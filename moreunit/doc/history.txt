@@ -1,0 +1,96 @@
+2005-12-26:
+
+	- Refactoring durchgeführt
+
+2005-12-25:
+
+	- Schönes Häckchen eingebaut :)
+
+2005-12-20:
+
+	- Bug entfernt: Testmethode durfte nur eine leere Parameterliste enthalten, damit sie gefunden wurde
+
+2005-12-19:
+
+	- Plugin nicht als JAR, sondern als Folder deployt und dann sieht man die Markericons
+
+2005-11-20:
+
+	- ImageDescriptor in ImageDescriptorCenter-Klasse ausgelagert mit Lazy-Caching-Mechanismus
+	- Key-Binding für JumpToTestAction repariert
+	- getaggt auf Version 0.2
+	- Bug entfernt: Testmethoden ohne "echte" Methode dazu gaben eine Exception
+
+2005-11-18:
+
+	- erste Icons gebaut
+	- LabelDecorator mit Icons eingebaut (bei vorhandenem Test wird die Klasse mit Label dekoriert)
+
+2005-11-15:
+
+	- Decorator wird instanziiert (Problem war aktivierter Decorator des DecoratorDemos)
+
+2005-11-13:
+
+	- markerImageProvider-Problem gelöst: es lag am Icon, na prima
+	- refresh-Methode für den LabelDecorator eingebaut, aber Decorator ist immer null
+
+2005-11-09:
+
+	- Geschafft bei den Markern das Information-Icons wegzubekommen, aber leider wird immer noch die der markerImageProvider verwendet
+
+2005-11-02:
+
+	- erste Gehversuche mit Labeldecorator, aber der Listener fehlt noch
+
+2005-11-01:
+
+	- großer Umbau: Projekt umbenannt von JUnitOptimizer zu moreUnit und neu in Subversion abgelegt
+	- IElementChangedListener sorgt für dynamischen Update der Marker
+	- Extension Point für Labeldecorator eingebaut, den man in den Preferences sehen und enablen kann
+
+2005-10-30:
+
+	- statt ResourceChangeListener einen IElementChangedListener eingebaut,
+	  damit man mitbekomment, wenn sich Javacode ändert
+
+2005-10-26:
+
+	- ResourceChangeListener eingebaut. Jetzt müßte man nur noch mit dem IResourceChangeEvent was anfangen können ;)
+
+2005-10-25:
+
+	- Shortcuts mit Handler für Erzeugung der Testmethode und Springen zur Testklasse eingebaut.
+
+2005-10-24:
+
+	- ActionHandler für die Shortcuts ausprobiert und es klappt *HEUREKA*
+
+2005-10-23:
+
+	- Menü für das Hinzufügen und Entfernen von Markern eingebaut
+
+2005-10-12:
+
+	- erfolglos versucht Key-Bindings für die Actions einzubauen (sehe den Key, aber wird nicht ausgelöst)
+
+2005-10-11:
+
+	- Im Editor gibt es ein Popupmenü (Jump to test) mit dem man zum entsprechenden Test springen kann
+
+2005-10-10:
+
+	- Marker werden sofort beim geöffneten File wieder angezeigt (Problem der Eclispeversion)
+
+2005-10-09:
+
+	- Testklasse und Pakete werden miterzeugt, wenn sie noch nicht vorhanden sind
+
+2005-10-05:
+
+	- Stand auf Version 0.1 getaggt, nach langem Subversionkampf ;)
+
+2005-10-01:
+
+	- Über Cursorposition kann IMethod bestimmt werden
+	- Testmethod kann programmatisch erzeugt werden (in Package Explorer und Editor)

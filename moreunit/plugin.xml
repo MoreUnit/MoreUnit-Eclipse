@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.ui.commands">
+  		 <command
+	            name="JumpToTest"
+	            defaultHandler="moreUnit.handler.JumpToTestActionHandler"
+	            description="Jump to test."
+	            categoryId="org.eclipse.jdt.ui.category.source"
+	            id="moreunit.jumptotestaction">
+	   </command> 
+		<command
+	            name="CreateTestMethod"
+	            defaultHandler="moreUnit.handler.CreateTestMethodActionHandler"
+	            description="Creation of a testmethod."
+	            categoryId="org.eclipse.jdt.ui.category.source"
+	            id="moreunit.createtestmethod">
+	   </command> 
+   </extension> 
+   <extension point="org.eclipse.ui.bindings">
+   	   <key
+	      sequence="CTRL+J"
+	      commandId="moreunit.jumptotestaction"
+	      contextId="org.eclipse.jdt.ui.javaEditorScope"
+	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key> 
+	   <key
+	      sequence="CTRL+U"
+	      commandId="moreunit.createtestmethod"
+	      contextId="org.eclipse.jdt.ui.javaEditorScope"
+	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+	</extension>
+   <extension point="org.eclipse.ui.actionSets">
+   		<actionSet
+   			id="moreUnit.actionSet"
+   			label="JOOutside"
+   			visible="true">
+   			 <menu
+               	label="moreUnit"
+               	id="moreUnitMenu">
+	            <separator
+	                  name="moreGroup">
+	            </separator>
+	         </menu>
+   			<action
+   				id="moreUnit.toolbar.DeleteMarkerAction"
+   				label="-"
+	   			toolbarPath="JOGroup"
+	   			menubarPath="moreUnitMenu/moreGroup"
+   				class="moreUnit.toolbar.DeleteMarkerAction">
+   			</action>
+   			<action
+   				id="moreUnit.toolbar.AddMarkerAction"
+   				label="+"
+	   			toolbarPath="JOGroup"
+	   			menubarPath="moreUnitMenu/moreGroup"
+   				class="moreUnit.toolbar.AddMarkerAction">
+   			</action>
+
+   		</actionSet>
+   </extension>
+
+   <extension point="org.eclipse.ui.popupMenus">
+	  <viewerContribution
+            targetID="#CompilationUnitEditorContext"
+            id="moreunit.contribution1">
+         <action
+               label="Generate Test"
+               definitionId="moreunit.createtestmethod"
+               class="moreUnit.actions.CreateTestMethodEditorAction"
+               menubarPath="additions"
+               id="moreunit.actions.createtestmethodaction">
+         </action>
+      </viewerContribution>
+      <viewerContribution
+            targetID="#CompilationUnitEditorContext"
+            id="moreunit.contribution2">
+         <action
+               label="Jump to test"
+               definitionId="moreunit.jumptotestaction"
+               class="moreUnit.actions.JumpToTestAction"
+               menubarPath="additions"
+               id="moreunit.actions.jumptotestaction">
+         </action>
+      </viewerContribution>
+      <objectContribution
+      	id="moreunit.testcreator"
+      	objectClass="org.eclipse.jdt.core.IMethod">
+      	<action id="moreunit.actions.testcreatoraction"
+      		label="Generate Test"
+      		class="moreUnit.actions.CreateTestMethodHierarchyAction"
+      		menubarPath="additions"/>      		
+      </objectContribution>
+     </extension>
+
+   <extension
+      	point="org.eclipse.core.resources.markers"
+      	id="moreUnit.testCase"
+      	name="Besitzt TestCase">
+      	<super type="org.eclipse.core.resources.textmarker"/>
+      	<persistent value="true"/>
+      </extension>
+
+	<extension point="org.eclipse.ui.ide.markerImageProviders">
+		<imageprovider 
+			markertype="moreUnit.testCase"
+			icon="icons/haeckchen.jpg"
+			id="moreunit.testcaseimageprovider">
+		</imageprovider>
+	</extension>
+	<extension point="org.eclipse.ui.decorators">
+		<decorator
+			id="moreunit.testdecorator"
+			label="Decorate Classes with TestCase"
+			state="true"
+			class="moreUnit.decorator.UnitDecorator"
+			adaptable="true"
+			lightweight="true">
+			<enablement>
+				<objectClass name="org.eclipse.core.resources.IResource"/>
+			</enablement>
+			<description>
+				Classes which have a Testclass get decorated.
+			</description>
+		</decorator>
+	</extension>
+</plugin>

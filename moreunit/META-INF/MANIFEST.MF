@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MoreUnit Plug-in
+Bundle-SymbolicName: moreUnit; singleton:=true
+Bundle-Version: 0.2
+Bundle-Activator: moreUnit.MoreUnitPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.ui,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.junit
+Eclipse-AutoStart: true
