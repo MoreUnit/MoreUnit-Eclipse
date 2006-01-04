@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorPart;
@@ -70,13 +71,14 @@ public class PluginTools {
 	}
 	
 	public static IType getTypeOfTestCaseClassFromJavaFile(IFile javaFile, IJavaProject javaProject) {
-		try {
-			return javaProject.findType(BaseTools.getNameOfTestCaseClass(javaFile));
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
+//		try {
+			//return javaProject.findType(BaseTools.getNameOfTestCaseClass(javaFile));
+			return getTestKlasseVomKlassenNamen(JavaCore.createCompilationUnitFrom(javaFile));
+//		} catch (JavaModelException e) {
+//			e.printStackTrace();
+//		}
 		
-		return null;
+//		return null;
 	}
 	
 	public static IType createTestCaseClass(IFile classToTest, IJavaProject javaProject, String paketName) {

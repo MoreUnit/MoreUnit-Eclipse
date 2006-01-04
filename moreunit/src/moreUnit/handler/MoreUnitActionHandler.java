@@ -52,6 +52,8 @@ public class MoreUnitActionHandler {
 		try {
 			if(method != null) {
 				IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(file, compilationUnit.getJavaProject());
+				//IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(file, compilationUnit.getJavaProject());
+				
 				if(typeOfTextCaseClassFromJavaFile == null) {
 					IJavaProject javaProject = compilationUnit.getJavaProject();
 					IPackageDeclaration[] packageDeclarations = compilationUnit.getPackageDeclarations();
