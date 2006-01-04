@@ -1,3 +1,7 @@
+2006-01-04:
+
+	- Bug entfernt bei Generierung der Testmethoden bei Klassen die in Packages liegen
+
 2005-12-26:
 
 	- Refactoring durchgeführt
