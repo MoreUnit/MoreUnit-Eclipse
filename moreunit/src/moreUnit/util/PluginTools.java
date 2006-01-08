@@ -1,6 +1,7 @@
 package moreUnit.util;
 
 
+import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
 
 import org.eclipse.core.resources.IFile;
@@ -91,8 +92,10 @@ public class PluginTools {
 				
 				String testCaseClassName = BaseTools.getNameOfTestCaseClass(classToTest);
 				StringBuffer contents = new StringBuffer();
-				contents.append("package " + paketName	+ ";"+MagicNumbers.NEWLINE);
-				contents.append(MagicNumbers.NEWLINE);
+				if(paketName != null && paketName.length() > 0) {
+					contents.append("package " + paketName	+ ";"+MagicNumbers.NEWLINE);
+					contents.append(MagicNumbers.NEWLINE);
+				}
 				contents.append("import junit.framework.TestCase;"+MagicNumbers.NEWLINE);
 				contents.append(MagicNumbers.NEWLINE);
 				contents.append("public class " + testCaseClassName + " extends TestCase {"+ MagicNumbers.NEWLINE);
@@ -123,7 +126,8 @@ public class PluginTools {
 			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getAllPackageFragmentRoots();
 			for(int i=0; i<packageFragmentRoots.length; i++) {
 				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
-				if(packageFragmentRoot instanceof IPackageFragmentRoot && packageFragmentRoot.getElementName().equals("junit"))
+				String junitFolder = MoreUnitPlugin.getDefault().getJunitDirectoryFromPreferences();
+				if(packageFragmentRoot instanceof IPackageFragmentRoot && packageFragmentRoot.getElementName().equals(junitFolder))
 					return packageFragmentRoot;
 			}
 		} catch (JavaModelException exc) {

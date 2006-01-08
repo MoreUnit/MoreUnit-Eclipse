@@ -61,6 +61,8 @@ public class MoreUnitActionHandler {
 						IPackageDeclaration packageDeclaration = packageDeclarations[0];
 						String paketName = packageDeclaration.getElementName();
 						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(file, javaProject, paketName);
+					} else {
+						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(file, javaProject, MagicNumbers.EMPTY_STRING);
 					}
 				} 
 				if(typeOfTextCaseClassFromJavaFile != null && typeOfTextCaseClassFromJavaFile.exists())

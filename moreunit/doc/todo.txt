@@ -22,4 +22,4 @@
 019:		Automatisches TestCaseRefactoring
 020:		Getter und Setter Ausnehmen
 
-021:		In der deployten Version fehlt das Icon beim Marker
+021:	d	In der deployten Version fehlt das Icon beim Marker
