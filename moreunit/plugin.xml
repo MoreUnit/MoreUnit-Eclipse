@@ -100,7 +100,7 @@
       	name="Besitzt TestCase">
       	<super type="org.eclipse.core.resources.textmarker"/>
       	<persistent value="true"/>
-      </extension>
+    </extension>
 
 	<extension point="org.eclipse.ui.ide.markerImageProviders">
 		<imageprovider 
@@ -109,6 +109,22 @@
 			id="moreunit.testcaseimageprovider">
 		</imageprovider>
 	</extension>
+	
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type 
+			name="moreUnit.testCaseAnnotation"
+			super="org.eclipse.ui.workbench.texteditor.info"
+			markerType="moreUnit.testCase">
+		</type>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification
+			annotationType="moreUnit.testCaseAnnotation"
+			icon="icons/haeckchen.jpg">
+		</specification>
+	</extension>
+
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
 			id="moreunit.testdecorator"
@@ -124,5 +140,12 @@
 				Classes which have a Testclass get decorated.
 			</description>
 		</decorator>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page id="moreunit.moreunitPreferencePage"
+			name="moreUnit"
+			class="moreUnit.preferences.MoreUnitPreferencePage">
+		</page>
 	</extension>
 </plugin>
