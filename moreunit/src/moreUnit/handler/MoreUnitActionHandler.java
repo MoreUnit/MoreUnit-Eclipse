@@ -1,18 +1,22 @@
 package moreUnit.handler;
 
 import moreUnit.log.LogHandler;
+import moreUnit.util.BaseTools;
 import moreUnit.util.CodeTools;
 import moreUnit.util.MagicNumbers;
 import moreUnit.util.PluginTools;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
+import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -44,15 +48,10 @@ public class MoreUnitActionHandler {
 		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
 		
 		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
-		IWorkbenchPartSite site = editorPart.getSite();
-		ISelectionProvider selectionProvider = site.getSelectionProvider();
-		ITextSelection structuredSelection = (ITextSelection) selectionProvider.getSelection();
-		
-		IMethod method = PluginTools.getMethodUnderCursorPosition(compilationUnit, structuredSelection);
+		IMethod method = PluginTools.getMethodUnderCursorPosition(editorPart);
 		try {
 			if(method != null) {
 				IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(file, compilationUnit.getJavaProject());
-				//IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(file, compilationUnit.getJavaProject());
 				
 				if(typeOfTextCaseClassFromJavaFile == null) {
 					IJavaProject javaProject = compilationUnit.getJavaProject();
@@ -84,12 +83,25 @@ public class MoreUnitActionHandler {
 		
 		if(testKlasse != null) {
 			try {
-				JavaUI.openInEditor(testKlasse.getParent());
+				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
+				jumpToMethodIfPossible(editorPart, openedEditor);
 			} catch (PartInitException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			} catch (JavaModelException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			}
 		}
+	}
+	
+	private static void jumpToMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart) {
+		IMethod method = PluginTools.getMethodUnderCursorPosition(oldEditorPart);
+		if(method == null)
+			return;
+		
+		IFile file = (IFile)openedEditorPart.getEditorInput().getAdapter(IFile.class);
+		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
+		IMethod correspondingTestMethod = CodeTools.getFirstMethodByName(compilationUnit.findPrimaryType(), BaseTools.getTestmethodNameFromMethodName(method.getElementName()));
+		if(correspondingTestMethod != null)
+			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)correspondingTestMethod);
 	}
 }

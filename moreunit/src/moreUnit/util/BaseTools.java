@@ -8,6 +8,15 @@ import org.eclipse.core.resources.IFile;
 
 
 public class BaseTools {
+	
+	public static String getTestmethodNameFromMethodName(String methodName) {
+		String erstesZeichen = String.valueOf(methodName.charAt(0));
+		methodName = methodName.replaceFirst(erstesZeichen, erstesZeichen.toUpperCase());
+		
+		String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX+methodName;
+		
+		return testMethodName;
+	}
 
 	public static String getTestedClass(String testCaseClass) {
 		if(!testCaseClass.endsWith(MagicNumbers.TEST_CASE_SUFFIX))

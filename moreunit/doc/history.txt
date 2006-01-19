@@ -1,3 +1,8 @@
+2006-01-08:
+
+	- Marker funktionieren nun auch unter dem aktuellen Release 3.1.1
+	- der Ordner für JUnit-Tests kann über die Preferences konfiguriert werden
+
 2006-01-04:
 
 	- Bug entfernt bei Generierung der Testmethoden bei Klassen die in Packages liegen
