@@ -1,3 +1,9 @@
+2006-01-18:
+
+	- ssh-Zugang zu Sourceforge eingebaut
+	- Feature eingebaut: JumpTo-Action springt direkt zur Methode (wenn möglich)
+	- CVS-Commit-Logging in Java-Files eingebaut
+
 2006-01-08:
 
 	- Marker funktionieren nun auch unter dem aktuellen Release 3.1.1
