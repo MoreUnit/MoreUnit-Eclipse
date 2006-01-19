@@ -17,9 +17,11 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -56,10 +58,17 @@ public class PluginTools {
 		return testCaseListe;
 	}
 
-	public static IMethod getMethodUnderCursorPosition(ICompilationUnit compilationUnit, ITextSelection textSelection) {
+	public static IMethod getMethodUnderCursorPosition(IEditorPart editorPart) {
+		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
+		
+		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
+		IWorkbenchPartSite site = editorPart.getSite();
+		ISelectionProvider selectionProvider = site.getSelectionProvider();
+		ITextSelection structuredSelection = (ITextSelection) selectionProvider.getSelection();
+		
 		IMethod method = null;
 		try {
-			IJavaElement javaElement = compilationUnit.getElementAt(textSelection.getOffset());
+			IJavaElement javaElement = compilationUnit.getElementAt(structuredSelection.getOffset());
 			if(javaElement instanceof IMethod) {
 				method = (IMethod) javaElement;
 			} else 

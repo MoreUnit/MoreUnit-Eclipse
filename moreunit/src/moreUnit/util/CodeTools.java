@@ -39,4 +39,19 @@ public class CodeTools {
 		
 		return false;
 	}
+	
+	public static IMethod getFirstMethodByName(IType classType, String methodName) {
+		try {
+			IMethod[] methodsOfType = classType.getMethods();
+			for(int i=0; i<methodsOfType.length; i++) {
+				IMethod method = methodsOfType[i];
+				if(methodName.equals(method.getElementName()))
+					return method;
+			}
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+		
+		return null;
+	}
 }
