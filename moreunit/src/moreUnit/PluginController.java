@@ -15,3 +15,5 @@ public class PluginController {
 		return controllerInstance;
 	}
 }
+
+// $Log: not supported by cvs2svn $

@@ -23,3 +23,5 @@ public class LogHandler {
 		System.out.println("moreunit: "+infoMessage);
 	}
 }
+
+// $Log: not supported by cvs2svn $

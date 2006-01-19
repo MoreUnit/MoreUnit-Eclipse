@@ -36,3 +36,5 @@ public class DeleteMarkerAction implements IWorkbenchWindowActionDelegate{
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 }
+
+// $Log: not supported by cvs2svn $

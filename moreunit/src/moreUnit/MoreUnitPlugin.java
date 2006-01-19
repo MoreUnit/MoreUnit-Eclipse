@@ -66,3 +66,5 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 		return getPreferenceStore().getString(JUNIT_PATH_PREFERENCE);
 	}
 }
+
+// $Log: not supported by cvs2svn $

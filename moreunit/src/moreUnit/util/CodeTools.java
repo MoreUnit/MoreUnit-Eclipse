@@ -55,3 +55,5 @@ public class CodeTools {
 		return null;
 	}
 }
+
+// $Log: not supported by cvs2svn $

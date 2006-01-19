@@ -11,3 +11,5 @@ public class ExampleTest extends TestCase {
 	public void testNothing() {
 	}
 }
+
+// $Log: not supported by cvs2svn $

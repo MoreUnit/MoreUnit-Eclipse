@@ -17,3 +17,5 @@ public class JumpToTestActionHandler extends AbstractHandler {
 		return null;
 	}
 }
+
+// $Log: not supported by cvs2svn $

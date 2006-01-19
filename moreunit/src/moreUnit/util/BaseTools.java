@@ -41,3 +41,5 @@ public class BaseTools {
 		return fileNameWithoutExtension+MagicNumbers.TEST_CASE_SUFFIX;
 	}
 }
+
+// $Log: not supported by cvs2svn $

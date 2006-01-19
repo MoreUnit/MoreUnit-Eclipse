@@ -25,6 +25,6 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(MoreUnitPlugin.getDefault().getPreferenceStore());
 	}
-
-
 }
+
+// $Log: not supported by cvs2svn $

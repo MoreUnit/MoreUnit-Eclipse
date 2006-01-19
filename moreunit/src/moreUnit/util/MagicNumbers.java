@@ -16,3 +16,5 @@ public class MagicNumbers {
 	public static final String EMPTY_STRING = "";
 	public static final String NEWLINE = "\n";
 }
+
+// $Log: not supported by cvs2svn $

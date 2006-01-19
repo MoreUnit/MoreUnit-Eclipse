@@ -70,3 +70,5 @@ public class AddMarkerAction implements IWorkbenchWindowActionDelegate {
 		this.selection = selection;
 	}
 }
+
+// $Log: not supported by cvs2svn $

@@ -18,3 +18,5 @@ public class ImageDescriptorCenter {
 		return testCaseLabelDescriptor;
 	}
 }
+
+// $Log: not supported by cvs2svn $

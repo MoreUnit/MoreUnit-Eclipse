@@ -37,3 +37,5 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 		this.selection = selection;
 	}
 }
+
+// $Log: not supported by cvs2svn $

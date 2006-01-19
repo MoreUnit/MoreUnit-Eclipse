@@ -20,3 +20,5 @@ public class CreateTestMethodActionHandler extends AbstractHandler {
 		return null;
 	}
 }
+
+// $Log: not supported by cvs2svn $

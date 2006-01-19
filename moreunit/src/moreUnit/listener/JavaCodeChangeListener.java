@@ -37,3 +37,5 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 		}
 	}
 }
+
+// $Log: not supported by cvs2svn $

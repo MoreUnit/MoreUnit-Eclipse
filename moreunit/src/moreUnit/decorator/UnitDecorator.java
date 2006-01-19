@@ -58,3 +58,5 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 			unitDecorator.fireLabelProviderChanged(new LabelProviderChangedEvent(unitDecorator));
 	}
 }
+
+// $Log: not supported by cvs2svn $

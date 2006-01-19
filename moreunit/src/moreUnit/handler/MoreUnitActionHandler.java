@@ -105,3 +105,5 @@ public class MoreUnitActionHandler {
 			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)correspondingTestMethod);
 	}
 }
+
+// $Log: not supported by cvs2svn $
