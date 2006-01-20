@@ -12,5 +12,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.editors,
- org.junit
+ org.junit,
+ org.eclipse.jdt.launching
 Eclipse-AutoStart: true
