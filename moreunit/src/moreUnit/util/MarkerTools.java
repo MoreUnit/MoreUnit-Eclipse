@@ -79,7 +79,7 @@ public class MarkerTools {
 					for(int i=0; i<foundTestMethods.length; i++) {
 						IMethod method = foundTestMethods[i];
 						if(method.getElementName().equals(testedMethodName) && method.exists()) {
-							ISourceRange range = method.getSourceRange();
+							ISourceRange range = method.getNameRange();
 							Map map = new HashMap();
 							map.put(IMarker.CHAR_START, new Integer(range.getOffset()));
 							map.put(IMarker.CHAR_END, new Integer(range.getOffset()));
@@ -95,3 +95,6 @@ public class MarkerTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//
