@@ -1,3 +1,7 @@
+2006-01-20:
+
+	- TestProjekt weiter ausgebaut (erster simpler Plugin-Testcase läuft)
+
 2006-01-18:
 
 	- ssh-Zugang zu Sourceforge eingebaut
