@@ -2,7 +2,6 @@ package moreUnit;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFolder;
@@ -12,8 +11,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -24,11 +21,8 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.core.search.ITypeNameRequestor;
-import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jdt.internal.core.JavaElement;
-import org.eclipse.jdt.internal.ui.callhierarchy.ICallHierarchyViewPart;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.osgi.service.datalocation.Location;
 
 /**
  * @author vera
@@ -43,6 +37,20 @@ public class TestProject {
 	public TestProject() throws CoreException {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		project = workspaceRoot.getProject("AProject");
+		project.create(null);
+		project.open(null);
+		
+		javaProject = JavaCore.create(project);
+		IFolder classFolder = createClassFolder();
+		setJavaNature();
+		javaProject.setRawClasspath(new IClasspathEntry[0], null);
+		createOutputFolder(classFolder);
+		addSystemLibraries();
+	}
+	
+	public TestProject(String projectname) throws CoreException {
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		project = workspaceRoot.getProject(projectname);
 		project.create(null);
 		project.open(null);
 		
@@ -126,36 +134,38 @@ public class TestProject {
 		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
 		IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
 		System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-		// TODO
-		//newEntries[oldEntries.length] = JavaRuntime.getDefaultJREContainerEntry();
+		newEntries[oldEntries.length] = JavaRuntime.getDefaultJREContainerEntry();
 		javaProject.setRawClasspath(newEntries, null);
 	}
 	
 	private Path findFileInPlugin(String plugin, String file) throws MalformedURLException, IOException {
-		IPluginRegistry registry = Platform.getPluginRegistry();
-		IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
-		URL pluginURL = descriptor.getInstallURL();
+		Location location = Platform.getInstallLocation();
+		URL pluginURL = location.getURL();
 		URL jarURL = new URL(pluginURL, file);
 		URL localJarURL = Platform.asLocalURL(jarURL);
+		
 		return new Path(localJarURL.getPath());
 	}
 	
 	private void waitForIndexer() throws JavaModelException {
-		new SearchEngine()
-			.searchAllTypeNames(
-					ResourcesPlugin.getWorkspace(),
-					null,
-					null,
-					IJavaSearchConstants.EXACT_MATCH,
-					IJavaSearchConstants.CASE_SENSITIVE,
-					IJavaSearchConstants.CLASS,
-					SearchEngine.createJavaSearchScope(new JavaElement[0]), new ITypeNameRequestor() {
-						public void acceptClass(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {}
-						public void acceptInterface(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {}
-					}, 
-					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
-					null);
+//		new SearchEngine()
+//			.searchAllTypeNames(
+//					ResourcesPlugin.getWorkspace(),
+//					null,
+//					null,
+//					IJavaSearchConstants.EXACT_MATCH,
+//					IJavaSearchConstants.CASE_SENSITIVE,
+//					IJavaSearchConstants.CLASS,
+//					SearchEngine.createJavaSearchScope(new JavaElement[0]), new ITypeNameRequestor() {
+//						public void acceptClass(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {}
+//						public void acceptInterface(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {}
+//					}, 
+//					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
+//					null);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:40:18  gianasista
+// Added CVS-commit-logging to all java-files
+//
