@@ -1,6 +1,7 @@
 2006-01-20:
 
 	- TestProjekt weiter ausgebaut (erster simpler Plugin-Testcase läuft)
+	- Marker werden direkt neben der Methodensignatur gemalt und nicht bei Kommentaren
 
 2006-01-18:
 
