@@ -1,3 +1,7 @@
+2006-01-22:
+
+	- Suche zu Bug mit Testklasse im falschen Javaprojekt begonnen und vermutlich gefunden
+
 2006-01-20:
 
 	- TestProjekt weiter ausgebaut (erster simpler Plugin-Testcase läuft)
