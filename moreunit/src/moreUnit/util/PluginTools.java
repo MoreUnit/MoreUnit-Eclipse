@@ -132,7 +132,7 @@ public class PluginTools {
 	
 	private static IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject) {
 		try {
-			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getAllPackageFragmentRoots();
+			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
 			for(int i=0; i<packageFragmentRoots.length; i++) {
 				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
 				String junitFolder = MoreUnitPlugin.getDefault().getJunitDirectoryFromPreferences();
@@ -153,3 +153,6 @@ public class PluginTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/01/19 21:38:32  gianasista
+// Added CVS-commit-logging to all java-files
+//
