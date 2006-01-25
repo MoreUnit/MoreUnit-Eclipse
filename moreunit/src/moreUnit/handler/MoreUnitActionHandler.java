@@ -1,5 +1,6 @@
 package moreUnit.handler;
 
+import moreUnit.elements.EditorPartFacade;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
 import moreUnit.util.CodeTools;
@@ -40,23 +41,21 @@ public class MoreUnitActionHandler {
 	public void executeCreateTestMethodAction(IEditorPart editorPart) {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 		
-		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
-		
-		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
-		IMethod method = PluginTools.getMethodUnderCursorPosition(editorPart);
+		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
+		IMethod method = editorPartFacade.getMethodUnderCursorPosition();
 		try {
 			if(method != null) {
-				IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(file, compilationUnit.getJavaProject());
+				IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(editorPartFacade.getFile(), editorPartFacade.getJavaProject());
 				
 				if(typeOfTextCaseClassFromJavaFile == null) {
-					IJavaProject javaProject = compilationUnit.getJavaProject();
-					IPackageDeclaration[] packageDeclarations = compilationUnit.getPackageDeclarations();
+					IJavaProject javaProject = editorPartFacade.getJavaProject();
+					IPackageDeclaration[] packageDeclarations = editorPartFacade.getCompilationUnit().getPackageDeclarations();
 					if(packageDeclarations.length > 0) {
 						IPackageDeclaration packageDeclaration = packageDeclarations[0];
 						String paketName = packageDeclaration.getElementName();
-						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(file, javaProject, paketName);
+						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(editorPartFacade.getFile(), javaProject, paketName);
 					} else {
-						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(file, javaProject, MagicNumbers.EMPTY_STRING);
+						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(editorPartFacade.getFile(), javaProject, MagicNumbers.EMPTY_STRING);
 					}
 				} 
 				if(typeOfTextCaseClassFromJavaFile != null && typeOfTextCaseClassFromJavaFile.exists())
@@ -102,6 +101,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/01/20 21:33:30  gianasista
+// Organize Imports
+//
 // Revision 1.5  2006/01/19 21:38:32  gianasista
 // Added CVS-commit-logging to all java-files
 //
