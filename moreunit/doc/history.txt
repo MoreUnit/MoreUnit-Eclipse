@@ -1,3 +1,7 @@
+2006-01-25:
+
+	- Begonnen mir der großen Refaktorisierung
+
 2006-01-22:
 
 	- Suche zu Bug mit Testklasse im falschen Javaprojekt begonnen und vermutlich gefunden
