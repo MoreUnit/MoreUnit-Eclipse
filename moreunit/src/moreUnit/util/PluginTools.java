@@ -58,6 +58,9 @@ public class PluginTools {
 		return testCaseListe;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static IMethod getMethodUnderCursorPosition(IEditorPart editorPart) {
 		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
 		
@@ -153,6 +156,9 @@ public class PluginTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/01/22 20:53:32  gianasista
+// Bugfix: Testcase in wrong java project (sometimes)
+//
 // Revision 1.5  2006/01/19 21:38:32  gianasista
 // Added CVS-commit-logging to all java-files
 //
