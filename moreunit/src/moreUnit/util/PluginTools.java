@@ -37,6 +37,9 @@ public class PluginTools {
 		return null;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public static IType getTestKlasseVomKlassenNamen(ICompilationUnit compilationUnit) {
 		try {
 			String klassenName = compilationUnit.findPrimaryType().getFullyQualifiedName()+MagicNumbers.TEST_CASE_SUFFIX;
@@ -83,6 +86,9 @@ public class PluginTools {
 		return method;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public static IType getTypeOfTestCaseClassFromJavaFile(IFile javaFile, IJavaProject javaProject) {
 //		try {
 			//return javaProject.findType(BaseTools.getNameOfTestCaseClass(javaFile));
@@ -94,6 +100,9 @@ public class PluginTools {
 //		return null;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public static IType createTestCaseClass(IFile classToTest, IJavaProject javaProject, String paketName) {
 		try {
 			IPackageFragmentRoot junitSourceFolder = getJUnitSourceFolder(javaProject);
@@ -133,6 +142,9 @@ public class PluginTools {
 		return page.getActiveEditor();
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	private static IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject) {
 		try {
 			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
@@ -149,6 +161,9 @@ public class PluginTools {
 		return null;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public static boolean isTestCase(IType type) {
 		String classname = type.getElementName();
 		return classname.endsWith(MagicNumbers.TEST_CASE_SUFFIX);
@@ -156,6 +171,9 @@ public class PluginTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/01/25 21:25:16  gianasista
+// getMethodUnderCursorPosition is deprecated, new class EditorPartFacade implements this functionality now
+//
 // Revision 1.6  2006/01/22 20:53:32  gianasista
 // Bugfix: Testcase in wrong java project (sometimes)
 //

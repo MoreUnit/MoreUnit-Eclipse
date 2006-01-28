@@ -42,30 +42,26 @@ public class MoreUnitActionHandler {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 		
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		IMethod method = editorPartFacade.getMethodUnderCursorPosition();
-		try {
-			if(method != null) {
-				IType typeOfTextCaseClassFromJavaFile = PluginTools.getTypeOfTestCaseClassFromJavaFile(editorPartFacade.getFile(), editorPartFacade.getJavaProject());
-				
-				if(typeOfTextCaseClassFromJavaFile == null) {
-					IJavaProject javaProject = editorPartFacade.getJavaProject();
-					IPackageDeclaration[] packageDeclarations = editorPartFacade.getCompilationUnit().getPackageDeclarations();
-					if(packageDeclarations.length > 0) {
-						IPackageDeclaration packageDeclaration = packageDeclarations[0];
-						String paketName = packageDeclaration.getElementName();
-						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(editorPartFacade.getFile(), javaProject, paketName);
-					} else {
-						typeOfTextCaseClassFromJavaFile = PluginTools.createTestCaseClass(editorPartFacade.getFile(), javaProject, MagicNumbers.EMPTY_STRING);
-					}
-				} 
-				if(typeOfTextCaseClassFromJavaFile != null && typeOfTextCaseClassFromJavaFile.exists())
-					CodeTools.addTestCaseMethod(method, typeOfTextCaseClassFromJavaFile);
-				else
-					LogHandler.getInstance().handleInfoLog("Es wird keine Testmethode erzeugt");
-			}
-		} catch (JavaModelException exc) {
-			LogHandler.getInstance().handleExceptionLog(exc);
+		if(editorPartFacade.isTestCase()) {
+			LogHandler.getInstance().handleInfoLog("The class is already a testcase.");
+			return;
 		}
+			
+		IMethod method = editorPartFacade.getMethodUnderCursorPosition();
+		if(method == null) {
+			LogHandler.getInstance().handleInfoLog("No method found under cursor position");
+			return;
+		}
+		
+		IType typeOfTextCaseClassFromJavaFile = editorPartFacade.getCorrespondingTestCase();
+		
+		if(typeOfTextCaseClassFromJavaFile == null)
+			typeOfTextCaseClassFromJavaFile = editorPartFacade.createTestCase();
+		
+		if(typeOfTextCaseClassFromJavaFile != null && typeOfTextCaseClassFromJavaFile.exists())
+			CodeTools.addTestCaseMethod(method, typeOfTextCaseClassFromJavaFile);
+		else
+			LogHandler.getInstance().handleInfoLog("Es wird keine Testmethode erzeugt");
 	}
 	
 	public void executeJumpToTestAction(IEditorPart editorPart) {
@@ -101,6 +97,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/01/25 21:27:19  gianasista
+// First refactoring to smarter code (Replacing util-classes)
+//
 // Revision 1.6  2006/01/20 21:33:30  gianasista
 // Organize Imports
 //

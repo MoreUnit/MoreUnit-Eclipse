@@ -3,13 +3,19 @@
  */
 package moreUnit.elements;
 
+import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
+import moreUnit.util.BaseTools;
+import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageDeclaration;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -65,22 +71,77 @@ public class EditorPartFacade {
 	}
 	
 	public boolean isTestCase() {
-		// FIX to be implemented
-		return false;
+		String classname = getCompilationUnit().findPrimaryType().getElementName();
+		return classname.endsWith(MagicNumbers.TEST_CASE_SUFFIX);
 	}
 	
-	public boolean createTestCase() {
-		// FIX to be implemented
-		return false;
+	public IType createTestCase() {
+		try {
+			String paketName = MagicNumbers.EMPTY_STRING;
+			IPackageDeclaration[] packageDeclarations = getCompilationUnit().getPackageDeclarations();
+			if(packageDeclarations.length > 0) {
+				IPackageDeclaration packageDeclaration = packageDeclarations[0];
+				paketName = packageDeclaration.getElementName();
+			}
+			
+			IPackageFragmentRoot junitSourceFolder = getJUnitSourceFolder();
+			if (junitSourceFolder.exists()) {
+				IPackageFragment packageFragment = junitSourceFolder.getPackageFragment(paketName);
+				if (!packageFragment.exists()) 
+					packageFragment = junitSourceFolder.createPackageFragment(paketName, true, null);
+				
+				String testCaseClassName = BaseTools.getNameOfTestCaseClass(getFile());
+				StringBuffer contents = new StringBuffer();
+				if(paketName != null && paketName.length() > 0) {
+					contents.append("package " + paketName	+ ";"+MagicNumbers.NEWLINE);
+					contents.append(MagicNumbers.NEWLINE);
+				}
+				contents.append("import junit.framework.TestCase;"+MagicNumbers.NEWLINE);
+				contents.append(MagicNumbers.NEWLINE);
+				contents.append("public class " + testCaseClassName + " extends TestCase {"+ MagicNumbers.NEWLINE);
+				contents.append(MagicNumbers.NEWLINE);
+				contents.append("}");
+				ICompilationUnit compilationUnit = packageFragment.createCompilationUnit(testCaseClassName+".java",contents.toString(), true, null);
+				return compilationUnit.findPrimaryType();
+			} else {
+				LogHandler.getInstance().handleInfoLog("junit-Source-Folder konnte nicht gefunden werden.");
+			}
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+			
+		return null;
 	}
 	
+	private IPackageFragmentRoot getJUnitSourceFolder() {
+		try {
+			IPackageFragmentRoot[] packageFragmentRoots = getJavaProject().getPackageFragmentRoots();
+			for(int i=0; i<packageFragmentRoots.length; i++) {
+				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
+				String junitFolder = MoreUnitPlugin.getDefault().getJunitDirectoryFromPreferences();
+				if(packageFragmentRoot instanceof IPackageFragmentRoot && packageFragmentRoot.getElementName().equals(junitFolder))
+					return packageFragmentRoot;
+			}
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+		
+		return null;
+	}
+
 	public boolean createTestMethod() {
 		// FIX to be implemented
 		return false;
 	}
 	
 	public IType getCorrespondingTestCase() {
-		// FIX to be implemented
+		try {
+			String klassenName = getCompilationUnit().findPrimaryType().getFullyQualifiedName()+MagicNumbers.TEST_CASE_SUFFIX;
+			return getJavaProject().findType(klassenName);
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+	
 		return null;
 	}
 	
@@ -92,3 +153,6 @@ public class EditorPartFacade {
 
 
 // $Log$
+// Revision 1.1  2006/01/25 21:26:30  gianasista
+// Started implementing a smarter code
+//
