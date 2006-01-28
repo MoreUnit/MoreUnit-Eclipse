@@ -1,3 +1,8 @@
+2006-01-28:
+
+	- Weiterarbeit am Refactoring (weitere Methoden von PluginTools zur EditorPartFacade verschoben)
+	- Begonnen mit der Zerlegung von EditorPartFacade (Teile sollen zur JavaFileFacade)
+
 2006-01-25:
 
 	- Begonnen mir der groﬂen Refaktorisierung
