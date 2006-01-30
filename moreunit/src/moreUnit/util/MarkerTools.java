@@ -3,6 +3,7 @@ package moreUnit.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import moreUnit.elements.JavaProjectFacade;
 import moreUnit.log.LogHandler;
 
 import org.eclipse.core.resources.IMarker;
@@ -35,7 +36,7 @@ public class MarkerTools {
 			return;
 		
 		try {
-			IType[] testCaseListe = PluginTools.getTestCasesFromJavaProject(javaProject);
+			IType[] testCaseListe = (new JavaProjectFacade(javaProject)).getTestCasesFromJavaProject();
 
 			for(int i=0; i<testCaseListe.length; i++) {
 				IType testCase = testCaseListe[i];
@@ -95,6 +96,9 @@ public class MarkerTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/20 22:01:36  gianasista
+// Bugfix: Marker position at signature line
+//
 // Revision 1.2  2006/01/19 21:39:44  gianasista
 // Added CVS-commit-logging to all java-files
 //

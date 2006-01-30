@@ -1,9 +1,9 @@
 package moreUnit.decorator;
 
 import moreUnit.MoreUnitPlugin;
+import moreUnit.elements.JavaFileFacade;
 import moreUnit.images.ImageDescriptorCenter;
 import moreUnit.util.MagicNumbers;
-import moreUnit.util.PluginTools;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -34,7 +34,8 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 			if(javaTypeOfResource == null)
 				return ;
 			
-			IType type = PluginTools.getTestKlasseVomKlassenNamen(javaTypeOfResource);
+			JavaFileFacade javaFileFacade = new JavaFileFacade(javaTypeOfResource);
+			IType type = javaFileFacade.getCorrespondingTestCase();
 			if(type != null) {
 				ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
 				decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
@@ -60,3 +61,6 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//

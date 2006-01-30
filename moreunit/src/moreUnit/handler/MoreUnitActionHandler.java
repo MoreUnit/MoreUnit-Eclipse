@@ -1,20 +1,12 @@
 package moreUnit.handler;
 
 import moreUnit.elements.EditorPartFacade;
+import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
-import moreUnit.util.BaseTools;
-import moreUnit.util.CodeTools;
-import moreUnit.util.MagicNumbers;
-import moreUnit.util.PluginTools;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorPart;
@@ -42,7 +34,7 @@ public class MoreUnitActionHandler {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 		
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		if(editorPartFacade.isTestCase()) {
+		if(editorPartFacade.getJavaFileFacade().isTestCase()) {
 			LogHandler.getInstance().handleInfoLog("The class is already a testcase.");
 			return;
 		}
@@ -53,23 +45,19 @@ public class MoreUnitActionHandler {
 			return;
 		}
 		
-		IType typeOfTextCaseClassFromJavaFile = editorPartFacade.getCorrespondingTestCase();
+		IType typeOfTestCaseClassFromJavaFile = editorPartFacade.getJavaFileFacade().getCorrespondingTestCase();
 		
-		if(typeOfTextCaseClassFromJavaFile == null)
-			typeOfTextCaseClassFromJavaFile = editorPartFacade.createTestCase();
+		if(typeOfTestCaseClassFromJavaFile == null)
+			typeOfTestCaseClassFromJavaFile = editorPartFacade.getJavaFileFacade().createTestCase();
 		
-		if(typeOfTextCaseClassFromJavaFile != null && typeOfTextCaseClassFromJavaFile.exists())
-			CodeTools.addTestCaseMethod(method, typeOfTextCaseClassFromJavaFile);
+		if(typeOfTestCaseClassFromJavaFile != null && typeOfTestCaseClassFromJavaFile.exists())
+			(new JavaFileFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit())).createTestMethodForMethod(method);
 		else
 			LogHandler.getInstance().handleInfoLog("Es wird keine Testmethode erzeugt");
 	}
 	
 	public void executeJumpToTestAction(IEditorPart editorPart) {
-		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
-		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
-		
-		String klassenName = compilationUnit.findPrimaryType().getFullyQualifiedName();
-		IType testKlasse = PluginTools.getTestKlasseVomKlassenNamen(compilationUnit.getJavaProject(), klassenName+MagicNumbers.TEST_CASE_SUFFIX);
+		IType testKlasse = (new JavaFileFacade(editorPart)).getCorrespondingTestCase();
 		
 		if(testKlasse != null) {
 			try {
@@ -84,19 +72,21 @@ public class MoreUnitActionHandler {
 	}
 	
 	private static void jumpToMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart) {
-		IMethod method = PluginTools.getMethodUnderCursorPosition(oldEditorPart);
+		EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
+		IMethod method = (oldEditorPartFacade).getMethodUnderCursorPosition();
 		if(method == null)
 			return;
 		
-		IFile file = (IFile)openedEditorPart.getEditorInput().getAdapter(IFile.class);
-		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
-		IMethod correspondingTestMethod = CodeTools.getFirstMethodByName(compilationUnit.findPrimaryType(), BaseTools.getTestmethodNameFromMethodName(method.getElementName()));
+		IMethod correspondingTestMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition(); 
 		if(correspondingTestMethod != null)
 			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)correspondingTestMethod);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/01/28 15:48:25  gianasista
+// Moved several methods from PluginTools to EditorPartFacade
+//
 // Revision 1.7  2006/01/25 21:27:19  gianasista
 // First refactoring to smarter code (Replacing util-classes)
 //

@@ -1,9 +1,7 @@
 package moreUnit.actions;
 
-import moreUnit.util.CodeTools;
-import moreUnit.util.PluginTools;
+import moreUnit.elements.JavaFileFacade;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
@@ -26,9 +24,10 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
 			if(firstElement instanceof IMethod) {
 				IMethod method = (IMethod)firstElement;
-				IFile file = (IFile) method.getCompilationUnit().getResource();
-				IType type = PluginTools.getTypeOfTestCaseClassFromJavaFile(file, method.getJavaProject());
-				CodeTools.addTestCaseMethod(method, type);
+				JavaFileFacade javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
+				IType type = javaFileFacade.getCorrespondingTestCase();
+				if(type != null)
+					(new JavaFileFacade(type.getCompilationUnit())).createTestMethodForMethod(method);
 			}
 		}
 	}
@@ -39,3 +38,6 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//
