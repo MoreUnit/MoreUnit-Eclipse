@@ -1,3 +1,7 @@
+2006-01-30:
+
+	- Weiterarbeit am Refactoring bis auf MarkerTools vollendet
+
 2006-01-28:
 
 	- Weiterarbeit am Refactoring (weitere Methoden von PluginTools zur EditorPartFacade verschoben)
