@@ -70,8 +70,8 @@ public class TestProject {
 		return javaProject;
 	}
 
-	public void addJar(String plugin, String jar) throws MalformedURLException, IOException, JavaModelException {
-		Path result = findFileInPlugin(plugin, jar);
+	public void addJar(String jar) throws MalformedURLException, IOException, JavaModelException {
+		Path result = findFileInPlugin(jar);
 		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
 		IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
 		System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
@@ -79,11 +79,22 @@ public class TestProject {
 		javaProject.setRawClasspath(newEntries, null);
 	}
 	
+	public void addJUnitJar() throws JavaModelException, MalformedURLException, IOException {
+		addJar("junit.jar");
+	}
+	
 	public IPackageFragment createPackage(String name) throws CoreException {
 		if(sourceFolder == null)
 			sourceFolder = createSourceFolder();
 		
 		return sourceFolder.createPackageFragment(name, false, null);
+	}
+	
+	public IPackageFragment createPackage(IPackageFragmentRoot packageFragmentRoot, String name) throws JavaModelException {
+		if(packageFragmentRoot == null)
+			return null;
+		
+		return packageFragmentRoot.createPackageFragment(name, false, null);
 	}
 	
 	public IType createType(IPackageFragment pack, String cuName, String source) throws JavaModelException {
@@ -130,6 +141,19 @@ public class TestProject {
 		return fragmentRoot;
 	}
 	
+	public IPackageFragmentRoot createAdditionalSourceFolder(String sourceFolderName) throws CoreException {
+		IFolder folder = project.getFolder(sourceFolderName);
+		folder.create(false, true, null);
+		IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(folder);
+		
+		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+		IClasspathEntry[] newEntires = new IClasspathEntry[oldEntries.length + 1];
+		System.arraycopy(oldEntries, 0, newEntires, 0, oldEntries.length);
+		newEntires[oldEntries.length] = JavaCore.newSourceEntry(fragmentRoot.getPath());
+		javaProject.setRawClasspath(newEntires, null);
+		return fragmentRoot;
+	}
+	
 	private void addSystemLibraries() throws JavaModelException {
 		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
 		IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
@@ -138,7 +162,7 @@ public class TestProject {
 		javaProject.setRawClasspath(newEntries, null);
 	}
 	
-	private Path findFileInPlugin(String plugin, String file) throws MalformedURLException, IOException {
+	private Path findFileInPlugin(String file) throws MalformedURLException, IOException {
 		Location location = Platform.getInstallLocation();
 		URL pluginURL = location.getURL();
 		URL jarURL = new URL(pluginURL, file);
@@ -166,6 +190,9 @@ public class TestProject {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/20 21:34:52  gianasista
+// First plugin testcase implemented
+//
 // Revision 1.2  2006/01/19 21:40:18  gianasista
 // Added CVS-commit-logging to all java-files
 //

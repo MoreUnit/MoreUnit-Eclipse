@@ -3,6 +3,7 @@ package moreUnit;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IType;
 
 import junit.framework.TestCase;
 
@@ -19,12 +20,16 @@ public class ExampleTest extends TestCase {
 		// Projekt anlegen
 		testProject = new TestProject("Test");
 		IPackageFragment packageFragment = testProject.createPackage("com");
+	}
+	
+	private String getJavaSource() {
 		StringBuffer source = new StringBuffer();
 		source.append("package com;").append(MagicNumbers.NEWLINE);
 		source.append("public class Hello {").append(MagicNumbers.NEWLINE);
 		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
 		source.append("}");
-		testProject.createType(packageFragment, "Hello.java", source.toString());
+		
+		return source.toString();
 	}
 	
 	public void testNothing() {
@@ -33,6 +38,9 @@ public class ExampleTest extends TestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/20 21:34:52  gianasista
+// First plugin testcase implemented
+//
 // Revision 1.2  2006/01/19 21:40:18  gianasista
 // Added CVS-commit-logging to all java-files
 //
