@@ -1,6 +1,6 @@
 package moreUnit.toolbar;
 
-import moreUnit.util.MarkerTools;
+import moreUnit.elements.JavaProjectFacade;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -29,7 +29,7 @@ public class DeleteMarkerAction implements IWorkbenchWindowActionDelegate{
 		for(int i=0; i<projects.length; i++) {
 			IProject project = (IProject)projects[i];
 			IJavaProject javaProject = JavaCore.create(project);
-			MarkerTools.deleteTestCaseMarkers(javaProject);
+			(new JavaProjectFacade(javaProject)).deleteTestCaseMarkers();
 		}
 	}
 
@@ -38,3 +38,6 @@ public class DeleteMarkerAction implements IWorkbenchWindowActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//

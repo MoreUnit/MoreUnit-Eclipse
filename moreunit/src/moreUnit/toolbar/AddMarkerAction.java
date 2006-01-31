@@ -6,8 +6,8 @@
  */
 package moreUnit.toolbar;
 
+import moreUnit.elements.JavaProjectFacade;
 import moreUnit.log.LogHandler;
-import moreUnit.util.MarkerTools;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -35,35 +35,23 @@ public class AddMarkerAction implements IWorkbenchWindowActionDelegate {
 
 	public void run(IAction action) {
 		LogHandler.getInstance().handleInfoLog("AddMarkerAction.run()");
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceRoot workspaceRoot = workspace.getRoot();
-		IProject[] projects = workspaceRoot.getProjects();
+		IProject[] projects = getProjects();
 
 		for(int i=0; i<projects.length; i++) {
 			IProject project = (IProject)projects[i];
 			IJavaProject javaProject = JavaCore.create(project);
 			if(javaProject.isOpen()) {
-				MarkerTools.deleteTestCaseMarkers(javaProject);
-				MarkerTools.addTestCaseMarkers(javaProject);
+				JavaProjectFacade javaProjectFacade = new JavaProjectFacade(javaProject);
+				(javaProjectFacade).deleteTestCaseMarkers();
+				javaProjectFacade.addTestCaseMarkers();
 			}
 		}
-		
-		/*
-		LogHandler.getInstance().handleInfoLog("Informiere Decorator");
-		try {
-			IDecoratorManager decoratorManager = MoreUnitPlugin.getDefault().getWorkbench().getDecoratorManager();
-			decoratorManager.setEnabled(MagicNumbers.TEST_CASE_DECORATOR, true);
-		} catch (CoreException exc) {
-			LogHandler.getInstance().handleExceptionLog(exc);
-		}
-		
-		UnitDecorator unitDecorator = UnitDecorator.getUnitDecorator();
-		if(unitDecorator != null)
-			unitDecorator.refreshAll();
-		else
-			LogHandler.getInstance().handleInfoLog("unitDecorator ist null");
-		*/
-		
+	}
+	
+	private IProject[] getProjects() {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot workspaceRoot = workspace.getRoot();
+		return workspaceRoot.getProjects();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -72,3 +60,6 @@ public class AddMarkerAction implements IWorkbenchWindowActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//
