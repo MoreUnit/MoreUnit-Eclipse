@@ -2,7 +2,10 @@ package moreUnit.elements;
 
 import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
+import moreUnit.util.MagicNumbers;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -48,6 +51,38 @@ public class JavaProjectFacade {
 		IType[] testCaseListe = hierarchy.getAllSubtypes(testCaseType);
 		return testCaseListe;
 	}
+	
+	public void deleteTestCaseMarkers() {
+		try {
+			javaProject.getProject().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addTestCaseMarkers() {
+		if(!javaProject.isOpen())
+			return;
+		
+		try {
+			IType[] testCaseListe = (new JavaProjectFacade(javaProject)).getTestCasesFromJavaProject();
+
+			for(int i=0; i<testCaseListe.length; i++) {
+				IType testCase = testCaseListe[i];
+				(new JavaFileFacade(testCase.getCompilationUnit())).createMarkerForTestedClass();
+			}
+		} catch (JavaModelException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		} catch (CoreException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		} catch (NullPointerException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		}
+	}	
+	
 }
 
 // $Log$
+// Revision 1.1  2006/01/30 21:12:32  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//

@@ -1,19 +1,29 @@
 package moreUnit.elements;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.texteditor.MarkerUtilities;
 
 public class JavaFileFacade {
 	
@@ -132,6 +142,54 @@ public class JavaFileFacade {
 		return false;
 	}
 	
+	public void createMarkerForTestedClass() throws CoreException {
+		IJavaProject javaProject = compilationUnit.getJavaProject();
+		IResource resource= compilationUnit.getUnderlyingResource();
+		if (resource == null)
+			return;
+		if (!resource.getProject().equals(javaProject))
+			return;
+		
+		
+		if(!Flags.isAbstract(getType().getFlags())) {
+			String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName());
+			if(testedClassString == null)
+				return;
+			
+			IType testedClass = javaProject.findType(testedClassString);
+			
+			if(testedClass == null || !testedClass.exists())
+				return;
+			
+			testedClass.getResource().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+
+			IMethod[] testMethoden = getType().getMethods();
+			for(int j=0; j<testMethoden.length; j++) {
+				IMethod methode = testMethoden[j];
+				String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
+				if(testedMethodName != null) {
+					IMethod[] foundTestMethods = testedClass.getMethods();
+					for(int i=0; i<foundTestMethods.length; i++) {
+						IMethod method = foundTestMethods[i];
+						if(method.getElementName().equals(testedMethodName) && method.exists()) {
+							ISourceRange range = method.getNameRange();
+							Map map = new HashMap();
+							map.put(IMarker.CHAR_START, new Integer(range.getOffset()));
+							map.put(IMarker.CHAR_END, new Integer(range.getOffset()));
+							map.put(IMarker.MESSAGE,	"Diese Methode befindet sich im Test");
+		
+							MarkerUtilities.createMarker(testedClass.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private IType getType() {
+		return compilationUnit.findPrimaryType();
+	}
+	
 	private boolean doesTestMethodExist(String testMethodName) {
 		try {
 			IMethod[] vorhandeneTests = compilationUnit.findPrimaryType().getMethods();
@@ -150,6 +208,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.2  2006/01/30 21:12:31  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//
 // Revision 1.1  2006/01/28 15:48:25  gianasista
 // Moved several methods from PluginTools to EditorPartFacade
 //

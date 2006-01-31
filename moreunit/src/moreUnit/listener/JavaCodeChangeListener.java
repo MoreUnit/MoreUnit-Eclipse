@@ -2,7 +2,6 @@ package moreUnit.listener;
 
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
-import moreUnit.util.MarkerTools;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ElementChangedEvent;
@@ -27,7 +26,8 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 	private void handleTypeCompilationUnit(IJavaElement element) {
 		if(isTestCaseChanged(element)) {
 			try {
-				MarkerTools.createMarkerForTestedClass(element.getJavaProject(), ((ICompilationUnit)element).findPrimaryType());
+				JavaFileFacade javaFileFacade = new JavaFileFacade((ICompilationUnit) element);
+				javaFileFacade.createMarkerForTestedClass();
 			} catch (CoreException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			}
@@ -41,6 +41,9 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/30 21:12:32  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//
 // Revision 1.2  2006/01/19 21:39:44  gianasista
 // Added CVS-commit-logging to all java-files
 //
