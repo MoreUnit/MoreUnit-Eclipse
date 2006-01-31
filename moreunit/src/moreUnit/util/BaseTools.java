@@ -4,12 +4,19 @@
  */
 package moreUnit.util;
 
+import moreUnit.log.LogHandler;
+
 import org.eclipse.core.resources.IFile;
 
 
 public class BaseTools {
 	
 	public static String getTestmethodNameFromMethodName(String methodName) {
+		if(methodName == null || methodName.length() == 0) {
+			LogHandler.getInstance().handleWarnLog("Methodname is null or has length of 0");
+			return MagicNumbers.EMPTY_STRING;
+		}
+		
 		String erstesZeichen = String.valueOf(methodName.charAt(0));
 		methodName = methodName.replaceFirst(erstesZeichen, erstesZeichen.toUpperCase());
 		
@@ -19,14 +26,14 @@ public class BaseTools {
 	}
 
 	public static String getTestedClass(String testCaseClass) {
-		if(!testCaseClass.endsWith(MagicNumbers.TEST_CASE_SUFFIX))
+		if(testCaseClass == null || testCaseClass.length() < 4 || !testCaseClass.endsWith(MagicNumbers.TEST_CASE_SUFFIX))
 			return null;
 
 		return testCaseClass.substring(0, testCaseClass.length()-4);
 	}
 	
 	public static String getTestedMethod(String testMethodName) {
-		if(!testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX))
+		if(testMethodName == null || !testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX))
 			return null;
 		
 		char erstesZeichen = testMethodName.charAt(4);
@@ -43,3 +50,6 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/19 21:38:32  gianasista
+// Added CVS-commit-logging to all java-files
+//
