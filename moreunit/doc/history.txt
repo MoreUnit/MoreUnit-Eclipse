@@ -1,3 +1,7 @@
+2006-02-03:
+
+	- Tests fuer JavaFileFacade fertiggemacht
+
 2006-02-01:
 
 	- Neue Testmethode für createTestCase in JavaFileFacade
