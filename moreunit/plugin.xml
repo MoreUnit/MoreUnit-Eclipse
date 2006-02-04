@@ -148,4 +148,73 @@
 			class="moreUnit.preferences.MoreUnitPreferencePage">
 		</page>
 	</extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+		<renameParticipant id="moreunit.renameMethodParticipant"
+			name="MoreUnitRenameMethodParticipant"
+			class="moreUnit.refactoring.RenameMethodParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.IMethod"/>
+				</with>
+			</enablement>
+		</renameParticipant>
+	</extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+		<renameParticipant id="moreunit.renameClassParticipant"
+			name="MoreUnitMethodClassParticipant"
+			class="moreUnit.refactoring.RenameClassParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+				</with>
+			</enablement>
+		</renameParticipant>
+	</extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
+		<moveParticipant id="moreunit.moveMethodParticipant"
+			name="MoreUnitMethodMethodParticipant"
+			class="moreUnit.refactoring.MoveMethodParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.IMethod"/>
+				</with>
+			</enablement>
+		</moveParticipant>
+	</extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
+		<moveParticipant id="moreunit.moveClassParticipant"
+			name="MoreUnitMethodMethodParticipant"
+			class="moreUnit.refactoring.MoveClassParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+				</with>
+			</enablement>
+		</moveParticipant>
+	</extension>
+	
 </plugin>
