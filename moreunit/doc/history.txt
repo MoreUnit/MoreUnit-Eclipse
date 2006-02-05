@@ -1,3 +1,7 @@
+2006-02-05:
+
+	- Weiterarbeit an Refactorings
+
 2006-02-04:
 
 	- Klassen eingebaut die auf Refactorings hören (Move & Rename von Klassen & Methoden)
