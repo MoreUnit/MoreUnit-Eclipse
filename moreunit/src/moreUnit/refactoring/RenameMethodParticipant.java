@@ -1,7 +1,5 @@
 package moreUnit.refactoring;
 
-import java.lang.reflect.InvocationTargetException;
-
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
@@ -15,8 +13,7 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author vera
@@ -25,11 +22,13 @@ import org.eclipse.swt.widgets.Shell;
 public class RenameMethodParticipant extends RenameParticipant{
 	
 	IMethod method;
+	JavaFileFacade javaFileFacade;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.initialize");
 		method = (IMethod) element;
-		return true;
+		javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
+		return !javaFileFacade.isTestCase();
 	}
 
 	public String getName() {
@@ -44,29 +43,23 @@ public class RenameMethodParticipant extends RenameParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.createChange");
-		String alterName = method.getElementName();
-		String neuerName = getArguments().getNewName();
-		
-		JavaFileFacade javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
+		String methodNameAfterRename = getArguments().getNewName();
 		IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method);
-		String neuerTestMethodName = BaseTools.getTestmethodNameFromMethodName(neuerName);
-		RenameSupport renameSupport = RenameSupport.create(testMethod, neuerTestMethodName, RenameSupport.UPDATE_REFERENCES);
-		//Display default1 = Display.getDefault();
-		Shell shell = new Shell();
-		try {
-			renameSupport.perform(shell, null);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		if(testMethod == null)
+			return null;
+		
+		String testMethodNameAfterRename = BaseTools.getTestmethodNameFromMethodName(methodNameAfterRename);
+		RenameSupport renameSupport = RenameSupport.create(testMethod, testMethodNameAfterRename, RenameSupport.UPDATE_REFERENCES);
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport));
 		return null;
 	}
 }
 
 // $Log$
+// Revision 1.2  2006/02/05 21:14:34  gianasista
+// First try to delegate refactoring to rename testmethods
+//
 // Revision 1.1  2006/02/04 21:54:27  gianasista
 // Added classes to listen to refactoring (copy and move of classes and methods)
 //
