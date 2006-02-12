@@ -1,3 +1,11 @@
+2006-02-12:
+
+	- Rename Refactorings für Methoden und Klassen funktionieren
+
+2006-02-10:
+
+	- Umbennen von Testmethoden bei Rename-Refactoring klappt jetzt
+
 2006-02-05:
 
 	- Weiterarbeit an Refactorings
