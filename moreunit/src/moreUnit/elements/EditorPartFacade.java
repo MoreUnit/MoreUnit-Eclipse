@@ -29,6 +29,7 @@ public class EditorPartFacade {
 	
 	public EditorPartFacade(IEditorPart editorPart) {
 		this.editorPart = editorPart;
+		//editorPart.getEditorSite().getShell();
 	}
 	
 	public IFile getFile() {
@@ -79,6 +80,9 @@ public class EditorPartFacade {
 
 
 // $Log$
+// Revision 1.3  2006/01/30 21:12:31  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//
 // Revision 1.2  2006/01/28 15:48:25  gianasista
 // Moved several methods from PluginTools to EditorPartFacade
 //
