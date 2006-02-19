@@ -47,9 +47,18 @@ public class BaseTools {
 		String fileNameWithoutExtension = classToTest.getName().replaceFirst(MagicNumbers.STRING_DOT+classToTest.getFileExtension(), MagicNumbers.EMPTY_STRING);
 		return fileNameWithoutExtension+MagicNumbers.TEST_CASE_SUFFIX;
 	}
+	
+	public static String getNameOfTestCaseClass(String classname) {
+		String fileNameWithoutExtension = classname.replaceFirst(".java", MagicNumbers.EMPTY_STRING);
+		return fileNameWithoutExtension + MagicNumbers.TEST_CASE_SUFFIX + ".java";
+		
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/01/31 19:35:35  gianasista
+// Methods are now null-save and have tests.
+//
 // Revision 1.3  2006/01/19 21:38:32  gianasista
 // Added CVS-commit-logging to all java-files
 //
