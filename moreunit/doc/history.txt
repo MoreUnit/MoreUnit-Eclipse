@@ -1,3 +1,9 @@
+2006-02-19:
+
+	- Problem mit Move-Refactoring erneut in Newsgroup geposted
+	- Ersten Rückfrage-Dialog eingebaut, ob Refactoring auf Testklasse angewendet werden soll
+	- Property für Rückfrage-Dialog implementiert
+
 2006-02-12:
 
 	- Rename Refactorings für Methoden und Klassen funktionieren

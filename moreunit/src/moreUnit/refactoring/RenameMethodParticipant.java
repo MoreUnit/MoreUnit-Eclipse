@@ -51,12 +51,28 @@ public class RenameMethodParticipant extends RenameParticipant{
 		
 		String testMethodNameAfterRename = BaseTools.getTestmethodNameFromMethodName(methodNameAfterRename);
 		RenameSupport renameSupport = RenameSupport.create(testMethod, testMethodNameAfterRename, RenameSupport.UPDATE_REFERENCES);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport));
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport, getDialogMessage(testMethod.getElementName(), testMethodNameAfterRename)));
 		return null;
+	}
+	
+	private String getDialogMessage(String originalTestMethod, String renamedTestMethod) {
+		StringBuffer result = new StringBuffer();
+		
+		result.append("moreUnit did find a corresponding testmethod.\n");
+		result.append("Do you wish to rename ");
+		result.append(originalTestMethod);
+		result.append(" to ");
+		result.append(renamedTestMethod);
+		result.append(" either?");
+		
+		return result.toString();
 	}
 }
 
 // $Log$
+// Revision 1.3  2006/02/12 20:50:06  gianasista
+// Rename refactorings completed for testcases and testmethods
+//
 // Revision 1.2  2006/02/05 21:14:34  gianasista
 // First try to delegate refactoring to rename testmethods
 //
