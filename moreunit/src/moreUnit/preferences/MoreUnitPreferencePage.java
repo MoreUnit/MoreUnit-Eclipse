@@ -2,6 +2,7 @@ package moreUnit.preferences;
 
 import moreUnit.MoreUnitPlugin;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
@@ -19,7 +20,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	
 	protected void createFieldEditors() {
 		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(MoreUnitPlugin.JUNIT_PATH_PREFERENCE, "Directory for testcases", 10, getFieldEditorParent());
+		BooleanFieldEditor showDialogField = new BooleanFieldEditor(MoreUnitPlugin.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
 		addField(junitDirPreferenceField);
+		addField(showDialogField);
 	}
 
 	public void init(IWorkbench workbench) {
@@ -28,3 +31,6 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//

@@ -52,13 +52,29 @@ public class RenameClassParticipant extends RenameParticipant{
 		
 		String testcaseNameAfterRename = BaseTools.getNameOfTestCaseClass(classnameAfterRename);
 		RenameSupport renameSupport = RenameSupport.create(testcaseType.getCompilationUnit(), testcaseNameAfterRename, RenameSupport.UPDATE_REFERENCES);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport));
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport, getDialogMessage(testcaseType.getElementName(), testcaseNameAfterRename)));
 		return null;
+	}
+	
+	private String getDialogMessage(String originalTestclass, String renamedTestclass) {
+		StringBuffer result = new StringBuffer();
+		
+		result.append("moreUnit did find a corresponding testcase.\n");
+		result.append("Do you wish to rename ");
+		result.append(originalTestclass);
+		result.append(" to ");
+		result.append(renamedTestclass);
+		result.append(" either?");
+		
+		return result.toString();
 	}
 }
 
 
 // $Log$
+// Revision 1.2  2006/02/12 20:50:06  gianasista
+// Rename refactorings completed for testcases and testmethods
+//
 // Revision 1.1  2006/02/04 21:54:27  gianasista
 // Added classes to listen to refactoring (copy and move of classes and methods)
 //
