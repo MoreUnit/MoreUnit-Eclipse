@@ -147,9 +147,6 @@ public class JavaFileFacade {
 		IResource resource= compilationUnit.getUnderlyingResource();
 		if (resource == null)
 			return;
-		if (!resource.getProject().equals(javaProject))
-			return;
-		
 		
 		if(!Flags.isAbstract(getType().getFlags())) {
 			String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName());
@@ -208,6 +205,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.3  2006/01/31 19:05:54  gianasista
+// Refactored MarkerTools and added methods to corresponding facade classes.
+//
 // Revision 1.2  2006/01/30 21:12:31  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
