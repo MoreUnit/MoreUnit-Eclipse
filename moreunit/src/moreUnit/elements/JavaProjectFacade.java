@@ -7,6 +7,7 @@ import moreUnit.util.MagicNumbers;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -69,7 +70,11 @@ public class JavaProjectFacade {
 
 			for(int i=0; i<testCaseListe.length; i++) {
 				IType testCase = testCaseListe[i];
-				(new JavaFileFacade(testCase.getCompilationUnit())).createMarkerForTestedClass();
+				ICompilationUnit compilationUnit = testCase.getCompilationUnit();
+				if(compilationUnit != null)
+					(new JavaFileFacade(compilationUnit)).createMarkerForTestedClass();
+				else
+					LogHandler.getInstance().handleInfoLog("JavaProjectFacade.addTestCaseMarkers(): CompilatioUnit is null "+testCase.getFullyQualifiedName());
 			}
 		} catch (JavaModelException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
@@ -83,6 +88,9 @@ public class JavaProjectFacade {
 }
 
 // $Log$
+// Revision 1.2  2006/01/31 19:05:54  gianasista
+// Refactored MarkerTools and added methods to corresponding facade classes.
+//
 // Revision 1.1  2006/01/30 21:12:32  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
