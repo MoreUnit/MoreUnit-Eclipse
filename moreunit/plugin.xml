@@ -31,30 +31,22 @@
 	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 	</extension>
-   <extension point="org.eclipse.ui.actionSets">
+   
+      <extension point="org.eclipse.ui.actionSets">
    		<actionSet
    			id="moreUnit.actionSet"
    			label="JOOutside"
    			visible="true">
-   			 <menu
-               	label="moreUnit"
-               	id="moreUnitMenu">
-	            <separator
-	                  name="moreGroup">
-	            </separator>
-	         </menu>
    			<action
    				id="moreUnit.toolbar.DeleteMarkerAction"
    				label="-"
 	   			toolbarPath="JOGroup"
-	   			menubarPath="moreUnitMenu/moreGroup"
    				class="moreUnit.toolbar.DeleteMarkerAction">
    			</action>
    			<action
    				id="moreUnit.toolbar.AddMarkerAction"
    				label="+"
 	   			toolbarPath="JOGroup"
-	   			menubarPath="moreUnitMenu/moreGroup"
    				class="moreUnit.toolbar.AddMarkerAction">
    			</action>
 
@@ -105,7 +97,7 @@
 	<extension point="org.eclipse.ui.ide.markerImageProviders">
 		<imageprovider 
 			markertype="moreUnit.testCase"
-			icon="icons/haeckchen.jpg"
+			icon="icons/classHasTest.gif"
 			id="moreunit.testcaseimageprovider">
 		</imageprovider>
 	</extension>
@@ -121,7 +113,7 @@
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
 		<specification
 			annotationType="moreUnit.testCaseAnnotation"
-			icon="icons/haeckchen.jpg">
+			icon="icons/classHasTest.gif">
 		</specification>
 	</extension>
 

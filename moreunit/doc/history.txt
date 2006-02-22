@@ -1,3 +1,9 @@
+2006-02-22:
+
+	- moreUnit-Menü entfernt
+	- Marker persistent gemacht
+	- Markericon gewechselt
+
 2006-02-19:
 
 	- Problem mit Move-Refactoring erneut in Newsgroup geposted
