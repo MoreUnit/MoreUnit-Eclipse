@@ -112,7 +112,7 @@ public class JavaFileFacade {
 			IMethod[] methodsOfType = getCorrespondingTestCase().getCompilationUnit().findPrimaryType().getMethods();
 			for(int i=0; i<methodsOfType.length; i++) {
 				IMethod testmethod = methodsOfType[i];
-				if(nameOfCorrespondingTestMethod.equals(testmethod.getElementName()))
+				if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
 					return testmethod;
 			}
 		} catch (JavaModelException exc) {
@@ -163,21 +163,25 @@ public class JavaFileFacade {
 			IMethod[] testMethoden = getType().getMethods();
 			for(int j=0; j<testMethoden.length; j++) {
 				IMethod methode = testMethoden[j];
-				String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
-				if(testedMethodName != null) {
-					IMethod[] foundTestMethods = testedClass.getMethods();
-					for(int i=0; i<foundTestMethods.length; i++) {
-						IMethod method = foundTestMethods[i];
-						if(method.getElementName().equals(testedMethodName) && method.exists()) {
-							ISourceRange range = method.getNameRange();
-							Map map = new HashMap();
-							map.put(IMarker.CHAR_START, new Integer(range.getOffset()));
-							map.put(IMarker.CHAR_END, new Integer(range.getOffset()));
-							map.put(IMarker.MESSAGE,	"Diese Methode befindet sich im Test");
-		
-							MarkerUtilities.createMarker(testedClass.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
-						}
-					}
+				createMarkerForTestMethod(testedClass, methode);
+			}
+		}
+	}
+
+	private void createMarkerForTestMethod(IType testedClass, IMethod methode) throws JavaModelException, CoreException {
+		String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
+		if(testedMethodName != null) {
+			IMethod[] foundTestMethods = testedClass.getMethods();
+			for(int i=0; i<foundTestMethods.length; i++) {
+				IMethod method = foundTestMethods[i];
+				if(testedMethodName.startsWith(method.getElementName()) && method.exists()) {
+					ISourceRange range = method.getNameRange();
+					Map map = new HashMap();
+					map.put(IMarker.CHAR_START, new Integer(range.getOffset()));
+					map.put(IMarker.CHAR_END, new Integer(range.getOffset()));
+					map.put(IMarker.MESSAGE,	"Diese Methode befindet sich im Test");
+
+					MarkerUtilities.createMarker(testedClass.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
 				}
 			}
 		}
@@ -205,6 +209,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.4  2006/02/22 21:30:52  gianasista
+// Removed unneccessary if-statement.
+//
 // Revision 1.3  2006/01/31 19:05:54  gianasista
 // Refactored MarkerTools and added methods to corresponding facade classes.
 //
