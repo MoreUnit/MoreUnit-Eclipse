@@ -32,7 +32,8 @@
 		</key>
 	</extension>
    
-      <extension point="org.eclipse.ui.actionSets">
+    <!--
+     <extension point="org.eclipse.ui.actionSets">
    		<actionSet
    			id="moreUnit.actionSet"
    			label="JOOutside"
@@ -52,6 +53,7 @@
 
    		</actionSet>
    </extension>
+   -->
 
    <extension point="org.eclipse.ui.popupMenus">
 	  <viewerContribution
@@ -82,6 +84,22 @@
       	<action id="moreunit.actions.testcreatoraction"
       		label="Generate Test"
       		class="moreUnit.actions.CreateTestMethodHierarchyAction"
+      		menubarPath="additions"/>      		
+      </objectContribution>
+      <objectContribution
+      	id="moreunit.testcreator"
+      	objectClass="org.eclipse.jdt.core.IJavaProject">
+      	<action id="moreUnit.toolbar.DeleteMarkerAction"
+      		label="Delete marker for tested methods"
+      		class="moreUnit.toolbar.DeleteMarkerAction"
+      		menubarPath="additions"/>      		
+      </objectContribution>
+      <objectContribution
+      	id="moreunit.testcreator"
+      	objectClass="org.eclipse.jdt.core.IJavaProject">
+      	<action id="moreUnit.toolbar.AddMarkerAction"
+      		label="Add marker for tested methods"
+      		class="moreUnit.toolbar.AddMarkerAction"
       		menubarPath="additions"/>      		
       </objectContribution>
      </extension>
@@ -141,6 +159,7 @@
 		</page>
 	</extension>
 	
+	<!--
 	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
 		<renameParticipant id="moreunit.renameMethodParticipant"
 			name="MoreUnitRenameMethodParticipant"
@@ -208,5 +227,6 @@
 			</enablement>
 		</moveParticipant>
 	</extension>
+	-->
 	
 </plugin>

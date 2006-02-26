@@ -1,3 +1,8 @@
+2006-02-26:
+
+	- Testmethoden mit Suffix nach dem Namen werden trotzdem noch als Test erkannt
+	- Toolbar auskommentiert und Einträge für Hinzufügen und Entfernen von Markern ins Menü von Javaprojekten aufgenommen
+
 2006-02-22:
 
 	- moreUnit-Menü entfernt
