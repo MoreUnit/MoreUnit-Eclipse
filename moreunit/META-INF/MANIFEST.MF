@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.eclipse.jdt.launching,
  org.eclipse.ltk.core.refactoring,
- org.eclipse.ltk.ui.refactoring
+ org.eclipse.ltk.ui.refactoring,
+ org.eclipse.ui.workbench.texteditor
 Eclipse-AutoStart: true
