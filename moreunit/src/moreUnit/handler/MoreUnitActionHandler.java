@@ -9,8 +9,10 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * @author vera
@@ -62,6 +64,8 @@ public class MoreUnitActionHandler {
 		if(testKlasse != null) {
 			try {
 				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
+				AbstractTextEditor selectionProvider = (AbstractTextEditor) openedEditor.getEditorSite().getSelectionProvider();
+				//selectionProvider.get
 				jumpToMethodIfPossible(editorPart, openedEditor);
 			} catch (PartInitException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
@@ -84,6 +88,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/01/30 21:12:31  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//
 // Revision 1.8  2006/01/28 15:48:25  gianasista
 // Moved several methods from PluginTools to EditorPartFacade
 //
