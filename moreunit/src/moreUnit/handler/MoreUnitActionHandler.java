@@ -64,7 +64,7 @@ public class MoreUnitActionHandler {
 		if(testKlasse != null) {
 			try {
 				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
-				AbstractTextEditor selectionProvider = (AbstractTextEditor) openedEditor.getEditorSite().getSelectionProvider();
+				//AbstractTextEditor selectionProvider = (AbstractTextEditor) openedEditor.getEditorSite().getSelectionProvider();
 				//selectionProvider.get
 				jumpToMethodIfPossible(editorPart, openedEditor);
 			} catch (PartInitException exc) {
@@ -88,6 +88,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/02/27 19:55:56  gianasista
+// Started hover support
+//
 // Revision 1.9  2006/01/30 21:12:31  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
