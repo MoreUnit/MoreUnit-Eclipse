@@ -1,3 +1,20 @@
+2006-04-02:
+
+	- Testcase-Suffix wird über Preferences eingestellt
+
+2006-03-31:
+
+	- ListDialog geht
+	- Klassen für besseren Dialog gesucht (PopupDialog, AbstractInformationControl, JavaOutlineInformationControl)
+
+2006-03-29:
+
+	- Ersten ListDialog eingebaut (aber leider werden noch keine Methoden angezeigt)
+
+2006-03-28:
+
+	- Start eines Dialogs zur Auswahl der gefundenen Testmethoden (ListDialog)
+
 2006-03-21:
 
 	- Bugfix bei JumpToTestAction
