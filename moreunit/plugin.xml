@@ -159,7 +159,6 @@
 		</page>
 	</extension>
 	
-	<!--
 	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
 		<renameParticipant id="moreunit.renameMethodParticipant"
 			name="MoreUnitRenameMethodParticipant"
@@ -194,6 +193,7 @@
 		</renameParticipant>
 	</extension>
 	
+	<!--
 	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
 		<moveParticipant id="moreunit.moveMethodParticipant"
 			name="MoreUnitMethodMethodParticipant"
