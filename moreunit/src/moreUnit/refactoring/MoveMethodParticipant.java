@@ -14,8 +14,6 @@ import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 import org.eclipse.ltk.core.refactoring.participants.MoveProcessor;
 import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 
-import com.sun.javadoc.Type;
-
 /**
  * @author vera
  * 04.02.2006 22:29:07
@@ -44,7 +42,7 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.createChange");
-		Type targetType = (Type) getArguments().getDestination();
+		//Type targetType = (Type) getArguments().getDestination();
 		
 		IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method);
 		if(testMethod == null)
@@ -59,6 +57,9 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 
 // $Log$
+// Revision 1.2  2006/02/12 20:50:06  gianasista
+// Rename refactorings completed for testcases and testmethods
+//
 // Revision 1.1  2006/02/04 21:54:27  gianasista
 // Added classes to listen to refactoring (copy and move of classes and methods)
 //

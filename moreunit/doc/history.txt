@@ -1,3 +1,7 @@
+2006-04-14:
+
+	- MarkerUpdate wegen Resource-Locks in eigenen Thread ausgelagert 
+
 2006-04-02:
 
 	- Testcase-Suffix wird über Preferences eingestellt
