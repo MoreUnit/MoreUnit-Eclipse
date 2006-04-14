@@ -39,4 +39,20 @@ public class BaseToolsTest extends TestCase {
 		methodName = null;
 		assertNull(BaseTools.getTestedMethod(methodName));
 	}
+
+	public void testGetTestMethodNameAfterRename() {
+		String methodNameBeforeRename = "countMembers";
+		String methodNameAfterRename = "countAllMembers";
+		String testMethodName = "testCountMembersSpecialCase";
+		
+		assertEquals("testCountAllMembersSpecialCase", BaseTools.getTestMethodNameAfterRename(methodNameBeforeRename, methodNameAfterRename, testMethodName));
+		
+		testMethodName = "testCountMembers";
+		assertEquals("testCountAllMembers", BaseTools.getTestMethodNameAfterRename(methodNameBeforeRename, methodNameAfterRename, testMethodName));
+	}
+
+	public void testGetStringWithFirstCharToUpperCase() {
+		String testString = "hello";
+		assertEquals("Hello", BaseTools.getStringWithFirstCharToUpperCase(testString));
+	}
 }

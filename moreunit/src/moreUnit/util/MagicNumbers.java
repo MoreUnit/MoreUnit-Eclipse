@@ -9,7 +9,7 @@ public class MagicNumbers {
 	public static final String TEST_CASE_MARKER = "moreUnit.testCase";
 	public static final String TEST_CASE_DECORATOR = "moreunit.testdecorator";
 	
-	public static final String TEST_CASE_SUFFIX = "Test";
+	//public static final String TEST_CASE_SUFFIX = "Test";
 	public static final String TEST_METHOD_PRAEFIX = "test";
 	
 	public static final String STRING_DOT = ".";
@@ -18,3 +18,6 @@ public class MagicNumbers {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//

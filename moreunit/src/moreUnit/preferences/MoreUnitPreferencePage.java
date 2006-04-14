@@ -19,9 +19,11 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	}
 	
 	protected void createFieldEditors() {
-		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(MoreUnitPlugin.JUNIT_PATH_PREFERENCE, "Directory for testcases", 10, getFieldEditorParent());
+		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(MoreUnitPlugin.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
+		StringFieldEditor testcaseSuffixPreferenceField = new StringFieldEditor(MoreUnitPlugin.PREF_TESTCASE_SUFFIX, "Suffix for testcases", 20, getFieldEditorParent());
 		BooleanFieldEditor showDialogField = new BooleanFieldEditor(MoreUnitPlugin.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
 		addField(junitDirPreferenceField);
+		addField(testcaseSuffixPreferenceField);
 		addField(showDialogField);
 	}
 
@@ -31,6 +33,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/02/19 21:46:45  gianasista
+// Dialog to ask user of refactoring should be performed on corresponding tests (configurable via properties)
+//
 // Revision 1.2  2006/01/19 21:39:44  gianasista
 // Added CVS-commit-logging to all java-files
 //
