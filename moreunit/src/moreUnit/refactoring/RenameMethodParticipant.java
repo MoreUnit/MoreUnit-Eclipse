@@ -2,13 +2,11 @@ package moreUnit.refactoring;
 
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
-import moreUnit.util.BaseTools;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
@@ -49,27 +47,15 @@ public class RenameMethodParticipant extends RenameParticipant{
 		if(testMethod == null)
 			return null;
 		
-		String testMethodNameAfterRename = BaseTools.getTestmethodNameFromMethodName(methodNameAfterRename);
-		RenameSupport renameSupport = RenameSupport.create(testMethod, testMethodNameAfterRename, RenameSupport.UPDATE_REFERENCES);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport, getDialogMessage(testMethod.getElementName(), testMethodNameAfterRename)));
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameDialogRunnable(javaFileFacade, method, methodNameAfterRename));
 		return null;
-	}
-	
-	private String getDialogMessage(String originalTestMethod, String renamedTestMethod) {
-		StringBuffer result = new StringBuffer();
-		
-		result.append("moreUnit did find a corresponding testmethod.\n");
-		result.append("Do you wish to rename ");
-		result.append(originalTestMethod);
-		result.append(" to ");
-		result.append(renamedTestMethod);
-		result.append(" either?");
-		
-		return result.toString();
 	}
 }
 
 // $Log$
+// Revision 1.4  2006/02/19 21:46:21  gianasista
+// *** empty log message ***
+//
 // Revision 1.3  2006/02/12 20:50:06  gianasista
 // Rename refactorings completed for testcases and testmethods
 //

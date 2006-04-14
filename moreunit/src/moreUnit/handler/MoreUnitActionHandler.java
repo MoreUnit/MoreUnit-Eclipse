@@ -9,10 +9,8 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * @author vera
@@ -64,8 +62,6 @@ public class MoreUnitActionHandler {
 		if(testKlasse != null) {
 			try {
 				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
-				//AbstractTextEditor selectionProvider = (AbstractTextEditor) openedEditor.getEditorSite().getSelectionProvider();
-				//selectionProvider.get
 				jumpToMethodIfPossible(editorPart, openedEditor);
 			} catch (PartInitException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
@@ -81,13 +77,16 @@ public class MoreUnitActionHandler {
 		if(method == null)
 			return;
 		
-		IMethod correspondingTestMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition(); 
-		if(correspondingTestMethod != null)
-			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)correspondingTestMethod);
+		IMethod testMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition();
+		if(testMethod != null) 
+			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)testMethod);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2006/03/21 20:59:49  gianasista
+// Bugfix JumpToTest
+//
 // Revision 1.10  2006/02/27 19:55:56  gianasista
 // Started hover support
 //

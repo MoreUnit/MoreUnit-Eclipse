@@ -68,6 +68,9 @@ public class JavaProjectFacade {
 		try {
 			IType[] testCaseListe = (new JavaProjectFacade(javaProject)).getTestCasesFromJavaProject();
 
+			if(testCaseListe == null)
+				return;
+			
 			for(int i=0; i<testCaseListe.length; i++) {
 				IType testCase = testCaseListe[i];
 				ICompilationUnit compilationUnit = testCase.getCompilationUnit();
@@ -88,6 +91,9 @@ public class JavaProjectFacade {
 }
 
 // $Log$
+// Revision 1.3  2006/02/22 21:30:21  gianasista
+// Bugfix: Statement null-save
+//
 // Revision 1.2  2006/01/31 19:05:54  gianasista
 // Refactored MarkerTools and added methods to corresponding facade classes.
 //

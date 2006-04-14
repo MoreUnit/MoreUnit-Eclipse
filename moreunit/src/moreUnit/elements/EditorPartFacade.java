@@ -3,6 +3,8 @@
  */
 package moreUnit.elements;
 
+import java.util.List;
+
 import moreUnit.log.LogHandler;
 
 import org.eclipse.core.resources.IFile;
@@ -76,10 +78,18 @@ public class EditorPartFacade {
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
 		return getJavaFileFacade().getCorrespondingTestMethod(methodUnderCursorPosition);
 	}
+	
+	public List getTestmethodsForMethodUnderCursorPosition() {
+		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
+		return getJavaFileFacade().getCorrespondingTestMethods(methodUnderCursorPosition);
+	}
 }
 
 
 // $Log$
+// Revision 1.4  2006/02/19 21:47:44  gianasista
+// Deleted unnecessary code
+//
 // Revision 1.3  2006/01/30 21:12:31  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //

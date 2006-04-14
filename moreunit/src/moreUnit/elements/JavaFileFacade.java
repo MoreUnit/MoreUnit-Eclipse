@@ -1,8 +1,11 @@
 package moreUnit.elements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
@@ -22,6 +25,9 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
+import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
+import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 
@@ -45,7 +51,7 @@ public class JavaFileFacade {
 
 	public IType getCorrespondingTestCase() {
 		try {
-			String klassenName = compilationUnit.findPrimaryType().getFullyQualifiedName()+MagicNumbers.TEST_CASE_SUFFIX;
+			String klassenName = compilationUnit.findPrimaryType().getFullyQualifiedName()+MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences();
 			return compilationUnit.getJavaProject().findType(klassenName);
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -56,10 +62,16 @@ public class JavaFileFacade {
 	
 	public boolean isTestCase() {
 		String classname = compilationUnit.findPrimaryType().getElementName();
-		return classname.endsWith(MagicNumbers.TEST_CASE_SUFFIX);
+		return classname.endsWith(MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences());
 	}
 	
 	public IType createTestCase() {
+		IJavaProject project = compilationUnit.getJavaProject();
+		System.out.println("CODEGEN_ADD_COMMENTS: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue());
+		System.out.println("CODEGEN_KEYWORD_THIS: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue());
+		System.out.println("CODEGEN_USE_OVERRIDE_ANNOTATION: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_USE_OVERRIDE_ANNOTATION, project)).booleanValue());
+		System.out.println("ORGIMPORTS_IGNORELOWERCASE: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IGNORELOWERCASE, project)).booleanValue());
+		
 		try {
 			String paketName = MagicNumbers.EMPTY_STRING;
 			IPackageDeclaration[] packageDeclarations = compilationUnit.getPackageDeclarations();
@@ -120,6 +132,25 @@ public class JavaFileFacade {
 		}
 		
 		return null;
+	}
+	
+	public List getCorrespondingTestMethods(IMethod method) {
+		List result = new ArrayList();
+		
+		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
+		
+		try {
+			IMethod[] methodsOfType = getCorrespondingTestCase().getCompilationUnit().findPrimaryType().getMethods();
+			for(int i=0; i<methodsOfType.length; i++) {
+				IMethod testmethod = methodsOfType[i];
+				if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
+					result.add(testmethod);
+			}
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+		
+		return result;
 	}
 	
 	public boolean createTestMethodForMethod(IMethod methodToTest) {
@@ -209,6 +240,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.5  2006/02/26 16:53:17  gianasista
+// Test methods can have a suffix and are recognized as a testmethod
+//
 // Revision 1.4  2006/02/22 21:30:52  gianasista
 // Removed unneccessary if-statement.
 //
