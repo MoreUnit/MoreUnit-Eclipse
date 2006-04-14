@@ -7,12 +7,16 @@ import java.util.Map;
 
 import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
+import moreUnit.ui.MarkerUpdateRunnable;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -183,41 +187,27 @@ public class JavaFileFacade {
 			String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName());
 			if(testedClassString == null)
 				return;
-			
+
 			IType testedClass = javaProject.findType(testedClassString);
-			
-			if(testedClass == null || !testedClass.exists())
-				return;
-			
-			testedClass.getResource().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
-
-			IMethod[] testMethoden = getType().getMethods();
-			for(int j=0; j<testMethoden.length; j++) {
-				IMethod methode = testMethoden[j];
-				createMarkerForTestMethod(testedClass, methode);
-			}
+			//IWorkspaceRunnable workspaceRunnable = new MarkerUpdateRunnable(testedClass, getType());
+			//IWorkspace workspace= ResourcesPlugin.getWorkspace();
+			(new Thread(new MarkerUpdateRunnable(testedClass, getType()))).run();
+			//workspace.run(workspaceRunnable, null); 
+//			IType testedClass = javaProject.findType(testedClassString);
+//			
+//			if(testedClass == null || !testedClass.exists())
+//				return;
+//
+//			testedClass.getResource().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+//
+//			IMethod[] testMethoden = getType().getMethods();
+//			for(int j=0; j<testMethoden.length; j++) {
+//				IMethod methode = testMethoden[j];
+//				createMarkerForTestMethod(testedClass, methode);
+//			}
 		}
 	}
 
-	private void createMarkerForTestMethod(IType testedClass, IMethod methode) throws JavaModelException, CoreException {
-		String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
-		if(testedMethodName != null) {
-			IMethod[] foundTestMethods = testedClass.getMethods();
-			for(int i=0; i<foundTestMethods.length; i++) {
-				IMethod method = foundTestMethods[i];
-				if(testedMethodName.startsWith(method.getElementName()) && method.exists()) {
-					ISourceRange range = method.getNameRange();
-					Map map = new HashMap();
-					map.put(IMarker.CHAR_START, new Integer(range.getOffset()));
-					map.put(IMarker.CHAR_END, new Integer(range.getOffset()));
-					map.put(IMarker.MESSAGE,	"Diese Methode befindet sich im Test");
-
-					MarkerUtilities.createMarker(testedClass.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
-				}
-			}
-		}
-	}
-	
 	private IType getType() {
 		return compilationUnit.findPrimaryType();
 	}
@@ -240,6 +230,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.6  2006/04/14 17:14:22  gianasista
+// Refactoring Support with dialog
+//
 // Revision 1.5  2006/02/26 16:53:17  gianasista
 // Test methods can have a suffix and are recognized as a testmethod
 //
