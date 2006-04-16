@@ -1,3 +1,7 @@
+2006-04-16:
+
+	- Verwende Job-API zum Update der Marker um den Fortschritt anzuzeigen
+
 2006-04-14:
 
 	- MarkerUpdate wegen Resource-Locks in eigenen Thread ausgelagert 
