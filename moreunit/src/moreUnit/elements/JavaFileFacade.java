@@ -1,9 +1,7 @@
 package moreUnit.elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
@@ -12,11 +10,7 @@ import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -25,15 +19,11 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
-import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 
 public class JavaFileFacade {
 	
@@ -65,7 +55,11 @@ public class JavaFileFacade {
 	}
 	
 	public boolean isTestCase() {
-		String classname = compilationUnit.findPrimaryType().getElementName();
+		IType primaryType = compilationUnit.findPrimaryType();
+		if(primaryType == null)
+			return false;
+		
+		String classname = primaryType.getElementName();
 		return classname.endsWith(MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences());
 	}
 	
@@ -230,6 +224,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.7  2006/04/14 19:42:38  gianasista
+// MarkerUpdate moved to Thread because of resource locks
+//
 // Revision 1.6  2006/04/14 17:14:22  gianasista
 // Refactoring Support with dialog
 //
