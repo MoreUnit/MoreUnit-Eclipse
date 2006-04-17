@@ -1,3 +1,7 @@
+2006-04-17
+
+	- Version 0.4.0 getaggt
+
 2006-04-16:
 
 	- Verwende Job-API zum Update der Marker um den Fortschritt anzuzeigen
