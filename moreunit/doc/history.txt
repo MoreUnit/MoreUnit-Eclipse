@@ -1,3 +1,9 @@
+2006-04-20
+
+	- Bugfix beim Rename einer Methode ohne Test (war nicht nullsicher)
+	- Springen von Test zur getesten Klasse ist nun möglich
+	- Templates für neue Java-Dateien werden bei Erzeugen eines neues Testcase verwendet
+
 2006-04-17
 
 	- Version 0.4.0 getaggt

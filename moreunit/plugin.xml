@@ -73,7 +73,7 @@
          <action
                label="Jump to test"
                definitionId="moreunit.jumptotestaction"
-               class="moreUnit.actions.JumpToTestAction"
+               class="moreUnit.actions.JumpAction"
                menubarPath="additions"
                id="moreunit.actions.jumptotestaction">
          </action>
