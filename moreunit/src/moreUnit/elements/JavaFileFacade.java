@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
 
@@ -54,6 +55,20 @@ public class JavaFileFacade {
 		return null;
 	}
 	
+	public IType getCorrespondingClassUnderTest() {
+		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName());
+		if(testedClassString == null)
+			return null;
+
+		try {
+			return compilationUnit.getJavaProject().findType(testedClassString);
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+		
+		return null;
+	}
+	
 	public boolean isTestCase() {
 		IType primaryType = compilationUnit.findPrimaryType();
 		if(primaryType == null)
@@ -64,12 +79,6 @@ public class JavaFileFacade {
 	}
 	
 	public IType createTestCase() {
-		IJavaProject project = compilationUnit.getJavaProject();
-		System.out.println("CODEGEN_ADD_COMMENTS: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue());
-		System.out.println("CODEGEN_KEYWORD_THIS: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue());
-		System.out.println("CODEGEN_USE_OVERRIDE_ANNOTATION: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_USE_OVERRIDE_ANNOTATION, project)).booleanValue());
-		System.out.println("ORGIMPORTS_IGNORELOWERCASE: "+Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IGNORELOWERCASE, project)).booleanValue());
-		
 		try {
 			String paketName = MagicNumbers.EMPTY_STRING;
 			IPackageDeclaration[] packageDeclarations = compilationUnit.getPackageDeclarations();
@@ -87,17 +96,21 @@ public class JavaFileFacade {
 				IFile file = (IFile) compilationUnit.getUnderlyingResource().getAdapter(IFile.class);
 				String testCaseClassName = BaseTools.getNameOfTestCaseClass(file);
 				StringBuffer contents = new StringBuffer();
-				if(paketName != null && paketName.length() > 0) {
-					contents.append("package " + paketName	+ ";"+MagicNumbers.NEWLINE);
-					contents.append(MagicNumbers.NEWLINE);
-				}
 				contents.append("import junit.framework.TestCase;"+MagicNumbers.NEWLINE);
 				contents.append(MagicNumbers.NEWLINE);
 				contents.append("public class " + testCaseClassName + " extends TestCase {"+ MagicNumbers.NEWLINE);
 				contents.append(MagicNumbers.NEWLINE);
 				contents.append("}");
-				ICompilationUnit compilationUnit = packageFragment.createCompilationUnit(testCaseClassName+".java",contents.toString(), true, null);
-				return compilationUnit.findPrimaryType();
+				ICompilationUnit compilationUnitCopy = packageFragment.createCompilationUnit(testCaseClassName+".java",contents.toString(), true, null);
+				try {
+					String fileComment = CodeGeneration.getFileComment(compilationUnitCopy, "\n");
+					String typeComment = CodeGeneration.getTypeComment(compilationUnitCopy, compilationUnitCopy.findPrimaryType().getTypeQualifiedName(), "\n");
+					
+					compilationUnitCopy.getBuffer().setContents(CodeGeneration.getCompilationUnitContent(compilationUnitCopy, fileComment, typeComment, contents.toString(), "\n"));
+				} catch (CoreException exc) {
+					LogHandler.getInstance().handleExceptionLog(exc);
+				}
+				return compilationUnitCopy.findPrimaryType();
 			} else {
 				LogHandler.getInstance().handleInfoLog("junit-Source-Folder konnte nicht gefunden werden.");
 			}
@@ -118,8 +131,12 @@ public class JavaFileFacade {
 	public IMethod getCorrespondingTestMethod(IMethod method) {
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 		
+		IType correspondingTestCase = getCorrespondingTestCase();
+		if(correspondingTestCase == null)
+			return null;
+		
 		try {
-			IMethod[] methodsOfType = getCorrespondingTestCase().getCompilationUnit().findPrimaryType().getMethods();
+			IMethod[] methodsOfType = correspondingTestCase.getCompilationUnit().findPrimaryType().getMethods();
 			for(int i=0; i<methodsOfType.length; i++) {
 				IMethod testmethod = methodsOfType[i];
 				if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
@@ -172,33 +189,17 @@ public class JavaFileFacade {
 	}
 	
 	public void createMarkerForTestedClass() throws CoreException {
-		IJavaProject javaProject = compilationUnit.getJavaProject();
 		IResource resource= compilationUnit.getUnderlyingResource();
 		if (resource == null)
 			return;
 		
 		if(!Flags.isAbstract(getType().getFlags())) {
-			String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName());
-			if(testedClassString == null)
+			
+			IType testedClass = getCorrespondingClassUnderTest();
+			if(testedClass == null)
 				return;
-
-			IType testedClass = javaProject.findType(testedClassString);
-			//IWorkspaceRunnable workspaceRunnable = new MarkerUpdateRunnable(testedClass, getType());
-			//IWorkspace workspace= ResourcesPlugin.getWorkspace();
+			
 			(new Thread(new MarkerUpdateRunnable(testedClass, getType()))).run();
-			//workspace.run(workspaceRunnable, null); 
-//			IType testedClass = javaProject.findType(testedClassString);
-//			
-//			if(testedClass == null || !testedClass.exists())
-//				return;
-//
-//			testedClass.getResource().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
-//
-//			IMethod[] testMethoden = getType().getMethods();
-//			for(int j=0; j<testMethoden.length; j++) {
-//				IMethod methode = testMethoden[j];
-//				createMarkerForTestMethod(testedClass, methode);
-//			}
 		}
 	}
 
@@ -224,6 +225,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.8  2006/04/16 16:57:35  gianasista
+// Bugfix: isTestCase wasn't null-safe yet
+//
 // Revision 1.7  2006/04/14 19:42:38  gianasista
 // MarkerUpdate moved to Thread because of resource locks
 //

@@ -13,9 +13,12 @@ import org.eclipse.core.commands.ExecutionException;
 public class JumpToTestActionHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		MoreUnitActionHandler.getInstance().executeJumpToTestAction(PluginTools.getOpenEditorPart());
+		MoreUnitActionHandler.getInstance().executeJumpAction(PluginTools.getOpenEditorPart());
 		return null;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/01/19 21:39:44  gianasista
+// Added CVS-commit-logging to all java-files
+//

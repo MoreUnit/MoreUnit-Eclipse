@@ -3,6 +3,7 @@ package moreUnit.handler;
 import moreUnit.elements.EditorPartFacade;
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
+import moreUnit.util.BaseTools;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -56,22 +57,44 @@ public class MoreUnitActionHandler {
 			LogHandler.getInstance().handleInfoLog("Es wird keine Testmethode erzeugt");
 	}
 	
-	public void executeJumpToTestAction(IEditorPart editorPart) {
-		IType testKlasse = (new JavaFileFacade(editorPart)).getCorrespondingTestCase();
+	public void executeJumpAction(IEditorPart editorPart) {
+		JavaFileFacade javaFileFacade = new JavaFileFacade(editorPart);
+		if(javaFileFacade.isTestCase())
+			executeJumpFromTest(editorPart, javaFileFacade);
+		else
+			executeJumpToTest(editorPart, javaFileFacade);
+	}
+	
+	private void executeJumpFromTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
+		IType classUnderTest = javaFileFacade.getCorrespondingClassUnderTest();
 		
-		if(testKlasse != null) {
+		if(classUnderTest != null)
 			try {
-				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
-				jumpToMethodIfPossible(editorPart, openedEditor);
+				IEditorPart openedEditorPart = JavaUI.openInEditor(classUnderTest.getParent());
+				jumpToMethodUnderTestIfPossible(classUnderTest, editorPart, openedEditorPart);
 			} catch (PartInitException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			} catch (JavaModelException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			}
-		}
 	}
 	
-	private static void jumpToMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart) {
+	private void executeJumpToTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
+		IType testKlasse = javaFileFacade.getCorrespondingTestCase();
+		
+		if(testKlasse != null) {
+			try {
+				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
+				jumpToTestMethodIfPossible(editorPart, openedEditor);
+			} catch (PartInitException exc) {
+				LogHandler.getInstance().handleExceptionLog(exc);
+			} catch (JavaModelException exc) {
+				LogHandler.getInstance().handleExceptionLog(exc);
+			}
+		}		
+	}
+	
+	private static void jumpToTestMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart) {
 		EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
 		IMethod method = (oldEditorPartFacade).getMethodUnderCursorPosition();
 		if(method == null)
@@ -81,9 +104,32 @@ public class MoreUnitActionHandler {
 		if(testMethod != null) 
 			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)testMethod);
 	}
+	
+	private static void jumpToMethodUnderTestIfPossible(IType classUnderTest, IEditorPart oldEditorPart, IEditorPart openedEditorPart) throws JavaModelException {
+		EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
+		IMethod methode = (oldEditorPartFacade).getMethodUnderCursorPosition();
+		if(methode == null)
+			return;
+		
+		String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
+		if(testedMethodName != null) {
+			IMethod[] foundTestMethods = classUnderTest.getMethods();
+			for(int i=0; i<foundTestMethods.length; i++) {
+				IMethod method = foundTestMethods[i];
+				if(testedMethodName.startsWith(method.getElementName()) && method.exists()) {
+					JavaUI.revealInEditor(openedEditorPart, (IJavaElement)method);
+					return;
+				}
+			}
+		}
+
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2006/04/14 17:14:22  gianasista
+// Refactoring Support with dialog
+//
 // Revision 1.11  2006/03/21 20:59:49  gianasista
 // Bugfix JumpToTest
 //
