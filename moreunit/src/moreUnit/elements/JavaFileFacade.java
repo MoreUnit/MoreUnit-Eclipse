@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 
 public class JavaFileFacade {
 	
@@ -199,7 +200,7 @@ public class JavaFileFacade {
 			if(testedClass == null)
 				return;
 			
-			(new Thread(new MarkerUpdateRunnable(testedClass, getType()))).run();
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new MarkerUpdateRunnable(testedClass, getType()));
 		}
 	}
 
@@ -225,6 +226,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.9  2006/04/21 05:56:39  gianasista
+// Feature: Jump from testcase back to class under test
+//
 // Revision 1.8  2006/04/16 16:57:35  gianasista
 // Bugfix: isTestCase wasn't null-safe yet
 //
