@@ -1,6 +1,7 @@
 package moreUnit;
 
 import moreUnit.listener.JavaCodeChangeListener;
+import moreUnit.log.LogHandler;
 
 import org.eclipse.ui.plugin.*;
 import org.eclipse.jdt.core.JavaCore;
@@ -54,6 +55,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 	 * Returns the shared instance.
 	 */
 	public static MoreUnitPlugin getDefault() {
+		if(plugin == null)
+			LogHandler.getInstance().handleWarnLog("MoreUnitPlugin.getDefault() is null!");
+		
 		return plugin;
 	}
 
@@ -82,6 +86,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/04/14 17:11:56  gianasista
+// Suffix for testcasename ist configurable (+Tests)
+//
 // Revision 1.4  2006/02/19 21:48:47  gianasista
 // Dialog to ask user of refactoring should be performed on corresponding tests (configurable via properties)
 //
