@@ -15,8 +15,9 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 
 /**
+ * JavaProjectFacade offers easy access to {@link IJavaProject}
+ * 
  * @author vera
- *
  * 30.01.2006 20:30:54
  */
 public class JavaProjectFacade {
@@ -91,6 +92,9 @@ public class JavaProjectFacade {
 }
 
 // $Log$
+// Revision 1.4  2006/04/14 17:14:22  gianasista
+// Refactoring Support with dialog
+//
 // Revision 1.3  2006/02/22 21:30:21  gianasista
 // Bugfix: Statement null-save
 //

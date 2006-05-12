@@ -21,8 +21,9 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
  * @author vera
- *
  * 25.01.2006 21:50:37
+ * 
+ * EditorPartFacade offers easy access to {@link IEditorPart}	
  */
 public class EditorPartFacade {
 	
@@ -31,7 +32,6 @@ public class EditorPartFacade {
 	
 	public EditorPartFacade(IEditorPart editorPart) {
 		this.editorPart = editorPart;
-		//editorPart.getEditorSite().getShell();
 	}
 	
 	public IFile getFile() {
@@ -87,6 +87,9 @@ public class EditorPartFacade {
 
 
 // $Log$
+// Revision 1.5  2006/04/14 17:14:22  gianasista
+// Refactoring Support with dialog
+//
 // Revision 1.4  2006/02/19 21:47:44  gianasista
 // Deleted unnecessary code
 //

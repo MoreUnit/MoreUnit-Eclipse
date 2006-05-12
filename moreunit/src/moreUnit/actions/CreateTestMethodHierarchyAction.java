@@ -10,6 +10,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+/** 
+ * This class delegates the action from the menu in the package explorer
+ * to create a new testmethod.
+ */
 public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 	
 	IWorkbenchPart workbenchPart;
@@ -38,6 +42,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/30 21:12:31  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//
 // Revision 1.2  2006/01/19 21:39:44  gianasista
 // Added CVS-commit-logging to all java-files
 //

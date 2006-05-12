@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.ui.IDecoratorManager;
 
 /**
- * @author vera
- * 01.11.2005
+ * Handles the decoration of java files.
+ * If the class has a testcase a overlay icon is added. 
  */
 public class UnitDecorator extends LabelProvider implements ILightweightLabelDecorator {
 	
@@ -61,6 +61,9 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/01/30 21:12:32  gianasista
+// Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
+//
 // Revision 1.2  2006/01/19 21:39:44  gianasista
 // Added CVS-commit-logging to all java-files
 //

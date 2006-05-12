@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -23,10 +22,15 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.CodeGeneration;
-import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * JavaFileFacade offers easy access to a simple java file within eclipse.
+ * It is identified by a {@link ICompilationUnit}.
+ * 
+ * @author vera
+ */
 public class JavaFileFacade {
 	
 	private ICompilationUnit compilationUnit;
@@ -47,13 +51,25 @@ public class JavaFileFacade {
 
 	public IType getCorrespondingTestCase() {
 		try {
-			String klassenName = compilationUnit.findPrimaryType().getFullyQualifiedName()+MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences();
+			IType primaryType = compilationUnit.findPrimaryType();
+			if(primaryType == null)
+				return null;
+				
+			String klassenName = primaryType.getFullyQualifiedName()+MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences();
 			return compilationUnit.getJavaProject().findType(klassenName);
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
 	
 		return null;
+	}
+	
+	public List<IType> getCorrespondingTestCaseList() {
+		List<IType> resultList = new ArrayList<IType>();
+		
+		// TODO
+		
+		return resultList;
 	}
 	
 	public IType getCorrespondingClassUnderTest() {
@@ -226,6 +242,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.10  2006/04/24 20:15:05  gianasista
+// Creation of marker via asyncExec
+//
 // Revision 1.9  2006/04/21 05:56:39  gianasista
 // Feature: Jump from testcase back to class under test
 //

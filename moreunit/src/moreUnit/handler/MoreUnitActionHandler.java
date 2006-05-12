@@ -14,6 +14,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 
 /**
+ * Handles the actions which get delegates from several action and handler
+ * classes.
+ * 
  * @author vera
  * 25.10.2005
  */
@@ -127,6 +130,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/04/21 05:57:17  gianasista
+// Feature: Jump from testcase back to class under test
+//
 // Revision 1.12  2006/04/14 17:14:22  gianasista
 // Refactoring Support with dialog
 //
