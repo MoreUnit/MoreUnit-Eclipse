@@ -220,7 +220,7 @@ public class JavaFileFacade {
 		}
 	}
 
-	private IType getType() {
+	public IType getType() {
 		return compilationUnit.findPrimaryType();
 	}
 	
@@ -242,6 +242,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.11  2006/05/12 17:52:38  gianasista
+// added comments
+//
 // Revision 1.10  2006/04/24 20:15:05  gianasista
 // Creation of marker via asyncExec
 //

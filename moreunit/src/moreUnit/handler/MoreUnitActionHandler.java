@@ -4,6 +4,8 @@ import moreUnit.elements.EditorPartFacade;
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
+import moreUnit.wizards.NewClassWizard;
+import moreUnit.wizards.NewTestCaseWizard;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -70,7 +72,9 @@ public class MoreUnitActionHandler {
 	
 	private void executeJumpFromTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
 		IType classUnderTest = javaFileFacade.getCorrespondingClassUnderTest();
-		
+		if (classUnderTest == null) {
+			classUnderTest = new NewClassWizard(javaFileFacade.getType()).open();
+		}
 		if(classUnderTest != null)
 			try {
 				IEditorPart openedEditorPart = JavaUI.openInEditor(classUnderTest.getParent());
@@ -84,7 +88,9 @@ public class MoreUnitActionHandler {
 	
 	private void executeJumpToTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
 		IType testKlasse = javaFileFacade.getCorrespondingTestCase();
-		
+		if (testKlasse == null) {
+			testKlasse = new NewTestCaseWizard(javaFileFacade.getType()).open();
+		}
 		if(testKlasse != null) {
 			try {
 				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
@@ -130,6 +136,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2006/05/12 17:53:07  gianasista
+// added comments
+//
 // Revision 1.13  2006/04/21 05:57:17  gianasista
 // Feature: Jump from testcase back to class under test
 //
