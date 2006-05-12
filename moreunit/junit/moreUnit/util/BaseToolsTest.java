@@ -54,5 +54,8 @@ public class BaseToolsTest extends TestCase {
 	public void testGetStringWithFirstCharToUpperCase() {
 		String testString = "hello";
 		assertEquals("Hello", BaseTools.getStringWithFirstCharToUpperCase(testString));
+		
+		assertEquals(null, BaseTools.getStringWithFirstCharToUpperCase(null));
+		assertEquals("", BaseTools.getStringWithFirstCharToUpperCase(""));
 	}
 }
