@@ -2,6 +2,7 @@ package moreUnit;
 
 import moreUnit.listener.JavaCodeChangeListener;
 import moreUnit.log.LogHandler;
+import moreUnit.preferences.PreferenceConstants;
 
 import org.eclipse.ui.plugin.*;
 import org.eclipse.jdt.core.JavaCore;
@@ -41,6 +42,12 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 		preferenceStore.setDefault(PREF_JUNIT_PATH, PREF_JUNIT_PATH_DEFAULT);
 		preferenceStore.setDefault(PREF_TESTCASE_SUFFIX, PREF_TESTCASE_SUFFIX_DEFAULT);
 		preferenceStore.setDefault(SHOW_REFACTORING_DIALOG, true);
+		
+		preferenceStore.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
+		preferenceStore.setDefault(PreferenceConstants.SUFFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
+		preferenceStore.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
+		preferenceStore.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
+		preferenceStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
 	}
 
 	/**
@@ -86,6 +93,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/04/30 10:20:31  gianasista
+// getDefault was not null-safe
+//
 // Revision 1.5  2006/04/14 17:11:56  gianasista
 // Suffix for testcasename ist configurable (+Tests)
 //
