@@ -48,4 +48,4 @@ public class Preferences {
 
 }
 
-// $LOG$
+// $Log$
