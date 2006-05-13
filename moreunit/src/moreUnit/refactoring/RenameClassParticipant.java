@@ -59,12 +59,12 @@ public class RenameClassParticipant extends RenameParticipant{
 	private String getDialogMessage(String originalTestclass, String renamedTestclass) {
 		StringBuffer result = new StringBuffer();
 		
-		result.append("moreUnit did find a corresponding testcase.\n");
+		result.append("moreUnit found a corresponding testcase.\n");
 		result.append("Do you wish to rename ");
 		result.append(originalTestclass);
 		result.append(" to ");
 		result.append(renamedTestclass);
-		result.append(" either?");
+		result.append(" as well?");
 		
 		return result.toString();
 	}
@@ -72,6 +72,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log$
+// Revision 1.3  2006/02/19 21:46:33  gianasista
+// Dialog to ask user of refactoring should be performed on corresponding tests (configurable via properties)
+//
 // Revision 1.2  2006/02/12 20:50:06  gianasista
 // Rename refactorings completed for testcases and testmethods
 //
