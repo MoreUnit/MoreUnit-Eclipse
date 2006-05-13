@@ -5,6 +5,18 @@ import moreUnit.MoreUnitPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 public class Preferences {
+	
+	private static Preferences	INSTANCE;
+	
+	public static synchronized Preferences instance() {
+		if (INSTANCE == null) {
+			INSTANCE = new Preferences();
+		}
+		return INSTANCE;
+	}
+	
+	protected Preferences() {
+	}
 
 	public String[] getPrefixes() {
 		return getValues(PreferenceConstants.PREFIXES);
@@ -49,3 +61,6 @@ public class Preferences {
 }
 
 // $Log$
+// Revision 1.2  2006/05/12 22:34:36  channingwalton
+// added class creation wizards if type to jump to does not exist
+//

@@ -57,7 +57,7 @@ public class NewClassWizard extends NewClassyWizard {
 	}
 
 	private String getPotentialTypeName() {
-		Preferences preferences = new Preferences();
+		Preferences preferences = Preferences.instance();
 		String name = getType().getElementName();
 		String[] prefixes = preferences.getPrefixes();
 		for (int i = 0; i < prefixes.length; i++) {
@@ -81,3 +81,6 @@ public class NewClassWizard extends NewClassyWizard {
 }
 
 // $Log$
+// Revision 1.1  2006/05/12 22:33:41  channingwalton
+// added class creation wizards if type to jump to does not exist
+//
