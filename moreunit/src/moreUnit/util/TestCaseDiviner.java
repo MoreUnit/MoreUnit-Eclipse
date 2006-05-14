@@ -36,7 +36,7 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 public class TestCaseDiviner {
 	
 	private ICompilationUnit 		compilationUnit;
-	private Set						matches;
+	private Set<IType>				matches;
 	private IType 					source;
 	
 	private Preferences				preferences;
@@ -52,12 +52,12 @@ public class TestCaseDiviner {
 		}
 	}
 	
-	public Set getMatches() {
+	public Set<IType> getMatches() {
 		return matches;
 	}
 	
 	private void findPotentialTargets() throws CoreException {
-		matches = new LinkedHashSet();
+		matches = new LinkedHashSet<IType>();
 		String[] prefixes = preferences.getPrefixes();
 		for (int i = 0; i < prefixes.length; i++) {
 			matches.addAll(searchFor(getSearchTerm(source, prefixes[i], true)));
@@ -86,14 +86,14 @@ public class TestCaseDiviner {
 		return searchTerm;
 	}
 	
-	private Set searchFor(String typeName) throws JavaModelException, CoreException {
+	private Set<IType> searchFor(String typeName) throws JavaModelException, CoreException {
 		SearchPattern pattern = SearchPattern.createPattern(typeName, IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
 		IJavaSearchScope scope = getSearchScope();
 		SearchEngine searchEngine = new SearchEngine();
-		final Set matches = new TreeSet(new ITypeNameComparator());
+		final Set<IType> matches = new TreeSet(new ITypeNameComparator());
 		SearchRequestor requestor = new SearchRequestor() {
 			public void acceptSearchMatch(SearchMatch match) {
-				matches.add(match.getElement());
+				matches.add((IType)match.getElement());
 			}
 		};
 		searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
@@ -116,3 +116,6 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/13 18:30:24  gianasista
+// Searching for testcases for a class (based on preferences) + Tests
+//
