@@ -1,7 +1,6 @@
 package moreUnit.elements;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -168,8 +167,8 @@ public class JavaFileFacade {
 		return null;
 	}
 	
-	public List getCorrespondingTestMethods(IMethod method) {
-		List result = new ArrayList();
+	public List<IMethod> getCorrespondingTestMethods(IMethod method) {
+		List<IMethod> result = new ArrayList<IMethod>();
 		
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 		
@@ -255,6 +254,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.13  2006/05/14 19:07:55  gianasista
+// JumpToTest uses TypeChoiceDialog
+//
 // Revision 1.12  2006/05/12 22:33:42  channingwalton
 // added class creation wizards if type to jump to does not exist
 //

@@ -2,6 +2,7 @@ package moreUnit.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -90,7 +91,11 @@ public class TestCaseDiviner {
 		SearchPattern pattern = SearchPattern.createPattern(typeName, IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
 		IJavaSearchScope scope = getSearchScope();
 		SearchEngine searchEngine = new SearchEngine();
-		final Set<IType> matches = new TreeSet(new ITypeNameComparator());
+		final Set<IType> matches = new TreeSet<IType>(new Comparator<IType>() {
+			public int compare(IType first, IType second) {
+				return first.getFullyQualifiedName().compareTo(second.getFullyQualifiedName());
+			}
+		});
 		SearchRequestor requestor = new SearchRequestor() {
 			public void acceptSearchMatch(SearchMatch match) {
 				matches.add((IType)match.getElement());
@@ -103,19 +108,22 @@ public class TestCaseDiviner {
 	private IJavaSearchScope getSearchScope() throws JavaModelException {
 		IJavaProject javaProject = compilationUnit.getJavaProject();
 		IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
-		ArrayList sourceFolders = new ArrayList();
+		ArrayList<IPackageFragmentRoot> sourceFolders = new ArrayList<IPackageFragmentRoot>();
 		for (int i = 0; i < entries.length; i++) {
 			IClasspathEntry entry = entries[i];
 			if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
 				sourceFolders.addAll(Arrays.asList(javaProject.findPackageFragmentRoots(entry)));
 			}
 		}
-		return SearchEngine.createJavaSearchScope((IPackageFragmentRoot[]) sourceFolders.toArray(new IPackageFragmentRoot[sourceFolders.size()]));
+		return SearchEngine.createJavaSearchScope(sourceFolders.toArray(new IPackageFragmentRoot[sourceFolders.size()]));
 	}
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/14 19:10:58  gianasista
+// Smaller enhancements
+//
 // Revision 1.1  2006/05/13 18:30:24  gianasista
 // Searching for testcases for a class (based on preferences) + Tests
 //
