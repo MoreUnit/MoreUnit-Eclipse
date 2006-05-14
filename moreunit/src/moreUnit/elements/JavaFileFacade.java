@@ -1,13 +1,17 @@
 package moreUnit.elements;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
+import moreUnit.preferences.Preferences;
 import moreUnit.ui.MarkerUpdateRunnable;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
+import moreUnit.util.TestCaseDiviner;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -35,6 +39,8 @@ public class JavaFileFacade {
 	
 	private ICompilationUnit compilationUnit;
 	private JavaProjectFacade javaProjectFacade;
+	
+	private TestCaseDiviner testCaseDiviner;
 	
 	public JavaFileFacade(ICompilationUnit compilationUnit) {
 		this.compilationUnit = compilationUnit;
@@ -64,12 +70,8 @@ public class JavaFileFacade {
 		return null;
 	}
 	
-	public List<IType> getCorrespondingTestCaseList() {
-		List<IType> resultList = new ArrayList<IType>();
-		
-		// TODO
-		
-		return resultList;
+	public Set<IType> getCorrespondingTestCaseList() {
+		return getTestCaseDiviner().getMatches();
 	}
 	
 	public IType getCorrespondingClassUnderTest() {
@@ -239,9 +241,23 @@ public class JavaFileFacade {
 		return false;
 	}
 	
+	
+	/**
+	 * Getter uses lazy caching. 
+	 */
+	private TestCaseDiviner getTestCaseDiviner() {
+		if(testCaseDiviner == null)
+			testCaseDiviner = new TestCaseDiviner(compilationUnit, Preferences.instance());
+		
+		return testCaseDiviner;
+	}
+	
 }
 
 // $Log$
+// Revision 1.12  2006/05/12 22:33:42  channingwalton
+// added class creation wizards if type to jump to does not exist
+//
 // Revision 1.11  2006/05/12 17:52:38  gianasista
 // added comments
 //

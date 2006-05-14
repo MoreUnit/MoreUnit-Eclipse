@@ -1,8 +1,11 @@
 package moreUnit.handler;
 
+import java.util.Set;
+
 import moreUnit.elements.EditorPartFacade;
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
+import moreUnit.ui.TypeChoiceDialog;
 import moreUnit.util.BaseTools;
 import moreUnit.wizards.NewClassWizard;
 import moreUnit.wizards.NewTestCaseWizard;
@@ -14,6 +17,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
+
 
 /**
  * Handles the actions which get delegates from several action and handler
@@ -87,13 +91,18 @@ public class MoreUnitActionHandler {
 	}
 	
 	private void executeJumpToTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
-		IType testKlasse = javaFileFacade.getCorrespondingTestCase();
-		if (testKlasse == null) {
-			testKlasse = new NewTestCaseWizard(javaFileFacade.getType()).open();
-		}
-		if(testKlasse != null) {
+		Set<IType> testcases = javaFileFacade.getCorrespondingTestCaseList();
+		IType testcaseToJump = null;
+		if(testcases == null || testcases.size() == 0)
+			testcaseToJump = new NewTestCaseWizard(javaFileFacade.getType()).open();
+		else if(testcases.size() == 1)
+			testcaseToJump = (IType) testcases.toArray()[0];
+		else
+			testcaseToJump = new TypeChoiceDialog((IType[]) testcases.toArray(new IType[testcases.size()])).getChoice();
+
+		if(testcaseToJump != null) {
 			try {
-				IEditorPart openedEditor = JavaUI.openInEditor(testKlasse.getParent());
+				IEditorPart openedEditor = JavaUI.openInEditor(testcaseToJump.getParent());
 				jumpToTestMethodIfPossible(editorPart, openedEditor);
 			} catch (PartInitException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
@@ -136,6 +145,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2006/05/12 22:33:42  channingwalton
+// added class creation wizards if type to jump to does not exist
+//
 // Revision 1.14  2006/05/12 17:53:07  gianasista
 // added comments
 //
