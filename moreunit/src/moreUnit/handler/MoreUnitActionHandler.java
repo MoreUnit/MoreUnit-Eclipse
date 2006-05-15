@@ -55,7 +55,7 @@ public class MoreUnitActionHandler {
 			return;
 		}
 		
-		IType typeOfTestCaseClassFromJavaFile = editorPartFacade.getJavaFileFacade().getCorrespondingTestCase();
+		IType typeOfTestCaseClassFromJavaFile = editorPartFacade.getJavaFileFacade().getOneCorrespondingTestCase();
 		
 		if(typeOfTestCaseClassFromJavaFile == null)
 			typeOfTestCaseClassFromJavaFile = editorPartFacade.getJavaFileFacade().createTestCase();
@@ -63,7 +63,7 @@ public class MoreUnitActionHandler {
 		if(typeOfTestCaseClassFromJavaFile != null && typeOfTestCaseClassFromJavaFile.exists())
 			(new JavaFileFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit())).createTestMethodForMethod(method);
 		else
-			LogHandler.getInstance().handleInfoLog("Es wird keine Testmethode erzeugt");
+			LogHandler.getInstance().handleInfoLog("No testmethod is created.");
 	}
 	
 	public void executeJumpAction(IEditorPart editorPart) {
@@ -91,14 +91,9 @@ public class MoreUnitActionHandler {
 	}
 	
 	private void executeJumpToTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
-		Set<IType> testcases = javaFileFacade.getCorrespondingTestCaseList();
-		IType testcaseToJump = null;
-		if(testcases == null || testcases.size() == 0)
+		IType testcaseToJump = javaFileFacade.getOneCorrespondingTestCase();
+		if(testcaseToJump == null)
 			testcaseToJump = new NewTestCaseWizard(javaFileFacade.getType()).open();
-		else if(testcases.size() == 1)
-			testcaseToJump = (IType) testcases.toArray()[0];
-		else
-			testcaseToJump = new TypeChoiceDialog((IType[]) testcases.toArray(new IType[testcases.size()])).getChoice();
 
 		if(testcaseToJump != null) {
 			try {
@@ -145,6 +140,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2006/05/14 19:08:57  gianasista
+// JumpToTest uses TypeChoiceDialog
+//
 // Revision 1.15  2006/05/12 22:33:42  channingwalton
 // added class creation wizards if type to jump to does not exist
 //

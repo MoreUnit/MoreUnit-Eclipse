@@ -1,5 +1,7 @@
 package moreUnit.decorator;
 
+import java.util.Set;
+
 import moreUnit.MoreUnitPlugin;
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.images.ImageDescriptorCenter;
@@ -35,8 +37,8 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 				return ;
 			
 			JavaFileFacade javaFileFacade = new JavaFileFacade(javaTypeOfResource);
-			IType type = javaFileFacade.getCorrespondingTestCase();
-			if(type != null) {
+			Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
+			if(correspondingTestcases != null && correspondingTestcases.size() > 0) {
 				ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
 				decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
 			}
@@ -61,6 +63,9 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/12 17:52:02  gianasista
+// added comments
+//
 // Revision 1.3  2006/01/30 21:12:32  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //

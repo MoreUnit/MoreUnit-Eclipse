@@ -29,7 +29,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 			if(firstElement instanceof IMethod) {
 				IMethod method = (IMethod)firstElement;
 				JavaFileFacade javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
-				IType type = javaFileFacade.getCorrespondingTestCase();
+				IType type = javaFileFacade.getOneCorrespondingTestCase();
 				if(type != null)
 					(new JavaFileFacade(type.getCompilationUnit())).createTestMethodForMethod(method);
 			}
@@ -42,6 +42,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/12 17:51:41  gianasista
+// added comments
+//
 // Revision 1.3  2006/01/30 21:12:31  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
