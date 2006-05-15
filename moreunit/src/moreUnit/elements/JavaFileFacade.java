@@ -8,9 +8,11 @@ import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
 import moreUnit.preferences.Preferences;
 import moreUnit.ui.MarkerUpdateRunnable;
+import moreUnit.ui.TypeChoiceDialog;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
 import moreUnit.util.TestCaseDiviner;
+import moreUnit.wizards.NewTestCaseWizard;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -54,6 +56,9 @@ public class JavaFileFacade {
 		this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
 	}
 
+	/**
+	 * @deprecated 
+	 */
 	public IType getCorrespondingTestCase() {
 		try {
 			IType primaryType = compilationUnit.findPrimaryType();
@@ -67,6 +72,24 @@ public class JavaFileFacade {
 		}
 	
 		return null;
+	}
+	
+	/**
+	 * Returns the corresponding testcase of the javaFileFacade. If there are more
+	 * than one testcases the uses has to make a choice via a dialog. If no test is
+	 * found <code>null</code> is returned.
+	 * 
+	 * @return one of the corresponding testcases
+	 */
+	public IType getOneCorrespondingTestCase() {
+		Set<IType> testcases = getCorrespondingTestCaseList();
+		IType testcaseToJump = null;
+		if(testcases.size() == 1)
+			testcaseToJump = (IType) testcases.toArray()[0];
+		else
+			testcaseToJump = new TypeChoiceDialog((IType[]) testcases.toArray(new IType[testcases.size()])).getChoice();
+		
+		return testcaseToJump;
 	}
 	
 	public Set<IType> getCorrespondingTestCaseList() {
@@ -87,6 +110,7 @@ public class JavaFileFacade {
 		return null;
 	}
 	
+	// TODO not an optimal implementation
 	public boolean isTestCase() {
 		IType primaryType = compilationUnit.findPrimaryType();
 		if(primaryType == null)
@@ -96,6 +120,7 @@ public class JavaFileFacade {
 		return classname.endsWith(MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences());
 	}
 	
+	// TODO doesn't use preferences
 	public IType createTestCase() {
 		try {
 			String paketName = MagicNumbers.EMPTY_STRING;
@@ -146,6 +171,7 @@ public class JavaFileFacade {
 		return javaProjectFacade;
 	}
 	
+	// TODO uses old code getCorrespondingTestCase
 	public IMethod getCorrespondingTestMethod(IMethod method) {
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 		
@@ -254,6 +280,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.14  2006/05/14 22:27:10  channingwalton
+// made use of generics to remove some warnings
+//
 // Revision 1.13  2006/05/14 19:07:55  gianasista
 // JumpToTest uses TypeChoiceDialog
 //
