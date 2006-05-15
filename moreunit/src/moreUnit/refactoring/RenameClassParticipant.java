@@ -42,6 +42,7 @@ public class RenameClassParticipant extends RenameParticipant{
 		return new RefactoringStatus();
 	}
 
+	// TODO all testcases have to be renamed
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.createChange");
 		String classnameAfterRename = getArguments().getNewName();
@@ -72,6 +73,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log$
+// Revision 1.4  2006/05/13 08:26:54  channingwalton
+// corrected the english
+//
 // Revision 1.3  2006/02/19 21:46:33  gianasista
 // Dialog to ask user of refactoring should be performed on corresponding tests (configurable via properties)
 //
