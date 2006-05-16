@@ -1,8 +1,12 @@
 package moreUnit.refactoring;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
+import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -42,19 +46,26 @@ public class RenameClassParticipant extends RenameParticipant{
 		return new RefactoringStatus();
 	}
 
-	// TODO all testcases have to be renamed
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.createChange");
-		String classnameAfterRename = getArguments().getNewName();
-		IType testcaseType = javaFileFacade.getCorrespondingTestCase();
+		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
 		
-		if(testcaseType == null)
+		if(allTestcases == null || allTestcases.size() == 0)
 			return null;
 		
-		String testcaseNameAfterRename = BaseTools.getNameOfTestCaseClass(classnameAfterRename);
-		RenameSupport renameSupport = RenameSupport.create(testcaseType.getCompilationUnit(), testcaseNameAfterRename, RenameSupport.UPDATE_REFERENCES);
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport, getDialogMessage(testcaseType.getElementName(), testcaseNameAfterRename)));
+		for (Iterator iterator = allTestcases.iterator(); iterator.hasNext();) {
+			IType typeToRename = (IType) iterator.next();
+			String testcaseNameAfterRename = getNewTestName(typeToRename);
+			RenameSupport renameSupport = RenameSupport.create(typeToRename.getCompilationUnit(), testcaseNameAfterRename, RenameSupport.UPDATE_REFERENCES);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport, getDialogMessage(typeToRename.getElementName(), testcaseNameAfterRename)));
+		}
 		return null;
+	}
+	
+	private String getNewTestName(IType typeToRename) {
+		String newName = getArguments().getNewName();
+		newName = newName.replaceFirst(MagicNumbers.JAVA_FILE_EXTENSION, MagicNumbers.EMPTY_STRING);
+		return typeToRename.getElementName().replaceFirst(compilationUnit.findPrimaryType().getElementName(), newName).concat(MagicNumbers.JAVA_FILE_EXTENSION);
 	}
 	
 	private String getDialogMessage(String originalTestclass, String renamedTestclass) {
@@ -73,6 +84,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log$
+// Revision 1.5  2006/05/15 19:51:09  gianasista
+// added todo
+//
 // Revision 1.4  2006/05/13 08:26:54  channingwalton
 // corrected the english
 //
