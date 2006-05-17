@@ -1,11 +1,11 @@
 package moreUnit.refactoring;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
-import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.runtime.CoreException;
@@ -13,12 +13,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author vera
@@ -48,42 +47,41 @@ public class RenameClassParticipant extends RenameParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.createChange");
-		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
 		
-		if(allTestcases == null || allTestcases.size() == 0)
+		if (!getArguments().getUpdateReferences()) {
 			return null;
-		
-		for (Iterator iterator = allTestcases.iterator(); iterator.hasNext();) {
-			IType typeToRename = (IType) iterator.next();
-			String testcaseNameAfterRename = getNewTestName(typeToRename);
-			RenameSupport renameSupport = RenameSupport.create(typeToRename.getCompilationUnit(), testcaseNameAfterRename, RenameSupport.UPDATE_REFERENCES);
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new RenameRunnable(renameSupport, getDialogMessage(typeToRename.getElementName(), testcaseNameAfterRename)));
 		}
+		List<Change> changes = new ArrayList<Change>();
+
+		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
+		for (IType typeToRename : allTestcases) {			
+			changes.add(new RenameChange(typeToRename, getNewTestName(typeToRename)));
+		}
+		
+		if (changes.size() == 1) {
+			return (Change) changes.get(0);
+		}
+		
+		if (changes.size() > 0) {
+			return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+		}
+
 		return null;
 	}
 	
 	private String getNewTestName(IType typeToRename) {
 		String newName = getArguments().getNewName();
 		newName = newName.replaceFirst(MagicNumbers.JAVA_FILE_EXTENSION, MagicNumbers.EMPTY_STRING);
-		return typeToRename.getElementName().replaceFirst(compilationUnit.findPrimaryType().getElementName(), newName).concat(MagicNumbers.JAVA_FILE_EXTENSION);
+		return typeToRename.getElementName().replaceFirst(compilationUnit.findPrimaryType().getElementName(), newName);
 	}
 	
-	private String getDialogMessage(String originalTestclass, String renamedTestclass) {
-		StringBuffer result = new StringBuffer();
-		
-		result.append("moreUnit found a corresponding testcase.\n");
-		result.append("Do you wish to rename ");
-		result.append(originalTestclass);
-		result.append(" to ");
-		result.append(renamedTestclass);
-		result.append(" as well?");
-		
-		return result.toString();
-	}
 }
 
 
 // $Log$
+// Revision 1.6  2006/05/16 20:15:02  gianasista
+// removed deprecated method call
+//
 // Revision 1.5  2006/05/15 19:51:09  gianasista
 // added todo
 //
