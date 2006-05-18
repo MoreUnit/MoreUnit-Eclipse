@@ -1,11 +1,8 @@
 package moreUnit.handler;
 
-import java.util.Set;
-
 import moreUnit.elements.EditorPartFacade;
 import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
-import moreUnit.ui.TypeChoiceDialog;
 import moreUnit.util.BaseTools;
 import moreUnit.wizards.NewClassWizard;
 import moreUnit.wizards.NewTestCaseWizard;
@@ -140,6 +137,9 @@ public class MoreUnitActionHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2006/05/15 19:50:42  gianasista
+// removed deprecated method call
+//
 // Revision 1.16  2006/05/14 19:08:57  gianasista
 // JumpToTest uses TypeChoiceDialog
 //

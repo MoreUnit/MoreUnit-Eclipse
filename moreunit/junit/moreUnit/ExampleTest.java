@@ -1,11 +1,9 @@
 package moreUnit;
 
+import junit.framework.TestCase;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IType;
-
-import junit.framework.TestCase;
 
 /**
  * @author vera
@@ -38,6 +36,9 @@ public class ExampleTest extends TestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/01/31 21:34:20  gianasista
+// Extended TestProject to write more tests.
+//
 // Revision 1.3  2006/01/20 21:34:52  gianasista
 // First plugin testcase implemented
 //

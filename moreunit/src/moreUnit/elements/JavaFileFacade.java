@@ -12,7 +12,6 @@ import moreUnit.ui.TypeChoiceDialog;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
 import moreUnit.util.TestCaseDiviner;
-import moreUnit.wizards.NewTestCaseWizard;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -280,6 +279,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.15  2006/05/15 19:49:58  gianasista
+// proceeded integration of switchunit code
+//
 // Revision 1.14  2006/05/14 22:27:10  channingwalton
 // made use of generics to remove some warnings
 //

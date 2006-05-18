@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -166,7 +167,8 @@ public class TestProject {
 		Location location = Platform.getInstallLocation();
 		URL pluginURL = location.getURL();
 		URL jarURL = new URL(pluginURL, file);
-		URL localJarURL = Platform.asLocalURL(jarURL);
+		
+		URL localJarURL = FileLocator.toFileURL(jarURL);
 		
 		return new Path(localJarURL.getPath());
 	}
@@ -190,6 +192,9 @@ public class TestProject {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/01/31 21:34:20  gianasista
+// Extended TestProject to write more tests.
+//
 // Revision 1.3  2006/01/20 21:34:52  gianasista
 // First plugin testcase implemented
 //
