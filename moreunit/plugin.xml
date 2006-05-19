@@ -156,8 +156,26 @@
 		<page id="moreunit.moreunitPreferencePage"
 			name="moreUnit"
 			class="moreUnit.preferences.MoreUnitPreferencePage">
+			<keywordReference id="moreunit.keywordReference.junit"/>
+            <keywordReference id="moreunit.keywordReference.moreunit"/>
+            <keywordReference id="moreunit.keywordReference.test"/>
 		</page>
 	</extension>
+	
+	<extension
+         id="moreunit.keywordReferences"
+         name="moreUnit Preferences Keywords"
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="moreunit.keywordReference.junit"
+            label="JUnit"/>
+      <keyword
+            id="moreunit.keywordReference.moreunit"
+            label="moreUnit"/>
+      <keyword
+            id="moreunit.keywordReference.test"
+            label="Test"/>
+   </extension>
 	
 	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
 		<renameParticipant id="moreunit.renameMethodParticipant"
