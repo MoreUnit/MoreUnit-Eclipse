@@ -81,7 +81,7 @@ public class NameListEditor extends FieldEditor {
 		TreeSet<String> items = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 		items.addAll(Arrays.asList(list.getItems()));
 		items.add(input);
-		list.setItems((String[]) items.toArray(new String[items.size()]));
+		list.setItems(items.toArray(new String[items.size()]));
 		selectionChanged();
 	}
 
