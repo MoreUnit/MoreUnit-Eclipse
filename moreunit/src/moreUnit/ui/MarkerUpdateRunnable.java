@@ -75,7 +75,7 @@ public class MarkerUpdateRunnable implements Runnable {
 					Map<String,Object> map = new HashMap<String, Object>();
 					map.put(IMarker.CHAR_START, range.getOffset());
 					map.put(IMarker.CHAR_END, range.getOffset());
-					map.put(IMarker.MESSAGE,	"Diese Methode befindet sich im Test");
+					map.put(IMarker.MESSAGE,	"This method has a testmethod.");
 
 					MarkerUtilities.createMarker(testedClass.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
 				}
@@ -85,6 +85,9 @@ public class MarkerUpdateRunnable implements Runnable {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/14 22:27:10  channingwalton
+// made use of generics to remove some warnings
+//
 // Revision 1.1  2006/04/14 19:41:16  gianasista
 // MarkerUpdate moved to Thread because of resource locks
 //
