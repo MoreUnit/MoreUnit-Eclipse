@@ -62,7 +62,7 @@ public class JavaFileFacade {
 		IType testcaseToJump = null;
 		if(testcases.size() == 1)
 			testcaseToJump = (IType) testcases.toArray()[0];
-		else
+		else if(testcases.size() > 1)
 			testcaseToJump = new TypeChoiceDialog((IType[]) testcases.toArray(new IType[testcases.size()])).getChoice();
 		
 		return testcaseToJump;
@@ -290,6 +290,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.17  2006/05/20 16:07:42  gianasista
+// Integration of switchunit preferences
+//
 // Revision 1.16  2006/05/18 06:57:48  channingwalton
 // fixed some warnings and deprecated APIs
 //
