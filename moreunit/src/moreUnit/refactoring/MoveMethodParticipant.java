@@ -42,14 +42,16 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.createChange");
-		//Type targetType = (Type) getArguments().getDestination();
-		
+			
+		// TODO not implemented yet because MoveSupport is not part of the API yet
+		/*
 		IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method);
 		if(testMethod == null)
 			return null;
 		
 		MoveProcessor moveProcessor = null;
 		MoveRefactoring moveRefactoring = new MoveRefactoring(moveProcessor);
+		*/
 		return null;
 	}
 
@@ -57,6 +59,9 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 
 // $Log$
+// Revision 1.3  2006/04/14 19:42:09  gianasista
+// *** empty log message ***
+//
 // Revision 1.2  2006/02/12 20:50:06  gianasista
 // Rename refactorings completed for testcases and testmethods
 //

@@ -33,8 +33,13 @@ public class MoveClassParticipant extends MoveParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.createChange");
+		
+		// TODO not implemented yet because MoveSupport is not part of the API yet
 		return null;
 	}
 }
 
 // $Log$
+// Revision 1.1  2006/02/04 21:54:27  gianasista
+// Added classes to listen to refactoring (copy and move of classes and methods)
+//
