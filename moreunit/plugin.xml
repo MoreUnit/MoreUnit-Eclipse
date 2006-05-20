@@ -4,7 +4,7 @@
    <extension point="org.eclipse.ui.commands">
   		 <command
 	            name="JumpToTest"
-	            defaultHandler="moreUnit.handler.JumpToTestActionHandler"
+	            defaultHandler="moreUnit.handler.JumpActionHandler"
 	            description="Jump to test."
 	            categoryId="org.eclipse.jdt.ui.category.source"
 	            id="moreunit.jumptotestaction">
@@ -106,8 +106,8 @@
 
    <extension
       	point="org.eclipse.core.resources.markers"
-      	id="moreUnit.testCase"
-      	name="Besitzt TestCase">
+      	id="testCase"
+      	name="Has TestCase">
       	<super type="org.eclipse.core.resources.textmarker"/>
       	<persistent value="true"/>
     </extension>
