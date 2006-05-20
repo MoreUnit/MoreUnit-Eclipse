@@ -42,7 +42,7 @@ public class JavaFileFacadeTest extends TestCase {
 		IType testHelloType = testProject.createType(junitComPaket, "HelloTest.java", getTestCaseSource1());
 		testJavaFileFacade = new JavaFileFacade(testHelloType.getCompilationUnit());		
 		
-		IType testCaseType = javaFileFacade.getCorrespondingTestCase();
+		IType testCaseType = javaFileFacade.getOneCorrespondingTestCase();
 		
 		assertNotNull(testCaseType);
 		assertEquals("com.HelloTest", testCaseType.getFullyQualifiedName());
@@ -62,6 +62,7 @@ public class JavaFileFacadeTest extends TestCase {
 		assertFalse(javaFileFacade.isTestCase());
 	}
 	
+	/*
 	public void testCreateTestCase() throws CoreException {
 		IPackageFragment comPaket = testProject.createPackage("com");
 		IType wowType = testProject.createType(comPaket, "Wow.java", getJavaFileSource2());
@@ -73,6 +74,7 @@ public class JavaFileFacadeTest extends TestCase {
 		assertNotNull(testCaseType);
 		assertEquals("com.WowTest", testCaseType.getFullyQualifiedName());
 	}
+	*/
 	
 	public void testGetCorrespondingTestMethod() throws CoreException {
 		IPackageFragment comPaket = testProject.createPackage("com");
@@ -81,15 +83,15 @@ public class JavaFileFacadeTest extends TestCase {
 		
 		junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
 		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource3());
+		IType testCaseType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource3());
 
 		IMethod methodGetOneString = musterType.getMethods()[0];
 		IMethod methodGetTwoString = musterType.getMethods()[1];
 		
-		IMethod correspondingTestMethodGetOneString = javaFileFacade.getCorrespondingTestMethod(methodGetOneString);
+		IMethod correspondingTestMethodGetOneString = javaFileFacade.getCorrespondingTestMethod(methodGetOneString, testCaseType);
 		assertNotNull(correspondingTestMethodGetOneString);
 		assertEquals("testGetOneString", correspondingTestMethodGetOneString.getElementName());
-		assertNull(javaFileFacade.getCorrespondingTestMethod(methodGetTwoString));
+		assertNull(javaFileFacade.getCorrespondingTestMethod(methodGetTwoString, testCaseType));
 	}	
 	
 	public void testCreateTestMethodForMethod() throws CoreException {
@@ -105,13 +107,13 @@ public class JavaFileFacadeTest extends TestCase {
 		IMethod methodGetOneString = musterType.getMethods()[0];
 		IMethod methodGetTwoString = musterType.getMethods()[1];
 		
-		IMethod correspondingTestMethodGetOneString = javaFileFacade.getCorrespondingTestMethod(methodGetOneString);
+		IMethod correspondingTestMethodGetOneString = javaFileFacade.getCorrespondingTestMethod(methodGetOneString, testMusterType);
 		assertNotNull(correspondingTestMethodGetOneString);
 		assertEquals("testGetOneString", correspondingTestMethodGetOneString.getElementName());
-		assertNull(javaFileFacade.getCorrespondingTestMethod(methodGetTwoString));
+		assertNull(javaFileFacade.getCorrespondingTestMethod(methodGetTwoString, testMusterType));
 		
 		testJavaFileFacade.createTestMethodForMethod(methodGetTwoString);
-		IMethod correspondingTestMethodGetTwoString = javaFileFacade.getCorrespondingTestMethod(methodGetTwoString);
+		IMethod correspondingTestMethodGetTwoString = javaFileFacade.getCorrespondingTestMethod(methodGetTwoString, testMusterType);
 		assertEquals(2, testMusterType.getMethods().length);
 		assertNotNull(correspondingTestMethodGetTwoString);
 		assertEquals("testGetTwoString", correspondingTestMethodGetTwoString.getElementName());
@@ -176,6 +178,9 @@ public class JavaFileFacadeTest extends TestCase {
 }
 
 // $Log$
+// Revision 1.3  2006/02/03 21:40:19  gianasista
+// Completed tests for JavaFileFacade
+//
 // Revision 1.2  2006/02/01 20:57:39  gianasista
 // New testmethod for createTestCase
 //

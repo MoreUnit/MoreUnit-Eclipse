@@ -20,13 +20,10 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	
 	protected void createFieldEditors() {
 		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(MoreUnitPlugin.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
-		StringFieldEditor testcaseSuffixPreferenceField = new StringFieldEditor(MoreUnitPlugin.PREF_TESTCASE_SUFFIX, "Suffix for testcases", 20, getFieldEditorParent());
 		BooleanFieldEditor showDialogField = new BooleanFieldEditor(MoreUnitPlugin.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
 		addField(junitDirPreferenceField);
-		addField(testcaseSuffixPreferenceField);
 		addField(showDialogField);
 		
-		//StringFieldEditor packagePrefixFieldEditor = new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent());
 		addField(new NameListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
 		addField(new NameListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
 		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
@@ -40,6 +37,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/12 17:53:41  gianasista
+// started extended preferences (Lists of testcase prefixes, suffixes)
+//
 // Revision 1.4  2006/04/14 17:11:56  gianasista
 // Suffix for testcasename ist configurable (+Tests)
 //

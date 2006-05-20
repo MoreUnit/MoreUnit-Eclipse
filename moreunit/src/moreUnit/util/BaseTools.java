@@ -4,10 +4,7 @@
  */
 package moreUnit.util;
 
-import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
-
-import org.eclipse.core.resources.IFile;
 
 
 public class BaseTools {
@@ -84,20 +81,33 @@ public class BaseTools {
 	}
 
 	/**
-	 * This method identifies the name of the class under test for
-	 * a given name of a testcase.<br>
-	 * Example (with "Test" configured as testcase suffix):<br>
-	 * HelloWorldTest: HelloWorld
+	 * This method tries to find out the name of the class which is under test
+	 * by the name of a given testcase.
 	 * 
 	 * @param testCaseClass name of the testcase
-	 * @return name of the corresponding class under test
+	 * @param prefixes		possible prefixes of the testcase
+	 * @param suffixes		possible suffixes of the testcase
+	 * @return name of the class under test
 	 */
-	public static String getTestedClass(String testCaseClass) {
-		if(testCaseClass == null || testCaseClass.length() < 4 || !testCaseClass.endsWith(getTestcaseSuffixFromPreferences()))
+	public static String getTestedClass(String testCaseClass, String[] prefixes, String[] suffixes) {
+		if(testCaseClass == null || testCaseClass.length() <= 1)
 			return null;
-
-		int lengthOfTestcaseSuffix = getTestcaseSuffixFromPreferences().length();
-		return testCaseClass.substring(0, testCaseClass.length()-lengthOfTestcaseSuffix);
+		
+		if(suffixes != null) {
+			for(String suffix: suffixes) {
+				if(testCaseClass.endsWith(suffix))
+					return testCaseClass.substring(0, testCaseClass.length()-suffix.length());
+			}
+		}
+		
+		if(prefixes != null) {
+			for(String prefix: prefixes) {
+				if(testCaseClass.startsWith(prefix))
+					return testCaseClass.replaceFirst(prefix, MagicNumbers.EMPTY_STRING);
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -119,23 +129,12 @@ public class BaseTools {
 		result.append(testMethodName.substring(5));
 		return result.toString();
 	}
-	
-	public static String getNameOfTestCaseClass(IFile classToTest) {
-		String fileNameWithoutExtension = classToTest.getName().replaceFirst(MagicNumbers.STRING_DOT+classToTest.getFileExtension(), MagicNumbers.EMPTY_STRING);
-		return fileNameWithoutExtension+getTestcaseSuffixFromPreferences();
-	}
-	
-	public static String getNameOfTestCaseClass(String classname) {
-		String fileNameWithoutExtension = classname.replaceFirst(".java", MagicNumbers.EMPTY_STRING);
-		return fileNameWithoutExtension + getTestcaseSuffixFromPreferences() + ".java";
-	}
-	
-	private static String getTestcaseSuffixFromPreferences() {
-		return MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences();
-	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/12 17:54:40  gianasista
+// added comments
+//
 // Revision 1.6  2006/04/14 17:11:11  gianasista
 // Suffix for testcasename ist configurable (+Tests)
 //

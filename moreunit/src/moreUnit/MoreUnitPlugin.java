@@ -17,8 +17,6 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 	
 	public static final String PREF_JUNIT_PATH = "junit_path";
 	public static final String PREF_JUNIT_PATH_DEFAULT = "junit";
-	public static final String PREF_TESTCASE_SUFFIX = "testcase_suffix";
-	public static final String PREF_TESTCASE_SUFFIX_DEFAULT = "Test";
 	public static final String SHOW_REFACTORING_DIALOG = "show_refactoring_dialog";
 
 	//The shared instance.
@@ -40,7 +38,6 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 		
 		IPreferenceStore preferenceStore = getPreferenceStore();
 		preferenceStore.setDefault(PREF_JUNIT_PATH, PREF_JUNIT_PATH_DEFAULT);
-		preferenceStore.setDefault(PREF_TESTCASE_SUFFIX, PREF_TESTCASE_SUFFIX_DEFAULT);
 		preferenceStore.setDefault(SHOW_REFACTORING_DIALOG, true);
 		
 		preferenceStore.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
@@ -83,16 +80,15 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 		return getPreferenceStore().getString(PREF_JUNIT_PATH);
 	}
 	
-	public String getTestcaseSuffixFromPreferences() {
-		return getPreferenceStore().getString(PREF_TESTCASE_SUFFIX);
-	}
-	
 	public boolean getShowRefactoringDialogFromPreferences() {
 		return getPreferenceStore().getBoolean(SHOW_REFACTORING_DIALOG);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/12 17:51:11  gianasista
+// Added comments, preferences (Lists of testcase prefixes, suffixes)
+//
 // Revision 1.6  2006/04/30 10:20:31  gianasista
 // getDefault was not null-safe
 //

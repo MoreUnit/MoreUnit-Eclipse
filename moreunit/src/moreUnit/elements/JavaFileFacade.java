@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
 import moreUnit.preferences.Preferences;
 import moreUnit.ui.MarkerUpdateRunnable;
@@ -19,13 +18,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageDeclaration;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -56,24 +51,6 @@ public class JavaFileFacade {
 	}
 
 	/**
-	 * @deprecated 
-	 */
-	public IType getCorrespondingTestCase() {
-		try {
-			IType primaryType = compilationUnit.findPrimaryType();
-			if(primaryType == null)
-				return null;
-				
-			String klassenName = primaryType.getFullyQualifiedName()+MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences();
-			return compilationUnit.getJavaProject().findType(klassenName);
-		} catch (JavaModelException exc) {
-			LogHandler.getInstance().handleExceptionLog(exc);
-		}
-	
-		return null;
-	}
-	
-	/**
 	 * Returns the corresponding testcase of the javaFileFacade. If there are more
 	 * than one testcases the uses has to make a choice via a dialog. If no test is
 	 * found <code>null</code> is returned.
@@ -96,7 +73,7 @@ public class JavaFileFacade {
 	}
 	
 	public IType getCorrespondingClassUnderTest() {
-		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName());
+		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes());
 		if(testedClassString == null)
 			return null;
 
@@ -109,17 +86,37 @@ public class JavaFileFacade {
 		return null;
 	}
 	
-	// TODO not an optimal implementation
+	/**
+	 * This method checks if the name of the class starts with one of
+	 * the prefixes or ends with one of the suffixes defined in the preferences.
+	 *  
+	 * @return <code>true</code> if a prefix is found this classname starts with
+	 *         suffix is found this classname ends, otherwise <code>false</code>
+	 *         is returned
+	 */
 	public boolean isTestCase() {
 		IType primaryType = compilationUnit.findPrimaryType();
 		if(primaryType == null)
 			return false;
 		
 		String classname = primaryType.getElementName();
-		return classname.endsWith(MoreUnitPlugin.getDefault().getTestcaseSuffixFromPreferences());
+		
+		String[] suffixes = Preferences.instance().getSuffixes();
+		for(String suffix: suffixes) {
+			if(classname.endsWith(suffix))
+				return true;
+		}
+		
+		String[] prefixes = Preferences.instance().getPrefixes();
+		for(String prefix: prefixes) {
+			if(classname.startsWith(prefix))
+				return true;
+		}
+		
+		return false;
 	}
 	
-	// TODO doesn't use preferences
+	/*
 	public IType createTestCase() {
 		try {
 			String paketName = MagicNumbers.EMPTY_STRING;
@@ -162,6 +159,7 @@ public class JavaFileFacade {
 			
 		return null;
 	}
+	*/
 	
 	public JavaProjectFacade getJavaProjectFacade() {
 		if(javaProjectFacade == null)
@@ -170,16 +168,14 @@ public class JavaFileFacade {
 		return javaProjectFacade;
 	}
 	
-	// TODO uses old code getCorrespondingTestCase
-	public IMethod getCorrespondingTestMethod(IMethod method) {
+	public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType) {
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 		
-		IType correspondingTestCase = getCorrespondingTestCase();
-		if(correspondingTestCase == null)
+		if(testCaseType == null)
 			return null;
 		
 		try {
-			IMethod[] methodsOfType = correspondingTestCase.getCompilationUnit().findPrimaryType().getMethods();
+			IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
 			for(int i=0; i<methodsOfType.length; i++) {
 				IMethod testmethod = methodsOfType[i];
 				if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
@@ -195,10 +191,25 @@ public class JavaFileFacade {
 	public List<IMethod> getCorrespondingTestMethods(IMethod method) {
 		List<IMethod> result = new ArrayList<IMethod>();
 		
+		Set<IType> allTestCases = getCorrespondingTestCaseList();
+		
+		for(IType testCaseType: allTestCases) {
+			result.addAll(getTestMethodsForTestCase(method, testCaseType));
+		}
+		
+		return result;
+	}
+
+	private List<IMethod> getTestMethodsForTestCase(IMethod method, IType testCaseType) {
+		List<IMethod> result = new ArrayList<IMethod>();
+		
+		if(testCaseType == null)
+			return result;
+		
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 		
 		try {
-			IMethod[] methodsOfType = getCorrespondingTestCase().getCompilationUnit().findPrimaryType().getMethods();
+			IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
 			for(int i=0; i<methodsOfType.length; i++) {
 				IMethod testmethod = methodsOfType[i];
 				if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
@@ -279,6 +290,9 @@ public class JavaFileFacade {
 }
 
 // $Log$
+// Revision 1.16  2006/05/18 06:57:48  channingwalton
+// fixed some warnings and deprecated APIs
+//
 // Revision 1.15  2006/05/15 19:49:58  gianasista
 // proceeded integration of switchunit code
 //

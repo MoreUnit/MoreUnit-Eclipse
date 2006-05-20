@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.ITextSelection;
@@ -76,17 +77,22 @@ public class EditorPartFacade {
 	
 	public IMethod getFirstTestMethodForMethodUnderCursorPosition() {
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-		return getJavaFileFacade().getCorrespondingTestMethod(methodUnderCursorPosition);
+		IType testcaseType = getJavaFileFacade().getOneCorrespondingTestCase();
+		return getJavaFileFacade().getCorrespondingTestMethod(methodUnderCursorPosition, testcaseType);
 	}
 	
 	public List getTestmethodsForMethodUnderCursorPosition() {
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
+		IType testcaseType = getJavaFileFacade().getOneCorrespondingTestCase();
 		return getJavaFileFacade().getCorrespondingTestMethods(methodUnderCursorPosition);
 	}
 }
 
 
 // $Log$
+// Revision 1.6  2006/05/12 17:52:37  gianasista
+// added comments
+//
 // Revision 1.5  2006/04/14 17:14:22  gianasista
 // Refactoring Support with dialog
 //

@@ -17,16 +17,19 @@ public class BaseToolsTest extends TestCase {
 
 	public void testGetTestedClass() {
 		String className = "Eins";
-		assertNull(BaseTools.getTestedClass(className));
+		String[] prefixes = new String[] { "Test" };
+		assertNull(BaseTools.getTestedClass(className, prefixes, new String[0]));
 		
 		className = "EinsTest";
-		assertEquals("Eins", BaseTools.getTestedClass(className));
+		String[] suffixes = new String[] { "Test" };
+		assertEquals("Eins", BaseTools.getTestedClass(className, new String[0], suffixes));
 		
 		className = null;
-		assertNull(BaseTools.getTestedClass(className));
+		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0]));
 		
 		className = "ABC";
-		assertNull(BaseTools.getTestedClass(className));
+		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0]));
+		assertNull(BaseTools.getTestedClass(className, null, null));
 	}
 
 	public void testGetTestedMethod() {
