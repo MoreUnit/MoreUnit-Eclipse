@@ -19,12 +19,15 @@ public class CreateTestMethodActionHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		LogHandler.getInstance().handleInfoLog("CreateTestMethodActionHandler.execute()");
 		 
-		MoreUnitActionHandler.getInstance().executeCreateTestMethodAction(PluginTools.getOpenEditorPart());
+		EditorActionExecutor.getInstance().executeCreateTestMethodAction(PluginTools.getOpenEditorPart());
 		return null;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/12 17:53:07  gianasista
+// added comments
+//
 // Revision 1.2  2006/01/19 21:39:44  gianasista
 // Added CVS-commit-logging to all java-files
 //

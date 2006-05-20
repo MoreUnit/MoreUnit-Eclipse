@@ -1,6 +1,6 @@
 package moreUnit.actions;
 
-import moreUnit.handler.MoreUnitActionHandler;
+import moreUnit.handler.EditorActionExecutor;
 import moreUnit.log.LogHandler;
 
 import org.eclipse.jface.action.IAction;
@@ -22,7 +22,7 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate {
 
 	public void run(IAction action) {
 		LogHandler.getInstance().handleInfoLog("CreateTestMethodEditorAction.run()");
-		MoreUnitActionHandler.getInstance().executeCreateTestMethodAction(editorPart);
+		EditorActionExecutor.getInstance().executeCreateTestMethodAction(editorPart);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -30,6 +30,9 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/12 17:51:41  gianasista
+// added comments
+//
 // Revision 1.3  2006/03/21 20:59:23  gianasista
 // Deleted Info-Log
 //

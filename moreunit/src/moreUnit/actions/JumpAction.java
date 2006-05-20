@@ -1,6 +1,6 @@
 package moreUnit.actions;
 
-import moreUnit.handler.MoreUnitActionHandler;
+import moreUnit.handler.EditorActionExecutor;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -22,7 +22,7 @@ public class JumpAction implements IEditorActionDelegate{
 	}
 
 	public void run(IAction action) {
-		MoreUnitActionHandler.getInstance().executeJumpAction(editorPart);
+		EditorActionExecutor.getInstance().executeJumpAction(editorPart);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -30,6 +30,9 @@ public class JumpAction implements IEditorActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/12 17:51:41  gianasista
+// added comments
+//
 // Revision 1.1  2006/04/21 05:55:24  gianasista
 // Feature: Jump from testcase back to class under test
 //
