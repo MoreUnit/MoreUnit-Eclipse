@@ -16,6 +16,15 @@ public class Preferences {
 	}
 	
 	protected Preferences() {
+		IPreferenceStore preferenceStore = store();
+		preferenceStore.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
+		preferenceStore.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
+		
+		preferenceStore.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
+		preferenceStore.setDefault(PreferenceConstants.SUFFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
+		preferenceStore.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
+		preferenceStore.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
+		preferenceStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
 	}
 	
 	public String getJunitDirectoryFromPreferences() {
@@ -69,6 +78,9 @@ public class Preferences {
 }
 
 // $Log$
+// Revision 1.4  2006/05/21 10:59:31  gianasista
+// moved prefs to Preferences class
+//
 // Revision 1.3  2006/05/13 18:27:37  gianasista
 // Preferences as singelton (protected constructor for testing purposes)
 //
