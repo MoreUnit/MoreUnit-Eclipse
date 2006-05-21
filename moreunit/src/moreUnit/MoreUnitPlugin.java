@@ -15,10 +15,6 @@ import org.osgi.framework.BundleContext;
  */
 public class MoreUnitPlugin extends AbstractUIPlugin {
 	
-	public static final String PREF_JUNIT_PATH = "junit_path";
-	public static final String PREF_JUNIT_PATH_DEFAULT = "junit";
-	public static final String SHOW_REFACTORING_DIALOG = "show_refactoring_dialog";
-
 	//The shared instance.
 	private static MoreUnitPlugin plugin;
 	
@@ -37,8 +33,8 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 		JavaCore.addElementChangedListener(new JavaCodeChangeListener());
 		
 		IPreferenceStore preferenceStore = getPreferenceStore();
-		preferenceStore.setDefault(PREF_JUNIT_PATH, PREF_JUNIT_PATH_DEFAULT);
-		preferenceStore.setDefault(SHOW_REFACTORING_DIALOG, true);
+		preferenceStore.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
+		preferenceStore.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
 		
 		preferenceStore.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
 		preferenceStore.setDefault(PreferenceConstants.SUFFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
@@ -75,17 +71,12 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("moreUnit", path);
 	}
-	
-	public String getJunitDirectoryFromPreferences() {
-		return getPreferenceStore().getString(PREF_JUNIT_PATH);
-	}
-	
-	public boolean getShowRefactoringDialogFromPreferences() {
-		return getPreferenceStore().getBoolean(SHOW_REFACTORING_DIALOG);
-	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/20 16:04:05  gianasista
+// Integration of switchunit preferences
+//
 // Revision 1.7  2006/05/12 17:51:11  gianasista
 // Added comments, preferences (Lists of testcase prefixes, suffixes)
 //

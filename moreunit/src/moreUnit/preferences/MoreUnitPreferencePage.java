@@ -19,8 +19,8 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	}
 	
 	protected void createFieldEditors() {
-		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(MoreUnitPlugin.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
-		BooleanFieldEditor showDialogField = new BooleanFieldEditor(MoreUnitPlugin.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
+		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(PreferenceConstants.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
+		BooleanFieldEditor showDialogField = new BooleanFieldEditor(PreferenceConstants.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
 		addField(junitDirPreferenceField);
 		addField(showDialogField);
 		
@@ -37,6 +37,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/20 16:09:40  gianasista
+// Integration of switchunit preferences
+//
 // Revision 1.5  2006/05/12 17:53:41  gianasista
 // started extended preferences (Lists of testcase prefixes, suffixes)
 //

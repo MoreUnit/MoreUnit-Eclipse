@@ -17,6 +17,14 @@ public class Preferences {
 	
 	protected Preferences() {
 	}
+	
+	public String getJunitDirectoryFromPreferences() {
+		return store().getString(PreferenceConstants.PREF_JUNIT_PATH);
+	}
+	
+	public boolean getShowRefactoringDialogFromPreferences() {
+		return store().getBoolean(PreferenceConstants.SHOW_REFACTORING_DIALOG);
+	}
 
 	public String[] getPrefixes() {
 		return getValues(PreferenceConstants.PREFIXES);
@@ -61,6 +69,9 @@ public class Preferences {
 }
 
 // $Log$
+// Revision 1.3  2006/05/13 18:27:37  gianasista
+// Preferences as singelton (protected constructor for testing purposes)
+//
 // Revision 1.2  2006/05/12 22:34:36  channingwalton
 // added class creation wizards if type to jump to does not exist
 //

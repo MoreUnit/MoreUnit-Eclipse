@@ -2,8 +2,8 @@ package moreUnit.refactoring;
 
 import java.lang.reflect.InvocationTargetException;
 
-import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
+import moreUnit.preferences.Preferences;
 
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,7 +35,7 @@ public class RenameRunnable implements Runnable {
 	}
 	
 	private boolean shouldPerformRefactoringAfterDialoag(Shell shell) {
-		if(!MoreUnitPlugin.getDefault().getShowRefactoringDialogFromPreferences())
+		if(!Preferences.instance().getShowRefactoringDialogFromPreferences())
 			return true;
 		
 		return MessageDialog.openQuestion(shell, "moreUnit Action", dialogMessage);
@@ -43,6 +43,9 @@ public class RenameRunnable implements Runnable {
 }
 
 // $Log$
+// Revision 1.2  2006/02/19 21:46:04  gianasista
+// Dialog to ask user of refactoring should be performed on corresponding tests (configurable via properties)
+//
 // Revision 1.1  2006/02/12 20:50:06  gianasista
 // Rename refactorings completed for testcases and testmethods
 //

@@ -1,7 +1,7 @@
 package moreUnit.elements;
 
-import moreUnit.MoreUnitPlugin;
 import moreUnit.log.LogHandler;
+import moreUnit.preferences.Preferences;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.resources.IResource;
@@ -33,7 +33,7 @@ public class JavaProjectFacade {
 			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
 			for(int i=0; i<packageFragmentRoots.length; i++) {
 				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
-				String junitFolder = MoreUnitPlugin.getDefault().getJunitDirectoryFromPreferences();
+				String junitFolder = Preferences.instance().getJunitDirectoryFromPreferences();
 				if(packageFragmentRoot instanceof IPackageFragmentRoot && packageFragmentRoot.getElementName().equals(junitFolder))
 					return packageFragmentRoot;
 			}
@@ -92,6 +92,9 @@ public class JavaProjectFacade {
 }
 
 // $Log$
+// Revision 1.5  2006/05/12 17:52:38  gianasista
+// added comments
+//
 // Revision 1.4  2006/04/14 17:14:22  gianasista
 // Refactoring Support with dialog
 //
