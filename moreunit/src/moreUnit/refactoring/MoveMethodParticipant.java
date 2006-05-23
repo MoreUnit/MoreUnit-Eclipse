@@ -1,6 +1,5 @@
 package moreUnit.refactoring;
 
-import moreUnit.elements.JavaFileFacade;
 import moreUnit.log.LogHandler;
 
 import org.eclipse.core.runtime.CoreException;
@@ -11,8 +10,6 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
-import org.eclipse.ltk.core.refactoring.participants.MoveProcessor;
-import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 
 /**
  * @author vera
@@ -59,6 +56,9 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 
 // $Log$
+// Revision 1.5  2006/05/23 19:39:50  gianasista
+// Splitted JavaFileFacade into two classes
+//
 // Revision 1.4  2006/05/20 16:10:39  gianasista
 // todo-comment
 //

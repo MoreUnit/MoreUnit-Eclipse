@@ -19,9 +19,6 @@ public class TypeFacadeTest extends TestCase {
 	
 	TestProject testProject;
 
-	JavaFileFacade javaFileFacade;
-	JavaFileFacade testJavaFileFacade;
-	
 	IPackageFragmentRoot junitSourceRoot;
 	
 	protected void setUp() throws Exception {

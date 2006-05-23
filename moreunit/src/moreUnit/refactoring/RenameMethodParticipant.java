@@ -3,7 +3,6 @@ package moreUnit.refactoring;
 import java.util.Set;
 
 import moreUnit.elements.ClassTypeFacade;
-import moreUnit.elements.JavaFileFacade;
 import moreUnit.elements.TypeFacade;
 import moreUnit.log.LogHandler;
 
@@ -68,6 +67,9 @@ public class RenameMethodParticipant extends RenameParticipant{
 }
 
 // $Log$
+// Revision 1.7  2006/05/23 19:39:50  gianasista
+// Splitted JavaFileFacade into two classes
+//
 // Revision 1.6  2006/05/20 16:11:00  gianasista
 // Integration of switchunit preferences
 //
