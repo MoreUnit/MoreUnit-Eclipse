@@ -1,6 +1,8 @@
 package moreUnit.actions;
 
-import moreUnit.elements.JavaFileFacade;
+import moreUnit.elements.ClassTypeFacade;
+import moreUnit.elements.TestCaseTypeFacade;
+import moreUnit.elements.TypeFacade;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -28,10 +30,15 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
 			if(firstElement instanceof IMethod) {
 				IMethod method = (IMethod)firstElement;
-				JavaFileFacade javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
-				IType type = javaFileFacade.getOneCorrespondingTestCase();
-				if(type != null)
-					(new JavaFileFacade(type.getCompilationUnit())).createTestMethodForMethod(method);
+				if(!TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType())) {
+					ClassTypeFacade classTypeFacade = new ClassTypeFacade(method.getCompilationUnit());
+					IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase();
+					if(oneCorrespondingTestCase == null)
+						return;
+					
+					TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(oneCorrespondingTestCase.getCompilationUnit());
+					testCaseTypeFacade.createTestMethodForMethod(method);
+				}
 			}
 		}
 	}
@@ -42,6 +49,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/15 19:48:32  gianasista
+// removed deprecated method call
+//
 // Revision 1.4  2006/05/12 17:51:41  gianasista
 // added comments
 //

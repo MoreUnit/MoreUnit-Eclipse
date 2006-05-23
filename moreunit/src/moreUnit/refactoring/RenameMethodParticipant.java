@@ -2,7 +2,9 @@ package moreUnit.refactoring;
 
 import java.util.Set;
 
+import moreUnit.elements.ClassTypeFacade;
 import moreUnit.elements.JavaFileFacade;
+import moreUnit.elements.TypeFacade;
 import moreUnit.log.LogHandler;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,13 +25,16 @@ import org.eclipse.ui.PlatformUI;
 public class RenameMethodParticipant extends RenameParticipant{
 	
 	IMethod method;
-	JavaFileFacade javaFileFacade;
+	ClassTypeFacade javaFileFacade;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.initialize");
 		method = (IMethod) element;
-		javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
-		return !javaFileFacade.isTestCase();
+		if(TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType()))
+			return false;
+		
+		javaFileFacade = new ClassTypeFacade(method.getCompilationUnit());
+		return true;
 	}
 
 	public String getName() {
@@ -63,6 +68,9 @@ public class RenameMethodParticipant extends RenameParticipant{
 }
 
 // $Log$
+// Revision 1.6  2006/05/20 16:11:00  gianasista
+// Integration of switchunit preferences
+//
 // Revision 1.5  2006/04/14 17:14:22  gianasista
 // Refactoring Support with dialog
 //

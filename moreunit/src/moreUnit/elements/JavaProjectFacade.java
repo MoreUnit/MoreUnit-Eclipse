@@ -76,7 +76,7 @@ public class JavaProjectFacade {
 				IType testCase = testCaseListe[i];
 				ICompilationUnit compilationUnit = testCase.getCompilationUnit();
 				if(compilationUnit != null)
-					(new JavaFileFacade(compilationUnit)).createMarkerForTestedClass();
+					(new TestCaseTypeFacade(compilationUnit)).createMarkerForTestedClass();
 				else
 					LogHandler.getInstance().handleInfoLog("JavaProjectFacade.addTestCaseMarkers(): CompilatioUnit is null "+testCase.getFullyQualifiedName());
 			}
@@ -92,6 +92,9 @@ public class JavaProjectFacade {
 }
 
 // $Log$
+// Revision 1.6  2006/05/21 10:58:07  gianasista
+// moved prefs to Preferences class
+//
 // Revision 1.5  2006/05/12 17:52:38  gianasista
 // added comments
 //

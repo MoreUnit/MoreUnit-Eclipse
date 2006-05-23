@@ -2,7 +2,7 @@ package moreUnit.refactoring;
 
 import java.util.List;
 
-import moreUnit.elements.JavaFileFacade;
+import moreUnit.elements.ClassTypeFacade;
 import moreUnit.elements.MethodContentProvider;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
@@ -19,11 +19,11 @@ import org.eclipse.ui.dialogs.ListDialog;
  * 01.04.2006 13:02:18
  */
 public class RenameDialogRunnable implements Runnable {
-	JavaFileFacade javaFile;
+	ClassTypeFacade javaFile;
 	IMethod renamedMethod;
 	String newMethodName;
 	
-	public RenameDialogRunnable(JavaFileFacade javaFile, IMethod renamedMethod, String newMethodName) {
+	public RenameDialogRunnable(ClassTypeFacade javaFile, IMethod renamedMethod, String newMethodName) {
 		this.javaFile = javaFile;
 		this.renamedMethod = renamedMethod;
 		this.newMethodName = newMethodName;
@@ -58,3 +58,6 @@ public class RenameDialogRunnable implements Runnable {
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/04/14 17:14:22  gianasista
+// Refactoring Support with dialog
+//

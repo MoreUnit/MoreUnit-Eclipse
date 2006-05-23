@@ -3,16 +3,21 @@ package moreUnit.handler;
 import moreUnit.actions.CreateTestMethodEditorAction;
 import moreUnit.actions.CreateTestMethodHierarchyAction;
 import moreUnit.actions.JumpAction;
+import moreUnit.elements.ClassTypeFacade;
 import moreUnit.elements.EditorPartFacade;
-import moreUnit.elements.JavaFileFacade;
+import moreUnit.elements.TestCaseTypeFacade;
+import moreUnit.elements.TypeFacade;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
 import moreUnit.wizards.NewClassWizard;
 import moreUnit.wizards.NewTestCaseWizard;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorPart;
@@ -58,7 +63,7 @@ public class EditorActionExecutor {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 		
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		if(editorPartFacade.getJavaFileFacade().isTestCase()) {
+		if(TypeFacade.isTestCase(editorPartFacade.getCompilationUnit().findPrimaryType())) {
 			LogHandler.getInstance().handleInfoLog("The class is a testcase.");
 			return;
 		}
@@ -68,27 +73,29 @@ public class EditorActionExecutor {
 			LogHandler.getInstance().handleInfoLog("No method found under cursor position");
 			return;
 		}
+		ClassTypeFacade classTypeFacade = new ClassTypeFacade(method.getCompilationUnit());
 		
-		IType typeOfTestCaseClassFromJavaFile = editorPartFacade.getJavaFileFacade().getOneCorrespondingTestCase();
+		IType typeOfTestCaseClassFromJavaFile = classTypeFacade.getOneCorrespondingTestCase();
 		
 		if(typeOfTestCaseClassFromJavaFile == null)
-			typeOfTestCaseClassFromJavaFile = new NewTestCaseWizard(editorPartFacade.getJavaFileFacade().getType()).open();
+			typeOfTestCaseClassFromJavaFile = new NewTestCaseWizard(classTypeFacade.getType()).open();
 		
 		if(typeOfTestCaseClassFromJavaFile != null && typeOfTestCaseClassFromJavaFile.exists())
-			(new JavaFileFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit())).createTestMethodForMethod(method);
+			(new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit())).createTestMethodForMethod(method);
 		else
 			LogHandler.getInstance().handleInfoLog("No testmethod is created.");
 	}
 	
 	public void executeJumpAction(IEditorPart editorPart) {
-		JavaFileFacade javaFileFacade = new JavaFileFacade(editorPart);
-		if(javaFileFacade.isTestCase())
-			executeJumpFromTest(editorPart, javaFileFacade);
+		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
+		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
+		if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
+			executeJumpFromTest(editorPart, new TestCaseTypeFacade(compilationUnit));
 		else
-			executeJumpToTest(editorPart, javaFileFacade);
+			executeJumpToTest(editorPart, new ClassTypeFacade(compilationUnit));
 	}
 	
-	private void executeJumpFromTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
+	private void executeJumpFromTest(IEditorPart editorPart, TestCaseTypeFacade javaFileFacade) {
 		IType classUnderTest = javaFileFacade.getCorrespondingClassUnderTest();
 		if (classUnderTest == null) {
 			classUnderTest = new NewClassWizard(javaFileFacade.getType()).open();
@@ -104,7 +111,7 @@ public class EditorActionExecutor {
 			}
 	}
 	
-	private void executeJumpToTest(IEditorPart editorPart, JavaFileFacade javaFileFacade) {
+	private void executeJumpToTest(IEditorPart editorPart, ClassTypeFacade javaFileFacade) {
 		IType testcaseToJump = javaFileFacade.getOneCorrespondingTestCase();
 		if(testcaseToJump == null)
 			testcaseToJump = new NewTestCaseWizard(javaFileFacade.getType()).open();
@@ -154,6 +161,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/20 16:08:21  gianasista
+// Rename of MoreUnitActionHandler, new name EditorActionExecutor
+//
 // Revision 1.18  2006/05/18 06:57:48  channingwalton
 // fixed some warnings and deprecated APIs
 //

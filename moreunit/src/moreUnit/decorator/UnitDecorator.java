@@ -3,7 +3,8 @@ package moreUnit.decorator;
 import java.util.Set;
 
 import moreUnit.MoreUnitPlugin;
-import moreUnit.elements.JavaFileFacade;
+import moreUnit.elements.ClassTypeFacade;
+import moreUnit.elements.TypeFacade;
 import moreUnit.images.ImageDescriptorCenter;
 import moreUnit.util.MagicNumbers;
 
@@ -36,7 +37,10 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 			if(javaTypeOfResource == null)
 				return ;
 			
-			JavaFileFacade javaFileFacade = new JavaFileFacade(javaTypeOfResource);
+			if(TypeFacade.isTestCase(javaTypeOfResource.findPrimaryType()))
+				return;
+			
+			ClassTypeFacade javaFileFacade = new ClassTypeFacade(javaTypeOfResource);
 			Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
 			if(correspondingTestcases != null && correspondingTestcases.size() > 0) {
 				ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
@@ -63,6 +67,9 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/15 19:49:09  gianasista
+// removed deprecated method call
+//
 // Revision 1.4  2006/05/12 17:52:02  gianasista
 // added comments
 //

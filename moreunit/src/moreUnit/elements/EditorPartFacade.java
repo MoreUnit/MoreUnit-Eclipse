@@ -29,7 +29,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 public class EditorPartFacade {
 	
 	private IEditorPart editorPart;
-	private JavaFileFacade javaFileFacade;	
+	//private JavaFileFacade javaFileFacade;	
 	
 	public EditorPartFacade(IEditorPart editorPart) {
 		this.editorPart = editorPart;
@@ -49,12 +49,12 @@ public class EditorPartFacade {
 		return (ITextSelection) selectionProvider.getSelection();
 	}
 	
-	public JavaFileFacade getJavaFileFacade() {
-		if(javaFileFacade == null)
-			javaFileFacade = new JavaFileFacade(getCompilationUnit());
-		
-		return javaFileFacade;
-	}
+//	public JavaFileFacade getJavaFileFacade() {
+//		if(javaFileFacade == null)
+//			javaFileFacade = new JavaFileFacade(getCompilationUnit());
+//		
+//		return javaFileFacade;
+//	}
 	
 	public IMethod getMethodUnderCursorPosition() {
 		IMethod method = null;
@@ -76,20 +76,33 @@ public class EditorPartFacade {
 	}
 	
 	public IMethod getFirstTestMethodForMethodUnderCursorPosition() {
+		if(TypeFacade.isTestCase(getCompilationUnit().findPrimaryType()))
+			return null;
+		
+		ClassTypeFacade classTypeFacade = new ClassTypeFacade(getCompilationUnit());
+		
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-		IType testcaseType = getJavaFileFacade().getOneCorrespondingTestCase();
-		return getJavaFileFacade().getCorrespondingTestMethod(methodUnderCursorPosition, testcaseType);
+		IType testcaseType = classTypeFacade.getOneCorrespondingTestCase();
+		return classTypeFacade.getCorrespondingTestMethod(methodUnderCursorPosition, testcaseType);
 	}
 	
 	public List getTestmethodsForMethodUnderCursorPosition() {
+		if(TypeFacade.isTestCase(getCompilationUnit().findPrimaryType()))
+			return null;
+		
+		ClassTypeFacade classTypeFacade = new ClassTypeFacade(getCompilationUnit());
+		
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-		IType testcaseType = getJavaFileFacade().getOneCorrespondingTestCase();
-		return getJavaFileFacade().getCorrespondingTestMethods(methodUnderCursorPosition);
+		classTypeFacade.getOneCorrespondingTestCase();
+		return classTypeFacade.getCorrespondingTestMethods(methodUnderCursorPosition);
 	}
 }
 
 
 // $Log$
+// Revision 1.7  2006/05/20 16:05:56  gianasista
+// Integration of switchunit preferences
+//
 // Revision 1.6  2006/05/12 17:52:37  gianasista
 // added comments
 //

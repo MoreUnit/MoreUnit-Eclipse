@@ -21,12 +21,12 @@ import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 public class MoveMethodParticipant extends MoveParticipant{
 	
 	IMethod method;
-	JavaFileFacade javaFileFacade;
+	//JavaFileFacade javaFileFacade;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.initialize");
 		method = (IMethod) element;
-		javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
+		//javaFileFacade = new JavaFileFacade(method.getCompilationUnit());
 		return true;
 	}
 
@@ -59,6 +59,9 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 
 // $Log$
+// Revision 1.4  2006/05/20 16:10:39  gianasista
+// todo-comment
+//
 // Revision 1.3  2006/04/14 19:42:09  gianasista
 // *** empty log message ***
 //

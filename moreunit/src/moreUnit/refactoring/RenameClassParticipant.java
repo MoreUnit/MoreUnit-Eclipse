@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import moreUnit.elements.JavaFileFacade;
+import moreUnit.elements.ClassTypeFacade;
+import moreUnit.elements.TypeFacade;
 import moreUnit.log.LogHandler;
 import moreUnit.util.MagicNumbers;
 
@@ -26,13 +27,16 @@ import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 public class RenameClassParticipant extends RenameParticipant{
 	
 	ICompilationUnit compilationUnit;
-	JavaFileFacade javaFileFacade;
+	ClassTypeFacade javaFileFacade;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.initialize");
 		compilationUnit = (ICompilationUnit) element;
-		javaFileFacade = new JavaFileFacade(compilationUnit);
-		return !javaFileFacade.isTestCase();
+		if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
+			return false;
+		
+		javaFileFacade = new ClassTypeFacade(compilationUnit);
+		return true;
 	}
 
 	public String getName() {
@@ -79,6 +83,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log$
+// Revision 1.7  2006/05/17 19:16:00  channingwalton
+// enhanced rename refactoring to support undo and so that it is included in the preview with other changes.
+//
 // Revision 1.6  2006/05/16 20:15:02  gianasista
 // removed deprecated method call
 //
