@@ -5,7 +5,7 @@ package moreUnit.elements;
  *
  * 23.05.2006 21:13:50
  */
-import moreUnit.TestProject;
+import moreUnit.ProjectTestCase;
 import moreUnit.util.MagicNumbers;
 
 import org.eclipse.core.runtime.CoreException;
@@ -14,33 +14,14 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 
-import junit.framework.TestCase;
-
-public class TestCaseTypeFacadeTest extends TestCase {
+public class TestCaseTypeFacadeTest extends ProjectTestCase {
 	
-	TestProject testProject;
-
-	IPackageFragmentRoot junitSourceRoot;
-	
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		testProject = new TestProject("ProjektJavaFileFacade");
-		testProject.createPackage("com");
-	}
-	
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		
-		testProject.dispose();
-	}
-
 	public void testCreateTestMethodForMethod() throws CoreException {
 		IPackageFragment comPaket = testProject.createPackage("com");
 		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource3());
 		ClassTypeFacade javaFileFacade = new ClassTypeFacade(musterType.getCompilationUnit());
 		
-		junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
+		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
 		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
 		IType testMusterType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource3());
 		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
