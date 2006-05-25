@@ -64,8 +64,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 			if(doesMethodExist(testMethodName))
 				return false;
 			
-			String methodHead = "public void "+testMethodName+"() {"+MagicNumbers.NEWLINE+"}";
-			compilationUnit.findPrimaryType().createMethod(methodHead, null, true, null);
+			compilationUnit.findPrimaryType().createMethod(getTestMethodString(testMethodName), null, true, null);
 			return true;
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -74,6 +73,18 @@ public class TestCaseTypeFacade extends TypeFacade {
 		return false;
 	}
 	
+	private String getTestMethodString(String testMethodName) {
+		if(Preferences.instance().shouldUseJunit4Type()) {
+			StringBuffer result = new StringBuffer();
+			result.append("@Test").append(MagicNumbers.NEWLINE);
+			result.append("public void ").append(testMethodName).append("() {").append(MagicNumbers.NEWLINE).append("}");
+			
+			return result.toString();
+		} else {
+			return "public void "+testMethodName+"() {"+MagicNumbers.NEWLINE+"}";
+		}
+	}
+ 	
 	public void createMarkerForTestedClass() throws CoreException {
 		IResource resource= compilationUnit.getUnderlyingResource();
 		if (resource == null)

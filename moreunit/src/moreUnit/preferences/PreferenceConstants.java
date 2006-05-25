@@ -11,8 +11,10 @@ public interface PreferenceConstants {
 	String	USE_WIZARDS							= "org.moreunit.use_wizards";
 	String	SWITCH_TO_MATCHING_METHOD			= "org.moreunit.switch_to_matching_method";
 	String	TEST_PACKAGE_PREFIX					= "org.moreunit.package_prefix";
+	String JUNIT4_TEST_TYPE						= "org.moreunit.junit4type";
 	String	DEFAULT_QUALIFIERS					= "Test";
 	boolean	DEFAULT_USE_WIZARDS					= true;
 	boolean	DEFAULT_SWITCH_TO_MATCHING_METHOD	= true;
 	String	DEFAULT_TEST_PACKAGE_PREFIX			= "";
+	boolean DEFAULT_JUNIT4_TEST_TYPE				= true;
 }

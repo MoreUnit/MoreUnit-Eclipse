@@ -25,6 +25,7 @@ public class Preferences {
 		preferenceStore.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
 		preferenceStore.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
 		preferenceStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
+		preferenceStore.setDefault(PreferenceConstants.JUNIT4_TEST_TYPE, PreferenceConstants.DEFAULT_JUNIT4_TEST_TYPE);
 	}
 	
 	public String getJunitDirectoryFromPreferences() {
@@ -56,6 +57,13 @@ public class Preferences {
 		}
 		return store().getDefaultBoolean(PreferenceConstants.SWITCH_TO_MATCHING_METHOD);
 	}
+	
+	public boolean shouldUseJunit4Type() {
+		if(store().contains(PreferenceConstants.JUNIT4_TEST_TYPE)) {
+			return store().getBoolean(PreferenceConstants.JUNIT4_TEST_TYPE);
+		}
+		return store().getDefaultBoolean(PreferenceConstants.JUNIT4_TEST_TYPE);
+	}
 
 	public String getTestPackagePrefix() {
 		if (store().contains(PreferenceConstants.TEST_PACKAGE_PREFIX)) {
@@ -78,6 +86,9 @@ public class Preferences {
 }
 
 // $Log$
+// Revision 1.5  2006/05/21 20:43:19  gianasista
+// Moved initialization of preferenceStore
+//
 // Revision 1.4  2006/05/21 10:59:31  gianasista
 // moved prefs to Preferences class
 //

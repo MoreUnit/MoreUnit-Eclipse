@@ -29,6 +29,7 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.USE_WIZARDS, "Use class creation &Wizards", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, "Switch to matching &Methods", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.JUNIT4_TEST_TYPE, "Create JUnit4 methods", getFieldEditorParent()));
 	}
 
 	public void init(IWorkbench workbench) {
@@ -37,6 +38,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/05/21 10:58:44  gianasista
+// moved prefs to Preferences class
+//
 // Revision 1.6  2006/05/20 16:09:40  gianasista
 // Integration of switchunit preferences
 //
