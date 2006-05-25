@@ -6,6 +6,7 @@ package moreUnit.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import moreUnit.elements.TestMethodVisitor;
 import moreUnit.log.LogHandler;
 import moreUnit.util.BaseTools;
 import moreUnit.util.MagicNumbers;
@@ -21,6 +22,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 
 /**
@@ -48,10 +50,9 @@ public class MarkerUpdateRunnable implements Runnable {
 				
 				baseClassType.getResource().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
 
-				IMethod[] testMethoden = testCaseType.getMethods();
-				for(int j=0; j<testMethoden.length; j++) {
-					IMethod methode = testMethoden[j];
-					createMarkerForTestMethod(baseClassType, methode);
+				TestMethodVisitor testMethodVisitor = new TestMethodVisitor(testCaseType);
+				for(MethodDeclaration methodDeclaration : testMethodVisitor.getTestMethods()) {
+					createMarkerForTestMethod(baseClassType, methodDeclaration);
 				}
 			}
 		};
@@ -64,12 +65,11 @@ public class MarkerUpdateRunnable implements Runnable {
 		} 
 	}
 	
-	private void createMarkerForTestMethod(IType testedClass, IMethod methode) throws JavaModelException, CoreException {
-		String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
+	private void createMarkerForTestMethod(IType classTypeUnderTest, MethodDeclaration testMethod) throws JavaModelException, CoreException {
+		String testedMethodName = BaseTools.getTestedMethod(testMethod.getName().getFullyQualifiedName());
 		if(testedMethodName != null) {
-			IMethod[] foundTestMethods = testedClass.getMethods();
-			for(int i=0; i<foundTestMethods.length; i++) {
-				IMethod method = foundTestMethods[i];
+			IMethod[] methodsInClassUnderTest = classTypeUnderTest.getMethods();
+			for(IMethod method: methodsInClassUnderTest) {
 				if(testedMethodName.startsWith(method.getElementName()) && method.exists()) {
 					ISourceRange range = method.getNameRange();
 					Map<String,Object> map = new HashMap<String, Object>();
@@ -77,7 +77,7 @@ public class MarkerUpdateRunnable implements Runnable {
 					map.put(IMarker.CHAR_END, range.getOffset());
 					map.put(IMarker.MESSAGE,	"This method has a testmethod.");
 
-					MarkerUtilities.createMarker(testedClass.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
+					MarkerUtilities.createMarker(classTypeUnderTest.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
 				}
 			}
 		}
@@ -85,6 +85,9 @@ public class MarkerUpdateRunnable implements Runnable {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/20 16:11:36  gianasista
+// translated marker message
+//
 // Revision 1.2  2006/05/14 22:27:10  channingwalton
 // made use of generics to remove some warnings
 //

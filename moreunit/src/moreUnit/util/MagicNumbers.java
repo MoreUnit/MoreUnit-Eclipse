@@ -17,9 +17,14 @@ public class MagicNumbers {
 	public static final String STRING_DOT = ".";
 	public static final String EMPTY_STRING = "";
 	public static final String NEWLINE = "\n";
+	
+	public static final String TEST_ANNOTATION_NAME = "Test";
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/16 20:15:56  gianasista
+// new constant for java file extension
+//
 // Revision 1.3  2006/04/14 17:11:56  gianasista
 // Suffix for testcasename ist configurable (+Tests)
 //
