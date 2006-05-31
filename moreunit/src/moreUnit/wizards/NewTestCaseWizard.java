@@ -1,7 +1,11 @@
 package moreUnit.wizards;
 
+import moreUnit.elements.JavaProjectFacade;
+import moreUnit.preferences.Preferences;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne;
@@ -12,9 +16,13 @@ public class NewTestCaseWizard extends NewClassyWizard {
 
 	private NewTestCaseWizardPageOne	pageOne;
 	private NewTestCaseWizardPageTwo	pageTwo;
+	
+	private IJavaProject project;
 
 	public NewTestCaseWizard(IType element) {
 		super(element);
+		
+		this.project = element.getJavaProject();
 	}
 
 	public void addPages() {
@@ -24,9 +32,15 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		pageTwo.setWizard(this);
 		pageOne.init(new StructuredSelection(getType()));
 		//initialisePackageFragment();
+		pageOne.setJUnit4(Preferences.instance().shouldUseJunit4Type(), true);
 		pageOne.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);
 		addPage(pageOne);
 		addPage(pageTwo);
+	}
+	
+	@Override
+	protected IPackageFragmentRoot getPackageFragmentRootFromSettings() {
+		return (new JavaProjectFacade(project)).getJUnitSourceFolder();
 	}
 
 //	private void initialisePackageFragment() {
@@ -56,3 +70,6 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log$
+// Revision 1.1  2006/05/12 22:33:41  channingwalton
+// added class creation wizards if type to jump to does not exist
+//
