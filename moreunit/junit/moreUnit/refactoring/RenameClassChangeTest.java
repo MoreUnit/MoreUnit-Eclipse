@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.jmock.Mock;
 
-public class RenameChangeTest extends AbstractMoreUnitTest {
+public class RenameClassChangeTest extends AbstractMoreUnitTest {
 
 	private Mock				typeToRename			= mock(IType.class);
 	private Mock				renamedType				= mock(IType.class);
@@ -18,12 +18,12 @@ public class RenameChangeTest extends AbstractMoreUnitTest {
 	private Mock				compilationUnitToRename	= mock(ICompilationUnit.class);
 	private Mock				renamedCompilationUnit	= mock(ICompilationUnit.class);
 	private NullProgressMonitor	progressMonitor			= new NullProgressMonitor();
-	private RenameChange		change;
+	private RenameClassChange	change;
 
 	protected void setUp() throws Exception {
 		setUpType(typeToRename, "KebabHouse", compilationUnitToRename, parentPackage);
 		setUpType(renamedType, "KebabEmporium", renamedCompilationUnit, parentPackage);
-		change = new RenameChange((IType) typeToRename.proxy(), "KebabEmporium");
+		change = new RenameClassChange((IType) typeToRename.proxy(), "KebabEmporium");
 	}
 
 	public void testPerformReturnsUndoForRenameType() throws CoreException {
@@ -46,3 +46,6 @@ public class RenameChangeTest extends AbstractMoreUnitTest {
 }
 
 // $Log$
+// Revision 1.1 2006/05/17 19:16:00 channingwalton
+// enhanced rename refactoring to support undo and so that it is included in the preview with other changes.
+//

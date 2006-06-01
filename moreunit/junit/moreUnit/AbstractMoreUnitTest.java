@@ -1,15 +1,12 @@
 package moreUnit;
 
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IType;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
 public abstract class AbstractMoreUnitTest extends MockObjectTestCase {
 
-	protected Mock	type	= mock(IType.class);
-
-	protected void stubTypeQualifiedName(String name) {
+	protected void stubTypeQualifiedName(Mock type, String name) {
 		type.stubs().method("getTypeQualifiedName").will(returnValue(name));
 	}
 
@@ -24,6 +21,15 @@ public abstract class AbstractMoreUnitTest extends MockObjectTestCase {
 		packageFragment.stubs().method("getElementType").will(returnValue(IJavaElement.PACKAGE_FRAGMENT));
 		packageFragment.stubs().method("getCompilationUnit").with(eq(elementName + ".java")).will(returnValue(compilationUnit.proxy()));
 	}
+
+	protected void setUpMethod(Mock mockMethod, String name, Mock declaringType) {
+		mockMethod.stubs().method("getElementName").will(returnValue(name));
+		mockMethod.stubs().method("getDeclaringType").will(returnValue(declaringType.proxy()));
+	}
+
 }
 
 // $Log$
+// Revision 1.1  2006/05/17 19:16:00  channingwalton
+// enhanced rename refactoring to support undo and so that it is included in the preview with other changes.
+//

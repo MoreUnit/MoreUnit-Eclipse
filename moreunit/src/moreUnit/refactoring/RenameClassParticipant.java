@@ -59,7 +59,7 @@ public class RenameClassParticipant extends RenameParticipant{
 
 		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
 		for (IType typeToRename : allTestcases) {			
-			changes.add(new RenameChange(typeToRename, getNewTestName(typeToRename)));
+			changes.add(new RenameClassChange(typeToRename, getNewTestName(typeToRename)));
 		}
 		
 		if (changes.size() == 1) {
@@ -83,6 +83,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log$
+// Revision 1.8  2006/05/23 19:39:50  gianasista
+// Splitted JavaFileFacade into two classes
+//
 // Revision 1.7  2006/05/17 19:16:00  channingwalton
 // enhanced rename refactoring to support undo and so that it is included in the preview with other changes.
 //

@@ -9,12 +9,12 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-public class RenameChange extends Change {
+public class RenameClassChange extends Change {
 
 	private final IType		typeToRename;
 	private final String	newName;
 
-	public RenameChange(IType typeToRename, String newName) {
+	public RenameClassChange(IType typeToRename, String newName) {
 		this.typeToRename = typeToRename;
 		this.newName = newName;
 	}
@@ -49,7 +49,7 @@ public class RenameChange extends Change {
 		if (newType == null) {
 			return null;
 		}
-		return new RenameChange(newType, oldName);
+		return new RenameClassChange(newType, oldName);
 	}
 
 	private IType getNewType() {
@@ -64,3 +64,6 @@ public class RenameChange extends Change {
 }
 
 // $Log$
+// Revision 1.1  2006/05/17 19:16:00  channingwalton
+// enhanced rename refactoring to support undo and so that it is included in the preview with other changes.
+//
