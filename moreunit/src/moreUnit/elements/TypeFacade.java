@@ -22,6 +22,9 @@ public abstract class TypeFacade {
 	JavaProjectFacade javaProjectFacade;
 	
 	public static boolean isTestCase(IType type) {
+		if(type == null)
+			return false;
+		
 		IType primaryType = type.getCompilationUnit().findPrimaryType();
 		if(primaryType == null)
 			return false;
@@ -30,13 +33,13 @@ public abstract class TypeFacade {
 		
 		String[] suffixes = Preferences.instance().getSuffixes();
 		for(String suffix: suffixes) {
-			if(classname.endsWith(suffix))
+			if(suffix.length() > 0 && classname.endsWith(suffix))
 				return true;
 		}
 		
 		String[] prefixes = Preferences.instance().getPrefixes();
 		for(String prefix: prefixes) {
-			if(classname.startsWith(prefix))
+			if(prefix.length() > 0 && classname.startsWith(prefix))
 				return true;
 		}
 		
