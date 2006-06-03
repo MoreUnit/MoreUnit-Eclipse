@@ -1,0 +1,30 @@
+Struktur:
+
+Titel:
+MoreUnit - Unterstützung für Unit-Tester
+
+Kurze Einleitung
+
+1) Visuelle Unterstützung (Decorator, Marker)
+
+Decorator im Package Explorer.
+Marker neben getesteten Methoden.
+
+2) Codeunterstützung (Create Testklasse, Create Testmethode)
+
+Eigenen Wizard anzeigen.
+Neue Testmethoden werden automatisch erzeugt.
+
+3) Navigation (Shortcuts zum Springen)
+
+Shortcuts zum Switchen zwischen Produktiv- und Testcode.
+
+4) Preferences
+
+Alles konfigurierbar.
+
+5) Ausblick
+
+Sprachunterstüzung (Ruby, PHP)
+Testgenerierung
+Feedback gewünscht...
