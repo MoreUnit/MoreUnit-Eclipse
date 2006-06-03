@@ -58,6 +58,9 @@ public class TestCaseDiviner {
 	}
 	
 	private void findPotentialTargets() throws CoreException {
+		if(source == null)
+			return;
+		
 		matches = new LinkedHashSet<IType>();
 		String[] prefixes = preferences.getPrefixes();
 		for (int i = 0; i < prefixes.length; i++) {
@@ -121,6 +124,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/14 22:27:10  channingwalton
+// made use of generics to remove some warnings
+//
 // Revision 1.2  2006/05/14 19:10:58  gianasista
 // Smaller enhancements
 //
