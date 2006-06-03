@@ -24,8 +24,8 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 		addField(junitDirPreferenceField);
 		addField(showDialogField);
 		
-		addField(new NameListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
-		addField(new NameListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
+		addField(new StringListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
+		addField(new StringListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
 		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.USE_WIZARDS, "Use class creation &Wizards", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, "Switch to matching &Methods", getFieldEditorParent()));
@@ -38,6 +38,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/25 19:51:01  gianasista
+// JUnit4 support
+//
 // Revision 1.7  2006/05/21 10:58:44  gianasista
 // moved prefs to Preferences class
 //
