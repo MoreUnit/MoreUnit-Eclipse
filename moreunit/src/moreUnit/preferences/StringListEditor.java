@@ -36,7 +36,7 @@ public class StringListEditor extends ListEditor {
 	@Override
 	protected String getNewInputObject() {
 		
-		InputDialog dialog = new InputDialog(getShell(), "SwitchUnit", "Please enter a new name:", "Test", new IInputValidator() {
+		InputDialog dialog = new InputDialog(getShell(), "moreUnit", "Please enter a new name:", "Test", new IInputValidator() {
 			public String isValid(String newText) {
 				return getListControl(parent).indexOf(newText) == -1 ? null : newText + " is already in the list.";
 			}
