@@ -74,7 +74,10 @@ public class Preferences {
 
 	private String[] getValues(String listPreference) {
 		if (store().contains(listPreference)) {
-			return store().getString(listPreference).split(",");
+			String prefValue = store().getString(listPreference);
+			if(prefValue == null || prefValue.length() == 0)
+				return new String[0];
+			return prefValue.split(",");
 		}
 		return store().getDefaultString(listPreference).split(",");
 	}
@@ -86,6 +89,9 @@ public class Preferences {
 }
 
 // $Log$
+// Revision 1.6  2006/05/25 19:51:01  gianasista
+// JUnit4 support
+//
 // Revision 1.5  2006/05/21 20:43:19  gianasista
 // Moved initialization of preferenceStore
 //
