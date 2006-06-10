@@ -94,7 +94,7 @@ public class BaseTools {
 		if(testCaseClass == null || testCaseClass.length() <= 1)
 			return null;
 		
-		if (packagePrefix != null) {
+		if (packagePrefix != null && packagePrefix.length() > 0) {
 			testCaseClass = testCaseClass.replaceFirst(packagePrefix + "\\.", "");
 		}
 		
@@ -137,6 +137,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/10 09:42:40  channingwalton
+// fix for jumping from a test case to its class under test when the test packages have a prefix
+//
 // Revision 1.8  2006/05/20 16:13:20  gianasista
 // Integration of switchunit preferences
 //
