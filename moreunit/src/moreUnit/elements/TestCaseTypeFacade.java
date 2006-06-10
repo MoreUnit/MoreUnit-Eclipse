@@ -14,7 +14,6 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -41,7 +40,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 	}
 	
 	public IType getCorrespondingClassUnderTest() {
-		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes());
+		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes(), Preferences.instance().getTestPackagePrefix());
 		if(testedClassString == null)
 			return null;
 

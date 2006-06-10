@@ -18,18 +18,28 @@ public class BaseToolsTest extends TestCase {
 	public void testGetTestedClass() {
 		String className = "Eins";
 		String[] prefixes = new String[] { "Test" };
-		assertNull(BaseTools.getTestedClass(className, prefixes, new String[0]));
+		assertNull(BaseTools.getTestedClass(className, prefixes, new String[0], null));
 		
 		className = "EinsTest";
 		String[] suffixes = new String[] { "Test" };
-		assertEquals("Eins", BaseTools.getTestedClass(className, new String[0], suffixes));
+		assertEquals("Eins", BaseTools.getTestedClass(className, new String[0], suffixes, null));
 		
 		className = null;
-		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0]));
+		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0], null));
 		
 		className = "ABC";
-		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0]));
-		assertNull(BaseTools.getTestedClass(className, null, null));
+		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0], null));
+		assertNull(BaseTools.getTestedClass(className, null, null, null));
+	}
+	
+	public void testGetTestedClassWithPackagePrefix() throws Exception {
+		String className = "test.EinsTest";
+		String[] suffixes = new String[] { "Test" };
+		String packagePrefix = "test";
+		assertEquals("Test with prefix", "Eins", BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix));
+		
+		className = "EinsTest";
+		assertEquals("Test without prefix but package prefix set", "Eins", BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix));
 	}
 
 	public void testGetTestedMethod() {

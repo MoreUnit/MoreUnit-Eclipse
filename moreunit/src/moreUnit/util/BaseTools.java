@@ -87,11 +87,16 @@ public class BaseTools {
 	 * @param testCaseClass name of the testcase
 	 * @param prefixes		possible prefixes of the testcase
 	 * @param suffixes		possible suffixes of the testcase
+	 * @param packagePrefix 
 	 * @return name of the class under test
 	 */
-	public static String getTestedClass(String testCaseClass, String[] prefixes, String[] suffixes) {
+	public static String getTestedClass(String testCaseClass, String[] prefixes, String[] suffixes, String packagePrefix) {
 		if(testCaseClass == null || testCaseClass.length() <= 1)
 			return null;
+		
+		if (packagePrefix != null) {
+			testCaseClass = testCaseClass.replaceFirst(packagePrefix + "\\.", "");
+		}
 		
 		if(suffixes != null) {
 			for(String suffix: suffixes) {
@@ -132,6 +137,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/05/20 16:13:20  gianasista
+// Integration of switchunit preferences
+//
 // Revision 1.7  2006/05/12 17:54:40  gianasista
 // added comments
 //
