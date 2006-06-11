@@ -2,12 +2,10 @@ package moreUnit;
 
 import moreUnit.listener.JavaCodeChangeListener;
 import moreUnit.log.LogHandler;
-import moreUnit.preferences.PreferenceConstants;
 
-import org.eclipse.ui.plugin.*;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -64,6 +62,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/05/21 20:42:50  gianasista
+// Moved initialization of preferenceStore
+//
 // Revision 1.9  2006/05/21 10:57:52  gianasista
 // moved prefs to Preferences class
 //
