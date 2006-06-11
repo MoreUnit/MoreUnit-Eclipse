@@ -32,10 +32,6 @@ public class Preferences {
 		return store().getString(PreferenceConstants.PREF_JUNIT_PATH);
 	}
 	
-	public boolean getShowRefactoringDialogFromPreferences() {
-		return store().getBoolean(PreferenceConstants.SHOW_REFACTORING_DIALOG);
-	}
-
 	public String[] getPrefixes() {
 		return getValues(PreferenceConstants.PREFIXES);
 	}
@@ -44,19 +40,23 @@ public class Preferences {
 		return getValues(PreferenceConstants.SUFFIXES);
 	}
 
+	/*
 	public boolean useClassCreationWizards() {
 		if (store().contains(PreferenceConstants.USE_WIZARDS)) {
 			return store().getBoolean(PreferenceConstants.USE_WIZARDS);
 		}
 		return store().getDefaultBoolean(PreferenceConstants.USE_WIZARDS);
 	}
+	*/
 
+	/*
 	public boolean switchToMatchingMethod() {
 		if (store().contains(PreferenceConstants.SWITCH_TO_MATCHING_METHOD)) {
 			return store().getBoolean(PreferenceConstants.SWITCH_TO_MATCHING_METHOD);
 		}
 		return store().getDefaultBoolean(PreferenceConstants.SWITCH_TO_MATCHING_METHOD);
 	}
+	*/
 	
 	public boolean shouldUseJunit4Type() {
 		if(store().contains(PreferenceConstants.JUNIT4_TEST_TYPE)) {
@@ -89,6 +89,9 @@ public class Preferences {
 }
 
 // $Log$
+// Revision 1.7  2006/06/10 20:31:17  gianasista
+// Bugfix in getValue (problem with empty list solved)
+//
 // Revision 1.6  2006/05/25 19:51:01  gianasista
 // JUnit4 support
 //

@@ -20,15 +20,15 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	
 	protected void createFieldEditors() {
 		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(PreferenceConstants.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
-		BooleanFieldEditor showDialogField = new BooleanFieldEditor(PreferenceConstants.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
+		//BooleanFieldEditor showDialogField = new BooleanFieldEditor(PreferenceConstants.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
 		addField(junitDirPreferenceField);
-		addField(showDialogField);
+		//addField(showDialogField);
 		
 		addField(new StringListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
 		addField(new StringListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
 		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(PreferenceConstants.USE_WIZARDS, "Use class creation &Wizards", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, "Switch to matching &Methods", getFieldEditorParent()));
+		//addField(new BooleanFieldEditor(PreferenceConstants.USE_WIZARDS, "Use class creation &Wizards", getFieldEditorParent()));
+		//addField(new BooleanFieldEditor(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, "Switch to matching &Methods", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.JUNIT4_TEST_TYPE, "Create JUnit4 methods", getFieldEditorParent()));
 	}
 
@@ -38,6 +38,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/03 14:45:57  gianasista
+// StringListEditor (extends ListEditor) as an alternative for NameListEditor?
+//
 // Revision 1.8  2006/05/25 19:51:01  gianasista
 // JUnit4 support
 //
