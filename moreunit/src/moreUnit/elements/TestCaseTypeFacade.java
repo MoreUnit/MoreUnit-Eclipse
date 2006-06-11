@@ -64,6 +64,10 @@ public class TestCaseTypeFacade extends TypeFacade {
 				return false;
 			
 			compilationUnit.findPrimaryType().createMethod(getTestMethodString(testMethodName), null, true, null);
+			
+			if(Preferences.instance().shouldUseJunit4Type()) {
+				compilationUnit.createImport("org.junit.Test", null, null);
+			}
 			return true;
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
