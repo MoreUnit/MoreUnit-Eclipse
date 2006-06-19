@@ -1,0 +1,25 @@
+001:	 d	Testmethode erzeugen über rechte Maustaste
+002:	 d	Testmethode erzeugen über Tastaturkürzel
+003:		XML-File für die Konfiguration (JUnit-Source-Folder)
+004:		Konfiguration über Preferences
+005:	 d	Markeraktualisierung nicht erst beim erneuten Öffnen des Editors
+
+006:	 d	Markeraktualisierung in Echtzeit beim Tippen
+007:	 d	Go-Action schein nicht mehr zu funktionieren
+008:	 d	Testmethode nicht erzeugen, wenn die Methode schon da ist
+009:	 d	Testklasse erzeugen, falls es sie noch nicht gibt
+010:	 d	Öffnen der Testklasse, wenn man eine Testmethode erzeugt hat
+
+011:		Springen zur Testmethode über Markericon
+012:	 d	Labeldekorator einbauen (Icon für keine Testklasse, teils getestet, komplett getestet)
+013:		Batching der Workspacechanges über WorkspaceRunnable (Bookmark in Doku)
+014:		Jobs API einbauen für AddMarkerAction auf Workspace
+015:		Quickfix auf Testcase (Tests für alle nicht getesteten Methoden einbauen)
+
+016:		JumpToTestAction als Switcher umbauen (vom Test zurück zur Klasse)
+017:		auch im Outline-View die getesteten Methoden mit Icons versehen
+018:		Plugin beim Aufstarten schon starten
+019:		Automatisches TestCaseRefactoring
+020:		Getter und Setter Ausnehmen
+
+021:	d	In der deployten Version fehlt das Icon beim Marker

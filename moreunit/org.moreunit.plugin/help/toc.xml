@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="MoreUnit">
+	<topic label="Getting Started"  href="help/gettingStarted.html"> </topic>
+	<topic label="Documentation"  href="help/documentation.html"> </topic>
+</toc>
+

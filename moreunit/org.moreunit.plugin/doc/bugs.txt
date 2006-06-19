@@ -1,0 +1,5 @@
+001:	 d	Nimmt man eine Methode aus dem Testcase, merkt es die getestete Klasse nicht,
+		und behält den Marker.
+002:	 d	Ruft man zum zweiten Mal AddMarkerAction auf, werden anscheinend die vorhandenen
+		Marker nicht davor entfährt, so bleiben evtl zu viele Marker übrig
+003:	 d	Shortcut für JumpToTest geht nicht mehr (definitionId bei Action hat gefehlt)
