@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Plug-in
-Bundle-SymbolicName: moreUnit; singleton:=true
-Bundle-Version: 0.5.2
-Bundle-Activator: moreUnit.MoreUnitPlugin
+Bundle-SymbolicName: org.moreunit;singleton:=true
+Bundle-Version: 0.5.3
+Bundle-Activator: org.moreunit.MoreUnitPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -21,3 +21,4 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-AutoStart: true
 Bundle-ClassPath: lib/jmock-1.0.1.jar,
  .
+Bundle-Vendor: www.moreunit.org
