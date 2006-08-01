@@ -26,7 +26,7 @@ public class TypeChoiceDialog extends Dialog {
 	}
 
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("SwitchUnit");
+		getShell().setText("MoreUnit");
 
 		Composite composite = (Composite) super.createDialogArea(parent);
 

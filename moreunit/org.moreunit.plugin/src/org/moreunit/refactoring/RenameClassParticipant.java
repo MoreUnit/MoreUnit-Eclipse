@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -26,8 +24,8 @@ import org.moreunit.util.MagicNumbers;
  */
 public class RenameClassParticipant extends RenameParticipant{
 	
-	ICompilationUnit compilationUnit;
-	ClassTypeFacade javaFileFacade;
+	private ICompilationUnit compilationUnit;
+	private ClassTypeFacade javaFileFacade;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.initialize");
@@ -49,7 +47,7 @@ public class RenameClassParticipant extends RenameParticipant{
 		return new RefactoringStatus();
 	}
 
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.createChange");
 		
 		if (!getArguments().getUpdateReferences()) {
@@ -63,7 +61,7 @@ public class RenameClassParticipant extends RenameParticipant{
 		}
 		
 		if (changes.size() == 1) {
-			return (Change) changes.get(0);
+			return changes.get(0);
 		}
 		
 		if (changes.size() > 0) {
@@ -83,6 +81,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/22 20:22:28  gianasista
+// package rename
+//
 // Revision 1.1  2006/06/19 20:08:48  gianasista
 // CVS Refactoring
 //

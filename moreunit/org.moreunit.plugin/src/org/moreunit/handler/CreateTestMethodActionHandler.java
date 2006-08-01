@@ -3,7 +3,6 @@ package org.moreunit.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.PluginTools;
 
@@ -16,7 +15,7 @@ import org.moreunit.util.PluginTools;
  */
 public class CreateTestMethodActionHandler extends AbstractHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(ExecutionEvent event) {
 		LogHandler.getInstance().handleInfoLog("CreateTestMethodActionHandler.execute()");
 		 
 		EditorActionExecutor.getInstance().executeCreateTestMethodAction(PluginTools.getOpenEditorPart());
@@ -25,6 +24,9 @@ public class CreateTestMethodActionHandler extends AbstractHandler {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/22 20:22:29  gianasista
+// package rename
+//
 // Revision 1.1  2006/06/19 20:08:48  gianasista
 // CVS Refactoring
 //

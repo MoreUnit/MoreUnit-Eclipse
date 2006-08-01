@@ -52,7 +52,7 @@ public class NameListEditor extends FieldEditor {
 	}
 
 	protected String getNewInputObject() {
-		InputDialog dialog = new InputDialog(getShell(), "SwitchUnit", "Please enter a new name:", "Test", new IInputValidator() {
+		InputDialog dialog = new InputDialog(getShell(), "MoreUnit", "Please enter a new name:", "Test", new IInputValidator() {
 			public String isValid(String newText) {
 				return list.indexOf(newText) == -1 ? null : newText + " is already in the list.";
 			}

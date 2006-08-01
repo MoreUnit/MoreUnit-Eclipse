@@ -47,7 +47,7 @@ public class AddMarkerAction implements IWorkbenchWindowActionDelegate {
 				monitor.beginTask("Update projects", projects.length);
 
 				for(int i=0; i<projects.length; i++) {
-					IProject project = (IProject)projects[i];
+					IProject project = projects[i];
 					monitor.subTask(project.getName());
 					IJavaProject javaProject = JavaCore.create(project);
 					if(javaProject.isOpen()) {
@@ -76,6 +76,9 @@ public class AddMarkerAction implements IWorkbenchWindowActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/22 20:22:28  gianasista
+// package rename
+//
 // Revision 1.1  2006/06/19 20:08:48  gianasista
 // CVS Refactoring
 //

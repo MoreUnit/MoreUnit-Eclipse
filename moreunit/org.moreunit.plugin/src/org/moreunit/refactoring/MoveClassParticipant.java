@@ -1,7 +1,6 @@
 package org.moreunit.refactoring;
 
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -31,7 +30,7 @@ public class MoveClassParticipant extends MoveParticipant{
 		return null;
 	}
 
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.createChange");
 		
 		// TODO not implemented yet because MoveSupport is not part of the API yet
@@ -40,6 +39,9 @@ public class MoveClassParticipant extends MoveParticipant{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/22 20:22:28  gianasista
+// package rename
+//
 // Revision 1.1  2006/06/19 20:08:48  gianasista
 // CVS Refactoring
 //

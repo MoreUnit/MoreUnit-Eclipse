@@ -34,7 +34,7 @@ public class JavaProjectFacade {
 			for(int i=0; i<packageFragmentRoots.length; i++) {
 				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
 				String junitFolder = Preferences.instance().getJunitDirectoryFromPreferences();
-				if(packageFragmentRoot instanceof IPackageFragmentRoot && packageFragmentRoot.getElementName().equals(junitFolder))
+				if(packageFragmentRoot.getElementName().equals(junitFolder))
 					return packageFragmentRoot;
 			}
 		} catch (JavaModelException exc) {
@@ -92,6 +92,9 @@ public class JavaProjectFacade {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/22 20:22:29  gianasista
+// package rename
+//
 // Revision 1.1  2006/06/19 20:08:48  gianasista
 // CVS Refactoring
 //
