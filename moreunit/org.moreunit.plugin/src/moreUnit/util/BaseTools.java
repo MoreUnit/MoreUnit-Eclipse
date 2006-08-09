@@ -125,7 +125,7 @@ public class BaseTools {
 	 * @return name of the method which is tested
 	 */
 	public static String getTestedMethod(String testMethodName) {
-		if(testMethodName == null || !testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX))
+		if(testMethodName == null || !testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX) || testMethodName.length() == MagicNumbers.TEST_METHOD_PRAEFIX.length())
 			return null;
 		
 		char erstesZeichen = testMethodName.charAt(4);
@@ -137,6 +137,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/19 20:08:48  gianasista
+// CVS Refactoring
+//
 // Revision 1.10  2006/06/10 20:32:44  gianasista
 // Bugfix: handle package prefix as empty string
 //
