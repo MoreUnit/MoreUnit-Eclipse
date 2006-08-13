@@ -1,0 +1,222 @@
+2006-04-20
+
+	- Bugfix beim Rename einer Methode ohne Test (war nicht nullsicher)
+	- Springen von Test zur getesten Klasse ist nun möglich
+	- Templates für neue Java-Dateien werden bei Erzeugen eines neues Testcase verwendet
+
+2006-04-17
+
+	- Version 0.4.0 getaggt
+
+2006-04-16:
+
+	- Verwende Job-API zum Update der Marker um den Fortschritt anzuzeigen
+
+2006-04-14:
+
+	- MarkerUpdate wegen Resource-Locks in eigenen Thread ausgelagert 
+
+2006-04-02:
+
+	- Testcase-Suffix wird über Preferences eingestellt
+
+2006-03-31:
+
+	- ListDialog geht
+	- Klassen für besseren Dialog gesucht (PopupDialog, AbstractInformationControl, JavaOutlineInformationControl)
+
+2006-03-29:
+
+	- Ersten ListDialog eingebaut (aber leider werden noch keine Methoden angezeigt)
+
+2006-03-28:
+
+	- Start eines Dialogs zur Auswahl der gefundenen Testmethoden (ListDialog)
+
+2006-03-21:
+
+	- Bugfix bei JumpToTestAction
+
+2006-03-20:
+
+	- neue Version getaggt (Version 0.3.2)
+
+2006-02-26:
+
+	- Testmethoden mit Suffix nach dem Namen werden trotzdem noch als Test erkannt
+	- Toolbar auskommentiert und Einträge für Hinzufügen und Entfernen von Markern ins Menü von Javaprojekten aufgenommen
+
+2006-02-22:
+
+	- moreUnit-Menü entfernt
+	- Marker persistent gemacht
+	- Markericon gewechselt
+
+2006-02-19:
+
+	- Problem mit Move-Refactoring erneut in Newsgroup geposted
+	- Ersten Rückfrage-Dialog eingebaut, ob Refactoring auf Testklasse angewendet werden soll
+	- Property für Rückfrage-Dialog implementiert
+
+2006-02-12:
+
+	- Rename Refactorings für Methoden und Klassen funktionieren
+
+2006-02-10:
+
+	- Umbennen von Testmethoden bei Rename-Refactoring klappt jetzt
+
+2006-02-05:
+
+	- Weiterarbeit an Refactorings
+
+2006-02-04:
+
+	- Klassen eingebaut die auf Refactorings hören (Move & Rename von Klassen & Methoden)
+
+2006-02-03:
+
+	- Tests fuer JavaFileFacade fertiggemacht
+
+2006-02-01:
+
+	- Neue Testmethode für createTestCase in JavaFileFacade
+
+2006-01-31:
+
+	- MarkerTools refaktorisiert und in die Facade-Klassen eingebaut
+	- TestProject erweitert und Testcase fuer JavaFileFacade begonnen
+
+2006-01-30:
+
+	- Weiterarbeit am Refactoring bis auf MarkerTools vollendet
+
+2006-01-28:
+
+	- Weiterarbeit am Refactoring (weitere Methoden von PluginTools zur EditorPartFacade verschoben)
+	- Begonnen mit der Zerlegung von EditorPartFacade (Teile sollen zur JavaFileFacade)
+
+2006-01-25:
+
+	- Begonnen mir der großen Refaktorisierung
+
+2006-01-22:
+
+	- Suche zu Bug mit Testklasse im falschen Javaprojekt begonnen und vermutlich gefunden
+
+2006-01-20:
+
+	- TestProjekt weiter ausgebaut (erster simpler Plugin-Testcase läuft)
+	- Marker werden direkt neben der Methodensignatur gemalt und nicht bei Kommentaren
+
+2006-01-18:
+
+	- ssh-Zugang zu Sourceforge eingebaut
+	- Feature eingebaut: JumpTo-Action springt direkt zur Methode (wenn möglich)
+	- CVS-Commit-Logging in Java-Files eingebaut
+
+2006-01-08:
+
+	- Marker funktionieren nun auch unter dem aktuellen Release 3.1.1
+	- der Ordner für JUnit-Tests kann über die Preferences konfiguriert werden
+
+2006-01-04:
+
+	- Bug entfernt bei Generierung der Testmethoden bei Klassen die in Packages liegen
+
+2005-12-26:
+
+	- Refactoring durchgeführt
+
+2005-12-25:
+
+	- Schönes Häckchen eingebaut :)
+
+2005-12-20:
+
+	- Bug entfernt: Testmethode durfte nur eine leere Parameterliste enthalten, damit sie gefunden wurde
+
+2005-12-19:
+
+	- Plugin nicht als JAR, sondern als Folder deployt und dann sieht man die Markericons
+
+2005-11-20:
+
+	- ImageDescriptor in ImageDescriptorCenter-Klasse ausgelagert mit Lazy-Caching-Mechanismus
+	- Key-Binding für JumpToTestAction repariert
+	- getaggt auf Version 0.2
+	- Bug entfernt: Testmethoden ohne "echte" Methode dazu gaben eine Exception
+
+2005-11-18:
+
+	- erste Icons gebaut
+	- LabelDecorator mit Icons eingebaut (bei vorhandenem Test wird die Klasse mit Label dekoriert)
+
+2005-11-15:
+
+	- Decorator wird instanziiert (Problem war aktivierter Decorator des DecoratorDemos)
+
+2005-11-13:
+
+	- markerImageProvider-Problem gelöst: es lag am Icon, na prima
+	- refresh-Methode für den LabelDecorator eingebaut, aber Decorator ist immer null
+
+2005-11-09:
+
+	- Geschafft bei den Markern das Information-Icons wegzubekommen, aber leider wird immer noch die der markerImageProvider verwendet
+
+2005-11-02:
+
+	- erste Gehversuche mit Labeldecorator, aber der Listener fehlt noch
+
+2005-11-01:
+
+	- großer Umbau: Projekt umbenannt von JUnitOptimizer zu moreUnit und neu in Subversion abgelegt
+	- IElementChangedListener sorgt für dynamischen Update der Marker
+	- Extension Point für Labeldecorator eingebaut, den man in den Preferences sehen und enablen kann
+
+2005-10-30:
+
+	- statt ResourceChangeListener einen IElementChangedListener eingebaut,
+	  damit man mitbekomment, wenn sich Javacode ändert
+
+2005-10-26:
+
+	- ResourceChangeListener eingebaut. Jetzt müßte man nur noch mit dem IResourceChangeEvent was anfangen können ;)
+
+2005-10-25:
+
+	- Shortcuts mit Handler für Erzeugung der Testmethode und Springen zur Testklasse eingebaut.
+
+2005-10-24:
+
+	- ActionHandler für die Shortcuts ausprobiert und es klappt *HEUREKA*
+
+2005-10-23:
+
+	- Menü für das Hinzufügen und Entfernen von Markern eingebaut
+
+2005-10-12:
+
+	- erfolglos versucht Key-Bindings für die Actions einzubauen (sehe den Key, aber wird nicht ausgelöst)
+
+2005-10-11:
+
+	- Im Editor gibt es ein Popupmenü (Jump to test) mit dem man zum entsprechenden Test springen kann
+
+2005-10-10:
+
+	- Marker werden sofort beim geöffneten File wieder angezeigt (Problem der Eclispeversion)
+
+2005-10-09:
+
+	- Testklasse und Pakete werden miterzeugt, wenn sie noch nicht vorhanden sind
+
+2005-10-05:
+
+	- Stand auf Version 0.1 getaggt, nach langem Subversionkampf ;)
+
+2005-10-01:
+
+	- Über Cursorposition kann IMethod bestimmt werden
+	- Testmethod kann programmatisch erzeugt werden (in Package Explorer und Editor)

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension point="org.eclipse.ui.commands">
+  		 <command
+	            name="JumpToTest"
+	            defaultHandler="org.moreunit.handler.JumpActionHandler"
+	            description="Jump to test."
+	            categoryId="org.eclipse.jdt.ui.category.source"
+	            id="org.moreunit.jumptotestaction">
+	   </command> 
+		<command
+	            name="CreateTestMethod"
+	            defaultHandler="org.moreunit.handler.CreateTestMethodActionHandler"
+	            description="Creation of a testmethod."
+	            categoryId="org.eclipse.jdt.ui.category.source"
+	            id="org.moreunit.createtestmethod">
+	   </command> 
+   </extension> 
+   <extension point="org.eclipse.ui.bindings">
+   	   <key
+	      sequence="CTRL+J"
+	      commandId="org.moreunit.jumptotestaction"
+	      contextId="org.eclipse.jdt.ui.javaEditorScope"
+	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key> 
+	   <key
+	      sequence="CTRL+U"
+	      commandId="org.moreunit.createtestmethod"
+	      contextId="org.eclipse.jdt.ui.javaEditorScope"
+	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+	</extension>
+   
+    <!--
+     <extension point="org.eclipse.ui.actionSets">
+   		<actionSet
+   			id="moreUnit.actionSet"
+   			label="JOOutside"
+   			visible="true">
+   			<action
+   				id="moreUnit.toolbar.DeleteMarkerAction"
+   				label="-"
+	   			toolbarPath="JOGroup"
+   				class="moreUnit.toolbar.DeleteMarkerAction">
+   			</action>
+   			<action
+   				id="moreUnit.toolbar.AddMarkerAction"
+   				label="+"
+	   			toolbarPath="JOGroup"
+   				class="moreUnit.toolbar.AddMarkerAction">
+   			</action>
+
+   		</actionSet>
+   </extension>
+   -->
+
+   <extension point="org.eclipse.ui.popupMenus">
+	  <viewerContribution
+            targetID="#CompilationUnitEditorContext"
+            id="org.moreunit.contribution1">
+         <action
+               label="Generate Test"
+               definitionId="org.moreunit.createtestmethod"
+               class="org.moreunit.actions.CreateTestMethodEditorAction"
+               menubarPath="additions"
+               id="org.moreunit.actions.createtestmethodaction">
+         </action>
+      </viewerContribution>
+      <viewerContribution
+            targetID="#CompilationUnitEditorContext"
+            id="org.moreunit.contribution2">
+         <action
+               label="Jump to test"
+               definitionId="org.moreunit.jumptotestaction"
+               class="org.moreunit.actions.JumpAction"
+               menubarPath="additions"
+               id="org.moreunit.actions.jumptotestaction">
+         </action>
+      </viewerContribution>
+      <objectContribution
+      	id="org.moreunit.testcreator"
+      	objectClass="org.eclipse.jdt.core.IMethod">
+      	<action id="org.moreunit.actions.testcreatoraction"
+      		label="Generate Test"
+      		class="org.moreunit.actions.CreateTestMethodHierarchyAction"
+      		menubarPath="additions"/>      		
+      </objectContribution>
+      <objectContribution
+      	id="org.moreunit.testcreator"
+      	objectClass="org.eclipse.jdt.core.IJavaProject">
+      	<action id="org.moreunit.toolbar.DeleteMarkerAction"
+      		label="Delete marker for tested methods"
+      		class="org.moreunit.toolbar.DeleteMarkerAction"
+      		menubarPath="additions"/>      		
+      </objectContribution>
+      <objectContribution
+      	id="org.moreunit.testcreator"
+      	objectClass="org.eclipse.jdt.core.IJavaProject">
+      	<action id="org.moreunit.toolbar.AddMarkerAction"
+      		label="Add marker for tested methods"
+      		class="org.moreunit.toolbar.AddMarkerAction"
+      		menubarPath="additions"/>      		
+      </objectContribution>
+     </extension>
+
+   <extension
+      	point="org.eclipse.core.resources.markers"
+      	id="testCase"
+      	name="Has TestCase">
+      	<super type="org.eclipse.core.resources.textmarker"/>
+      	<persistent value="true"/>
+    </extension>
+
+	<extension point="org.eclipse.ui.ide.markerImageProviders">
+		<imageprovider 
+			markertype="org.moreunit.testCase"
+			icon="icons/classHasTest.gif"
+			id="org.moreunit.testcaseimageprovider">
+		</imageprovider>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type 
+			name="org.moreunit.testCaseAnnotation"
+			super="org.eclipse.ui.workbench.texteditor.info"
+			markerType="org.moreunit.testCase">
+		</type>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification
+			annotationType="org.moreunit.testCaseAnnotation"
+			icon="icons/classHasTest.gif">
+		</specification>
+	</extension>
+
+	<extension point="org.eclipse.ui.decorators">
+		<decorator
+			id="org.moreunit.testdecorator"
+			label="Decorate Classes with TestCase"
+			state="true"
+			class="org.moreunit.decorator.UnitDecorator"
+			adaptable="true"
+			lightweight="true">
+			<enablement>
+				<objectClass name="org.eclipse.core.resources.IResource"/>
+			</enablement>
+			<description>
+				Classes which have a Testclass get decorated.
+			</description>
+		</decorator>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page id="org.moreunit.moreunitPreferencePage"
+			name="MoreUnit"
+			class="org.moreunit.preferences.MoreUnitPreferencePage">
+			<keywordReference id="org.moreunit.keywordReference.junit"/>
+            <keywordReference id="org.moreunit.keywordReference.moreunit"/>
+            <keywordReference id="org.moreunit.keywordReference.test"/>
+		</page>
+	</extension>
+	
+	<extension
+         id="org.moreunit.keywordReferences"
+         name="org.moreunit Preferences Keywords"
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="org.moreunit.keywordReference.junit"
+            label="JUnit"/>
+      <keyword
+            id="org.moreunit.keywordReference.moreunit"
+            label="moreUnit"/>
+      <keyword
+            id="morg.oreunit.keywordReference.test"
+            label="Test"/>
+   </extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+		<renameParticipant id="org.moreunit.renameMethodParticipant"
+			name="MoreUnitRenameMethodParticipant"
+			class="org.moreunit.refactoring.RenameMethodParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.IMethod"/>
+				</with>
+			</enablement>
+		</renameParticipant>
+	</extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+		<renameParticipant id="org.moreunit.renameClassParticipant"
+			name="MoreUnitMethodClassParticipant"
+			class="org.moreunit.refactoring.RenameClassParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+				</with>
+			</enablement>
+		</renameParticipant>
+	</extension>
+	
+	<!--
+	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
+		<moveParticipant id="moreunit.moveMethodParticipant"
+			name="MoreUnitMethodMethodParticipant"
+			class="org.moreunit.refactoring.MoveMethodParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.IMethod"/>
+				</with>
+			</enablement>
+		</moveParticipant>
+	</extension>
+	
+	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
+		<moveParticipant id="moreunit.moveClassParticipant"
+			name="MoreUnitMethodMethodParticipant"
+			class="org.moreunit.refactoring.MoveClassParticipant">  
+			<enablement>
+				<with variable="affectedNatures">
+					<iterate operator="or">
+						<equals value="org.eclipse.jdt.core.javanature"/>
+					</iterate>
+				</with>
+				<with variable="element">
+					<instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+				</with>
+			</enablement>
+		</moveParticipant>
+	</extension>
+	-->
+	
+	<extension point="org.eclipse.help.toc">
+      <toc file="help/toc.xml"
+            primary="true"/>
+   </extension>
+	
+</plugin>
