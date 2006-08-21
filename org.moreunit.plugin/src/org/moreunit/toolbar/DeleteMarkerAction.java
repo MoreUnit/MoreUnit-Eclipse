@@ -27,7 +27,7 @@ public class DeleteMarkerAction implements IWorkbenchWindowActionDelegate{
 		IProject[] projects = workspaceRoot.getProjects();
 
 		for(int i=0; i<projects.length; i++) {
-			IProject project = (IProject)projects[i];
+			IProject project = projects[i];
 			IJavaProject javaProject = JavaCore.create(project);
 			(new JavaProjectFacade(javaProject)).deleteTestCaseMarkers();
 		}
@@ -38,6 +38,9 @@ public class DeleteMarkerAction implements IWorkbenchWindowActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //

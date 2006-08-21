@@ -55,7 +55,7 @@ public class ClassTypeFacade extends TypeFacade {
 		if(testcases.size() == 1)
 			testcaseToJump = (IType) testcases.toArray()[0];
 		else if(testcases.size() > 1)
-			testcaseToJump = new TypeChoiceDialog((IType[]) testcases.toArray(new IType[testcases.size()])).getChoice();
+			testcaseToJump = new TypeChoiceDialog(testcases.toArray(new IType[testcases.size()])).getChoice();
 		
 		return testcaseToJump;
 	}

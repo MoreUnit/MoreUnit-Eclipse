@@ -57,6 +57,9 @@ public class RenameMethodParticipant extends RenameParticipant {
 		List<Change> changes = new ArrayList<Change>();
 
 		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
+		if (allTestcases == null) {
+			return null;
+		}
 		for (IType test : allTestcases) {
 			IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method, test);
 
@@ -66,7 +69,7 @@ public class RenameMethodParticipant extends RenameParticipant {
 		}
 
 		if (changes.size() == 1) {
-			return (Change) changes.get(0);
+			return changes.get(0);
 		}
 
 		if (changes.size() > 0) {
@@ -84,6 +87,9 @@ public class RenameMethodParticipant extends RenameParticipant {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //
