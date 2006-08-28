@@ -126,7 +126,7 @@ public class BaseTools {
 	 * @return name of the method which is tested
 	 */
 	public static String getTestedMethod(String testMethodName) {
-		if(testMethodName == null || !testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX))
+		if(testMethodName == null || !testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX) || testMethodName.length() <= 4)
 			return null;
 		
 		char erstesZeichen = testMethodName.charAt(4);
@@ -138,6 +138,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //
