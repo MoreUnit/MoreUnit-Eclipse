@@ -53,6 +53,9 @@ public class BaseToolsTest extends TestCase {
 		
 		methodName = null;
 		assertNull(BaseTools.getTestedMethod(methodName));
+		
+		methodName = "test";
+		assertEquals(null, BaseTools.getTestedMethod(methodName));
 	}
 
 	public void testGetTestMethodNameAfterRename() {
