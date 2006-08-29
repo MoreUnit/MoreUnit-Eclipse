@@ -32,6 +32,14 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 		assertEquals("com.HelloTest", testCaseType.getFullyQualifiedName());
 	}
 	
+	public void testGetOneCorrespondingTestCaseWithEnum() throws CoreException {
+		IPackageFragment comPaket = testProject.createPackage("com");
+		IType helloType = testProject.createType(comPaket, "HelloEnum.java", getEnumSourceFile());
+		
+		ClassTypeFacade javaFileFacade = new ClassTypeFacade(helloType.getCompilationUnit());
+		assertNull(javaFileFacade.getOneCorrespondingTestCase());
+	}
+	
 	public void testGetCorrespondingTestMethod() throws CoreException {
 		IPackageFragment comPaket = testProject.createPackage("com");
 		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource3());
@@ -97,4 +105,12 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 		return source.toString();		
 	}
 
+	private String getEnumSourceFile() {
+		StringBuffer source = new StringBuffer();
+		source.append("package com;").append(MagicNumbers.NEWLINE);
+		source.append("public enum MyEnum {").append(MagicNumbers.NEWLINE);
+		source.append("}").append(MagicNumbers.NEWLINE);
+		
+		return source.toString();
+	}
 }
