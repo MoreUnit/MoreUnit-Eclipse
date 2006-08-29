@@ -37,7 +37,7 @@ import org.moreunit.preferences.Preferences;
 public class TestCaseDiviner {
 	
 	private ICompilationUnit 		compilationUnit;
-	private Set<IType>				matches;
+	private Set<IType>				matches = new LinkedHashSet<IType>();;
 	private IType 					source;
 	
 	private Preferences				preferences;
@@ -124,6 +124,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //
