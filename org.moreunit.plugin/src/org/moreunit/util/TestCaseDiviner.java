@@ -1,27 +1,12 @@
 package org.moreunit.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
-
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jdt.core.search.SearchMatch;
-import org.eclipse.jdt.core.search.SearchParticipant;
-import org.eclipse.jdt.core.search.SearchPattern;
-import org.eclipse.jdt.core.search.SearchRequestor;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
@@ -64,11 +49,11 @@ public class TestCaseDiviner {
 		matches = new LinkedHashSet<IType>();
 		String[] prefixes = preferences.getPrefixes();
 		for (int i = 0; i < prefixes.length; i++) {
-			matches.addAll(searchFor(getSearchTerm(source, prefixes[i], true)));
+			matches.addAll(BaseTools.searchFor(getSearchTerm(source, prefixes[i], true), compilationUnit));
 		}
 		String[] suffixes = preferences.getSuffixes();
 		for (int i = 0; i < suffixes.length; i++) {
-			matches.addAll(searchFor(getSearchTerm(source, suffixes[i], false)));
+			matches.addAll(BaseTools.searchFor(getSearchTerm(source, suffixes[i], false), compilationUnit));
 		}
 	}
 	
@@ -86,44 +71,16 @@ public class TestCaseDiviner {
 	}
 	
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
-		String searchTerm = prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
-		return searchTerm;
+		return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
 	}
 	
-	private Set<IType> searchFor(String typeName) throws JavaModelException, CoreException {
-		SearchPattern pattern = SearchPattern.createPattern(typeName, IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
-		IJavaSearchScope scope = getSearchScope();
-		SearchEngine searchEngine = new SearchEngine();
-		final Set<IType> matches = new TreeSet<IType>(new Comparator<IType>() {
-			public int compare(IType first, IType second) {
-				return first.getFullyQualifiedName().compareTo(second.getFullyQualifiedName());
-			}
-		});
-		SearchRequestor requestor = new SearchRequestor() {
-			public void acceptSearchMatch(SearchMatch match) {
-				matches.add((IType)match.getElement());
-			}
-		};
-		searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
-		return matches;
-	}
-	
-	private IJavaSearchScope getSearchScope() throws JavaModelException {
-		IJavaProject javaProject = compilationUnit.getJavaProject();
-		IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
-		ArrayList<IPackageFragmentRoot> sourceFolders = new ArrayList<IPackageFragmentRoot>();
-		for (int i = 0; i < entries.length; i++) {
-			IClasspathEntry entry = entries[i];
-			if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-				sourceFolders.addAll(Arrays.asList(javaProject.findPackageFragmentRoots(entry)));
-			}
-		}
-		return SearchEngine.createJavaSearchScope(sourceFolders.toArray(new IPackageFragmentRoot[sourceFolders.size()]));
-	}
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/29 19:35:40  gianasista
+// Bugfix to avoid NPE
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //

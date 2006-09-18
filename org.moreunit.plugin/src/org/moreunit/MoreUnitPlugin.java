@@ -57,11 +57,14 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("moreUnit", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.moreunit", path);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //

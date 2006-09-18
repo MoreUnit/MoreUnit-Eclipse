@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -32,10 +33,15 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 			return;
 		
 		try {
-			ICompilationUnit javaTypeOfResource = (ICompilationUnit) JavaCore.create(objectResource);
-			
-			if(javaTypeOfResource == null)
+			IJavaElement javaElement = JavaCore.create(objectResource);
+			if(javaElement == null)
 				return ;
+			
+			if (javaElement.getElementType() != IJavaElement.COMPILATION_UNIT)
+				return;
+
+			ICompilationUnit javaTypeOfResource = (ICompilationUnit) javaElement;
+			
 			
 			if(TypeFacade.isTestCase(javaTypeOfResource.findPrimaryType()))
 				return;
@@ -67,6 +73,9 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //

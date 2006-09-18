@@ -27,7 +27,7 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard {
 	public NewClassyWizard(IType element) {
 		this.element = element;
 		setNeedsProgressMonitor(true);
-		setDefaultPageImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/switchunit_wizard.png"));
+		setDefaultPageImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/moreunitWizard.png"));
 	}
 
 	protected IType getType() {
@@ -91,6 +91,9 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //
