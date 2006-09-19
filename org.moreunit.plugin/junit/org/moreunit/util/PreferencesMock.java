@@ -14,6 +14,11 @@ public class PreferencesMock extends Preferences {
 	private String[] prefixes;
 	private String[] suffixes;
 	
+	public PreferencesMock(String[] prefixes, String[] suffixes) {
+		this.prefixes = prefixes;
+		this.suffixes = suffixes;
+	}
+
 	public String[] getPrefixes() {
 		return prefixes;
 	}
@@ -34,6 +39,9 @@ public class PreferencesMock extends Preferences {
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:30:56  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:21:44  gianasista
 // package rename
 //

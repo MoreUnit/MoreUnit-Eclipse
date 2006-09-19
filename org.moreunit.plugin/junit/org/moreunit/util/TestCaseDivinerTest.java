@@ -42,9 +42,8 @@ public class TestCaseDivinerTest extends TestCase {
 		IType testHelloType = testProject.createType(junitComPaket, "FooTest.java", getTestCaseSource("com", "FooTest"));
 		IType testNGHelloType = testProject.createType(junitComPaket, "FooTestNG.java", getTestCaseSource("com", "FooTestNG"));
 		
-		PreferencesMock preferencesMock = new PreferencesMock();
-		preferencesMock.setPrefixes(new String[] {});
-		preferencesMock.setSuffixes(new String[] {"Test"});
+		PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] {"Test"});
+		
 		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
 		Set result = testCaseDiviner.getMatches();
 		assertNotNull(result);
@@ -68,9 +67,7 @@ public class TestCaseDivinerTest extends TestCase {
 		IType testHelloType = testProject.createType(junitComPaket, "TestFoo.java", getTestCaseSource("com", "TestFoo"));
 		IType testNGHelloType = testProject.createType(junitComPaket, "BFooTest.java", getTestCaseSource("com", "BFooTest"));
 				
-		PreferencesMock preferencesMock = new PreferencesMock();
-		preferencesMock.setPrefixes(new String[] {"Test"});
-		preferencesMock.setSuffixes(new String[] {});
+		PreferencesMock preferencesMock = new PreferencesMock(new String[]{"Test"}, new String[] {});
 		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
 		Set result = testCaseDiviner.getMatches();
 		
@@ -78,7 +75,24 @@ public class TestCaseDivinerTest extends TestCase {
 		assertTrue(result.contains(testHelloType));
 		assertFalse(result.contains(testNGHelloType));
 	}
-	
+
+	public void testGetMatchesWhenPackageNameDiffers() throws CoreException {
+		IPackageFragment comPaket = testProject.createPackage("com.foo.bar");
+		IType fooType = testProject.createType(comPaket, "Foo.java", getJavaFileSource("com", "Foo"));
+		
+		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com.something");
+		IType testHelloType = testProject.createType(junitComPaket, "FooTest.java", getTestCaseSource("com.something", "FooTest"));
+		IType testNGHelloType = testProject.createType(junitComPaket, "FooTestNg.java", getTestCaseSource("com.something", "FooTestNg"));
+		
+		PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] {"Test"});
+		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
+		Set result = testCaseDiviner.getMatches();
+		
+		assertEquals(1, result.size());
+		assertTrue(result.contains(testHelloType));
+		assertFalse(result.contains(testNGHelloType));
+	}
+
 	private String getJavaFileSource(String packageName, String className) {
 		StringBuffer source = new StringBuffer();
 		source.append("package "+packageName+";").append(MagicNumbers.NEWLINE);
@@ -100,6 +114,9 @@ public class TestCaseDivinerTest extends TestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:30:56  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:21:44  gianasista
 // package rename
 //

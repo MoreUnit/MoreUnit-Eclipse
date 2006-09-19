@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.handler.EditorActionExecutor;
+import org.moreunit.log.LogHandler;
 
 /**
  * This class delegates the editor action switching between class and
@@ -22,6 +23,7 @@ public class JumpAction implements IEditorActionDelegate{
 	}
 
 	public void run(IAction action) {
+		LogHandler.getInstance().handleInfoLog("JumpAction.run()");
 		EditorActionExecutor.getInstance().executeJumpAction(editorPart);
 	}
 
@@ -30,6 +32,9 @@ public class JumpAction implements IEditorActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //

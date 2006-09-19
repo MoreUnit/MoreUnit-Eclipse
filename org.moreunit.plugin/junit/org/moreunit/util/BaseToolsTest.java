@@ -25,6 +25,10 @@ public class BaseToolsTest extends TestCase {
 		className = "EinsTest";
 		String[] suffixes = new String[] { "Test" };
 		assertEquals("Eins", BaseTools.getTestedClass(className, new String[0], suffixes, null));
+
+		className = "TestCaseDivinerTest";
+		suffixes = new String[] { "Test" };
+		assertEquals("TestCaseDiviner", BaseTools.getTestedClass(className, new String[0], suffixes, null));
 		
 		className = null;
 		assertNull(BaseTools.getTestedClass(className, new String[0], new String[0], null));
