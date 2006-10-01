@@ -36,17 +36,7 @@ public class TestProject {
 	private IPackageFragmentRoot sourceFolder;
 	
 	public TestProject() throws CoreException {
-		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		project = workspaceRoot.getProject("AProject");
-		project.create(null);
-		project.open(null);
-		
-		javaProject = JavaCore.create(project);
-		IFolder classFolder = createClassFolder();
-		setJavaNature();
-		javaProject.setRawClasspath(new IClasspathEntry[0], null);
-		createOutputFolder(classFolder);
-		addSystemLibraries();
+		this("AProject");
 	}
 	
 	public TestProject(String projectname) throws CoreException {
@@ -192,6 +182,9 @@ public class TestProject {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:30:55  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:21:44  gianasista
 // package rename
 //

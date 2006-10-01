@@ -7,6 +7,7 @@ package org.moreunit.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,6 +26,7 @@ import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
 import org.moreunit.log.LogHandler;
+import org.moreunit.properties.ProjectProperties;
 
 
 public class BaseTools {
@@ -171,6 +173,15 @@ public class BaseTools {
 	
 	private static IJavaSearchScope getSearchScope(IJavaElement compilationUnit) throws JavaModelException {
 		IJavaProject javaProject = compilationUnit.getJavaProject();
+		ArrayList<IPackageFragmentRoot> sourceFolders = getPackageFragmentsToSearch(javaProject);
+		List<IJavaProject> testProjects = ProjectProperties.instance().getJumpTargets(javaProject);
+		for (IJavaProject project : testProjects) {
+			sourceFolders.addAll(getPackageFragmentsToSearch(project));
+		}
+		return SearchEngine.createJavaSearchScope(sourceFolders.toArray(new IPackageFragmentRoot[sourceFolders.size()]));
+	}
+
+	private static ArrayList<IPackageFragmentRoot> getPackageFragmentsToSearch(IJavaProject javaProject) throws JavaModelException {
 		IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
 		ArrayList<IPackageFragmentRoot> sourceFolders = new ArrayList<IPackageFragmentRoot>();
 		for (int i = 0; i < entries.length; i++) {
@@ -179,11 +190,14 @@ public class BaseTools {
 				sourceFolders.addAll(Arrays.asList(javaProject.findPackageFragmentRoots(entry)));
 			}
 		}
-		return SearchEngine.createJavaSearchScope(sourceFolders.toArray(new IPackageFragmentRoot[sourceFolders.size()]));
+		return sourceFolders;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/09/18 20:00:05  channingwalton
+// the CVS substitions broke with my last check in because I put newlines in them
+//
 // Revision 1.3  2006/09/18 19:56:03  channingwalton
 // Fixed bug [ 1537839 ] moreunit cannot find test class if it is in wrong package.Also found a classcast exception in UnitDecorator whicj I've guarded for.Fixed the Class wizard icon
 //

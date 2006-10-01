@@ -247,9 +247,22 @@
 	</extension>
 	-->
 	
-	<extension point="org.eclipse.help.toc">
-      <toc file="help/toc.xml"
+	<extension
+       point="org.eclipse.help.toc">
+      <toc
+            file="help/toc.xml"
             primary="true"/>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.moreunit.properties.ProjectPropertiesPage"
+            id="Moreunit Properties"
+            name="MoreUnit"
+            nameFilter="*"
+            objectClass="org.eclipse.jdt.core.IJavaProject">
+      </page>
    </extension>
 	
 </plugin>

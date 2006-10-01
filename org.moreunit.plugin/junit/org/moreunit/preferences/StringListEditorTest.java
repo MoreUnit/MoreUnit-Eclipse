@@ -2,11 +2,6 @@ package org.moreunit.preferences;
 
 import junit.framework.TestCase;
 
-import org.eclipse.swt.widgets.Composite;
-import org.jmock.Mock;
-import org.jmock.cglib.MockObjectTestCase;
-import org.moreunit.preferences.StringListEditor;
-
 /**
  * @author vera
  *
