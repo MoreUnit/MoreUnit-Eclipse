@@ -63,7 +63,7 @@ public class ProjectPropertiesPage extends PropertyPage {
 
 	@Override
 	protected void performDefaults() {
-		super.performDefaults();
+		tableViewer.setAllChecked(false);
 	}
 
 	@Override
@@ -87,4 +87,7 @@ public class ProjectPropertiesPage extends PropertyPage {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/01 13:02:44  channingwalton
+// Implementation for [ 1556583 ] Extend testcase matching across whole workspace
+//
 //
