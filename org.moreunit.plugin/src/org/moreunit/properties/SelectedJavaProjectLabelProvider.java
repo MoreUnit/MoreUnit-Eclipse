@@ -23,7 +23,16 @@ public class SelectedJavaProjectLabelProvider extends LabelProvider implements I
 		}
 		return "";
 	}
+	
+	@Override
+	public String getText(Object element) {
+		SelectedJavaProject row = (SelectedJavaProject) element;
+		return row.getProjectName();
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/01 13:02:44  channingwalton
+// Implementation for [ 1556583 ] Extend testcase matching across whole workspace
+//
 //

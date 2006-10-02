@@ -1,5 +1,6 @@
 package org.moreunit;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
@@ -27,9 +28,18 @@ public abstract class AbstractMoreUnitTest extends MockObjectTestCase {
 		mockMethod.stubs().method("getDeclaringType").will(returnValue(declaringType.proxy()));
 	}
 
+	protected void dispose(TestProject testProject) throws CoreException {
+		if (testProject != null) {
+			testProject.dispose();
+		}
+	}
+
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:30:55  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:21:44  gianasista
 // package rename
 //

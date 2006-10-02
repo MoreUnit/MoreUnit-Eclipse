@@ -6,6 +6,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -38,7 +39,7 @@ public class ProjectPropertiesPage extends PropertyPage {
 
 	private void createLabel(Composite composite) {
 		Label label = new Label(composite, SWT.LEFT);
-		label.setText("Projects with tests");
+		label.setText("Projects with tests for " + getProject().getName());
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 	}
 
@@ -57,6 +58,7 @@ public class ProjectPropertiesPage extends PropertyPage {
 		SelectedJavaProjectProvider provider = new SelectedJavaProjectProvider(getJavaProject());
 		tableViewer.setContentProvider(provider);
 		tableViewer.setLabelProvider(new SelectedJavaProjectLabelProvider());
+		tableViewer.setComparator(new ViewerComparator());
 		tableViewer.setInput(provider.getElements());
 		tableViewer.setCheckedElements(provider.getCheckedElements());
 	}
@@ -87,7 +89,10 @@ public class ProjectPropertiesPage extends PropertyPage {
 }
 
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2006/10/01 13:02:44  channingwalton
+// Revision 1.2 2006/10/01 14:11:11 channingwalton
+// forgot one thing for Implementation for [ 1556583 ] Extend testcase matching across whole workspace
+//
+// Revision 1.1 2006/10/01 13:02:44 channingwalton
 // Implementation for [ 1556583 ] Extend testcase matching across whole workspace
 //
 //

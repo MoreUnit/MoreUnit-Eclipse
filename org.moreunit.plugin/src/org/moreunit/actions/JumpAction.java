@@ -16,7 +16,7 @@ import org.moreunit.log.LogHandler;
  */
 public class JumpAction implements IEditorActionDelegate{
 	
-	IEditorPart editorPart;
+	private IEditorPart editorPart;
 
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editorPart = targetEditor;
@@ -32,6 +32,9 @@ public class JumpAction implements IEditorActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/09/19 21:48:28  channingwalton
+// added some tests and logging to help debug a problem
+//
 // Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
 // initial
 //

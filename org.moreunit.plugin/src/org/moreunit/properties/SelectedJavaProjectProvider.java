@@ -59,7 +59,7 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 		}
 		return (SelectedJavaProject[]) checked.toArray(new SelectedJavaProject[checked.size()]);
 	}
-
+	
 	public void dispose() {
 
 	}
@@ -67,7 +67,11 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
 	}
+
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/01 13:02:44  channingwalton
+// Implementation for [ 1556583 ] Extend testcase matching across whole workspace
+//
 //

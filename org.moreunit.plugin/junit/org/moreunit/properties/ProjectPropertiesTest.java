@@ -33,7 +33,7 @@ public class ProjectPropertiesTest extends MockObjectTestCase {
 
 	private void dispose(TestProject testProject) throws CoreException {
 		if (testProject != null) {
-			testProject1.dispose();
+			testProject.dispose();
 		}
 	}
 

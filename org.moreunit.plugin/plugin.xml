@@ -79,6 +79,28 @@
          </action>
       </viewerContribution>
       <objectContribution
+            adaptable="false"
+            id="org.moreunit.plugin.jumpFromCompilationUnitContribution"
+            objectClass="org.eclipse.jdt.core.ICompilationUnit">
+         <action
+               class="org.moreunit.actions.JumpFromCompilationUnitAction"
+               id="org.moreunit.plugin.action1"
+               label="Jump to Test"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.moreunit.plugin.jumpFromTypeContribution"
+            objectClass="org.eclipse.jdt.core.IType">
+         <action
+               class="org.moreunit.actions.JumpFromTypeAction"
+               id="org.moreunit.plugin.action2"
+               label="Jump to Test"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+      <objectContribution
       	id="org.moreunit.testcreator"
       	objectClass="org.eclipse.jdt.core.IMethod">
       	<action id="org.moreunit.actions.testcreatoraction"
