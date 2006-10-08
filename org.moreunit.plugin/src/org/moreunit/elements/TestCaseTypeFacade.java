@@ -7,9 +7,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
@@ -41,7 +43,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 	}
 
 	public IType getCorrespondingClassUnderTest() {
-		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes(), Preferences.instance().getTestPackagePrefix());
+		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes(), Preferences.instance().getTestPackagePrefix(), Preferences.instance().getTestPackageSuffix());
 		if (testedClassString == null)
 			return null;
 
@@ -55,11 +57,18 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		return null;
 	}
+	
 
 	private String getUnqualifiedTypeName(String testedClassString) {
 		return testedClassString.lastIndexOf('.') > 0 ? testedClassString.substring(testedClassString.lastIndexOf('.') + 1) : testedClassString;
 	}
-
+	
+	/**
+	 * Creates a testmethod for the method that should be tested.
+	 * 
+	 * @param methodToTest The method that should be tested.
+	 * @return
+	 */
 	public boolean createTestMethodForMethod(IMethod methodToTest) {
 		try {
 			String methodName = methodToTest.getElementName();
@@ -82,7 +91,27 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		return false;
 	}
-
+	
+	/**
+	 * Creates another testmethod for the given method aTestMethod
+	 * 
+	 * @param aTestMethod
+	 * @return
+	 */
+	public boolean createAnotherTestMethod(IMethod aTestMethod) {
+		try {
+			String testedMethodName = BaseTools.getTestedMethod(aTestMethod.getElementName());
+			IMethod testedMethod = BaseTools.getFirstMethodWithSameNamePrefix(compilationUnit.findPrimaryType().getMethods(), testedMethodName);
+			if(testedMethod != null) {
+				
+			}
+		} catch (JavaModelException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		}
+			
+		return false;
+	}
+	
 	private String getTestMethodString(String testMethodName) {
 		if (Preferences.instance().shouldUseJunit4Type()) {
 			StringBuffer result = new StringBuffer();
@@ -112,6 +141,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.3  2006/09/18 20:00:10  channingwalton
+//the CVS substitions broke with my last check in because I put newlines in them
+//
 //Revision 1.2  2006/09/18 19:56:07  channingwalton
 //Fixed bug [ 1537839 ] moreunit cannot find test class if it is in wrong package. Also found a classcast exception in UnitDecorator whicj I've guarded for.Fixed the Class wizard icon
 //

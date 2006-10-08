@@ -71,6 +71,13 @@ public class Preferences {
 		}
 		return store().getDefaultString(PreferenceConstants.TEST_PACKAGE_PREFIX);
 	}
+	
+	public String getTestPackageSuffix() {
+		if(store().contains(PreferenceConstants.TEST_PACKAGE_SUFFIX)) {
+			return store().getString(PreferenceConstants.TEST_PACKAGE_SUFFIX);
+		}
+		return store().getDefaultString(PreferenceConstants.TEST_PACKAGE_SUFFIX);
+	}
 
 	private String[] getValues(String listPreference) {
 		if (store().contains(listPreference)) {
@@ -89,6 +96,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //

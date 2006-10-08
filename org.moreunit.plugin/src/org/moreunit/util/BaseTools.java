@@ -5,6 +5,9 @@
 package org.moreunit.util;
 
 
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.ui.JavaUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -110,14 +113,18 @@ public class BaseTools {
 	 * @param prefixes		possible prefixes of the testcase
 	 * @param suffixes		possible suffixes of the testcase
 	 * @param packagePrefix 
+	 * @param packageSuffix
 	 * @return name of the class under test
 	 */
-	public static String getTestedClass(String testCaseClass, String[] prefixes, String[] suffixes, String packagePrefix) {
+	public static String getTestedClass(String testCaseClass, String[] prefixes, String[] suffixes, String packagePrefix, String packageSuffix) {
 		if(testCaseClass == null || testCaseClass.length() <= 1)
 			return null;
 		
 		if (packagePrefix != null && packagePrefix.length() > 0) {
 			testCaseClass = testCaseClass.replaceFirst(packagePrefix + "\\.", "");
+		}
+		if(packageSuffix != null && packageSuffix.length() > 0) {
+			testCaseClass = removeSuffixFromTestCase(testCaseClass, packageSuffix);
 		}
 		
 		if(suffixes != null) {
@@ -135,6 +142,24 @@ public class BaseTools {
 		}
 		
 		return null;
+	}
+	
+	protected static String removeSuffixFromTestCase(String testClassName, String packageSuffix) {
+		String[] pathElements = testClassName.split("\\.");
+		int theLastButOne = pathElements.length - 2;
+		if(theLastButOne < 0)
+			return testClassName;
+		if(pathElements[theLastButOne].equals(packageSuffix)) {
+			pathElements[theLastButOne] = MagicNumbers.EMPTY_STRING;
+			
+			StringBuffer result = new StringBuffer();
+			for(int i=0; i<theLastButOne; i++) {
+				result.append(pathElements[i]).append(MagicNumbers.STRING_DOT);
+			}
+			return result.append(pathElements[pathElements.length-1]).toString();
+		}
+		
+		return testClassName;
 	}
 	
 	/**
@@ -155,6 +180,32 @@ public class BaseTools {
 		result.append(Character.toLowerCase(erstesZeichen));
 		result.append(testMethodName.substring(5));
 		return result.toString();
+	}
+	
+	/**
+	 * Returns the first method which has the same beginning.<br>
+	 * Example:<br>
+	 * methods[0] = some()<br>
+	 * methods[1] = foo()<br>
+	 * methodName = "fooSome"<br>
+	 * returns foo()<br>
+	 * If no method is found in the array, this method returns <code>null</code>.
+	 * 
+	 * @param methods
+	 * @param methodName
+	 * @return
+	 */
+	public static IMethod getFirstMethodWithSameNamePrefix(IMethod[] methods, String methodName) {
+		if(methodName != null) {
+			for(int i=0; i<methods.length; i++) {
+				IMethod method = methods[i];
+				if(methodName.startsWith(method.getElementName()) && method.exists()) {
+					return method;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public static Set<IType> searchFor(String typeName, IJavaElement sourceCompilationUnit) throws JavaModelException, CoreException {
@@ -195,6 +246,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/10/01 13:02:43  channingwalton
+// Implementation for [ 1556583 ] Extend testcase matching across whole workspace
+//
 // Revision 1.4  2006/09/18 20:00:05  channingwalton
 // the CVS substitions broke with my last check in because I put newlines in them
 //

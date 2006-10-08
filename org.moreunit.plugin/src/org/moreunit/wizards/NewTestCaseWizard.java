@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.util.BaseTools;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
@@ -53,11 +54,23 @@ public class NewTestCaseWizard extends NewClassyWizard {
 
 	private void initialisePackageFragment() {
 		String testPackagePrefix = Preferences.instance().getTestPackagePrefix();
-		if (testPackagePrefix == null || testPackagePrefix.length() == 0) {
+		String testPackageSuffix = Preferences.instance().getTestPackageSuffix();
+		
+		boolean hasPrefix = (testPackagePrefix != null) &&  (testPackagePrefix.length() > 0);
+		boolean hasSuffix = (testPackageSuffix != null) &&  (testPackageSuffix.length() > 0);
+		
+		if (!hasPrefix && !hasSuffix) {
 			return;
 		}
+		
+		String fragment = null;
+		if(hasPrefix)
+			fragment = getPackageFragmentNameWithPrefix();
+		else
+			fragment = getPackageFragmentNameWithSuffix();
+		
 		try {
-			IPackageFragment packageFragment = createPackageFragment(getPackageFragmentNameWithPrefix());
+			IPackageFragment packageFragment = createPackageFragment(fragment);
 			pageOne.setPackageFragment(packageFragment, true);
 		} catch (JavaModelException e) {
 			LogHandler.getInstance().handleWarnLog("Unable to create package fragment root");
@@ -66,6 +79,11 @@ public class NewTestCaseWizard extends NewClassyWizard {
 
 	private String getPackageFragmentNameWithPrefix() {
 		return Preferences.instance().getTestPackagePrefix() + "." + pageOne.getPackageFragment().getElementName();
+	}
+	
+	private String getPackageFragmentNameWithSuffix() {
+		//return BaseTools.addPackageFragmentSuffixToElementName(pageOne.getPackageFragment().getElementName(), Preferences.instance().getTestPackageSuffix());
+		return pageOne.getPackageFragment().getElementName() + "." + Preferences.instance().getTestPackageSuffix();
 	}
 
 	public IType createClass() throws CoreException, InterruptedException {
@@ -79,6 +97,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //
