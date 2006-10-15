@@ -1,5 +1,6 @@
 package org.moreunit.handler;
 
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -21,6 +22,7 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.util.BaseTools;
 import org.moreunit.wizards.NewClassWizard;
 import org.moreunit.wizards.NewTestCaseWizard;
+
 
 /**
  * Handles the actions which are delegated from the handlers:<br>
@@ -53,11 +55,13 @@ public class EditorActionExecutor {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		if (TypeFacade.isTestCase(editorPartFacade.getCompilationUnit().findPrimaryType())) {
-			LogHandler.getInstance().handleInfoLog("The class is a testcase.");
-			return;
-		}
+		if(TypeFacade.isTestCase(editorPartFacade.getCompilationUnit().findPrimaryType()))
+			createAnotherTestMethod(editorPartFacade);
+		else 
+			createFirstTestMethod(editorPartFacade);
+	}
 
+	private void createFirstTestMethod(EditorPartFacade editorPartFacade) {
 		IMethod method = editorPartFacade.getMethodUnderCursorPosition();
 		if (method == null) {
 			LogHandler.getInstance().handleInfoLog("No method found under cursor position");
@@ -75,7 +79,18 @@ public class EditorActionExecutor {
 		else
 			LogHandler.getInstance().handleInfoLog("No testmethod is created.");
 	}
-
+	
+	private void createAnotherTestMethod(EditorPartFacade testCaseTypeFacade) {
+		IMethod method = testCaseTypeFacade.getMethodUnderCursorPosition();
+		if(method == null) {
+			LogHandler.getInstance().handleInfoLog("No method found under cursor position");
+			return;
+		}
+		
+		TestCaseTypeFacade testFacade = new TestCaseTypeFacade(method.getCompilationUnit());
+		
+	}
+	
 	public void executeJumpAction(IEditorPart editorPart) {
 		IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
 		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
@@ -161,60 +176,63 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
+// Revision 1.2  2006/10/02 18:22:23  channingwalton
+// added actions for jumping from views. added some tests for project properties. improved some of the text
+//
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
-// Revision 1.1 2006/06/22 20:22:29 gianasista
+// Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //
-// Revision 1.1 2006/06/19 20:08:48 gianasista
+// Revision 1.1  2006/06/19 20:08:48  gianasista
 // CVS Refactoring
 //
-// Revision 1.2 2006/05/23 19:39:15 gianasista
+// Revision 1.2  2006/05/23 19:39:15  gianasista
 // Splitted JavaFileFacade into two classes
 //
-// Revision 1.1 2006/05/20 16:08:21 gianasista
+// Revision 1.1  2006/05/20 16:08:21  gianasista
 // Rename of MoreUnitActionHandler, new name EditorActionExecutor
 //
-// Revision 1.18 2006/05/18 06:57:48 channingwalton
+// Revision 1.18  2006/05/18 06:57:48  channingwalton
 // fixed some warnings and deprecated APIs
 //
-// Revision 1.17 2006/05/15 19:50:42 gianasista
+// Revision 1.17  2006/05/15 19:50:42  gianasista
 // removed deprecated method call
 //
-// Revision 1.16 2006/05/14 19:08:57 gianasista
+// Revision 1.16  2006/05/14 19:08:57  gianasista
 // JumpToTest uses TypeChoiceDialog
 //
-// Revision 1.15 2006/05/12 22:33:42 channingwalton
+// Revision 1.15  2006/05/12 22:33:42  channingwalton
 // added class creation wizards if type to jump to does not exist
 //
-// Revision 1.14 2006/05/12 17:53:07 gianasista
+// Revision 1.14  2006/05/12 17:53:07  gianasista
 // added comments
 //
-// Revision 1.13 2006/04/21 05:57:17 gianasista
+// Revision 1.13  2006/04/21 05:57:17  gianasista
 // Feature: Jump from testcase back to class under test
 //
-// Revision 1.12 2006/04/14 17:14:22 gianasista
+// Revision 1.12  2006/04/14 17:14:22  gianasista
 // Refactoring Support with dialog
 //
-// Revision 1.11 2006/03/21 20:59:49 gianasista
+// Revision 1.11  2006/03/21 20:59:49  gianasista
 // Bugfix JumpToTest
 //
-// Revision 1.10 2006/02/27 19:55:56 gianasista
+// Revision 1.10  2006/02/27 19:55:56  gianasista
 // Started hover support
 //
-// Revision 1.9 2006/01/30 21:12:31 gianasista
+// Revision 1.9  2006/01/30 21:12:31  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
-// Revision 1.8 2006/01/28 15:48:25 gianasista
+// Revision 1.8  2006/01/28 15:48:25  gianasista
 // Moved several methods from PluginTools to EditorPartFacade
 //
-// Revision 1.7 2006/01/25 21:27:19 gianasista
+// Revision 1.7  2006/01/25 21:27:19  gianasista
 // First refactoring to smarter code (Replacing util-classes)
 //
-// Revision 1.6 2006/01/20 21:33:30 gianasista
+// Revision 1.6  2006/01/20 21:33:30  gianasista
 // Organize Imports
 //
-// Revision 1.5 2006/01/19 21:38:32 gianasista
+// Revision 1.5  2006/01/19 21:38:32  gianasista
 // Added CVS-commit-logging to all java-files
 //
