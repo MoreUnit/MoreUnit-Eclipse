@@ -2,7 +2,7 @@
 <feature
       id="moreUnit"
       label="moreUnit Plug-In"
-      version="0.5.2"
+      version="0.6.0"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
@@ -122,7 +122,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="moreUnit"
          download-size="0"
          install-size="0"
-         version="0.5.2"
+         version="0.6.0"
          unpack="false"/>
 
 </feature>
