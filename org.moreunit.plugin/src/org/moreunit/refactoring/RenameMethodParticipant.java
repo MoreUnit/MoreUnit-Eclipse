@@ -2,14 +2,11 @@ package org.moreunit.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -24,17 +21,21 @@ import org.moreunit.log.LogHandler;
  */
 public class RenameMethodParticipant extends RenameParticipant {
 
-	IMethod			method;
-	ClassTypeFacade	javaFileFacade;
+	private IMethod			renamedMethod;
+	private ClassTypeFacade	javaFileFacade;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.initialize");
-		method = (IMethod) element;
-		if (TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType()))
+		setMethod(element);
+		if (TypeFacade.isTestCase(renamedMethod.getCompilationUnit().findPrimaryType()))
 			return false;
 
-		javaFileFacade = new ClassTypeFacade(method.getCompilationUnit());
+		javaFileFacade = new ClassTypeFacade(renamedMethod.getCompilationUnit());
 		return true;
+	}
+
+	public void setMethod(Object element) {
+		renamedMethod = (IMethod) element;
 	}
 
 	public String getName() {
@@ -48,7 +49,6 @@ public class RenameMethodParticipant extends RenameParticipant {
 	}
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.createChange");
 
 		if (!getArguments().getUpdateReferences()) {
@@ -56,15 +56,14 @@ public class RenameMethodParticipant extends RenameParticipant {
 		}
 		List<Change> changes = new ArrayList<Change>();
 
-		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
-		if (allTestcases == null) {
+		List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethods(renamedMethod);
+		if (allTestMethods == null) {
 			return null;
 		}
-		for (IType test : allTestcases) {
-			IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method, test);
-
+		for (IMethod testMethod : allTestMethods) {
 			if (testMethod != null) {
-				changes.add(new RenameMethodChange(testMethod, getNewTestMethodName()));
+				String newTestMethodName = getNewTestMethodName(testMethod.getElementName(), renamedMethod.getElementName(), getArguments().getNewName());
+				changes.add(new RenameMethodChange(testMethod, newTestMethodName));
 			}
 		}
 
@@ -77,16 +76,23 @@ public class RenameMethodParticipant extends RenameParticipant {
 		}
 
 		return null;
-
 	}
 
-	private String getNewTestMethodName() {
-		String newName = getArguments().getNewName();
-		return "test" + newName.substring(0,1).toUpperCase() + newName.substring(1);
+	String getNewTestMethodName(String testMethodCurrentName, String renamedMethodOldName, String renamedMethodNewName) {
+		String old = upperCaseFirstLetter(renamedMethodOldName);
+		String newName = upperCaseFirstLetter(renamedMethodNewName);
+		return testMethodCurrentName.replaceFirst(old, newName);
+	}
+
+	private String upperCaseFirstLetter(String word) {
+		return word.substring(0,1).toUpperCase() + word.substring(1);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/21 06:18:34  channingwalton
+// removed some unnecessary casts, fixed a NPE
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
