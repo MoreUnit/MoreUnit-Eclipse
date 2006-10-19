@@ -1,6 +1,7 @@
 package org.moreunit.elements;
 
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -56,7 +57,9 @@ public class JavaProjectFacade {
 	
 	public void deleteTestCaseMarkers() {
 		try {
-			javaProject.getProject().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+			IProject project = javaProject.getProject();
+			if(project.isAccessible())
+				project.deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -92,6 +95,9 @@ public class JavaProjectFacade {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/21 06:18:33  channingwalton
+// removed some unnecessary casts, fixed a NPE
+//
 // Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
 // initial
 //
@@ -122,3 +128,4 @@ public class JavaProjectFacade {
 // Revision 1.1  2006/01/30 21:12:32  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
+	

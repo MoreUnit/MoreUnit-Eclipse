@@ -31,7 +31,7 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 		
 		List<SelectedJavaProject> rows = new ArrayList<SelectedJavaProject>();
 		for (int i = 0; i < projects.length; i++) {
-			if (isJavaProject(projects[i]) && !project.getProject().equals(projects[i])) {
+			if (projects[i].isAccessible() && isJavaProject(projects[i]) && !project.getProject().equals(projects[i])) {
 				IJavaProject javaProject = JavaCore.create(projects[i]);
 				rows.add(new SelectedJavaProject(javaProject, jumpTargets.contains(javaProject)));
 			}
@@ -71,6 +71,9 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/02 18:22:23  channingwalton
+// added actions for jumping from views. added some tests for project properties. improved some of the text
+//
 // Revision 1.1  2006/10/01 13:02:44  channingwalton
 // Implementation for [ 1556583 ] Extend testcase matching across whole workspace
 //

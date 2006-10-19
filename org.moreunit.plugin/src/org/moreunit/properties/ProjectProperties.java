@@ -43,10 +43,12 @@ public class ProjectProperties {
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		
 		for (int i = 0; i < allProjects.length; i++) {
-			if (allProjects[i].hasNature(JavaCore.NATURE_ID)) {
-				IJavaProject candidate = JavaCore.create(allProjects[i]);
-				if (getJumpTargetsFrom(candidate).contains(javaProject)) {
-					projects.add(candidate);
+			if(allProjects[i].isAccessible()) {
+				if (allProjects[i].hasNature(JavaCore.NATURE_ID)) {
+					IJavaProject candidate = JavaCore.create(allProjects[i]);
+					if (getJumpTargetsFrom(candidate).contains(javaProject)) {
+						projects.add(candidate);
+					}
 				}
 			}
 		}
@@ -97,5 +99,8 @@ public class ProjectProperties {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/01 13:02:44  channingwalton
+// Implementation for [ 1556583 ] Extend testcase matching across whole workspace
+//
 //
 
