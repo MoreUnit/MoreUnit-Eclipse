@@ -40,7 +40,7 @@ public class RenameMethodParticipant extends RenameParticipant {
 
 	public String getName() {
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.getName");
-		return "MoreUnitRenameMethodParticipant";
+		return "MoreUnit Rename Method";
 	}
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
@@ -90,6 +90,9 @@ public class RenameMethodParticipant extends RenameParticipant {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/18 22:13:16  channingwalton
+// fixes for [ 1580067 ] Renaming a method renames only one test method and [ 1579278 ] Renaming methods truncates some testcase method names
+//
 // Revision 1.2  2006/08/21 06:18:34  channingwalton
 // removed some unnecessary casts, fixed a NPE
 //

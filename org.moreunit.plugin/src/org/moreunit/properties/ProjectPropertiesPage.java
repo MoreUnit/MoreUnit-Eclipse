@@ -2,6 +2,7 @@ package org.moreunit.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -83,12 +84,18 @@ public class ProjectPropertiesPage extends PropertyPage {
 	}
 
 	private IJavaProject getJavaProject() {
-		return (IJavaProject) getElement();
+		if (getElement() instanceof IJavaProject) {
+			return (IJavaProject) getElement();
+		}
+		return JavaCore.create((IProject) getElement());
 	}
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3 2006/10/02 18:22:23 channingwalton
+// added actions for jumping from views. added some tests for project properties. improved some of the text
+//
 // Revision 1.2 2006/10/01 14:11:11 channingwalton
 // forgot one thing for Implementation for [ 1556583 ] Extend testcase matching across whole workspace
 //

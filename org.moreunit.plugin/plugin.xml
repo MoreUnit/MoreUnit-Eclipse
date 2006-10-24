@@ -285,6 +285,22 @@
             nameFilter="*"
             objectClass="org.eclipse.jdt.core.IJavaProject">
       </page>
+      <page
+            class="org.moreunit.properties.ProjectPropertiesPage"
+            id="Moreunit Properties"
+            name="MoreUnit"
+            nameFilter="*"
+            >
+         <filter
+               name="nature"
+               value="org.eclipse.jdt.core.javanature">
+         </filter>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.core.resources.IProject">
+            </instanceof>
+         </enabledWhen>
+      </page>
    </extension>
 	
 </plugin>

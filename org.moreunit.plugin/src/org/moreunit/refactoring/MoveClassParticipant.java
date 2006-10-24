@@ -23,7 +23,7 @@ public class MoveClassParticipant extends MoveParticipant{
 
 	public String getName() {
 		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.getName");
-		return null;
+		return "MoreUnit Move Class";
 	}
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
@@ -40,6 +40,9 @@ public class MoveClassParticipant extends MoveParticipant{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //

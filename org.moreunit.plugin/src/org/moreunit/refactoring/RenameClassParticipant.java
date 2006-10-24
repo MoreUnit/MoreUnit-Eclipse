@@ -41,7 +41,7 @@ public class RenameClassParticipant extends RenameParticipant{
 
 	public String getName() {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.getName");
-		return "MoreUnitRenameClassParticipant";
+		return "MoreUnit Rename Class";
 	}
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
@@ -83,6 +83,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/08/21 06:18:34  channingwalton
+// removed some unnecessary casts, fixed a NPE
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
