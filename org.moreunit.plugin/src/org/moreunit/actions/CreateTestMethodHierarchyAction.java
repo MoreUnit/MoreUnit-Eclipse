@@ -32,7 +32,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 				IMethod method = (IMethod)firstElement;
 				if(!TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType())) {
 					ClassTypeFacade classTypeFacade = new ClassTypeFacade(method.getCompilationUnit());
-					IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase();
+					IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(false);
 					if(oneCorrespondingTestCase == null)
 						return;
 					
@@ -49,6 +49,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //

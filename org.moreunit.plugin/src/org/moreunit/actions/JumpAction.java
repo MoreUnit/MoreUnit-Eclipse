@@ -23,7 +23,6 @@ public class JumpAction implements IEditorActionDelegate{
 	}
 
 	public void run(IAction action) {
-		LogHandler.getInstance().handleInfoLog("JumpAction.run()");
 		EditorActionExecutor.getInstance().executeJumpAction(editorPart);
 	}
 
@@ -32,6 +31,9 @@ public class JumpAction implements IEditorActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/02 18:22:24  channingwalton
+// added actions for jumping from views. added some tests for project properties. improved some of the text
+//
 // Revision 1.2  2006/09/19 21:48:28  channingwalton
 // added some tests and logging to help debug a problem
 //

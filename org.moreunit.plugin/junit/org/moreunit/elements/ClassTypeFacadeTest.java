@@ -25,9 +25,9 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 		
 		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
 		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testHelloType = testProject.createType(junitComPaket, "HelloTest.java", getTestCaseSource1());
+		testProject.createType(junitComPaket, "HelloTest.java", getTestCaseSource1());
 		
-		IType testCaseType = javaFileFacade.getOneCorrespondingTestCase();
+		IType testCaseType = javaFileFacade.getOneCorrespondingTestCase(false);
 		
 		assertNotNull(testCaseType);
 		assertEquals("com.HelloTest", testCaseType.getFullyQualifiedName());
@@ -38,7 +38,7 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 		IType helloType = testProject.createType(comPaket, "HelloEnum.java", getEnumSourceFile());
 		
 		ClassTypeFacade javaFileFacade = new ClassTypeFacade(helloType.getCompilationUnit());
-		assertNull(javaFileFacade.getOneCorrespondingTestCase());
+		assertNull(javaFileFacade.getOneCorrespondingTestCase(false));
 	}
 	
 	public void testGetCorrespondingTestMethod() throws CoreException {
@@ -66,7 +66,7 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 		
 		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
 		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testCaseType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource4());
+		testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource4());
 		
 		IMethod methodGetOneString = musterType.getMethods()[0];
 		IMethod methodGetTwoString = musterType.getMethods()[1];

@@ -21,7 +21,6 @@ import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.BaseTools;
 import org.moreunit.wizards.NewClassWizard;
-import org.moreunit.wizards.NewTestCaseWizard;
 
 
 /**
@@ -69,10 +68,7 @@ public class EditorActionExecutor {
 		}
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(method.getCompilationUnit());
 
-		IType typeOfTestCaseClassFromJavaFile = classTypeFacade.getOneCorrespondingTestCase();
-
-		if (typeOfTestCaseClassFromJavaFile == null)
-			typeOfTestCaseClassFromJavaFile = new NewTestCaseWizard(classTypeFacade.getType()).open();
+		IType typeOfTestCaseClassFromJavaFile = classTypeFacade.getOneCorrespondingTestCase(true);
 
 		if (typeOfTestCaseClassFromJavaFile != null && typeOfTestCaseClassFromJavaFile.exists())
 			(new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit())).createTestMethodForMethod(method);
@@ -87,6 +83,7 @@ public class EditorActionExecutor {
 			return;
 		}
 		
+		// TODO I don't think this is doing anything - delete it ?
 		TestCaseTypeFacade testFacade = new TestCaseTypeFacade(method.getCompilationUnit());
 		
 	}
@@ -127,14 +124,12 @@ public class EditorActionExecutor {
 	}
 
 	private void executeJumpToTest(IEditorPart editorPart, ClassTypeFacade javaFileFacade) {
-		IType testcaseToJump = javaFileFacade.getOneCorrespondingTestCase();
-		if (testcaseToJump == null)
-			testcaseToJump = new NewTestCaseWizard(javaFileFacade.getType()).open();
+		IType testcaseToJump = javaFileFacade.getOneCorrespondingTestCase(true);
 
 		if (testcaseToJump != null) {
 			try {
 				IEditorPart openedEditor = JavaUI.openInEditor(testcaseToJump.getParent());
-				jumpToTestMethodIfPossible(editorPart, openedEditor);
+				jumpToTestMethodIfPossible(editorPart, openedEditor, testcaseToJump);
 			} catch (PartInitException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			} catch (JavaModelException exc) {
@@ -143,13 +138,13 @@ public class EditorActionExecutor {
 		}
 	}
 
-	private void jumpToTestMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart) {
+	private void jumpToTestMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart, IType testCaseType) {
 		EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
 		IMethod method = (oldEditorPartFacade).getMethodUnderCursorPosition();
 		if (method == null)
 			return;
 
-		IMethod testMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition();
+		IMethod testMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition(testCaseType);
 		if (testMethod != null)
 			JavaUI.revealInEditor(openedEditorPart, (IJavaElement) testMethod);
 	}
@@ -176,6 +171,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/15 18:31:16  gianasista
+// Started to implement the feature to create several test methods for one methods
+//
 // Revision 1.2  2006/10/02 18:22:23  channingwalton
 // added actions for jumping from views. added some tests for project properties. improved some of the text
 //

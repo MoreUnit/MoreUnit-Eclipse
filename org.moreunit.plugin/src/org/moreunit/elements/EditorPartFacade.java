@@ -75,14 +75,13 @@ public class EditorPartFacade {
 		return getCompilationUnit().getJavaProject();
 	}
 	
-	public IMethod getFirstTestMethodForMethodUnderCursorPosition() {
+	public IMethod getFirstTestMethodForMethodUnderCursorPosition(IType testcaseType) {
 		if(TypeFacade.isTestCase(getCompilationUnit().findPrimaryType()))
 			return null;
 		
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(getCompilationUnit());
 		
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-		IType testcaseType = classTypeFacade.getOneCorrespondingTestCase();
 		return classTypeFacade.getCorrespondingTestMethod(methodUnderCursorPosition, testcaseType);
 	}
 	
@@ -93,13 +92,16 @@ public class EditorPartFacade {
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(getCompilationUnit());
 		
 		IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-		classTypeFacade.getOneCorrespondingTestCase();
+		classTypeFacade.getOneCorrespondingTestCase(false);
 		return classTypeFacade.getCorrespondingTestMethods(methodUnderCursorPosition);
 	}
 }
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //
