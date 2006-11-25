@@ -1,6 +1,8 @@
 package org.moreunit.elements;
 
 
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -13,6 +15,7 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.properties.ProjectProperties;
 import org.moreunit.util.MagicNumbers;
 
 /**
@@ -29,9 +32,22 @@ public class JavaProjectFacade {
 		this.javaProject = javaProject;
 	}
 
+	/**
+	 * Tries to get the sourcefolder for the unittests.
+	 * If there are several projects for the tests in the project specific settings,
+	 * this method chooses the first project from the settings.
+	 */
 	public IPackageFragmentRoot getJUnitSourceFolder() {
+		List<IJavaProject> listOfProjects = ProjectProperties.instance().getJumpTargets(javaProject);
+		
+		IJavaProject referenceJavaProject = null;
+		if(listOfProjects.size() == 0)
+			referenceJavaProject = javaProject;
+		else
+			referenceJavaProject = listOfProjects.get(0);
+		
 		try {
-			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
+			IPackageFragmentRoot[] packageFragmentRoots = referenceJavaProject.getPackageFragmentRoots();
 			for(int i=0; i<packageFragmentRoots.length; i++) {
 				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
 				String junitFolder = Preferences.instance().getJunitDirectoryFromPreferences();
@@ -95,6 +111,9 @@ public class JavaProjectFacade {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/19 19:17:10  gianasista
+// Bugfixing: Problems with closed projects solved
+//
 // Revision 1.2  2006/08/21 06:18:33  channingwalton
 // removed some unnecessary casts, fixed a NPE
 //
