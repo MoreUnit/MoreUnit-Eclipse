@@ -95,10 +95,19 @@ public class EditorPartFacade {
 		classTypeFacade.getOneCorrespondingTestCase(false);
 		return classTypeFacade.getCorrespondingTestMethods(methodUnderCursorPosition);
 	}
+
+	public IEditorPart getEditorPart() {
+		return editorPart;
+	}
+	
+	
 }
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/04 08:50:17  channingwalton
+// Fix for [ 1579660 ] Testcase selection dialog opens twice
+//
 // Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
 // initial
 //
