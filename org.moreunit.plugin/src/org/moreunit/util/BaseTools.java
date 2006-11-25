@@ -243,9 +243,20 @@ public class BaseTools {
 		}
 		return sourceFolders;
 	}
+	
+	public static String firstCharToUpperCase(String aString) {
+		if(aString == null || aString.length() == 0)
+			return aString;
+		
+		String firstChar = String.valueOf(aString.charAt(0));
+		return aString.replaceFirst(firstChar, firstChar.toUpperCase());
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/08 17:28:50  gianasista
+// Suffix preference
+//
 // Revision 1.5  2006/10/01 13:02:43  channingwalton
 // Implementation for [ 1556583 ] Extend testcase matching across whole workspace
 //

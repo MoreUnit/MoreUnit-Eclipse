@@ -1,7 +1,5 @@
 package org.moreunit.util;
 
-import org.moreunit.util.BaseTools;
-
 import junit.framework.TestCase;
 
 public class BaseToolsTest extends TestCase {
@@ -99,5 +97,15 @@ public class BaseToolsTest extends TestCase {
 		
 		testClassName = "test.MyTest";
 		assertEquals("MyTest", BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix));
+	}
+
+	public void testFirstCharToUpperCase() {
+		assertEquals("Test", BaseTools.firstCharToUpperCase("test"));
+		assertEquals("Test", BaseTools.firstCharToUpperCase("Test"));
+		assertEquals("T", BaseTools.firstCharToUpperCase("t"));
+		assertEquals("T", BaseTools.firstCharToUpperCase("T"));
+		assertEquals(null, BaseTools.firstCharToUpperCase(null));
+		assertEquals("", BaseTools.firstCharToUpperCase(""));
+		
 	}
 }
