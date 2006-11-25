@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.util.BaseTools;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
@@ -97,6 +96,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/08 17:28:29  gianasista
+// Suffix preference
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
