@@ -42,6 +42,22 @@ public class TestCaseTypeFacadeTest extends ProjectTestCase {
 		assertNotNull(correspondingTestMethodGetTwoString);
 		assertEquals("testGetTwoString", correspondingTestMethodGetTwoString.getElementName());
 	}
+	
+	public void testCreateAnotherTestMethod() throws CoreException {
+		IPackageFragment comPaket = testProject.createPackage("com");
+		testProject.createType(comPaket, "Muster.java", getJavaFileSource3());
+		
+		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
+		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
+		IType testMusterType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource3());
+		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
+
+		IMethod testMethod = testMusterType.getMethods()[0];
+		IMethod newTestMethod = testJavaFileFacade.createAnotherTestMethod(testMethod);
+		assertNotNull(newTestMethod);
+		assertEquals("testGetOneString2", newTestMethod.getElementName());
+		
+	}
 
 	private String getJavaFileSource3() {
 		StringBuffer source = new StringBuffer();
@@ -66,4 +82,46 @@ public class TestCaseTypeFacadeTest extends ProjectTestCase {
 		
 		return source.toString();		
 	}
+
+	public void testGetCorrespondingTestedMethod() throws CoreException {
+		IPackageFragment comPaket = testProject.createPackage("com");
+		IType musterType = testProject.createType(comPaket, "Muster2.java", getJavaFileSourceForTestGetCorrespondingTestedMethod());
+		ClassTypeFacade javaFileFacade = new ClassTypeFacade(musterType.getCompilationUnit());
+		
+		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
+		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
+		IType testMusterType = testProject.createType(junitComPaket, "Muster2Test.java", getTestCaseSourceTestGetCorrespondingTestedMethod());
+		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
+		
+		IMethod testMethod = testMusterType.getMethods()[0];
+		IMethod method = testJavaFileFacade.getCorrespondingTestedMethod(testMethod, musterType);
+		assertNotNull(method);
+		assertEquals("getOneString", method.getElementName());
+	}
+	
+	private String getJavaFileSourceForTestGetCorrespondingTestedMethod() {
+		StringBuffer source = new StringBuffer();
+		source.append("package com;").append(MagicNumbers.NEWLINE);
+		source.append("public class Muster2 {").append(MagicNumbers.NEWLINE);
+		source.append("public String getOneString() { return \"1\"; }").append(MagicNumbers.NEWLINE);
+		source.append("public String getTwoString() { return \"2\"; }").append(MagicNumbers.NEWLINE);
+		source.append("}");
+		
+		return source.toString();
+	}
+	
+	private String getTestCaseSourceTestGetCorrespondingTestedMethod() {
+		StringBuffer source = new StringBuffer();
+		source.append("package com;").append(MagicNumbers.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
+		source.append("public class Muster2Test extends TestCase{").append(MagicNumbers.NEWLINE);
+		source.append("public void testGetOneString() {").append(MagicNumbers.NEWLINE);
+		source.append("assertTrue(true);").append(MagicNumbers.NEWLINE);
+		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("}");
+		
+		return source.toString();		
+	}
+
+	
 }

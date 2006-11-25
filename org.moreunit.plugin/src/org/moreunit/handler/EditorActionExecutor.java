@@ -9,6 +9,9 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.moreunit.actions.CreateTestMethodEditorAction;
@@ -19,7 +22,6 @@ import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.BaseTools;
 import org.moreunit.wizards.NewClassWizard;
 
 
@@ -83,9 +85,16 @@ public class EditorActionExecutor {
 			return;
 		}
 		
-		// TODO I don't think this is doing anything - delete it ?
 		TestCaseTypeFacade testFacade = new TestCaseTypeFacade(method.getCompilationUnit());
+		IMethod newMethod = testFacade.createAnotherTestMethod(method);
 		
+		if(newMethod != null) {
+			ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
+			ISelection selection = new StructuredSelection(newMethod);
+			selectionProvider.setSelection(selection);
+	
+			JavaUI.revealInEditor(testCaseTypeFacade.getEditorPart(), (IJavaElement)newMethod);
+		}
 	}
 	
 	public void executeJumpAction(IEditorPart editorPart) {
@@ -155,22 +164,17 @@ public class EditorActionExecutor {
 		if (methode == null)
 			return;
 
-		String testedMethodName = BaseTools.getTestedMethod(methode.getElementName());
-		if (testedMethodName != null) {
-			IMethod[] foundTestMethods = classUnderTest.getMethods();
-			for (int i = 0; i < foundTestMethods.length; i++) {
-				IMethod method = foundTestMethods[i];
-				if (testedMethodName.startsWith(method.getElementName()) && method.exists()) {
-					JavaUI.revealInEditor(openedEditorPart, (IJavaElement) method);
-					return;
-				}
-			}
-		}
-
+		TestCaseTypeFacade testCase = new TestCaseTypeFacade(oldEditorPartFacade.getCompilationUnit());
+		IMethod testedMethod = testCase.getCorrespondingTestedMethod(methode, classUnderTest);
+		if(testedMethod != null)
+			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)testedMethod);
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/11/04 08:50:19  channingwalton
+// Fix for [ 1579660 ] Testcase selection dialog opens twice
+//
 // Revision 1.3  2006/10/15 18:31:16  gianasista
 // Started to implement the feature to create several test methods for one methods
 //

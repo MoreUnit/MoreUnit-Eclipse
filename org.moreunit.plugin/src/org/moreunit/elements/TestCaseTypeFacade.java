@@ -12,6 +12,11 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
@@ -58,6 +63,25 @@ public class TestCaseTypeFacade extends TypeFacade {
 		return null;
 	}
 	
+	public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest) {
+		try {
+			String testedMethodName = BaseTools.getTestedMethod(testMethod.getElementName());
+			if (testedMethodName != null) {
+				IMethod[] foundTestMethods = classUnderTest.getMethods();
+				for (int i = 0; i < foundTestMethods.length; i++) {
+					IMethod method = foundTestMethods[i];
+					if (testedMethodName.startsWith(method.getElementName()) && method.exists()) {
+						return method;
+					}
+				}
+			}
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+		
+		return null;
+	}
+	
 
 	private String getUnqualifiedTypeName(String testedClassString) {
 		return testedClassString.lastIndexOf('.') > 0 ? testedClassString.substring(testedClassString.lastIndexOf('.') + 1) : testedClassString;
@@ -72,9 +96,8 @@ public class TestCaseTypeFacade extends TypeFacade {
 	public boolean createTestMethodForMethod(IMethod methodToTest) {
 		try {
 			String methodName = methodToTest.getElementName();
-			String erstesZeichen = String.valueOf(methodName.charAt(0));
-			methodName = methodName.replaceFirst(erstesZeichen, erstesZeichen.toUpperCase());
-
+			methodName = BaseTools.firstCharToUpperCase(methodName);
+			
 			String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + methodName;
 			if (doesMethodExist(testMethodName))
 				return false;
@@ -96,20 +119,27 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 * Creates another testmethod for the given method aTestMethod
 	 * 
 	 * @param aTestMethod
+	 * @param testCaseTypeFacade The editorPart is necessary to reset the cursor position
 	 * @return
 	 */
-	public boolean createAnotherTestMethod(IMethod aTestMethod) {
+	public IMethod createAnotherTestMethod(IMethod aTestMethod) {
 		try {
 			String testedMethodName = BaseTools.getTestedMethod(aTestMethod.getElementName());
-			IMethod testedMethod = BaseTools.getFirstMethodWithSameNamePrefix(compilationUnit.findPrimaryType().getMethods(), testedMethodName);
+			IMethod testedMethod = BaseTools.getFirstMethodWithSameNamePrefix(getCorrespondingClassUnderTest().getMethods(), testedMethodName);
 			if(testedMethod != null) {
+				String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
+				if (doesMethodExist(testMethodName))
+					testMethodName = testMethodName + "2";
 				
+				IMethod newTestMethod = compilationUnit.findPrimaryType().createMethod(getTestMethodString(testMethodName), null, true, null);
+
+				return newTestMethod;
 			}
 		} catch (JavaModelException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
 		}
 			
-		return false;
+		return null;
 	}
 	
 	private String getTestMethodString(String testMethodName) {
@@ -141,6 +171,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.4  2006/10/08 17:26:27  gianasista
+//Suffix preference
+//
 //Revision 1.3  2006/09/18 20:00:10  channingwalton
 //the CVS substitions broke with my last check in because I put newlines in them
 //
