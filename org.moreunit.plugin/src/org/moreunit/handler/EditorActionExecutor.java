@@ -5,10 +5,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -22,6 +24,7 @@ import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.MagicNumbers;
 import org.moreunit.wizards.NewClassWizard;
 
 
@@ -88,12 +91,23 @@ public class EditorActionExecutor {
 		TestCaseTypeFacade testFacade = new TestCaseTypeFacade(method.getCompilationUnit());
 		IMethod newMethod = testFacade.createAnotherTestMethod(method);
 		
+		// Scroll to method and mark the suffix of the testmethod
 		if(newMethod != null) {
 			ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
-			ISelection selection = new StructuredSelection(newMethod);
-			selectionProvider.setSelection(selection);
-	
+			
+			ISelection exactSelection = null;
+			try {
+				ISourceRange range = newMethod.getNameRange();
+				int offset = range.getOffset();
+				int length = range.getLength();
+				
+				int suffixLength = MagicNumbers.SUFFIX_NAME.length();
+				exactSelection = new TextSelection(offset+length-suffixLength, suffixLength);
+			} catch (JavaModelException exc) {
+				LogHandler.getInstance().handleExceptionLog(exc);
+			}
 			JavaUI.revealInEditor(testCaseTypeFacade.getEditorPart(), (IJavaElement)newMethod);
+			selectionProvider.setSelection(exactSelection);
 		}
 	}
 	
@@ -172,6 +186,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/25 15:00:26  gianasista
+// Create second testmethod
+//
 // Revision 1.4  2006/11/04 08:50:19  channingwalton
 // Fix for [ 1579660 ] Testcase selection dialog opens twice
 //

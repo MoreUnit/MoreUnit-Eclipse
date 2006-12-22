@@ -129,7 +129,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 			if(testedMethod != null) {
 				String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
 				if (doesMethodExist(testMethodName))
-					testMethodName = testMethodName + "2";
+					testMethodName = testMethodName.concat(MagicNumbers.SUFFIX_NAME);
 				
 				IMethod newTestMethod = compilationUnit.findPrimaryType().createMethod(getTestMethodString(testMethodName), null, true, null);
 
@@ -171,6 +171,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.5  2006/11/25 14:58:56  gianasista
+//Create second testmethod
+//
 //Revision 1.4  2006/10/08 17:26:27  gianasista
 //Suffix preference
 //
