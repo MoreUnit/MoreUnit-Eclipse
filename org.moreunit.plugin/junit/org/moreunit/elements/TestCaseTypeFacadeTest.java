@@ -55,7 +55,7 @@ public class TestCaseTypeFacadeTest extends ProjectTestCase {
 		IMethod testMethod = testMusterType.getMethods()[0];
 		IMethod newTestMethod = testJavaFileFacade.createAnotherTestMethod(testMethod);
 		assertNotNull(newTestMethod);
-		assertEquals("testGetOneString2", newTestMethod.getElementName());
+		assertEquals("testGetOneStringSuffix", newTestMethod.getElementName());
 		
 	}
 
