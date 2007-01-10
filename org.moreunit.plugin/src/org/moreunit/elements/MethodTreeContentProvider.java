@@ -19,9 +19,13 @@ import org.moreunit.ui.MethodPage;
  */
 public class MethodTreeContentProvider implements ITreeContentProvider {
 	
+	IType classType;
 	List<IMethod> methods = new ArrayList<IMethod>();
+	private boolean isPrivateFiltered = false;
+	private boolean isGetterFiltered = false;
 	
 	public MethodTreeContentProvider(IType javaFileFile) {
+		this.classType = javaFileFile;
 		resetMethods(javaFileFile);
 	}
 
@@ -57,7 +61,15 @@ public class MethodTreeContentProvider implements ITreeContentProvider {
 		if(inputElement instanceof MethodPage)
 			resetMethods(((MethodPage)inputElement).getInputType());
 		
-		return methods.toArray();
+		List<IMethod> resultMethodList = new ArrayList<IMethod>();
+		if(isPrivateFiltered)
+			resultMethodList.addAll(filterPrivateMethods(methods));
+		
+		if(isGetterFiltered) {
+			return filterGetterAndSetter(resultMethodList).toArray();
+		}
+		
+		return resultMethodList.toArray();
 	}
 
 	public void dispose() {
@@ -66,5 +78,37 @@ public class MethodTreeContentProvider implements ITreeContentProvider {
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
  	}
+	
+	private List<IMethod> filterPrivateMethods(List<IMethod> methodList) {
+		List<IMethod> resultList = new ArrayList<IMethod>();
+		FilterMethodVisitor privateMethodVisitor = new FilterMethodVisitor(classType);
+		
+		for (IMethod method : methodList) {
+			if(!privateMethodVisitor.isPrivateMethod(method))
+				resultList.add(method);
+		}
+		
+		return resultList;
+	}
+	
+	private List<IMethod> filterGetterAndSetter(List<IMethod> methodList) {
+		List<IMethod> resultList = new ArrayList<IMethod>();
+		FilterMethodVisitor getterMethodVisitor = new FilterMethodVisitor(classType);
+		
+		for(IMethod method : methodList) {
+			if(!getterMethodVisitor.isGetterMethod(method) && !getterMethodVisitor.isSetterMethod(method))
+				resultList.add(method);
+		}
+		
+		return resultList;
+	}
+
+	public void setPrivateFiltered(boolean isPrivateFiltered) {
+		this.isPrivateFiltered = isPrivateFiltered;
+	}
+
+	public void setGetterFiltered(boolean isGetterFiltered) {
+		this.isGetterFiltered = isGetterFiltered;
+	}
 
 }

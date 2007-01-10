@@ -5,7 +5,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-public abstract class AbstractMoreUnitTest extends MockObjectTestCase {
+public abstract class AbstractMoreUnitTest extends MockObjectTestCase{
 
 	protected void stubTypeQualifiedName(Mock type, String name) {
 		type.stubs().method("getTypeQualifiedName").will(returnValue(name));
@@ -37,6 +37,9 @@ public abstract class AbstractMoreUnitTest extends MockObjectTestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/02 18:22:24  channingwalton
+// added actions for jumping from views. added some tests for project properties. improved some of the text
+//
 // Revision 1.1.1.1  2006/08/13 14:30:55  gianasista
 // initial
 //

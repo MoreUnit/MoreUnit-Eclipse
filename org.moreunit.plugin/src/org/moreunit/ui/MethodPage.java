@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -30,6 +31,10 @@ public class MethodPage extends Page {
 	TreeViewer treeViewer;
 	
 	Action addTestAction;
+	Action filterPrivateAction;
+	Action filterGetterAction;
+	
+	private MethodTreeContentProvider methodTreeContentProvider;
 	
 	public MethodPage(EditorPartFacade editorPartFacade) {
 		super();
@@ -40,11 +45,13 @@ public class MethodPage extends Page {
 	@Override
 	public void createControl(Composite parent) {
 		treeViewer = new TreeViewer(parent);
-		treeViewer.setContentProvider(new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType()));
+		methodTreeContentProvider = new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType());
+		treeViewer.setContentProvider(methodTreeContentProvider);
 		treeViewer.setLabelProvider(new JavaElementLabelProvider());
 		treeViewer.setInput(this);
 		
 		createMenu();
+		createToolbar();
 	}
 	
 	public IType getInputType() {
@@ -61,6 +68,38 @@ public class MethodPage extends Page {
 		addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
 		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
 		menuManager.add(addTestAction);
+	}
+	
+	private void createToolbar() {
+		filterPrivateAction = new Action("", Action.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				actionFilterPrivateMethods();
+			}
+		};
+		filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.png"));
+		
+		filterGetterAction = new Action("", Action.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				actionFilterGetterMethods();
+			}
+		};
+		filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.png"));
+		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
+		toolBarManager.add(filterPrivateAction);
+		toolBarManager.add(filterGetterAction);
+		
+	}
+	
+	private void actionFilterPrivateMethods() {
+		methodTreeContentProvider.setPrivateFiltered(filterPrivateAction.isChecked());
+		updateUI();
+	}
+	
+	private void actionFilterGetterMethods() {
+		methodTreeContentProvider.setGetterFiltered(filterGetterAction.isChecked());
+		updateUI();
 	}
 
 	private void addItem() {

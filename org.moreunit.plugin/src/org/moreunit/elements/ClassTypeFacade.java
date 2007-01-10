@@ -128,5 +128,4 @@ public class ClassTypeFacade extends TypeFacade {
 
 		return testCaseDiviner;
 	}
-
 }

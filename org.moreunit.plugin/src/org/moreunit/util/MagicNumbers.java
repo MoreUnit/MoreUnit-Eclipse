@@ -20,9 +20,14 @@ public class MagicNumbers {
 	public static final String NEWLINE = "\n";
 	
 	public static final String TEST_ANNOTATION_NAME = "Test";
+	public static final String GETTER_PREFIX = "get";
+	public static final String SETTER_PREFIX = "set";
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/12/22 19:03:18  gianasista
+// changed textselection after creation of another testmethod
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
