@@ -1,5 +1,8 @@
 package org.moreunit.elements;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -7,16 +10,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
@@ -24,6 +20,8 @@ import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.MarkerUpdateRunnable;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.SearchTools;
+import org.moreunit.util.WordTokenizer;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The file represented by this instance is not
@@ -53,8 +51,16 @@ public class TestCaseTypeFacade extends TypeFacade {
 			return null;
 
 		try {
-			String typeName = getUnqualifiedTypeName(testedClassString);
-			Set<IType> searchResults = BaseTools.searchFor(typeName, compilationUnit);
+			List<String> typeNames = getListOfUnqualifiedTypeNames(testedClassString);
+			//String typeName = getUnqualifiedTypeName(testedClassString);
+			Set<IType> searchResults = new HashSet<IType>();
+			for(String typeName : typeNames) {
+				Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit);
+				if(searchFor != null && searchFor.size() > 0)
+					searchResults.addAll(searchFor);
+			}
+			
+			//Set<IType> searchResults = SearchTools.searchFor(typeName, compilationUnit);
 			return searchResults.size() > 0 ? searchResults.iterator().next() : null;
 		} catch (Exception exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -85,6 +91,42 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 	private String getUnqualifiedTypeName(String testedClassString) {
 		return testedClassString.lastIndexOf('.') > 0 ? testedClassString.substring(testedClassString.lastIndexOf('.') + 1) : testedClassString;
+	}
+	
+	/**
+	 * Returns a list of String which are possible unqualified names for the
+	 * testedClassString.<br>
+	 * Example:<br>
+	 * testedClassString: "OneTwoThree"<br>
+	 * returns: {"One", "OneTwo", "OneTwoThree"} 
+	 */
+	private List<String> getListOfUnqualifiedTypeNames(String testedClassString) {
+		List<String> resultList = new ArrayList<String>();
+		
+		WordTokenizer wordTokenizer = new WordTokenizer(testedClassString);
+		while(wordTokenizer.hasMoreElements()) {
+			resultList.add(getNewWord(resultList, wordTokenizer.nextElement()));
+		}
+		
+		return resultList;
+	}
+	
+	/**
+	 * Returns a String which is a concatenation of the Strings of the
+	 * wordList and appends word to this String.<br>
+	 * Example:<br>
+	 * wordList: {"One", "Two", "Three"}<br>
+	 * word: Four<br>
+	 * returns: "OneTwoThreeFour"
+	 */
+	private String getNewWord(List<String> wordList, String word) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for(String wordOfList : wordList)
+			stringBuilder.append(wordOfList);
+		
+		stringBuilder.append(word);
+		
+		return stringBuilder.toString();
 	}
 	
 	/**
@@ -171,6 +213,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.6  2006/12/22 19:03:50  gianasista
+//changed textselection after creation of another testmethod
+//
 //Revision 1.5  2006/11/25 14:58:56  gianasista
 //Create second testmethod
 //

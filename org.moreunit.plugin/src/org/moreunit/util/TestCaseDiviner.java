@@ -49,11 +49,11 @@ public class TestCaseDiviner {
 		matches = new LinkedHashSet<IType>();
 		String[] prefixes = preferences.getPrefixes();
 		for (int i = 0; i < prefixes.length; i++) {
-			matches.addAll(BaseTools.searchFor(getSearchTerm(source, prefixes[i], true), compilationUnit));
+			matches.addAll(SearchTools.searchFor(getSearchTerm(source, prefixes[i], true), compilationUnit));
 		}
 		String[] suffixes = preferences.getSuffixes();
 		for (int i = 0; i < suffixes.length; i++) {
-			matches.addAll(BaseTools.searchFor(getSearchTerm(source, suffixes[i], false), compilationUnit));
+			matches.addAll(SearchTools.searchFor(getSearchTerm(source, suffixes[i], false), compilationUnit));
 		}
 	}
 	
@@ -71,13 +71,16 @@ public class TestCaseDiviner {
 	}
 	
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
-		return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
+		return prefixMatch ? qualifier + MagicNumbers.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + MagicNumbers.WILDCARD + qualifier;
 	}
 	
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/09/18 20:00:06  channingwalton
+// the CVS substitions broke with my last check in because I put newlines in them
+//
 // Revision 1.3  2006/09/18 19:56:03  channingwalton
 // Fixed bug [ 1537839 ] moreunit cannot find test class if it is in wrong package. Also found a classcast exception in UnitDecorator whicj I've guarded for. Fixed the Class wizard icon
 //
