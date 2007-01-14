@@ -18,6 +18,7 @@ public class MagicNumbers {
 	public static final String STRING_DOT = ".";
 	public static final String EMPTY_STRING = "";
 	public static final String NEWLINE = "\n";
+	public static final String SLASH = "/";
 	
 	public static final String TEST_ANNOTATION_NAME = "Test";
 	public static final String GETTER_PREFIX = "get";
@@ -27,6 +28,9 @@ public class MagicNumbers {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/01/12 21:56:14  gianasista
+// Better matching for testcases [1575497]
+//
 // Revision 1.3  2007/01/10 20:24:48  gianasista
 // Added Filters to MissingTestMethods-View
 //
