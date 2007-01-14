@@ -64,7 +64,7 @@ public class TestCaseDiviner {
 				return allTypes[0];
 			}
 		} catch (JavaModelException exc) {
-			LogHandler.getInstance().handleExceptionLog(exc);
+			LogHandler.getInstance().handleInfoLog(exc.getMessage());
 		}
 		
 		return null;
@@ -78,6 +78,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/01/12 21:56:14  gianasista
+// Better matching for testcases [1575497]
+//
 // Revision 1.4  2006/09/18 20:00:06  channingwalton
 // the CVS substitions broke with my last check in because I put newlines in them
 //
