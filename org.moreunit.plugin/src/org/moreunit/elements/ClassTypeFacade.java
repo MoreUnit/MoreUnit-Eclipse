@@ -10,8 +10,10 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.ui.TestcaseChooseDialog;
 import org.moreunit.ui.TypeChoiceDialog;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.TestCaseDiviner;
@@ -52,15 +54,16 @@ public class ClassTypeFacade extends TypeFacade {
 		IType testcaseToJump = null;
 		if (testcases.size() == 1)
 			testcaseToJump = (IType) testcases.toArray()[0];
-		else if (testcases.size() > 1)
-			testcaseToJump = new TypeChoiceDialog(testcases.toArray(new IType[testcases.size()])).getChoice();
+		else if (testcases.size() > 1) {
+			testcaseToJump = (new TestcaseChooseDialog("", "", testcases)).getChoice();
+		}
 		else if (createIfNecessary) {
 			testcaseToJump = new NewTestCaseWizard(getType()).open();
 		}
 
 		return testcaseToJump;
 	}
-
+	
 	public Set<IType> getCorrespondingTestCaseList() {
 		return getTestCaseDiviner().getMatches();
 	}
