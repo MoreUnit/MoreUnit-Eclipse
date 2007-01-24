@@ -5,6 +5,9 @@
 package org.moreunit.util;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.ui.JavaUI;
 
@@ -195,9 +198,46 @@ public class BaseTools {
 		String firstChar = String.valueOf(aString.charAt(0));
 		return aString.replaceFirst(firstChar, firstChar.toUpperCase());
 	}
+	
+	/**
+	 * Returns a list of String which are possible unqualified names for the
+	 * testedClassString.<br>
+	 * Example:<br>
+	 * testedClassString: "OneTwoThree"<br>
+	 * returns: {"One", "OneTwo", "OneTwoThree"} 
+	 */
+	public static List<String> getListOfUnqualifiedTypeNames(String testedClassString) {
+		List<String> resultList = new ArrayList<String>();
+		
+		WordTokenizer wordTokenizer = new WordTokenizer(testedClassString);
+		while(wordTokenizer.hasMoreElements()) {
+			resultList.add(getNewWord(resultList, wordTokenizer.nextElement()));
+		}
+		
+		return resultList;
+	}
+	
+	/**
+	 * Returns a String which is a concatenation of the last but on element of
+	 * wordList and appends word to this String.<br>
+	 * Example:<br>
+	 * wordList: {"One"}<br>
+	 * word: Two<br>
+	 * returns: "OneTwo"
+	 */
+	private static String getNewWord(List<String> wordList, String word) {
+		StringBuilder stringBuilder = new StringBuilder();
+		if(wordList.size() > 0)
+			stringBuilder.append(wordList.get(wordList.size()-1));
+		stringBuilder.append(word);
+		return stringBuilder.toString();
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2007/01/12 21:56:14  gianasista
+// Better matching for testcases [1575497]
+//
 // Revision 1.7  2006/11/25 15:00:51  gianasista
 // new method
 //

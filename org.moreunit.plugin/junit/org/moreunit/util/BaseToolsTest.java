@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 public class BaseToolsTest extends TestCase {
@@ -107,5 +109,25 @@ public class BaseToolsTest extends TestCase {
 		assertEquals(null, BaseTools.firstCharToUpperCase(null));
 		assertEquals("", BaseTools.firstCharToUpperCase(""));
 		
+	}
+
+	public void testGetListOfUnqualifiedTypeNames() {
+		String testString = "One";
+		List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testString);
+		assertEquals(1, result.size());
+		assertEquals("One", result.get(0));
+		
+		testString = "OneTwo";
+		result = BaseTools.getListOfUnqualifiedTypeNames(testString);
+		assertEquals(2, result.size());
+		assertEquals("One", result.get(0));
+		assertEquals("OneTwo", result.get(1));
+		
+		testString = "OneTwoThree";
+		result = BaseTools.getListOfUnqualifiedTypeNames(testString);
+		assertEquals(3, result.size());
+		assertEquals("One", result.get(0));
+		assertEquals("OneTwo", result.get(1));
+		assertEquals("OneTwoThree", result.get(2));
 	}
 }

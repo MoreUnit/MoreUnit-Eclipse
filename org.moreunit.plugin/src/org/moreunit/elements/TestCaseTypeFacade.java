@@ -51,7 +51,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 			return null;
 
 		try {
-			List<String> typeNames = getListOfUnqualifiedTypeNames(testedClassString);
+			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClassString);
 			//String typeName = getUnqualifiedTypeName(testedClassString);
 			Set<IType> searchResults = new HashSet<IType>();
 			for(String typeName : typeNames) {
@@ -91,42 +91,6 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 	private String getUnqualifiedTypeName(String testedClassString) {
 		return testedClassString.lastIndexOf('.') > 0 ? testedClassString.substring(testedClassString.lastIndexOf('.') + 1) : testedClassString;
-	}
-	
-	/**
-	 * Returns a list of String which are possible unqualified names for the
-	 * testedClassString.<br>
-	 * Example:<br>
-	 * testedClassString: "OneTwoThree"<br>
-	 * returns: {"One", "OneTwo", "OneTwoThree"} 
-	 */
-	private List<String> getListOfUnqualifiedTypeNames(String testedClassString) {
-		List<String> resultList = new ArrayList<String>();
-		
-		WordTokenizer wordTokenizer = new WordTokenizer(testedClassString);
-		while(wordTokenizer.hasMoreElements()) {
-			resultList.add(getNewWord(resultList, wordTokenizer.nextElement()));
-		}
-		
-		return resultList;
-	}
-	
-	/**
-	 * Returns a String which is a concatenation of the Strings of the
-	 * wordList and appends word to this String.<br>
-	 * Example:<br>
-	 * wordList: {"One", "Two", "Three"}<br>
-	 * word: Four<br>
-	 * returns: "OneTwoThreeFour"
-	 */
-	private String getNewWord(List<String> wordList, String word) {
-		StringBuilder stringBuilder = new StringBuilder();
-		for(String wordOfList : wordList)
-			stringBuilder.append(wordOfList);
-		
-		stringBuilder.append(word);
-		
-		return stringBuilder.toString();
 	}
 	
 	/**
@@ -213,6 +177,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.7  2007/01/12 21:55:54  gianasista
+//Better matching for testcases [1575497]
+//
 //Revision 1.6  2006/12/22 19:03:50  gianasista
 //changed textselection after creation of another testmethod
 //
