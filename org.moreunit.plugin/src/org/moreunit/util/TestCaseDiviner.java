@@ -71,13 +71,19 @@ public class TestCaseDiviner {
 	}
 	
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
-		return prefixMatch ? qualifier + MagicNumbers.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + MagicNumbers.WILDCARD + qualifier;
-	}
-	
+		if(Preferences.instance().shoulUseFlexibleTestCaseNaming()) {
+			return prefixMatch ? qualifier + MagicNumbers.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + MagicNumbers.WILDCARD + qualifier;
+		} else {
+			return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
+		}
+	}	
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/01/14 21:14:14  gianasista
+// Changed logging behaviour
+//
 // Revision 1.5  2007/01/12 21:56:14  gianasista
 // Better matching for testcases [1575497]
 //

@@ -26,6 +26,7 @@ public class Preferences {
 		preferenceStore.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
 		preferenceStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
 		preferenceStore.setDefault(PreferenceConstants.JUNIT4_TEST_TYPE, PreferenceConstants.DEFAULT_JUNIT4_TEST_TYPE);
+		preferenceStore.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
 	}
 	
 	public String getJunitDirectoryFromPreferences() {
@@ -64,6 +65,13 @@ public class Preferences {
 		}
 		return store().getDefaultBoolean(PreferenceConstants.JUNIT4_TEST_TYPE);
 	}
+	
+	public boolean shoulUseFlexibleTestCaseNaming() {
+		if(store().contains(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING)) {
+			return store().getBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
+		}
+		return store().getDefaultBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
+	}
 
 	public String getTestPackagePrefix() {
 		if (store().contains(PreferenceConstants.TEST_PACKAGE_PREFIX)) {
@@ -96,6 +104,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/08 17:27:22  gianasista
+// Suffix preference
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //

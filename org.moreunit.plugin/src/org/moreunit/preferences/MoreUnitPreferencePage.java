@@ -32,6 +32,7 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 		//addField(new BooleanFieldEditor(PreferenceConstants.USE_WIZARDS, "Use class creation &Wizards", getFieldEditorParent()));
 		//addField(new BooleanFieldEditor(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, "Switch to matching &Methods", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.JUNIT4_TEST_TYPE, "Create JUnit4 methods", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, "Enable flexible naming of tests", getFieldEditorParent()));
 	}
 
 	public void init(IWorkbench workbench) {
@@ -40,6 +41,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/08 17:37:24  gianasista
+// Suffix preference
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //

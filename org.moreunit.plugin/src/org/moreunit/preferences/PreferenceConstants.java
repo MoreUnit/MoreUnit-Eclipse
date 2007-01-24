@@ -12,11 +12,13 @@ public interface PreferenceConstants {
 	String	SWITCH_TO_MATCHING_METHOD			= "org.moreunit.switch_to_matching_method";
 	String	TEST_PACKAGE_PREFIX					= "org.moreunit.package_prefix";
 	String	TEST_PACKAGE_SUFFIX					= "org.moreunit.package_suffix";
-	String JUNIT4_TEST_TYPE						= "org.moreunit.junit4type";
+	String	JUNIT4_TEST_TYPE					= "org.moreunit.junit4type";
+	String	FLEXIBEL_TESTCASE_NAMING			= "org.moreunit.flexiblenaming";
 	String	DEFAULT_QUALIFIERS					= "Test";
 	boolean	DEFAULT_USE_WIZARDS					= true;
 	boolean	DEFAULT_SWITCH_TO_MATCHING_METHOD	= true;
 	String	DEFAULT_TEST_PACKAGE_PREFIX			= "";
 	String	DEFAULT_TEST_PACKAGE_SUFFIX			= "";
-	boolean DEFAULT_JUNIT4_TEST_TYPE				= true;
+	boolean DEFAULT_JUNIT4_TEST_TYPE			= true;
+	boolean DEFAULT_FLEXIBLE_TESTCASE_NAMING	= false;
 }
