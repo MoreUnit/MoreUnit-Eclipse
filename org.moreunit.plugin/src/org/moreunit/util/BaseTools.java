@@ -204,7 +204,11 @@ public class BaseTools {
 	 * testedClassString.<br>
 	 * Example:<br>
 	 * testedClassString: "OneTwoThree"<br>
-	 * returns: {"One", "OneTwo", "OneTwoThree"} 
+	 * returns: {"One", "OneTwo", "OneTwoThree"}
+	 * 
+	 * @param testedClassString The name of the test class.
+	 * @return 	a <code>List</code> of <code>String</code>s containing possible names for the class under test
+	 * 			derived from \a testedClassString.
 	 */
 	public static List<String> getListOfUnqualifiedTypeNames(String testedClassString) {
 		List<String> resultList = new ArrayList<String>();
@@ -235,6 +239,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2007/01/24 20:13:23  gianasista
+// Bugfix: flexible testcase matching
+//
 // Revision 1.8  2007/01/12 21:56:14  gianasista
 // Better matching for testcases [1575497]
 //

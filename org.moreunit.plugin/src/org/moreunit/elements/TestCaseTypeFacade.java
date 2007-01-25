@@ -1,6 +1,5 @@
 package org.moreunit.elements;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +20,6 @@ import org.moreunit.ui.MarkerUpdateRunnable;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.MagicNumbers;
 import org.moreunit.util.SearchTools;
-import org.moreunit.util.WordTokenizer;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The file represented by this instance is not
@@ -88,16 +86,12 @@ public class TestCaseTypeFacade extends TypeFacade {
 		return null;
 	}
 	
-
-	private String getUnqualifiedTypeName(String testedClassString) {
-		return testedClassString.lastIndexOf('.') > 0 ? testedClassString.substring(testedClassString.lastIndexOf('.') + 1) : testedClassString;
-	}
-	
 	/**
 	 * Creates a testmethod for the method that should be tested.
 	 * 
 	 * @param methodToTest The method that should be tested.
-	 * @return
+	 * @return	<code>true</code> if the method was successfully created, <code>false</code>
+	 * 			if the method already existed or the method creation threw an exception.
 	 */
 	public boolean createTestMethodForMethod(IMethod methodToTest) {
 		try {
@@ -125,7 +119,6 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 * Creates another testmethod for the given method aTestMethod
 	 * 
 	 * @param aTestMethod
-	 * @param testCaseTypeFacade The editorPart is necessary to reset the cursor position
 	 * @return
 	 */
 	public IMethod createAnotherTestMethod(IMethod aTestMethod) {
@@ -177,6 +170,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.8  2007/01/24 20:11:50  gianasista
+//Bugfix: flexible testcase matching
+//
 //Revision 1.7  2007/01/12 21:55:54  gianasista
 //Better matching for testcases [1575497]
 //
