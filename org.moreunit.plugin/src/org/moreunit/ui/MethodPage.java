@@ -78,6 +78,7 @@ public class MethodPage extends Page {
 			}
 		};
 		filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.png"));
+		filterPrivateAction.setChecked(true);
 		
 		filterGetterAction = new Action("", Action.AS_CHECK_BOX) {
 			@Override
@@ -86,6 +87,7 @@ public class MethodPage extends Page {
 			}
 		};
 		filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.png"));
+		filterGetterAction.setChecked(true);
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		toolBarManager.add(filterPrivateAction);
 		toolBarManager.add(filterGetterAction);

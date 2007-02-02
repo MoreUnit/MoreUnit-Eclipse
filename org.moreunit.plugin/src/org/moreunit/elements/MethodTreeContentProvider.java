@@ -64,6 +64,8 @@ public class MethodTreeContentProvider implements ITreeContentProvider {
 		List<IMethod> resultMethodList = new ArrayList<IMethod>();
 		if(isPrivateFiltered)
 			resultMethodList.addAll(filterPrivateMethods(methods));
+		else
+			resultMethodList.addAll(methods);
 		
 		if(isGetterFiltered) {
 			return filterGetterAndSetter(resultMethodList).toArray();

@@ -9,6 +9,7 @@ import org.eclipse.ui.part.MessagePage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
 import org.moreunit.elements.EditorPartFacade;
+import org.moreunit.util.PluginTools;
 
 /**
  * @author vera
@@ -49,13 +50,10 @@ public class MissingTestmethodViewPart extends PageBookView {
 
 	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	protected IWorkbenchPart getBootstrapPart() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -67,6 +65,12 @@ public class MissingTestmethodViewPart extends PageBookView {
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		super.partOpened(part);
+		
+		// on startup the view should become synchronized with the open file
+		if(part instanceof MissingTestmethodViewPart) {
+			super.partActivated(PluginTools.getOpenEditorPart());
+			activePage.updateUI();
+		}
 	}
 	
 	@Override
@@ -76,7 +80,6 @@ public class MissingTestmethodViewPart extends PageBookView {
 	
 	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
-		//super.partBroughtToTop(part);
 		partActivated(part);
 		activePage.updateUI();
 	}
