@@ -1,8 +1,15 @@
+2007-02-02:
+
+	- Bugfix: On startup of eclipse the MissingTestMethodView gets synchronized with the active editor part
+
+###########################################################################################################
+
 2006-04-20
 
 	- Bugfix beim Rename einer Methode ohne Test (war nicht nullsicher)
 	- Springen von Test zur getesten Klasse ist nun möglich
-	- Templates für neue Java-Dateien werden bei Erzeugen eines neues Testcase verwendet
+	- Templates für neue Java-Dateien werden bei Erzeugen eines neues Testcase verwendet 
+	
 
 2006-04-17
 
