@@ -2,8 +2,12 @@ package org.moreunit.ui;
 
 import java.util.Iterator;
 
+import org.eclipse.jdt.core.ElementChangedEvent;
+import org.eclipse.jdt.core.IElementChangedListener;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -13,6 +17,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.Page;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
@@ -24,7 +29,7 @@ import org.moreunit.elements.TestCaseTypeFacade;
  * @author vera
  *
  */
-public class MethodPage extends Page {
+public class MethodPage extends Page implements IElementChangedListener{
 	
 	ListViewer listViewer;
 	EditorPartFacade editorPartFacade;
@@ -40,6 +45,7 @@ public class MethodPage extends Page {
 		super();
 		
 		this.editorPartFacade = editorPartFacade;
+		JavaCore.addElementChangedListener(this);
 	}
 
 	@Override
@@ -59,15 +65,15 @@ public class MethodPage extends Page {
 	}
 
 	private void createMenu() {
-		addTestAction = new Action("Add...") {
-			@Override
-			public void run() {
-				addItem();
-			}
-		};
-		addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
-		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
-		menuManager.add(addTestAction);
+//		addTestAction = new Action("Add...") {
+//			@Override
+//			public void run() {
+//				addItem();
+//			}
+//		};
+//		addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
+//		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
+//		menuManager.add(addTestAction);
 	}
 	
 	private void createToolbar() {
@@ -88,9 +94,18 @@ public class MethodPage extends Page {
 		};
 		filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.png"));
 		filterGetterAction.setChecked(true);
+		
+		addTestAction = new Action("Add...") {
+			@Override
+			public void run() {
+				addItem();
+			}
+		};
+		addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		toolBarManager.add(filterPrivateAction);
 		toolBarManager.add(filterGetterAction);
+		toolBarManager.add(addTestAction);
 		
 	}
 	
@@ -139,6 +154,29 @@ public class MethodPage extends Page {
 
 	public void updateUI(){
 		treeViewer.refresh();
+	}
+
+	public void elementChanged(ElementChangedEvent event) {
+		int type = event.getDelta().getElement().getElementType();
+		switch(type) {
+			case(IJavaElement.COMPILATION_UNIT): updateUIafterElementChangedEvent(); break;
+			default: {}
+		}
+	}
+	
+	private void updateUIafterElementChangedEvent() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				updateUI();
+			}
+		});
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		JavaCore.removeElementChangedListener(this);
 	}
 
 }
