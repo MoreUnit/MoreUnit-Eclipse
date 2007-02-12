@@ -83,7 +83,7 @@ public class MethodPage extends Page implements IElementChangedListener{
 				actionFilterPrivateMethods();
 			}
 		};
-		filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.png"));
+		filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.gif"));
 		filterPrivateAction.setChecked(true);
 		
 		filterGetterAction = new Action("", Action.AS_CHECK_BOX) {
@@ -92,7 +92,7 @@ public class MethodPage extends Page implements IElementChangedListener{
 				actionFilterGetterMethods();
 			}
 		};
-		filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.png"));
+		filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.gif"));
 		filterGetterAction.setChecked(true);
 		
 		addTestAction = new Action("Add...") {

@@ -8,6 +8,7 @@ import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.MessagePage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
+import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.util.PluginTools;
 
@@ -20,6 +21,8 @@ public class MissingTestmethodViewPart extends PageBookView {
 	
 	public MissingTestmethodViewPart() {
 		super();
+		
+		setTitleImage(MoreUnitPlugin.getImageDescriptor("icons/moreunitLogo.gif").createImage());
 	}
 
 	@Override
@@ -68,8 +71,11 @@ public class MissingTestmethodViewPart extends PageBookView {
 		
 		// on startup the view should become synchronized with the open file
 		if(part instanceof MissingTestmethodViewPart) {
-			super.partActivated(PluginTools.getOpenEditorPart());
-			activePage.updateUI();
+			IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
+			if(openEditorPart != null && activePage != null) {
+				super.partActivated(openEditorPart);
+				activePage.updateUI();
+			}
 		}
 	}
 	
