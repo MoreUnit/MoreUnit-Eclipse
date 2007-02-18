@@ -3,6 +3,7 @@ package org.moreunit.ui;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.MessagePage;
@@ -45,14 +46,24 @@ public class MissingTestmethodViewPart extends PageBookView {
 
 	@Override
 	protected PageRec doCreatePage(IWorkbenchPart part) {
-		activePage = new MethodPage(new EditorPartFacade((IEditorPart) part));
-		initPage((IPageBookViewPage)activePage);
-		activePage.createControl(getPageBook());
+		if(activePage == null) {
+			activePage = new MethodPage(new EditorPartFacade((IEditorPart) part));
+			initPage((IPageBookViewPage)activePage);
+			activePage.createControl(getPageBook());
+		} else {
+			activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
+			initPage((IPageBookViewPage)activePage);
+		}
 		return new PageRec(part, activePage);
 	}
 
 	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
+		pageRecord.dispose();
+		if(activePage != null) {
+			activePage.dispose();
+			activePage = null;
+		}
 	}
 
 	@Override
@@ -72,22 +83,44 @@ public class MissingTestmethodViewPart extends PageBookView {
 		// on startup the view should become synchronized with the open file
 		if(part instanceof MissingTestmethodViewPart) {
 			IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
-			if(openEditorPart != null && activePage != null) {
+			if(openEditorPart != null) {
 				super.partActivated(openEditorPart);
-				activePage.updateUI();
+				if(activePage != null)
+					activePage.updateUI();
 			}
 		}
 	}
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		super.partActivated(part);
+		if(activePage == null)
+			super.partActivated(part);
+		else if(part instanceof IEditorPart) {
+			activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
+			initPage((IPageBookViewPage)activePage);
+		}
+			
 	}
 	
 	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
-		partActivated(part);
-		activePage.updateUI();
+		if(part instanceof EditorPart) {
+			partActivated(part);
+			activePage.updateUI();
+		}
+	}
+	
+	@Override
+	public void partClosed(IWorkbenchPart part) {
+		super.partClosed(part);
+		
+		if(part instanceof IEditorPart) {
+			IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
+			if(openEditorPart != null && activePage != null) {
+				super.partActivated(openEditorPart);
+				activePage.updateUI();
+			} 
+		}
 	}
 
 }

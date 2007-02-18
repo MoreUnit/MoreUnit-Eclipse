@@ -10,7 +10,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ListViewer;
@@ -56,26 +55,19 @@ public class MethodPage extends Page implements IElementChangedListener{
 		treeViewer.setLabelProvider(new JavaElementLabelProvider());
 		treeViewer.setInput(this);
 		
-		createMenu();
 		createToolbar();
+	}
+	
+	public void setNewEditorPartFacade(EditorPartFacade editorPartFacade) {
+		methodTreeContentProvider = new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType());
+		this.editorPartFacade = editorPartFacade; 
+		treeViewer.setContentProvider(methodTreeContentProvider);
 	}
 	
 	public IType getInputType() {
 		return editorPartFacade.getCompilationUnit().findPrimaryType();
 	}
 
-	private void createMenu() {
-//		addTestAction = new Action("Add...") {
-//			@Override
-//			public void run() {
-//				addItem();
-//			}
-//		};
-//		addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
-//		IMenuManager menuManager = getSite().getActionBars().getMenuManager();
-//		menuManager.add(addTestAction);
-	}
-	
 	private void createToolbar() {
 		filterPrivateAction = new Action("", Action.AS_CHECK_BOX) {
 			@Override
@@ -174,9 +166,8 @@ public class MethodPage extends Page implements IElementChangedListener{
 	
 	@Override
 	public void dispose() {
-		super.dispose();
-		
 		JavaCore.removeElementChangedListener(this);
+		super.dispose();
 	}
 
 }

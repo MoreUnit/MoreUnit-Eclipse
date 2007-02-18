@@ -14,11 +14,17 @@ public class PluginTools {
 		IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = window.getActivePage();
 		
-		return page.getActiveEditor();
+		if(page != null) 		
+			return page.getActiveEditor();
+		else
+			return null;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //
