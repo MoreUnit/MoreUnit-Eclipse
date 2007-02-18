@@ -1,3 +1,7 @@
+2007-02-18:
+
+	- Some bugfixes because the new view threw some exception (now MethodPage is reused for several files)
+
 2007-02-07:
 
 	- MethodPage listens to resource changes to update the view
