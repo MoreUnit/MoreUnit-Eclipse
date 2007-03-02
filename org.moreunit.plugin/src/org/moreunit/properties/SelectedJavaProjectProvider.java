@@ -28,15 +28,15 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 	public SelectedJavaProject[] getElements() {
 		List<IJavaProject> jumpTargets = ProjectProperties.instance().getJumpTargets(project);
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		
+
 		List<SelectedJavaProject> rows = new ArrayList<SelectedJavaProject>();
-		for (int i = 0; i < projects.length; i++) {
-			if (projects[i].isAccessible() && isJavaProject(projects[i]) && !project.getProject().equals(projects[i])) {
-				IJavaProject javaProject = JavaCore.create(projects[i]);
+		for (IProject project : projects) {
+			if (project.isAccessible() && isJavaProject(project) && !project.getProject().equals(project)) {
+				IJavaProject javaProject = JavaCore.create(project);
 				rows.add(new SelectedJavaProject(javaProject, jumpTargets.contains(javaProject)));
 			}
 		}
-		return (SelectedJavaProject[]) rows.toArray(new SelectedJavaProject[rows.size()]);
+		return rows.toArray(new SelectedJavaProject[rows.size()]);
 	}
 
 	private boolean isJavaProject(IProject project) {
@@ -52,14 +52,14 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 	public Object[] getCheckedElements() {
 		List<SelectedJavaProject> checked = new ArrayList<SelectedJavaProject>();
 		SelectedJavaProject[] elements = getElements();
-		for (int i = 0; i < elements.length; i++) {
-			if (elements[i].isSelected()) {
-				checked.add(elements[i]);
+		for (SelectedJavaProject element : elements) {
+			if (element.isSelected()) {
+				checked.add(element);
 			}
 		}
-		return (SelectedJavaProject[]) checked.toArray(new SelectedJavaProject[checked.size()]);
+		return checked.toArray(new SelectedJavaProject[checked.size()]);
 	}
-	
+
 	public void dispose() {
 
 	}
@@ -71,6 +71,9 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/19 19:17:41  gianasista
+// Bugfixing: Problems with closed projects solved
+//
 // Revision 1.2  2006/10/02 18:22:23  channingwalton
 // added actions for jumping from views. added some tests for project properties. improved some of the text
 //

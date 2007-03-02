@@ -24,9 +24,9 @@ import org.moreunit.util.SearchTools;
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The file represented by this instance is not
  * a testcase.
- * 
+ *
  * @author vera
- * 
+ *
  * 23.05.2006 20:29:57
  */
 public class TestCaseTypeFacade extends TypeFacade {
@@ -44,21 +44,20 @@ public class TestCaseTypeFacade extends TypeFacade {
 	}
 
 	public IType getCorrespondingClassUnderTest() {
-		String testedClassString = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes(), Preferences.instance().getTestPackagePrefix(), Preferences.instance().getTestPackageSuffix());
-		if (testedClassString == null)
+		List<String> testedClasses = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes(), Preferences.instance().getTestPackagePrefix(), Preferences.instance().getTestPackageSuffix());
+		if (testedClasses.isEmpty())
 			return null;
 
 		try {
-			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClassString);
-			//String typeName = getUnqualifiedTypeName(testedClassString);
+			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
 			Set<IType> searchResults = new HashSet<IType>();
 			for(String typeName : typeNames) {
 				Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit);
-				if(searchFor != null && searchFor.size() > 0)
+				if(searchFor != null && searchFor.size() > 0) {
 					searchResults.addAll(searchFor);
+				}
 			}
-			
-			//Set<IType> searchResults = SearchTools.searchFor(typeName, compilationUnit);
+
 			return searchResults.size() > 0 ? searchResults.iterator().next() : null;
 		} catch (Exception exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -66,14 +65,13 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		return null;
 	}
-	
+
 	public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest) {
 		try {
 			String testedMethodName = BaseTools.getTestedMethod(testMethod.getElementName());
 			if (testedMethodName != null) {
 				IMethod[] foundTestMethods = classUnderTest.getMethods();
-				for (int i = 0; i < foundTestMethods.length; i++) {
-					IMethod method = foundTestMethods[i];
+				for (IMethod method : foundTestMethods) {
 					if (testedMethodName.startsWith(method.getElementName()) && method.exists()) {
 						return method;
 					}
@@ -82,13 +80,13 @@ public class TestCaseTypeFacade extends TypeFacade {
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Creates a testmethod for the method that should be tested.
-	 * 
+	 *
 	 * @param methodToTest The method that should be tested.
 	 * @return	<code>true</code> if the method was successfully created, <code>false</code>
 	 * 			if the method already existed or the method creation threw an exception.
@@ -97,7 +95,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 		try {
 			String methodName = methodToTest.getElementName();
 			methodName = BaseTools.firstCharToUpperCase(methodName);
-			
+
 			String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + methodName;
 			if (doesMethodExist(testMethodName))
 				return false;
@@ -114,10 +112,10 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		return false;
 	}
-	
+
 	/**
 	 * Creates another testmethod for the given method aTestMethod
-	 * 
+	 *
 	 * @param aTestMethod
 	 * @return
 	 */
@@ -129,7 +127,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 				String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
 				if (doesMethodExist(testMethodName))
 					testMethodName = testMethodName.concat(MagicNumbers.SUFFIX_NAME);
-				
+
 				IMethod newTestMethod = compilationUnit.findPrimaryType().createMethod(getTestMethodString(testMethodName), null, true, null);
 
 				return newTestMethod;
@@ -137,10 +135,10 @@ public class TestCaseTypeFacade extends TypeFacade {
 		} catch (JavaModelException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
 		}
-			
+
 		return null;
 	}
-	
+
 	private String getTestMethodString(String testMethodName) {
 		if (Preferences.instance().shouldUseJunit4Type()) {
 			StringBuffer result = new StringBuffer();
@@ -170,6 +168,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.9  2007/01/25 08:34:25  hannosti
+//Some comments. Removed dead code.
+//
 //Revision 1.8  2007/01/24 20:11:50  gianasista
 //Bugfix: flexible testcase matching
 //
