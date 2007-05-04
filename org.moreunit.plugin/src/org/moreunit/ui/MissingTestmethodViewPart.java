@@ -1,5 +1,6 @@
 package org.moreunit.ui;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -73,7 +74,7 @@ public class MissingTestmethodViewPart extends PageBookView {
 
 	@Override
 	protected boolean isImportant(IWorkbenchPart part) {
-		 return (part instanceof IEditorPart);
+		 return (isJavaFile(part));
 	}
 	
 	@Override
@@ -95,11 +96,22 @@ public class MissingTestmethodViewPart extends PageBookView {
 	public void partActivated(IWorkbenchPart part) {
 		if(activePage == null)
 			super.partActivated(part);
-		else if(part instanceof IEditorPart) {
+		else if(isJavaFile(part)) {
 			activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
 			initPage((IPageBookViewPage)activePage);
 		}
 			
+	}
+
+	private boolean isJavaFile(IWorkbenchPart part) {
+		if(!(part instanceof IEditorPart))
+			return false;
+		
+		IFile file = (IFile)((IEditorPart)part).getEditorInput().getAdapter(IFile.class);
+		if(file == null)
+			return false;
+		
+		return "java".equals(file.getFileExtension());
 	}
 	
 	@Override
