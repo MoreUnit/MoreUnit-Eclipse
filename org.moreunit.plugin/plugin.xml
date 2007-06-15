@@ -182,6 +182,11 @@
             <keywordReference id="org.moreunit.keywordReference.moreunit"/>
             <keywordReference id="org.moreunit.keywordReference.test"/>
 		</page>
+		<page id="org.moreunit.moreunitDetails"
+			name="MoreUnit-Details"
+			category="org.moreunit.moreunitPreferencePage"
+			class="org.moreunit.preferences.MoreUnitDetailPreferencePage">
+		</page>
 	</extension>
 	
 	<extension

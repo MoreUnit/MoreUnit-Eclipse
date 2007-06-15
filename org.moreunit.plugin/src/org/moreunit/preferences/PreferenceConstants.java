@@ -14,6 +14,9 @@ public interface PreferenceConstants {
 	String	TEST_PACKAGE_SUFFIX					= "org.moreunit.package_suffix";
 	String	JUNIT4_TEST_TYPE					= "org.moreunit.junit4type";
 	String	FLEXIBEL_TESTCASE_NAMING			= "org.moreunit.flexiblenaming";
+	
+	String 	PREF_CREATE_TEST_NG					= "org.moreunit.testng";
+	boolean DEFAULT_CREATE_TESTNG				= false;
 	String	DEFAULT_QUALIFIERS					= "Test";
 	boolean	DEFAULT_USE_WIZARDS					= true;
 	boolean	DEFAULT_SWITCH_TO_MATCHING_METHOD	= true;
