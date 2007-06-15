@@ -10,7 +10,6 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.junit.Test;
 import org.moreunit.ProjectTestCase;
 import org.moreunit.util.MagicNumbers;
 
