@@ -31,7 +31,7 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 
 		List<SelectedJavaProject> rows = new ArrayList<SelectedJavaProject>();
 		for (IProject project : projects) {
-			if (project.isAccessible() && isJavaProject(project) && !project.getProject().equals(project)) {
+			if (project.isAccessible() && isJavaProject(project) && !this.project.getProject().equals(project)) {
 				IJavaProject javaProject = JavaCore.create(project);
 				rows.add(new SelectedJavaProject(javaProject, jumpTargets.contains(javaProject)));
 			}
@@ -71,6 +71,11 @@ public class SelectedJavaProjectProvider implements IStructuredContentProvider {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/03/02 22:14:08  channingwalton
+// [ 1667386 ] Jump to test can miss some testcases
+//
+// Fixed
+//
 // Revision 1.3  2006/10/19 19:17:41  gianasista
 // Bugfixing: Problems with closed projects solved
 //
