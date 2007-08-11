@@ -41,6 +41,7 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		pageOne.setJUnit4(Preferences.instance().shouldUseJunit4Type(), true);
 		} catch (NoSuchMethodError error) {
 		}
+		pageOne.setSuperClass("java.lang.Object", true);
 		pageOne.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);
 		addPage(pageOne);
 		addPage(pageTwo);
@@ -96,6 +97,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/25 15:01:21  gianasista
+// organize import
+//
 // Revision 1.2  2006/10/08 17:28:29  gianasista
 // Suffix preference
 //
