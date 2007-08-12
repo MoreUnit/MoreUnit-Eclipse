@@ -18,6 +18,7 @@ public class Preferences {
 	protected Preferences() {
 		IPreferenceStore preferenceStore = store();
 		preferenceStore.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
+		preferenceStore.setDefault(PreferenceConstants.TEST_TYPE, PreferenceConstants.DEFAULT_TEST_TYPE);
 		preferenceStore.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
 		
 		preferenceStore.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_QUALIFIERS);
@@ -25,7 +26,6 @@ public class Preferences {
 		preferenceStore.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
 		preferenceStore.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
 		preferenceStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
-		preferenceStore.setDefault(PreferenceConstants.JUNIT4_TEST_TYPE, PreferenceConstants.DEFAULT_JUNIT4_TEST_TYPE);
 		preferenceStore.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
 	}
 	
@@ -59,11 +59,32 @@ public class Preferences {
 	}
 	*/
 	
-	public boolean shouldUseJunit4Type() {
-		if(store().contains(PreferenceConstants.JUNIT4_TEST_TYPE)) {
-			return store().getBoolean(PreferenceConstants.JUNIT4_TEST_TYPE);
+	public String getTestType() {
+		if(store().contains(PreferenceConstants.TEST_TYPE)) {
+			return store().getString(PreferenceConstants.TEST_TYPE);
 		}
-		return store().getDefaultBoolean(PreferenceConstants.JUNIT4_TEST_TYPE);
+		return store().getDefaultString(PreferenceConstants.DEFAULT_TEST_TYPE);
+	}
+	
+	public boolean shouldUseJunit4Type() {
+		if(store().contains(PreferenceConstants.TEST_TYPE)) {
+			return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(store().getString(PreferenceConstants.TEST_TYPE));
+		}
+		return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
+	}
+	
+	public boolean shouldUseJunit3Type() {
+		if(store().contains(PreferenceConstants.TEST_TYPE)) {
+			return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(store().getString(PreferenceConstants.TEST_TYPE));
+		}
+		return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
+	}
+	
+	public boolean shouldUseTestNgType() {
+		if(store().contains(PreferenceConstants.TEST_TYPE)) {
+			return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(store().getString(PreferenceConstants.TEST_TYPE));
+		}
+		return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
 	}
 	
 	public boolean shoulUseFlexibleTestCaseNaming() {
@@ -104,6 +125,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/01/24 20:12:20  gianasista
+// Property for felxible testcase matching
+//
 // Revision 1.2  2006/10/08 17:27:22  gianasista
 // Suffix preference
 //

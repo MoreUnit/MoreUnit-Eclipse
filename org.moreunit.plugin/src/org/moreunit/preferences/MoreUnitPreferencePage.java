@@ -2,8 +2,8 @@ package org.moreunit.preferences;
 
 
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -21,18 +21,17 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 	
 	protected void createFieldEditors() {
 		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(PreferenceConstants.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
-		//BooleanFieldEditor showDialogField = new BooleanFieldEditor(PreferenceConstants.SHOW_REFACTORING_DIALOG, "Should ask before perform refactorings to tests either", getFieldEditorParent());
 		addField(junitDirPreferenceField);
-		//addField(showDialogField);
+		
+		String[][] labelAndValues = new String[][] { 
+				{"JUnit 3.8", PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3},
+				{"Junit 4", PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4},
+				{"TestNG", PreferenceConstants.TEST_TYPE_VALUE_TESTNG}
+		};
+		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_TYPE, "Test Type", 1, labelAndValues, getFieldEditorParent()));
 		
 		addField(new StringListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
 		addField(new StringListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX, "Test package suffix", getFieldEditorParent()));
-		//addField(new BooleanFieldEditor(PreferenceConstants.USE_WIZARDS, "Use class creation &Wizards", getFieldEditorParent()));
-		//addField(new BooleanFieldEditor(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, "Switch to matching &Methods", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(PreferenceConstants.JUNIT4_TEST_TYPE, "Create JUnit4 methods", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, "Enable flexible naming of tests", getFieldEditorParent()));
 	}
 
 	public void init(IWorkbench workbench) {
@@ -41,6 +40,9 @@ public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/01/24 20:12:21  gianasista
+// Property for felxible testcase matching
+//
 // Revision 1.2  2006/10/08 17:37:24  gianasista
 // Suffix preference
 //

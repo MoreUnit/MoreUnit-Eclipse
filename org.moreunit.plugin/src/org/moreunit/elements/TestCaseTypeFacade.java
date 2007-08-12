@@ -91,6 +91,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 * @return	<code>true</code> if the method was successfully created, <code>false</code>
 	 * 			if the method already existed or the method creation threw an exception.
 	 */
+	/*
 	public boolean createTestMethodForMethod(IMethod methodToTest) {
 		try {
 			String methodName = methodToTest.getElementName();
@@ -112,6 +113,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		return false;
 	}
+	*/
 
 	/**
 	 * Creates another testmethod for the given method aTestMethod
@@ -119,6 +121,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 * @param aTestMethod
 	 * @return
 	 */
+	/*
 	public IMethod createAnotherTestMethod(IMethod aTestMethod) {
 		try {
 			String testedMethodName = BaseTools.getTestedMethod(aTestMethod.getElementName());
@@ -138,7 +141,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		return null;
 	}
+	*/
 
+	/*
 	private String getTestMethodString(String testMethodName) {
 		if (Preferences.instance().shouldUseJunit4Type()) {
 			StringBuffer result = new StringBuffer();
@@ -150,6 +155,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 			return "public void " + testMethodName + "() {" + MagicNumbers.NEWLINE + "}";
 		}
 	}
+	*/
 
 	public void createMarkerForTestedClass() throws CoreException {
 		IResource resource = compilationUnit.getUnderlyingResource();
@@ -168,6 +174,11 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.10  2007/03/02 22:14:07  channingwalton
+//[ 1667386 ] Jump to test can miss some testcases
+//
+//Fixed
+//
 //Revision 1.9  2007/01/25 08:34:25  hannosti
 //Some comments. Removed dead code.
 //

@@ -23,6 +23,8 @@ import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodTreeContentProvider;
 import org.moreunit.elements.TestCaseTypeFacade;
+import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera
@@ -125,7 +127,8 @@ public class MethodPage extends Page implements IElementChangedListener{
 		TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit());
 		for (Iterator<IMethod> allSelected = selection.iterator(); allSelected.hasNext();) {
 			IMethod selectedMethod = (IMethod) allSelected.next();
-			testCaseTypeFacade.createTestMethodForMethod(selectedMethod);
+			TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.instance().getTestType());
+			testmethodCreator.createTestMethod(selectedMethod);
 		}
 		
 		updateUI();

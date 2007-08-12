@@ -10,7 +10,9 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
+import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.preferences.Preferences;
 
 /** 
  * This class delegates the action from the menu in the package explorer
@@ -31,13 +33,8 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 			if(firstElement instanceof IMethod) {
 				IMethod method = (IMethod)firstElement;
 				if(!TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType())) {
-					ClassTypeFacade classTypeFacade = new ClassTypeFacade(method.getCompilationUnit());
-					IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(false);
-					if(oneCorrespondingTestCase == null)
-						return;
-					
-					TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(oneCorrespondingTestCase.getCompilationUnit());
-					testCaseTypeFacade.createTestMethodForMethod(method);
+					TestmethodCreator testmethodCreator = new TestmethodCreator(method.getCompilationUnit(), Preferences.instance().getTestType());
+					testmethodCreator.createTestMethod(method);
 				}
 			}
 		}
@@ -49,6 +46,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/04 08:50:18  channingwalton
+// Fix for [ 1579660 ] Testcase selection dialog opens twice
+//
 // Revision 1.1.1.1  2006/08/13 14:31:15  gianasista
 // initial
 //

@@ -22,8 +22,10 @@ import org.moreunit.actions.JumpAction;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
+import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 import org.moreunit.util.MagicNumbers;
 import org.moreunit.wizards.NewClassWizard;
 
@@ -59,56 +61,31 @@ public class EditorActionExecutor {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		if(TypeFacade.isTestCase(editorPartFacade.getCompilationUnit().findPrimaryType()))
-			createAnotherTestMethod(editorPartFacade);
-		else 
-			createFirstTestMethod(editorPartFacade);
+		
+		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.instance().getTestType());
+		IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
+		
+		if(createdMethod != null && createdMethod.getElementName().endsWith(MagicNumbers.SUFFIX_NAME))
+			markMethodSuffix(editorPartFacade, createdMethod);
 	}
 
-	private void createFirstTestMethod(EditorPartFacade editorPartFacade) {
-		IMethod method = editorPartFacade.getMethodUnderCursorPosition();
-		if (method == null) {
-			LogHandler.getInstance().handleInfoLog("No method found under cursor position");
-			return;
-		}
-		ClassTypeFacade classTypeFacade = new ClassTypeFacade(method.getCompilationUnit());
-
-		IType typeOfTestCaseClassFromJavaFile = classTypeFacade.getOneCorrespondingTestCase(true);
-
-		if (typeOfTestCaseClassFromJavaFile != null && typeOfTestCaseClassFromJavaFile.exists())
-			(new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit())).createTestMethodForMethod(method);
-		else
-			LogHandler.getInstance().handleInfoLog("No testmethod is created.");
-	}
-	
-	private void createAnotherTestMethod(EditorPartFacade testCaseTypeFacade) {
-		IMethod method = testCaseTypeFacade.getMethodUnderCursorPosition();
-		if(method == null) {
-			LogHandler.getInstance().handleInfoLog("No method found under cursor position");
-			return;
-		}
+	private void markMethodSuffix(EditorPartFacade testCaseTypeFacade,
+			IMethod newMethod) {
+		ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
 		
-		TestCaseTypeFacade testFacade = new TestCaseTypeFacade(method.getCompilationUnit());
-		IMethod newMethod = testFacade.createAnotherTestMethod(method);
-		
-		// Scroll to method and mark the suffix of the testmethod
-		if(newMethod != null) {
-			ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
+		ISelection exactSelection = null;
+		try {
+			ISourceRange range = newMethod.getNameRange();
+			int offset = range.getOffset();
+			int length = range.getLength();
 			
-			ISelection exactSelection = null;
-			try {
-				ISourceRange range = newMethod.getNameRange();
-				int offset = range.getOffset();
-				int length = range.getLength();
-				
-				int suffixLength = MagicNumbers.SUFFIX_NAME.length();
-				exactSelection = new TextSelection(offset+length-suffixLength, suffixLength);
-			} catch (JavaModelException exc) {
-				LogHandler.getInstance().handleExceptionLog(exc);
-			}
-			JavaUI.revealInEditor(testCaseTypeFacade.getEditorPart(), (IJavaElement)newMethod);
-			selectionProvider.setSelection(exactSelection);
+			int suffixLength = MagicNumbers.SUFFIX_NAME.length();
+			exactSelection = new TextSelection(offset+length-suffixLength, suffixLength);
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
 		}
+		JavaUI.revealInEditor(testCaseTypeFacade.getEditorPart(), (IJavaElement)newMethod);
+		selectionProvider.setSelection(exactSelection);
 	}
 	
 	public void executeJumpAction(IEditorPart editorPart) {
@@ -186,6 +163,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/12/22 19:03:00  gianasista
+// changed textselection after creation of another testmethod
+//
 // Revision 1.5  2006/11/25 15:00:26  gianasista
 // Create second testmethod
 //

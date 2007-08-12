@@ -18,6 +18,7 @@ import org.moreunit.util.MagicNumbers;
 
 public class TestCaseTypeFacadeTest extends ProjectTestCase {
 	
+	/*
 	public void testCreateTestMethodForMethod() throws CoreException {
 		IPackageFragment comPaket = testProject.createPackage("com");
 		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource3());
@@ -58,6 +59,7 @@ public class TestCaseTypeFacadeTest extends ProjectTestCase {
 		assertEquals("testGetOneStringSuffix", newTestMethod.getElementName());
 		
 	}
+	*/
 
 	private String getJavaFileSource3() {
 		StringBuffer source = new StringBuffer();
