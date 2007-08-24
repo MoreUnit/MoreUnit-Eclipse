@@ -61,11 +61,12 @@ public class TestmethodCreator {
 		else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
 			return createJUnit3Testmethod(testMethodName);
 		else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-			return null; // TODO
+			return createTestNgTestMethod(testMethodName);
 		
 		return null;
 	}
 	
+
 	private IMethod createAnotherTestMethod(IMethod testMethod)
 	{
 		String testedMethodName = BaseTools.getTestedMethod(testMethod.getElementName());
@@ -87,7 +88,7 @@ public class TestmethodCreator {
 			else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
 				return createJUnit3Testmethod(testMethodName);
 			else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-				return null; // TODO
+				return createTestNgTestMethod(testMethodName);
 		}
 		
 		return null;
@@ -95,6 +96,18 @@ public class TestmethodCreator {
 	
 	protected IMethod createJUnit3Testmethod(String testMethodName) {
 		return createMethod(testMethodName, getJUnit3MethodStub(testMethodName));
+	}
+	
+	private IMethod createTestNgTestMethod(String testMethodName) {
+		return createMethod(testMethodName, getTestNgMethodStub(testMethodName));
+	}
+	
+	private String getTestNgMethodStub(String testmethodName) {
+		StringBuffer methodContent = new StringBuffer();
+		methodContent.append("@Test").append(MagicNumbers.NEWLINE);
+		methodContent.append("public void ").append(testmethodName).append("() {").append(MagicNumbers.NEWLINE).append("}");
+		
+		return methodContent.toString();
 	}
 	
 	private String getJUnit3MethodStub(String testmethodName) {

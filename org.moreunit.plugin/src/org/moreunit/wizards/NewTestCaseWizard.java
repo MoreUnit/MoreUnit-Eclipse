@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.elements.JavaProjectFacade;
@@ -97,6 +96,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/08/11 17:09:05  gianasista
+// Applied patch for super class
+//
 // Revision 1.3  2006/11/25 15:01:21  gianasista
 // organize import
 //
