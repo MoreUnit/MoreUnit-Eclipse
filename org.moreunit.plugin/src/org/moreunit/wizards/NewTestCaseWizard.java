@@ -16,7 +16,7 @@ import org.moreunit.preferences.Preferences;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
-	private org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne	pageOne;
+	private MoreUnitNewTestCaseWizardPageOne	pageOne;
 	private NewTestCaseWizardPageTwo	pageTwo;
 	
 	private IJavaProject project;
@@ -29,7 +29,7 @@ public class NewTestCaseWizard extends NewClassyWizard {
 
 	public void addPages() {
 		pageTwo = new NewTestCaseWizardPageTwo();
-		pageOne = new org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne(pageTwo);
+		pageOne = new MoreUnitNewTestCaseWizardPageOne(pageTwo);
 		pageOne.setWizard(this);
 		pageTwo.setWizard(this);
 		pageOne.init(new StructuredSelection(getType()));
@@ -96,6 +96,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/08/24 18:31:59  gianasista
+// TestNG support
+//
 // Revision 1.5  2007/08/24 18:30:46  gianasista
 // TestNG support
 //
