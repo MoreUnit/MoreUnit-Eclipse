@@ -5,10 +5,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
+import org.eclipse.jdt.core.refactoring.descriptors.MoveMethodDescriptor;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.RefactoringContribution;
+import org.eclipse.ltk.core.refactoring.RefactoringCore;
+import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
+import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 import org.moreunit.log.LogHandler;
 
 /**
@@ -40,6 +46,12 @@ public class MoveMethodParticipant extends MoveParticipant{
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.createChange");
 			
+		MoveMethodDescriptor refactoringDescriptor = (MoveMethodDescriptor) RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE_METHOD).createDescriptor();
+		//refactoringDescriptor.se
+		RefactoringStatus refactoringStatus = new RefactoringStatus();
+		refactoringDescriptor.createRefactoring(refactoringStatus);
+		//MoveRefactoring moveRefactoring = refactoringContribution.createDescriptor(id, project, description, comment, arguments, flags)
+		
 		// TODO not implemented yet because MoveSupport is not part of the API yet
 		/*
 		IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method);
@@ -56,6 +68,9 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/24 18:37:39  channingwalton
+// made  the properties page appear on the navigator view and fixed some gui text
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //

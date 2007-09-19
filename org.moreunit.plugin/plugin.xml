@@ -238,7 +238,6 @@
 		</renameParticipant>
 	</extension>
 	
-	<!--
 	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
 		<moveParticipant id="moreunit.moveMethodParticipant"
 			name="MoreUnitMethodMethodParticipant"
@@ -272,7 +271,6 @@
 			</enablement>
 		</moveParticipant>
 	</extension>
-	-->
 	
 	<extension
        point="org.eclipse.help.toc">

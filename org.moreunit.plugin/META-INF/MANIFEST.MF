@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.ltk.ui.refactoring,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.jdt.junit
+ org.eclipse.jdt.junit,
+ org.eclipse.jdt.core.manipulation
 Eclipse-AutoStart: true
 Bundle-ClassPath: lib/jmock-1.0.1.jar,
  .

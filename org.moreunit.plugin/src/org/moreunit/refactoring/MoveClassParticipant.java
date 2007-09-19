@@ -4,7 +4,11 @@ package org.moreunit.refactoring;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
+import org.eclipse.jdt.core.refactoring.descriptors.MoveDescriptor;
+import org.eclipse.jdt.core.refactoring.descriptors.MoveMethodDescriptor;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
@@ -33,13 +37,21 @@ public class MoveClassParticipant extends MoveParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.createChange");
-		
+		MoveDescriptor refactoringDescriptor = (MoveDescriptor) RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE).createDescriptor();
+		//getArguments().getDestination()
+		//refactoringDescriptor.se
+		//refactoringDescriptor.se
+		//RefactoringStatus refactoringStatus = new RefactoringStatus();
+		//refactoringDescriptor.createRefactoring(refactoringStatus);
 		// TODO not implemented yet because MoveSupport is not part of the API yet
 		return null;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/24 18:37:39  channingwalton
+// made  the properties page appear on the navigator view and fixed some gui text
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
