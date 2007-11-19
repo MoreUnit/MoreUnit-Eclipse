@@ -17,71 +17,79 @@ import org.moreunit.preferences.Preferences;
  * 23.05.2006 20:21:57
  */
 public abstract class TypeFacade {
-	
+
 	ICompilationUnit compilationUnit;
 	JavaProjectFacade javaProjectFacade;
-	
+
 	public static boolean isTestCase(IType type) {
-		if(type == null)
+		if(type == null) {
 			return false;
-		
+		}
+
 		IType primaryType = type.getCompilationUnit().findPrimaryType();
-		if(primaryType == null)
+		if(primaryType == null) {
 			return false;
-		
+		}
+
 		String classname = primaryType.getElementName();
-		
-		String[] suffixes = Preferences.instance().getSuffixes();
+		final Preferences preferences = Preferences.newInstance(type.getJavaProject());
+		String[] suffixes = preferences.getSuffixes();
 		for(String suffix: suffixes) {
-			if(suffix.length() > 0 && classname.endsWith(suffix))
+			if((suffix.length() > 0) && classname.endsWith(suffix)) {
 				return true;
+			}
 		}
-		
-		String[] prefixes = Preferences.instance().getPrefixes();
+
+		String[] prefixes = preferences.getPrefixes();
 		for(String prefix: prefixes) {
-			if(prefix.length() > 0 && classname.startsWith(prefix))
+			if((prefix.length() > 0) && classname.startsWith(prefix)) {
 				return true;
+			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public TypeFacade(ICompilationUnit compilationUnit) {
 		this.compilationUnit = compilationUnit;
+		getJavaProjectFacade();
 	}
-	
+
 	public TypeFacade(IFile file) {
 		this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
+		getJavaProjectFacade();
 	}
-	
+
 	public TypeFacade(IEditorPart editorPart) {
 		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
 		this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
+		getJavaProjectFacade();
 	}
-	
+
 	public JavaProjectFacade getJavaProjectFacade() {
-		if(javaProjectFacade == null)
-			javaProjectFacade = new JavaProjectFacade(compilationUnit.getJavaProject());
-		
-		return javaProjectFacade;
+		if(this.javaProjectFacade == null) {
+			this.javaProjectFacade = new JavaProjectFacade(this.compilationUnit.getJavaProject());
+		}
+
+		return this.javaProjectFacade;
 	}
-	
+
 	public IType getType() {
-		return compilationUnit.findPrimaryType();
+		return this.compilationUnit.findPrimaryType();
 	}
-	
+
 	protected boolean doesMethodExist(String testMethodName) {
 		try {
-			IMethod[] vorhandeneTests = compilationUnit.findPrimaryType().getMethods();
-			for (int i = 0; i < vorhandeneTests.length; i++) {
-				IMethod method = vorhandeneTests[i];
-				if(testMethodName.equals(method.getElementName()))
+			IMethod[] vorhandeneTests = this.compilationUnit.findPrimaryType().getMethods();
+			for (IMethod method : vorhandeneTests) {
+				if(testMethodName.equals(method.getElementName())) {
 					return true;
+				}
 			}
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
-		
+
 		return false;
 	}
 

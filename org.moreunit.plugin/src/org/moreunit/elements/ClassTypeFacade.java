@@ -20,9 +20,9 @@ import org.moreunit.wizards.NewTestCaseWizard;
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The file represented by this instance is not
  * a testcase.
- * 
+ *
  * @author vera
- * 
+ *
  * 23.05.2006 20:28:52
  */
 public class ClassTypeFacade extends TypeFacade {
@@ -44,15 +44,15 @@ public class ClassTypeFacade extends TypeFacade {
 	/**
 	 * Returns the corresponding testcase of the javaFileFacade. If there are more than one testcases the uses has to
 	 * make a choice via a dialog. If no test is found <code>null</code> is returned.
-	 * 
+	 *
 	 * @return one of the corresponding testcases
 	 */
 	public IType getOneCorrespondingTestCase(boolean createIfNecessary) {
 		Set<IType> testcases = getCorrespondingTestCaseList();
 		IType testcaseToJump = null;
-		if (testcases.size() == 1)
+		if (testcases.size() == 1) {
 			testcaseToJump = (IType) testcases.toArray()[0];
-		else if (testcases.size() > 1) {
+		} else if (testcases.size() > 1) {
 			testcaseToJump = (new TestcaseChooseDialog("", "", testcases)).getChoice();
 		}
 		else if (createIfNecessary) {
@@ -61,7 +61,7 @@ public class ClassTypeFacade extends TypeFacade {
 
 		return testcaseToJump;
 	}
-	
+
 	public Set<IType> getCorrespondingTestCaseList() {
 		return getTestCaseDiviner().getMatches();
 	}
@@ -69,15 +69,16 @@ public class ClassTypeFacade extends TypeFacade {
 	public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType) {
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 
-		if (testCaseType == null)
+		if (testCaseType == null) {
 			return null;
+		}
 
 		try {
 			IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
-			for (int i = 0; i < methodsOfType.length; i++) {
-				IMethod testmethod = methodsOfType[i];
-				if (testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
+			for (IMethod testmethod : methodsOfType) {
+				if (testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod)) {
 					return testmethod;
+				}
 			}
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -101,17 +102,18 @@ public class ClassTypeFacade extends TypeFacade {
 	private List<IMethod> getTestMethodsForTestCase(IMethod method, IType testCaseType) {
 		List<IMethod> result = new ArrayList<IMethod>();
 
-		if (testCaseType == null)
+		if (testCaseType == null) {
 			return result;
+		}
 
 		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
 
 		try {
 			IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
-			for (int i = 0; i < methodsOfType.length; i++) {
-				IMethod testmethod = methodsOfType[i];
-				if (testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
+			for (IMethod testmethod : methodsOfType) {
+				if (testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod)) {
 					result.add(testmethod);
+				}
 			}
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -124,9 +126,10 @@ public class ClassTypeFacade extends TypeFacade {
 	 * Getter uses lazy caching.
 	 */
 	private TestCaseDiviner getTestCaseDiviner() {
-		if (testCaseDiviner == null)
-			testCaseDiviner = new TestCaseDiviner(compilationUnit, Preferences.instance());
+		if (this.testCaseDiviner == null) {
+			this.testCaseDiviner = new TestCaseDiviner(this.compilationUnit, Preferences.newInstance(this.javaProjectFacade.getJavaProject()));
+		}
 
-		return testCaseDiviner;
+		return this.testCaseDiviner;
 	}
 }

@@ -20,16 +20,20 @@ import org.moreunit.util.MagicNumbers;
 
 /**
  * JavaProjectFacade offers easy access to {@link IJavaProject}
- * 
+ *
  * @author vera
  * 30.01.2006 20:30:54
  */
 public class JavaProjectFacade {
-	
+
 	private IJavaProject javaProject;
-	
+
 	public JavaProjectFacade(IJavaProject javaProject) {
 		this.javaProject = javaProject;
+	}
+
+	public IJavaProject getJavaProject() {
+		return this.javaProject;
 	}
 
 	/**
@@ -38,66 +42,71 @@ public class JavaProjectFacade {
 	 * this method chooses the first project from the settings.
 	 */
 	public IPackageFragmentRoot getJUnitSourceFolder() {
-		List<IJavaProject> listOfProjects = ProjectProperties.instance().getJumpTargets(javaProject);
-		
+		List<IJavaProject> listOfProjects = ProjectProperties.instance().getJumpTargets(this.javaProject);
+
 		IJavaProject referenceJavaProject = null;
-		if(listOfProjects.size() == 0)
-			referenceJavaProject = javaProject;
-		else
+		if(listOfProjects.size() == 0) {
+			referenceJavaProject = this.javaProject;
+		} else {
 			referenceJavaProject = listOfProjects.get(0);
-		
+		}
+
 		try {
 			IPackageFragmentRoot[] packageFragmentRoots = referenceJavaProject.getPackageFragmentRoots();
-			for(int i=0; i<packageFragmentRoots.length; i++) {
-				IPackageFragmentRoot packageFragmentRoot = packageFragmentRoots[i];
-				String junitFolder = Preferences.instance().getJunitDirectoryFromPreferences();
-				if(packageFragmentRoot.getPath().toString().equals(MagicNumbers.SLASH+referenceJavaProject.getElementName()+MagicNumbers.SLASH+junitFolder))
+			for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots) {
+				String junitFolder = Preferences.newInstance(this.javaProject).getJunitDirectoryFromPreferences();
+				if(packageFragmentRoot.getPath().toString().equals(MagicNumbers.SLASH+referenceJavaProject.getElementName()+MagicNumbers.SLASH+junitFolder)) {
 					return packageFragmentRoot;
+				}
 			}
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
-		
+
 		return null;
 	}
-	
-	public IType[] getTestCasesFromJavaProject() throws JavaModelException {
-		IType testCaseType = javaProject.findType("junit.framework.TestCase");
-		if(testCaseType == null)
-			return null;
 
-		ITypeHierarchy hierarchy= testCaseType.newTypeHierarchy(javaProject, new NullProgressMonitor());
+	public IType[] getTestCasesFromJavaProject() throws JavaModelException {
+		IType testCaseType = this.javaProject.findType("junit.framework.TestCase");
+		if(testCaseType == null) {
+			return null;
+		}
+
+		ITypeHierarchy hierarchy= testCaseType.newTypeHierarchy(this.javaProject, new NullProgressMonitor());
 		IType[] testCaseListe = hierarchy.getAllSubtypes(testCaseType);
 		return testCaseListe;
 	}
-	
+
 	public void deleteTestCaseMarkers() {
 		try {
-			IProject project = javaProject.getProject();
-			if(project.isAccessible())
+			IProject project = this.javaProject.getProject();
+			if(project.isAccessible()) {
 				project.deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void addTestCaseMarkers() {
-		if(!javaProject.isOpen())
-			return;
-		
-		try {
-			IType[] testCaseListe = (new JavaProjectFacade(javaProject)).getTestCasesFromJavaProject();
 
-			if(testCaseListe == null)
+	public void addTestCaseMarkers() {
+		if(!this.javaProject.isOpen()) {
+			return;
+		}
+
+		try {
+			IType[] testCaseListe = (new JavaProjectFacade(this.javaProject)).getTestCasesFromJavaProject();
+
+			if(testCaseListe == null) {
 				return;
-			
-			for(int i=0; i<testCaseListe.length; i++) {
-				IType testCase = testCaseListe[i];
+			}
+
+			for (IType testCase : testCaseListe) {
 				ICompilationUnit compilationUnit = testCase.getCompilationUnit();
-				if(compilationUnit != null)
+				if(compilationUnit != null) {
 					(new TestCaseTypeFacade(compilationUnit)).createMarkerForTestedClass();
-				else
+				} else {
 					LogHandler.getInstance().handleInfoLog("JavaProjectFacade.addTestCaseMarkers(): CompilatioUnit is null "+testCase.getFullyQualifiedName());
+				}
 			}
 		} catch (JavaModelException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
@@ -106,11 +115,14 @@ public class JavaProjectFacade {
 		} catch (NullPointerException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
 		}
-	}	
-	
+	}
+
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/01/14 21:13:21  gianasista
+// Bugfix [1634387]
+//
 // Revision 1.4  2006/11/25 14:58:27  gianasista
 // Using project specific settings
 //
@@ -150,4 +162,3 @@ public class JavaProjectFacade {
 // Revision 1.1  2006/01/30 21:12:32  gianasista
 // Further Refactorings (moved methods from singleton classes like PluginTools to facade classes)
 //
-	

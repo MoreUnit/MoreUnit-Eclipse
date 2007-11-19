@@ -13,7 +13,6 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.moreunit.actions.CreateTestMethodEditorAction;
@@ -40,7 +39,7 @@ import org.moreunit.wizards.NewClassWizard;
  * </li>
  * </ul>
  * The handler is a singelton.
- * 
+ *
  * @author vera 25.10.2005
  */
 public class EditorActionExecutor {
@@ -51,8 +50,9 @@ public class EditorActionExecutor {
 	}
 
 	public static EditorActionExecutor getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new EditorActionExecutor();
+		}
 
 		return instance;
 	}
@@ -61,24 +61,23 @@ public class EditorActionExecutor {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.instance().getTestType());
+		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.newInstance(editorPartFacade.getJavaProject()).getTestType());
 		IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
-		
-		if(createdMethod != null && createdMethod.getElementName().endsWith(MagicNumbers.SUFFIX_NAME))
+
+		if((createdMethod != null) && createdMethod.getElementName().endsWith(MagicNumbers.SUFFIX_NAME)) {
 			markMethodSuffix(editorPartFacade, createdMethod);
+		}
 	}
 
-	private void markMethodSuffix(EditorPartFacade testCaseTypeFacade,
-			IMethod newMethod) {
+	private void markMethodSuffix(EditorPartFacade testCaseTypeFacade, IMethod newMethod) {
 		ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
-		
+
 		ISelection exactSelection = null;
 		try {
 			ISourceRange range = newMethod.getNameRange();
 			int offset = range.getOffset();
 			int length = range.getLength();
-			
+
 			int suffixLength = MagicNumbers.SUFFIX_NAME.length();
 			exactSelection = new TextSelection(offset+length-suffixLength, suffixLength);
 		} catch (JavaModelException exc) {
@@ -87,7 +86,7 @@ public class EditorActionExecutor {
 		JavaUI.revealInEditor(testCaseTypeFacade.getEditorPart(), (IJavaElement)newMethod);
 		selectionProvider.setSelection(exactSelection);
 	}
-	
+
 	public void executeJumpAction(IEditorPart editorPart) {
 		IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
 		ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
@@ -99,10 +98,11 @@ public class EditorActionExecutor {
 	}
 
 	private void executeJumpAction(IEditorPart editorPart, ICompilationUnit compilationUnit) {
-		if (TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
+		if (TypeFacade.isTestCase(compilationUnit.findPrimaryType())) {
 			executeJumpFromTest(editorPart, new TestCaseTypeFacade(compilationUnit));
-		else
+		} else {
 			executeJumpToTest(editorPart, new ClassTypeFacade(compilationUnit));
+		}
 	}
 
 	private void executeJumpFromTest(IEditorPart editorPart, TestCaseTypeFacade javaFileFacade) {
@@ -110,7 +110,7 @@ public class EditorActionExecutor {
 		if (classUnderTest == null) {
 			classUnderTest = new NewClassWizard(javaFileFacade.getType()).open();
 		}
-		if (classUnderTest != null)
+		if (classUnderTest != null) {
 			try {
 				IEditorPart openedEditorPart = JavaUI.openInEditor(classUnderTest.getParent());
 				if (editorPart != null) {
@@ -121,6 +121,7 @@ public class EditorActionExecutor {
 			} catch (JavaModelException exc) {
 				LogHandler.getInstance().handleExceptionLog(exc);
 			}
+		}
 	}
 
 	private void executeJumpToTest(IEditorPart editorPart, ClassTypeFacade javaFileFacade) {
@@ -138,31 +139,38 @@ public class EditorActionExecutor {
 		}
 	}
 
-	private void jumpToTestMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart, IType testCaseType) {
+	private void jumpToTestMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart, final IType testCaseType) {
 		EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
 		IMethod method = (oldEditorPartFacade).getMethodUnderCursorPosition();
-		if (method == null)
+		if (method == null) {
 			return;
+		}
 
 		IMethod testMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition(testCaseType);
-		if (testMethod != null)
+		if (testMethod != null) {
 			JavaUI.revealInEditor(openedEditorPart, (IJavaElement) testMethod);
+		}
 	}
 
 	private void jumpToMethodUnderTestIfPossible(IType classUnderTest, IEditorPart oldEditorPart, IEditorPart openedEditorPart) throws JavaModelException {
 		EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
 		IMethod methode = (oldEditorPartFacade).getMethodUnderCursorPosition();
-		if (methode == null)
+		if (methode == null) {
 			return;
+		}
 
 		TestCaseTypeFacade testCase = new TestCaseTypeFacade(oldEditorPartFacade.getCompilationUnit());
 		IMethod testedMethod = testCase.getCorrespondingTestedMethod(methode, classUnderTest);
-		if(testedMethod != null)
+		if(testedMethod != null) {
 			JavaUI.revealInEditor(openedEditorPart, (IJavaElement)testedMethod);
+		}
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2007/08/12 17:09:54  gianasista
+// Refactoring: Test method creation
+//
 // Revision 1.6  2006/12/22 19:03:00  gianasista
 // changed textselection after creation of another testmethod
 //

@@ -42,9 +42,17 @@ public class TestCaseTypeFacade extends TypeFacade {
 	}
 
 	public IType getCorrespondingClassUnderTest() {
-		List<String> testedClasses = BaseTools.getTestedClass(getType().getFullyQualifiedName(), Preferences.instance().getPrefixes(), Preferences.instance().getSuffixes(), Preferences.instance().getTestPackagePrefix(), Preferences.instance().getTestPackageSuffix());
-		if (testedClasses.isEmpty())
+		final Preferences preferences = Preferences.newInstance(this.javaProjectFacade.getJavaProject());
+		List<String> testedClasses =
+				BaseTools.getTestedClass(
+						getType().getFullyQualifiedName(),
+						preferences.getPrefixes(),
+						preferences.getSuffixes(),
+						preferences.getTestPackagePrefix(),
+						preferences.getTestPackageSuffix());
+		if (testedClasses.isEmpty()) {
 			return null;
+		}
 
 		try {
 			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
@@ -150,55 +158,54 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 */
 
 	public void createMarkerForTestedClass() throws CoreException {
-		IResource resource = compilationUnit.getUnderlyingResource();
-		if (resource == null)
+		IResource resource = this.compilationUnit.getUnderlyingResource();
+		if (resource == null) {
 			return;
+		}
 
 		if (!Flags.isAbstract(getType().getFlags())) {
 
 			IType testedClass = getCorrespondingClassUnderTest();
-			if (testedClass == null)
+			if (testedClass == null) {
 				return;
+			}
 
 			new MarkerUpdateRunnable(testedClass, getType()).schedule();
 		}
 	}
 }
 
-// $Log: not supported by cvs2svn $
-// Revision 1.11 2007/08/12 17:09:32 gianasista
-// Refactoring: Test method creation
+//$Log: not supported by cvs2svn $
+//Revision 1.11  2007/08/12 17:09:32  gianasista
+//Refactoring: Test method creation
 //
-// Revision 1.10 2007/03/02 22:14:07 channingwalton
-// [ 1667386 ] Jump to test can miss some testcases
+//Revision 1.10  2007/03/02 22:14:07  channingwalton
+//[ 1667386 ] Jump to test can miss some testcases
 //
-// Fixed
+//Fixed
 //
-// Revision 1.9 2007/01/25 08:34:25 hannosti
-// Some comments. Removed dead code.
+//Revision 1.9  2007/01/25 08:34:25  hannosti
+//Some comments. Removed dead code.
 //
-// Revision 1.8 2007/01/24 20:11:50 gianasista
-// Bugfix: flexible testcase matching
+//Revision 1.8  2007/01/24 20:11:50  gianasista
+//Bugfix: flexible testcase matching
 //
-// Revision 1.7 2007/01/12 21:55:54 gianasista
-// Better matching for testcases [1575497]
+//Revision 1.7  2007/01/12 21:55:54  gianasista
+//Better matching for testcases [1575497]
 //
-// Revision 1.6 2006/12/22 19:03:50 gianasista
-// changed textselection after creation of another testmethod
+//Revision 1.6  2006/12/22 19:03:50  gianasista
+//changed textselection after creation of another testmethod
 //
-// Revision 1.5 2006/11/25 14:58:56 gianasista
-// Create second testmethod
+//Revision 1.5  2006/11/25 14:58:56  gianasista
+//Create second testmethod
 //
-// Revision 1.4 2006/10/08 17:26:27 gianasista
-// Suffix preference
+//Revision 1.4  2006/10/08 17:26:27  gianasista
+//Suffix preference
 //
-// Revision 1.3 2006/09/18 20:00:10 channingwalton
-// the CVS substitions broke with my last check in because I put newlines in
-// them
+//Revision 1.3  2006/09/18 20:00:10  channingwalton
+//the CVS substitions broke with my last check in because I put newlines in them
 //
-// Revision 1.2 2006/09/18 19:56:07 channingwalton
-// Fixed bug [ 1537839 ] moreunit cannot find test class if it is in wrong
-// package. Also found a classcast exception in UnitDecorator whicj I've guarded
-// for.Fixed the Class wizard icon
+//Revision 1.2  2006/09/18 19:56:07  channingwalton
+//Fixed bug [ 1537839 ] moreunit cannot find test class if it is in wrong package. Also found a classcast exception in UnitDecorator whicj I've guarded for.Fixed the Class wizard icon
 //
 //
