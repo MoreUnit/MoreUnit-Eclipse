@@ -21,16 +21,17 @@ public class NewClassWizard extends NewClassyWizard {
 		super(element);
 	}
 
+	@Override
 	public void addPages() {
-		newClassWizardPage = new NewClassWizardPage();
-		newClassWizardPage.setWizard(this);
-		newClassWizardPage.init(new StructuredSelection(getType()));
-		newClassWizardPage.setTypeName(getPotentialTypeName(), true);
-		newClassWizardPage.setPackageFragment(getPackage(), true);
-		newClassWizardPage.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);
-		newClassWizardPage.setEnclosingType(null, false);
-		newClassWizardPage.setSuperClass("", true);
-		addPage(newClassWizardPage);
+		this.newClassWizardPage = new NewClassWizardPage();
+		this.newClassWizardPage.setWizard(this);
+		this.newClassWizardPage.init(new StructuredSelection(getType()));
+		this.newClassWizardPage.setTypeName(getPotentialTypeName(), true);
+		this.newClassWizardPage.setPackageFragment(getPackage(), true);
+		this.newClassWizardPage.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);
+		this.newClassWizardPage.setEnclosingType(null, false);
+		this.newClassWizardPage.setSuperClass("", true);
+		addPage(this.newClassWizardPage);
 	}
 
 	private IPackageFragment getPackage() {
@@ -45,8 +46,8 @@ public class NewClassWizard extends NewClassyWizard {
 		return false;
 //		return Preferences.instance().hasTestPackagePrefix() && packageFragment.getElementName().startsWith(Preferences.instance().getTestPackagePrefix());
 	}
-	
-	private IPackageFragment getPackageFragmentStrippedOfPrefix(IPackageFragment packageFragment) {
+
+	private IPackageFragment getPackageFragmentStrippedOfPrefix(final IPackageFragment packageFragment) {
 //		String targetPackage = packageFragment.getElementName().replaceFirst(Preferences.instance().getTestPackagePrefix() + "\\.", "");
 		String targetPackage = packageFragment.getElementName();
 		try {
@@ -58,30 +59,35 @@ public class NewClassWizard extends NewClassyWizard {
 	}
 
 	private String getPotentialTypeName() {
-		Preferences preferences = Preferences.instance();
+		Preferences preferences = Preferences.newInstance(getType().getJavaProject());
 		String name = getType().getElementName();
 		String[] prefixes = preferences.getPrefixes();
-		for (int i = 0; i < prefixes.length; i++) {
-			name = name.replaceAll(prefixes[i], "");
+		for (String element2 : prefixes) {
+			name = name.replaceAll(element2, "");
 		}
 		String[] suffixes = preferences.getSuffixes();
-		for (int i = 0; i < suffixes.length; i++) {
-			name = name.replaceAll(suffixes[i], "");
+		for (String element2 : suffixes) {
+			name = name.replaceAll(element2, "");
 		}
 		return name;
 	}
 
+	@Override
 	public IType createClass() throws CoreException, InterruptedException {
-		newClassWizardPage.createType(new NullProgressMonitor());
-		return newClassWizardPage.getCreatedType();
+		this.newClassWizardPage.createType(new NullProgressMonitor());
+		return this.newClassWizardPage.getCreatedType();
 	}
 
+	@Override
 	protected IPackageFragmentRoot getPackageFragmentRoot() {
-		return newClassWizardPage.getPackageFragmentRoot();
+		return this.newClassWizardPage.getPackageFragmentRoot();
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:29  gianasista
 // package rename
 //

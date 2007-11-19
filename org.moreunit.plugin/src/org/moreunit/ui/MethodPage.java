@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ListViewer;
@@ -31,114 +32,117 @@ import org.moreunit.preferences.Preferences;
  *
  */
 public class MethodPage extends Page implements IElementChangedListener{
-	
+
 	ListViewer listViewer;
 	EditorPartFacade editorPartFacade;
 	TreeViewer treeViewer;
-	
+
 	Action addTestAction;
 	Action filterPrivateAction;
 	Action filterGetterAction;
-	
+
 	private MethodTreeContentProvider methodTreeContentProvider;
-	
+
 	public MethodPage(EditorPartFacade editorPartFacade) {
 		super();
-		
+
 		this.editorPartFacade = editorPartFacade;
 		JavaCore.addElementChangedListener(this);
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-		treeViewer = new TreeViewer(parent);
-		methodTreeContentProvider = new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType());
-		treeViewer.setContentProvider(methodTreeContentProvider);
-		treeViewer.setLabelProvider(new JavaElementLabelProvider());
-		treeViewer.setInput(this);
-		
+		this.treeViewer = new TreeViewer(parent);
+		this.methodTreeContentProvider = new MethodTreeContentProvider(this.editorPartFacade.getCompilationUnit().findPrimaryType());
+		this.treeViewer.setContentProvider(this.methodTreeContentProvider);
+		this.treeViewer.setLabelProvider(new JavaElementLabelProvider());
+		this.treeViewer.setInput(this);
+
 		createToolbar();
 	}
-	
+
 	public void setNewEditorPartFacade(EditorPartFacade editorPartFacade) {
-		methodTreeContentProvider = new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType());
-		this.editorPartFacade = editorPartFacade; 
-		treeViewer.setContentProvider(methodTreeContentProvider);
+		this.methodTreeContentProvider = new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType());
+		this.editorPartFacade = editorPartFacade;
+		this.treeViewer.setContentProvider(this.methodTreeContentProvider);
 	}
-	
+
 	public IType getInputType() {
-		return editorPartFacade.getCompilationUnit().findPrimaryType();
+		return this.editorPartFacade.getCompilationUnit().findPrimaryType();
 	}
 
 	private void createToolbar() {
-		filterPrivateAction = new Action("", Action.AS_CHECK_BOX) {
+		this.filterPrivateAction = new Action("", IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				actionFilterPrivateMethods();
 			}
 		};
-		filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.gif"));
-		filterPrivateAction.setChecked(true);
-		
-		filterGetterAction = new Action("", Action.AS_CHECK_BOX) {
+		this.filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.gif"));
+		this.filterPrivateAction.setChecked(true);
+
+		this.filterGetterAction = new Action("", IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				actionFilterGetterMethods();
 			}
 		};
-		filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.gif"));
-		filterGetterAction.setChecked(true);
-		
-		addTestAction = new Action("Add...") {
+		this.filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.gif"));
+		this.filterGetterAction.setChecked(true);
+
+		this.addTestAction = new Action("Add...") {
 			@Override
 			public void run() {
 				addItem();
 			}
 		};
-		addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
+		this.addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
-		toolBarManager.add(filterPrivateAction);
-		toolBarManager.add(filterGetterAction);
-		toolBarManager.add(addTestAction);
-		
+		toolBarManager.add(this.filterPrivateAction);
+		toolBarManager.add(this.filterGetterAction);
+		toolBarManager.add(this.addTestAction);
+
 	}
-	
+
 	private void actionFilterPrivateMethods() {
-		methodTreeContentProvider.setPrivateFiltered(filterPrivateAction.isChecked());
+		this.methodTreeContentProvider.setPrivateFiltered(this.filterPrivateAction.isChecked());
 		updateUI();
 	}
-	
+
 	private void actionFilterGetterMethods() {
-		methodTreeContentProvider.setGetterFiltered(filterGetterAction.isChecked());
+		this.methodTreeContentProvider.setGetterFiltered(this.filterGetterAction.isChecked());
 		updateUI();
 	}
 
 	private void addItem() {
-		ITreeSelection selection = (ITreeSelection) treeViewer.getSelection();
-		if(selection.isEmpty())
+		ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
+		if(selection.isEmpty()) {
 			return;
-		
-		ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getEditorPart());
+		}
+
+		ClassTypeFacade classTypeFacade = new ClassTypeFacade(this.editorPartFacade.getEditorPart());
 		IType typeOfTestCaseClassFromJavaFile = classTypeFacade.getOneCorrespondingTestCase(true);
 
-		if(typeOfTestCaseClassFromJavaFile == null || !typeOfTestCaseClassFromJavaFile.exists())
+		if((typeOfTestCaseClassFromJavaFile == null) || !typeOfTestCaseClassFromJavaFile.exists()) {
 			return;
+		}
 
 		TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit());
 		for (Iterator<IMethod> allSelected = selection.iterator(); allSelected.hasNext();) {
-			IMethod selectedMethod = (IMethod) allSelected.next();
-			TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.instance().getTestType());
+			IMethod selectedMethod = allSelected.next();
+			TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), Preferences.newInstance(this.editorPartFacade.getJavaProject()).getTestType());
 			testmethodCreator.createTestMethod(selectedMethod);
 		}
-		
+
 		updateUI();
 	}
-	
+
 	@Override
 	public Control getControl() {
-		if(treeViewer != null)
-			return treeViewer.getControl();
-		
+		if(this.treeViewer != null) {
+			return this.treeViewer.getControl();
+		}
+
 		return null;
 	}
 
@@ -148,7 +152,7 @@ public class MethodPage extends Page implements IElementChangedListener{
 	}
 
 	public void updateUI(){
-		treeViewer.refresh();
+		this.treeViewer.refresh();
 	}
 
 	public void elementChanged(ElementChangedEvent event) {
@@ -158,7 +162,7 @@ public class MethodPage extends Page implements IElementChangedListener{
 			default: {}
 		}
 	}
-	
+
 	private void updateUIafterElementChangedEvent() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -166,7 +170,7 @@ public class MethodPage extends Page implements IElementChangedListener{
 			}
 		});
 	}
-	
+
 	@Override
 	public void dispose() {
 		JavaCore.removeElementChangedListener(this);

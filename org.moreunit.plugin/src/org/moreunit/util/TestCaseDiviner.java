@@ -14,19 +14,19 @@ import org.moreunit.preferences.Preferences;
 /**
  * Encalpsulates the implementation to find the testcases from a given
  * compilationUnit.
- * 
+ *
  * @author giana
  *
  * 13.05.2006 12:49:12
  */
 public class TestCaseDiviner {
-	
+
 	private ICompilationUnit 		compilationUnit;
 	private Set<IType>				matches = new LinkedHashSet<IType>();;
 	private IType 					source;
-	
+
 	private Preferences				preferences;
-	
+
 	public TestCaseDiviner(ICompilationUnit compilationUnit, Preferences preferences) {
 		this.compilationUnit = compilationUnit;
 		this.source = getSource();
@@ -37,50 +37,54 @@ public class TestCaseDiviner {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
 	}
-	
+
 	public Set<IType> getMatches() {
-		return matches;
+		return this.matches;
 	}
-	
+
 	private void findPotentialTargets() throws CoreException {
-		if(source == null)
+		if(this.source == null) {
 			return;
-		
-		matches = new LinkedHashSet<IType>();
-		String[] prefixes = preferences.getPrefixes();
-		for (int i = 0; i < prefixes.length; i++) {
-			matches.addAll(SearchTools.searchFor(getSearchTerm(source, prefixes[i], true), compilationUnit));
 		}
-		String[] suffixes = preferences.getSuffixes();
-		for (int i = 0; i < suffixes.length; i++) {
-			matches.addAll(SearchTools.searchFor(getSearchTerm(source, suffixes[i], false), compilationUnit));
+
+		this.matches = new LinkedHashSet<IType>();
+		String[] prefixes = this.preferences.getPrefixes();
+		for (String element : prefixes) {
+			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit));
+		}
+		String[] suffixes = this.preferences.getSuffixes();
+		for (String element : suffixes) {
+			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit));
 		}
 	}
-	
+
 	private IType getSource() {
 		try {
-			IType[] allTypes = compilationUnit.getAllTypes();
-			if (allTypes.length > 0 && allTypes[0].isClass()) {
+			IType[] allTypes = this.compilationUnit.getAllTypes();
+			if ((allTypes.length > 0) && allTypes[0].isClass()) {
 				return allTypes[0];
 			}
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleInfoLog(exc.getMessage());
 		}
-		
+
 		return null;
 	}
-	
+
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
-		if(Preferences.instance().shoulUseFlexibleTestCaseNaming()) {
+		if(this.preferences.shoulUseFlexibleTestCaseNaming()) {
 			return prefixMatch ? qualifier + MagicNumbers.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + MagicNumbers.WILDCARD + qualifier;
 		} else {
 			return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
 		}
-	}	
+	}
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2007/01/24 20:13:38  gianasista
+// Property for felxible testcase matching
+//
 // Revision 1.6  2007/01/14 21:14:14  gianasista
 // Changed logging behaviour
 //

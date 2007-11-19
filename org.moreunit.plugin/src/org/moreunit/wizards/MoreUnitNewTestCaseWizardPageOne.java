@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera
@@ -26,8 +27,11 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 	private Button unit4Toggle;
 	private Button testNgToggle;
 	
-	public MoreUnitNewTestCaseWizardPageOne(NewTestCaseWizardPageTwo page2) {
+	private Preferences preferences;
+	
+	public MoreUnitNewTestCaseWizardPageOne(NewTestCaseWizardPageTwo page2, Preferences preferences) {
 		super(page2);
+		this.preferences = preferences;
 	}
 	
 	protected void createJUnit4Controls(Composite composite, int nColumns) {
@@ -47,32 +51,33 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 		junti3Toggle = new Button(inner, SWT.RADIO);
 		junti3Toggle.setText("JUnit 3");
 		junti3Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
-		junti3Toggle.setSelection(false);
+		junti3Toggle.setSelection(preferences.shouldUseJunit3Type());
 		junti3Toggle.setEnabled(true);
 		
 		unit4Toggle = new Button(inner, SWT.RADIO);
 		unit4Toggle.setText("JUnit 4");
-		unit4Toggle.setSelection(false);
+		unit4Toggle.setSelection(preferences.shouldUseJunit4Type());
 		unit4Toggle.setEnabled(true);
 		unit4Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
 		unit4Toggle.addSelectionListener(listener);
 		
 		testNgToggle = new Button(inner, SWT.RADIO);
 		testNgToggle.setText("TestNG");
-		testNgToggle.setSelection(false);
+		testNgToggle.setSelection(preferences.shouldUseTestNgType());
 		testNgToggle.setEnabled(true);
 		testNgToggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
 		testNgToggle.addSelectionListener(listener);
 	}
 	
 	private void testTypeSelectionChanged() {
-		if(junti3Toggle.getSelection())
+		if(junti3Toggle.getSelection()) {
+			setJUnit4(false, true);
+		} else if(unit4Toggle.getSelection()) {
+			setJUnit4(true, true);
+			setSuperClass(preferences.getTestSuperClass(), true);
+		} else if(testNgToggle.getSelection()) {
 			setJUnit4(false, false);
-		else if(unit4Toggle.getSelection())
-			setJUnit4(true, false);
-		else if(testNgToggle.getSelection()) {
-			setJUnit4(false, false);
-			setSuperClass("java.lang.Object", false);
+			setSuperClass(preferences.getTestSuperClass(), true);
 			handleFieldChanged(JUNIT4TOGGLE);
 		}
 	}
