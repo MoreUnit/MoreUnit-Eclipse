@@ -3,43 +3,68 @@ package org.moreunit.preferences;
 
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.moreunit.MoreUnitPlugin;
 
+import com.bdaum.overlayPages.FieldEditorOverlayPage;
+
 /**
  * @author vera
  * 08.01.2006 19:24:23
  */
-public class MoreUnitPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage{
+public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IWorkbenchPreferencePage{
 
 	public MoreUnitPreferencePage() {
-		super(FieldEditorPreferencePage.FLAT);
+		super(FieldEditorPreferencePage.GRID);
 	}
-	
+
+	@Override
 	protected void createFieldEditors() {
 		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(PreferenceConstants.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
 		addField(junitDirPreferenceField);
-		
-		String[][] labelAndValues = new String[][] { 
+
+		String[][] labelAndValues = new String[][] {
 				{"JUnit 3.8", PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3},
 				{"Junit 4", PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4},
 				{"TestNG", PreferenceConstants.TEST_TYPE_VALUE_TESTNG}
 		};
 		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_TYPE, "Test Type", 1, labelAndValues, getFieldEditorParent()));
-		
+
 		addField(new StringListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
 		addField(new StringListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
 	}
 
-	public void init(IWorkbench workbench) {
+	public void init(final IWorkbench workbench) {
 		setPreferenceStore(MoreUnitPlugin.getDefault().getPreferenceStore());
 	}
+
+	@Override
+	protected IPreferenceStore doGetPreferenceStore() {
+		return MoreUnitPlugin.getDefault().getPreferenceStore();
+	}
+
+	@Override
+	protected String getPageId() {
+		return PreferenceConstants.PREF_PAGE_ID;
+	}
+
+	@Override
+	public boolean performOk() {
+		Preferences.clearProjectCach();
+		return super.performOk();
+	}
+	
+	
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/08/12 17:10:11  gianasista
+// Refactoring: Test method creation
+//
 // Revision 1.3  2007/01/24 20:12:21  gianasista
 // Property for felxible testcase matching
 //
