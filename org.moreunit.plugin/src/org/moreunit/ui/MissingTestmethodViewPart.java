@@ -18,12 +18,12 @@ import org.moreunit.util.PluginTools;
  * @author vera
  */
 public class MissingTestmethodViewPart extends PageBookView {
-	
+
 	MethodPage activePage;
-	
+
 	public MissingTestmethodViewPart() {
 		super();
-		
+
 		setTitleImage(MoreUnitPlugin.getImageDescriptor("icons/moreunitLogo.gif").createImage());
 	}
 
@@ -47,13 +47,13 @@ public class MissingTestmethodViewPart extends PageBookView {
 
 	@Override
 	protected PageRec doCreatePage(IWorkbenchPart part) {
-		if(activePage == null) {
+		if (activePage == null) {
 			activePage = new MethodPage(new EditorPartFacade((IEditorPart) part));
-			initPage((IPageBookViewPage)activePage);
+			initPage((IPageBookViewPage) activePage);
 			activePage.createControl(getPageBook());
 		} else {
 			activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
-			initPage((IPageBookViewPage)activePage);
+			initPage((IPageBookViewPage) activePage);
 		}
 		return new PageRec(part, activePage);
 	}
@@ -61,7 +61,7 @@ public class MissingTestmethodViewPart extends PageBookView {
 	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
 		pageRecord.dispose();
-		if(activePage != null) {
+		if (activePage != null) {
 			activePage.dispose();
 			activePage = null;
 		}
@@ -74,64 +74,66 @@ public class MissingTestmethodViewPart extends PageBookView {
 
 	@Override
 	protected boolean isImportant(IWorkbenchPart part) {
-		 return (isJavaFile(part));
+		return (isJavaFile(part));
 	}
-	
+
 	@Override
 	public void partOpened(IWorkbenchPart part) {
 		super.partOpened(part);
-		
+
 		// on startup the view should become synchronized with the open file
-		if(part instanceof MissingTestmethodViewPart) {
+		if (part instanceof MissingTestmethodViewPart) {
 			IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
-			if(openEditorPart != null) {
+			if (openEditorPart != null) {
 				super.partActivated(openEditorPart);
-				if(activePage != null)
+				if (activePage != null)
 					activePage.updateUI();
 			}
 		}
 	}
-	
+
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		if(activePage == null)
+		if (activePage == null)
 			super.partActivated(part);
-		else if(isJavaFile(part)) {
+		else if (isJavaFile(part)) {
 			activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
-			initPage((IPageBookViewPage)activePage);
+			initPage((IPageBookViewPage) activePage);
 		}
-			
+
 	}
 
 	private boolean isJavaFile(IWorkbenchPart part) {
-		if(!(part instanceof IEditorPart))
+		if (!(part instanceof IEditorPart))
 			return false;
-		
-		IFile file = (IFile)((IEditorPart)part).getEditorInput().getAdapter(IFile.class);
-		if(file == null)
+
+		IFile file = (IFile) ((IEditorPart) part).getEditorInput().getAdapter(IFile.class);
+		if (file == null)
 			return false;
-		
+
 		return "java".equals(file.getFileExtension());
 	}
-	
+
 	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
-		if(part instanceof EditorPart) {
+		if (part instanceof EditorPart) {
 			partActivated(part);
-			activePage.updateUI();
+			if (activePage != null) {
+				activePage.updateUI();
+			}
 		}
 	}
-	
+
 	@Override
 	public void partClosed(IWorkbenchPart part) {
 		super.partClosed(part);
-		
-		if(part instanceof IEditorPart) {
+
+		if (part instanceof IEditorPart) {
 			IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
-			if(openEditorPart != null && activePage != null) {
+			if (openEditorPart != null && activePage != null) {
 				super.partActivated(openEditorPart);
 				activePage.updateUI();
-			} 
+			}
 		}
 	}
 
