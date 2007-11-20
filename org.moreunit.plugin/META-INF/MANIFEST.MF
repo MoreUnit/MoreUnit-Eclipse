@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Plug-in
 Bundle-SymbolicName: org.moreunit;singleton:=true
-Bundle-Version: 0.8.1
+Bundle-Version: 0.8.1.qualifier
 Bundle-Activator: org.moreunit.MoreUnitPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
