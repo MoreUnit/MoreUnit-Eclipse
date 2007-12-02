@@ -102,6 +102,9 @@ public class MoveClassParticipant extends MoveParticipant{
 		MoveDescriptor moveDescriptor = new MoveDescriptor();
 		moveDescriptor.setDestination(moveToPackage);
 		IMember[] members = new IMember[1];
+		if (allTestcases.isEmpty()) {
+			return null;
+		}
 		members[0] = allTestcases.iterator().next();
 		moveDescriptor.setMoveMembers(members);
 		moveDescriptor.setUpdateQualifiedNames(true);
@@ -114,6 +117,9 @@ public class MoveClassParticipant extends MoveParticipant{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/10/29 06:40:22  gianasista
+// Move refactoring via move descriptor
+//
 // Revision 1.3  2007/09/19 19:19:43  gianasista
 // Started move refactoring support
 //
