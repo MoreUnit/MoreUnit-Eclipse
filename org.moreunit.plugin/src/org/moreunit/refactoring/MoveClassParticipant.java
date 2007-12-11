@@ -2,36 +2,30 @@ package org.moreunit.refactoring;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.jdt.core.refactoring.descriptors.MoveDescriptor;
-import org.eclipse.jdt.core.refactoring.descriptors.MoveMethodDescriptor;
-import org.eclipse.jdt.internal.core.PackageFragment;
-import org.eclipse.jdt.internal.corext.refactoring.reorg.JavaMoveProcessor;
-import org.eclipse.jdt.internal.corext.refactoring.reorg.ReorgPolicyFactory;
-import org.eclipse.jdt.internal.corext.refactoring.reorg.ReorgUtils;
-import org.eclipse.jdt.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
+import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringContribution;
 import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
-import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
 
 /**
@@ -39,6 +33,8 @@ import org.moreunit.log.LogHandler;
  * 04.02.2006 22:26:18
  */
 public class MoveClassParticipant extends MoveParticipant{
+	
+	private static final String EMPTY_CONTENT = "";
 	
 	private ICompilationUnit compilationUnit;
 	private ClassTypeFacade javaFileFacade;
@@ -52,7 +48,7 @@ public class MoveClassParticipant extends MoveParticipant{
 
 	public String getName() {
 		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.getName");
-		return "MoreUnit Move Class";
+		return "MoreUnit testcase move operation";
 	}
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
@@ -62,57 +58,54 @@ public class MoveClassParticipant extends MoveParticipant{
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.createChange");
-		IPackageFragment moveToPackage = (IPackageFragment) getArguments().getDestination();
+		IPackageFragment moveClassDestinationPackage = (IPackageFragment) getArguments().getDestination();
 		
-		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
-		for (IType typeToRename : allTestcases) {			
-			//changes.add(new RenameClassChange(typeToRename, getNewTestName(typeToRename)));
-		}
-		
-//		if (changes.size() == 1) {
-//			return changes.get(0);
-//		}
-		
-//		if (changes.size() > 0) {
-//			return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
-//		}
-//		List elementList = new ArrayList();
-//		elementList.add(allTestcases.iterator().next());
-//		IResource[] resources = ReorgUtils.getResources(elementList);
-//		IJavaElement[] elements = ReorgUtils.getJavaElements(elementList);
-//		IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(resources, elements);
-//		JavaMoveProcessor processor = new JavaMoveProcessor(policy);
-//		MoveRefactoring refactoring = new MoveRefactoring(processor); 
-//		//IReorgQueries yourQueries; 
-//		//processor.setReorgQueries(yourQueries);
-//		// yours option here
-//		processor.setDestination(moveToPackage);
-//		processor.setUpdateReferences(true);
-//		processor.setUpdateQualifiedNames(true);
-//		RefactoringStatus status = refactoring.checkAllConditions(null);
-//		if (!status.hasFatalError()) {
-//		    Change change = refactoring.createChange(null);
-//		    change.initializeValidationData(null);
-//		    change.perform(null);
-//		    return change;
-//		} 
-		
+		IPackageFragment moveTestsDestinationPackage = getMoveTestsDestinationPackage(moveClassDestinationPackage);
 		RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
-		//MoveDescriptor refactoringDescriptor = (MoveDescriptor) refactoringContribution.createDescriptor("id", compilationUnit.getJavaProject().getElementName(), "des", "com", new HashMap(), 0);
-		MoveDescriptor moveDescriptor = new MoveDescriptor();
-		moveDescriptor.setDestination(moveToPackage);
-		IMember[] members = new IMember[1];
-		if (allTestcases.isEmpty()) {
-			return null;
+		
+		List<Change> changes = new ArrayList<Change>();
+		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
+		for (IType typeToRename : allTestcases) {
+			ICompilationUnit[] members = new ICompilationUnit[1];
+			members[0] = typeToRename.getCompilationUnit();
+			ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
+			
+			MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToRename, members, newType);
+			RefactoringStatus refactoringStatus = new RefactoringStatus();
+			Refactoring createRefactoring = moveDescriptor.createRefactoring(refactoringStatus);
+			createRefactoring.checkAllConditions(pm);
+			Change createChange = createRefactoring.createChange(null);
+			changes.add(createChange);
 		}
-		members[0] = allTestcases.iterator().next();
-		moveDescriptor.setMoveMembers(members);
+		
+		if (changes.size() == 1) {
+			return changes.get(0);
+		}
+		
+		if (changes.size() > 0) {
+			return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+		}
+
+		return null;
+	}
+	
+	private MoveDescriptor createMoveDescriptor(RefactoringContribution refactoringContribution, IType typeToRename, ICompilationUnit[] members, ICompilationUnit newType) {
+		MoveDescriptor moveDescriptor = (MoveDescriptor) refactoringContribution.createDescriptor();
+		
+		if(moveDescriptor == null)
+			moveDescriptor = new MoveDescriptor();
+		
+		moveDescriptor.setDestination(newType);
+		moveDescriptor.setMoveResources(new IFile[] {}, new IFolder[] {}, members);
 		moveDescriptor.setUpdateQualifiedNames(true);
 		moveDescriptor.setUpdateReferences(true);
-		RefactoringStatus refactoringStatus = new RefactoringStatus();
-		moveDescriptor.createRefactoring(refactoringStatus).createChange(null);
 		
-		return null;
+		return moveDescriptor;
+	}
+
+	private IPackageFragment getMoveTestsDestinationPackage(IPackageFragment moveClassDestinationPackage) {
+		IPackageFragmentRoot unitSourceFolder = (new JavaProjectFacade(moveClassDestinationPackage.getJavaProject())).getJUnitSourceFolder();
+		return unitSourceFolder.getPackageFragment(moveClassDestinationPackage.getElementName());
 	}
 }
 
