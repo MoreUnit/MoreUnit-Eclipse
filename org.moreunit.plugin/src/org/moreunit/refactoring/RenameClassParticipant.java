@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
+import org.eclipse.jdt.core.refactoring.descriptors.RenameJavaElementDescriptor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
+import org.eclipse.ltk.core.refactoring.Refactoring;
+import org.eclipse.ltk.core.refactoring.RefactoringContribution;
+import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
@@ -49,6 +53,7 @@ public class RenameClassParticipant extends RenameParticipant{
 		return new RefactoringStatus();
 	}
 
+	/*
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		LogHandler.getInstance().handleInfoLog("RenameClassParticipant.createChange");
 		
@@ -72,6 +77,40 @@ public class RenameClassParticipant extends RenameParticipant{
 
 		return null;
 	}
+	*/ 
+	
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+		if (!getArguments().getUpdateReferences()) {
+			return null;
+		}
+		
+		try {
+			List<Change> changes = new ArrayList<Change>();
+			Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
+			RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
+			for (IType typeToRename : allTestcases) {
+				RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
+				renameJavaElementDescriptor.setJavaElement(typeToRename.getCompilationUnit());
+				renameJavaElementDescriptor.setNewName(getNewTestName(typeToRename));
+				RefactoringStatus refactoringStatus = new RefactoringStatus();
+				Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
+				RefactoringStatus checkAllConditions = renameRefactoring.checkAllConditions(pm);
+				changes.add(renameRefactoring.createChange(pm));
+			}
+			
+			if (changes.size() == 1) {
+				return changes.get(0);
+			}
+			
+			if (changes.size() > 0) {
+				return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+			}
+		} catch (Exception e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		}
+
+		return null;
+	}
 	
 	private String getNewTestName(IType typeToRename) {
 		String newName = getArguments().getNewName();
@@ -83,6 +122,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/24 18:37:39  channingwalton
+// made  the properties page appear on the navigator view and fixed some gui text
+//
 // Revision 1.2  2006/08/21 06:18:34  channingwalton
 // removed some unnecessary casts, fixed a NPE
 //
