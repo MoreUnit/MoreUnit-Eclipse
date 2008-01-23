@@ -16,6 +16,7 @@ import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.util.BaseTools;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
@@ -55,7 +56,11 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		this.pageOne.setJUnit4(this.preferences.shouldUseJunit4Type(), true);
 		} catch (NoSuchMethodError error) {
 		}
-		this.pageOne.setSuperClass(this.preferences.getTestSuperClass(), true);
+		
+		String testSuperClass = this.preferences.getTestSuperClass();
+		if(!BaseTools.isStringTrimmedEmpty(testSuperClass))
+			this.pageOne.setSuperClass(testSuperClass, true);
+		
 		//set default and focus
 		String classUnderTest= pageOne.getClassUnderTestText();
 		if (classUnderTest.length() > 0) {
@@ -124,6 +129,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2007/11/19 21:15:17  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.7  2007/09/02 19:25:42  gianasista
 // TestNG support
 //
