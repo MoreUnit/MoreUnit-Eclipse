@@ -33,5 +33,5 @@ public interface PreferenceConstants {
 	String	DEFAULT_TEST_TYPE					= PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
 	String 	DEFAULT_PRAEFIX						= "test";
 	String 	DEFAULT_SUFFIX						= "Test";
-	String	DEFAULT_TEST_SUPERCLASS				= "java.lang.Object";
+	String	DEFAULT_TEST_SUPERCLASS				= "";
 }
