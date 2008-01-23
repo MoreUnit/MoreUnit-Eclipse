@@ -242,10 +242,21 @@ public class BaseTools {
 		stringBuilder.append(word);
 		return stringBuilder.toString();
 	}
+	
+	public static boolean isStringTrimmedEmpty(String aString) {
+        return aString == null || aString.trim().length() == 0;
+    }
+	
+	
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2007/03/02 22:14:06  channingwalton
+// [ 1667386 ] Jump to test can miss some testcases
+//
+// Fixed
+//
 // Revision 1.10  2007/01/25 08:34:25  hannosti
 // Some comments. Removed dead code.
 //
