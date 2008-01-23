@@ -2,6 +2,7 @@ package org.moreunit.preferences;
 
 
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -34,8 +35,15 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 		};
 		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_TYPE, "Test Type", 1, labelAndValues, getFieldEditorParent()));
 
-		addField(new StringListEditor(PreferenceConstants.PREFIXES, "Unit Test &Prefixes:", getFieldEditorParent()));
-		addField(new StringListEditor(PreferenceConstants.SUFFIXES, "Unit Test &Suffixes:", getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.PREFIXES, "Test &Prefixes (comma separated):", 30, getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.SUFFIXES, "Test &Suffixes (comma separated):", 30, getFieldEditorParent()));
+		
+		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX, "Test package suffix", getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS, "Test superclass", getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, "Enable flexible naming of tests", getFieldEditorParent()));
+
 	}
 
 	public void init(final IWorkbench workbench) {
@@ -62,6 +70,9 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/11/19 21:00:38  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.4  2007/08/12 17:10:11  gianasista
 // Refactoring: Test method creation
 //

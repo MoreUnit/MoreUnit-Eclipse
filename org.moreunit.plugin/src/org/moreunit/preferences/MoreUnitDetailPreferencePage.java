@@ -32,11 +32,11 @@ public class MoreUnitDetailPreferencePage extends FieldEditorOverlayPage impleme
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX, "Test package suffix", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS, "Test superclass", getFieldEditorParent()));
-		
-		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, "Enable flexible naming of tests", getFieldEditorParent()));
+//		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
+//		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX, "Test package suffix", getFieldEditorParent()));
+//		addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS, "Test superclass", getFieldEditorParent()));
+//		
+//		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, "Enable flexible naming of tests", getFieldEditorParent()));
 	}
 	
 	@Override
