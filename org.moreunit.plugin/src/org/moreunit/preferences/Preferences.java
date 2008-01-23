@@ -18,12 +18,10 @@ public class Preferences {
 	private static Map<IJavaProject, Preferences> preferenceMap = new HashMap<IJavaProject, Preferences>();
 
 	public static synchronized Preferences newInstance(final IJavaProject currentProject) {
-		System.out.println("project: " + currentProject.getElementName());
 		Preferences result = Preferences.preferenceMap.get(currentProject);
 		if (result != null) {
 			return result;
 		}
-		System.out.println("new");
 		try {
 			result = new Preferences(currentProject.getCorrespondingResource());
 			Preferences.preferenceMap.put(currentProject, result);
@@ -177,6 +175,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/11/19 21:01:20  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.4  2007/08/12 17:10:09  gianasista
 // Refactoring: Test method creation
 //
