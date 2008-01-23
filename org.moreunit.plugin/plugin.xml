@@ -182,11 +182,13 @@
             <keywordReference id="org.moreunit.keywordReference.moreunit"/>
             <keywordReference id="org.moreunit.keywordReference.test"/>
 		</page>
+		<!--
 		<page id="org.moreunit.moreunitPreferencePage_details"
 			name="MoreUnit-Details"
 			category="org.moreunit.moreunitPreferencePage"
 			class="org.moreunit.preferences.MoreUnitDetailPreferencePage">
 		</page>
+		-->
 	</extension>
 	
 	<extension
@@ -281,13 +283,7 @@
    
     <extension
          point="org.eclipse.ui.propertyPages">
-     <page
-            class="org.moreunit.preferences.MoreUnitPreferencePage"
-            id="org.moreunit.moreunitPreferencePage"
-            name="MoreUnit-ProjectPreferences"
-            adaptable="true"
-            objectClass="org.eclipse.jdt.core.IJavaProject">
-      </page>
+      <!--
       <page id="org.moreunit.moreunitPreferencePage_details"
 			name="MoreUnit-ProjectPreferences-Details"
 			adaptable="true"
@@ -295,6 +291,7 @@
 			class="org.moreunit.preferences.MoreUnitDetailPreferencePage"
 			objectClass="org.eclipse.jdt.core.IJavaProject">
 	</page>
+	-->
       
       <page
             class="org.moreunit.properties.ProjectPropertiesPage"
@@ -318,6 +315,14 @@
                   value="org.eclipse.core.resources.IProject">
             </instanceof>
          </enabledWhen>
+      </page>
+     <page
+            class="org.moreunit.preferences.MoreUnitPreferencePage"
+            id="org.moreunit.moreunitPreferencePage"
+            name="MoreUnit Details"
+            adaptable="true"
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            category="Moreunit Properties">
       </page>
    </extension>
    
