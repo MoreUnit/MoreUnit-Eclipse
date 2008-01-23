@@ -14,8 +14,10 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.jdt.core.refactoring.descriptors.MoveDescriptor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.Refactoring;
@@ -24,6 +26,9 @@ import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
@@ -40,50 +45,54 @@ public class MoveClassParticipant extends MoveParticipant{
 	private ClassTypeFacade javaFileFacade;
 
 	protected boolean initialize(Object element) {
-		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.initialize2");
 		compilationUnit = (ICompilationUnit) element;
 		javaFileFacade = new ClassTypeFacade(compilationUnit);
 		return true;
 	}
 
 	public String getName() {
-		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.getName");
 		return "MoreUnit testcase move operation";
 	}
 
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
-		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.checkConditions");
 		return new RefactoringStatus();
 	}
 
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		LogHandler.getInstance().handleInfoLog("MoveClassParticipant.createChange");
-		IPackageFragment moveClassDestinationPackage = (IPackageFragment) getArguments().getDestination();
-		
-		IPackageFragment moveTestsDestinationPackage = getMoveTestsDestinationPackage(moveClassDestinationPackage);
-		RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
-		
-		List<Change> changes = new ArrayList<Change>();
-		Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
-		for (IType typeToRename : allTestcases) {
-			ICompilationUnit[] members = new ICompilationUnit[1];
-			members[0] = typeToRename.getCompilationUnit();
-			ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
+		try {
+			IPackageFragment moveClassDestinationPackage = (IPackageFragment) getArguments().getDestination();
 			
-			MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToRename, members, newType);
-			RefactoringStatus refactoringStatus = new RefactoringStatus();
-			Refactoring createRefactoring = moveDescriptor.createRefactoring(refactoringStatus);
-			createRefactoring.checkAllConditions(pm);
-			Change createChange = createRefactoring.createChange(null);
-			changes.add(createChange);
-		}
-		
-		if (changes.size() == 1) {
-			return changes.get(0);
-		}
-		
-		if (changes.size() > 0) {
-			return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+			IPackageFragment moveTestsDestinationPackage = getMoveTestsDestinationPackage(moveClassDestinationPackage);
+			if(moveTestsDestinationPackage == null) {
+				return null;
+			}
+			
+			RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
+			
+			List<Change> changes = new ArrayList<Change>();
+			Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
+			for (IType typeToRename : allTestcases) {
+				ICompilationUnit[] members = new ICompilationUnit[1];
+				members[0] = typeToRename.getCompilationUnit();
+				ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
+				
+				MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToRename, members, newType);
+				RefactoringStatus refactoringStatus = new RefactoringStatus();
+				Refactoring createRefactoring = moveDescriptor.createRefactoring(refactoringStatus);
+				createRefactoring.checkAllConditions(pm);
+				Change createChange = createRefactoring.createChange(null);
+				changes.add(createChange);
+			}
+			
+			if (changes.size() == 1) {
+				return changes.get(0);
+			}
+			
+			if (changes.size() > 0) {
+				return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+			}
+		} catch (Exception e) {
+			LogHandler.getInstance().handleExceptionLog(e);
 		}
 
 		return null;
@@ -105,11 +114,27 @@ public class MoveClassParticipant extends MoveParticipant{
 
 	private IPackageFragment getMoveTestsDestinationPackage(IPackageFragment moveClassDestinationPackage) {
 		IPackageFragmentRoot unitSourceFolder = (new JavaProjectFacade(moveClassDestinationPackage.getJavaProject())).getJUnitSourceFolder();
-		return unitSourceFolder.getPackageFragment(moveClassDestinationPackage.getElementName());
+		if(unitSourceFolder == null || !unitSourceFolder.exists()) {
+			System.out.println("Kein Source folder");
+			return null;
+		}
+			
+		IPackageFragment packageFragment = unitSourceFolder.getPackageFragment(moveClassDestinationPackage.getElementName());
+		if(packageFragment != null && !packageFragment.exists()) {
+			try {
+				packageFragment = unitSourceFolder.createPackageFragment(moveClassDestinationPackage.getElementName(), false, null);
+			} catch (JavaModelException e) {
+				LogHandler.getInstance().handleExceptionLog(e);
+			}
+		}
+		return packageFragment;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/12/11 20:54:58  gianasista
+// Refactoring
+//
 // Revision 1.4  2007/10/29 06:40:22  gianasista
 // Move refactoring via move descriptor
 //
