@@ -158,6 +158,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 */
 
 	public void createMarkerForTestedClass() throws CoreException {
+		if (!compilationUnit.exists()) {
+			return;
+		}
 		IResource resource = this.compilationUnit.getUnderlyingResource();
 		if (resource == null) {
 			return;
@@ -176,6 +179,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.13  2007/11/19 20:51:57  gianasista
+//Patch from Bjoern: project specific settings
+//
 //Revision 1.11  2007/08/12 17:09:32  gianasista
 //Refactoring: Test method creation
 //
