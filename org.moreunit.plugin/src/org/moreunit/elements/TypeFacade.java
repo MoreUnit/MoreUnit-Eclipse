@@ -32,15 +32,15 @@ public abstract class TypeFacade {
 		}
 
 		String classname = primaryType.getElementName();
-		final Preferences preferences = Preferences.newInstance(type.getJavaProject());
-		String[] suffixes = preferences.getSuffixes();
+		 Preferences preferences = Preferences.getInstance();
+		String[] suffixes = preferences.getSuffixes(type.getJavaProject());
 		for(String suffix: suffixes) {
 			if((suffix.length() > 0) && classname.endsWith(suffix)) {
 				return true;
 			}
 		}
 
-		String[] prefixes = preferences.getPrefixes();
+		String[] prefixes = preferences.getPrefixes(type.getJavaProject());
 		for(String prefix: prefixes) {
 			if((prefix.length() > 0) && classname.startsWith(prefix)) {
 				return true;
@@ -76,6 +76,10 @@ public abstract class TypeFacade {
 
 	public IType getType() {
 		return this.compilationUnit.findPrimaryType();
+	}
+	
+	public ICompilationUnit getCompilationUnit() {
+		return this.compilationUnit;
 	}
 
 	protected boolean doesMethodExist(String testMethodName) {

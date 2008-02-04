@@ -61,7 +61,7 @@ public class EditorActionExecutor {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.newInstance(editorPartFacade.getJavaProject()).getTestType());
+		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()));
 		IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
 
 		if((createdMethod != null) && createdMethod.getElementName().endsWith(MagicNumbers.SUFFIX_NAME)) {
@@ -168,6 +168,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2007/11/19 20:54:55  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.7  2007/08/12 17:09:54  gianasista
 // Refactoring: Test method creation
 //

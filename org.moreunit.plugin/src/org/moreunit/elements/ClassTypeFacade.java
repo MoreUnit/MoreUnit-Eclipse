@@ -127,7 +127,7 @@ public class ClassTypeFacade extends TypeFacade {
 	 */
 	private TestCaseDiviner getTestCaseDiviner() {
 		if (this.testCaseDiviner == null) {
-			this.testCaseDiviner = new TestCaseDiviner(this.compilationUnit, Preferences.newInstance(this.javaProjectFacade.getJavaProject()));
+			this.testCaseDiviner = new TestCaseDiviner(this.compilationUnit, Preferences.getInstance());
 		}
 
 		return this.testCaseDiviner;

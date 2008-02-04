@@ -5,43 +5,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.BaseTools;
 
+import com.bdaum.overlayPages.FieldEditorOverlayPage;
 import com.bdaum.overlayPages.PropertyStore;
 
 public class Preferences {
 
-	private static Map<IJavaProject, Preferences> preferenceMap = new HashMap<IJavaProject, Preferences>();
+	private static Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
-	public static synchronized Preferences newInstance(final IJavaProject currentProject) {
-		Preferences result = Preferences.preferenceMap.get(currentProject);
-		if (result != null) {
-			return result;
-		}
-		try {
-			result = new Preferences(currentProject.getCorrespondingResource());
-			Preferences.preferenceMap.put(currentProject, result);
-			return result;
-		} catch (JavaModelException e) {
-			LogHandler.getInstance().handleExceptionLog(e);
-			//should never appear, if so we can'T handle it so re throw
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
-
-	private IPreferenceStore preferenceStore = null;
-	private IPreferenceStore detailPreferences = null;
-
-	protected Preferences() {
-		super();
-	}
-
-	protected Preferences(final IResource currentProject) {
-		IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
+	private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
+	
+	private static final Preferences instance = new Preferences();
+	
+	static {
 		workbenchStore.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
 		workbenchStore.setDefault(PreferenceConstants.TEST_TYPE, PreferenceConstants.DEFAULT_TEST_TYPE);
 		workbenchStore.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
@@ -53,6 +37,58 @@ public class Preferences {
 		workbenchStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
 		workbenchStore.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
 		workbenchStore.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
+	}
+	
+//	public static synchronized Preferences getStore(final IJavaProject currentProject) {
+//		Preferences result = Preferences.preferenceMap.get(currentProject);
+//		if (result != null) {
+//			return result;
+//		}
+//		try {
+//			result = new Preferences(currentProject.getCorrespondingResource());
+//			Preferences.preferenceMap.put(currentProject, result);
+//			return result;
+//		} catch (JavaModelException e) {
+//			LogHandler.getInstance().handleExceptionLog(e);
+//			//should never appear, if so we can'T handle it so re throw
+//			throw new RuntimeException(e.getMessage(), e);
+//		}
+//	}
+	
+	public static Preferences getInstance() {
+		return instance;
+	}
+	
+	private static boolean hasProjectSpecificSettings(IJavaProject javaProject) {
+		if(javaProject == null)
+			return false;
+		
+		try {
+			String propertyValue = javaProject.getProject().getPersistentProperty(getQualifiedNameForKey(FieldEditorOverlayPage.USEPROJECTSETTINGS));
+			if(BaseTools.isStringTrimmedEmpty(propertyValue))
+				return false;
+			
+			return Boolean.parseBoolean(propertyValue);
+		} catch (CoreException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		}
+		
+		return false;
+	}
+	
+	private static QualifiedName getQualifiedNameForKey(String key) {
+		return new QualifiedName(PreferenceConstants.PREF_PAGE_ID, key);
+	}
+
+	//private IPreferenceStore preferenceStore = null;
+	//private IPreferenceStore detailPreferences = null;
+
+	protected Preferences() {
+		super();
+	}
+
+	/*
+	protected Preferences(final IResource currentProject) {
 		this.preferenceStore = new PropertyStore(
 				currentProject,
 				workbenchStore,
@@ -62,17 +98,18 @@ public class Preferences {
 				workbenchStore,
 				PreferenceConstants.PREF_DETAILS_PAGE_ID);
 	}
+	*/
 
-	public String getJunitDirectoryFromPreferences() {
-		return store().getString(PreferenceConstants.PREF_JUNIT_PATH);
+	public String getJunitDirectoryFromPreferences(IJavaProject javaProject) {
+		return store(javaProject).getString(PreferenceConstants.PREF_JUNIT_PATH);
 	}
 
-	public String[] getPrefixes() {
-		return getValues(PreferenceConstants.PREFIXES);
+	public String[] getPrefixes(IJavaProject javaProject) {
+		return getValues(PreferenceConstants.PREFIXES, javaProject);
 	}
 
-	public String[] getSuffixes() {
-		return getValues(PreferenceConstants.SUFFIXES);
+	public String[] getSuffixes(IJavaProject javaProject) {
+		return getValues(PreferenceConstants.SUFFIXES, javaProject);
 	}
 
 	/*
@@ -93,77 +130,107 @@ public class Preferences {
 	}
 	*/
 	
-	public String getTestSuperClass() {
-		return getStringValue(PreferenceConstants.TEST_SUPERCLASS, detailPreferences);
+	public String getTestSuperClass(IJavaProject javaProject) {
+		return getStringValue(PreferenceConstants.TEST_SUPERCLASS, javaProject);
 	}
 	
+	/*
+	public String getWorkspaceTestSuperClass() {
+		if(getWorkspaceStore().contains(PreferenceConstants.TEST_SUPERCLASS)) {
+			return getWorkspaceStore().getString(PreferenceConstants.TEST_SUPERCLASS);
+		}
+		return getWorkspaceStore().getDefaultString(PreferenceConstants.TEST_SUPERCLASS);
+	}
+	
+	private IPreferenceStore getWorkspaceStore() {
+		return MoreUnitPlugin.getDefault().getPreferenceStore();
+	}
+	*/
+	
+	/*
 	private String getStringValue(final String key) {
 		return getStringValue(key, preferenceStore);
 	}
+	*/
 	
-	private String getStringValue(final String key, IPreferenceStore store) {
-		if(store.contains(key)) {
-			return store.getString(key);
+	private String getStringValue(final String key, IJavaProject javaProject) {
+		if(store(javaProject).contains(key)) {
+			return store(javaProject).getString(key);
 		}
-		return store.getDefaultString(key);
+		return store(javaProject).getDefaultString(key);
 	}
 
-	public String getTestType() {
-		if(store().contains(PreferenceConstants.TEST_TYPE)) {
-			return store().getString(PreferenceConstants.TEST_TYPE);
+	public String getTestType(IJavaProject javaProject) {
+		if(store(javaProject).contains(PreferenceConstants.TEST_TYPE)) {
+			return store(javaProject).getString(PreferenceConstants.TEST_TYPE);
 		}
-		return store().getDefaultString(PreferenceConstants.DEFAULT_TEST_TYPE);
+		return store(javaProject).getDefaultString(PreferenceConstants.DEFAULT_TEST_TYPE);
 	}
 
-	public boolean shouldUseJunit4Type() {
-		if(store().contains(PreferenceConstants.TEST_TYPE)) {
-			return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(store().getString(PreferenceConstants.TEST_TYPE));
+	public boolean shouldUseJunit4Type(IJavaProject javaProject) {
+		if(store(javaProject).contains(PreferenceConstants.TEST_TYPE)) {
+			return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(store(javaProject).getString(PreferenceConstants.TEST_TYPE));
 		}
 		return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
 	}
 
-	public boolean shouldUseJunit3Type() {
-		if(store().contains(PreferenceConstants.TEST_TYPE)) {
-			return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(store().getString(PreferenceConstants.TEST_TYPE));
+	public boolean shouldUseJunit3Type(IJavaProject javaProject) {
+		if(store(javaProject).contains(PreferenceConstants.TEST_TYPE)) {
+			return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(store(javaProject).getString(PreferenceConstants.TEST_TYPE));
 		}
 		return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
 	}
 
-	public boolean shouldUseTestNgType() {
-		if(store().contains(PreferenceConstants.TEST_TYPE)) {
-			return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(store().getString(PreferenceConstants.TEST_TYPE));
+	public boolean shouldUseTestNgType(IJavaProject javaProject) {
+		if(store(javaProject).contains(PreferenceConstants.TEST_TYPE)) {
+			return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(store(javaProject).getString(PreferenceConstants.TEST_TYPE));
 		}
 		return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
 	}
 
-	public boolean shoulUseFlexibleTestCaseNaming() {
-		if(store().contains(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING)) {
-			return store().getBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
+	public boolean shoulUseFlexibleTestCaseNaming(IJavaProject javaProject) {
+		if(store(javaProject).contains(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING)) {
+			return store(javaProject).getBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
 		}
-		return store().getDefaultBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
+		return store(javaProject).getDefaultBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
 	}
 
-	public String getTestPackagePrefix() {
-		return getStringValue(PreferenceConstants.TEST_PACKAGE_PREFIX, detailPreferences);
+	public String getTestPackagePrefix(IJavaProject javaProject) {
+		return getStringValue(PreferenceConstants.TEST_PACKAGE_PREFIX, javaProject);
 	}
 
-	public String getTestPackageSuffix() {
-		return getStringValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, detailPreferences);
+	public String getTestPackageSuffix(IJavaProject javaProject) {
+		return getStringValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, javaProject);
 	}
 
-	private String[] getValues(final String listPreference) {
-		if (store().contains(listPreference)) {
-			String prefValue = store().getString(listPreference);
+	private String[] getValues(final String listPreference, IJavaProject javaProject) {
+		if (store(javaProject).contains(listPreference)) {
+			String prefValue = store(javaProject).getString(listPreference);
 			if((prefValue == null) || (prefValue.length() == 0)) {
 				return new String[0];
 			}
 			return prefValue.split(",");
 		}
-		return store().getDefaultString(listPreference).split(",");
+		return store(javaProject).getDefaultString(listPreference).split(",");
 	}
 
-	private IPreferenceStore store() {
-		return this.preferenceStore;
+	private IPreferenceStore store(IJavaProject javaProject) {
+		if(!hasProjectSpecificSettings(javaProject))
+			return MoreUnitPlugin.getDefault().getPreferenceStore();
+		
+		return getProjectSpecificStore(javaProject);
+	}
+	
+	private IPreferenceStore getProjectSpecificStore(IJavaProject javaProject) {
+		IPreferenceStore result = Preferences.preferenceMap.get(javaProject);
+		if(result != null)
+			return result;
+		
+		result = new PropertyStore(javaProject.getProject(), workbenchStore, PreferenceConstants.PREF_PAGE_ID);
+		preferenceMap.put(javaProject, result);
+		
+		return result;
+		
 	}
 	
 	public static void clearProjectCach() {
@@ -175,6 +242,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/01/23 19:32:24  gianasista
+// Remove console logs
+//
 // Revision 1.5  2007/11/19 21:01:20  gianasista
 // Patch from Bjoern: project specific settings
 //

@@ -54,7 +54,7 @@ public class JavaProjectFacade {
 		try {
 			IPackageFragmentRoot[] packageFragmentRoots = referenceJavaProject.getPackageFragmentRoots();
 			for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots) {
-				String junitFolder = Preferences.newInstance(this.javaProject).getJunitDirectoryFromPreferences();
+				String junitFolder = Preferences.getInstance().getJunitDirectoryFromPreferences(this.javaProject);
 				if(packageFragmentRoot.getPath().toString().equals(MagicNumbers.SLASH+referenceJavaProject.getElementName()+MagicNumbers.SLASH+junitFolder)) {
 					return packageFragmentRoot;
 				}
@@ -120,6 +120,9 @@ public class JavaProjectFacade {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/11/19 20:51:13  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.5  2007/01/14 21:13:21  gianasista
 // Bugfix [1634387]
 //

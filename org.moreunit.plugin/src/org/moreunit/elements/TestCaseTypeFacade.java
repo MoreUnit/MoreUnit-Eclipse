@@ -42,14 +42,14 @@ public class TestCaseTypeFacade extends TypeFacade {
 	}
 
 	public IType getCorrespondingClassUnderTest() {
-		final Preferences preferences = Preferences.newInstance(this.javaProjectFacade.getJavaProject());
+		Preferences preferences = Preferences.getInstance();
 		List<String> testedClasses =
 				BaseTools.getTestedClass(
 						getType().getFullyQualifiedName(),
-						preferences.getPrefixes(),
-						preferences.getSuffixes(),
-						preferences.getTestPackagePrefix(),
-						preferences.getTestPackageSuffix());
+						preferences.getPrefixes(this.javaProjectFacade.getJavaProject()),
+						preferences.getSuffixes(this.javaProjectFacade.getJavaProject()),
+						preferences.getTestPackagePrefix(this.javaProjectFacade.getJavaProject()),
+						preferences.getTestPackageSuffix(this.javaProjectFacade.getJavaProject()));
 		if (testedClasses.isEmpty()) {
 			return null;
 		}
@@ -179,6 +179,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.14  2008/01/29 07:57:30  channingwalton
+//under some circumstances after a rename, the compilation unit does not seem to exist. this fix checks for that and prevents a java model exception being thrown.
+//
 //Revision 1.13  2007/11/19 20:51:57  gianasista
 //Patch from Bjoern: project specific settings
 //
