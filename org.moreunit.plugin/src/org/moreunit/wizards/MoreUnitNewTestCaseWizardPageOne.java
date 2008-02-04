@@ -3,6 +3,7 @@ package org.moreunit.wizards;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
@@ -28,10 +29,12 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 	private Button testNgToggle;
 	
 	private Preferences preferences;
+	private IJavaProject javaProject;
 	
-	public MoreUnitNewTestCaseWizardPageOne(NewTestCaseWizardPageTwo page2, Preferences preferences) {
+	public MoreUnitNewTestCaseWizardPageOne(NewTestCaseWizardPageTwo page2, Preferences preferences, IJavaProject javaProject) {
 		super(page2);
 		this.preferences = preferences;
+		this.javaProject = javaProject;
 	}
 	
 	protected void createJUnit4Controls(Composite composite, int nColumns) {
@@ -51,19 +54,19 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 		junti3Toggle = new Button(inner, SWT.RADIO);
 		junti3Toggle.setText("JUnit 3");
 		junti3Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
-		junti3Toggle.setSelection(preferences.shouldUseJunit3Type());
+		junti3Toggle.setSelection(preferences.shouldUseJunit3Type(javaProject));
 		junti3Toggle.setEnabled(true);
 		
 		unit4Toggle = new Button(inner, SWT.RADIO);
 		unit4Toggle.setText("JUnit 4");
-		unit4Toggle.setSelection(preferences.shouldUseJunit4Type());
+		unit4Toggle.setSelection(preferences.shouldUseJunit4Type(javaProject));
 		unit4Toggle.setEnabled(true);
 		unit4Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
 		unit4Toggle.addSelectionListener(listener);
 		
 		testNgToggle = new Button(inner, SWT.RADIO);
 		testNgToggle.setText("TestNG");
-		testNgToggle.setSelection(preferences.shouldUseTestNgType());
+		testNgToggle.setSelection(preferences.shouldUseTestNgType(javaProject));
 		testNgToggle.setEnabled(true);
 		testNgToggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
 		testNgToggle.addSelectionListener(listener);
@@ -74,10 +77,10 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 			setJUnit4(false, true);
 		} else if(unit4Toggle.getSelection()) {
 			setJUnit4(true, true);
-			setSuperClass(preferences.getTestSuperClass(), true);
+			setSuperClass(preferences.getTestSuperClass(javaProject), true);
 		} else if(testNgToggle.getSelection()) {
 			setJUnit4(false, false);
-			setSuperClass(preferences.getTestSuperClass(), true);
+			setSuperClass(preferences.getTestSuperClass(javaProject), true);
 			handleFieldChanged(JUNIT4TOGGLE);
 		}
 	}

@@ -30,13 +30,13 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		super(element);
 
 		this.project = element.getJavaProject();
-		this.preferences = Preferences.newInstance(this.project);
+		this.preferences = Preferences.getInstance();
 	}
 
 	@Override
 	public void addPages() {
 		this.pageTwo = new NewTestCaseWizardPageTwo();
-		this.pageOne = new MoreUnitNewTestCaseWizardPageOne(this.pageTwo, this.preferences);
+		this.pageOne = new MoreUnitNewTestCaseWizardPageOne(this.pageTwo, this.preferences, project);
 		this.pageOne.setWizard(this);
 		this.pageTwo.setWizard(this);
 		this.pageOne.init(new StructuredSelection(getType()));
@@ -53,18 +53,18 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		super.createPageControls(pageContainer);
 		// Eclipse 3.1.x  does not support junit 4
 		try {
-		this.pageOne.setJUnit4(this.preferences.shouldUseJunit4Type(), true);
+		this.pageOne.setJUnit4(this.preferences.shouldUseJunit4Type(project), true);
 		} catch (NoSuchMethodError error) {
 		}
 		
-		String testSuperClass = this.preferences.getTestSuperClass();
+		String testSuperClass = getTestSuperClass();
 		if(!BaseTools.isStringTrimmedEmpty(testSuperClass))
 			this.pageOne.setSuperClass(testSuperClass, true);
 		
 		//set default and focus
 		String classUnderTest= pageOne.getClassUnderTestText();
 		if (classUnderTest.length() > 0) {
-			final String[] suffixes = preferences.getSuffixes();
+			final String[] suffixes = preferences.getSuffixes(project);
 			final String suffix;
 			if (suffixes.length > 0) {
 				suffix = suffixes[0];
@@ -76,14 +76,18 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		this.pageOne.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);	
 	}
 
+	private String getTestSuperClass() {
+		return this.preferences.getTestSuperClass(project);
+	}
+
 	@Override
 	protected IPackageFragmentRoot getPackageFragmentRootFromSettings() {
 		return (new JavaProjectFacade(this.project)).getJUnitSourceFolder();
 	}
 
 	private void initialisePackageFragment() {
-		String testPackagePrefix = this.preferences.getTestPackagePrefix();
-		String testPackageSuffix = this.preferences.getTestPackageSuffix();
+		String testPackagePrefix = this.preferences.getTestPackagePrefix(project);
+		String testPackageSuffix = this.preferences.getTestPackageSuffix(project);
 
 		boolean hasPrefix = (testPackagePrefix != null) &&  (testPackagePrefix.length() > 0);
 		boolean hasSuffix = (testPackageSuffix != null) &&  (testPackageSuffix.length() > 0);
@@ -108,12 +112,12 @@ public class NewTestCaseWizard extends NewClassyWizard {
 	}
 
 	private String getPackageFragmentNameWithPrefix() {
-		return this.preferences.getTestPackagePrefix() + "." + this.pageOne.getPackageFragment().getElementName();
+		return this.preferences.getTestPackagePrefix(project) + "." + this.pageOne.getPackageFragment().getElementName();
 	}
 
 	private String getPackageFragmentNameWithSuffix() {
 		//return BaseTools.addPackageFragmentSuffixToElementName(pageOne.getPackageFragment().getElementName(), Preferences.instance().getTestPackageSuffix());
-		return this.pageOne.getPackageFragment().getElementName() + "." + this.preferences.getTestPackageSuffix();
+		return this.pageOne.getPackageFragment().getElementName() + "." + this.preferences.getTestPackageSuffix(project);
 	}
 
 	@Override
@@ -129,6 +133,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2008/01/23 19:37:01  gianasista
+// Bugfix for default super class
+//
 // Revision 1.8  2007/11/19 21:15:17  gianasista
 // Patch from Bjoern: project specific settings
 //

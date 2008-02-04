@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
@@ -48,14 +49,18 @@ public class TestCaseDiviner {
 		}
 
 		this.matches = new LinkedHashSet<IType>();
-		String[] prefixes = this.preferences.getPrefixes();
+		String[] prefixes = this.preferences.getPrefixes(getJavaProject());
 		for (String element : prefixes) {
 			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit));
 		}
-		String[] suffixes = this.preferences.getSuffixes();
+		String[] suffixes = this.preferences.getSuffixes(getJavaProject());
 		for (String element : suffixes) {
 			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit));
 		}
+	}
+	
+	private IJavaProject getJavaProject() {
+		return compilationUnit.getJavaProject();
 	}
 
 	private IType getSource() {
@@ -72,7 +77,7 @@ public class TestCaseDiviner {
 	}
 
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
-		if(this.preferences.shoulUseFlexibleTestCaseNaming()) {
+		if(this.preferences.shoulUseFlexibleTestCaseNaming(getJavaProject())) {
 			return prefixMatch ? qualifier + MagicNumbers.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + MagicNumbers.WILDCARD + qualifier;
 		} else {
 			return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
@@ -82,6 +87,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2007/11/19 21:13:51  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.7  2007/01/24 20:13:38  gianasista
 // Property for felxible testcase matching
 //

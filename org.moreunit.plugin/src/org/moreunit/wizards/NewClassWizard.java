@@ -59,13 +59,13 @@ public class NewClassWizard extends NewClassyWizard {
 	}
 
 	private String getPotentialTypeName() {
-		Preferences preferences = Preferences.newInstance(getType().getJavaProject());
+		Preferences preferences = Preferences.getInstance();
 		String name = getType().getElementName();
-		String[] prefixes = preferences.getPrefixes();
+		String[] prefixes = preferences.getPrefixes(getType().getJavaProject());
 		for (String element2 : prefixes) {
 			name = name.replaceAll(element2, "");
 		}
-		String[] suffixes = preferences.getSuffixes();
+		String[] suffixes = preferences.getSuffixes(getType().getJavaProject());
 		for (String element2 : suffixes) {
 			name = name.replaceAll(element2, "");
 		}
@@ -85,6 +85,9 @@ public class NewClassWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/11/19 21:15:01  gianasista
+// Patch from Bjoern: project specific settings
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
