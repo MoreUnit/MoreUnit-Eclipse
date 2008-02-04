@@ -126,7 +126,7 @@ public class BaseTools {
 		return results;
 	}
 
-	protected static String removeSuffixFromTestCase(String testClassName, String packageSuffix) {
+	public static String removeSuffixFromTestCase(String testClassName, String packageSuffix) {
 		String[] pathElements = testClassName.split("\\.");
 		int theLastButOne = pathElements.length - 2;
 		if(theLastButOne < 0)
@@ -252,6 +252,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2008/01/23 19:35:41  gianasista
+// test for empty string
+//
 // Revision 1.11  2007/03/02 22:14:06  channingwalton
 // [ 1667386 ] Jump to test can miss some testcases
 //
