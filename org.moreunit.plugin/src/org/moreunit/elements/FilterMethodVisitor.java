@@ -70,19 +70,19 @@ public class FilterMethodVisitor extends ASTVisitor {
 		return methodDeclaration.getName().getFullyQualifiedName().startsWith(MagicNumbers.SETTER_PREFIX);
 	}
 
-	protected List<MethodDeclaration> getPrivateMethods() {
+	public List<MethodDeclaration> getPrivateMethods() {
 		return privateMethods;
 	}	
 	
-	protected List<FieldDeclaration> getFieldDeclarations() {
+	public List<FieldDeclaration> getFieldDeclarations() {
 		return fieldDeclarations;
 	}
 
-	protected List<MethodDeclaration> getGetterMethods() {
+	public List<MethodDeclaration> getGetterMethods() {
 		return getterMethods;
 	}
 
-	protected List<MethodDeclaration> getSetterMethods() {
+	public List<MethodDeclaration> getSetterMethods() {
 		return setterMethods;
 	}
 

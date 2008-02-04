@@ -78,7 +78,7 @@ public class RenameMethodParticipant extends RenameParticipant {
 		return null;
 	}
 
-	String getNewTestMethodName(String testMethodCurrentName, String renamedMethodOldName, String renamedMethodNewName) {
+	public String getNewTestMethodName(String testMethodCurrentName, String renamedMethodOldName, String renamedMethodNewName) {
 		String old = upperCaseFirstLetter(renamedMethodOldName);
 		String newName = upperCaseFirstLetter(renamedMethodNewName);
 		return testMethodCurrentName.replaceFirst(old, newName);
@@ -90,6 +90,9 @@ public class RenameMethodParticipant extends RenameParticipant {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/24 18:37:39  channingwalton
+// made  the properties page appear on the navigator view and fixed some gui text
+//
 // Revision 1.3  2006/10/18 22:13:16  channingwalton
 // fixes for [ 1580067 ] Renaming a method renames only one test method and [ 1579278 ] Renaming methods truncates some testcase method names
 //
