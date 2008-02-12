@@ -17,6 +17,7 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
+import org.moreunit.util.MagicNumbers;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
@@ -62,7 +63,7 @@ public class NewTestCaseWizard extends NewClassyWizard {
 			this.pageOne.setSuperClass(testSuperClass, true);
 		
 		//set default and focus
-		String classUnderTest= pageOne.getClassUnderTestText();
+/*		String classUnderTest= pageOne.getClassUnderTestText();
 		if (classUnderTest.length() > 0) {
 			final String[] suffixes = preferences.getSuffixes(project);
 			final String suffix;
@@ -72,8 +73,36 @@ public class NewTestCaseWizard extends NewClassyWizard {
 				suffix = PreferenceConstants.DEFAULT_SUFFIX;
 			}
 			this.pageOne.setTypeName(Signature.getSimpleName(classUnderTest) + suffix, true);
-		}
+		}*/
+		this.pageOne.setTypeName(getTestCaseClassName(), true);
 		this.pageOne.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);	
+	}
+	
+	private String getTestCaseClassName() {
+		String classUnderTest= pageOne.getClassUnderTestText();
+		
+		if(classUnderTest.length() == 0)
+			return MagicNumbers.EMPTY_STRING;
+		
+		return getFirstPrefix()+Signature.getSimpleName(classUnderTest)+getFirstSuffix();
+	}
+	
+	private String getFirstSuffix() {
+		String[] suffixes = preferences.getSuffixes(project);
+		String suffix = MagicNumbers.EMPTY_STRING;
+		if (suffixes.length > 0) {
+			suffix = suffixes[0];
+		} 		
+		return suffix;
+	}
+	
+	private String getFirstPrefix() {
+		String[] prefixes = preferences.getPrefixes(project);
+		String prefix = MagicNumbers.EMPTY_STRING;
+		if (prefixes.length > 0) {
+			prefix = prefixes[0];
+		} 		
+		return prefix;
 	}
 
 	private String getTestSuperClass() {
@@ -133,6 +162,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2008/02/04 20:12:35  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.9  2008/01/23 19:37:01  gianasista
 // Bugfix for default super class
 //
