@@ -2,7 +2,7 @@
 <feature
       id="moreUnit"
       label="moreUnit Plug-In"
-      version="1.0.0"
+      version="1.0.2"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">

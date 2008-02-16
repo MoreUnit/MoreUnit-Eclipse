@@ -1,5 +1,6 @@
 package org.moreunit.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -151,5 +152,16 @@ public class BaseToolsTest extends TestCase {
 		assertEquals("One", result.get(0));
 		assertEquals("OneTwo", result.get(1));
 		assertEquals("OneTwoThree", result.get(2));
+	}
+	
+	public void testReturnsListOfUnqualifiedTypeNamesSortedByRawLength() throws Exception {
+		ArrayList<String> testedClasses = new ArrayList<String>(); 
+		testedClasses.add("EinsZweiDrei");
+		testedClasses.add("OneTwoThree");
+		List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
+		assertEquals("EinsZweiDrei", result.get(0));
+		assertEquals("OneTwoThree", result.get(1));
+		//Yadda, yadda. Just make sure the last one's right, nobody really cares.
+		assertEquals("One", result.get(5));
 	}
 }

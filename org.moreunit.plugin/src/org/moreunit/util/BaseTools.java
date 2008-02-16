@@ -224,6 +224,8 @@ public class BaseTools {
 		for (String clazz : testedClasses) {
 			result.addAll(getListOfUnqualifiedTypeNames(clazz));
 		}
+		Collections.sort(result, new StringLengthComparator());
+		Collections.reverse(result);
 		return result;
 	}
 
@@ -252,6 +254,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2008/02/04 20:10:23  gianasista
+// Move tests to org.moreunit.test
+//
 // Revision 1.12  2008/01/23 19:35:41  gianasista
 // test for empty string
 //

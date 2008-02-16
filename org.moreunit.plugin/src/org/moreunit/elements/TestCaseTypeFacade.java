@@ -1,6 +1,5 @@
 package org.moreunit.elements;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,19 +55,16 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 		try {
 			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
-			Set<IType> searchResults = new HashSet<IType>();
 			for (String typeName : typeNames) {
 				Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit);
 				if (searchFor != null && searchFor.size() > 0) {
-					searchResults.addAll(searchFor);
+					return searchFor.iterator().next();
 				}
 			}
-
-			return searchResults.size() > 0 ? searchResults.iterator().next() : null;
+			return null;
 		} catch (Exception exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
-
 		return null;
 	}
 
@@ -179,6 +175,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.15  2008/02/04 20:02:16  gianasista
+//Bugfix: project specific settings
+//
 //Revision 1.14  2008/01/29 07:57:30  channingwalton
 //under some circumstances after a rename, the compilation unit does not seem to exist. this fix checks for that and prevents a java model exception being thrown.
 //
