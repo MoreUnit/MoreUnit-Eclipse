@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description url="features/moreUnit_0.6.1.jar">
+   <description url="features/moreUnit_1.0.2.jar">
       MoreUnit helps developers writing more tests.
    </description>
+   <feature url="features/moreUnit_1.0.2.jar" id="moreUnit" version="1.0.2">
+      <category name="MoreUnit"/>
+   </feature>
    <feature url="features/moreUnit_0.6.1.jar" id="moreUnit" version="0.6.1">
       <category name="MoreUnit"/>
    </feature>
