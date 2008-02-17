@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description url="features/moreUnit_1.0.2.jar">
+   <description url="http://moreunit.sourceforge.net/org.moreunit.updatesite">
       MoreUnit helps developers writing more tests.
    </description>
-   <feature url="features/moreUnit_1.0.2.jar" id="moreUnit" version="1.0.2">
+   <feature url="http://downloads.sourceforge.net/moreunit/moreUnit_1.0.2.jar?use_mirror=osdn" id="moreUnit" version="1.0.2">
       <category name="MoreUnit"/>
    </feature>
    <feature url="features/moreUnit_0.6.1.jar" id="moreUnit" version="0.6.1">
       <category name="MoreUnit"/>
    </feature>
-   <archive path="features/moreUnit_1.0.2.jar" url="http://downloads.sourceforge.net/moreunit/moreUnit_1.0.2.jar?use_mirror=osdn"/>
-   <archive path="plugins/org.moreunit_1.0.2" url="http://downloads.sourceforge.net/moreunit/org.moreunit_1.0.2.jar?use_mirror=osdn"/>
+   <archive path="plugins/org.moreunit_1.0.2.jar" url="http://downloads.sourceforge.net/moreunit/org.moreunit_1.0.2.jar?use_mirror=osdn"/>
    <category-def name="MoreUnit" label="MoreUnit"/>
 </site>
