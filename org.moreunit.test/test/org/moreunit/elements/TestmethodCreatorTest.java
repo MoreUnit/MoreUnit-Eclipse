@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.ProjectTestCase;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.util.MagicNumbers;
@@ -16,142 +17,99 @@ import org.moreunit.util.MagicNumbers;
  */
 public class TestmethodCreatorTest extends ProjectTestCase {
 
-	/*
-	 * Situation tested:
-	 * - Creation of a new testmethod for a method.
-	 * - JUnit 3
-	 */
-	public void testCreateTestMethod1_1() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource1());
-		ClassTypeFacade javaFileFacade = new ClassTypeFacade(musterType.getCompilationUnit());
-		IMethod method = musterType.getMethods()[0];
+	private IType cutType;
+	private IType testType;
+	
+	private static final String TEST_METHODNAME = "testGetSomething";
+	
+	public void testCreateFirstTestMethodJUnit3() throws CoreException {
+		IMethod cutMethod = initCutWithMethod();
+		initTestCase(false);
 		
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testMusterType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource1());
-		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
-		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(javaFileFacade.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
-		IMethod createdMethod = testmethodCreator.createTestMethod(method);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+		IMethod createdMethod = testmethodCreator.createTestMethod(cutMethod);
 		
 		assertNotNull(createdMethod);
-		assertEquals("testGetOneString", createdMethod.getElementName());
+		assertEquals(TEST_METHODNAME, createdMethod.getElementName());
 		assertFalse(createdMethod.getSource().startsWith("@Test"));
 	}
 	
-	/*
-	 * Situation tested:
-	 * - Creation of a new testmethod for a method.
-	 * - JUnit 4
-	 */
-	public void testCreateTestMethod1_2() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource1());
-		ClassTypeFacade javaFileFacade = new ClassTypeFacade(musterType.getCompilationUnit());
-		IMethod method = musterType.getMethods()[0];
-		
+	private IMethod initTestCase(boolean shouldCreateTestMethod) throws CoreException, JavaModelException {
 		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
 		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testMusterType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource1());
-		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
+		testType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource(shouldCreateTestMethod));
 		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(javaFileFacade.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+		if(shouldCreateTestMethod)
+			return testType.getMethods()[0];
+		
+		return null;
+	}
+	
+	private IMethod initCutWithMethod() throws CoreException {
+		IPackageFragment comPaket = testProject.createPackage("com");
+		cutType = testProject.createType(comPaket, "Muster.java", getCutSourceWithOneMethod());
+		IMethod method = cutType.getMethods()[0];
+		
+		return method;
+	}
+	
+	public void testCreateFirstTestMethodJUnit4() throws CoreException {
+		IMethod method = initCutWithMethod();
+		initTestCase(false);
+		
+		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
 		IMethod createdMethod = testmethodCreator.createTestMethod(method);
 		
 		assertNotNull(createdMethod);
-		assertEquals("testGetOneString", createdMethod.getElementName());
+		assertEquals(TEST_METHODNAME, createdMethod.getElementName());
 		assertTrue(createdMethod.getSource().startsWith("@Test"));
 	}
 
-	private String getTestCaseSource1() {
+	private String getTestCaseSource(boolean shouldCreateTestMethod) {
 		StringBuffer source = new StringBuffer();
 		source.append("package com;").append(MagicNumbers.NEWLINE);
 		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
 		source.append("public class MusterTest extends TestCase {").append(MagicNumbers.NEWLINE);
+		if(shouldCreateTestMethod)
+			source.append("public void "+TEST_METHODNAME+"() {}").append(MagicNumbers.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		
 	}
 
-	private String getJavaFileSource1() {
+	private String getCutSourceWithOneMethod() {
 		StringBuffer source = new StringBuffer();
 		source.append("package com;").append(MagicNumbers.NEWLINE);
 		source.append("public class Muster {").append(MagicNumbers.NEWLINE);
-		source.append("public String getOneString() { return \"1\"; }").append(MagicNumbers.NEWLINE);
+		source.append("public String getSomething() { return \"1\"; }").append(MagicNumbers.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
 	}
 	
-	/*
-	 * Situation tested:
-	 * - Creation of a new second testmethod.
-	 * - JUnit 3
-	 */
-	public void testCreateTestMethod2_1() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource2());
-		ClassTypeFacade javaFileFacade = new ClassTypeFacade(musterType.getCompilationUnit());
+	public void testCreateSecondTestMethodJUnit3() throws CoreException {
+		initCutWithMethod();
+		IMethod testMethod = initTestCase(true);
 		
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testMusterType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource2());
-		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
-		IMethod method = testMusterType.getMethods()[0];
-		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testJavaFileFacade.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
-		IMethod createdMethod = testmethodCreator.createTestMethod(method);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(testType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+		IMethod createdMethod = testmethodCreator.createTestMethod(testMethod);
 		
 		assertNotNull(createdMethod);
-		assertEquals("testGetOneStringSuffix", createdMethod.getElementName());
+		assertEquals(TEST_METHODNAME+"Suffix", createdMethod.getElementName());
 		assertFalse(createdMethod.getSource().startsWith("@Test"));
-		assertEquals(2, testMusterType.getMethods().length);
+		assertEquals(2, testType.getMethods().length);
 	}
 	
-	/*
-	 * Situation tested:
-	 * - Creation of a new second testmethod.
-	 * - JUnit 4
-	 */
-	public void testCreateTestMethod2_2() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType musterType = testProject.createType(comPaket, "Muster.java", getJavaFileSource2());
-		ClassTypeFacade javaFileFacade = new ClassTypeFacade(musterType.getCompilationUnit());
+	public void testCreateSecondTestMethodJUnit4() throws CoreException {
+		initCutWithMethod();
+		IMethod testMethod = initTestCase(true);
 		
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testMusterType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource2());
-		TestCaseTypeFacade testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
-		IMethod method = testMusterType.getMethods()[0];
-		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testJavaFileFacade.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
-		IMethod createdMethod = testmethodCreator.createTestMethod(method);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(testType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+		IMethod createdMethod = testmethodCreator.createTestMethod(testMethod);
 		
 		assertNotNull(createdMethod);
-		assertEquals("testGetOneStringSuffix", createdMethod.getElementName());
+		assertEquals(TEST_METHODNAME+"Suffix", createdMethod.getElementName());
 		assertTrue(createdMethod.getSource().startsWith("@Test"));
-		assertEquals(2, testMusterType.getMethods().length);
-	}
-	
-	private String getTestCaseSource2() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class MusterTest extends TestCase {").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOneString() {}").append(MagicNumbers.NEWLINE);
-		source.append("}");
-		
-		return source.toString();		
-	}
-
-	private String getJavaFileSource2() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class Muster {").append(MagicNumbers.NEWLINE);
-		source.append("public String getOneString() { return \"1\"; }").append(MagicNumbers.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
+		assertEquals(2, testType.getMethods().length);
 	}
 }
