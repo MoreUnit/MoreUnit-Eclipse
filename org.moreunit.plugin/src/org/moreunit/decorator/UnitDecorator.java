@@ -18,7 +18,7 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.images.ImageDescriptorCenter;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
 
 /**
  * Handles the decoration of java files.
@@ -58,8 +58,8 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 	public static UnitDecorator getUnitDecorator() {
 		IDecoratorManager decoratorManager = MoreUnitPlugin.getDefault().getWorkbench().getDecoratorManager();
 		
-		if(decoratorManager.getEnabled(MagicNumbers.TEST_CASE_DECORATOR))
-			return (UnitDecorator) decoratorManager.getBaseLabelProvider(MagicNumbers.TEST_CASE_DECORATOR);
+		if(decoratorManager.getEnabled(MoreUnitContants.TEST_CASE_DECORATOR))
+			return (UnitDecorator) decoratorManager.getBaseLabelProvider(MoreUnitContants.TEST_CASE_DECORATOR);
 		else
 			return null;
 	}
@@ -73,6 +73,9 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/09/18 20:00:02  channingwalton
+// the CVS substitions broke with my last check in because I put newlines in them
+//
 // Revision 1.2  2006/09/18 19:56:00  channingwalton
 // Fixed bug [ 1537839 ] moreunit cannot find test class if it is in wrong package. Also found a classcast exception in UnitDecorator whicj I've guarded for.Fixed the Class wizard icon
 //

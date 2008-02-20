@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
 
 /**
  * To get the testmethods the AST analyzes.
@@ -34,7 +34,7 @@ public class TestMethodVisitor extends ASTVisitor {
 		if(hasTestAnnotation(node))
 			testmethods.add(node);
 		else {
-			if(node.getName().getFullyQualifiedName().startsWith(MagicNumbers.TEST_METHOD_PRAEFIX))
+			if(node.getName().getFullyQualifiedName().startsWith(MoreUnitContants.TEST_METHOD_PRAEFIX))
 				testmethods.add(node);
 		}
 		return super.visit(node);
@@ -46,7 +46,7 @@ public class TestMethodVisitor extends ASTVisitor {
 		for(Object modifier: modifiers) {
 			if(modifier instanceof MarkerAnnotation) {
 				MarkerAnnotation annotation = (MarkerAnnotation)modifier;
-				if(MagicNumbers.TEST_ANNOTATION_NAME.equals(annotation.getTypeName().getFullyQualifiedName()))
+				if(MoreUnitContants.TEST_ANNOTATION_NAME.equals(annotation.getTypeName().getFullyQualifiedName()))
 					return true;
 			}
 		}

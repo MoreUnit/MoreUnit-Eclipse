@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.ProjectTestCase;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 public class ClassTypeFacadeTest extends ProjectTestCase {
 	
@@ -104,9 +104,9 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 	
 	private String getHelloSourceWithGetOneMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class Hello {").append(MagicNumbers.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class Hello {").append(StringConstants.NEWLINE);
+		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -114,12 +114,12 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 	
 	private String getHelloTestSourceWithGetOneTestMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class HelloTest extends TestCase{").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOne() {").append(MagicNumbers.NEWLINE);
-		source.append("assertTrue(true);").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class HelloTest extends TestCase{").append(StringConstants.NEWLINE);
+		source.append("public void testGetOne() {").append(StringConstants.NEWLINE);
+		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		
@@ -127,10 +127,10 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 
 	private String getMusterSourceWithGetOneStringAndGetTwoStringMethods() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class Muster {").append(MagicNumbers.NEWLINE);
-		source.append("public String getOneString() { return \"1\"; }").append(MagicNumbers.NEWLINE);
-		source.append("public String getTwoString() { return \"2\"; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class Muster {").append(StringConstants.NEWLINE);
+		source.append("public String getOneString() { return \"1\"; }").append(StringConstants.NEWLINE);
+		source.append("public String getTwoString() { return \"2\"; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -138,12 +138,12 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 	
 	private String getMusterTestSourceWithGetOneStringTestMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class MusterTest extends TestCase{").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOneString() {").append(MagicNumbers.NEWLINE);
-		source.append("assertTrue(true);").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class MusterTest extends TestCase{").append(StringConstants.NEWLINE);
+		source.append("public void testGetOneString() {").append(StringConstants.NEWLINE);
+		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		
@@ -151,16 +151,16 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 
 	private String getMusterTestSourceWithMultipleTestMethodsForGetOneString() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class MusterTest extends TestCase{").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOneString() {").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOneStringFoo() {").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOneStringBar() {").append(MagicNumbers.NEWLINE);
-		source.append("assertTrue(true);").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class MusterTest extends TestCase{").append(StringConstants.NEWLINE);
+		source.append("public void testGetOneString() {").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
+		source.append("public void testGetOneStringFoo() {").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
+		source.append("public void testGetOneStringBar() {").append(StringConstants.NEWLINE);
+		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		
@@ -168,9 +168,9 @@ public class ClassTypeFacadeTest extends ProjectTestCase {
 
 	private String getEnumSourceFile() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public enum MyEnum {").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public enum MyEnum {").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
 		
 		return source.toString();
 	}

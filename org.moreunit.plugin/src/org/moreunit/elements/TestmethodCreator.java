@@ -9,7 +9,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.util.BaseTools;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -52,7 +53,7 @@ public class TestmethodCreator {
 		String methodName = method.getElementName();
 		methodName = BaseTools.firstCharToUpperCase(methodName);
 
-		String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + methodName;
+		String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX + methodName;
 		if (doesMethodExist(testMethodName))
 			return null;
 		
@@ -79,9 +80,9 @@ public class TestmethodCreator {
 		}
 		
 		if(testedMethod != null) {
-			String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
+			String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
 			if (doesMethodExist(testMethodName))
-				testMethodName = testMethodName.concat(MagicNumbers.SUFFIX_NAME);
+				testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 			
 			if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
 				return createJUnit4Testmethod(testMethodName);
@@ -104,15 +105,15 @@ public class TestmethodCreator {
 	
 	private String getTestNgMethodStub(String testmethodName) {
 		StringBuffer methodContent = new StringBuffer();
-		methodContent.append("@Test").append(MagicNumbers.NEWLINE);
-		methodContent.append("public void ").append(testmethodName).append("() {").append(MagicNumbers.NEWLINE).append("}");
+		methodContent.append("@Test").append(StringConstants.NEWLINE);
+		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append("}");
 		
 		return methodContent.toString();
 	}
 	
 	private String getJUnit3MethodStub(String testmethodName) {
 		StringBuffer methodContent = new StringBuffer();
-		methodContent.append("public void ").append(testmethodName).append("() {").append(MagicNumbers.NEWLINE).append("}");
+		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append("}");
 		
 		return methodContent.toString();
 	}
@@ -123,8 +124,8 @@ public class TestmethodCreator {
 	
 	private String getJUnit4MethodStub(String testmethodName) {
 		StringBuffer methodContent = new StringBuffer();
-		methodContent.append("@Test").append(MagicNumbers.NEWLINE);
-		methodContent.append("public void ").append(testmethodName).append("() {").append(MagicNumbers.NEWLINE).append("}");
+		methodContent.append("@Test").append(StringConstants.NEWLINE);
+		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append("}");
 		
 		return methodContent.toString();
 	}

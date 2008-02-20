@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.ProjectTestCase;
 import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -67,11 +67,11 @@ public class TestmethodCreatorTest extends ProjectTestCase {
 
 	private String getTestCaseSource(boolean shouldCreateTestMethod) {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class MusterTest extends TestCase {").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class MusterTest extends TestCase {").append(StringConstants.NEWLINE);
 		if(shouldCreateTestMethod)
-			source.append("public void "+TEST_METHODNAME+"() {}").append(MagicNumbers.NEWLINE);
+			source.append("public void "+TEST_METHODNAME+"() {}").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		
@@ -79,9 +79,9 @@ public class TestmethodCreatorTest extends ProjectTestCase {
 
 	private String getCutSourceWithOneMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class Muster {").append(MagicNumbers.NEWLINE);
-		source.append("public String getSomething() { return \"1\"; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class Muster {").append(StringConstants.NEWLINE);
+		source.append("public String getSomething() { return \"1\"; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();

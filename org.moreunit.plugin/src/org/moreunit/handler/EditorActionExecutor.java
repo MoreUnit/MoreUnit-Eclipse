@@ -25,7 +25,7 @@ import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
 import org.moreunit.wizards.NewClassWizard;
 
 
@@ -64,7 +64,7 @@ public class EditorActionExecutor {
 		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()));
 		IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
 
-		if((createdMethod != null) && createdMethod.getElementName().endsWith(MagicNumbers.SUFFIX_NAME)) {
+		if((createdMethod != null) && createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME)) {
 			markMethodSuffix(editorPartFacade, createdMethod);
 		}
 	}
@@ -78,7 +78,7 @@ public class EditorActionExecutor {
 			int offset = range.getOffset();
 			int length = range.getLength();
 
-			int suffixLength = MagicNumbers.SUFFIX_NAME.length();
+			int suffixLength = MoreUnitContants.SUFFIX_NAME.length();
 			exactSelection = new TextSelection(offset+length-suffixLength, suffixLength);
 		} catch (JavaModelException exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
@@ -168,6 +168,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2008/02/04 20:03:11  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.8  2007/11/19 20:54:55  gianasista
 // Patch from Bjoern: project specific settings
 //

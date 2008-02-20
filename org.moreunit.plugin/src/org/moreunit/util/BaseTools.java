@@ -27,13 +27,13 @@ public class BaseTools {
 	public static String getTestmethodNameFromMethodName(String methodName) {
 		if(methodName == null || methodName.length() == 0) {
 			LogHandler.getInstance().handleWarnLog("Methodname is null or has length of 0");
-			return MagicNumbers.EMPTY_STRING;
+			return StringConstants.EMPTY_STRING;
 		}
 
 		String firstChar = String.valueOf(methodName.charAt(0));
 		methodName = methodName.replaceFirst(firstChar, firstChar.toUpperCase());
 
-		String testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX+methodName;
+		String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX+methodName;
 
 		return testMethodName;
 	}
@@ -57,7 +57,7 @@ public class BaseTools {
 			return null;
 
 		String prefix = prefixAndSuffix[0];
-		String suffix = MagicNumbers.EMPTY_STRING;
+		String suffix = StringConstants.EMPTY_STRING;
 
 		if(prefixAndSuffix.length > 1)
 			suffix = prefixAndSuffix[1];
@@ -119,7 +119,7 @@ public class BaseTools {
 		if(prefixes != null) {
 			for(String prefix: prefixes) {
 				if(testCaseClass.startsWith(prefix))
-					results.add(testCaseClass.replaceFirst(prefix, MagicNumbers.EMPTY_STRING));
+					results.add(testCaseClass.replaceFirst(prefix, StringConstants.EMPTY_STRING));
 			}
 		}
 
@@ -132,11 +132,11 @@ public class BaseTools {
 		if(theLastButOne < 0)
 			return testClassName;
 		if(pathElements[theLastButOne].equals(packageSuffix)) {
-			pathElements[theLastButOne] = MagicNumbers.EMPTY_STRING;
+			pathElements[theLastButOne] = StringConstants.EMPTY_STRING;
 
 			StringBuffer result = new StringBuffer();
 			for(int i=0; i<theLastButOne; i++) {
-				result.append(pathElements[i]).append(MagicNumbers.STRING_DOT);
+				result.append(pathElements[i]).append(StringConstants.STRING_DOT);
 			}
 			return result.append(pathElements[pathElements.length-1]).toString();
 		}
@@ -154,7 +154,7 @@ public class BaseTools {
 	 * @return name of the method which is tested
 	 */
 	public static String getTestedMethod(String testMethodName) {
-		if(testMethodName == null || !testMethodName.startsWith(MagicNumbers.TEST_METHOD_PRAEFIX) || testMethodName.length() <= 4)
+		if(testMethodName == null || !testMethodName.startsWith(MoreUnitContants.TEST_METHOD_PRAEFIX) || testMethodName.length() <= 4)
 			return null;
 
 		char erstesZeichen = testMethodName.charAt(4);
@@ -254,6 +254,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2008/02/16 12:57:14  gianasista
+// improved matching for CUT
+//
 // Revision 1.13  2008/02/04 20:10:23  gianasista
 // Move tests to org.moreunit.test
 //

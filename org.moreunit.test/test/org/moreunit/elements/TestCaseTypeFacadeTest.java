@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.IType;
 import org.moreunit.ProjectTestCase;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 public class TestCaseTypeFacadeTest extends ProjectTestCase {
 	private TestCaseTypeFacade testJavaFileFacade;
@@ -42,10 +42,10 @@ public class TestCaseTypeFacadeTest extends ProjectTestCase {
 	
 	private String getJavaFileSourceForTestGetCorrespondingTestedMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class Muster2 {").append(MagicNumbers.NEWLINE);
-		source.append("public String getOneString() { return \"1\"; }").append(MagicNumbers.NEWLINE);
-		source.append("public String getTwoString() { return \"2\"; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class Muster2 {").append(StringConstants.NEWLINE);
+		source.append("public String getOneString() { return \"1\"; }").append(StringConstants.NEWLINE);
+		source.append("public String getTwoString() { return \"2\"; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -53,12 +53,12 @@ public class TestCaseTypeFacadeTest extends ProjectTestCase {
 	
 	private String getTestCaseSourceTestGetCorrespondingTestedMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class Muster2Test extends TestCase{").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOneString() {").append(MagicNumbers.NEWLINE);
-		source.append("assertTrue(true);").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class Muster2Test extends TestCase{").append(StringConstants.NEWLINE);
+		source.append("public void testGetOneString() {").append(StringConstants.NEWLINE);
+		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		

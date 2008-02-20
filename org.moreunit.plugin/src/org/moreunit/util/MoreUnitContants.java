@@ -4,30 +4,25 @@ package org.moreunit.util;
  * @author vera
  * 02.10.2005
  */
-public class MagicNumbers {
+public class MoreUnitContants {
 
 	public static final String TEST_CASE_MARKER = "org.moreunit.testCase";
 	public static final String TEST_CASE_DECORATOR = "moreunit.testdecorator";
 	
-	//public static final String TEST_CASE_SUFFIX = "Test";
 	public static final String TEST_METHOD_PRAEFIX = "test";
 	public static final String SUFFIX_NAME = "Suffix";
 	
 	public static final String JAVA_FILE_EXTENSION = ".java";
 	
-	public static final String STRING_DOT = ".";
-	public static final String EMPTY_STRING = "";
-	public static final String NEWLINE = "\n";
-	public static final String SLASH = "/";
-	
 	public static final String TEST_ANNOTATION_NAME = "Test";
 	public static final String GETTER_PREFIX = "get";
 	public static final String SETTER_PREFIX = "set";
-	
-	public static final String WILDCARD = "*";
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/01/14 21:13:46  gianasista
+// Bugfix [1634387]
+//
 // Revision 1.4  2007/01/12 21:56:14  gianasista
 // Better matching for testcases [1575497]
 //

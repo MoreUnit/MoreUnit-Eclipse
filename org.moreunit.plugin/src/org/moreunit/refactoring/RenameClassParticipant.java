@@ -22,7 +22,8 @@ import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -114,7 +115,7 @@ public class RenameClassParticipant extends RenameParticipant{
 	
 	private String getNewTestName(IType typeToRename) {
 		String newName = getArguments().getNewName();
-		newName = newName.replaceFirst(MagicNumbers.JAVA_FILE_EXTENSION, MagicNumbers.EMPTY_STRING);
+		newName = newName.replaceFirst(MoreUnitContants.JAVA_FILE_EXTENSION, StringConstants.EMPTY_STRING);
 		return typeToRename.getElementName().replaceFirst(compilationUnit.findPrimaryType().getElementName(), newName);
 	}
 	
@@ -122,6 +123,9 @@ public class RenameClassParticipant extends RenameParticipant{
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/01/23 19:34:55  gianasista
+// Refactorings via descriptors
+//
 // Revision 1.3  2006/10/24 18:37:39  channingwalton
 // made  the properties page appear on the navigator view and fixed some gui text
 //

@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.moreunit.ProjectTestCase;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 public class TypeFacadeTest extends ProjectTestCase {
 	
@@ -30,9 +30,9 @@ public class TypeFacadeTest extends ProjectTestCase {
 	
 	private String getJavaFileSource1() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class Hello {").append(MagicNumbers.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class Hello {").append(StringConstants.NEWLINE);
+		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -40,12 +40,12 @@ public class TypeFacadeTest extends ProjectTestCase {
 	
 	private String getTestCaseSource1() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class HelloTest extends TestCase{").append(MagicNumbers.NEWLINE);
-		source.append("public void testGetOne() {").append(MagicNumbers.NEWLINE);
-		source.append("assertTrue(true);").append(MagicNumbers.NEWLINE);
-		source.append("}").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class HelloTest extends TestCase{").append(StringConstants.NEWLINE);
+		source.append("public void testGetOne() {").append(StringConstants.NEWLINE);
+		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
+		source.append("}").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();		

@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.moreunit.ProjectTestCase;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 public class TestMethodVisitorTest extends ProjectTestCase {
 	
@@ -63,8 +63,8 @@ public class TestMethodVisitorTest extends ProjectTestCase {
 	
 	private IType createTestCaseTypeWithMethodSource(String methodSource) throws JavaModelException {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class HelloTest {").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class HelloTest {").append(StringConstants.NEWLINE);
 		
 		source.append(methodSource);
 		

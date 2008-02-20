@@ -17,7 +17,7 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
@@ -82,14 +82,14 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		String classUnderTest= pageOne.getClassUnderTestText();
 		
 		if(classUnderTest.length() == 0)
-			return MagicNumbers.EMPTY_STRING;
+			return StringConstants.EMPTY_STRING;
 		
 		return getFirstPrefix()+Signature.getSimpleName(classUnderTest)+getFirstSuffix();
 	}
 	
 	private String getFirstSuffix() {
 		String[] suffixes = preferences.getSuffixes(project);
-		String suffix = MagicNumbers.EMPTY_STRING;
+		String suffix = StringConstants.EMPTY_STRING;
 		if (suffixes.length > 0) {
 			suffix = suffixes[0];
 		} 		
@@ -98,7 +98,7 @@ public class NewTestCaseWizard extends NewClassyWizard {
 	
 	private String getFirstPrefix() {
 		String[] prefixes = preferences.getPrefixes(project);
-		String prefix = MagicNumbers.EMPTY_STRING;
+		String prefix = StringConstants.EMPTY_STRING;
 		if (prefixes.length > 0) {
 			prefix = prefixes[0];
 		} 		
@@ -162,6 +162,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2008/02/12 20:22:19  gianasista
+// Bugfix (wrong testcasename)
+//
 // Revision 1.10  2008/02/04 20:12:35  gianasista
 // Bugfix: project specific settings
 //

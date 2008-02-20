@@ -23,7 +23,7 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.TestMethodVisitor;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.BaseTools;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
 
 /**
  * @author giana 14.04.2006 20:47:14 This thread handles the updates for the
@@ -46,7 +46,7 @@ public class MarkerUpdateRunnable extends Job {
 			return new Status(Status.OK, MoreUnitPlugin.PLUGIN_ID, "Nothing to do");
 
 		try {
-			baseClassType.getResource().deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+			baseClassType.getResource().deleteMarkers(MoreUnitContants.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
 
 			TestMethodVisitor testMethodVisitor = new TestMethodVisitor(testCaseType);
 			for (MethodDeclaration methodDeclaration : testMethodVisitor.getTestMethods()) {
@@ -71,7 +71,7 @@ public class MarkerUpdateRunnable extends Job {
 					map.put(IMarker.CHAR_END, range.getOffset());
 					map.put(IMarker.MESSAGE, "This method has a testmethod.");
 
-					MarkerUtilities.createMarker(classTypeUnderTest.getResource(), map, MagicNumbers.TEST_CASE_MARKER);
+					MarkerUtilities.createMarker(classTypeUnderTest.getResource(), map, MoreUnitContants.TEST_CASE_MARKER);
 				}
 			}
 		}
@@ -79,6 +79,9 @@ public class MarkerUpdateRunnable extends Job {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/11/13 12:41:28  channingwalton
+// fix for bug [ 1831049 ] marker update causing an IAE
+//
 // Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
 // initial
 //

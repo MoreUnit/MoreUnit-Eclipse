@@ -16,7 +16,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.properties.ProjectProperties;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
+import org.moreunit.util.StringConstants;
 
 /**
  * JavaProjectFacade offers easy access to {@link IJavaProject}
@@ -55,7 +56,7 @@ public class JavaProjectFacade {
 			IPackageFragmentRoot[] packageFragmentRoots = referenceJavaProject.getPackageFragmentRoots();
 			for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots) {
 				String junitFolder = Preferences.getInstance().getJunitDirectoryFromPreferences(this.javaProject);
-				if(packageFragmentRoot.getPath().toString().equals(MagicNumbers.SLASH+referenceJavaProject.getElementName()+MagicNumbers.SLASH+junitFolder)) {
+				if(packageFragmentRoot.getPath().toString().equals(StringConstants.SLASH+referenceJavaProject.getElementName()+StringConstants.SLASH+junitFolder)) {
 					return packageFragmentRoot;
 				}
 			}
@@ -81,7 +82,7 @@ public class JavaProjectFacade {
 		try {
 			IProject project = this.javaProject.getProject();
 			if(project.isAccessible()) {
-				project.deleteMarkers(MagicNumbers.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+				project.deleteMarkers(MoreUnitContants.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -120,6 +121,9 @@ public class JavaProjectFacade {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/02/04 20:01:59  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.6  2007/11/19 20:51:13  gianasista
 // Patch from Bjoern: project specific settings
 //

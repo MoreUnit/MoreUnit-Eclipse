@@ -78,7 +78,7 @@ public class TestCaseDiviner {
 
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
 		if(this.preferences.shoulUseFlexibleTestCaseNaming(getJavaProject())) {
-			return prefixMatch ? qualifier + MagicNumbers.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + MagicNumbers.WILDCARD + qualifier;
+			return prefixMatch ? qualifier + StringConstants.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + StringConstants.WILDCARD + qualifier;
 		} else {
 			return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
 		}
@@ -87,6 +87,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2008/02/04 20:10:52  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.8  2007/11/19 21:13:51  gianasista
 // Patch from Bjoern: project specific settings
 //

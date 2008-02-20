@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -42,10 +42,10 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
 	private Object selectedElement;
 	
 	public TestcaseChooseDialog(String titleText, String infoText, Set<IType> testcaseSet) {
-		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.PRIMARY_MODAL, true, false, false, false, MagicNumbers.EMPTY_STRING, MagicNumbers.EMPTY_STRING);
+		super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.PRIMARY_MODAL, true, false, false, false, StringConstants.EMPTY_STRING, StringConstants.EMPTY_STRING);
 		
 		this.testcaseSet = testcaseSet;
-		setInfoText(MagicNumbers.EMPTY_STRING);
+		setInfoText(StringConstants.EMPTY_STRING);
 		create();
 	}
 

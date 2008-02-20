@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.moreunit.ProjectTestCase;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -158,10 +158,10 @@ public class FilterMethodVisitorTest extends ProjectTestCase {
 	
 	private String getPmvSourceWithOnePublicAndOnePrivateMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class PMV {").append(MagicNumbers.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
-		source.append("private int getTwo() { return 2; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class PMV {").append(StringConstants.NEWLINE);
+		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
+		source.append("private int getTwo() { return 2; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -169,11 +169,11 @@ public class FilterMethodVisitorTest extends ProjectTestCase {
 	
 	private String getPmv2SourceWithOverloadedGetTwoMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class PMV2 {").append(MagicNumbers.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
-		source.append("private int getTwo() { return 2; }").append(MagicNumbers.NEWLINE);
-		source.append("public int getTwo(String aParameter) { return 2; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class PMV2 {").append(StringConstants.NEWLINE);
+		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
+		source.append("private int getTwo() { return 2; }").append(StringConstants.NEWLINE);
+		source.append("public int getTwo(String aParameter) { return 2; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -181,11 +181,11 @@ public class FilterMethodVisitorTest extends ProjectTestCase {
 	
 	private String getPmv3SourceWithOverloadedGetTwoMethod() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class PMV3 {").append(MagicNumbers.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
-		source.append("private int getTwo(boolean isParameter) { return 2; }").append(MagicNumbers.NEWLINE);
-		source.append("public int getTwo(String aParameter) { return 2; }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class PMV3 {").append(StringConstants.NEWLINE);
+		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
+		source.append("private int getTwo(boolean isParameter) { return 2; }").append(StringConstants.NEWLINE);
+		source.append("public int getTwo(String aParameter) { return 2; }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -193,14 +193,14 @@ public class FilterMethodVisitorTest extends ProjectTestCase {
 	
 	private String getFdSourceWithOverloadedMethodsAndCorrectGetterSetterForTwo() {
 		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(MagicNumbers.NEWLINE);
-		source.append("public class FD {").append(MagicNumbers.NEWLINE);
-		source.append("private String one;").append(MagicNumbers.NEWLINE);
-		source.append("private int two;").append(MagicNumbers.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(MagicNumbers.NEWLINE);
-		source.append("private int getTwo(boolean isParameter) { return 2; }").append(MagicNumbers.NEWLINE);
-		source.append("public int getTwo() { return 2; }").append(MagicNumbers.NEWLINE);
-		source.append("public void setTwo(String aParameter) { }").append(MagicNumbers.NEWLINE);
+		source.append("package com;").append(StringConstants.NEWLINE);
+		source.append("public class FD {").append(StringConstants.NEWLINE);
+		source.append("private String one;").append(StringConstants.NEWLINE);
+		source.append("private int two;").append(StringConstants.NEWLINE);
+		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
+		source.append("private int getTwo(boolean isParameter) { return 2; }").append(StringConstants.NEWLINE);
+		source.append("public int getTwo() { return 2; }").append(StringConstants.NEWLINE);
+		source.append("public void setTwo(String aParameter) { }").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();

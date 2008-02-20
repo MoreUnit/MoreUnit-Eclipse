@@ -19,7 +19,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.moreunit.util.MagicNumbers;
+import org.moreunit.util.MoreUnitContants;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -63,11 +64,11 @@ public class FilterMethodVisitor extends ASTVisitor {
 	}
 	
 	private boolean isGetterMethod(MethodDeclaration methodDeclaration) {
-		return methodDeclaration.getName().getFullyQualifiedName().startsWith(MagicNumbers.GETTER_PREFIX);
+		return methodDeclaration.getName().getFullyQualifiedName().startsWith(MoreUnitContants.GETTER_PREFIX);
 	}
 	
 	private boolean isSetterMethod(MethodDeclaration methodDeclaration) {
-		return methodDeclaration.getName().getFullyQualifiedName().startsWith(MagicNumbers.SETTER_PREFIX);
+		return methodDeclaration.getName().getFullyQualifiedName().startsWith(MoreUnitContants.SETTER_PREFIX);
 	}
 
 	public List<MethodDeclaration> getPrivateMethods() {
@@ -96,7 +97,7 @@ public class FilterMethodVisitor extends ASTVisitor {
 	}
 	
 	public boolean isGetterMethod(IMethod method) {
-		String getterVariableName = method.getElementName().replaceFirst(MagicNumbers.GETTER_PREFIX, MagicNumbers.EMPTY_STRING);
+		String getterVariableName = method.getElementName().replaceFirst(MoreUnitContants.GETTER_PREFIX, StringConstants.EMPTY_STRING);
 		
 		for (FieldDeclaration fieldDeclaration : fieldDeclarations) {
 			List<VariableDeclarationFragment> variableDeclarationFragments = fieldDeclaration.fragments();

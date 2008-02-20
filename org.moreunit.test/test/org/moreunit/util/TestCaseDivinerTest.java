@@ -9,7 +9,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.moreunit.TestProject;
-import org.moreunit.util.MagicNumbers;
 import org.moreunit.util.TestCaseDiviner;
 
 /**
@@ -95,8 +94,8 @@ public class TestCaseDivinerTest extends TestCase {
 
 	private String getJavaFileSource(String packageName, String className) {
 		StringBuffer source = new StringBuffer();
-		source.append("package "+packageName+";").append(MagicNumbers.NEWLINE);
-		source.append("public class "+className+" {").append(MagicNumbers.NEWLINE);
+		source.append("package "+packageName+";").append(StringConstants.NEWLINE);
+		source.append("public class "+className+" {").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -104,9 +103,9 @@ public class TestCaseDivinerTest extends TestCase {
 	
 	private String getTestCaseSource(String packageName, String testcaseName) {
 		StringBuffer source = new StringBuffer();
-		source.append("package "+packageName+";").append(MagicNumbers.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(MagicNumbers.NEWLINE);
-		source.append("public class "+testcaseName+" extends TestCase{").append(MagicNumbers.NEWLINE);
+		source.append("package "+packageName+";").append(StringConstants.NEWLINE);
+		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
+		source.append("public class "+testcaseName+" extends TestCase{").append(StringConstants.NEWLINE);
 		source.append("}");
 		
 		return source.toString();
@@ -114,6 +113,9 @@ public class TestCaseDivinerTest extends TestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2008/02/04 20:41:11  gianasista
+// Initital
+//
 // Revision 1.2  2006/09/19 21:48:27  channingwalton
 // added some tests and logging to help debug a problem
 //
