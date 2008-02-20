@@ -4,11 +4,9 @@ package org.moreunit.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.log.LogHandler;
@@ -39,22 +37,6 @@ public class Preferences {
 		workbenchStore.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
 	}
 	
-//	public static synchronized Preferences getStore(final IJavaProject currentProject) {
-//		Preferences result = Preferences.preferenceMap.get(currentProject);
-//		if (result != null) {
-//			return result;
-//		}
-//		try {
-//			result = new Preferences(currentProject.getCorrespondingResource());
-//			Preferences.preferenceMap.put(currentProject, result);
-//			return result;
-//		} catch (JavaModelException e) {
-//			LogHandler.getInstance().handleExceptionLog(e);
-//			//should never appear, if so we can'T handle it so re throw
-//			throw new RuntimeException(e.getMessage(), e);
-//		}
-//	}
-	
 	public static Preferences getInstance() {
 		return instance;
 	}
@@ -80,25 +62,9 @@ public class Preferences {
 		return new QualifiedName(PreferenceConstants.PREF_PAGE_ID, key);
 	}
 
-	//private IPreferenceStore preferenceStore = null;
-	//private IPreferenceStore detailPreferences = null;
-
 	protected Preferences() {
 		super();
 	}
-
-	/*
-	protected Preferences(final IResource currentProject) {
-		this.preferenceStore = new PropertyStore(
-				currentProject,
-				workbenchStore,
-				PreferenceConstants.PREF_PAGE_ID);
-		this.detailPreferences = new PropertyStore(
-				currentProject,
-				workbenchStore,
-				PreferenceConstants.PREF_DETAILS_PAGE_ID);
-	}
-	*/
 
 	public String getJunitDirectoryFromPreferences(IJavaProject javaProject) {
 		return store(javaProject).getString(PreferenceConstants.PREF_JUNIT_PATH);
@@ -112,46 +78,9 @@ public class Preferences {
 		return getValues(PreferenceConstants.SUFFIXES, javaProject);
 	}
 
-	/*
-	public boolean useClassCreationWizards() {
-		if (store().contains(PreferenceConstants.USE_WIZARDS)) {
-			return store().getBoolean(PreferenceConstants.USE_WIZARDS);
-		}
-		return store().getDefaultBoolean(PreferenceConstants.USE_WIZARDS);
-	}
-	*/
-
-	/*
-	public boolean switchToMatchingMethod() {
-		if (store().contains(PreferenceConstants.SWITCH_TO_MATCHING_METHOD)) {
-			return store().getBoolean(PreferenceConstants.SWITCH_TO_MATCHING_METHOD);
-		}
-		return store().getDefaultBoolean(PreferenceConstants.SWITCH_TO_MATCHING_METHOD);
-	}
-	*/
-	
 	public String getTestSuperClass(IJavaProject javaProject) {
 		return getStringValue(PreferenceConstants.TEST_SUPERCLASS, javaProject);
 	}
-	
-	/*
-	public String getWorkspaceTestSuperClass() {
-		if(getWorkspaceStore().contains(PreferenceConstants.TEST_SUPERCLASS)) {
-			return getWorkspaceStore().getString(PreferenceConstants.TEST_SUPERCLASS);
-		}
-		return getWorkspaceStore().getDefaultString(PreferenceConstants.TEST_SUPERCLASS);
-	}
-	
-	private IPreferenceStore getWorkspaceStore() {
-		return MoreUnitPlugin.getDefault().getPreferenceStore();
-	}
-	*/
-	
-	/*
-	private String getStringValue(final String key) {
-		return getStringValue(key, preferenceStore);
-	}
-	*/
 	
 	private String getStringValue(final String key, IJavaProject javaProject) {
 		if(store(javaProject).contains(key)) {
@@ -242,6 +171,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/02/04 20:04:32  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.6  2008/01/23 19:32:24  gianasista
 // Remove console logs
 //
