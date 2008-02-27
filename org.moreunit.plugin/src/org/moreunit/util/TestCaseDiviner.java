@@ -77,7 +77,7 @@ public class TestCaseDiviner {
 	}
 
 	private String getSearchTerm(IType type, String qualifier, boolean prefixMatch) {
-		if(this.preferences.shoulUseFlexibleTestCaseNaming(getJavaProject())) {
+		if(this.preferences.shouldUseFlexibleTestCaseNaming(getJavaProject())) {
 			return prefixMatch ? qualifier + StringConstants.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + StringConstants.WILDCARD + qualifier;
 		} else {
 			return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
@@ -87,6 +87,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2008/02/20 19:24:14  gianasista
+// Rename of classes for constants
+//
 // Revision 1.9  2008/02/04 20:10:52  gianasista
 // Bugfix: project specific settings
 //

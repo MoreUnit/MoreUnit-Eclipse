@@ -117,7 +117,7 @@ public class Preferences {
 		return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
 	}
 
-	public boolean shoulUseFlexibleTestCaseNaming(IJavaProject javaProject) {
+	public boolean shouldUseFlexibleTestCaseNaming(IJavaProject javaProject) {
 		if(store(javaProject).contains(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING)) {
 			return store(javaProject).getBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
 		}
@@ -171,6 +171,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2008/02/20 19:22:25  gianasista
+// Removed comments
+//
 // Revision 1.7  2008/02/04 20:04:32  gianasista
 // Bugfix: project specific settings
 //
