@@ -2,14 +2,18 @@ package org.moreunit.preferences;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.log.LogHandler;
+import org.moreunit.properties.ProjectProperties;
 import org.moreunit.util.BaseTools;
 
 import com.bdaum.overlayPages.FieldEditorOverlayPage;
@@ -167,10 +171,44 @@ public class Preferences {
 			preferenceMap.clear();
 		}
 	}
+	
+	/**
+	 * Tries to get the sourcefolder for the unittests.
+	 * If there are several projects for the tests in the project specific settings,
+	 * this method chooses the first project from the settings.
+	 */
+	public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject) {
+		List<IJavaProject> listOfProjects = ProjectProperties.instance().getJumpTargets(javaProject);
+
+		IJavaProject referenceJavaProject = null;
+		if(listOfProjects.size() == 0) {
+			referenceJavaProject = javaProject;
+		} else {
+			referenceJavaProject = listOfProjects.get(0);
+		}
+
+		try {
+			String junitFolder = getJunitDirectoryFromPreferences(javaProject);
+			
+			IPackageFragmentRoot[] packageFragmentRoots = referenceJavaProject.getPackageFragmentRoots();
+			for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots) {
+				if(packageFragmentRoot.getElementName().equals(junitFolder)) {
+					return packageFragmentRoot;
+				}
+			}
+		} catch (JavaModelException exc) {
+			LogHandler.getInstance().handleExceptionLog(exc);
+		}
+
+		return null;
+	}
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2008/02/27 09:03:52  channingwalton
+// corrected a misspelt method
+//
 // Revision 1.8  2008/02/20 19:22:25  gianasista
 // Removed comments
 //

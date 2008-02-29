@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
-import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera
@@ -113,7 +113,7 @@ public class MoveClassParticipant extends MoveParticipant{
 	}
 
 	private IPackageFragment getMoveTestsDestinationPackage(IPackageFragment moveClassDestinationPackage) {
-		IPackageFragmentRoot unitSourceFolder = (new JavaProjectFacade(moveClassDestinationPackage.getJavaProject())).getJUnitSourceFolder();
+		IPackageFragmentRoot unitSourceFolder = Preferences.getInstance().getJUnitSourceFolder(moveClassDestinationPackage.getJavaProject());
 		if(unitSourceFolder == null || !unitSourceFolder.exists()) {
 			System.out.println("Kein Source folder");
 			return null;
@@ -132,6 +132,9 @@ public class MoveClassParticipant extends MoveParticipant{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/01/23 19:34:18  gianasista
+// Refactorings and bugfixes
+//
 // Revision 1.6  2007/12/11 20:54:58  gianasista
 // Refactoring
 //

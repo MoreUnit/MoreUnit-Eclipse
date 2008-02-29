@@ -1,5 +1,6 @@
 package org.moreunit.elements;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -41,31 +42,39 @@ public class TestCaseTypeFacade extends TypeFacade {
 	}
 
 	public IType getCorrespondingClassUnderTest() {
+		List<IType> correspondingClassesUnderTest = getCorrespondingClassesUnderTest();
+		if(correspondingClassesUnderTest == null || correspondingClassesUnderTest.size() == 0)
+			return null;
+		
+		return correspondingClassesUnderTest.get(0);
+	}
+	
+	public List<IType> getCorrespondingClassesUnderTest() {
 		Preferences preferences = Preferences.getInstance();
 		List<String> testedClasses =
 				BaseTools.getTestedClass(
 						getType().getFullyQualifiedName(),
-						preferences.getPrefixes(this.javaProjectFacade.getJavaProject()),
-						preferences.getSuffixes(this.javaProjectFacade.getJavaProject()),
-						preferences.getTestPackagePrefix(this.javaProjectFacade.getJavaProject()),
-						preferences.getTestPackageSuffix(this.javaProjectFacade.getJavaProject()));
+						preferences.getPrefixes(getJavaProject()),
+						preferences.getSuffixes(getJavaProject()),
+						preferences.getTestPackagePrefix(getJavaProject()),
+						preferences.getTestPackageSuffix(getJavaProject()));
 		if (testedClasses.isEmpty()) {
 			return null;
 		}
 
+		List<IType> resultList = new ArrayList<IType>();
 		try {
 			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
 			for (String typeName : typeNames) {
 				Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit);
-				if (searchFor != null && searchFor.size() > 0) {
-					return searchFor.iterator().next();
+				for(IType searchForResult: searchFor) {
+					resultList.add(searchForResult);
 				}
 			}
-			return null;
 		} catch (Exception exc) {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
-		return null;
+		return resultList;
 	}
 
 	public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest) {
@@ -153,6 +162,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 	 * "() {" + MagicNumbers.NEWLINE + "}"; } }
 	 */
 
+	/*
 	public void createMarkerForTestedClass() throws CoreException {
 		if (!compilationUnit.exists()) {
 			return;
@@ -172,9 +182,13 @@ public class TestCaseTypeFacade extends TypeFacade {
 			new MarkerUpdateRunnable(testedClass, getType()).schedule();
 		}
 	}
+	*/
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.16  2008/02/16 12:56:55  gianasista
+//improved matching for CUT
+//
 //Revision 1.15  2008/02/04 20:02:16  gianasista
 //Bugfix: project specific settings
 //

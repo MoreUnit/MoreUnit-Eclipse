@@ -28,7 +28,7 @@ public class NewClassWizard extends NewClassyWizard {
 		this.newClassWizardPage.init(new StructuredSelection(getType()));
 		this.newClassWizardPage.setTypeName(getPotentialTypeName(), true);
 		this.newClassWizardPage.setPackageFragment(getPackage(), true);
-		this.newClassWizardPage.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);
+		this.newClassWizardPage.setPackageFragmentRoot(getSourceFolderForUnitTest(), true);
 		this.newClassWizardPage.setEnclosingType(null, false);
 		this.newClassWizardPage.setSuperClass("", true);
 		addPage(this.newClassWizardPage);
@@ -85,6 +85,9 @@ public class NewClassWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/02/04 20:12:24  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.2  2007/11/19 21:15:01  gianasista
 // Patch from Bjoern: project specific settings
 //

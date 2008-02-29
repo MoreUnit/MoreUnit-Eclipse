@@ -12,9 +12,7 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
-import org.moreunit.elements.JavaProjectFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.StringConstants;
@@ -62,20 +60,8 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		if(!BaseTools.isStringTrimmedEmpty(testSuperClass))
 			this.pageOne.setSuperClass(testSuperClass, true);
 		
-		//set default and focus
-/*		String classUnderTest= pageOne.getClassUnderTestText();
-		if (classUnderTest.length() > 0) {
-			final String[] suffixes = preferences.getSuffixes(project);
-			final String suffix;
-			if (suffixes.length > 0) {
-				suffix = suffixes[0];
-			} else {
-				suffix = PreferenceConstants.DEFAULT_SUFFIX;
-			}
-			this.pageOne.setTypeName(Signature.getSimpleName(classUnderTest) + suffix, true);
-		}*/
 		this.pageOne.setTypeName(getTestCaseClassName(), true);
-		this.pageOne.setPackageFragmentRoot(getPackageFragmentRootFromSettings(), true);	
+		this.pageOne.setPackageFragmentRoot(getSourceFolderForUnitTest(), true);	
 	}
 	
 	private String getTestCaseClassName() {
@@ -110,8 +96,8 @@ public class NewTestCaseWizard extends NewClassyWizard {
 	}
 
 	@Override
-	protected IPackageFragmentRoot getPackageFragmentRootFromSettings() {
-		return (new JavaProjectFacade(this.project)).getJUnitSourceFolder();
+	protected IPackageFragmentRoot getSourceFolderForUnitTest() {
+		return preferences.getJUnitSourceFolder(this.project);
 	}
 
 	private void initialisePackageFragment() {
@@ -162,6 +148,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2008/02/20 19:24:32  gianasista
+// Rename of classes for constants
+//
 // Revision 1.11  2008/02/12 20:22:19  gianasista
 // Bugfix (wrong testcasename)
 //

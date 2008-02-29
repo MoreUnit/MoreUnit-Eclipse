@@ -74,7 +74,7 @@ public class MissingTestmethodViewPart extends PageBookView {
 
 	@Override
 	protected boolean isImportant(IWorkbenchPart part) {
-		return (isJavaFile(part));
+		return (PluginTools.isJavaFile(part));
 	}
 
 	@Override
@@ -96,22 +96,10 @@ public class MissingTestmethodViewPart extends PageBookView {
 	public void partActivated(IWorkbenchPart part) {
 		if (activePage == null)
 			super.partActivated(part);
-		else if (isJavaFile(part)) {
+		else if (PluginTools.isJavaFile(part)) {
 			activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
 			initPage((IPageBookViewPage) activePage);
 		}
-
-	}
-
-	private boolean isJavaFile(IWorkbenchPart part) {
-		if (!(part instanceof IEditorPart))
-			return false;
-
-		IFile file = (IFile) ((IEditorPart) part).getEditorInput().getAdapter(IFile.class);
-		if (file == null)
-			return false;
-
-		return "java".equals(file.getFileExtension());
 	}
 
 	@Override

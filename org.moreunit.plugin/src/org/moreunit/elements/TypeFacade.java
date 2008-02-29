@@ -3,6 +3,7 @@ package org.moreunit.elements;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -19,7 +20,6 @@ import org.moreunit.preferences.Preferences;
 public abstract class TypeFacade {
 
 	ICompilationUnit compilationUnit;
-	JavaProjectFacade javaProjectFacade;
 
 	public static boolean isTestCase(IType type) {
 		if(type == null) {
@@ -52,26 +52,15 @@ public abstract class TypeFacade {
 
 	public TypeFacade(ICompilationUnit compilationUnit) {
 		this.compilationUnit = compilationUnit;
-		getJavaProjectFacade();
 	}
 
 	public TypeFacade(IFile file) {
 		this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
-		getJavaProjectFacade();
 	}
 
 	public TypeFacade(IEditorPart editorPart) {
 		IFile file = (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
 		this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
-		getJavaProjectFacade();
-	}
-
-	public JavaProjectFacade getJavaProjectFacade() {
-		if(this.javaProjectFacade == null) {
-			this.javaProjectFacade = new JavaProjectFacade(this.compilationUnit.getJavaProject());
-		}
-
-		return this.javaProjectFacade;
 	}
 
 	public IType getType() {
@@ -95,6 +84,10 @@ public abstract class TypeFacade {
 		}
 
 		return false;
+	}
+	
+	public IJavaProject getJavaProject() {
+		return compilationUnit.getJavaProject();
 	}
 
 }

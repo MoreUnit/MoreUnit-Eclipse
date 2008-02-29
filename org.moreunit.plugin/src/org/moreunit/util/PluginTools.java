@@ -1,9 +1,11 @@
 package org.moreunit.util;
 
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -19,9 +21,23 @@ public class PluginTools {
 		else
 			return null;
 	}
+	
+	public static boolean isJavaFile(IWorkbenchPart part) {
+		if (!(part instanceof IEditorPart))
+			return false;
+
+		IFile file = (IFile) ((IEditorPart) part).getEditorInput().getAdapter(IFile.class);
+		if (file == null)
+			return false;
+
+		return "java".equals(file.getFileExtension());
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/02/18 13:46:37  gianasista
+// Bugfix: Solved exceptions in missing testmethod view
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //

@@ -1,14 +1,17 @@
 package org.moreunit.listener;
 
 
-import org.eclipse.core.runtime.CoreException;
+import java.util.List;
+
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IType;
+import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.log.LogHandler;
+import org.moreunit.marker.MarkerUpdater;
 
 /**
  * @author vera
@@ -26,11 +29,10 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 
 	private void handleTypeCompilationUnit(IJavaElement element) {
 		if(isTestCaseChanged(element)) {
-			try {
-				TestCaseTypeFacade javaFileFacade = new TestCaseTypeFacade((ICompilationUnit) element);
-				javaFileFacade.createMarkerForTestedClass();
-			} catch (CoreException exc) {
-				LogHandler.getInstance().handleExceptionLog(exc);
+			TestCaseTypeFacade javaFileFacade = new TestCaseTypeFacade((ICompilationUnit) element);
+			List<IType> correspondingClassesUnderTest = javaFileFacade.getCorrespondingClassesUnderTest();
+			for(IType singleCut : correspondingClassesUnderTest) {
+				(new MarkerUpdater(new ClassTypeFacade(singleCut.getCompilationUnit()))).schedule();
 			}
 		}
 	}
@@ -41,6 +43,9 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
+// initial
+//
 // Revision 1.1  2006/06/22 20:22:28  gianasista
 // package rename
 //
