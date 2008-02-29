@@ -3,8 +3,10 @@ package org.moreunit;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.listener.JavaCodeChangeListener;
+import org.moreunit.listener.MarkerUpdateListener;
 import org.moreunit.log.LogHandler;
 import org.osgi.framework.BundleContext;
 
@@ -31,6 +33,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		JavaCore.addElementChangedListener(new JavaCodeChangeListener());
+		PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(new MarkerUpdateListener());
 	}
 
 	/**
@@ -64,6 +67,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/09/02 19:25:22  gianasista
+// TestNG support
+//
 // Revision 1.3  2006/09/18 20:00:03  channingwalton
 // the CVS substitions broke with my last check in because I put newlines in them
 //
