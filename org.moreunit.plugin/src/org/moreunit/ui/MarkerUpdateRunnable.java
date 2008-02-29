@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.moreunit.ui;
 
 import java.util.HashMap;
@@ -79,6 +76,9 @@ public class MarkerUpdateRunnable extends Job {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/02/20 19:23:38  gianasista
+// Rename of classes for constants
+//
 // Revision 1.2  2007/11/13 12:41:28  channingwalton
 // fix for bug [ 1831049 ] marker update causing an IAE
 //
