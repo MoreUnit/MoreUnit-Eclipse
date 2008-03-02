@@ -275,6 +275,14 @@
             objectClass="org.eclipse.jdt.core.IJavaProject"
             category="Moreunit Properties">
       </page>
+      <page
+            class="org.moreunit.properties.UnitSourcesPropertiesPage"
+            id="org.moreunit.unitSourcesPropertiesPage"
+            name="MoreUnit Test Sources"
+            adaptable="true"
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            category="Moreunit Properties">
+      </page>
    </extension>
    
    <extension point="org.eclipse.ui.views">
