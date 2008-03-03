@@ -58,10 +58,11 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 		sourceFolderTree = new TreeViewer(composite);
 		unitSourcesContentProvider = new UnitSourcesContentProvider(getJavaProject());
 		sourceFolderTree.setContentProvider(unitSourcesContentProvider);
-		sourceFolderTree.setLabelProvider(new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_QUALIFIED | JavaElementLabelProvider.SHOW_ROOT));
+		sourceFolderTree.setLabelProvider(new UnitSourceFolderLabelProvider());
 		sourceFolderTree.setInput(getJavaProject());
 		GridData layoutData = new GridData();
 		layoutData.widthHint = 250;
+		layoutData.heightHint = 200;
 		sourceFolderTree.getControl().setLayoutData(layoutData);
 	}
 
@@ -119,10 +120,12 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 	}
 
 	private void addButtonClicked() {
-		List<IPackageFragmentRoot> listOfSourceFolderToAdd = new AddUnitSourceFolderWizard().open();
-		
-		if(listOfSourceFolderToAdd.size() > 0) {
-			unitSourcesContentProvider.add(listOfSourceFolderToAdd);
+		new AddUnitSourceFolderWizard(this).open();
+	}
+	
+	public void handlePerformFinishFromAddUnitSourceFolderWizard(List<IPackageFragmentRoot> folderToAdd) {
+		if(folderToAdd.size() > 0) {
+			unitSourcesContentProvider.add(folderToAdd);
 			sourceFolderTree.refresh();
 		}
 	}
@@ -134,5 +137,9 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 				sourceFolderTree.refresh();
 		}
 		
+	}
+	
+	public List<IPackageFragmentRoot> getListOfUnitSourceFolder() {
+		return unitSourcesContentProvider.getListOfUnitSourceFolder();
 	}
 }

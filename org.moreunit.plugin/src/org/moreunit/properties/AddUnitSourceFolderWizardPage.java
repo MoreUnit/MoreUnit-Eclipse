@@ -36,7 +36,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 		checkboxTreeViewer = new CheckboxTreeViewer(parent);
 		checkboxTreeViewer.addCheckStateListener(this);
 		checkboxTreeViewer.setLabelProvider(new JavaElementLabelProvider());
-		workspaceSourceFolderContentProvider = new WorkspaceSourceFolderContentProvider();
+		workspaceSourceFolderContentProvider = new WorkspaceSourceFolderContentProvider(getSelectedUnitSourceFolderFromPropertyPage());
 		checkboxTreeViewer.setContentProvider(workspaceSourceFolderContentProvider);
 		checkboxTreeViewer.setInput(this);
 		
@@ -46,6 +46,10 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 		
 		checkboxTreeViewer.getControl().setLayoutData(gridData);
 		setControl(checkboxTreeViewer.getControl());
+	}
+	
+	private List<IPackageFragmentRoot> getSelectedUnitSourceFolderFromPropertyPage() {
+		return ((AddUnitSourceFolderWizard)getWizard()).getUnitSourceFolderFromPropertyPage();
 	}
 
 	public void checkStateChanged(CheckStateChangedEvent event) {
@@ -95,7 +99,6 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 	
 	protected List<IPackageFragmentRoot> getSelectedSourceFolder() {
 		List<IPackageFragmentRoot> selectedFolders = new ArrayList<IPackageFragmentRoot>();
-		
 		Object[] checkedElements = checkboxTreeViewer.getCheckedElements();
 		
 		for(Object checkedElement : checkedElements) {

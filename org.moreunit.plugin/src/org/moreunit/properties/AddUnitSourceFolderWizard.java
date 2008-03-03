@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
@@ -19,11 +18,17 @@ public class AddUnitSourceFolderWizard extends Wizard {
 
 	private AddUnitSourceFolderWizardPage page;
 	
-	private List<IPackageFragmentRoot> selectedSourceFolder = new ArrayList<IPackageFragmentRoot>();; 
+	private List<IPackageFragmentRoot> selectedSourceFolder = new ArrayList<IPackageFragmentRoot>();
+	private UnitSourcesPropertiesPage unitSourcesPropertiesPage;
 
+	public AddUnitSourceFolderWizard(UnitSourcesPropertiesPage unitSourcesPropertiesPage) {
+		this.unitSourcesPropertiesPage = unitSourcesPropertiesPage;
+	}
+	
 	@Override
 	public boolean performFinish() {
 		selectedSourceFolder = page.getSelectedSourceFolder();
+		unitSourcesPropertiesPage.handlePerformFinishFromAddUnitSourceFolderWizard(selectedSourceFolder);
 		return true;
 	}
 	
@@ -34,12 +39,12 @@ public class AddUnitSourceFolderWizard extends Wizard {
 		super.createPageControls(pageContainer);
 	}
 	
-	public List<IPackageFragmentRoot> open() {
+	public void open() {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
-		if (dialog.open() == Window.OK) {
-			return new ArrayList<IPackageFragmentRoot>();
-		}
-		
-		return selectedSourceFolder;
+		dialog.open();
+	}
+	
+	public List<IPackageFragmentRoot> getUnitSourceFolderFromPropertyPage() {
+		return unitSourcesPropertiesPage.getListOfUnitSourceFolder();
 	}
 }

@@ -19,6 +19,12 @@ import org.moreunit.log.LogHandler;
  * 02.03.2008 19:28:41
  */
 public class WorkspaceSourceFolderContentProvider implements ITreeContentProvider {
+	
+	private List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences;
+	
+	public WorkspaceSourceFolderContentProvider(List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences) {
+		this.selectedUnitSourceFolderFromPreferences = selectedUnitSourceFolderFromPreferences;
+	}
 
 	public Object[] getElements(Object inputElement) {
 		if(inputElement instanceof IJavaProject)
@@ -79,7 +85,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
 		
 		try {
 			for (IPackageFragmentRoot fragmentRoot : javaProject.getPackageFragmentRoots()) {
-				if(!fragmentRoot.isArchive())
+				if(!fragmentRoot.isArchive() && !selectedUnitSourceFolderFromPreferences.contains(fragmentRoot))
 					resultList.add(fragmentRoot);
 			}
 		} catch (CoreException e) {
