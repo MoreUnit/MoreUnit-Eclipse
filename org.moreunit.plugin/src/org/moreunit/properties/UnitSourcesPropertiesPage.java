@@ -8,8 +8,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -23,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera
@@ -136,10 +135,21 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 			if(unitSourcesContentProvider.remove((IPackageFragmentRoot) singleSelection))
 				sourceFolderTree.refresh();
 		}
-		
 	}
 	
 	public List<IPackageFragmentRoot> getListOfUnitSourceFolder() {
 		return unitSourcesContentProvider.getListOfUnitSourceFolder();
+	}
+	
+	@Override
+	public boolean performOk() {
+		Preferences.getInstance().setTestSourceFolder(getJavaProject(), unitSourcesContentProvider.getListOfUnitSourceFolder());
+		return super.performOk();
+	}
+	
+	@Override
+	protected void performApply() {
+		Preferences.getInstance().setTestSourceFolder(getJavaProject(), unitSourcesContentProvider.getListOfUnitSourceFolder());
+		super.performApply();
 	}
 }

@@ -34,6 +34,7 @@ public class AddUnitSourceFolderWizard extends Wizard {
 	
 	@Override
 	public void createPageControls(Composite pageContainer) {
+		setWindowTitle("MoreUnit test source folders");
 		page = new AddUnitSourceFolderWizardPage();
 		addPage(page);
 		super.createPageControls(pageContainer);

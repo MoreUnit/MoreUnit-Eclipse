@@ -16,6 +16,7 @@ public interface PreferenceConstants {
 	String	TEST_PACKAGE_PREFIX					= "org.moreunit.package_prefix";
 	String	TEST_PACKAGE_SUFFIX					= "org.moreunit.package_suffix";
 	String	FLEXIBEL_TESTCASE_NAMING			= "org.moreunit.flexiblenaming";
+	String UNIT_SOURCE_FOLDER					= "org.moreunit.unitsourcefolder"; 
 
 	String TEST_TYPE							= "org.moreunit.test_type";
 	String TEST_TYPE_VALUE_JUNIT_3				= "junit3";

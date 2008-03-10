@@ -1,15 +1,28 @@
 package org.moreunit.util;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.moreunit.log.LogHandler;
 
 public class PluginTools {
+	
+	private static final String DELIMITER_BETWEEN_SOURCE_FOLDER = "#";
+	private static final String DELIMITER_IN_BETWEEN ="/";
 	
 	public static IEditorPart getOpenEditorPart() {
 		IWorkbench wb = PlatformUI.getWorkbench();
@@ -32,9 +45,52 @@ public class PluginTools {
 
 		return "java".equals(file.getFileExtension());
 	}
+
+	public static String convertSourceFoldersToString(List<IPackageFragmentRoot> sourceFolderList) {
+		StringBuffer result = new StringBuffer();
+		
+		for(IPackageFragmentRoot aSourceFolder : sourceFolderList) {
+			result.append(aSourceFolder.getJavaProject().getElementName());
+			result.append(DELIMITER_IN_BETWEEN);
+			result.append(aSourceFolder.getElementName());
+			result.append(DELIMITER_BETWEEN_SOURCE_FOLDER);
+		}
+		// remove the last delimiter char at the end of the string
+		result.deleteCharAt(result.lastIndexOf(DELIMITER_BETWEEN_SOURCE_FOLDER));
+		
+		return result.toString();
+	}
+
+	public static List<IPackageFragmentRoot> convertStringToSourceFolderList(String sourceFolderString) {
+		List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
+		
+		if(BaseTools.isStringTrimmedEmpty(sourceFolderString))
+			return resultList;
+		
+		String[] projectsSplits = sourceFolderString.split(DELIMITER_BETWEEN_SOURCE_FOLDER);
+		
+		for(String projectToken : projectsSplits) {
+			String[] internalSplit = projectToken.split(DELIMITER_IN_BETWEEN);
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(internalSplit[0]);
+			IJavaProject javaProject = JavaCore.create(project);
+			
+			try {
+				for(IPackageFragmentRoot aSourceFolder : javaProject.getPackageFragmentRoots()) {
+					if(internalSplit[1].equals(aSourceFolder.getElementName()))
+						resultList.add(aSourceFolder);
+				}
+			} catch (JavaModelException e) {
+				LogHandler.getInstance().handleExceptionLog(e);
+			}
+		}
+		return resultList;
+	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/02/29 21:33:46  gianasista
+// Minor refactorings
+//
 // Revision 1.2  2007/02/18 13:46:37  gianasista
 // Bugfix: Solved exceptions in missing testmethod view
 //

@@ -15,6 +15,7 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.log.LogHandler;
 import org.moreunit.properties.ProjectProperties;
 import org.moreunit.util.BaseTools;
+import org.moreunit.util.PluginTools;
 
 import com.bdaum.overlayPages.FieldEditorOverlayPage;
 import com.bdaum.overlayPages.PropertyStore;
@@ -60,6 +61,15 @@ public class Preferences {
 		}
 		
 		return false;
+	}
+	
+	public void setTestSourceFolder(IJavaProject javaProject, List<IPackageFragmentRoot> testSourceFolderList) {
+		store(javaProject).setValue(PreferenceConstants.UNIT_SOURCE_FOLDER, PluginTools.convertSourceFoldersToString(testSourceFolderList));
+	}
+	
+	public List<IPackageFragmentRoot> getTestSourceFolder(IJavaProject javaProject) {
+		String sourceFolderString = store(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+		return PluginTools.convertStringToSourceFolderList(sourceFolderString);
 	}
 	
 	private static QualifiedName getQualifiedNameForKey(String key) {
@@ -178,19 +188,16 @@ public class Preferences {
 	 * this method chooses the first project from the settings.
 	 */
 	public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject) {
-		List<IJavaProject> listOfProjects = ProjectProperties.instance().getJumpTargets(javaProject);
+		// check for project specific settings
+		List<IPackageFragmentRoot> unitSourceFolderList = Preferences.instance.getTestSourceFolder(javaProject);
+		if(unitSourceFolderList != null && unitSourceFolderList.size() > 0)
+			return unitSourceFolderList.get(0);
 
-		IJavaProject referenceJavaProject = null;
-		if(listOfProjects.size() == 0) {
-			referenceJavaProject = javaProject;
-		} else {
-			referenceJavaProject = listOfProjects.get(0);
-		}
-
+		// check for workspace settings
 		try {
 			String junitFolder = getJunitDirectoryFromPreferences(javaProject);
 			
-			IPackageFragmentRoot[] packageFragmentRoots = referenceJavaProject.getPackageFragmentRoots();
+			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
 			for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots) {
 				if(packageFragmentRoot.getElementName().equals(junitFolder)) {
 					return packageFragmentRoot;
@@ -206,6 +213,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2008/02/29 21:31:58  gianasista
+// Minor refactorings
+//
 // Revision 1.9  2008/02/27 09:03:52  channingwalton
 // corrected a misspelt method
 //

@@ -30,7 +30,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
 		if(inputElement instanceof IJavaProject)
 			return getChildren(inputElement);
 		
-		return getJavaProjectsInWorkspace().toArray();
+		return getRelevantJavaProjectsInWorkspace().toArray();
 	}
 
 	public void dispose() {
@@ -42,7 +42,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
 
 	public Object[] getChildren(Object parentElement) {
 		if(parentElement instanceof IJavaProject)
-			return getSourceFolderForProject((IJavaProject) parentElement).toArray();
+			return getRelevantSourceFolderForProject((IJavaProject) parentElement).toArray();
 		
 		return new Object[0];
 	}
@@ -56,19 +56,26 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
 
 	public boolean hasChildren(Object element) {
 		if(element instanceof IJavaProject)
-			return !getSourceFolderForProject((IJavaProject)element).isEmpty();
+			return !getRelevantSourceFolderForProject((IJavaProject)element).isEmpty();
 			
 		return false;
 	}
 	
-	private List<IJavaProject> getJavaProjectsInWorkspace() {
+	/** 
+	 * Returns all java projects from workspace which have source folder
+	 * not selected as test source folder for the underlying project
+	 */
+	private List<IJavaProject> getRelevantJavaProjectsInWorkspace() {
 		List<IJavaProject> allJavaProjectsInWorkspace = new ArrayList<IJavaProject>();
 		
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for(IProject aProject : projects) {
 			try {
-				if(aProject.hasNature(JavaCore.NATURE_ID))
-					allJavaProjectsInWorkspace.add(JavaCore.create(aProject));
+				if(aProject.hasNature(JavaCore.NATURE_ID)) {
+					IJavaProject javaProject = JavaCore.create(aProject);
+					if(hasChildren(javaProject))
+						allJavaProjectsInWorkspace.add(JavaCore.create(aProject));
+				}
 			} catch (CoreException e) {
 				LogHandler.getInstance().handleExceptionLog(e);
 			}
@@ -77,7 +84,11 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
 		return allJavaProjectsInWorkspace;
 	}
 	
-	private List<IPackageFragmentRoot> getSourceFolderForProject(IJavaProject javaProject) {
+	/**
+	 * Returns all sourcefolder from <code>javaProject</code> and filters sourcefolder
+	 * which are already configured as test source folder for the underlying project.
+	 */
+	private List<IPackageFragmentRoot> getRelevantSourceFolderForProject(IJavaProject javaProject) {
 		List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
 		
 		if(javaProject == null)

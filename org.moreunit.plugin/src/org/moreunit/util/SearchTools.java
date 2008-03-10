@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
-import org.moreunit.properties.ProjectProperties;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera
@@ -43,11 +43,12 @@ public class SearchTools {
 
 	private static IJavaSearchScope getSearchScope(IJavaElement compilationUnit) throws JavaModelException {
 		IJavaProject javaProject = compilationUnit.getJavaProject();
-		ArrayList<IPackageFragmentRoot> sourceFolders = SearchTools.getPackageFragmentsToSearch(javaProject);
-		List<IJavaProject> testProjects = ProjectProperties.instance().getJumpTargets(javaProject);
-		for (IJavaProject project : testProjects) {
-			sourceFolders.addAll(SearchTools.getPackageFragmentsToSearch(project));
+		List<IPackageFragmentRoot> unitSourceFolder = Preferences.getInstance().getTestSourceFolder(javaProject);
+		if(unitSourceFolder.size() > 0) {
+			return SearchEngine.createJavaSearchScope(unitSourceFolder.toArray(new IPackageFragmentRoot[unitSourceFolder.size()]));
 		}
+		
+		ArrayList<IPackageFragmentRoot> sourceFolders = SearchTools.getPackageFragmentsToSearch(javaProject);
 		return SearchEngine.createJavaSearchScope(sourceFolders.toArray(new IPackageFragmentRoot[sourceFolders.size()]));
 	}
 

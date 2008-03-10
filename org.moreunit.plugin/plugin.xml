@@ -245,6 +245,13 @@
     <extension
          point="org.eclipse.ui.propertyPages">
       <page
+            class="org.moreunit.properties.UnitSourcesPropertiesPage"
+            id="org.moreunit.unitSourcesPropertiesPage"
+            name="MoreUnit Test Sources"
+            objectClass="org.eclipse.jdt.core.IJavaProject">
+      </page>
+      <!--
+      <page
             class="org.moreunit.properties.ProjectPropertiesPage"
             id="Moreunit Properties"
             name="MoreUnit"
@@ -267,21 +274,14 @@
             </instanceof>
          </enabledWhen>
       </page>
+      -->
      <page
             class="org.moreunit.preferences.MoreUnitPreferencePage"
             id="org.moreunit.moreunitPreferencePage"
             name="MoreUnit Details"
             adaptable="true"
             objectClass="org.eclipse.jdt.core.IJavaProject"
-            category="Moreunit Properties">
-      </page>
-      <page
-            class="org.moreunit.properties.UnitSourcesPropertiesPage"
-            id="org.moreunit.unitSourcesPropertiesPage"
-            name="MoreUnit Test Sources"
-            adaptable="true"
-            objectClass="org.eclipse.jdt.core.IJavaProject"
-            category="Moreunit Properties">
+            category="org.moreunit.unitSourcesPropertiesPage">
       </page>
    </extension>
    

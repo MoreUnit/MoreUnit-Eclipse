@@ -1,14 +1,12 @@
 package org.moreunit.properties;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera
@@ -37,22 +35,8 @@ public class UnitSourcesContentProvider implements ITreeContentProvider {
 		listOfUnitSourceFolder = getListOfSourceFoldersFromPreferences();
 	}
 	
-	// TODO get Sourcefolder from preferences
 	private List<IPackageFragmentRoot> getListOfSourceFoldersFromPreferences() {
-		List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
-		
-		if(javaProjectInput == null)
-			return resultList;
-		
-		try {
-			for (IPackageFragmentRoot fragmentRoot : javaProjectInput.getPackageFragmentRoots()) {
-				if(!fragmentRoot.isArchive())
-					resultList.add(fragmentRoot);
-			}
-		} catch (CoreException e) {
-			LogHandler.getInstance().handleExceptionLog(e);
-		}
-		return resultList;
+		return Preferences.getInstance().getTestSourceFolder(javaProjectInput);
 	}
 
 	public Object[] getChildren(Object parentElement) {
