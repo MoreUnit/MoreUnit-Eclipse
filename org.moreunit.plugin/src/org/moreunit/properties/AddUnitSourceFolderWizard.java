@@ -3,11 +3,13 @@ package org.moreunit.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
+import org.moreunit.elements.SourceFolderMapping;
 
 /**
  * @author vera
@@ -17,18 +19,33 @@ import org.eclipse.ui.PlatformUI;
 public class AddUnitSourceFolderWizard extends Wizard {
 
 	private AddUnitSourceFolderWizardPage page;
+	private IJavaProject javaProject;
 	
 	private List<IPackageFragmentRoot> selectedSourceFolder = new ArrayList<IPackageFragmentRoot>();
-	private UnitSourcesPropertiesPage unitSourcesPropertiesPage;
+	
+	private UnitSourceFolderBlock unitSourceFolderBlock;
+	//private UnitSourcesPropertiesPage unitSourcesPropertiesPage;
 
+	/*
 	public AddUnitSourceFolderWizard(UnitSourcesPropertiesPage unitSourcesPropertiesPage) {
 		this.unitSourcesPropertiesPage = unitSourcesPropertiesPage;
+	}
+	*/
+	
+	public AddUnitSourceFolderWizard(IJavaProject javaProject, UnitSourceFolderBlock unitSourceFolderBlock) {
+		this.javaProject = javaProject;
+		this.unitSourceFolderBlock = unitSourceFolderBlock;
 	}
 	
 	@Override
 	public boolean performFinish() {
 		selectedSourceFolder = page.getSelectedSourceFolder();
-		unitSourcesPropertiesPage.handlePerformFinishFromAddUnitSourceFolderWizard(selectedSourceFolder);
+		List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
+		for(IPackageFragmentRoot sourceFolder : selectedSourceFolder) {
+			SourceFolderMapping mapping = new SourceFolderMapping(javaProject, sourceFolder);
+			mappingList.add(mapping);
+		}
+		unitSourceFolderBlock.handlePerformFinishFromAddUnitSourceFolderWizard(mappingList);
 		return true;
 	}
 	
@@ -45,7 +62,7 @@ public class AddUnitSourceFolderWizard extends Wizard {
 		dialog.open();
 	}
 	
-	public List<IPackageFragmentRoot> getUnitSourceFolderFromPropertyPage() {
-		return unitSourcesPropertiesPage.getListOfUnitSourceFolder();
+	public List<SourceFolderMapping> getUnitSourceFolderFromPropertyPage() {
+		return unitSourceFolderBlock.getListOfUnitSourceFolder();
 	}
 }

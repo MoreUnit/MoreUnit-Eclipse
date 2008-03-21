@@ -1,11 +1,14 @@
 package org.moreunit.properties;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.Preferences;
 
 /**
@@ -16,15 +19,17 @@ import org.moreunit.preferences.Preferences;
 public class UnitSourcesContentProvider implements ITreeContentProvider {
 	
 	private IJavaProject javaProjectInput;
-	private List<IPackageFragmentRoot> listOfUnitSourceFolder;
+	private List<SourceFolderMapping> listOfSourceFolderMappings;
+	
+	private Map<IPackageFragmentRoot, SourceFolderMapping> sourceFolderToMappingMap = new HashMap<IPackageFragmentRoot, SourceFolderMapping>();
 	
 	public UnitSourcesContentProvider(IJavaProject javaProject) {
 		this.javaProjectInput = javaProject;
-		listOfUnitSourceFolder = getListOfSourceFoldersFromPreferences();
+		listOfSourceFolderMappings = getListOfSourceFoldersFromPreferences();
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return listOfUnitSourceFolder.toArray();
+		return listOfSourceFolderMappings.toArray();
 	}
 
 	public void dispose() {
@@ -32,38 +37,57 @@ public class UnitSourcesContentProvider implements ITreeContentProvider {
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.javaProjectInput = (IJavaProject) newInput;
-		listOfUnitSourceFolder = getListOfSourceFoldersFromPreferences();
+		listOfSourceFolderMappings = getListOfSourceFoldersFromPreferences();
 	}
 	
-	private List<IPackageFragmentRoot> getListOfSourceFoldersFromPreferences() {
-		return Preferences.getInstance().getTestSourceFolder(javaProjectInput);
+	private List<SourceFolderMapping> getListOfSourceFoldersFromPreferences() {
+		return Preferences.getInstance().getSourceMappingList(javaProjectInput);
 	}
 
 	public Object[] getChildren(Object parentElement) {
+		if(parentElement instanceof SourceFolderMapping) {
+			return new Object[] { ((SourceFolderMapping) parentElement).getSourceFolder() };
+		}
 		return getListOfSourceFoldersFromPreferences().toArray();
 	}
 
 	public Object getParent(Object element) {
+		if(element instanceof IPackageFragmentRoot)
+			return sourceFolderToMappingMap.get(element);
+		
 		return null;
 	}
 
 	public boolean hasChildren(Object element) {
-		return false;
+		return element instanceof SourceFolderMapping;
 	}
 	
-	public void add(IPackageFragmentRoot soureFolder) {
-		listOfUnitSourceFolder.add(soureFolder);
+	public void add(SourceFolderMapping mapping) {
+		listOfSourceFolderMappings.add(mapping);
+		
+		sourceFolderToMappingMap.put(mapping.getSourceFolder(), mapping);
 	}
 	
-	public void add(List<IPackageFragmentRoot> listOfSourceFolder) {
-		listOfUnitSourceFolder.addAll(listOfSourceFolder);
+	public void add(List<SourceFolderMapping> listOfSourceFolder) {
+		listOfSourceFolderMappings.addAll(listOfSourceFolder);
+		
+		for(SourceFolderMapping mapping : listOfSourceFolder) {
+			sourceFolderToMappingMap.put(mapping.getSourceFolder(), mapping);
+		}
 	}
 	
-	public boolean remove(IPackageFragmentRoot sourceFolder) {
-		return listOfUnitSourceFolder.remove(sourceFolder);
+	public boolean remove(SourceFolderMapping sourceFolder) {
+		if(sourceFolderToMappingMap.containsValue(sourceFolder)) {
+			for(IPackageFragmentRoot folderKey : sourceFolderToMappingMap.keySet()) {
+				if(sourceFolderToMappingMap.get(folderKey).equals(sourceFolder))
+					sourceFolderToMappingMap.remove(folderKey);
+			}
+		}
+		
+		return listOfSourceFolderMappings.remove(sourceFolder);
 	}
 
-	public List<IPackageFragmentRoot> getListOfUnitSourceFolder() {
-		return listOfUnitSourceFolder;
+	public List<SourceFolderMapping> getListOfUnitSourceFolder() {
+		return listOfSourceFolderMappings;
 	}
 }

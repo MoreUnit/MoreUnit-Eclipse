@@ -9,14 +9,19 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.MarkerUpdateRunnable;
 import org.moreunit.util.BaseTools;
+import org.moreunit.util.PluginTools;
+import org.moreunit.util.SearchScopeSingelton;
 import org.moreunit.util.SearchTools;
 
 /**
@@ -66,7 +71,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 		try {
 			List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
 			for (String typeName : typeNames) {
-				Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit);
+				Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit, getSearchScope());
 				for(IType searchForResult: searchFor) {
 					resultList.add(searchForResult);
 				}
@@ -75,6 +80,14 @@ public class TestCaseTypeFacade extends TypeFacade {
 			LogHandler.getInstance().handleExceptionLog(exc);
 		}
 		return resultList;
+	}
+	
+	private IJavaSearchScope getSearchScope() {
+		return SearchScopeSingelton.getInstance().getSearchScope(getSourceFolder());
+	}
+	
+	private IPackageFragmentRoot getSourceFolder() {
+		return PluginTools.getSourceFolder(compilationUnit);
 	}
 
 	public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest) {
@@ -186,6 +199,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.17  2008/02/29 21:30:14  gianasista
+//Minor refactorings
+//
 //Revision 1.16  2008/02/16 12:56:55  gianasista
 //improved matching for CUT
 //

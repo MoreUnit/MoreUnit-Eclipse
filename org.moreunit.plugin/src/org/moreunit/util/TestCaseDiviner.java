@@ -1,6 +1,8 @@
 package org.moreunit.util;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -8,6 +10,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
@@ -27,6 +30,8 @@ public class TestCaseDiviner {
 	private IType 					source;
 
 	private Preferences				preferences;
+	
+	private Map<IJavaProject, IJavaSearchScope> serachScopePerProjectMap = new HashMap<IJavaProject, IJavaSearchScope>();
 
 	public TestCaseDiviner(ICompilationUnit compilationUnit, Preferences preferences) {
 		this.compilationUnit = compilationUnit;
@@ -51,13 +56,20 @@ public class TestCaseDiviner {
 		this.matches = new LinkedHashSet<IType>();
 		String[] prefixes = this.preferences.getPrefixes(getJavaProject());
 		for (String element : prefixes) {
-			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit));
+			//this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit));
+			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit, getSearchScope()));
 		}
 		String[] suffixes = this.preferences.getSuffixes(getJavaProject());
 		for (String element : suffixes) {
-			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit));
+			//this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit));
+			this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit, getSearchScope()));
 		}
 	}
+
+	private IJavaSearchScope getSearchScope() {
+		return SearchScopeSingelton.getInstance().getSearchScope(PluginTools.getSourceFolder(compilationUnit));
+	}
+	
 	
 	private IJavaProject getJavaProject() {
 		return compilationUnit.getJavaProject();
@@ -87,6 +99,9 @@ public class TestCaseDiviner {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2008/02/27 09:03:52  channingwalton
+// corrected a misspelt method
+//
 // Revision 1.10  2008/02/20 19:24:14  gianasista
 // Rename of classes for constants
 //

@@ -13,6 +13,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.moreunit.elements.SourceFolderMapping;
 
 /**
  * @author vera
@@ -48,7 +49,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 		setControl(checkboxTreeViewer.getControl());
 	}
 	
-	private List<IPackageFragmentRoot> getSelectedUnitSourceFolderFromPropertyPage() {
+	private List<SourceFolderMapping> getSelectedUnitSourceFolderFromPropertyPage() {
 		return ((AddUnitSourceFolderWizard)getWizard()).getUnitSourceFolderFromPropertyPage();
 	}
 

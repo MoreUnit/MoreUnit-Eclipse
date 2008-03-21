@@ -10,6 +10,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.moreunit.MoreUnitPlugin;
+import org.moreunit.SourceFolderContext;
+import org.moreunit.util.SearchScopeSingelton;
 
 import com.bdaum.overlayPages.FieldEditorOverlayPage;
 
@@ -29,20 +31,20 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 		addField(junitDirPreferenceField);
 
 		String[][] labelAndValues = new String[][] {
-				{"JUnit 3.8", PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3},
-				{"Junit 4", PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4},
-				{"TestNG", PreferenceConstants.TEST_TYPE_VALUE_TESTNG}
+				{PreferenceConstants.TEXT_JUNIT_3_8, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3},
+				{PreferenceConstants.TEXT_JUNIT_4, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4},
+				{PreferenceConstants.TEXT_TEST_NG, PreferenceConstants.TEST_TYPE_VALUE_TESTNG}
 		};
-		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_TYPE, "Test Type", 1, labelAndValues, getFieldEditorParent()));
+		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_TYPE, PreferenceConstants.TEXT_TEST_TYPE, 1, labelAndValues, getFieldEditorParent()));
 
-		addField(new StringFieldEditor(PreferenceConstants.PREFIXES, "Test &Prefixes (comma separated):", 30, getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.SUFFIXES, "Test &Suffixes (comma separated):", 30, getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.PREFIXES, PreferenceConstants.TEXT_TEST_PREFIXES, 30, getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.SUFFIXES, PreferenceConstants.TEXT_TEST_SUFFIXES, 30, getFieldEditorParent()));
 		
-		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, "Test package prefix", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX, "Test package suffix", getFieldEditorParent()));
-		addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS, "Test superclass", getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.TEXT_PACKAGE_PREFIX, getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX, PreferenceConstants.TEXT_PACKAGE_SUFFIX, getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.TEXT_TEST_SUPERCLASS, getFieldEditorParent()));
 		
-		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, "Enable flexible naming of tests", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.TEXT_FLEXIBLE_NAMING, getFieldEditorParent()));
 
 	}
 
@@ -63,6 +65,10 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 	@Override
 	public boolean performOk() {
 		Preferences.clearProjectCach();
+		
+		SourceFolderContext.getInstance().initContextForWorkspace();
+		SearchScopeSingelton.getInstance().resetCachedSearchScopes();
+		
 		return super.performOk();
 	}
 	
@@ -70,6 +76,9 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/01/23 19:31:32  gianasista
+// Project specific settings
+//
 // Revision 1.5  2007/11/19 21:00:38  gianasista
 // Patch from Bjoern: project specific settings
 //

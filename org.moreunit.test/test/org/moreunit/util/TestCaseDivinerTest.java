@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.moreunit.TestProject;
+import org.moreunit.preferences.Preferences;
 import org.moreunit.util.TestCaseDiviner;
 
 /**
@@ -42,6 +43,7 @@ public class TestCaseDivinerTest extends TestCase {
 		IType testNGHelloType = testProject.createType(junitComPaket, "FooTestNG.java", getTestCaseSource("com", "FooTestNG"));
 		
 		PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] {"Test"});
+		Preferences.setInstance(preferencesMock);
 		
 		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
 		Set result = testCaseDiviner.getMatches();
@@ -113,6 +115,9 @@ public class TestCaseDivinerTest extends TestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/02/20 19:26:54  gianasista
+// Rename of classes for constants
+//
 // Revision 1.1  2008/02/04 20:41:11  gianasista
 // Initital
 //

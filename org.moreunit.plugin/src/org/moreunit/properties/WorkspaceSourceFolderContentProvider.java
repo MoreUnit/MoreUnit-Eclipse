@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
 
 /**
@@ -20,10 +21,12 @@ import org.moreunit.log.LogHandler;
  */
 public class WorkspaceSourceFolderContentProvider implements ITreeContentProvider {
 	
-	private List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences;
+	private List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences = new ArrayList<IPackageFragmentRoot>();
 	
-	public WorkspaceSourceFolderContentProvider(List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences) {
-		this.selectedUnitSourceFolderFromPreferences = selectedUnitSourceFolderFromPreferences;
+	public WorkspaceSourceFolderContentProvider(List<SourceFolderMapping> selectedUnitSourceFolderFromPreferences) {
+		for(SourceFolderMapping mapping : selectedUnitSourceFolderFromPreferences) {
+			this.selectedUnitSourceFolderFromPreferences.add(mapping.getTestFolder());
+		}
 	}
 
 	public Object[] getElements(Object inputElement) {

@@ -7,6 +7,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -20,9 +23,6 @@ import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
 
 public class PluginTools {
-	
-	private static final String DELIMITER_BETWEEN_SOURCE_FOLDER = "#";
-	private static final String DELIMITER_IN_BETWEEN ="/";
 	
 	public static IEditorPart getOpenEditorPart() {
 		IWorkbench wb = PlatformUI.getWorkbench();
@@ -46,48 +46,51 @@ public class PluginTools {
 		return "java".equals(file.getFileExtension());
 	}
 
-	public static String convertSourceFoldersToString(List<IPackageFragmentRoot> sourceFolderList) {
-		StringBuffer result = new StringBuffer();
-		
-		for(IPackageFragmentRoot aSourceFolder : sourceFolderList) {
-			result.append(aSourceFolder.getJavaProject().getElementName());
-			result.append(DELIMITER_IN_BETWEEN);
-			result.append(aSourceFolder.getElementName());
-			result.append(DELIMITER_BETWEEN_SOURCE_FOLDER);
+	public static IPackageFragmentRoot createPackageFragmentRoot(String projectName, String folderName) {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		IJavaProject javaProject = JavaCore.create(project);
+		try {
+			for(IPackageFragmentRoot aSourceFolder : javaProject.getPackageFragmentRoots()) {
+				if(folderName.equals(aSourceFolder.getElementName()))
+					return aSourceFolder;
+			}
+		} catch (JavaModelException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
 		}
-		// remove the last delimiter char at the end of the string
-		result.deleteCharAt(result.lastIndexOf(DELIMITER_BETWEEN_SOURCE_FOLDER));
 		
-		return result.toString();
+		return null;
 	}
-
-	public static List<IPackageFragmentRoot> convertStringToSourceFolderList(String sourceFolderString) {
-		List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
-		
-		if(BaseTools.isStringTrimmedEmpty(sourceFolderString))
-			return resultList;
-		
-		String[] projectsSplits = sourceFolderString.split(DELIMITER_BETWEEN_SOURCE_FOLDER);
-		
-		for(String projectToken : projectsSplits) {
-			String[] internalSplit = projectToken.split(DELIMITER_IN_BETWEEN);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(internalSplit[0]);
-			IJavaProject javaProject = JavaCore.create(project);
-			
+	
+	public static List<IJavaProject> getJavaProjectsFromWorkspace() {
+		List<IJavaProject> result = new ArrayList<IJavaProject>();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for(IProject aProject : projects) {
 			try {
-				for(IPackageFragmentRoot aSourceFolder : javaProject.getPackageFragmentRoots()) {
-					if(internalSplit[1].equals(aSourceFolder.getElementName()))
-						resultList.add(aSourceFolder);
+				if(aProject.hasNature(JavaCore.NATURE_ID)) {
+					result.add(JavaCore.create(aProject));
 				}
-			} catch (JavaModelException e) {
+			} catch (CoreException e) {
 				LogHandler.getInstance().handleExceptionLog(e);
 			}
 		}
-		return resultList;
+		
+		return result;
+	}
+	
+	public static IPackageFragmentRoot getSourceFolder(ICompilationUnit compilationUnit) {
+		IJavaElement element = compilationUnit;
+		while(!(element instanceof IPackageFragmentRoot)) {
+			element = element.getParent();
+		}
+		
+		return (IPackageFragmentRoot) element;
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/03/10 19:49:47  gianasista
+// New property page for test source folder configuration
+//
 // Revision 1.3  2008/02/29 21:33:46  gianasista
 // Minor refactorings
 //

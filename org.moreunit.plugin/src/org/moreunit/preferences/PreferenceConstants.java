@@ -1,10 +1,13 @@
 package org.moreunit.preferences;
 
+import org.eclipse.core.runtime.QualifiedName;
+
 public interface PreferenceConstants {
 
 	String PREF_PAGE_ID							= "org.moreunit.moreunitPreferencePage";
 	String PREF_DETAILS_PAGE_ID					= "org.moreunit.moreunitPreferencePage_details";
 
+	QualifiedName USE_PROJECT_SPECIFIC_SETTINGS		= new QualifiedName("org.moreunit", "useprojectsettings");
 	String PREF_JUNIT_PATH 						= "org.moreunit.junit_path";
 	String PREF_JUNIT_PATH_DEFAULT 				= "junit";
 	String SHOW_REFACTORING_DIALOG 				= "org.moreunit.show_refactoring_dialog";
@@ -35,4 +38,15 @@ public interface PreferenceConstants {
 	String 	DEFAULT_PRAEFIX						= "test";
 	String 	DEFAULT_SUFFIX						= "Test";
 	String	DEFAULT_TEST_SUPERCLASS				= "";
+	
+	String TEXT_FLEXIBLE_NAMING = "Enable flexible naming of tests";
+	String TEXT_TEST_SUPERCLASS = "Test superclass";
+	String TEXT_PACKAGE_SUFFIX = "Test package suffix";
+	String TEXT_PACKAGE_PREFIX = "Test package prefix";
+	String TEXT_TEST_SUFFIXES = "Test &Suffixes (comma separated):";
+	String TEXT_TEST_PREFIXES = "Test &Prefixes (comma separated):";
+	String TEXT_TEST_TYPE = "Test Type";
+	String TEXT_TEST_NG = "TestNG";
+	String TEXT_JUNIT_4 = "Junit 4";
+	String TEXT_JUNIT_3_8 = "JUnit 3.8";
 }

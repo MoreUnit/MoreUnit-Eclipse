@@ -52,7 +52,6 @@ public class MoveMethodParticipant extends MoveParticipant{
 		refactoringDescriptor.createRefactoring(refactoringStatus);
 		//MoveRefactoring moveRefactoring = refactoringContribution.createDescriptor(id, project, description, comment, arguments, flags)
 		
-		// TODO not implemented yet because MoveSupport is not part of the API yet
 		/*
 		IMethod testMethod = javaFileFacade.getCorrespondingTestMethod(method);
 		if(testMethod == null)
@@ -68,6 +67,9 @@ public class MoveMethodParticipant extends MoveParticipant{
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/09/19 19:19:43  gianasista
+// Started move refactoring support
+//
 // Revision 1.2  2006/10/24 18:37:39  channingwalton
 // made  the properties page appear on the navigator view and fixed some gui text
 //

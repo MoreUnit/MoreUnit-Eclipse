@@ -6,18 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
+import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
-import org.moreunit.properties.ProjectProperties;
 import org.moreunit.util.BaseTools;
-import org.moreunit.util.PluginTools;
 
-import com.bdaum.overlayPages.FieldEditorOverlayPage;
 import com.bdaum.overlayPages.PropertyStore;
 
 public class Preferences {
@@ -26,7 +23,7 @@ public class Preferences {
 
 	private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
 	
-	private static final Preferences instance = new Preferences();
+	private static Preferences instance = new Preferences();
 	
 	static {
 		workbenchStore.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
@@ -46,12 +43,19 @@ public class Preferences {
 		return instance;
 	}
 	
-	private static boolean hasProjectSpecificSettings(IJavaProject javaProject) {
+	/**
+	 * Necessary for easier testing
+	 */
+	public static void setInstance(Preferences preferences) {
+		instance = preferences;
+	}
+	
+	public static boolean hasProjectSpecificSettings(IJavaProject javaProject) {
 		if(javaProject == null)
 			return false;
 		
 		try {
-			String propertyValue = javaProject.getProject().getPersistentProperty(getQualifiedNameForKey(FieldEditorOverlayPage.USEPROJECTSETTINGS));
+			String propertyValue = javaProject.getProject().getPersistentProperty(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS);
 			if(BaseTools.isStringTrimmedEmpty(propertyValue))
 				return false;
 			
@@ -63,17 +67,13 @@ public class Preferences {
 		return false;
 	}
 	
-	public void setTestSourceFolder(IJavaProject javaProject, List<IPackageFragmentRoot> testSourceFolderList) {
-		store(javaProject).setValue(PreferenceConstants.UNIT_SOURCE_FOLDER, PluginTools.convertSourceFoldersToString(testSourceFolderList));
+	public void setMappingList(IJavaProject javaProject, List<SourceFolderMapping> mappingList) {
+		store(javaProject).setValue(PreferenceConstants.UNIT_SOURCE_FOLDER, PreferencesConverter.convertSourceMappingsToString(mappingList));
 	}
 	
-	public List<IPackageFragmentRoot> getTestSourceFolder(IJavaProject javaProject) {
-		String sourceFolderString = store(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
-		return PluginTools.convertStringToSourceFolderList(sourceFolderString);
-	}
-	
-	private static QualifiedName getQualifiedNameForKey(String key) {
-		return new QualifiedName(PreferenceConstants.PREF_PAGE_ID, key);
+	public List<SourceFolderMapping> getSourceMappingList(IJavaProject javaProject) {
+		String mappingString = store(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+		return PreferencesConverter.convertStringToSourceMappingList(mappingString);
 	}
 
 	protected Preferences() {
@@ -85,15 +85,29 @@ public class Preferences {
 	}
 
 	public String[] getPrefixes(IJavaProject javaProject) {
-		return getValues(PreferenceConstants.PREFIXES, javaProject);
+		String preferenceValue = store(javaProject).getString(PreferenceConstants.PREFIXES);
+		return PreferencesConverter.convertStringToArray(preferenceValue);
+	}
+	
+	public void setPrefixes(IJavaProject javaProject, String[] prefixes) {
+		store(javaProject).setValue(PreferenceConstants.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
 	}
 
 	public String[] getSuffixes(IJavaProject javaProject) {
-		return getValues(PreferenceConstants.SUFFIXES, javaProject);
+		String preferenceValue = store(javaProject).getString(PreferenceConstants.SUFFIXES);
+		return PreferencesConverter.convertStringToArray(preferenceValue);
+	}
+	
+	public void setSuffixes(IJavaProject javaProject, String[] suffixes) {
+		store(javaProject).setValue(PreferenceConstants.SUFFIXES, PreferencesConverter.convertArrayToString(suffixes));
 	}
 
 	public String getTestSuperClass(IJavaProject javaProject) {
 		return getStringValue(PreferenceConstants.TEST_SUPERCLASS, javaProject);
+	}
+	
+	public void setTestSuperClass(IJavaProject javaProject, String testSuperClass) {
+		store(javaProject).setValue(PreferenceConstants.TEST_SUPERCLASS, testSuperClass);
 	}
 	
 	private String getStringValue(final String key, IJavaProject javaProject) {
@@ -108,6 +122,10 @@ public class Preferences {
 			return store(javaProject).getString(PreferenceConstants.TEST_TYPE);
 		}
 		return store(javaProject).getDefaultString(PreferenceConstants.DEFAULT_TEST_TYPE);
+	}
+	
+	public void setTestType(IJavaProject javaProject, String testType) {
+		store(javaProject).setValue(PreferenceConstants.TEST_TYPE, testType);
 	}
 
 	public boolean shouldUseJunit4Type(IJavaProject javaProject) {
@@ -137,27 +155,28 @@ public class Preferences {
 		}
 		return store(javaProject).getDefaultBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
 	}
+	
+	public void setShouldUseFlexibleTestCaseNaming(IJavaProject javaProject, boolean shouldUseFlexibleNaming) {
+		store(javaProject).setValue(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, shouldUseFlexibleNaming);
+	}
 
 	public String getTestPackagePrefix(IJavaProject javaProject) {
 		return getStringValue(PreferenceConstants.TEST_PACKAGE_PREFIX, javaProject);
+	}
+	
+	public void setTestPackagePrefix(IJavaProject javaProject, String packagePrefix) {
+		store(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_PREFIX, packagePrefix);
 	}
 
 	public String getTestPackageSuffix(IJavaProject javaProject) {
 		return getStringValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, javaProject);
 	}
-
-	private String[] getValues(final String listPreference, IJavaProject javaProject) {
-		if (store(javaProject).contains(listPreference)) {
-			String prefValue = store(javaProject).getString(listPreference);
-			if((prefValue == null) || (prefValue.length() == 0)) {
-				return new String[0];
-			}
-			return prefValue.split(",");
-		}
-		return store(javaProject).getDefaultString(listPreference).split(",");
+	
+	public void setTestPackageSuffix(IJavaProject javaProject, String packageSuffix) {
+		store(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, packageSuffix);
 	}
 
-	private IPreferenceStore store(IJavaProject javaProject) {
+	public IPreferenceStore store(IJavaProject javaProject) {
 		if(!hasProjectSpecificSettings(javaProject))
 			return MoreUnitPlugin.getDefault().getPreferenceStore();
 		
@@ -189,9 +208,9 @@ public class Preferences {
 	 */
 	public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject) {
 		// check for project specific settings
-		List<IPackageFragmentRoot> unitSourceFolderList = Preferences.instance.getTestSourceFolder(javaProject);
-		if(unitSourceFolderList != null && unitSourceFolderList.size() > 0)
-			return unitSourceFolderList.get(0);
+		List<SourceFolderMapping> mappingList = Preferences.instance.getSourceMappingList(javaProject);
+		if(mappingList != null && mappingList.size() > 0)
+			return mappingList.get(0).getTestFolder();
 
 		// check for workspace settings
 		try {
@@ -213,6 +232,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2008/03/10 19:49:05  gianasista
+// New property page for test source folder configuration
+//
 // Revision 1.10  2008/02/29 21:31:58  gianasista
 // Minor refactorings
 //

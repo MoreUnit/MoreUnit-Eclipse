@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.util.SearchScopeSingelton;
 
 /**
  * @author vera
@@ -30,10 +31,12 @@ import org.moreunit.preferences.Preferences;
  */
 public class UnitSourcesPropertiesPage extends PropertyPage {
 	
+	/*
 	private TreeViewer sourceFolderTree;
 	private Button addButton;
 	private Button removeButton;
 	private UnitSourcesContentProvider unitSourcesContentProvider;
+	*/
 
 	public UnitSourcesPropertiesPage() {
 	}
@@ -45,15 +48,18 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 	
 	@Override
 	protected Control createContents(Composite parent) {
+		/*
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		createLabel(parent);
 		createTreeViewer(parent);
 		createButtons(parent);
+		*/
 		return parent;
 	}
 	
 	private void createTreeViewer(Composite composite) {
+		/*
 		sourceFolderTree = new TreeViewer(composite);
 		unitSourcesContentProvider = new UnitSourcesContentProvider(getJavaProject());
 		sourceFolderTree.setContentProvider(unitSourcesContentProvider);
@@ -63,9 +69,11 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 		layoutData.widthHint = 250;
 		layoutData.heightHint = 200;
 		sourceFolderTree.getControl().setLayoutData(layoutData);
+		*/
 	}
 
 	private void createLabel(Composite composite) {
+		/*
 		Label label = new Label(composite, SWT.LEFT);
 		label.setText("Projects with tests for " + getJavaProject().getElementName());
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
@@ -74,9 +82,11 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 		layoutData.horizontalSpan = 2;
 		
 		label.setLayoutData(layoutData);
+		*/
 	}
 	
 	private void createButtons(Composite composite) {
+		/*
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		buttonComposite.setFont(composite.getFont());
 		
@@ -106,6 +116,7 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 		GridData layoutData = new GridData();
 		layoutData.widthHint = 100;
 		buttonComposite.setLayoutData(layoutData);
+		*/
 	}
 	
 	private IJavaProject getJavaProject() {
@@ -119,37 +130,48 @@ public class UnitSourcesPropertiesPage extends PropertyPage {
 	}
 
 	private void addButtonClicked() {
-		new AddUnitSourceFolderWizard(this).open();
+		//new AddUnitSourceFolderWizard(this).open();
 	}
 	
 	public void handlePerformFinishFromAddUnitSourceFolderWizard(List<IPackageFragmentRoot> folderToAdd) {
+		/*
 		if(folderToAdd.size() > 0) {
 			unitSourcesContentProvider.add(folderToAdd);
 			sourceFolderTree.refresh();
 		}
+		*/
 	}
 	
 	private void removeButtonClicked() {
+		/*
 		TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
 		for(Object singleSelection : selection.toList()) {
 			if(unitSourcesContentProvider.remove((IPackageFragmentRoot) singleSelection))
 				sourceFolderTree.refresh();
 		}
+		*/
 	}
 	
+	/*
 	public List<IPackageFragmentRoot> getListOfUnitSourceFolder() {
 		return unitSourcesContentProvider.getListOfUnitSourceFolder();
 	}
+	*/
 	
 	@Override
 	public boolean performOk() {
+		/*
 		Preferences.getInstance().setTestSourceFolder(getJavaProject(), unitSourcesContentProvider.getListOfUnitSourceFolder());
+		SearchScopeSingelton.getInstance().recalculateSearchScope(getJavaProject());
+		*/
 		return super.performOk();
 	}
 	
 	@Override
 	protected void performApply() {
+		/*
 		Preferences.getInstance().setTestSourceFolder(getJavaProject(), unitSourcesContentProvider.getListOfUnitSourceFolder());
+		*/
 		super.performApply();
 	}
 }
