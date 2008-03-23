@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -27,7 +29,7 @@ import org.moreunit.util.SearchScopeSingelton;
  *
  * 11.03.2008 20:43:49
  */
-public class UnitSourceFolderBlock {
+public class UnitSourceFolderBlock implements ISelectionChangedListener {
 	
 	private TreeViewer sourceFolderTree;
 	private Button addButton;
@@ -58,6 +60,7 @@ public class UnitSourceFolderBlock {
 		unitSourcesContentProvider = new UnitSourcesContentProvider(javaProject);
 		sourceFolderTree.setContentProvider(unitSourcesContentProvider);
 		sourceFolderTree.setLabelProvider(new UnitSourceFolderLabelProvider());
+		sourceFolderTree.addSelectionChangedListener(this);
 		sourceFolderTree.setInput(javaProject);
 		GridData layoutData = new GridData();
 		layoutData.widthHint = 250;
@@ -83,6 +86,8 @@ public class UnitSourceFolderBlock {
 		addButton = createAddButton(buttonComposite, composite.getFont());
 		removeButton = createRemoveButton(buttonComposite, composite.getFont());
 		mappingButton = createMappingButton(buttonComposite, composite.getFont());
+		removeButton.setEnabled(false);
+		mappingButton.setEnabled(false);
 		
 		FillLayout buttonBoxLayout = new FillLayout(SWT.VERTICAL);
 		buttonComposite.setLayout(buttonBoxLayout);
@@ -139,11 +144,13 @@ public class UnitSourceFolderBlock {
 	}
 	
 	private void removeButtonClicked() {
+		if(unitSourcesContentProvider.remove((SourceFolderMapping) getSelectedObject()))
+			sourceFolderTree.refresh();
+	}
+	
+	private Object getSelectedObject(){
 		TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
-		for(Object singleSelection : selection.toList()) {
-			if(unitSourcesContentProvider.remove((SourceFolderMapping) singleSelection))
-				sourceFolderTree.refresh();
-		}
+		return selection.getFirstElement();
 	}
 	
 	private void mappingButtonClicked() {
@@ -173,5 +180,11 @@ public class UnitSourceFolderBlock {
 		
 		SourceFolderContext.getInstance().initContextForWorkspace();
 		SearchScopeSingelton.getInstance().resetCachedSearchScopes();
+	}
+
+	public void selectionChanged(SelectionChangedEvent event) {
+		Object selectedObject = getSelectedObject();
+		removeButton.setEnabled(selectedObject instanceof SourceFolderMapping);
+		mappingButton.setEnabled(selectedObject instanceof IPackageFragmentRoot);
 	}
 }
