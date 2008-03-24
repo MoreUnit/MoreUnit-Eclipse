@@ -5,11 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
@@ -19,9 +24,12 @@ import com.bdaum.overlayPages.PropertyStore;
 
 public class Preferences {
 
+	private static final String[] LOOKUP_ORDER = { ProjectScope.SCOPE, ConfigurationScope.SCOPE };
 	private static Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
 	private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
+	private static final IScopeContext workbenchScopeContext = new ConfigurationScope();
+	private static Map<IJavaProject, ProjectScope> preferenceScopeMap = new HashMap<IJavaProject, ProjectScope>();
 	
 	private static Preferences instance = new Preferences();
 	
@@ -50,6 +58,7 @@ public class Preferences {
 		instance = preferences;
 	}
 	
+	/*
 	public static boolean hasProjectSpecificSettings(IJavaProject javaProject) {
 		if(javaProject == null)
 			return false;
@@ -65,6 +74,18 @@ public class Preferences {
 		}
 		
 		return false;
+	}
+	*/
+	
+	public boolean hasProjectSpecificSettings(IJavaProject javaProject) {
+		if(javaProject == null)
+			return false;
+		
+		return store(javaProject).getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS);
+	}
+	
+	public void setHasProjectSpecificSettings(IJavaProject javaProject, boolean hasProjectSpecificSettings) {
+		store(javaProject).setValue(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS, hasProjectSpecificSettings);
 	}
 	
 	public void setMappingList(IJavaProject javaProject, List<SourceFolderMapping> mappingList) {
@@ -177,12 +198,18 @@ public class Preferences {
 	}
 
 	public IPreferenceStore store(IJavaProject javaProject) {
-		if(!hasProjectSpecificSettings(javaProject))
-			return MoreUnitPlugin.getDefault().getPreferenceStore();
+		if(preferenceMap.containsKey(javaProject))
+			return preferenceMap.get(javaProject);
 		
-		return getProjectSpecificStore(javaProject);
+		ProjectScope projectScopeContext = new ProjectScope(javaProject.getProject());
+		ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
+		preferenceStore.setSearchContexts( new IScopeContext[] { projectScopeContext });
+		preferenceMap.put(javaProject, preferenceStore);
+		
+		return preferenceStore;
 	}
 	
+	/*
 	private IPreferenceStore getProjectSpecificStore(IJavaProject javaProject) {
 		IPreferenceStore result = Preferences.preferenceMap.get(javaProject);
 		if(result != null)
@@ -194,6 +221,7 @@ public class Preferences {
 		return result;
 		
 	}
+	*/
 	
 	public static void clearProjectCach() {
 		synchronized (preferenceMap) {
@@ -232,6 +260,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2008/03/21 18:20:17  gianasista
+// First version of new property page with source folder mapping
+//
 // Revision 1.11  2008/03/10 19:49:05  gianasista
 // New property page for test source folder configuration
 //

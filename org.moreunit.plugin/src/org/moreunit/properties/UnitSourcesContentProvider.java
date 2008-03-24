@@ -36,6 +36,8 @@ public class UnitSourcesContentProvider implements ITreeContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if(newInput == null)
+			return;
 		this.javaProjectInput = (IJavaProject) newInput;
 		listOfSourceFolderMappings = getListOfSourceFoldersFromPreferences();
 	}

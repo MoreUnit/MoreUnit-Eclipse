@@ -7,7 +7,7 @@ public interface PreferenceConstants {
 	String PREF_PAGE_ID							= "org.moreunit.moreunitPreferencePage";
 	String PREF_DETAILS_PAGE_ID					= "org.moreunit.moreunitPreferencePage_details";
 
-	QualifiedName USE_PROJECT_SPECIFIC_SETTINGS		= new QualifiedName("org.moreunit", "useprojectsettings");
+	String USE_PROJECT_SPECIFIC_SETTINGS		= "org.moreunit.useprojectsettings";
 	String PREF_JUNIT_PATH 						= "org.moreunit.junit_path";
 	String PREF_JUNIT_PATH_DEFAULT 				= "junit";
 	String SHOW_REFACTORING_DIALOG 				= "org.moreunit.show_refactoring_dialog";

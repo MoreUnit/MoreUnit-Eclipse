@@ -1,5 +1,6 @@
 package org.moreunit.properties;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
@@ -66,7 +68,7 @@ public class MoreUnitPropertyPage extends PropertyPage {
 		
 		projectSpecificSettingsCheckbox.setLayoutData(gridData);
 		
-		projectSpecificSettingsCheckbox.setSelection(Preferences.hasProjectSpecificSettings(getJavaProject()));
+		projectSpecificSettingsCheckbox.setSelection(Preferences.getInstance().hasProjectSpecificSettings(getJavaProject()));
 	}
 	
 	private void createTabContent(Composite parent) {
@@ -122,12 +124,15 @@ public class MoreUnitPropertyPage extends PropertyPage {
 	
 	private void saveProperties() {
 		try {
-			getJavaProject().getResource().setPersistentProperty(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS, String.valueOf(shouldUseProjectspecificSettings()));
+			Preferences.getInstance().setHasProjectSpecificSettings(getJavaProject(), shouldUseProjectspecificSettings());
 			if(shouldUseProjectspecificSettings()) {
 				firstTabUnitSourceFolder.saveProperties();
 				secondTabOtherProperties.saveProperties();
+				IPreferenceStore store = Preferences.getInstance().store(getJavaProject());
+				if(store instanceof ScopedPreferenceStore)
+					((ScopedPreferenceStore)store).save();
 			}
-		} catch (CoreException e) {
+		} catch (IOException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
 		}
 	}
