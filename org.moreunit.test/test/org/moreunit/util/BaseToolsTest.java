@@ -152,6 +152,12 @@ public class BaseToolsTest extends TestCase {
 		assertEquals("One", result.get(0));
 		assertEquals("OneTwo", result.get(1));
 		assertEquals("OneTwoThree", result.get(2));
+		
+		testString = "oneTwo";
+		result = BaseTools.getListOfUnqualifiedTypeNames(testString);
+		assertEquals(2, result.size());
+		assertEquals("one", result.get(0));
+		assertEquals("oneTwo", result.get(1));
 	}
 	
 	public void testReturnsListOfUnqualifiedTypeNamesSortedByRawLength() throws Exception {

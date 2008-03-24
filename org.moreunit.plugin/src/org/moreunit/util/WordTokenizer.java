@@ -19,15 +19,23 @@ public class WordTokenizer implements Enumeration<String>{
 		if(string == null || string.length()==0)
 			tokens = new ArrayList<String>();
 		else {
-			Pattern pattern = Pattern.compile("[A-Z][a-z]*");
-			Matcher matcher = pattern.matcher(string);
+			char[] charArray = string.toCharArray();
+			StringBuilder token = new StringBuilder();
 			
-			int i = 0; 
-			while(matcher.find()) {
-				tokens.add(matcher.group());
-				i++;
+			for(char singleChar : charArray) {
+				if(Character.isUpperCase(singleChar)) {
+					addTokenToList(token.toString());
+					token = new StringBuilder();
+				}
+				token.append(singleChar);
 			}
+			addTokenToList(token.toString());
 		}
+	}
+	
+	private void addTokenToList(String token) {
+		if(token.length() > 0)
+			tokens.add(token);
 	}
 
 	public boolean hasMoreElements() {
