@@ -58,7 +58,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 		Preferences preferences = Preferences.getInstance();
 		List<String> testedClasses =
 				BaseTools.getTestedClass(
-						getType().getFullyQualifiedName(),
+						getType().getTypeQualifiedName(),
 						preferences.getPrefixes(getJavaProject()),
 						preferences.getSuffixes(getJavaProject()),
 						preferences.getTestPackagePrefix(getJavaProject()),
@@ -199,6 +199,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.18  2008/03/21 18:20:03  gianasista
+//First version of new property page with source folder mapping
+//
 //Revision 1.17  2008/02/29 21:30:14  gianasista
 //Minor refactorings
 //
