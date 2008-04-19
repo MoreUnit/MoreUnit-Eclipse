@@ -198,30 +198,23 @@ public class Preferences {
 	}
 
 	public IPreferenceStore store(IJavaProject javaProject) {
-		if(preferenceMap.containsKey(javaProject))
-			return preferenceMap.get(javaProject);
+		IPreferenceStore resultStore = null;
+		if(preferenceMap.containsKey(javaProject)) {
+			resultStore =  preferenceMap.get(javaProject);
+		} else {
+			ProjectScope projectScopeContext = new ProjectScope(javaProject.getProject());
+			ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
+			preferenceStore.setSearchContexts( new IScopeContext[] { projectScopeContext });
+			preferenceMap.put(javaProject, preferenceStore);
+			
+			resultStore = preferenceStore;
+		}
 		
-		ProjectScope projectScopeContext = new ProjectScope(javaProject.getProject());
-		ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
-		preferenceStore.setSearchContexts( new IScopeContext[] { projectScopeContext });
-		preferenceMap.put(javaProject, preferenceStore);
+		if(resultStore.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS))
+			return resultStore;
 		
-		return preferenceStore;
+		return workbenchStore;
 	}
-	
-	/*
-	private IPreferenceStore getProjectSpecificStore(IJavaProject javaProject) {
-		IPreferenceStore result = Preferences.preferenceMap.get(javaProject);
-		if(result != null)
-			return result;
-		
-		result = new PropertyStore(javaProject.getProject(), workbenchStore, PreferenceConstants.PREF_PAGE_ID);
-		preferenceMap.put(javaProject, result);
-		
-		return result;
-		
-	}
-	*/
 	
 	public static void clearProjectCach() {
 		synchronized (preferenceMap) {
@@ -260,6 +253,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2008/03/24 18:32:59  gianasista
+// Preferences with scopes
+//
 // Revision 1.12  2008/03/21 18:20:17  gianasista
 // First version of new property page with source folder mapping
 //
