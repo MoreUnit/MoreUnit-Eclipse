@@ -50,14 +50,14 @@ public class PreferencesConverter {
 		IPackageFragmentRoot sourceFolder = mapping.getSourceFolder();
 		result.append(sourceFolder.getJavaProject().getElementName());
 		result.append(PreferencesConverter.DELIMITER_INTERNAL);
-		result.append(sourceFolder.getElementName());
+		result.append(PluginTools.getPathStringWithoutProjectName(sourceFolder));
 		
 		result.append(PreferencesConverter.DELIMITER_INTERNAL);
 		
 		IPackageFragmentRoot testFolder = mapping.getTestFolder();
 		result.append(testFolder.getJavaProject().getElementName());
 		result.append(PreferencesConverter.DELIMITER_INTERNAL);
-		result.append(testFolder.getElementName());
+		result.append(PluginTools.getPathStringWithoutProjectName(testFolder));
 		
 		return result.toString();
 	}

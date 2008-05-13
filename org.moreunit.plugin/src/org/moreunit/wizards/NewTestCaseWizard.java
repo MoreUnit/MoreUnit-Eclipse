@@ -59,6 +59,7 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		String testSuperClass = getTestSuperClass();
 		if(!BaseTools.isStringTrimmedEmpty(testSuperClass))
 			this.pageOne.setSuperClass(testSuperClass, true);
+		//else if(this.pageOne.i)
 		
 		this.pageOne.setTypeName(getTestCaseClassName(), true);
 		this.pageOne.setPackageFragmentRoot(getSourceFolderForUnitTest(), true);	
@@ -148,6 +149,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2008/02/29 21:34:32  gianasista
+// Minor refactorings
+//
 // Revision 1.12  2008/02/20 19:24:32  gianasista
 // Rename of classes for constants
 //

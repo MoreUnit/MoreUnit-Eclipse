@@ -5,6 +5,7 @@ import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.moreunit.elements.SourceFolderMapping;
+import org.moreunit.util.PluginTools;
 import org.moreunit.util.StringConstants;
 
 /**
@@ -46,7 +47,7 @@ public class UnitSourceFolderLabelProvider extends LabelProvider {
 		StringBuffer result = new StringBuffer();
 		result.append(folder.getJavaProject().getElementName());
 		result.append(StringConstants.SLASH);
-		result.append(folder.getElementName());
+		result.append(PluginTools.getPathStringWithoutProjectName(folder));
 		
 		return result.toString();
 	}

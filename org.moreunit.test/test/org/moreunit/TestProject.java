@@ -132,6 +132,13 @@ public class TestProject {
 		return fragmentRoot;
 	}
 	
+	public IFolder createFolder(String folderName) throws CoreException {
+		IFolder folder = project.getFolder(folderName);
+		folder.create(false, true, null);
+		
+		return folder;
+	}
+	
 	public IPackageFragmentRoot createAdditionalSourceFolder(String sourceFolderName) throws CoreException {
 		IFolder folder = project.getFolder(sourceFolderName);
 		folder.create(false, true, null);
@@ -165,6 +172,9 @@ public class TestProject {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2008/02/04 20:41:12  gianasista
+// Initital
+//
 // Revision 1.2  2006/10/01 13:02:44  channingwalton
 // Implementation for [ 1556583 ] Extend testcase matching across whole workspace
 //

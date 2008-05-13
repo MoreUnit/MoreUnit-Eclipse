@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.PluginTools;
 
 /**
  * @author vera
@@ -67,19 +68,7 @@ public class SourceFolderMappingDialog extends Dialog implements ICheckStateList
 	}
 
 	public Object[] getElements(Object inputElement) {
-		try {
-			IPackageFragmentRoot[] packageFragmentRoots = sourceFolderMapping.getJavaProject().getPackageFragmentRoots();
-			List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
-			for(IPackageFragmentRoot packageFragmentsRoot : packageFragmentRoots) {
-				if(!packageFragmentsRoot.isArchive())
-					resultList.add(packageFragmentsRoot);
-			}
-			return resultList.toArray();
-		} catch (JavaModelException e) {
-			LogHandler.getInstance().handleExceptionLog(e);
-		}
-		
-		return new Object[] {};
+		return PluginTools.getAllSourceFolderFromProject(sourceFolderMapping.getJavaProject()).toArray();
 	}
 
 	public void dispose() {

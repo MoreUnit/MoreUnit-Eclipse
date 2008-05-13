@@ -51,7 +51,7 @@ public class PluginTools {
 		IJavaProject javaProject = JavaCore.create(project);
 		try {
 			for(IPackageFragmentRoot aSourceFolder : javaProject.getPackageFragmentRoots()) {
-				if(folderName.equals(aSourceFolder.getElementName()))
+				if(folderName.equals(PluginTools.getPathStringWithoutProjectName(aSourceFolder)))
 					return aSourceFolder;
 			}
 		} catch (JavaModelException e) {
@@ -85,9 +85,37 @@ public class PluginTools {
 		
 		return (IPackageFragmentRoot) element;
 	}
+	
+	public static List<IPackageFragmentRoot> getAllSourceFolderFromProject(IJavaProject javaProject) {
+		List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
+		try {
+			IPackageFragmentRoot[] packageFragmentRoots;
+			packageFragmentRoots = javaProject.getPackageFragmentRoots();
+			for(IPackageFragmentRoot packageFragmentsRoot : packageFragmentRoots) {
+				if(!packageFragmentsRoot.isArchive())
+					resultList.add(packageFragmentsRoot);
+			}
+		} catch (JavaModelException e) {
+			LogHandler.getInstance().handleExceptionLog(e);
+		}
+		
+		return resultList;
+	}
+	
+	public static String getPathStringWithoutProjectName(IPackageFragmentRoot sourceFolder)
+	{
+		if(sourceFolder == null)
+			return StringConstants.EMPTY_STRING;
+		
+		return sourceFolder.getPath().removeFirstSegments(1).toString();
+	}
+	
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/03/21 18:21:00  gianasista
+// First version of new property page with source folder mapping
+//
 // Revision 1.4  2008/03/10 19:49:47  gianasista
 // New property page for test source folder configuration
 //

@@ -1,6 +1,7 @@
 package org.moreunit.preferences;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.BaseTools;
+import org.moreunit.util.PluginTools;
 
 import com.bdaum.overlayPages.PropertyStore;
 
@@ -58,25 +60,6 @@ public class Preferences {
 		instance = preferences;
 	}
 	
-	/*
-	public static boolean hasProjectSpecificSettings(IJavaProject javaProject) {
-		if(javaProject == null)
-			return false;
-		
-		try {
-			String propertyValue = javaProject.getProject().getPersistentProperty(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS);
-			if(BaseTools.isStringTrimmedEmpty(propertyValue))
-				return false;
-			
-			return Boolean.parseBoolean(propertyValue);
-		} catch (CoreException e) {
-			LogHandler.getInstance().handleExceptionLog(e);
-		}
-		
-		return false;
-	}
-	*/
-	
 	public boolean hasProjectSpecificSettings(IJavaProject javaProject) {
 		if(javaProject == null)
 			return false;
@@ -85,16 +68,46 @@ public class Preferences {
 	}
 	
 	public void setHasProjectSpecificSettings(IJavaProject javaProject, boolean hasProjectSpecificSettings) {
-		store(javaProject).setValue(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS, hasProjectSpecificSettings);
+		getProjectStore(javaProject).setValue(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS, hasProjectSpecificSettings);
 	}
 	
 	public void setMappingList(IJavaProject javaProject, List<SourceFolderMapping> mappingList) {
-		store(javaProject).setValue(PreferenceConstants.UNIT_SOURCE_FOLDER, PreferencesConverter.convertSourceMappingsToString(mappingList));
+		getProjectStore(javaProject).setValue(PreferenceConstants.UNIT_SOURCE_FOLDER, PreferencesConverter.convertSourceMappingsToString(mappingList));
 	}
 	
 	public List<SourceFolderMapping> getSourceMappingList(IJavaProject javaProject) {
+		if(hasProjectSpecificSettings(javaProject)) {
+			return getProjectSpecificSourceMappingList(javaProject);
+		} else {
+			return getWorkspaceSpecificSourceMappingList(javaProject);
+		}
+	}
+	
+	private List<SourceFolderMapping> getProjectSpecificSourceMappingList(IJavaProject javaProject) {
 		String mappingString = store(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
 		return PreferencesConverter.convertStringToSourceMappingList(mappingString);
+	}
+	
+	private List<SourceFolderMapping> getWorkspaceSpecificSourceMappingList(IJavaProject javaProject) {
+		List<SourceFolderMapping> resultList = new ArrayList<SourceFolderMapping>();
+		String testFolderName = workbenchStore.getString(PreferenceConstants.PREF_JUNIT_PATH);
+		
+		IPackageFragmentRoot testFolder = null;
+		List<IPackageFragmentRoot> notTestFolderList = new ArrayList<IPackageFragmentRoot>();
+		for(IPackageFragmentRoot sourceFolder : PluginTools.getAllSourceFolderFromProject(javaProject)) {
+			if(sourceFolder.getPath().removeFirstSegments(1).toString().equals(testFolderName))
+				testFolder = sourceFolder;
+			else
+				notTestFolderList.add(sourceFolder);
+		}
+		
+		if(testFolder != null) {
+			for(IPackageFragmentRoot notTestFolderInProject : notTestFolderList) {
+				resultList.add(new SourceFolderMapping(javaProject, notTestFolderInProject, testFolder));
+			}
+		}
+		
+		return resultList;
 	}
 
 	protected Preferences() {
@@ -111,7 +124,7 @@ public class Preferences {
 	}
 	
 	public void setPrefixes(IJavaProject javaProject, String[] prefixes) {
-		store(javaProject).setValue(PreferenceConstants.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
+		getProjectStore(javaProject).setValue(PreferenceConstants.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
 	}
 
 	public String[] getSuffixes(IJavaProject javaProject) {
@@ -120,7 +133,7 @@ public class Preferences {
 	}
 	
 	public void setSuffixes(IJavaProject javaProject, String[] suffixes) {
-		store(javaProject).setValue(PreferenceConstants.SUFFIXES, PreferencesConverter.convertArrayToString(suffixes));
+		getProjectStore(javaProject).setValue(PreferenceConstants.SUFFIXES, PreferencesConverter.convertArrayToString(suffixes));
 	}
 
 	public String getTestSuperClass(IJavaProject javaProject) {
@@ -128,7 +141,7 @@ public class Preferences {
 	}
 	
 	public void setTestSuperClass(IJavaProject javaProject, String testSuperClass) {
-		store(javaProject).setValue(PreferenceConstants.TEST_SUPERCLASS, testSuperClass);
+		getProjectStore(javaProject).setValue(PreferenceConstants.TEST_SUPERCLASS, testSuperClass);
 	}
 	
 	private String getStringValue(final String key, IJavaProject javaProject) {
@@ -146,7 +159,7 @@ public class Preferences {
 	}
 	
 	public void setTestType(IJavaProject javaProject, String testType) {
-		store(javaProject).setValue(PreferenceConstants.TEST_TYPE, testType);
+		getProjectStore(javaProject).setValue(PreferenceConstants.TEST_TYPE, testType);
 	}
 
 	public boolean shouldUseJunit4Type(IJavaProject javaProject) {
@@ -178,7 +191,7 @@ public class Preferences {
 	}
 	
 	public void setShouldUseFlexibleTestCaseNaming(IJavaProject javaProject, boolean shouldUseFlexibleNaming) {
-		store(javaProject).setValue(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, shouldUseFlexibleNaming);
+		getProjectStore(javaProject).setValue(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, shouldUseFlexibleNaming);
 	}
 
 	public String getTestPackagePrefix(IJavaProject javaProject) {
@@ -186,7 +199,7 @@ public class Preferences {
 	}
 	
 	public void setTestPackagePrefix(IJavaProject javaProject, String packagePrefix) {
-		store(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_PREFIX, packagePrefix);
+		getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_PREFIX, packagePrefix);
 	}
 
 	public String getTestPackageSuffix(IJavaProject javaProject) {
@@ -194,10 +207,19 @@ public class Preferences {
 	}
 	
 	public void setTestPackageSuffix(IJavaProject javaProject, String packageSuffix) {
-		store(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, packageSuffix);
+		getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, packageSuffix);
 	}
 
-	public IPreferenceStore store(IJavaProject javaProject) {
+	private IPreferenceStore store(IJavaProject javaProject) {
+		IPreferenceStore resultStore = getProjectStore(javaProject);
+		
+		if(resultStore.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS))
+			return resultStore;
+		
+		return workbenchStore;
+	}
+	
+	public IPreferenceStore getProjectStore(IJavaProject javaProject) {
 		IPreferenceStore resultStore = null;
 		if(preferenceMap.containsKey(javaProject)) {
 			resultStore =  preferenceMap.get(javaProject);
@@ -206,14 +228,10 @@ public class Preferences {
 			ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
 			preferenceStore.setSearchContexts( new IScopeContext[] { projectScopeContext });
 			preferenceMap.put(javaProject, preferenceStore);
-			
 			resultStore = preferenceStore;
 		}
 		
-		if(resultStore.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS))
-			return resultStore;
-		
-		return workbenchStore;
+		return resultStore;
 	}
 	
 	public static void clearProjectCach() {
@@ -239,7 +257,7 @@ public class Preferences {
 			
 			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
 			for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots) {
-				if(packageFragmentRoot.getElementName().equals(junitFolder)) {
+				if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder)) {
 					return packageFragmentRoot;
 				}
 			}
@@ -253,6 +271,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2008/04/19 09:43:23  gianasista
+// Bugfix with project specific settings
+//
 // Revision 1.13  2008/03/24 18:32:59  gianasista
 // Preferences with scopes
 //
