@@ -38,9 +38,11 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener {
 	private UnitSourcesContentProvider unitSourcesContentProvider;
 	
 	private IJavaProject javaProject;
+	private MoreUnitPropertyPage propertyPage;
 	
-	public UnitSourceFolderBlock(IJavaProject javaProject) {
+	public UnitSourceFolderBlock(IJavaProject javaProject, MoreUnitPropertyPage propertyPage) {
 		this.javaProject = javaProject;
+		this.propertyPage = propertyPage;
 	}
 	
 	public Composite getControl(Composite parent) {
@@ -186,5 +188,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener {
 		Object selectedObject = getSelectedObject();
 		removeButton.setEnabled(selectedObject instanceof SourceFolderMapping);
 		mappingButton.setEnabled(selectedObject instanceof IPackageFragmentRoot);
+		
+		propertyPage.updateValidState();
 	}
 }

@@ -26,6 +26,7 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.SearchScopeSingelton;
+import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
@@ -48,6 +49,8 @@ public class MoreUnitPropertyPage extends PropertyPage {
 		
 		createCheckboxContent(contentComposite);
 		createTabContent(contentComposite);
+		
+		updateValidState();
 		
 		return parent;
 	}
@@ -75,7 +78,7 @@ public class MoreUnitPropertyPage extends PropertyPage {
 		tabFolder = new TabFolder(parent, SWT.BORDER);
 		TabItem sourceFolderItem = new TabItem(tabFolder, SWT.NONE);
 		sourceFolderItem.setText("Test source folder");
-		firstTabUnitSourceFolder = new UnitSourceFolderBlock(getJavaProject());
+		firstTabUnitSourceFolder = new UnitSourceFolderBlock(getJavaProject(), this);
 		sourceFolderItem.setControl(firstTabUnitSourceFolder.getControl(tabFolder));
 		
 		TabItem otherFolderItem = new TabItem(tabFolder, SWT.NONE);
@@ -133,5 +136,15 @@ public class MoreUnitPropertyPage extends PropertyPage {
 		} catch (IOException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
 		}
+	}
+	
+	protected void updateValidState() {
+		boolean isInvalid = firstTabUnitSourceFolder.getListOfUnitSourceFolder().isEmpty();
+		setValid(!isInvalid);
+		
+		String message = null;
+		if(isInvalid)
+			message = "Choose at least one test folder!";
+		setErrorMessage(message);
 	}
 }
