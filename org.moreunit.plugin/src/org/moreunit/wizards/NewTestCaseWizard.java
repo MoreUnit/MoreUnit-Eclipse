@@ -57,9 +57,8 @@ public class NewTestCaseWizard extends NewClassyWizard {
 		}
 		
 		String testSuperClass = getTestSuperClass();
-		if(!BaseTools.isStringTrimmedEmpty(testSuperClass))
+		if(testSuperClass != null)
 			this.pageOne.setSuperClass(testSuperClass, true);
-		//else if(this.pageOne.i)
 		
 		this.pageOne.setTypeName(getTestCaseClassName(), true);
 		this.pageOne.setPackageFragmentRoot(getSourceFolderForUnitTest(), true);	
@@ -93,7 +92,12 @@ public class NewTestCaseWizard extends NewClassyWizard {
 	}
 
 	private String getTestSuperClass() {
-		return this.preferences.getTestSuperClass(project);
+		String result = this.preferences.getTestSuperClass(project);
+		
+		if(BaseTools.isStringTrimmedEmpty(result) && preferences.shouldUseJunit3Type(project))
+			return null;
+		
+		return result;
 	}
 
 	@Override
@@ -149,6 +153,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2008/05/13 18:54:28  gianasista
+// Bugfix for sourcefolder in subfolder
+//
 // Revision 1.13  2008/02/29 21:34:32  gianasista
 // Minor refactorings
 //
