@@ -35,7 +35,7 @@ public interface PreferenceConstants {
 	String	DEFAULT_TEST_PACKAGE_SUFFIX			= "";
 	boolean DEFAULT_FLEXIBLE_TESTCASE_NAMING	= false;
 	String	DEFAULT_TEST_TYPE					= PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
-	String 	DEFAULT_PRAEFIX						= "test";
+	String 	DEFAULT_PRAEFIX						= "Test";
 	String 	DEFAULT_SUFFIX						= "Test";
 	String	DEFAULT_TEST_SUPERCLASS				= "";
 	
