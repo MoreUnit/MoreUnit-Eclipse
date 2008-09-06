@@ -164,6 +164,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener {
 		if(mappingsToAdd.size() > 0) {
 			unitSourcesContentProvider.add(mappingsToAdd);
 			sourceFolderTree.refresh();
+			propertyPage.updateValidState();
 		}
 	}
 	

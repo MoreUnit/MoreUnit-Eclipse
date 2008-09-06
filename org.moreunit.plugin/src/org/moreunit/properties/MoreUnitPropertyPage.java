@@ -107,6 +107,8 @@ public class MoreUnitPropertyPage extends PropertyPage {
 			tabFolder.setEnabled(true);
 		else
 			tabFolder.setEnabled(false);
+		
+		updateValidState();
 	}
 
 	@Override
@@ -139,12 +141,16 @@ public class MoreUnitPropertyPage extends PropertyPage {
 	}
 	
 	protected void updateValidState() {
-		boolean isInvalid = firstTabUnitSourceFolder.getListOfUnitSourceFolder().isEmpty();
-		setValid(!isInvalid);
-		
 		String message = null;
-		if(isInvalid)
-			message = "Choose at least one test folder!";
+		if(shouldUseProjectspecificSettings())
+		{
+			boolean isInvalid = firstTabUnitSourceFolder.getListOfUnitSourceFolder().isEmpty();
+			setValid(!isInvalid);
+			
+			
+			if(isInvalid)
+				message = "Choose at least one test folder!";
+		}
 		setErrorMessage(message);
 	}
 }
