@@ -3,6 +3,9 @@
    <description url="http://moreunit.sourceforge.net/org.moreunit.updatesite">
       MoreUnit helps developers writing more tests.
    </description>
+   <feature url="http://downloads.sourceforge.net/moreunit/moreUnit_1.1.4.jar?use_mirror=osdn" id="moreUnit" version="1.1.4">
+      <category name="MoreUnit"/>
+   </feature>
    <feature url="http://downloads.sourceforge.net/moreunit/moreUnit_1.0.2.jar?use_mirror=osdn" id="moreUnit" version="1.0.2">
       <category name="MoreUnit"/>
    </feature>
@@ -10,5 +13,6 @@
       <category name="MoreUnit"/>
    </feature>
    <archive path="plugins/org.moreunit_1.0.2.jar" url="http://downloads.sourceforge.net/moreunit/org.moreunit_1.0.2.jar?use_mirror=osdn"/>
+   <archive path="plugins/org.moreunit_1.1.4.jar" url="http://downloads.sourceforge.net/moreunit/org.moreunit_1.1.4.jar?use_mirror=osdn"/>
    <category-def name="MoreUnit" label="MoreUnit"/>
 </site>
