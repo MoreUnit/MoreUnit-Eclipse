@@ -32,7 +32,8 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 			TestCaseTypeFacade javaFileFacade = new TestCaseTypeFacade((ICompilationUnit) element);
 			List<IType> correspondingClassesUnderTest = javaFileFacade.getCorrespondingClassesUnderTest();
 			for(IType singleCut : correspondingClassesUnderTest) {
-				(new MarkerUpdater(new ClassTypeFacade(singleCut.getCompilationUnit()))).schedule();
+				if(singleCut.getCompilationUnit() != null)
+					(new MarkerUpdater(new ClassTypeFacade(singleCut.getCompilationUnit()))).schedule();
 			}
 		}
 	}
@@ -43,6 +44,9 @@ public class JavaCodeChangeListener implements IElementChangedListener {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/02/29 21:31:02  gianasista
+// Minor refactorings
+//
 // Revision 1.1.1.1  2006/08/13 14:31:16  gianasista
 // initial
 //
