@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.moreunit.MoreUnitPlugin;
@@ -36,7 +37,11 @@ public class MarkerUpdater extends Job {
 		this.classTypeFacade = classTypeFacade;
 		
 		try {
-			this.methods = this.classTypeFacade.getType().getMethods();
+			IType type = this.classTypeFacade.getType();
+			if(type != null)
+				this.methods = type.getMethods();
+			else
+				this.methods = new IMethod[] {};
 		} catch (JavaModelException e) {
 			LogHandler.getInstance().handleExceptionLog(e);
 		}
