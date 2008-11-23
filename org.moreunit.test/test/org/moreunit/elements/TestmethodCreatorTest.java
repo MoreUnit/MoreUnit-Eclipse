@@ -112,4 +112,9 @@ public class TestmethodCreatorTest extends ProjectTestCase {
 		assertTrue(createdMethod.getSource().startsWith("@Test"));
 		assertEquals(2, testType.getMethods().length);
 	}
+
+	public void testGetTestMethodName() 
+	{
+		assertEquals("testName", TestmethodCreator.getTestMethodName("name"));
+	}
 }
