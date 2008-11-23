@@ -50,9 +50,8 @@ public class TestmethodCreator {
 	{
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
 		compilationUnit = classTypeFacade.getOneCorrespondingTestCase(true).getCompilationUnit();
-		String methodName = getTestMethodName(method.getElementName());
+		String testMethodName = getTestMethodName(method.getElementName());
 
-		String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX + methodName;
 		if (doesMethodExist(testMethodName))
 			return null;
 		

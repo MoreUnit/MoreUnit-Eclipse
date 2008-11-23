@@ -188,7 +188,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener {
 	public void selectionChanged(SelectionChangedEvent event) {
 		Object selectedObject = getSelectedObject();
 		removeButton.setEnabled(selectedObject instanceof SourceFolderMapping);
-		mappingButton.setEnabled(selectedObject instanceof IPackageFragmentRoot);
+		mappingButton.setEnabled(selectedObject instanceof SourceFolderMapping);
 		
 		propertyPage.updateValidState();
 	}

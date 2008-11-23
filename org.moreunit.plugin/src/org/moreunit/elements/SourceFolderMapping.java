@@ -1,9 +1,12 @@
 package org.moreunit.elements;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.PluginTools;
 
 /**
  * @author vera
@@ -29,29 +32,23 @@ public class SourceFolderMapping {
 	}
 	
 	private IPackageFragmentRoot getPreferredSourceFolder() {
-		try {
-			IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
-			if(hasProjectsNoSourceFolders(packageFragmentRoots))
-				return null;
-			if(hasProjectsOnlyOneSourceFolder(packageFragmentRoots))
-				return packageFragmentRoots[0];
-			
-			// if there are more than one sourcefolder in the project the user has to choose manually
-			return packageFragmentRoots[0]; // TODO hack 
-			
-		} catch (JavaModelException e) {
-			LogHandler.getInstance().handleExceptionLog(e);
-		}
+		List<IPackageFragmentRoot> packageFragmentRoots = PluginTools.getAllSourceFolderFromProject(javaProject);
+		//IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
+		if(hasProjectsNoSourceFolders(packageFragmentRoots))
+			return null;
+		if(hasProjectsOnlyOneSourceFolder(packageFragmentRoots))
+			return packageFragmentRoots.get(0);
 		
-		return null;
+		// if there are more than one sourcefolder in the project the user has to choose manually
+		return packageFragmentRoots.get(0); // TODO hack 
 	}
 
-	private boolean hasProjectsNoSourceFolders(IPackageFragmentRoot[] packageFragmentRoots) {
-		return packageFragmentRoots == null || packageFragmentRoots.length == 0;
+	private boolean hasProjectsNoSourceFolders(List<IPackageFragmentRoot> packageFragmentRoots) {
+		return packageFragmentRoots == null || packageFragmentRoots.size() == 0;
 	}
 	
-	private boolean hasProjectsOnlyOneSourceFolder(IPackageFragmentRoot[] packageFragmentRoots) {
-		return packageFragmentRoots.length == 1;
+	private boolean hasProjectsOnlyOneSourceFolder(List<IPackageFragmentRoot> packageFragmentRoots) {
+		return packageFragmentRoots.size() == 1;
 	}
 	
 	public void setSourceFolder(IPackageFragmentRoot sourceFolder) {
