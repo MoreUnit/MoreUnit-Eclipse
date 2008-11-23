@@ -4,7 +4,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
+import org.eclipse.jdt.internal.junit.util.JUnitStubUtility.GenStubSettings;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.swt.SWT;
@@ -40,7 +45,7 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 	protected void createJUnit4Controls(Composite composite, int nColumns) {
 		Composite inner= new Composite(composite, SWT.NONE);
 		inner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, nColumns, 1));
-		GridLayout layout= new GridLayout(2, false);
+		GridLayout layout= new GridLayout(3, false);
 		layout.marginHeight= 0;
 		layout.marginWidth= 0;
 		inner.setLayout(layout);
@@ -115,6 +120,97 @@ public class MoreUnitNewTestCaseWizardPageOne extends NewTestCaseWizardPageOne {
 		super.createType(monitor);
 		addTestNgImportIfNecessary();
 	}
+	
+	/*
+	@Override
+	protected void createTypeMembers(IType type, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
+		if (fMethodStubsButtons.isSelected(IDX_CONSTRUCTOR))
+			createConstructor(type, imports); 	
+		
+		if (fMethodStubsButtons.isSelected(IDX_SETUP_CLASS)) {
+			createSetUpClass(type, imports);
+		}
+		
+		if (fMethodStubsButtons.isSelected(IDX_TEARDOWN_CLASS)) {
+			createTearDownClass(type, imports);
+		}
+		
+		if (fMethodStubsButtons.isSelected(IDX_SETUP)) {
+			createSetUp(type, imports);
+		}
+		
+		if (fMethodStubsButtons.isSelected(IDX_TEARDOWN)) {
+			createTearDown(type, imports);
+		}
+
+		if (fClassUnderTest != null) {
+			createTestMethodStubs(type, imports);
+		}
+		
+		if (isJUnit4()) { 
+			imports.addStaticImport("org.junit.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+	*/
+	
+	/*
+	private void createConstructor(IType type, ImportsManager imports) throws CoreException {
+		ITypeHierarchy typeHierarchy= null;
+		IType[] superTypes= null;
+		String content;
+		IMethod methodTemplate= null;
+		if (type.exists()) {
+			typeHierarchy= type.newSupertypeHierarchy(null);
+			superTypes= typeHierarchy.getAllSuperclasses(type);
+			for (int i= 0; i < superTypes.length; i++) {
+				if (superTypes[i].exists()) {
+					IMethod constrMethod= superTypes[i].getMethod(superTypes[i].getElementName(), new String[] {"Ljava.lang.String;"}); //$NON-NLS-1$
+					if (constrMethod.exists() && constrMethod.isConstructor()) {
+						methodTemplate= constrMethod;
+						break;
+					}
+				}
+			}
+		}
+		GenStubSettings settings= JUnitStubUtility.getCodeGenerationSettings(type.getJavaProject());
+		settings.createComments= isAddComments();
+		
+		if (methodTemplate != null) {
+			settings.callSuper= true;				
+			settings.methodOverwrites= true;
+			content= JUnitStubUtility.genStub(type.getCompilationUnit(), getTypeName(), methodTemplate, settings, null, imports);
+		} else {
+			final String delimiter= getLineDelimiter();
+			StringBuffer buffer= new StringBuffer(32);
+			buffer.append("public "); //$NON-NLS-1$
+			buffer.append(getTypeName());
+			buffer.append('(');
+			if (!isJUnit4()) {
+				buffer.append(imports.addImport("java.lang.String")).append(" name"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			buffer.append(") {"); //$NON-NLS-1$
+			buffer.append(delimiter);
+			if (!isJUnit4()) {
+				buffer.append("super(name);").append(delimiter); //$NON-NLS-1$
+			}
+			buffer.append('}');
+			buffer.append(delimiter);
+			content= buffer.toString();
+		}
+		type.createMethod(content, null, true, null);	
+	}
+	*/
+	
+	/*
+	private String getLineDelimiter() throws JavaModelException{
+		IType classToTest= getClassUnderTest();
+		
+		if (classToTest != null && classToTest.exists() && classToTest.getCompilationUnit() != null)
+			return classToTest.getCompilationUnit().findRecommendedLineSeparator();
+		
+		return getPackageFragment().findRecommendedLineSeparator();
+	}
+	*/
 	
 	private void addTestNgImportIfNecessary() {
 		if(isTestNgSelected())

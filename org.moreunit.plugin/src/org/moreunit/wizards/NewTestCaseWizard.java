@@ -19,7 +19,7 @@ import org.moreunit.util.StringConstants;
 
 public class NewTestCaseWizard extends NewClassyWizard {
 
-	private MoreUnitNewTestCaseWizardPageOne	pageOne;
+	private MoreUnitWizardPageOne	pageOne;
 	private NewTestCaseWizardPageTwo	pageTwo;
 
 	private IJavaProject project;
@@ -35,7 +35,8 @@ public class NewTestCaseWizard extends NewClassyWizard {
 	@Override
 	public void addPages() {
 		this.pageTwo = new NewTestCaseWizardPageTwo();
-		this.pageOne = new MoreUnitNewTestCaseWizardPageOne(this.pageTwo, this.preferences, project);
+		//this.pageOne = new MoreUnitNewTestCaseWizardPageOne(this.pageTwo, this.preferences, project);
+		this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, project);
 		this.pageOne.setWizard(this);
 		this.pageTwo.setWizard(this);
 		this.pageOne.init(new StructuredSelection(getType()));
@@ -153,6 +154,9 @@ public class NewTestCaseWizard extends NewClassyWizard {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2008/05/26 18:26:07  gianasista
+// Bugfix superclass using TestNG
+//
 // Revision 1.14  2008/05/13 18:54:28  gianasista
 // Bugfix for sourcefolder in subfolder
 //

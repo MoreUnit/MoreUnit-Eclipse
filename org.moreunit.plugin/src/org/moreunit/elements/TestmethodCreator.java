@@ -50,8 +50,7 @@ public class TestmethodCreator {
 	{
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
 		compilationUnit = classTypeFacade.getOneCorrespondingTestCase(true).getCompilationUnit();
-		String methodName = method.getElementName();
-		methodName = BaseTools.firstCharToUpperCase(methodName);
+		String methodName = getTestMethodName(method.getElementName());
 
 		String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX + methodName;
 		if (doesMethodExist(testMethodName))
@@ -65,6 +64,12 @@ public class TestmethodCreator {
 			return createTestNgTestMethod(testMethodName);
 		
 		return null;
+	}
+	
+	public static String getTestMethodName(String methodName) 
+	{
+		String result = BaseTools.firstCharToUpperCase(methodName);
+		return MoreUnitContants.TEST_METHOD_PRAEFIX + result;
 	}
 	
 

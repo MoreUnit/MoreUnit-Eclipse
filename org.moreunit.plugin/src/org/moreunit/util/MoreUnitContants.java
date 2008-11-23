@@ -17,9 +17,14 @@ public class MoreUnitContants {
 	public static final String TEST_ANNOTATION_NAME = "Test";
 	public static final String GETTER_PREFIX = "get";
 	public static final String SETTER_PREFIX = "set";
+	
+	public static final String TESTNG_ANNOTATION_NAME = "Test";
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2008/02/20 19:24:14  gianasista
+// Rename of classes for constants
+//
 // Revision 1.5  2007/01/14 21:13:46  gianasista
 // Bugfix [1634387]
 //
