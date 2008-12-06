@@ -2,119 +2,83 @@ package org.moreunit.elements;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
-import org.moreunit.ProjectTestCase;
+import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.WorkspaceHelper;
 import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
  *
  * 02.08.2007 07:37:24
  */
-public class TestmethodCreatorTest extends ProjectTestCase {
+public class TestmethodCreatorTest extends SimpleProjectTestCase {
 
-	private IType cutType;
-	private IType testType;
-	
-	private static final String TEST_METHODNAME = "testGetSomething";
-	
 	public void testCreateFirstTestMethodJUnit3() throws CoreException {
-		IMethod cutMethod = initCutWithMethod();
-		initTestCase(false);
-		
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+
 		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
-		IMethod createdMethod = testmethodCreator.createTestMethod(cutMethod);
+		IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
 		
-		assertNotNull(createdMethod);
-		assertEquals(TEST_METHODNAME, createdMethod.getElementName());
-		assertFalse(createdMethod.getSource().startsWith("@Test"));
-	}
-	
-	private IMethod initTestCase(boolean shouldCreateTestMethod) throws CoreException, JavaModelException {
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		testType = testProject.createType(junitComPaket, "MusterTest.java", getTestCaseSource(shouldCreateTestMethod));
+		assertEquals("testGetNumberOne", createTestMethod.getElementName());
+		assertFalse(createTestMethod.getSource().startsWith("@Test"));
 		
-		if(shouldCreateTestMethod)
-			return testType.getMethods()[0];
-		
-		return null;
-	}
-	
-	private IMethod initCutWithMethod() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		cutType = testProject.createType(comPaket, "Muster.java", getCutSourceWithOneMethod());
-		IMethod method = cutType.getMethods()[0];
-		
-		return method;
+		IMethod[] methods = testcaseType.getMethods();
+		assertEquals(1, methods.length);
+		assertEquals(createTestMethod, methods[0]);
 	}
 	
 	public void testCreateFirstTestMethodJUnit4() throws CoreException {
-		IMethod method = initCutWithMethod();
-		initTestCase(false);
-		
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+
 		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
-		IMethod createdMethod = testmethodCreator.createTestMethod(method);
+		IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
 		
-		assertNotNull(createdMethod);
-		assertEquals(TEST_METHODNAME, createdMethod.getElementName());
-		assertTrue(createdMethod.getSource().startsWith("@Test"));
+		assertEquals("testGetNumberOne", createTestMethod.getElementName());
+		assertTrue(createTestMethod.getSource().startsWith("@Test"));
+		
+		IMethod[] methods = testcaseType.getMethods();
+		assertEquals(1, methods.length);
+		assertEquals(createTestMethod, methods[0]);
 	}
 
-	private String getTestCaseSource(boolean shouldCreateTestMethod) {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
-		source.append("public class MusterTest extends TestCase {").append(StringConstants.NEWLINE);
-		if(shouldCreateTestMethod)
-			source.append("public void "+TEST_METHODNAME+"() {}").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();		
-	}
-
-	private String getCutSourceWithOneMethod() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class Muster {").append(StringConstants.NEWLINE);
-		source.append("public String getSomething() { return \"1\"; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
 	public void testCreateSecondTestMethodJUnit3() throws CoreException {
-		initCutWithMethod();
-		IMethod testMethod = initTestCase(true);
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
 		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
-		IMethod createdMethod = testmethodCreator.createTestMethod(testMethod);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+		IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
+		assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
+		assertFalse(createTestMethod.getSource().startsWith("@Test"));
 		
-		assertNotNull(createdMethod);
-		assertEquals(TEST_METHODNAME+"Suffix", createdMethod.getElementName());
-		assertFalse(createdMethod.getSource().startsWith("@Test"));
-		assertEquals(2, testType.getMethods().length);
+		IMethod[] methods = testcaseType.getMethods();
+		assertEquals(2, methods.length);
 	}
 	
 	public void testCreateSecondTestMethodJUnit4() throws CoreException {
-		initCutWithMethod();
-		IMethod testMethod = initTestCase(true);
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
 		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
-		IMethod createdMethod = testmethodCreator.createTestMethod(testMethod);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+		IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
+		assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
+		assertTrue(createTestMethod.getSource().startsWith("@Test"));
 		
-		assertNotNull(createdMethod);
-		assertEquals(TEST_METHODNAME+"Suffix", createdMethod.getElementName());
-		assertTrue(createdMethod.getSource().startsWith("@Test"));
-		assertEquals(2, testType.getMethods().length);
+		IMethod[] methods = testcaseType.getMethods();
+		assertEquals(2, methods.length);		
 	}
 
 	public void testGetTestMethodName() 
 	{
 		assertEquals("testName", TestmethodCreator.getTestMethodName("name"));
+		assertEquals("testName", TestmethodCreator.getTestMethodName("Name"));
 	}
 }

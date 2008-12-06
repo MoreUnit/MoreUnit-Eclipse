@@ -8,61 +8,22 @@ package org.moreunit.elements;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.moreunit.ProjectTestCase;
-import org.moreunit.elements.ClassTypeFacade;
-import org.moreunit.elements.TestCaseTypeFacade;
-import org.moreunit.util.StringConstants;
+import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.WorkspaceHelper;
 
-public class TestCaseTypeFacadeTest extends ProjectTestCase {
-	private TestCaseTypeFacade testJavaFileFacade;
-	private ClassTypeFacade javaFileFacade;
+public class TestCaseTypeFacadeTest extends SimpleProjectTestCase {
 	
 	public void testGetCorrespondingTestedMethod() throws CoreException {
-		initClassAndTestWithTestmethodAndCorrespondingTestedMethod();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
 		
-		IMethod testMethod = testJavaFileFacade.getType().getMethods()[0];
-		IMethod method = testJavaFileFacade.getCorrespondingTestedMethod(testMethod, javaFileFacade.getType());
-		assertNotNull(method);
-		assertEquals("getOneString", method.getElementName());
-	}
-	
-	private void initClassAndTestWithTestmethodAndCorrespondingTestedMethod() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType javaType = testProject.createType(comPaket, "Muster2.java", getJavaFileSourceForTestGetCorrespondingTestedMethod());
-		javaFileFacade = new ClassTypeFacade(javaType.getCompilationUnit());
+		IMethod testedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberOne()", "");
+		IMethod testMethodWithNoCorrespondingTestedMethod= WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
 		
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testMusterType = testProject.createType(junitComPaket, "Muster2Test.java", getTestCaseSourceTestGetCorrespondingTestedMethod());
-		testJavaFileFacade = new TestCaseTypeFacade(testMusterType.getCompilationUnit());
+		TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+		assertEquals(testedMethod, testCaseTypeFacade.getCorrespondingTestedMethod(testMethod, cutType));
+		assertNull(testCaseTypeFacade.getCorrespondingTestedMethod(testMethodWithNoCorrespondingTestedMethod, cutType));
 	}
-	
-	private String getJavaFileSourceForTestGetCorrespondingTestedMethod() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class Muster2 {").append(StringConstants.NEWLINE);
-		source.append("public String getOneString() { return \"1\"; }").append(StringConstants.NEWLINE);
-		source.append("public String getTwoString() { return \"2\"; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getTestCaseSourceTestGetCorrespondingTestedMethod() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
-		source.append("public class Muster2Test extends TestCase{").append(StringConstants.NEWLINE);
-		source.append("public void testGetOneString() {").append(StringConstants.NEWLINE);
-		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
-		source.append("}").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();		
-	}
-
-	
 }

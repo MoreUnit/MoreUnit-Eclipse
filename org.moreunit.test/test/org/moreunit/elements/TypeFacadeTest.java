@@ -10,45 +10,49 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.moreunit.ProjectTestCase;
-import org.moreunit.elements.TypeFacade;
-import org.moreunit.util.StringConstants;
+import org.eclipse.jdt.core.JavaModelException;
+import org.moreunit.WorkspaceHelper;
+import org.moreunit.WorkspaceTestCase;
+import org.moreunit.preferences.DummyPreferencesForTesting;
+import org.moreunit.preferences.Preferences;
 
-public class TypeFacadeTest extends ProjectTestCase {
+public class TypeFacadeTest extends WorkspaceTestCase {
 	
-	public void testIsTestCase() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType helloType = testProject.createType(comPaket, "Hello.java", getJavaFileSource1());
+	private IPackageFragment packageFragmentForSources;
+	
+	@Override
+	protected void setUp() throws Exception 
+	{
+		super.setUp();
 		
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testHelloType = testProject.createType(junitComPaket, "HelloTest.java", getTestCaseSource1());
+		IPackageFragmentRoot sourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, "sources");
+		packageFragmentForSources = WorkspaceHelper.createNewPackageInSourceFolder(sourceFolder, "com");
+	}
 		
-		assertTrue(TypeFacade.isTestCase(testHelloType));
-		assertFalse(TypeFacade.isTestCase(helloType));
+	public void testIsTestCaseRegularClass() throws CoreException 
+	{
+		IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "Hello");		
+		assertFalse(TypeFacade.isTestCase(javaClass));
+	}
+
+	public void testIsTestCaseTestWithSuffix() throws JavaModelException 
+	{
+		initPreferencesWithPrefixesSuffixes(new String[] {}, new String[] {"Test"});
+		IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "HelloTest");
+		assertTrue(TypeFacade.isTestCase(javaClass));		
+	}
+
+	public void testIsTestCaseTestWithPrefix() throws JavaModelException 
+	{
+		initPreferencesWithPrefixesSuffixes(new String[] {"Test"}, new String[] {});
+		IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "TestHello");
+		assertTrue(TypeFacade.isTestCase(javaClass));		
 	}
 	
-	private String getJavaFileSource1() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class Hello {").append(StringConstants.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
+	private void initPreferencesWithPrefixesSuffixes(String[] prefixes, String[] suffixes)
+	{
+		Preferences preferences = new DummyPreferencesForTesting();
+		preferences.setPrefixes(workspaceTestProject, prefixes);
+		preferences.setSuffixes(workspaceTestProject, suffixes);
 	}
-	
-	private String getTestCaseSource1() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
-		source.append("public class HelloTest extends TestCase{").append(StringConstants.NEWLINE);
-		source.append("public void testGetOne() {").append(StringConstants.NEWLINE);
-		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
-		source.append("}").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();		
-	}	
-
 }

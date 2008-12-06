@@ -3,206 +3,170 @@ package org.moreunit.elements;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.moreunit.ProjectTestCase;
+import org.moreunit.WorkspaceHelper;
+import org.moreunit.WorkspaceTestCase;
 import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
  *
  */
-public class FilterMethodVisitorTest extends ProjectTestCase {
+public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	
-	private IPackageFragment comPaket;
-	private IType javaType;
-	private FilterMethodVisitor methodVisitor;
-
+	private static final String PACKAGE_NAME = "org";
+	private static final String SOURCES_FOLDER_NAME = "sources";
+	
+	private IPackageFragment sourcesPackage;
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();		
+		
+		IPackageFragmentRoot sourcesFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCES_FOLDER_NAME);
+		sourcesPackage = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, PACKAGE_NAME);
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+	
 	public void testGetPrivateMethods() throws CoreException {
-		initSourceVisitorWithOnePrivateMethodAndOnePublicMethod();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberThree()", "return 3");
+		WorkspaceHelper.createMethodInJavaType(cutType, "int getNumberFour()", "return 4");
 		
-		List<MethodDeclaration> privateMethods = methodVisitor.getPrivateMethods();
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
 		assertEquals(1, privateMethods.size());
-		MethodDeclaration methodDeclaration = privateMethods.get(0);
-		assertEquals("getTwo", methodDeclaration.getName().getFullyQualifiedName());
+		assertSameMethodName(privateMethod, privateMethods.get(0));
 	}
-
-	private void initSourceVisitorWithOnePrivateMethodAndOnePublicMethod() throws CoreException, JavaModelException {
-		comPaket = testProject.createPackage("com");
-		javaType = testProject.createType(comPaket, "PMV.java", getPmvSourceWithOnePublicAndOnePrivateMethod());
-		methodVisitor = new FilterMethodVisitor(javaType);
+	
+	private void assertSameMethodName(IMethod method, MethodDeclaration methodDeclaration) {
+		assertEquals(method.getElementName(), methodDeclaration.getName().getFullyQualifiedName());
 	}
-
+	
 	public void testGetPrivateMethodsOverloaded() throws CoreException {
-		initSourceVisitorWithOverloadedPrivateMethod();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
+		WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
 		
-		List<MethodDeclaration> privateMethods = methodVisitor.getPrivateMethods();
-		assertEquals(1, privateMethods.size());
-		MethodDeclaration methodDeclaration = privateMethods.get(0);
-		assertEquals("getTwo", methodDeclaration.getName().getFullyQualifiedName());
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
+		assertEquals(2, privateMethods.size());
+		assertSameMethodName(privateMethod, privateMethods.get(0));
+		assertSameMethodName(privateMethod, privateMethods.get(1));
 	}
 
-	private void initSourceVisitorWithOverloadedPrivateMethod()	throws CoreException, JavaModelException {
-		comPaket = testProject.createPackage("com");
-		javaType = testProject.createType(comPaket, "PMV2.java", getPmv2SourceWithOverloadedGetTwoMethod());
-		methodVisitor = new FilterMethodVisitor(javaType);
-	}
-	
 	public void testGetPrivateMethodsOverloaded2() throws CoreException {
-		initSourceVisitorWithOverloadedPrivateMethodSituation2();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(boolean parameter)", "return 1");
+		WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
 		
-		List<MethodDeclaration> privateMethods = methodVisitor.getPrivateMethods();
-		assertEquals(1, privateMethods.size());
-		MethodDeclaration methodDeclaration = privateMethods.get(0);
-		assertEquals("getTwo", methodDeclaration.getName().getFullyQualifiedName());
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
+		assertEquals(2, privateMethods.size());
+		assertSameMethodName(privateMethod, privateMethods.get(0));
+		assertSameMethodName(privateMethod, privateMethods.get(1));
 	}
 
-	private void initSourceVisitorWithOverloadedPrivateMethodSituation2() throws CoreException, JavaModelException {
-		comPaket = testProject.createPackage("com");
-		javaType = testProject.createType(comPaket, "PMV3.java", getPmv3SourceWithOverloadedGetTwoMethod());
-		methodVisitor = new FilterMethodVisitor(javaType);
-	}
-	
 	public void testIsPrivateMethod() throws CoreException {
-		initSourceVisitorWithOnePrivateMethodAndOnePublicMethod();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
+		IMethod publicMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2");
+		IMethod protectedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberThree()", "return 3");
+		IMethod defaultMethod = WorkspaceHelper.createMethodInJavaType(cutType, "int getNumberFour()", "return 4");
 		
-		IMethod method = javaType.getMethod("getOne", new String[0]);
-		assertNotNull(method);
-		assertFalse(methodVisitor.isPrivateMethod(method));
-		method = javaType.getMethod("getTwo", new String[0]);
-		assertNotNull(method);
-		assertTrue(methodVisitor.isPrivateMethod(method));
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod));
+		assertFalse(filterMethodVisitor.isPrivateMethod(publicMethod));
+		assertFalse(filterMethodVisitor.isPrivateMethod(protectedMethod));
+		assertFalse(filterMethodVisitor.isPrivateMethod(defaultMethod));
 	}
 	
 	public void testIsPrivateMethodOverloaded() throws CoreException {
-		initSourceVisitorWithOverloadedPrivateMethod();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
+		IMethod overloadedPrivateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
 		
-		IMethod method = javaType.getMethod("getOne", new String[0]);
-		assertNotNull(method);
-		assertFalse(methodVisitor.isPrivateMethod(method));
-		method = javaType.getMethod("getTwo", new String[0]);
-		assertNotNull(method);
-		assertTrue(methodVisitor.isPrivateMethod(method));
-		method = javaType.getMethod("getTwo", new String[] {Signature.createTypeSignature("String", false)});
-		assertNotNull(method);
-		assertFalse(methodVisitor.isPrivateMethod(method));
-	}
-	
-	public void testIsPrivateMethodOverloaded2() throws CoreException {
-		initSourceVisitorWithOverloadedPrivateMethodSituation2();
-		
-		IMethod method = javaType.getMethod("getOne", new String[0]);
-		assertNotNull(method);
-		assertFalse(methodVisitor.isPrivateMethod(method));
-		method = javaType.getMethod("getTwo", new String[] {Signature.createTypeSignature("boolean", false)});
-		assertNotNull(method);
-		assertTrue(methodVisitor.isPrivateMethod(method));
-		method = javaType.getMethod("getTwo", new String[] {Signature.createTypeSignature("String", false)});
-		assertNotNull(method);
-		assertFalse(methodVisitor.isPrivateMethod(method));
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod));
+		assertTrue(filterMethodVisitor.isPrivateMethod(overloadedPrivateMethod));
 	}
 	
 	public void testGetFieldDeclarations() throws CoreException {
-		initSourceWithOverloadedMethodsAndCorrectGetterAndSetter();
-		
-		List<FieldDeclaration> fieldDeclarations = methodVisitor.getFieldDeclarations();
+		String className = "Hello";
+		ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", className), getClassSourceWithFields(className, "fieldName1", "fieldName2"), false, null);
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(compilationUnit.findPrimaryType());
+		List<FieldDeclaration> fieldDeclarations = filterMethodVisitor.getFieldDeclarations();
 		assertEquals(2, fieldDeclarations.size());
 		
 		FieldDeclaration fieldDeclaration = fieldDeclarations.get(0);
 		VariableDeclarationFragment variable = (VariableDeclarationFragment) fieldDeclaration.fragments().get(0);
-		assertEquals("one", variable.getName().getFullyQualifiedName());
+		assertEquals("fieldName1", variable.getName().getFullyQualifiedName());
 		
 		fieldDeclaration = fieldDeclarations.get(1);
 		variable = (VariableDeclarationFragment) fieldDeclaration.fragments().get(0);
-		assertEquals("two", variable.getName().getFullyQualifiedName());
-	}
-
-	private void initSourceWithOverloadedMethodsAndCorrectGetterAndSetter() throws CoreException, JavaModelException {
-		comPaket = testProject.createPackage("com");
-		javaType = testProject.createType(comPaket, "FD.java", getFdSourceWithOverloadedMethodsAndCorrectGetterSetterForTwo());
-		methodVisitor = new FilterMethodVisitor(javaType);
+		assertEquals("fieldName2", variable.getName().getFullyQualifiedName());
 	}
 	
-	public void testGetGetterMethods() throws CoreException {
-		initSourceWithOverloadedMethodsAndCorrectGetterAndSetter();
+	private String getClassSourceWithFields(String className, String fieldname1, String fieldname2) {
+		StringBuilder result = new StringBuilder();
+		result.append(String.format("package %s;%s",sourcesPackage.getElementName(), StringConstants.NEWLINE));
+		result.append(String.format("public class %s {%s", className, StringConstants.NEWLINE));
 		
-		assertEquals(3, methodVisitor.getGetterMethods().size());
+		result.append(String.format("private String %s;%s", fieldname1, StringConstants.NEWLINE));
+		result.append(String.format("private String %s;%s", fieldname2, StringConstants.NEWLINE));
+		
+		result.append("}");
+		
+		return result.toString();
+	}
+
+	public void testGetGetterMethods() throws CoreException {
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod fieldName1GetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getFieldName1()", "return 1");
+		IMethod fieldName2GetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getFieldName2()", "return 2");
+		
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
+		assertEquals(2, getterMethods.size());
+		assertSameMethodName(fieldName1GetterMethod, getterMethods.get(0));
+		assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));		
 	}
 	
 	public void testGetSetterMethods() throws CoreException {
-		initSourceWithOverloadedMethodsAndCorrectGetterAndSetter();
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IMethod fieldName1SetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getFieldName1()", "return 1");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int setFieldName2()", "return 2");
 		
-		assertEquals(1, methodVisitor.getSetterMethods().size());
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+		List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
+		assertEquals(1, getterMethods.size());
+		assertSameMethodName(fieldName1SetterMethod, getterMethods.get(0));
 	}
 	
 	public void testIsGetterMethod() throws CoreException {
-		initSourceWithOverloadedMethodsAndCorrectGetterAndSetter();
+		String className = "Hello";
+		ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", className), getClassSourceWithFields(className, "fieldName1", "fieldName2"), false, null);
+		IMethod fieldName1GetterMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private String getFieldName1()", "return fieldname1;");
+		IMethod getterWithoutFieldMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private int getTheWorld()", "return 1;");
+		IMethod fieldName1SetterMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private int setFieldName1()", "return 1;");
+		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(compilationUnit.findPrimaryType());
 		
-		IMethod[] methods = javaType.getMethods();
-		
-		IMethod getOneMethod = methods[0];
-		assertFalse(methodVisitor.isGetterMethod(getOneMethod));
-		
-		IMethod getTwoMethod1 = methods[1];
-		assertFalse(methodVisitor.isGetterMethod(getTwoMethod1));
-		
-		IMethod getTwoMethod2 = methods[2];
-		assertTrue(methodVisitor.isGetterMethod(getTwoMethod2));
-	}
-	
-	private String getPmvSourceWithOnePublicAndOnePrivateMethod() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class PMV {").append(StringConstants.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
-		source.append("private int getTwo() { return 2; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getPmv2SourceWithOverloadedGetTwoMethod() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class PMV2 {").append(StringConstants.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
-		source.append("private int getTwo() { return 2; }").append(StringConstants.NEWLINE);
-		source.append("public int getTwo(String aParameter) { return 2; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getPmv3SourceWithOverloadedGetTwoMethod() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class PMV3 {").append(StringConstants.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
-		source.append("private int getTwo(boolean isParameter) { return 2; }").append(StringConstants.NEWLINE);
-		source.append("public int getTwo(String aParameter) { return 2; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getFdSourceWithOverloadedMethodsAndCorrectGetterSetterForTwo() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class FD {").append(StringConstants.NEWLINE);
-		source.append("private String one;").append(StringConstants.NEWLINE);
-		source.append("private int two;").append(StringConstants.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
-		source.append("private int getTwo(boolean isParameter) { return 2; }").append(StringConstants.NEWLINE);
-		source.append("public int getTwo() { return 2; }").append(StringConstants.NEWLINE);
-		source.append("public void setTwo(String aParameter) { }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
+		assertTrue(filterMethodVisitor.isGetterMethod(fieldName1GetterMethod));
+		assertFalse(filterMethodVisitor.isGetterMethod(getterWithoutFieldMethod));
+		assertFalse(filterMethodVisitor.isGetterMethod(fieldName1SetterMethod));
 	}
 }
