@@ -15,5 +15,4 @@ public class StringConstants {
 	public static final String NEWLINE = "\n";
 	public static final String SLASH = "/";
 	public static final String WILDCARD = "*";
-
 }
