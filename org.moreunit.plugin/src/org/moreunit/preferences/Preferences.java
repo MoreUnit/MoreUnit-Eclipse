@@ -56,7 +56,7 @@ public class Preferences {
 	/**
 	 * Necessary for easier testing
 	 */
-	public static void setInstance(Preferences preferences) {
+	protected static void setInstance(Preferences preferences) {
 		instance = preferences;
 	}
 	
@@ -271,6 +271,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2008/05/13 18:53:33  gianasista
+// Bugfix for sourcefolder in subfolder
+//
 // Revision 1.14  2008/04/19 09:43:23  gianasista
 // Bugfix with project specific settings
 //
