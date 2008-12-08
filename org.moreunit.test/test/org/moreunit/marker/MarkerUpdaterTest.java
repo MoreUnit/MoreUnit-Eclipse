@@ -4,35 +4,39 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.moreunit.ProjectTestCase;
+import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.WorkspaceHelper;
 import org.moreunit.elements.ClassTypeFacade;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
  *
  * 20.02.2008 21:48:06
  */
-public class MarkerUpdaterTest extends ProjectTestCase {
+public class MarkerUpdaterTest extends SimpleProjectTestCase {
 	
 	private ClassTypeFacade cutTypeFacade;
 	
 	@Override
 	protected void setUp() throws Exception {
+		
 		super.setUp();
 		
-		IPackageFragment createPackage = testProject.createPackage("com");
-		IType createType = testProject.createType(createPackage, "Hello.java", getSourceForCut());
-		cutTypeFacade = new ClassTypeFacade(createType.getCompilationUnit());
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		cutTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getOne()", "return 1;");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getTwo()", "return 2;");
+		WorkspaceHelper.createMethodInJavaType(cutType, "public int getThree()", "return 3;");
 		
-		IPackageFragmentRoot junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		testProject.createType(junitComPaket, "HelloTest.java", getSourceForFirstTestCase());
-		testProject.createType(junitComPaket, "HelloSecondTest.java", getSourceForSecondTestCase());
+		IType testType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		WorkspaceHelper.createMethodInJavaType(testType, "public void testGetOne()", "return;");
+		WorkspaceHelper.createMethodInJavaType(testType, "public void testGetThree()", "return;");
+		
+		IType secondTestType = WorkspaceHelper.createJavaClass(testPackage, "HelloSecondTest");
+		WorkspaceHelper.createMethodInJavaType(secondTestType, "public void testGetOne()", "return;");
+		WorkspaceHelper.createMethodInJavaType(secondTestType, "public void testGetOneAnother()", "return;");
 	}
 	
 	public void testHasTestMethod() throws JavaModelException {
@@ -61,49 +65,4 @@ public class MarkerUpdaterTest extends ProjectTestCase {
 		assertTrue(markerMap.containsKey(IMarker.CHAR_END));
 		assertTrue(markerMap.containsKey(IMarker.MESSAGE));
 	}
-
-	private String getSourceForCut() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class Hello {").append(StringConstants.NEWLINE);
-		source.append("public int getOne() { return 1; }").append(StringConstants.NEWLINE);
-		source.append("public int getTwo() { return 2; }").append(StringConstants.NEWLINE);
-		source.append("public int getThree() { return 3; }").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getSourceForFirstTestCase() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
-		source.append("public class HelloTest extends TestCase{").append(StringConstants.NEWLINE);
-		source.append("public void testGetOne() {").append(StringConstants.NEWLINE);
-		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
-		source.append("}").append(StringConstants.NEWLINE);
-		source.append("public void testGetThree() {").append(StringConstants.NEWLINE);
-		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
-		source.append("}").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getSourceForSecondTestCase() {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
-		source.append("public class HelloSecondTest extends TestCase{").append(StringConstants.NEWLINE);
-		source.append("public void testGetOne() {").append(StringConstants.NEWLINE);
-		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
-		source.append("}").append(StringConstants.NEWLINE);
-		source.append("public void testGetOneAnother() {").append(StringConstants.NEWLINE);
-		source.append("assertTrue(true);").append(StringConstants.NEWLINE);
-		source.append("}").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-
 }

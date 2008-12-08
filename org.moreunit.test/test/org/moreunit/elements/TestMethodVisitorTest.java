@@ -5,71 +5,54 @@ package org.moreunit.elements;
  *
  * 23.05.2006 19:54:02
  */
-import org.eclipse.jdt.core.IPackageFragment;
+import java.util.List;
+
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.moreunit.ProjectTestCase;
-import org.moreunit.util.StringConstants;
+import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.WorkspaceHelper;
 
-public class TestMethodVisitorTest extends ProjectTestCase {
+public class TestMethodVisitorTest extends SimpleProjectTestCase {
 	
-	IPackageFragment comPaket;
-
+	IType testcaseType;
+	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		comPaket = testProject.createPackage("com");
+		testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
 	}
 	
 	public void testGetTestMethodsOnlyTestAnnotation() throws JavaModelException {
 		String methodSource = "@Test \n public int getOne() { return 1; }";
-		IType testType = createTestCaseTypeWithMethodSource(methodSource);
-		TestMethodVisitor visitor = new TestMethodVisitor(testType);
-		
-		assertEquals(1, visitor.getTestMethods().size());
-		assertMethodName("getOne", visitor.getTestMethods().get(0));
-	}
-	
-	private void assertMethodName(String resultMethodName, MethodDeclaration methodDeclaration) {
-		assertEquals(resultMethodName, methodDeclaration.getName().toString());
+		IMethod annotationTestMethod = testcaseType.createMethod(methodSource, null, true, null);
+		TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+		List<MethodDeclaration> testMethods = visitor.getTestMethods();
+		assertEquals(1, testMethods.size());
+		WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
 	}
 	
 	public void testGetTestMethodsTestPrefix() throws JavaModelException {
-		String methodSource = "public int testGetTwo() { return 2; }";
-		IType testType = createTestCaseTypeWithMethodSource(methodSource);
-		TestMethodVisitor visitor = new TestMethodVisitor(testType);
-		
-		assertEquals(1, visitor.getTestMethods().size());
-		assertMethodName("testGetTwo", visitor.getTestMethods().get(0));
+		IMethod testMethodWithPrefix = WorkspaceHelper.createMethodInJavaType(testcaseType, "public int testGetTwo()", "");
+		TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+		List<MethodDeclaration> testMethods = visitor.getTestMethods();
+		assertEquals(1, testMethods.size());
+		WorkspaceHelper.assertSameMethodName(testMethodWithPrefix, testMethods.get(0));
 	}
 	
 	public void testGetTestMethodsTestAnnotationAndTestPrefix() throws JavaModelException {
-		String methodSource = "@Test \n public int testGetTwo() { return 2; }";
-		IType testType = createTestCaseTypeWithMethodSource(methodSource);
-		TestMethodVisitor visitor = new TestMethodVisitor(testType);
-		
-		assertEquals(1, visitor.getTestMethods().size());
-		assertMethodName("testGetTwo", visitor.getTestMethods().get(0));
+		String methodSource = "@Test \n public void testGetOne() {  }";
+		IMethod annotationTestMethod = testcaseType.createMethod(methodSource, null, true, null);
+		TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+		List<MethodDeclaration> testMethods = visitor.getTestMethods();
+		assertEquals(1, testMethods.size());
+		WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
 	}
 	
 	public void testGetTestMethodsNoTestMethod() throws JavaModelException {
-		String methodSource = "public int getThree() { return 3; }";
-		IType testType = createTestCaseTypeWithMethodSource(methodSource);
-		TestMethodVisitor visitor = new TestMethodVisitor(testType);
-		
-		assertEquals(0, visitor.getTestMethods().size());
-	}
-	
-	private IType createTestCaseTypeWithMethodSource(String methodSource) throws JavaModelException {
-		StringBuffer source = new StringBuffer();
-		source.append("package com;").append(StringConstants.NEWLINE);
-		source.append("public class HelloTest {").append(StringConstants.NEWLINE);
-		
-		source.append(methodSource);
-		
-		source.append("}");
-		
-		return testProject.createType(comPaket, "HelloTest.java", source.toString());
+		TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+		List<MethodDeclaration> testMethods = visitor.getTestMethods();
+		assertEquals(0, testMethods.size());
 	}
 }
