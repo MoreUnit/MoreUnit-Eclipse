@@ -50,11 +50,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
 		List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
 		assertEquals(1, privateMethods.size());
-		assertSameMethodName(privateMethod, privateMethods.get(0));
-	}
-	
-	private void assertSameMethodName(IMethod method, MethodDeclaration methodDeclaration) {
-		assertEquals(method.getElementName(), methodDeclaration.getName().getFullyQualifiedName());
+		WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
 	}
 	
 	public void testGetPrivateMethodsOverloaded() throws CoreException {
@@ -65,8 +61,8 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
 		List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
 		assertEquals(2, privateMethods.size());
-		assertSameMethodName(privateMethod, privateMethods.get(0));
-		assertSameMethodName(privateMethod, privateMethods.get(1));
+		WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
+		WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
 	}
 
 	public void testGetPrivateMethodsOverloaded2() throws CoreException {
@@ -77,8 +73,8 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
 		List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
 		assertEquals(2, privateMethods.size());
-		assertSameMethodName(privateMethod, privateMethods.get(0));
-		assertSameMethodName(privateMethod, privateMethods.get(1));
+		WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
+		WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
 	}
 
 	public void testIsPrivateMethod() throws CoreException {
@@ -142,8 +138,8 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
 		List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
 		assertEquals(2, getterMethods.size());
-		assertSameMethodName(fieldName1GetterMethod, getterMethods.get(0));
-		assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));		
+		WorkspaceHelper.assertSameMethodName(fieldName1GetterMethod, getterMethods.get(0));
+		WorkspaceHelper.assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));		
 	}
 	
 	public void testGetSetterMethods() throws CoreException {
@@ -154,7 +150,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
 		List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
 		assertEquals(1, getterMethods.size());
-		assertSameMethodName(fieldName1SetterMethod, getterMethods.get(0));
+		WorkspaceHelper.assertSameMethodName(fieldName1SetterMethod, getterMethods.get(0));
 	}
 	
 	public void testIsGetterMethod() throws CoreException {

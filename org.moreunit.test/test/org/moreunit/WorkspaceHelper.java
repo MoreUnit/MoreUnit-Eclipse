@@ -3,6 +3,8 @@ package org.moreunit;
 import java.io.IOException;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -22,10 +24,9 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.moreunit.preferences.DummyPreferencesForTesting;
-import org.moreunit.preferences.Preferences;
 import org.moreunit.util.StringConstants;
 
 /**
@@ -157,5 +158,9 @@ public class WorkspaceHelper {
 	{
 		String completeMethodCodeString = String.format("%s{%s%s}", methodDeclaration, StringConstants.NEWLINE, methodSourceCode);
 		return javaType.createMethod(completeMethodCodeString, null, true, null);
+	}
+
+	public static void assertSameMethodName(IMethod method, MethodDeclaration methodDeclaration) {
+		TestCase.assertEquals(method.getElementName(), methodDeclaration.getName().getFullyQualifiedName());
 	}
 }
