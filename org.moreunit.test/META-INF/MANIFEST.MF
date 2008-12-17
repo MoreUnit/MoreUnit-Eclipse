@@ -19,7 +19,7 @@ Require-Bundle: org.junit,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.core.manipulation,
  org.moreunit
-Bundle-ClassPath: lib/cglib-2.1_3.jar,
- lib/jmock-1.0.1.jar,
- lib/jmock-cglib-1.1.0RC1.jar,
- .
+Bundle-ClassPath: .,
+ lib/cglib-nodep-2.2.jar,
+ lib/easymock.jar,
+ lib/easymockclassextension.jar

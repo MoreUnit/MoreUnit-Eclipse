@@ -1,16 +1,19 @@
 package org.moreunit;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
-public abstract class AbstractMoreUnitTest extends MockObjectTestCase{
+public abstract class AbstractMoreUnitTest extends TestCase{
 
+	/*
 	protected void stubTypeQualifiedName(Mock type, String name) {
 		type.stubs().method("getTypeQualifiedName").will(returnValue(name));
 	}
+	*/
 
+	/*
 	protected void setUpType(Mock type, String elementName, Mock compilationUnit, Mock packageFragment) {
 		type.stubs().method("getElementName").will(returnValue(elementName));
 		type.stubs().method("getParent").will(returnValue(compilationUnit.proxy()));
@@ -22,20 +25,28 @@ public abstract class AbstractMoreUnitTest extends MockObjectTestCase{
 		packageFragment.stubs().method("getElementType").will(returnValue(IJavaElement.PACKAGE_FRAGMENT));
 		packageFragment.stubs().method("getCompilationUnit").with(eq(elementName + ".java")).will(returnValue(compilationUnit.proxy()));
 	}
+	*/
 
+	/*
 	protected void setUpMethod(Mock mockMethod, String name, Mock declaringType) {
 		mockMethod.stubs().method("getElementName").will(returnValue(name));
 		mockMethod.stubs().method("getDeclaringType").will(returnValue(declaringType.proxy()));
 	}
+	*/
 
+	/*
 	protected void dispose(TestProject testProject) throws CoreException {
 		if (testProject != null) {
 			testProject.dispose();
 		}
 	}
+	*/
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2008/02/04 20:41:12  gianasista
+// Initital
+//
 // Revision 1.3  2007/01/10 20:25:04  gianasista
 // Added Filters to MissingTestMethods-View
 //

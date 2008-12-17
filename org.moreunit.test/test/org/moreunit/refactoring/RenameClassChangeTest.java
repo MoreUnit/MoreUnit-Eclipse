@@ -1,41 +1,57 @@
 package org.moreunit.refactoring;
 
 
+import junit.framework.TestCase;
+
+import org.easymock.EasyMock;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IParent;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.jmock.Mock;
 import org.moreunit.AbstractMoreUnitTest;
 import org.moreunit.refactoring.RenameClassChange;
 
-public class RenameClassChangeTest extends AbstractMoreUnitTest {
+public class RenameClassChangeTest extends TestCase {
 
+	private static final String ELEMENT_NAME_NEW = "Anything";
+	private static final String ELEMENT_NAME_OLD = "Something";
+	/*
 	private Mock				typeToRename			= mock(IType.class);
 	private Mock				renamedType				= mock(IType.class);
 	private Mock				parentPackage			= mock(IPackageFragment.class);
 	private Mock				compilationUnitToRename	= mock(ICompilationUnit.class);
 	private Mock				renamedCompilationUnit	= mock(ICompilationUnit.class);
-	private NullProgressMonitor	progressMonitor			= new NullProgressMonitor();
+	*/
+	//private NullProgressMonitor	progressMonitor			= new NullProgressMonitor();
 	private RenameClassChange	change;
+	
+	private static final IProgressMonitor PROGRESS_MONITOR = new NullProgressMonitor();
 
 	protected void setUp() throws Exception {
+		/*
 		setUpType(typeToRename, "KebabHouse", compilationUnitToRename, parentPackage);
 		setUpType(renamedType, "KebabEmporium", renamedCompilationUnit, parentPackage);
 		change = new RenameClassChange((IType) typeToRename.proxy(), "KebabEmporium");
+		*/
 	}
 
 	public void testPerformReturnsUndoForRenameType() throws CoreException {
+		/*
 		NullProgressMonitor pm = new NullProgressMonitor();
 		typeToRename.expects(once()).method("rename").with(eq("KebabEmporium"), eq(false), same(pm));
 		Change undo = change.perform(pm);
 
 		assertSame(renamedType.proxy(), undo.getModifiedElement());
+		*/
 	}
 
 	public void testPerformUndo() throws CoreException {
+		/*
 		typeToRename.expects(once()).method("rename").with(eq("KebabEmporium"), eq(false), same(progressMonitor));
 		Change undo = change.perform(progressMonitor);
 
@@ -43,10 +59,93 @@ public class RenameClassChangeTest extends AbstractMoreUnitTest {
 		Change redo = undo.perform(progressMonitor);
 
 		assertSame(typeToRename.proxy(), redo.getModifiedElement());
+		*/
+	}
+
+	public void testGetModifiedElement() 
+	{
+		IType typeMock = createTypeRenameMockWithOldElementName();
+		RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
+		assertEquals(typeMock, change.getModifiedElement());
+	}
+	
+	private IType createTypeRenameMockWithOldElementName() 
+	{
+		IType createMock = EasyMock.createNiceMock(IType.class);
+		EasyMock.expect(createMock.getElementName()).andReturn(ELEMENT_NAME_OLD).anyTimes();
+		EasyMock.expect(createMock.getParent()).andReturn(createFirstParentMockForTypeToRename()).anyTimes();
+		
+		EasyMock.replay(createMock);
+		
+		return createMock;
+	}
+	
+	private IJavaElement createFirstParentMockForTypeToRename() {
+		IJavaElement parentMock = EasyMock.createNiceMock(IJavaElement.class);
+		EasyMock.expect(parentMock.getElementType()).andReturn(IJavaElement.COMPILATION_UNIT).anyTimes();
+		EasyMock.expect(parentMock.getParent()).andReturn(createPackageFragmentMockWhichContainsTypeNewElementName()).anyTimes();
+		EasyMock.replay(parentMock);
+		return parentMock;
+	}
+	
+	private IPackageFragment createPackageFragmentMockWhichContainsTypeNewElementName() 
+	{
+		IPackageFragment mock = EasyMock.createNiceMock(IPackageFragment.class);
+		EasyMock.expect(mock.getCompilationUnit(ELEMENT_NAME_NEW+".java")).andReturn(createCompilationUnitMockWithTypeNewElementName()).anyTimes();
+		EasyMock.replay(mock);
+		
+		return mock;
+	}
+	
+	private ICompilationUnit createCompilationUnitMockWithTypeNewElementName() 
+	{
+		ICompilationUnit compilationUnitMock = EasyMock.createNiceMock(ICompilationUnit.class);
+		EasyMock.expect(compilationUnitMock.getType(ELEMENT_NAME_NEW)).andReturn(createTypeMockWithNewElementName()).anyTimes();
+		EasyMock.replay(compilationUnitMock);
+		
+		return compilationUnitMock;		
+	}
+	
+	private IType createTypeMockWithNewElementName() {
+		IType newTypeMock = EasyMock.createNiceMock(IType.class);
+		EasyMock.expect(newTypeMock.getElementName()).andReturn(ELEMENT_NAME_NEW).anyTimes();
+		EasyMock.replay(newTypeMock);
+		
+		return newTypeMock;
+	}
+
+	public void testGetName() 
+	{
+		IType typeMock = createTypeRenameMockWithOldElementName();
+		RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
+		String expected = String.format("Rename %s to %s", ELEMENT_NAME_OLD, ELEMENT_NAME_NEW);
+		assertEquals(expected, change.getName());
+	}
+
+	public void testIsValid() 
+	{
+		IType typeMock = createTypeRenameMockWithOldElementName();
+		RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
+		assertNotNull(change.isValid(PROGRESS_MONITOR));
+	}
+
+	public void testPerform() throws CoreException 
+	{
+		IType typeMock = createTypeRenameMockWithOldElementName();
+		RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
+		Change perform = change.perform(PROGRESS_MONITOR);
+		
+		assertNotNull(perform);
+		assertTrue(perform instanceof RenameClassChange);
+		String expected = String.format("Rename %s to %s", ELEMENT_NAME_NEW, ELEMENT_NAME_OLD);
+		assertEquals(expected, perform.getName());
 	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2008/02/04 20:41:11  gianasista
+// Initital
+//
 // Revision 1.1.1.1  2006/08/13 14:30:55  gianasista
 // initial
 //
