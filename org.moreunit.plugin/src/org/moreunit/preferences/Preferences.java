@@ -47,6 +47,7 @@ public class Preferences {
 		workbenchStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
 		workbenchStore.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
 		workbenchStore.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
+		workbenchStore.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
 	}
 	
 	public static Preferences getInstance() {
@@ -118,6 +119,10 @@ public class Preferences {
 		return store(javaProject).getString(PreferenceConstants.PREF_JUNIT_PATH);
 	}
 
+	public String getTestMethodType(IJavaProject javaProject) {
+		return store(javaProject).getString(PreferenceConstants.TEST_METHOD_TYPE);
+	}
+	
 	public String[] getPrefixes(IJavaProject javaProject) {
 		String preferenceValue = store(javaProject).getString(PreferenceConstants.PREFIXES);
 		return PreferencesConverter.convertStringToArray(preferenceValue);
@@ -271,6 +276,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2008/12/06 16:43:26  gianasista
+// Test refactoring
+//
 // Revision 1.15  2008/05/13 18:53:33  gianasista
 // Bugfix for sourcefolder in subfolder
 //

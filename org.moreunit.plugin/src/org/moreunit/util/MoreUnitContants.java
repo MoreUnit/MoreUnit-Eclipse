@@ -9,7 +9,7 @@ public class MoreUnitContants {
 	public static final String TEST_CASE_MARKER = "org.moreunit.testCase";
 	public static final String TEST_CASE_DECORATOR = "moreunit.testdecorator";
 	
-	public static final String TEST_METHOD_PRAEFIX = "test";
+	public static final String TEST_JUNIT3_METHOD_PRAEFIX = "test";
 	public static final String SUFFIX_NAME = "Suffix";
 	
 	public static final String JAVA_FILE_EXTENSION = ".java";
@@ -22,6 +22,9 @@ public class MoreUnitContants {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/11/23 14:30:10  gianasista
+// Improved TestNG support
+//
 // Revision 1.1  2008/02/20 19:24:14  gianasista
 // Rename of classes for constants
 //

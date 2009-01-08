@@ -10,81 +10,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
-import org.moreunit.log.LogHandler;
 
 
 public class BaseTools {
 
-	/**
-	 * This method returns the name of the testmethod for a given
-	 * <code>methodName</code>. Only a prefix is used.<br>
-	 * Example:<br>
-	 * foo: testFoo
-	 *
-	 * @param methodName
-	 * @return
-	 */
-	public static String getTestmethodNameFromMethodName(String methodName) {
-		if(methodName == null || methodName.length() == 0) {
-			LogHandler.getInstance().handleWarnLog("Methodname is null or has length of 0");
-			return StringConstants.EMPTY_STRING;
-		}
-
-		String firstChar = String.valueOf(methodName.charAt(0));
-		methodName = methodName.replaceFirst(firstChar, firstChar.toUpperCase());
-
-		String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX+methodName;
-
-		return testMethodName;
-	}
-
-	/**
-	 * Example:<br>
-	 * methodNameBeforeRename: countMembers<br>
-	 * methodNameAfterRename: countAllMembers<br>
-	 * testMethodName: testCountMemberSpecialCase<br>
-	 * returns testCountAllMemberSpecialCase
-	 *
-	 * @param methodNameBeforeRename
-	 * @param methodNameAfterRename
-	 * @param testMethodName
-	 * @return Name of testmethod performed with the same rename as the tested method
-	 */
-	public static String getTestMethodNameAfterRename(String methodNameBeforeRename, String methodNameAfterRename, String testMethodName) {
-		String[] prefixAndSuffix = testMethodName.split(getStringWithFirstCharToUpperCase(methodNameBeforeRename));
-
-		if(prefixAndSuffix.length == 0)
-			return null;
-
-		String prefix = prefixAndSuffix[0];
-		String suffix = StringConstants.EMPTY_STRING;
-
-		if(prefixAndSuffix.length > 1)
-			suffix = prefixAndSuffix[1];
-
-		return prefix+getStringWithFirstCharToUpperCase(methodNameAfterRename)+suffix;
-	}
-
-	/**
-	 * Returns the same string and ensures that the first char of the {@link String}
-	 * is an uppercase letter.<br>
-	 * Example:<br>
-	 * test: Test
-	 *
-	 * @param string
-	 * @return
-	 */
-	public static String getStringWithFirstCharToUpperCase(String string) {
-		if(string == null || string.length() == 0)
-			return string;
-
-		char firstChar = string.charAt(0);
-		StringBuffer result = new StringBuffer();
-		result.append(Character.toUpperCase(firstChar));
-		result.append(string.substring(1));
-
-		return result.toString();
-	}
 
 	/**
 	 * This method tries to find out the name of the class which is under test
@@ -144,25 +73,6 @@ public class BaseTools {
 		return testClassName;
 	}
 
-	/**
-	 * This method identifies the name of the tested method for a given testmethod.<br>
-	 * Example:<br>
-	 * testFoo: foo
-	 * testFooSuffix: fooSuffix
-	 *
-	 * @param testMethodName name of the testmethod
-	 * @return name of the method which is tested
-	 */
-	public static String getTestedMethod(String testMethodName) {
-		if(testMethodName == null || !testMethodName.startsWith(MoreUnitContants.TEST_METHOD_PRAEFIX) || testMethodName.length() <= 4)
-			return null;
-
-		char erstesZeichen = testMethodName.charAt(4);
-		StringBuffer result = new StringBuffer();
-		result.append(Character.toLowerCase(erstesZeichen));
-		result.append(testMethodName.substring(5));
-		return result.toString();
-	}
 
 	/**
 	 * Returns the first method which has the same beginning.<br>
@@ -189,13 +99,13 @@ public class BaseTools {
 		return null;
 	}
 
-	public static String firstCharToUpperCase(String aString) {
-		if(aString == null || aString.length() == 0)
-			return aString;
-
-		String firstChar = String.valueOf(aString.charAt(0));
-		return aString.replaceFirst(firstChar, firstChar.toUpperCase());
-	}
+//	public static String firstCharToUpperCase(String aString) {
+//		if(aString == null || aString.length() == 0)
+//			return aString;
+//
+//		String firstChar = String.valueOf(aString.charAt(0));
+//		return aString.replaceFirst(firstChar, firstChar.toUpperCase());
+//	}
 
 	/**
 	 * Returns a list of String which are possible unqualified names for the
@@ -254,6 +164,9 @@ public class BaseTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2008/02/20 19:24:14  gianasista
+// Rename of classes for constants
+//
 // Revision 1.14  2008/02/16 12:57:14  gianasista
 // improved matching for CUT
 //

@@ -19,8 +19,9 @@ import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.TestMethodVisitor;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.BaseTools;
 import org.moreunit.util.MoreUnitContants;
+import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
  * @author giana 14.04.2006 20:47:14 This thread handles the updates for the
@@ -31,11 +32,15 @@ public class MarkerUpdateRunnable extends Job {
 
 	IType baseClassType;
 	IType testCaseType;
+	TestMethodDivinerFactory testMethodDivinerFactory;
+	TestMethodDiviner testMethodDiviner;
 
 	public MarkerUpdateRunnable(IType baseClassType, IType testCaseType) {
 		super("Update Moreunit Marker");
 		this.baseClassType = baseClassType;
 		this.testCaseType = testCaseType;
+		testMethodDivinerFactory = new TestMethodDivinerFactory(baseClassType.getCompilationUnit());
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	public IStatus run(IProgressMonitor monitor) {
@@ -57,7 +62,7 @@ public class MarkerUpdateRunnable extends Job {
 	}
 
 	private void createMarkerForTestMethod(IType classTypeUnderTest, MethodDeclaration testMethod) throws JavaModelException, CoreException {
-		String testedMethodName = BaseTools.getTestedMethod(testMethod.getName().getFullyQualifiedName());
+		String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getName().getFullyQualifiedName());
 		if (testedMethodName != null) {
 			IMethod[] methodsInClassUnderTest = classTypeUnderTest.getMethods();
 			for (IMethod method : methodsInClassUnderTest) {
@@ -76,6 +81,9 @@ public class MarkerUpdateRunnable extends Job {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/02/29 21:32:55  gianasista
+// Removed empty comment
+//
 // Revision 1.3  2008/02/20 19:23:38  gianasista
 // Rename of classes for constants
 //

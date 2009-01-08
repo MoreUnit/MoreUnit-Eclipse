@@ -15,6 +15,8 @@ import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
  * @author vera 04.02.2006 21:55:31
@@ -23,6 +25,8 @@ public class RenameMethodParticipant extends RenameParticipant {
 
 	private IMethod			renamedMethod;
 	private ClassTypeFacade	javaFileFacade;
+	TestMethodDivinerFactory testMethodDivinerFactory;
+	TestMethodDiviner testMethodDiviner;
 
 	protected boolean initialize(Object element) {
 		LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.initialize");
@@ -31,6 +35,8 @@ public class RenameMethodParticipant extends RenameParticipant {
 			return false;
 
 		javaFileFacade = new ClassTypeFacade(renamedMethod.getCompilationUnit());
+		testMethodDivinerFactory = new TestMethodDivinerFactory(renamedMethod.getCompilationUnit());
+		testMethodDiviner = testMethodDivinerFactory.create();
 		return true;
 	}
 
@@ -62,7 +68,7 @@ public class RenameMethodParticipant extends RenameParticipant {
 		}
 		for (IMethod testMethod : allTestMethods) {
 			if (testMethod != null) {
-				String newTestMethodName = getNewTestMethodName(testMethod.getElementName(), renamedMethod.getElementName(), getArguments().getNewName());
+				String newTestMethodName = testMethodDiviner.getTestMethodNameAfterRename(renamedMethod.getElementName(), getArguments().getNewName(), testMethod.getElementName()); 
 				changes.add(new RenameMethodChange(testMethod, newTestMethodName));
 			}
 		}
@@ -78,18 +84,12 @@ public class RenameMethodParticipant extends RenameParticipant {
 		return null;
 	}
 
-	public String getNewTestMethodName(String testMethodCurrentName, String renamedMethodOldName, String renamedMethodNewName) {
-		String old = upperCaseFirstLetter(renamedMethodOldName);
-		String newName = upperCaseFirstLetter(renamedMethodNewName);
-		return testMethodCurrentName.replaceFirst(old, newName);
-	}
-
-	private String upperCaseFirstLetter(String word) {
-		return word.substring(0,1).toUpperCase() + word.substring(1);
-	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/02/04 20:05:14  gianasista
+// Move tests to org.moreunit.test
+//
 // Revision 1.4  2006/10/24 18:37:39  channingwalton
 // made  the properties page appear on the navigator view and fixed some gui text
 //

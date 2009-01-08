@@ -76,9 +76,4 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase {
 		assertEquals(2, methods.length);		
 	}
 
-	public void testGetTestMethodName() 
-	{
-		assertEquals("testName", TestmethodCreator.getTestMethodName("name"));
-		assertEquals("testName", TestmethodCreator.getTestMethodName("Name"));
-	}
 }

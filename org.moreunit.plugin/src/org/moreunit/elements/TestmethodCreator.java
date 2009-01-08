@@ -11,6 +11,8 @@ import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.util.StringConstants;
+import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
  * @author vera
@@ -29,10 +31,14 @@ public class TestmethodCreator {
 	
 	private ICompilationUnit compilationUnit;
 	private String testType;
+	TestMethodDivinerFactory testMethodDivinerFactory;
+	TestMethodDiviner testMethodDiviner;
 	
 	public TestmethodCreator(ICompilationUnit compilationUnit, String testType) {
 		this.compilationUnit = compilationUnit;
 		this.testType = testType;
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 	
 	public IMethod createTestMethod(IMethod method)
@@ -40,21 +46,22 @@ public class TestmethodCreator {
 		if(method == null)
 			return null;
 		
-		if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
+		if(TypeFacade.isTestCase(compilationUnit.findPrimaryType())){
 			return createAnotherTestMethod(method);
-		else
-			return createFirstTestMethod(method);
+		}
+		return createFirstTestMethod(method);
 	}
 	
 	private IMethod createFirstTestMethod(IMethod method)
 	{
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
 		compilationUnit = classTypeFacade.getOneCorrespondingTestCase(true).getCompilationUnit();
-		String testMethodName = getTestMethodName(method.getElementName());
+		String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
 
 		if (doesMethodExist(testMethodName))
 			return null;
 		
+		//TODO move this into the testMethodDiviner
 		if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
 			return createJUnit4Testmethod(testMethodName);
 		else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
@@ -65,16 +72,10 @@ public class TestmethodCreator {
 		return null;
 	}
 	
-	public static String getTestMethodName(String methodName) 
-	{
-		String result = BaseTools.firstCharToUpperCase(methodName);
-		return MoreUnitContants.TEST_METHOD_PRAEFIX + result;
-	}
-	
 
 	private IMethod createAnotherTestMethod(IMethod testMethod)
 	{
-		String testedMethodName = BaseTools.getTestedMethod(testMethod.getElementName());
+		String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
 		TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(compilationUnit);
 		IMethod testedMethod = null;
 		try {
@@ -84,7 +85,9 @@ public class TestmethodCreator {
 		}
 		
 		if(testedMethod != null) {
-			String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
+			String testMethodName = testMethod.getElementName();
+			//TODO verify correct
+			//			String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX + BaseTools.firstCharToUpperCase(testedMethod.getElementName());
 			if (doesMethodExist(testMethodName))
 				testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 			

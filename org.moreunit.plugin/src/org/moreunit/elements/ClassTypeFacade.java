@@ -13,8 +13,9 @@ import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.TestcaseChooseDialog;
-import org.moreunit.util.BaseTools;
 import org.moreunit.util.TestCaseDiviner;
+import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 import org.moreunit.wizards.NewTestCaseWizard;
 
 /**
@@ -28,17 +29,25 @@ import org.moreunit.wizards.NewTestCaseWizard;
 public class ClassTypeFacade extends TypeFacade {
 
 	private TestCaseDiviner	testCaseDiviner;
+	TestMethodDivinerFactory testMethodDivinerFactory;
+	TestMethodDiviner testMethodDiviner;
 
 	public ClassTypeFacade(ICompilationUnit compilationUnit) {
 		super(compilationUnit);
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	public ClassTypeFacade(IEditorPart editorPart) {
 		super(editorPart);
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	public ClassTypeFacade(IFile file) {
 		super(file);
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	/**
@@ -67,7 +76,7 @@ public class ClassTypeFacade extends TypeFacade {
 	}
 
 	public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType) {
-		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
+		String nameOfCorrespondingTestMethod = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
 
 		if (testCaseType == null) {
 			return null;
@@ -106,7 +115,7 @@ public class ClassTypeFacade extends TypeFacade {
 			return result;
 		}
 
-		String nameOfCorrespondingTestMethod = BaseTools.getTestmethodNameFromMethodName(method.getElementName());
+		String nameOfCorrespondingTestMethod = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
 
 		try {
 			IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();

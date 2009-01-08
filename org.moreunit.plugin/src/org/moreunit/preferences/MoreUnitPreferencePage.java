@@ -45,7 +45,11 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 		addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.TEXT_TEST_SUPERCLASS, getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.TEXT_FLEXIBLE_NAMING, getFieldEditorParent()));
-
+		String[][] testMethodLabelsAndValues = new String[][] {
+				{"Test Methods Prefixed With \"test\"",PreferenceConstants.TEST_METHOD_TYPE_JUNIT3},
+				{"Test Methods With no Prefix",PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX}
+		};
+		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_METHOD_TYPE, "Test Method Type", 1, testMethodLabelsAndValues, getFieldEditorParent()));
 	}
 
 	public void init(final IWorkbench workbench) {
@@ -76,6 +80,9 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/03/21 18:20:17  gianasista
+// First version of new property page with source folder mapping
+//
 // Revision 1.6  2008/01/23 19:31:32  gianasista
 // Project specific settings
 //

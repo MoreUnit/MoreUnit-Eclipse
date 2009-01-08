@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -18,11 +14,12 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.ui.MarkerUpdateRunnable;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
 import org.moreunit.util.SearchScopeSingelton;
 import org.moreunit.util.SearchTools;
+import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
@@ -33,17 +30,25 @@ import org.moreunit.util.SearchTools;
  * 23.05.2006 20:29:57
  */
 public class TestCaseTypeFacade extends TypeFacade {
+	TestMethodDivinerFactory testMethodDivinerFactory;
+	TestMethodDiviner testMethodDiviner;
 
 	public TestCaseTypeFacade(ICompilationUnit compilationUnit) {
 		super(compilationUnit);
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	public TestCaseTypeFacade(IEditorPart editorPart) {
 		super(editorPart);
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	public TestCaseTypeFacade(IFile file) {
 		super(file);
+		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+		testMethodDiviner = testMethodDivinerFactory.create();
 	}
 
 	public IType getCorrespondingClassUnderTest() {
@@ -92,7 +97,7 @@ public class TestCaseTypeFacade extends TypeFacade {
 
 	public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest) {
 		try {
-			String testedMethodName = BaseTools.getTestedMethod(testMethod.getElementName());
+			String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
 			if (testedMethodName != null) {
 				IMethod[] foundTestMethods = classUnderTest.getMethods();
 				for (IMethod method : foundTestMethods) {
@@ -199,6 +204,9 @@ public class TestCaseTypeFacade extends TypeFacade {
 }
 
 //$Log: not supported by cvs2svn $
+//Revision 1.19  2008/04/02 18:10:24  gianasista
+//Bugfix: switching from test to CUT using test prefix
+//
 //Revision 1.18  2008/03/21 18:20:03  gianasista
 //First version of new property page with source folder mapping
 //

@@ -9,17 +9,6 @@ import junit.framework.TestCase;
 
 public class BaseToolsTest extends TestCase {
 
-	public void testGetTestmethodNameFromMethodName() {
-		String methodName = "getValue";
-		assertEquals("testGetValue", BaseTools.getTestmethodNameFromMethodName(methodName));
-
-		methodName = null;
-		assertEquals("", BaseTools.getTestmethodNameFromMethodName(methodName));
-
-		methodName = "";
-		assertEquals("", BaseTools.getTestmethodNameFromMethodName(methodName));
-	}
-
 	public void testGetTestedClass() {
 		String className = "Eins";
 		String[] prefixes = new String[] { "Test" };
@@ -81,39 +70,6 @@ public class BaseToolsTest extends TestCase {
 		assertEquals("Test without suffix but package prefix set", Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
 	}
 
-	public void testGetTestedMethod() {
-		String methodName = "getValue";
-		assertNull(BaseTools.getTestedMethod(methodName));
-
-		methodName = "testGetValue";
-		assertEquals("getValue", BaseTools.getTestedMethod(methodName));
-
-		methodName = null;
-		assertNull(BaseTools.getTestedMethod(methodName));
-
-		methodName = "test";
-		assertEquals(null, BaseTools.getTestedMethod(methodName));
-	}
-
-	public void testGetTestMethodNameAfterRename() {
-		String methodNameBeforeRename = "countMembers";
-		String methodNameAfterRename = "countAllMembers";
-		String testMethodName = "testCountMembersSpecialCase";
-
-		assertEquals("testCountAllMembersSpecialCase", BaseTools.getTestMethodNameAfterRename(methodNameBeforeRename, methodNameAfterRename, testMethodName));
-
-		testMethodName = "testCountMembers";
-		assertEquals("testCountAllMembers", BaseTools.getTestMethodNameAfterRename(methodNameBeforeRename, methodNameAfterRename, testMethodName));
-	}
-
-	public void testGetStringWithFirstCharToUpperCase() {
-		String testString = "hello";
-		assertEquals("Hello", BaseTools.getStringWithFirstCharToUpperCase(testString));
-
-		assertEquals(null, BaseTools.getStringWithFirstCharToUpperCase(null));
-		assertEquals("", BaseTools.getStringWithFirstCharToUpperCase(""));
-	}
-
 	public void testRemoveSuffixFromTestCase() {
 		String testClassName = "com.my.test.MyTest";
 		String packageSuffix = "test";
@@ -122,16 +78,6 @@ public class BaseToolsTest extends TestCase {
 
 		testClassName = "test.MyTest";
 		assertEquals("MyTest", BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix));
-	}
-
-	public void testFirstCharToUpperCase() {
-		assertEquals("Test", BaseTools.firstCharToUpperCase("test"));
-		assertEquals("Test", BaseTools.firstCharToUpperCase("Test"));
-		assertEquals("T", BaseTools.firstCharToUpperCase("t"));
-		assertEquals("T", BaseTools.firstCharToUpperCase("T"));
-		assertEquals(null, BaseTools.firstCharToUpperCase(null));
-		assertEquals("", BaseTools.firstCharToUpperCase(""));
-
 	}
 
 	public void testGetListOfUnqualifiedTypeNames() {

@@ -1,6 +1,5 @@
 package org.moreunit.preferences;
 
-import org.eclipse.core.runtime.QualifiedName;
 
 public interface PreferenceConstants {
 
@@ -49,4 +48,8 @@ public interface PreferenceConstants {
 	String TEXT_TEST_NG = "TestNG";
 	String TEXT_JUNIT_4 = "Junit 4";
 	String TEXT_JUNIT_3_8 = "JUnit 3.8";
+	
+	String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
+	String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";
+	String TEST_METHOD_TYPE_NO_PREFIX = "testMethodTypeNoPrefix";
 }
