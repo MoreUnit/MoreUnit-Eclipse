@@ -19,12 +19,12 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase {
 		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
 		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
 
-		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3,"foo");
 		IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
 		
 		assertEquals("testGetNumberOne", createTestMethod.getElementName());
 		assertFalse(createTestMethod.getSource().startsWith("@Test"));
-		
+		assertTrue(createTestMethod.getSource().contains("foo"));
 		IMethod[] methods = testcaseType.getMethods();
 		assertEquals(1, methods.length);
 		assertEquals(createTestMethod, methods[0]);
@@ -35,11 +35,12 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase {
 		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
 		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
 
-		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4,"foo");
 		IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
 		
 		assertEquals("testGetNumberOne", createTestMethod.getElementName());
 		assertTrue(createTestMethod.getSource().startsWith("@Test"));
+		assertTrue(createTestMethod.getSource().contains("foo"));
 		
 		IMethod[] methods = testcaseType.getMethods();
 		assertEquals(1, methods.length);
@@ -52,10 +53,11 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase {
 		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
 		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
 		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3,"foo");
 		IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
 		assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
 		assertFalse(createTestMethod.getSource().startsWith("@Test"));
+		assertTrue(createTestMethod.getSource().contains("foo"));
 		
 		IMethod[] methods = testcaseType.getMethods();
 		assertEquals(2, methods.length);
@@ -67,10 +69,11 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase {
 		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
 		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
 		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4,"foo");
 		IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
 		assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
 		assertTrue(createTestMethod.getSource().startsWith("@Test"));
+		assertTrue(createTestMethod.getSource().contains("foo"));
 		
 		IMethod[] methods = testcaseType.getMethods();
 		assertEquals(2, methods.length);		
