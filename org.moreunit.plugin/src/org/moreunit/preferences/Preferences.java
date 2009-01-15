@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
-import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -19,10 +17,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
-
-import com.bdaum.overlayPages.PropertyStore;
 
 public class Preferences {
 
@@ -121,6 +116,10 @@ public class Preferences {
 
 	public String getTestMethodType(IJavaProject javaProject) {
 		return store(javaProject).getString(PreferenceConstants.TEST_METHOD_TYPE);
+	}
+	
+	public String getTestMethodDefaultContent(IJavaProject javaProject) {
+		return store(javaProject).getString(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT);
 	}
 	
 	public String[] getPrefixes(IJavaProject javaProject) {
@@ -276,6 +275,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2009/01/08 19:58:21  gianasista
+// Patch from Zach for more flexible test method naming
+//
 // Revision 1.16  2008/12/06 16:43:26  gianasista
 // Test refactoring
 //

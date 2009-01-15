@@ -52,4 +52,5 @@ public interface PreferenceConstants {
 	String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
 	String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";
 	String TEST_METHOD_TYPE_NO_PREFIX = "testMethodTypeNoPrefix";
+	String TEST_METHOD_DEFAULT_CONTENT = "org.moreunit.test.test_methodDefaultContent";
 }

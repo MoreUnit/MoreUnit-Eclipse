@@ -31,7 +31,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 				IMethod method = (IMethod)firstElement;
 				if(!TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType())) {
 					TestmethodCreator testmethodCreator =
-							new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()));
+							new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(method.getJavaProject()));
 					testmethodCreator.createTestMethod(method);
 				}
 			}
@@ -44,6 +44,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/02/04 19:58:25  gianasista
+// Bugfix: project specific settings
+//
 // Revision 1.4  2007/11/19 20:47:19  gianasista
 // Patch from Bjoern: project specific settings
 //

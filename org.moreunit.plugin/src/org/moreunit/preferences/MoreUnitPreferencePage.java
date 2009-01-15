@@ -50,6 +50,7 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 				{"Test Methods With no Prefix",PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX}
 		};
 		addField(new RadioGroupFieldEditor(PreferenceConstants.TEST_METHOD_TYPE, "Test Method Type", 1, testMethodLabelsAndValues, getFieldEditorParent()));
+		addField(new StringFieldEditor(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, "Test Method Default Content", 30, getFieldEditorParent()));
 	}
 
 	public void init(final IWorkbench workbench) {
@@ -80,6 +81,9 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2009/01/08 19:58:21  gianasista
+// Patch from Zach for more flexible test method naming
+//
 // Revision 1.7  2008/03/21 18:20:17  gianasista
 // First version of new property page with source folder mapping
 //

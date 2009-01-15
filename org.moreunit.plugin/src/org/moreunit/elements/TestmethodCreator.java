@@ -31,14 +31,16 @@ public class TestmethodCreator {
 	
 	private ICompilationUnit compilationUnit;
 	private String testType;
+	private String defaultTestMethodContent = "";
 	TestMethodDivinerFactory testMethodDivinerFactory;
 	TestMethodDiviner testMethodDiviner;
 	
-	public TestmethodCreator(ICompilationUnit compilationUnit, String testType) {
+	public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent) {
 		this.compilationUnit = compilationUnit;
 		this.testType = testType;
 		testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
 		testMethodDiviner = testMethodDivinerFactory.create();
+		this.defaultTestMethodContent = defaultTestMethodContent;
 	}
 	
 	public IMethod createTestMethod(IMethod method)
@@ -113,14 +115,14 @@ public class TestmethodCreator {
 	private String getTestNgMethodStub(String testmethodName) {
 		StringBuffer methodContent = new StringBuffer();
 		methodContent.append("@Test").append(StringConstants.NEWLINE);
-		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append("}");
+		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append(defaultTestMethodContent).append(StringConstants.NEWLINE).append("}");
 		
 		return methodContent.toString();
 	}
 	
 	private String getJUnit3MethodStub(String testmethodName) {
 		StringBuffer methodContent = new StringBuffer();
-		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append("}");
+		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append(defaultTestMethodContent).append(StringConstants.NEWLINE).append("}");
 		
 		return methodContent.toString();
 	}
@@ -132,7 +134,7 @@ public class TestmethodCreator {
 	private String getJUnit4MethodStub(String testmethodName) {
 		StringBuffer methodContent = new StringBuffer();
 		methodContent.append("@Test").append(StringConstants.NEWLINE);
-		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append("}");
+		methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append(defaultTestMethodContent).append(StringConstants.NEWLINE).append("}");
 		
 		return methodContent.toString();
 	}

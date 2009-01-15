@@ -61,7 +61,7 @@ public class EditorActionExecutor {
 		LogHandler.getInstance().handleInfoLog("MoreUnitActionHandler.executeCreateTestMethodAction()");
 
 		EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()));
+		TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()),Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
 		IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
 
 		if((createdMethod != null) && createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME)) {
@@ -168,6 +168,9 @@ public class EditorActionExecutor {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2008/02/20 19:21:18  gianasista
+// Rename of classes for constants
+//
 // Revision 1.9  2008/02/04 20:03:11  gianasista
 // Bugfix: project specific settings
 //
