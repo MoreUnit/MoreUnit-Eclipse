@@ -66,7 +66,7 @@ public class PluginTools {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for(IProject aProject : projects) {
 			try {
-				if(aProject.hasNature(JavaCore.NATURE_ID)) {
+				if(aProject.isOpen() && aProject.hasNature(JavaCore.NATURE_ID)) {
 					result.add(JavaCore.create(aProject));
 				}
 			} catch (CoreException e) {
@@ -113,6 +113,9 @@ public class PluginTools {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/05/13 18:54:11  gianasista
+// Bugfix for sourcefolder in subfolder
+//
 // Revision 1.5  2008/03/21 18:21:00  gianasista
 // First version of new property page with source folder mapping
 //
