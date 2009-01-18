@@ -113,13 +113,31 @@ public class Preferences {
 	public String getJunitDirectoryFromPreferences(IJavaProject javaProject) {
 		return store(javaProject).getString(PreferenceConstants.PREF_JUNIT_PATH);
 	}
+	
+	public void setJunitDirectory(String directory) {
+		getProjectStore(null).getString(directory);
+	}
 
 	public String getTestMethodType(IJavaProject javaProject) {
 		return store(javaProject).getString(PreferenceConstants.TEST_METHOD_TYPE);
 	}
 	
+	public void setTestMethodTypeShouldUsePrefix(IJavaProject javaProject, boolean shouldUsePrefix) {
+		String value;
+		if(shouldUsePrefix)
+			value = PreferenceConstants.TEST_METHOD_TYPE_JUNIT3;
+		else
+			value = PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX;
+		
+		getProjectStore(javaProject).setValue(PreferenceConstants.TEST_METHOD_TYPE, value);
+	}
+	
 	public String getTestMethodDefaultContent(IJavaProject javaProject) {
 		return store(javaProject).getString(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT);
+	}
+	
+	public void setTestMethodDefaultContent(IJavaProject javaProject, String methodContent) {
+		getProjectStore(javaProject).setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, methodContent);
 	}
 	
 	public String[] getPrefixes(IJavaProject javaProject) {
@@ -224,7 +242,11 @@ public class Preferences {
 	}
 	
 	public IPreferenceStore getProjectStore(IJavaProject javaProject) {
+		if(javaProject == null)
+			return workbenchStore;
+		
 		IPreferenceStore resultStore = null;
+		
 		if(preferenceMap.containsKey(javaProject)) {
 			resultStore =  preferenceMap.get(javaProject);
 		} else {
@@ -275,6 +297,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2009/01/15 19:06:53  gianasista
+// Patch from Zach: configurable content for test method
+//
 // Revision 1.17  2009/01/08 19:58:21  gianasista
 // Patch from Zach for more flexible test method naming
 //

@@ -2,29 +2,89 @@ package org.moreunit.preferences;
 
 
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.SourceFolderContext;
+import org.moreunit.properties.OtherMoreunitPropertiesBlock;
 import org.moreunit.util.SearchScopeSingelton;
-
-import com.bdaum.overlayPages.FieldEditorOverlayPage;
 
 /**
  * @author vera
  * 08.01.2006 19:24:23
  */
-public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IWorkbenchPreferencePage{
+public class MoreUnitPreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
+
+	private Text testSourceFolderField;
+	private OtherMoreunitPropertiesBlock otherMoreunitPropertiesBlock;
 
 	public MoreUnitPreferencePage() {
-		super(FieldEditorPreferencePage.GRID);
+		//super(FieldEditorPreferencePage.GRID);
 	}
 
+	@Override
+	protected Control createContents(Composite parent) {
+		Composite contentComposite = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(1, true);
+		contentComposite.setLayout(gridLayout);
+		otherMoreunitPropertiesBlock = new OtherMoreunitPropertiesBlock(null);
+		
+		createTestSourceFolderField(contentComposite);
+		otherMoreunitPropertiesBlock.getControl(contentComposite);
+		
+		return parent;
+	}
+	
+	private void createTestSourceFolderField(Composite parent) {
+		Composite labelAndTextFieldComposite = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(2, true);
+		labelAndTextFieldComposite.setLayout(gridLayout);
+
+		GridData gridData = new GridData();
+		gridData.heightHint = 30;
+		labelAndTextFieldComposite.setLayoutData(gridData);
+
+		Label label = new Label(labelAndTextFieldComposite, SWT.NONE);
+		label.setText(PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
+
+		testSourceFolderField = new Text(labelAndTextFieldComposite, SWT.SINGLE | SWT.BORDER);
+		testSourceFolderField.setLayoutData(otherMoreunitPropertiesBlock.getLayoutForTextFields());
+		testSourceFolderField.setText(Preferences.getInstance().getJunitDirectoryFromPreferences(null));
+	}
+
+	public void init(IWorkbench workbench) {
+		setPreferenceStore(MoreUnitPlugin.getDefault().getPreferenceStore());
+	}
+
+	@Override
+	protected IPreferenceStore doGetPreferenceStore() {
+		return MoreUnitPlugin.getDefault().getPreferenceStore();
+	}
+	
+	public boolean performOk() {
+		Preferences.getInstance().setJunitDirectory(testSourceFolderField.getText());
+		otherMoreunitPropertiesBlock.saveProperties();
+		Preferences.clearProjectCach();
+		
+		SourceFolderContext.getInstance().initContextForWorkspace();
+		SearchScopeSingelton.getInstance().resetCachedSearchScopes();
+		
+		return super.performOk();
+	}
+	
+	/*
 	@Override
 	protected void createFieldEditors() {
 		StringFieldEditor junitDirPreferenceField = new StringFieldEditor(PreferenceConstants.PREF_JUNIT_PATH, "Directory for testcases", 10, getFieldEditorParent());
@@ -76,11 +136,15 @@ public class MoreUnitPreferencePage extends FieldEditorOverlayPage implements IW
 		
 		return super.performOk();
 	}
+	*/
 	
 	
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2009/01/15 19:06:53  gianasista
+// Patch from Zach: configurable content for test method
+//
 // Revision 1.8  2009/01/08 19:58:21  gianasista
 // Patch from Zach for more flexible test method naming
 //
