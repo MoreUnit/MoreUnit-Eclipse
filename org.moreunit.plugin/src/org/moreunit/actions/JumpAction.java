@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.handler.EditorActionExecutor;
-import org.moreunit.log.LogHandler;
 
 /**
  * This class delegates the editor action switching between class and
@@ -31,6 +30,9 @@ public class JumpAction implements IEditorActionDelegate{
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/11/04 08:50:18  channingwalton
+// Fix for [ 1579660 ] Testcase selection dialog opens twice
+//
 // Revision 1.3  2006/10/02 18:22:24  channingwalton
 // added actions for jumping from views. added some tests for project properties. improved some of the text
 //
