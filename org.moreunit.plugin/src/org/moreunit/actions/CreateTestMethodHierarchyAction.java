@@ -30,8 +30,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 			if(firstElement instanceof IMethod) {
 				IMethod method = (IMethod)firstElement;
 				if(!TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType())) {
-					TestmethodCreator testmethodCreator =
-							new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(method.getJavaProject()));
+					TestmethodCreator testmethodCreator = new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(method.getJavaProject()));
 					testmethodCreator.createTestMethod(method);
 				}
 			}
@@ -44,6 +43,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/01/15 19:05:58  gianasista
+// Patch from Zach: configurable content for test method
+//
 // Revision 1.5  2008/02/04 19:58:25  gianasista
 // Bugfix: project specific settings
 //
