@@ -27,32 +27,46 @@ import org.moreunit.util.MoreUnitContants;
 public class UnitDecorator extends LabelProvider implements ILightweightLabelDecorator {
 	
 	public void decorate(Object element, IDecoration decoration) {
-		IResource objectResource = (IResource) element;
-		
-		if(objectResource.getType() != IResource.FILE)
+		ICompilationUnit javaTypeOfResource = tryToGetCompilationUnitFromElement(element);
+		if(javaTypeOfResource == null)
 			return;
 		
-		try {
-			IJavaElement javaElement = JavaCore.create(objectResource);
-			if(javaElement == null)
-				return ;
-			
-			if (javaElement.getElementType() != IJavaElement.COMPILATION_UNIT)
-				return;
-
-			ICompilationUnit javaTypeOfResource = (ICompilationUnit) javaElement;
-			
-			
-			if(TypeFacade.isTestCase(javaTypeOfResource.findPrimaryType()))
-				return;
-			
-			ClassTypeFacade javaFileFacade = new ClassTypeFacade(javaTypeOfResource);
-			Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
-			if(correspondingTestcases != null && correspondingTestcases.size() > 0) {
-				ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
-				decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
-			}
-		} catch(ClassCastException exc) {}
+		if(hasTestCase(javaTypeOfResource)) {
+			handleClassDecoration(decoration);
+		}
+	}
+	
+	private void handleClassDecoration(IDecoration decoration) {
+		ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
+		decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
+	}
+	
+	private boolean hasTestCase(ICompilationUnit compilationUnit) {
+		ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
+		Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
+		return correspondingTestcases != null && correspondingTestcases.size() > 0;
+	}
+	
+	/**
+	 * This method checks the type of the <code>element</code> and tries to get the compilation unit
+	 * The method returns null if <code>element</code> is the wrong type or if it is a test case.
+	 */
+	public ICompilationUnit tryToGetCompilationUnitFromElement(Object element) {
+		IResource objectResource = (IResource) element;
+		if(objectResource.getType() != IResource.FILE)
+			return null;
+		
+		IJavaElement javaElement = JavaCore.create(objectResource);
+		if(javaElement == null)
+			return null;
+		
+		if (javaElement.getElementType() != IJavaElement.COMPILATION_UNIT)
+			return null;
+		
+		if(TypeFacade.isTestCase(((ICompilationUnit)javaElement).findPrimaryType()))
+			return null;
+		
+		return (ICompilationUnit) javaElement;
 	}
 	
 	public static UnitDecorator getUnitDecorator() {
@@ -73,6 +87,9 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/02/20 19:20:32  gianasista
+// Rename of classes for constants
+//
 // Revision 1.3  2006/09/18 20:00:02  channingwalton
 // the CVS substitions broke with my last check in because I put newlines in them
 //
