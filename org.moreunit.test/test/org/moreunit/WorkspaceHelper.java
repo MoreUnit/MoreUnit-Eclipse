@@ -160,7 +160,15 @@ public class WorkspaceHelper {
 		return javaType.createMethod(completeMethodCodeString, null, true, null);
 	}
 
-	public static void assertSameMethodName(IMethod method, MethodDeclaration methodDeclaration) {
+	public static void assertSameMethodName(IMethod method, MethodDeclaration methodDeclaration) 
+	{
 		TestCase.assertEquals(method.getElementName(), methodDeclaration.getName().getFullyQualifiedName());
+	}
+	
+	public static IFolder createFolder(IJavaProject project, String folderName) throws CoreException {
+		IFolder folder = project.getProject().getFolder(folderName);
+		folder.create(false, true, null);
+		
+		return folder;
 	}
 }

@@ -2,52 +2,35 @@ package org.moreunit.util;
 
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.moreunit.TestProject;
-import org.moreunit.preferences.DummyPreferencesForTesting;
-import org.moreunit.preferences.Preferences;
-import org.moreunit.util.TestCaseDiviner;
+import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.WorkspaceHelper;
 
 /**
  * @author giana
  *
  * 13.05.2006 13:49:29
  */
-public class TestCaseDivinerTest extends TestCase {
+public class TestCaseDivinerTest extends SimpleProjectTestCase {
 
-	TestProject testProject;
 	IPackageFragmentRoot junitSourceRoot;
-	
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		testProject = new TestProject("ProjektTestCaseDiviner");
-		junitSourceRoot = testProject.createAdditionalSourceFolder("junit");
-	}
-	
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		
-		testProject.dispose();
-	}
+
 	public void testGetMatchesOnlySuffix() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType fooType = testProject.createType(comPaket, "Foo.java", getJavaFileSource("com", "Foo"));
+		IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com");
+		IType fooType = WorkspaceHelper.createJavaClass(comPaket, "Foo");
 		
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testHelloType = testProject.createType(junitComPaket, "FooTest.java", getTestCaseSource("com", "FooTest"));
-		IType testNGHelloType = testProject.createType(junitComPaket, "FooTestNG.java", getTestCaseSource("com", "FooTestNG"));
+		IPackageFragment junitComPaket = WorkspaceHelper.createNewPackageInSourceFolder(testFolder, "com");
+		IType testHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTest");
+		IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTestNG");
 		
 		PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] {"Test"});
 		// TODO
 		//Preferences.setInstance(preferencesMock);
 		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
-		Set result = testCaseDiviner.getMatches();
+		Set<IType> result = testCaseDiviner.getMatches();
 		assertNotNull(result);
 		
 		assertEquals(1, result.size());
@@ -62,16 +45,16 @@ public class TestCaseDivinerTest extends TestCase {
 	}
 	
 	public void testGetMatchesPrefixes() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com");
-		IType fooType = testProject.createType(comPaket, "Foo.java", getJavaFileSource("com", "Foo"));
+		IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com");
+		IType fooType = WorkspaceHelper.createJavaClass(comPaket, "Foo");
 		
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com");
-		IType testHelloType = testProject.createType(junitComPaket, "TestFoo.java", getTestCaseSource("com", "TestFoo"));
-		IType testNGHelloType = testProject.createType(junitComPaket, "BFooTest.java", getTestCaseSource("com", "BFooTest"));
+		IPackageFragment junitComPaket = WorkspaceHelper.createNewPackageInSourceFolder(testFolder, "com");
+		IType testHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "TestFoo");
+		IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "BFooTest");
 				
 		PreferencesMock preferencesMock = new PreferencesMock(new String[]{"Test"}, new String[] {});
 		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
-		Set result = testCaseDiviner.getMatches();
+		Set<IType> result = testCaseDiviner.getMatches();
 		
 		assertEquals(1, result.size());
 		assertTrue(result.contains(testHelloType));
@@ -79,43 +62,27 @@ public class TestCaseDivinerTest extends TestCase {
 	}
 
 	public void testGetMatchesWhenPackageNameDiffers() throws CoreException {
-		IPackageFragment comPaket = testProject.createPackage("com.foo.bar");
-		IType fooType = testProject.createType(comPaket, "Foo.java", getJavaFileSource("com", "Foo"));
+		IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com.foo.bar");
+		IType fooType = WorkspaceHelper.createJavaClass(comPaket, "Foo");
 		
-		IPackageFragment junitComPaket = testProject.createPackage(junitSourceRoot, "com.something");
-		IType testHelloType = testProject.createType(junitComPaket, "FooTest.java", getTestCaseSource("com.something", "FooTest"));
-		IType testNGHelloType = testProject.createType(junitComPaket, "FooTestNg.java", getTestCaseSource("com.something", "FooTestNg"));
+		IPackageFragment junitComPaket = WorkspaceHelper.createNewPackageInSourceFolder(testFolder, "com.something");
+		IType testHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTest");
+		IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTestNG");
 		
 		PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] {"Test"});
 		TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
-		Set result = testCaseDiviner.getMatches();
+		Set<IType> result = testCaseDiviner.getMatches();
 		
 		assertEquals(1, result.size());
 		assertTrue(result.contains(testHelloType));
 		assertFalse(result.contains(testNGHelloType));
 	}
-
-	private String getJavaFileSource(String packageName, String className) {
-		StringBuffer source = new StringBuffer();
-		source.append("package "+packageName+";").append(StringConstants.NEWLINE);
-		source.append("public class "+className+" {").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
-	
-	private String getTestCaseSource(String packageName, String testcaseName) {
-		StringBuffer source = new StringBuffer();
-		source.append("package "+packageName+";").append(StringConstants.NEWLINE);
-		source.append("import junit.framework.TestCase;").append(StringConstants.NEWLINE);
-		source.append("public class "+testcaseName+" extends TestCase{").append(StringConstants.NEWLINE);
-		source.append("}");
-		
-		return source.toString();
-	}
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/12/06 16:42:38  gianasista
+// Test refactoring
+//
 // Revision 1.3  2008/03/21 18:25:15  gianasista
 // First version of new property page with source folder mapping
 //

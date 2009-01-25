@@ -1,8 +1,6 @@
 package org.moreunit.decorator;
 
-import org.easymock.EasyMock;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.SimpleProjectTestCase;
@@ -10,7 +8,6 @@ import org.moreunit.WorkspaceHelper;
 
 public class UnitDecoratorTest extends SimpleProjectTestCase 
 {
-
 	private UnitDecorator unitDecorator;
 
 	@Override

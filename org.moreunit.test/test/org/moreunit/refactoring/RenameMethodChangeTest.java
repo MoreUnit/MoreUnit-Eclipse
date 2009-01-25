@@ -1,15 +1,16 @@
 package org.moreunit.refactoring;
 
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.moreunit.AbstractMoreUnitTest;
 import org.moreunit.refactoring.RenameMethodChange;
 
-public class RenameMethodChangeTest extends AbstractMoreUnitTest {
+public class RenameMethodChangeTest extends TestCase {
 
 	/*
 	private Mock				declaringType	= mock(IType.class);
@@ -56,6 +57,9 @@ public class RenameMethodChangeTest extends AbstractMoreUnitTest {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/12/17 18:42:13  gianasista
+// Test refactoring
+//
 // Revision 1.1  2008/02/04 20:41:11  gianasista
 // Initital
 //

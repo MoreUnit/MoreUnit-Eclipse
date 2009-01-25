@@ -10,11 +10,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IParent;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.moreunit.AbstractMoreUnitTest;
-import org.moreunit.refactoring.RenameClassChange;
 
 public class RenameClassChangeTest extends TestCase {
 
@@ -143,6 +140,9 @@ public class RenameClassChangeTest extends TestCase {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/12/17 18:42:13  gianasista
+// Test refactoring
+//
 // Revision 1.1  2008/02/04 20:41:11  gianasista
 // Initital
 //
