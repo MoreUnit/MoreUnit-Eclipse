@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
-import org.moreunit.log.LogHandler;
 import org.moreunit.util.PluginTools;
 
 /**
