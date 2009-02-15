@@ -130,6 +130,12 @@ public class ClassTypeFacade extends TypeFacade {
 
 		return result;
 	}
+	
+	public boolean hasTestMethod(IMethod method)
+	{
+		List<IMethod> correspondingTestMethods = getCorrespondingTestMethods(method);
+		return correspondingTestMethods != null	&& correspondingTestMethods.size() > 0;
+	}
 
 	/**
 	 * Getter uses lazy caching.

@@ -60,6 +60,18 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase {
 		assertEquals(getNumberOneTestMethod, correspondingTestMethod);
 	}
 	
+	public void testHasTestMethodWithTestMethod() throws CoreException 
+	{
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		
+		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+		WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
+		
+		ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
+		assertTrue(classTypeFacade.hasTestMethod(getNumberOneMethod));
+	}
+	
 	public void testGetCorrespondingTestMethodWithoutTestMethod() throws JavaModelException 
 	{
 		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -69,6 +81,16 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase {
 		
 		ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
 		assertNull(classTypeFacade.getCorrespondingTestMethod(methodWithoutCorrespondingTestMethod, testcaseType));
+	}
+	
+	public void testHasTestMethodWithoutTestMethod() throws CoreException
+	{
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+		
+		IMethod methodWithoutCorrespondingTestMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "");
+		ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
+		assertFalse(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod));		
 	}
 
 	public void testGetCorrespondingTestMethods() throws CoreException {
@@ -84,8 +106,5 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase {
 		assertEquals(2, correspondingTestMethods.size());
 		assertTrue(correspondingTestMethods.contains(getNumberOneTestMethod));
 		assertTrue(correspondingTestMethods.contains(getNumberOneTestMethod2));
-	}
-		
-
-
+	}		
 }

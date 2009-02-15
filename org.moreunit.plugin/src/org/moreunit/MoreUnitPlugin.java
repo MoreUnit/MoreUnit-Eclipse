@@ -1,13 +1,21 @@
 package org.moreunit;
 
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.moreunit.listener.JavaCodeChangeListener;
-import org.moreunit.listener.MarkerUpdateListener;
+import org.moreunit.annotation.AnnotationUpdateListener;
+import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.MoreUnitContants;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -32,8 +40,30 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		JavaCore.addElementChangedListener(new JavaCodeChangeListener());
-		PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(new MarkerUpdateListener());
+		PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(new AnnotationUpdateListener());
+		MoreUnitAnnotationModel.attachForAllOpenEditor();
+		removeMarkerFromOlderMoreUnitVersions();
+	}
+	
+	/*
+	 * This methods should get removed some versions later.
+	 * Marker could be around from older versions of moreUnit (marker were declarated persistent).
+	 */
+	private void removeMarkerFromOlderMoreUnitVersions()
+	{
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot workspaceRoot = workspace.getRoot();
+		IProject[] projects = workspaceRoot.getProjects();
+		
+		for(int i=0; i<projects.length; i++) {
+			IProject project = (IProject)projects[i];
+			IJavaProject javaProject = JavaCore.create(project);
+			try {
+				javaProject.getProject().deleteMarkers(MoreUnitContants.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -67,6 +97,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/02/29 21:28:57  gianasista
+// Marker update gets synchronized with the open editors
+//
 // Revision 1.4  2007/09/02 19:25:22  gianasista
 // TestNG support
 //

@@ -87,6 +87,7 @@
       </objectContribution>
      </extension>
 
+   <!--
    <extension
       	point="org.eclipse.core.resources.markers"
       	id="testCase"
@@ -102,7 +103,9 @@
 			id="org.moreunit.testcaseimageprovider">
 		</imageprovider>
 	</extension>
+	-->
 	
+	<!--
 	<extension point="org.eclipse.ui.editors.annotationTypes">
 		<type 
 			name="org.moreunit.testCaseAnnotation"
@@ -110,11 +113,20 @@
 			markerType="org.moreunit.testCase">
 		</type>
 	</extension>
+	-->
 	
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
 		<specification
 			annotationType="org.moreunit.testCaseAnnotation"
-			icon="icons/classHasTest.gif">
+			icon="icons/classHasTest.gif"
+			label="MoreUnit marker"
+			overviewRulerPreferenceKey="org.moreunit.overview_ruler"
+			overviewRulerPreferenceValue="false"
+			verticalRulerPreferenceKey="org.moreunit.vertical_ruler"
+			verticalRulerPreferenceValue="true"
+			colorPreferenceKey="org.moreunit.color_preference"
+			colorPreferenceValue="32,128,65"
+			textPreferenceKey="org.moreunit.text_preference">
 		</specification>
 	</extension>
 
