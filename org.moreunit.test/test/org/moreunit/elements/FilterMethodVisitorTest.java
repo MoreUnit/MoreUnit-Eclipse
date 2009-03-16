@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
@@ -27,6 +26,8 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	
 	private IPackageFragment sourcesPackage;
 	
+	private static final String JAVA_CLASS_NAME = "FilterMethodVisitorUT";
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();		
@@ -41,7 +42,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 	
 	public void testGetPrivateMethods() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
 		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2");
 		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberThree()", "return 3");
@@ -54,7 +55,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 	
 	public void testGetPrivateMethodsOverloaded() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
 		WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
 		
@@ -66,7 +67,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 
 	public void testGetPrivateMethodsOverloaded2() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(boolean parameter)", "return 1");
 		WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
 		
@@ -78,7 +79,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 
 	public void testIsPrivateMethod() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
 		IMethod publicMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2");
 		IMethod protectedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberThree()", "return 3");
@@ -92,7 +93,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 	
 	public void testIsPrivateMethodOverloaded() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
 		IMethod overloadedPrivateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
 		
@@ -102,8 +103,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 	
 	public void testGetFieldDeclarations() throws CoreException {
-		String className = "Hello";
-		ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", className), getClassSourceWithFields(className, "fieldName1", "fieldName2"), false, null);
+		ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", JAVA_CLASS_NAME), getClassSourceWithFields(JAVA_CLASS_NAME, "fieldName1", "fieldName2"), false, null);
 		FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(compilationUnit.findPrimaryType());
 		List<FieldDeclaration> fieldDeclarations = filterMethodVisitor.getFieldDeclarations();
 		assertEquals(2, fieldDeclarations.size());
@@ -131,7 +131,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 
 	public void testGetGetterMethods() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod fieldName1GetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getFieldName1()", "return 1");
 		IMethod fieldName2GetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getFieldName2()", "return 2");
 		
@@ -139,11 +139,11 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 		List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
 		assertEquals(2, getterMethods.size());
 		WorkspaceHelper.assertSameMethodName(fieldName1GetterMethod, getterMethods.get(0));
-		WorkspaceHelper.assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));		
+		WorkspaceHelper.assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));
 	}
 	
 	public void testGetSetterMethods() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
 		IMethod fieldName1SetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getFieldName1()", "return 1");
 		WorkspaceHelper.createMethodInJavaType(cutType, "public int setFieldName2()", "return 2");
 		
@@ -154,8 +154,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase {
 	}
 	
 	public void testIsGetterMethod() throws CoreException {
-		String className = "Hello";
-		ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", className), getClassSourceWithFields(className, "fieldName1", "fieldName2"), false, null);
+		ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", JAVA_CLASS_NAME), getClassSourceWithFields(JAVA_CLASS_NAME, "fieldName1", "fieldName2"), false, null);
 		IMethod fieldName1GetterMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private String getFieldName1()", "return fieldname1;");
 		IMethod getterWithoutFieldMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private int getTheWorld()", "return 1;");
 		IMethod fieldName1SetterMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private int setFieldName1()", "return 1;");

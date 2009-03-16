@@ -68,6 +68,10 @@ public class PreferencesConverterTest extends SimpleProjectTestCase {
 		
 	}
 	
+	public void testConvertSourceMappingsToStringLeereListe() {
+		assertEquals("", PreferencesConverter.convertSourceMappingsToString(new ArrayList<SourceFolderMapping>()));
+	}
+	
 	public void testConvertStringToSourceMappingList() {
 		String mappingString = unit1SourceFolder.getJavaProject().getElementName()+":"+unit1SourceFolder.getElementName()+":"+
 	     					   unit2SourceFolder.getJavaProject().getElementName()+":"+unit2SourceFolder.getElementName()+"#"+
@@ -104,6 +108,5 @@ public class PreferencesConverterTest extends SimpleProjectTestCase {
 	public void testConvertArrayToString() {
 		assertEquals("token1,token2", PreferencesConverter.convertArrayToString(new String[] {"token1", "token2"}));
 	}
-
 
 }
