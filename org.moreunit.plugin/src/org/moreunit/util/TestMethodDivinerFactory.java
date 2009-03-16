@@ -17,7 +17,7 @@ public class TestMethodDivinerFactory{
 
 	public TestMethodDiviner create(){
 		String methodType = preferences.getTestMethodType(compilationUnit.getJavaProject());
-		LogHandler.getInstance().handleInfoLog("TestMethodDivinerFactory.create() - " +methodType);
+		//LogHandler.getInstance().handleInfoLog("TestMethodDivinerFactory.create() - " +methodType);
 		if(methodType.equals(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX)){
 			return new TestMethodDivinerNoPraefix();
 		}
