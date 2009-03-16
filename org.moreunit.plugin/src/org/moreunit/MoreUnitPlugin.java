@@ -57,11 +57,14 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 		
 		for(int i=0; i<projects.length; i++) {
 			IProject project = (IProject)projects[i];
-			IJavaProject javaProject = JavaCore.create(project);
-			try {
-				javaProject.getProject().deleteMarkers(MoreUnitContants.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
-			} catch (CoreException e) {
-				e.printStackTrace();
+			if(project.isAccessible())
+			{
+				IJavaProject javaProject = JavaCore.create(project);
+				try {
+					javaProject.getProject().deleteMarkers(MoreUnitContants.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -97,6 +100,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/02/15 17:28:09  gianasista
+// annotations instead of marker
+//
 // Revision 1.5  2008/02/29 21:28:57  gianasista
 // Marker update gets synchronized with the open editors
 //
