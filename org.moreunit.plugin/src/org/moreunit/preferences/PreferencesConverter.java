@@ -38,8 +38,12 @@ public class PreferencesConverter {
 			result.append(PreferencesConverter.createStringFromSourceMapping(mapping));
 			result.append(PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
 		}
-		// remove the last delimiter char at the end of the string
-		result.deleteCharAt(result.lastIndexOf(PreferencesConverter.DELIMITER_BETWEEN_MAPPING));
+		
+		if(mappingList.size() > 0)
+		{
+			// remove the last delimiter char at the end of the string
+			result.deleteCharAt(result.lastIndexOf(PreferencesConverter.DELIMITER_BETWEEN_MAPPING));
+		}
 		
 		return result.toString();
 	}

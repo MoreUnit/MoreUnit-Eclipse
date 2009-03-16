@@ -115,7 +115,7 @@ public class Preferences {
 	}
 	
 	public void setJunitDirectory(String directory) {
-		getProjectStore(null).getString(directory);
+		getProjectStore(null).setValue(PreferenceConstants.PREF_JUNIT_PATH, directory);
 	}
 
 	public String getTestMethodType(IJavaProject javaProject) {
@@ -137,7 +137,7 @@ public class Preferences {
 	}
 	
 	public void setTestMethodDefaultContent(IJavaProject javaProject, String methodContent) {
-		getProjectStore(javaProject).setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, methodContent);
+		getProjectStore(javaProject).setValue(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, methodContent);
 	}
 	
 	public String[] getPrefixes(IJavaProject javaProject) {
@@ -297,6 +297,9 @@ public class Preferences {
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2009/01/18 20:11:48  gianasista
+// Refactoring of preferences/properties
+//
 // Revision 1.18  2009/01/15 19:06:53  gianasista
 // Patch from Zach: configurable content for test method
 //
