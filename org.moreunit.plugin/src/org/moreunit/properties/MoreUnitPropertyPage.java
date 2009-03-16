@@ -130,8 +130,11 @@ public class MoreUnitPropertyPage extends PropertyPage {
 	private void saveProperties() {
 		try {
 			Preferences.getInstance().setHasProjectSpecificSettings(getJavaProject(), shouldUseProjectspecificSettings());
-			firstTabUnitSourceFolder.saveProperties();
-			secondTabOtherProperties.saveProperties();
+			if(shouldUseProjectspecificSettings())
+			{
+				firstTabUnitSourceFolder.saveProperties();
+				secondTabOtherProperties.saveProperties();
+			}
 			IPreferenceStore store = Preferences.getInstance().getProjectStore(getJavaProject());
 			if(store instanceof ScopedPreferenceStore)
 				((ScopedPreferenceStore)store).save();
