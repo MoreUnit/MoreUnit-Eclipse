@@ -331,6 +331,15 @@
    			name="Missing Testmethods"
    			class="org.moreunit.ui.MissingTestmethodViewPart"/>
    </extension>
+   <!--
+   <extension point="org.eclipse.ui.views">
+   		<category id="org.moreunit.ui"
+   			name="MoreUnit"/>
+   		<view id="org.moreunit.missingtestclassview"
+   			name="Missing Test Classes"
+   			class="org.moreunit.ui.MissingTestclassViewPart"/>
+   </extension>
+   -->
    
 	
 </plugin>

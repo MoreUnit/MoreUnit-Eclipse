@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.MoreUnitContants;
 
 /**
  * @author vera
@@ -37,6 +38,12 @@ public class EditorPartFacade {
 	
 	public IFile getFile() {
 		return (IFile)editorPart.getEditorInput().getAdapter(IFile.class);
+	}
+	
+	public boolean isJavaFile() 
+	{
+		IFile file = getFile();
+		return file.getName().endsWith(MoreUnitContants.JAVA_FILE_EXTENSION);
 	}
 	
 	public ICompilationUnit getCompilationUnit() {
@@ -105,6 +112,9 @@ public class EditorPartFacade {
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/25 14:57:46  gianasista
+// getter for EditorPart
+//
 // Revision 1.2  2006/11/04 08:50:17  channingwalton
 // Fix for [ 1579660 ] Testcase selection dialog opens twice
 //

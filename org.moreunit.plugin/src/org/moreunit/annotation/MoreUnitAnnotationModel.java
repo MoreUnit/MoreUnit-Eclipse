@@ -167,25 +167,29 @@ public class MoreUnitAnnotationModel implements IAnnotationModel {
 		clear(event);
 
 		EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-		ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getCompilationUnit());
-		try {
-			IMethod[] methods = classTypeFacade.getType().getMethods();
-			for (IMethod method : methods) 
-			{
-				if (classTypeFacade.hasTestMethod(method)) 
+		if(editorPartFacade.isJavaFile()) 
+		{
+			try {			
+				ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getCompilationUnit());
+				
+				IMethod[] methods = classTypeFacade.getType().getMethods();
+				for (IMethod method : methods) 
 				{
-					ISourceRange range = method.getNameRange();
-					MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
-					annotations.add(annotation);
-					event.annotationAdded(annotation);
+					if (classTypeFacade.hasTestMethod(method)) 
+					{
+						ISourceRange range = method.getNameRange();
+						MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
+						annotations.add(annotation);
+						event.annotationAdded(annotation);
+					}
 				}
 			}
+			catch (Exception exc) 
+			{
+				LogHandler.getInstance().handleExceptionLog(exc);
+			}
+			fireModelChanged(event);
 		}
-		catch (JavaModelException exc) 
-		{
-			LogHandler.getInstance().handleExceptionLog(exc);
-		}
-		fireModelChanged(event);
 	}
 
 	public void addAnnotation(Annotation annotation, Position position) 
