@@ -43,7 +43,7 @@ public class EditorPartFacade {
 	public boolean isJavaFile() 
 	{
 		IFile file = getFile();
-		return file.getName().endsWith(MoreUnitContants.JAVA_FILE_EXTENSION);
+		return file != null && file.getName().endsWith(MoreUnitContants.JAVA_FILE_EXTENSION);
 	}
 	
 	public ICompilationUnit getCompilationUnit() {
@@ -112,6 +112,9 @@ public class EditorPartFacade {
 
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2009/03/23 19:17:48  gianasista
+// Bugfix: Exception when opening non-java-files
+//
 // Revision 1.3  2006/11/25 14:57:46  gianasista
 // getter for EditorPart
 //
