@@ -14,25 +14,28 @@ import org.moreunit.log.LogHandler;
 public class CreateTestMethodEditorAction implements IEditorActionDelegate
 {
 
-  IEditorPart editorPart;
+    IEditorPart editorPart;
 
-  public void setActiveEditor(IAction action, IEditorPart targetEditor)
-  {
-    editorPart = targetEditor;
-  }
+    public void setActiveEditor(IAction action, IEditorPart targetEditor)
+    {
+        editorPart = targetEditor;
+    }
 
-  public void run(IAction action)
-  {
-    LogHandler.getInstance().handleInfoLog("CreateTestMethodEditorAction.run()");
-    EditorActionExecutor.getInstance().executeCreateTestMethodAction(editorPart);
-  }
+    public void run(IAction action)
+    {
+        LogHandler.getInstance().handleInfoLog("CreateTestMethodEditorAction.run()");
+        EditorActionExecutor.getInstance().executeCreateTestMethodAction(editorPart);
+    }
 
-  public void selectionChanged(IAction action, ISelection selection)
-  {
-  }
+    public void selectionChanged(IAction action, ISelection selection)
+    {
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4 2009/04/05 19:07:42 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.3 2009/04/05 19:05:12 gianasista
 // Switch to gnu code formatter
 //

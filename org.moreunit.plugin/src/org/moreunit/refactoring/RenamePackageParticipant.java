@@ -25,83 +25,91 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
 /**
- * @author vera
- *
- * 24.11.2008 20:18:09
+ * @author vera 24.11.2008 20:18:09
  */
-public class RenamePackageParticipant extends RenameParticipant {
+public class RenamePackageParticipant extends RenameParticipant
+{
 
-	private IPackageFragment packageFragment;
-	private IPackageFragmentRoot packageFragmentRoot;
-	private List<IPackageFragmentRoot> correspondingPackages;
-	
-	@Override
-	protected boolean initialize(Object element) {
-		LogHandler.getInstance().handleInfoLog("RenamePackageParticipant.initialize");
-		packageFragment = (IPackageFragment)element;
-		
-		IJavaElement fragment = packageFragment;
-		while (!(fragment instanceof IPackageFragmentRoot)) {
-			fragment = fragment.getParent();
-		}
-		packageFragmentRoot = (IPackageFragmentRoot) fragment;		
-		correspondingPackages = getSourceFolderFromContext();
-		
-		return !isTestSourceFolder();
-	}
-	
-	private boolean isTestSourceFolder() {
-		List<SourceFolderMapping> sourceMappingList = Preferences.getInstance().getSourceMappingList(packageFragment.getJavaProject());
-		for(SourceFolderMapping mapping : sourceMappingList) {
-			if(packageFragmentRoot.equals(mapping.getTestFolder()))
-				return true;
-		}
-		
-		return false;
-	}
-	
-	@Override
-	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException {
-		return new RefactoringStatus();
-	}
+    private IPackageFragment packageFragment;
+    private IPackageFragmentRoot packageFragmentRoot;
+    private List<IPackageFragmentRoot> correspondingPackages;
 
-	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		if (!getArguments().getUpdateReferences()) {
-			return null;
-		}
-		
-		List<Change> changes = new ArrayList<Change>();
-		
-		for(IPackageFragmentRoot packageRoot : correspondingPackages)
-		{
-			IPackageFragment packageToRename = packageRoot.getPackageFragment(packageFragment.getElementName());
-			if(packageToRename != null)
-			{
-				RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
-				RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
-				renameJavaElementDescriptor.setJavaElement(packageToRename);
-				renameJavaElementDescriptor.setNewName(getArguments().getNewName());
-				
-				RefactoringStatus refactoringStatus = new RefactoringStatus();
-				Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
-				renameRefactoring.checkAllConditions(pm);
-				
-				changes.add(renameRefactoring.createChange(pm));		
-			}
-		}
-		
-		return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
-	}
-	
-	private List<IPackageFragmentRoot> getSourceFolderFromContext() {
-		SourceFolderContext context = SourceFolderContext.getInstance();
-		return context.getSourceFolderToSearch(packageFragmentRoot);
-	}
+    @Override
+    protected boolean initialize(Object element)
+    {
+        LogHandler.getInstance().handleInfoLog("RenamePackageParticipant.initialize");
+        packageFragment = (IPackageFragment) element;
 
-	@Override
-	public String getName() {
-		LogHandler.getInstance().handleInfoLog("RenamePackageParticipant.getName");
-		return "MoreUnit Rename Package";
-	}
+        IJavaElement fragment = packageFragment;
+        while (! (fragment instanceof IPackageFragmentRoot))
+        {
+            fragment = fragment.getParent();
+        }
+        packageFragmentRoot = (IPackageFragmentRoot) fragment;
+        correspondingPackages = getSourceFolderFromContext();
+
+        return ! isTestSourceFolder();
+    }
+
+    private boolean isTestSourceFolder()
+    {
+        List<SourceFolderMapping> sourceMappingList = Preferences.getInstance().getSourceMappingList(packageFragment.getJavaProject());
+        for (SourceFolderMapping mapping : sourceMappingList)
+        {
+            if(packageFragmentRoot.equals(mapping.getTestFolder()))
+                return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
+    {
+        return new RefactoringStatus();
+    }
+
+    @Override
+    public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
+    {
+        if(! getArguments().getUpdateReferences())
+        {
+            return null;
+        }
+
+        List<Change> changes = new ArrayList<Change>();
+
+        for (IPackageFragmentRoot packageRoot : correspondingPackages)
+        {
+            IPackageFragment packageToRename = packageRoot.getPackageFragment(packageFragment.getElementName());
+            if(packageToRename != null)
+            {
+                RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
+                RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
+                renameJavaElementDescriptor.setJavaElement(packageToRename);
+                renameJavaElementDescriptor.setNewName(getArguments().getNewName());
+
+                RefactoringStatus refactoringStatus = new RefactoringStatus();
+                Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
+                renameRefactoring.checkAllConditions(pm);
+
+                changes.add(renameRefactoring.createChange(pm));
+            }
+        }
+
+        return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+    }
+
+    private List<IPackageFragmentRoot> getSourceFolderFromContext()
+    {
+        SourceFolderContext context = SourceFolderContext.getInstance();
+        return context.getSourceFolderToSearch(packageFragmentRoot);
+    }
+
+    @Override
+    public String getName()
+    {
+        LogHandler.getInstance().handleInfoLog("RenamePackageParticipant.getName");
+        return "MoreUnit Rename Package";
+    }
 }

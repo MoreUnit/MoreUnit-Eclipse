@@ -10,39 +10,39 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class AnnotationUpdateListener implements IPartListener
 {
 
-  public void partActivated(IWorkbenchPart part)
-  {
-    if (part instanceof ITextEditor)
-      {
-        MoreUnitAnnotationModel.updateAnnotations((ITextEditor) part);
-      }
-  }
+    public void partActivated(IWorkbenchPart part)
+    {
+        if(part instanceof ITextEditor)
+        {
+            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) part);
+        }
+    }
 
-  public void partBroughtToTop(IWorkbenchPart part)
-  {
-    if (part instanceof ITextEditor)
-      {
-        MoreUnitAnnotationModel.updateAnnotations((ITextEditor) part);
-      }
-  }
+    public void partBroughtToTop(IWorkbenchPart part)
+    {
+        if(part instanceof ITextEditor)
+        {
+            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) part);
+        }
+    }
 
-  public void partClosed(IWorkbenchPart part)
-  {
-    if (part instanceof ITextEditor)
-      {
-        MoreUnitAnnotationModel.detach((ITextEditor) part);
-      }
-  }
+    public void partClosed(IWorkbenchPart part)
+    {
+        if(part instanceof ITextEditor)
+        {
+            MoreUnitAnnotationModel.detach((ITextEditor) part);
+        }
+    }
 
-  public void partDeactivated(IWorkbenchPart part)
-  {
-  }
+    public void partDeactivated(IWorkbenchPart part)
+    {
+    }
 
-  public void partOpened(IWorkbenchPart part)
-  {
-    if (part instanceof ITextEditor)
-      {
-        MoreUnitAnnotationModel.attach((ITextEditor) part);
-      }
-  }
+    public void partOpened(IWorkbenchPart part)
+    {
+        if(part instanceof ITextEditor)
+        {
+            MoreUnitAnnotationModel.attach((ITextEditor) part);
+        }
+    }
 }

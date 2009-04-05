@@ -325,11 +325,11 @@
    </extension>
    
    <extension point="org.eclipse.ui.views">
-   		<category id="org.moreunit.ui"
-   			name="MoreUnit"/>
+   		<category id="org.moreunit.ui" name="MoreUnit"/>
    		<view id="org.moreunit.missingtestmethodview"
    			name="Missing Testmethods"
-   			class="org.moreunit.ui.MissingTestmethodViewPart"/>
+   			class="org.moreunit.ui.MissingTestmethodViewPart"
+   			icon="icons/moreunitLogo.gif"/>
    </extension>
    <!--
    <extension point="org.eclipse.ui.views">
@@ -340,6 +340,12 @@
    			class="org.moreunit.ui.MissingTestclassViewPart"/>
    </extension>
    -->
-   
-	
+   <extension point="org.eclipse.ui.views">
+   		<category id="org.moreunit.ui" name="MoreUnit"/>
+   		<view id="org.moreunit.missingtestsview"
+   			  class="org.moreunit.ui.MissingTestsViewPart"
+   			  icon="icons/moreunitLogo.gif"
+   			  name="Missing tests per project"
+   			  category="org.moreunit.ui"/>
+   </extension>
 </plugin>

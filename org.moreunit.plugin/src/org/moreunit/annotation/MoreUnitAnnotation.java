@@ -9,18 +9,18 @@ import org.eclipse.jface.text.source.Annotation;
 public class MoreUnitAnnotation extends Annotation
 {
 
-  private final Position position;
+    private final Position position;
 
-  private static final String ANNOTATION_ID = "org.moreunit.testCaseAnnotation";
+    private static final String ANNOTATION_ID = "org.moreunit.testCaseAnnotation";
 
-  public MoreUnitAnnotation(int offset, int length)
-  {
-    super(ANNOTATION_ID, false, null);
-    position = new Position(offset, length);
-  }
+    public MoreUnitAnnotation(int offset, int length)
+    {
+        super(ANNOTATION_ID, false, null);
+        position = new Position(offset, length);
+    }
 
-  public Position getPosition()
-  {
-    return position;
-  }
+    public Position getPosition()
+    {
+        return position;
+    }
 }

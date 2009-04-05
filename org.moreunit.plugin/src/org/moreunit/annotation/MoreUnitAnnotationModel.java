@@ -35,264 +35,264 @@ import org.moreunit.log.LogHandler;
 public class MoreUnitAnnotationModel implements IAnnotationModel
 {
 
-  private static final String MODEL_KEY = "org.moreunit.model_key";
+    private static final String MODEL_KEY = "org.moreunit.model_key";
 
-  private List<MoreUnitAnnotation> annotations = new ArrayList<MoreUnitAnnotation>();
+    private List<MoreUnitAnnotation> annotations = new ArrayList<MoreUnitAnnotation>();
 
-  private List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
+    private List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
 
-  private IDocumentListener documentListener = new IDocumentListener()
-  {
-    public void documentChanged(DocumentEvent event)
+    private IDocumentListener documentListener = new IDocumentListener()
     {
-      updateAnnotations();
+        public void documentChanged(DocumentEvent event)
+        {
+            updateAnnotations();
+        }
+
+        public void documentAboutToBeChanged(DocumentEvent event)
+        {
+        }
+    };
+
+    private int openConnections = 0;
+
+    private IDocument document;
+
+    private ITextEditor textEditor;
+
+    /*
+     * Could be private, but is public for testing.
+     */
+    public MoreUnitAnnotationModel(IDocument document, ITextEditor textEditor)
+    {
+        this.document = document;
+        this.textEditor = textEditor;
+        updateAnnotations();
     }
 
-    public void documentAboutToBeChanged(DocumentEvent event)
+    public static void updateAnnotations(ITextEditor editor)
     {
+        IDocumentProvider provider = editor.getDocumentProvider();
+        if(provider == null)
+        {
+            return;
+        }
+        IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
+        if(! (model instanceof IAnnotationModelExtension))
+        {
+            return;
+        }
+
+        IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
+        MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
+        if(annotationModel != null)
+        {
+            annotationModel.updateAnnotations();
+        }
     }
-  };
 
-  private int openConnections = 0;
+    public static void attachForAllOpenEditor()
+    {
+        IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+        for (IWorkbenchWindow window : windows)
+        {
+            IWorkbenchPage[] pages = window.getPages();
+            for (IWorkbenchPage page : pages)
+            {
+                IEditorReference[] editors = page.getEditorReferences();
+                for (IEditorReference editorReference : editors)
+                {
+                    IWorkbenchPart editorPart = editorReference.getPart(false);
+                    if(editorPart instanceof ITextEditor)
+                    {
+                        attach((ITextEditor) editorPart);
+                    }
+                }
+            }
+        }
+    }
 
-  private IDocument document;
+    public static void attach(ITextEditor editor)
+    {
+        IDocumentProvider provider = editor.getDocumentProvider();
+        if(provider == null)
+        {
+            return;
+        }
+        IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
+        if(! (model instanceof IAnnotationModelExtension))
+        {
+            return;
+        }
 
-  private ITextEditor textEditor;
+        IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
+        IDocument document = provider.getDocument(editor.getEditorInput());
 
-  /*
-   * Could be private, but is public for testing.
-   */
-  public MoreUnitAnnotationModel(IDocument document, ITextEditor textEditor)
-  {
-    this.document = document;
-    this.textEditor = textEditor;
-    updateAnnotations();
-  }
+        MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
 
-  public static void updateAnnotations(ITextEditor editor)
-  {
-    IDocumentProvider provider = editor.getDocumentProvider();
-    if (provider == null)
-      {
-        return;
-      }
-    IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-    if (! (model instanceof IAnnotationModelExtension))
-      {
-        return;
-      }
+        if(annotationModel == null)
+        {
+            annotationModel = new MoreUnitAnnotationModel(document, editor);
+            modelExtension.addAnnotationModel(MODEL_KEY, annotationModel);
+        }
+    }
 
-    IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-    MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
-    if (annotationModel != null)
-      {
-        annotationModel.updateAnnotations();
-      }
-  }
+    public static void detach(ITextEditor editor)
+    {
+        IDocumentProvider provider = editor.getDocumentProvider();
+        if(provider == null)
+        {
+            return;
+        }
 
-  public static void attachForAllOpenEditor()
-  {
-    IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-    for (IWorkbenchWindow window : windows)
-      {
-        IWorkbenchPage[] pages = window.getPages();
-        for (IWorkbenchPage page : pages)
-          {
-            IEditorReference[] editors = page.getEditorReferences();
-            for (IEditorReference editorReference : editors)
-              {
-                IWorkbenchPart editorPart = editorReference.getPart(false);
-                if (editorPart instanceof ITextEditor)
-                  {
-                    attach((ITextEditor) editorPart);
-                  }
-              }
-          }
-      }
-  }
+        IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
+        if(! (model instanceof IAnnotationModelExtension))
+        {
+            return;
+        }
+        IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
+        modelExtension.removeAnnotationModel(MODEL_KEY);
+    }
 
-  public static void attach(ITextEditor editor)
-  {
-    IDocumentProvider provider = editor.getDocumentProvider();
-    if (provider == null)
-      {
-        return;
-      }
-    IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-    if (! (model instanceof IAnnotationModelExtension))
-      {
-        return;
-      }
+    private void clear(AnnotationModelEvent event)
+    {
+        Iterator iterator = getAnnotationIterator();
+        while (iterator.hasNext())
+        {
+            MoreUnitAnnotation annotation = (MoreUnitAnnotation) iterator.next();
+            event.annotationRemoved(annotation, annotation.getPosition());
+        }
+        annotations.clear();
+    }
 
-    IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-    IDocument document = provider.getDocument(editor.getEditorInput());
+    private void updateAnnotations()
+    {
+        AnnotationModelEvent event = new AnnotationModelEvent(this);
+        clear(event);
 
-    MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
+        EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+        if(editorPartFacade.isJavaFile())
+        {
+            try
+            {
+                ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getCompilationUnit());
 
-    if (annotationModel == null)
-      {
-        annotationModel = new MoreUnitAnnotationModel(document, editor);
-        modelExtension.addAnnotationModel(MODEL_KEY, annotationModel);
-      }
-  }
+                IMethod[] methods = classTypeFacade.getType().getMethods();
+                for (IMethod method : methods)
+                {
+                    if(classTypeFacade.hasTestMethod(method))
+                    {
+                        ISourceRange range = method.getNameRange();
+                        MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
+                        annotations.add(annotation);
+                        event.annotationAdded(annotation);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                LogHandler.getInstance().handleExceptionLog(exc);
+            }
+            fireModelChanged(event);
+        }
+    }
 
-  public static void detach(ITextEditor editor)
-  {
-    IDocumentProvider provider = editor.getDocumentProvider();
-    if (provider == null)
-      {
-        return;
-      }
+    public void addAnnotation(Annotation annotation, Position position)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-    IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-    if (! (model instanceof IAnnotationModelExtension))
-      {
-        return;
-      }
-    IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-    modelExtension.removeAnnotationModel(MODEL_KEY);
-  }
+    public void addAnnotationModelListener(IAnnotationModelListener listener)
+    {
+        if(! annotationModelListeners.contains(listener))
+        {
+            annotationModelListeners.add(listener);
+            fireModelChanged(new AnnotationModelEvent(this, true));
+        }
+    }
 
-  private void clear(AnnotationModelEvent event)
-  {
-    Iterator iterator = getAnnotationIterator();
-    while (iterator.hasNext())
-      {
-        MoreUnitAnnotation annotation = (MoreUnitAnnotation) iterator.next();
-        event.annotationRemoved(annotation, annotation.getPosition());
-      }
-    annotations.clear();
-  }
+    protected void fireModelChanged(AnnotationModelEvent event)
+    {
+        event.markSealed();
+        if(! event.isEmpty())
+        {
+            for (IAnnotationModelListener listener : annotationModelListeners)
+            {
+                if(listener instanceof IAnnotationModelListenerExtension)
+                {
+                    ((IAnnotationModelListenerExtension) listener).modelChanged(event);
+                }
+                else
+                {
+                    listener.modelChanged(this);
+                }
+            }
+        }
+    }
 
-  private void updateAnnotations()
-  {
-    AnnotationModelEvent event = new AnnotationModelEvent(this);
-    clear(event);
+    public void connect(IDocument document)
+    {
+        if(this.document != document)
+        {
+            throw new RuntimeException("Can not connect");
+        }
 
-    EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-    if (editorPartFacade.isJavaFile())
-      {
-        try
-          {
-            ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getCompilationUnit());
+        for (MoreUnitAnnotation annotation : annotations)
+        {
+            try
+            {
+                document.addPosition(annotation.getPosition());
+            }
+            catch (BadLocationException exc)
+            {
+                LogHandler.getInstance().handleExceptionLog(exc);
+            }
+        }
 
-            IMethod[] methods = classTypeFacade.getType().getMethods();
-            for (IMethod method : methods)
-              {
-                if (classTypeFacade.hasTestMethod(method))
-                  {
-                    ISourceRange range = method.getNameRange();
-                    MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
-                    annotations.add(annotation);
-                    event.annotationAdded(annotation);
-                  }
-              }
-          }
-        catch (Exception exc)
-          {
-            LogHandler.getInstance().handleExceptionLog(exc);
-          }
-        fireModelChanged(event);
-      }
-  }
+        if(openConnections++ == 0)
+        {
+            document.addDocumentListener(documentListener);
+        }
+    }
 
-  public void addAnnotation(Annotation annotation, Position position)
-  {
-    throw new UnsupportedOperationException();
-  }
+    public void disconnect(IDocument document)
+    {
+        if(this.document != document)
+        {
+            throw new RuntimeException("Can not connect");
+        }
 
-  public void addAnnotationModelListener(IAnnotationModelListener listener)
-  {
-    if (! annotationModelListeners.contains(listener))
-      {
-        annotationModelListeners.add(listener);
-        fireModelChanged(new AnnotationModelEvent(this, true));
-      }
-  }
+        for (MoreUnitAnnotation annotation : annotations)
+        {
+            document.removePosition(annotation.getPosition());
+        }
 
-  protected void fireModelChanged(AnnotationModelEvent event)
-  {
-    event.markSealed();
-    if (! event.isEmpty())
-      {
-        for (IAnnotationModelListener listener : annotationModelListeners)
-          {
-            if (listener instanceof IAnnotationModelListenerExtension)
-              {
-                ((IAnnotationModelListenerExtension) listener).modelChanged(event);
-              }
-            else
-              {
-                listener.modelChanged(this);
-              }
-          }
-      }
-  }
+        if(--openConnections == 0)
+        {
+            document.removeDocumentListener(documentListener);
+        }
+    }
 
-  public void connect(IDocument document)
-  {
-    if (this.document != document)
-      {
-        throw new RuntimeException("Can not connect");
-      }
+    public Iterator getAnnotationIterator()
+    {
+        return annotations.iterator();
+    }
 
-    for (MoreUnitAnnotation annotation : annotations)
-      {
-        try
-          {
-            document.addPosition(annotation.getPosition());
-          }
-        catch (BadLocationException exc)
-          {
-            LogHandler.getInstance().handleExceptionLog(exc);
-          }
-      }
+    public Position getPosition(Annotation annotation)
+    {
+        if(annotation instanceof MoreUnitAnnotation)
+        {
+            return ((MoreUnitAnnotation) annotation).getPosition();
+        }
+        return null;
+    }
 
-    if (openConnections++ == 0)
-      {
-        document.addDocumentListener(documentListener);
-      }
-  }
+    public void removeAnnotation(Annotation annotation)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-  public void disconnect(IDocument document)
-  {
-    if (this.document != document)
-      {
-        throw new RuntimeException("Can not connect");
-      }
-
-    for (MoreUnitAnnotation annotation : annotations)
-      {
-        document.removePosition(annotation.getPosition());
-      }
-
-    if (--openConnections == 0)
-      {
-        document.removeDocumentListener(documentListener);
-      }
-  }
-
-  public Iterator getAnnotationIterator()
-  {
-    return annotations.iterator();
-  }
-
-  public Position getPosition(Annotation annotation)
-  {
-    if (annotation instanceof MoreUnitAnnotation)
-      {
-        return ((MoreUnitAnnotation) annotation).getPosition();
-      }
-    return null;
-  }
-
-  public void removeAnnotation(Annotation annotation)
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  public void removeAnnotationModelListener(IAnnotationModelListener listener)
-  {
-    annotationModelListeners.remove(listener);
-  }
+    public void removeAnnotationModelListener(IAnnotationModelListener listener)
+    {
+        annotationModelListeners.remove(listener);
+    }
 }

@@ -23,65 +23,75 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.util.PluginTools;
 
 /**
- * @author vera
- *
- * 15.03.2008 19:38:50
+ * @author vera 15.03.2008 19:38:50
  */
-public class SourceFolderMappingDialog extends Dialog implements ICheckStateListener, ITreeContentProvider {
-	
-	private SourceFolderMapping sourceFolderMapping;
-	private CheckboxTreeViewer checkboxTreeViewer;
-	private UnitSourceFolderBlock unitSourceFolderBlock;
+public class SourceFolderMappingDialog extends Dialog implements ICheckStateListener, ITreeContentProvider
+{
 
-	protected SourceFolderMappingDialog(UnitSourceFolderBlock unitSourceFolderBlock, Shell parentShell, SourceFolderMapping sourceFolderMapping) {
-		super(parentShell);
-		
-		this.unitSourceFolderBlock = unitSourceFolderBlock;
-		this.sourceFolderMapping = sourceFolderMapping;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		checkboxTreeViewer = new CheckboxTreeViewer(parent);
-		checkboxTreeViewer.addCheckStateListener(this);
-		checkboxTreeViewer.setLabelProvider(new JavaElementLabelProvider());
-		checkboxTreeViewer.setContentProvider(this);
-		checkboxTreeViewer.setInput(this);
-		
-		return parent;
-	}
+    private SourceFolderMapping sourceFolderMapping;
+    private CheckboxTreeViewer checkboxTreeViewer;
+    private UnitSourceFolderBlock unitSourceFolderBlock;
 
-	public void checkStateChanged(CheckStateChangedEvent event) {
-		
-	}
+    protected SourceFolderMappingDialog(UnitSourceFolderBlock unitSourceFolderBlock, Shell parentShell, SourceFolderMapping sourceFolderMapping)
+    {
+        super(parentShell);
 
-	public Object[] getChildren(Object parentElement) {
-		return null;
-	}
+        this.unitSourceFolderBlock = unitSourceFolderBlock;
+        this.sourceFolderMapping = sourceFolderMapping;
+    }
 
-	public Object getParent(Object element) {
-		return null;
-	}
+    @Override
+    protected Control createDialogArea(Composite parent)
+    {
+        checkboxTreeViewer = new CheckboxTreeViewer(parent);
+        checkboxTreeViewer.addCheckStateListener(this);
+        checkboxTreeViewer.setLabelProvider(new JavaElementLabelProvider());
+        checkboxTreeViewer.setContentProvider(this);
+        checkboxTreeViewer.setInput(this);
 
-	public boolean hasChildren(Object element) {
-		return false;
-	}
+        return parent;
+    }
 
-	public Object[] getElements(Object inputElement) {
-		return PluginTools.getAllSourceFolderFromProject(sourceFolderMapping.getJavaProject()).toArray();
-	}
+    public void checkStateChanged(CheckStateChangedEvent event)
+    {
 
-	public void dispose() {
-	}
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-	@Override
-	protected void okPressed() {
-		Object[] checkedFolder = checkboxTreeViewer.getCheckedElements();
-		if(checkedFolder != null && checkedFolder.length > 0)
-			unitSourceFolderBlock.handleSourceDialogMappingFinished(sourceFolderMapping, (IPackageFragmentRoot)checkedFolder[0]);
-		
-		super.okPressed();
-	}
+    public Object[] getChildren(Object parentElement)
+    {
+        return null;
+    }
+
+    public Object getParent(Object element)
+    {
+        return null;
+    }
+
+    public boolean hasChildren(Object element)
+    {
+        return false;
+    }
+
+    public Object[] getElements(Object inputElement)
+    {
+        return PluginTools.getAllSourceFolderFromProject(sourceFolderMapping.getJavaProject()).toArray();
+    }
+
+    public void dispose()
+    {
+    }
+
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+    {
+    }
+
+    @Override
+    protected void okPressed()
+    {
+        Object[] checkedFolder = checkboxTreeViewer.getCheckedElements();
+        if(checkedFolder != null && checkedFolder.length > 0)
+            unitSourceFolderBlock.handleSourceDialogMappingFinished(sourceFolderMapping, (IPackageFragmentRoot) checkedFolder[0]);
+
+        super.okPressed();
+    }
 }

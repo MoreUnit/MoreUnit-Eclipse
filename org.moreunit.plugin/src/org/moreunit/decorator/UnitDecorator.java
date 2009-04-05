@@ -26,75 +26,78 @@ import org.moreunit.util.MoreUnitContants;
 public class UnitDecorator extends LabelProvider implements ILightweightLabelDecorator
 {
 
-  public void decorate(Object element, IDecoration decoration)
-  {
-    ICompilationUnit javaTypeOfResource = tryToGetCompilationUnitFromElement(element);
-    if (javaTypeOfResource == null)
-      return;
+    public void decorate(Object element, IDecoration decoration)
+    {
+        ICompilationUnit javaTypeOfResource = tryToGetCompilationUnitFromElement(element);
+        if(javaTypeOfResource == null)
+            return;
 
-    if (hasTestCase(javaTypeOfResource))
-      {
-        handleClassDecoration(decoration);
-      }
-  }
+        if(hasTestCase(javaTypeOfResource))
+        {
+            handleClassDecoration(decoration);
+        }
+    }
 
-  private void handleClassDecoration(IDecoration decoration)
-  {
-    ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
-    decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
-  }
+    private void handleClassDecoration(IDecoration decoration)
+    {
+        ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
+        decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
+    }
 
-  private boolean hasTestCase(ICompilationUnit compilationUnit)
-  {
-    ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
-    Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
-    return correspondingTestcases != null && correspondingTestcases.size() > 0;
-  }
+    private boolean hasTestCase(ICompilationUnit compilationUnit)
+    {
+        ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
+        Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
+        return correspondingTestcases != null && correspondingTestcases.size() > 0;
+    }
 
-  /**
-   * This method checks the type of the <code>element</code> and tries to get
-   * the compilation unit The method returns null if <code>element</code> is the
-   * wrong type or if it is a test case.
-   */
-  public ICompilationUnit tryToGetCompilationUnitFromElement(Object element)
-  {
-    IResource objectResource = (IResource) element;
-    if (objectResource.getType() != IResource.FILE)
-      return null;
+    /**
+     * This method checks the type of the <code>element</code> and tries to get
+     * the compilation unit The method returns null if <code>element</code> is
+     * the wrong type or if it is a test case.
+     */
+    public ICompilationUnit tryToGetCompilationUnitFromElement(Object element)
+    {
+        IResource objectResource = (IResource) element;
+        if(objectResource.getType() != IResource.FILE)
+            return null;
 
-    IJavaElement javaElement = JavaCore.create(objectResource);
-    if (javaElement == null)
-      return null;
+        IJavaElement javaElement = JavaCore.create(objectResource);
+        if(javaElement == null)
+            return null;
 
-    if (javaElement.getElementType() != IJavaElement.COMPILATION_UNIT)
-      return null;
+        if(javaElement.getElementType() != IJavaElement.COMPILATION_UNIT)
+            return null;
 
-    if (TypeFacade.isTestCase(((ICompilationUnit) javaElement).findPrimaryType()))
-      return null;
+        if(TypeFacade.isTestCase(((ICompilationUnit) javaElement).findPrimaryType()))
+            return null;
 
-    return (ICompilationUnit) javaElement;
-  }
+        return (ICompilationUnit) javaElement;
+    }
 
-  public static UnitDecorator getUnitDecorator()
-  {
-    IDecoratorManager decoratorManager = MoreUnitPlugin.getDefault().getWorkbench().getDecoratorManager();
+    public static UnitDecorator getUnitDecorator()
+    {
+        IDecoratorManager decoratorManager = MoreUnitPlugin.getDefault().getWorkbench().getDecoratorManager();
 
-    if (decoratorManager.getEnabled(MoreUnitContants.TEST_CASE_DECORATOR))
-      return (UnitDecorator) decoratorManager.getBaseLabelProvider(MoreUnitContants.TEST_CASE_DECORATOR);
-    else
-      return null;
-  }
+        if(decoratorManager.getEnabled(MoreUnitContants.TEST_CASE_DECORATOR))
+            return (UnitDecorator) decoratorManager.getBaseLabelProvider(MoreUnitContants.TEST_CASE_DECORATOR);
+        else
+            return null;
+    }
 
-  public void refreshAll()
-  {
-    UnitDecorator unitDecorator = getUnitDecorator();
+    public void refreshAll()
+    {
+        UnitDecorator unitDecorator = getUnitDecorator();
 
-    if (unitDecorator != null)
-      unitDecorator.fireLabelProviderChanged(new LabelProviderChangedEvent(unitDecorator));
-  }
+        if(unitDecorator != null)
+            unitDecorator.fireLabelProviderChanged(new LabelProviderChangedEvent(unitDecorator));
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6 2009/04/05 19:08:33 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.5 2009/01/23 21:19:28 gianasista
 // Refactoring + Tests
 //

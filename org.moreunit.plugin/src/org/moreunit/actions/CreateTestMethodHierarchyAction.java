@@ -17,39 +17,42 @@ import org.moreunit.preferences.Preferences;
 public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
 {
 
-  IWorkbenchPart workbenchPart;
+    IWorkbenchPart workbenchPart;
 
-  ISelection selection;
+    ISelection selection;
 
-  public void setActivePart(final IAction action, final IWorkbenchPart targetPart)
-  {
-    this.workbenchPart = targetPart;
-  }
+    public void setActivePart(final IAction action, final IWorkbenchPart targetPart)
+    {
+        this.workbenchPart = targetPart;
+    }
 
-  public void run(final IAction action)
-  {
-    if ((this.selection != null) && (this.selection instanceof IStructuredSelection))
-      {
-        Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
-        if (firstElement instanceof IMethod)
-          {
-            IMethod method = (IMethod) firstElement;
-            if (! TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType()))
-              {
-                TestmethodCreator testmethodCreator = new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(method.getJavaProject()));
-                testmethodCreator.createTestMethod(method);
-              }
-          }
-      }
-  }
+    public void run(final IAction action)
+    {
+        if((this.selection != null) && (this.selection instanceof IStructuredSelection))
+        {
+            Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
+            if(firstElement instanceof IMethod)
+            {
+                IMethod method = (IMethod) firstElement;
+                if(! TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType()))
+                {
+                    TestmethodCreator testmethodCreator = new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(method.getJavaProject()));
+                    testmethodCreator.createTestMethod(method);
+                }
+            }
+        }
+    }
 
-  public void selectionChanged(final IAction action, final ISelection selection)
-  {
-    this.selection = selection;
-  }
+    public void selectionChanged(final IAction action, final ISelection selection)
+    {
+        this.selection = selection;
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10 2009/04/05 19:07:42 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.9 2009/04/05 19:05:12 gianasista
 // Switch to gnu code formatter
 //

@@ -11,27 +11,30 @@ import org.moreunit.handler.EditorActionExecutor;
 public class JumpFromCompilationUnitAction implements IObjectActionDelegate
 {
 
-  private ICompilationUnit compilationUnit;
+    private ICompilationUnit compilationUnit;
 
-  public void setActivePart(IAction action, IWorkbenchPart targetPart)
-  {
+    public void setActivePart(IAction action, IWorkbenchPart targetPart)
+    {
 
-  }
+    }
 
-  public void run(IAction action)
-  {
-    EditorActionExecutor.getInstance().executeJumpAction(compilationUnit);
-  }
+    public void run(IAction action)
+    {
+        EditorActionExecutor.getInstance().executeJumpAction(compilationUnit);
+    }
 
-  public void selectionChanged(IAction action, ISelection selection)
-  {
-    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    compilationUnit = (ICompilationUnit) structuredSelection.getFirstElement();
-  }
+    public void selectionChanged(IAction action, ISelection selection)
+    {
+        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+        compilationUnit = (ICompilationUnit) structuredSelection.getFirstElement();
+    }
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4 2009/04/05 19:07:42 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.3 2009/04/05 19:05:12 gianasista
 // Switch to gnu code formatter
 //

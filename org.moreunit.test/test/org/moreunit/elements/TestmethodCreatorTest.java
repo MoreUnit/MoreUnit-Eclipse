@@ -8,75 +8,78 @@ import org.moreunit.WorkspaceHelper;
 import org.moreunit.preferences.PreferenceConstants;
 
 /**
- * @author vera
- *
- * 02.08.2007 07:37:24
+ * @author vera 02.08.2007 07:37:24
  */
-public class TestmethodCreatorTest extends SimpleProjectTestCase {
+public class TestmethodCreatorTest extends SimpleProjectTestCase
+{
 
-	public void testCreateFirstTestMethodJUnit3() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
-		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+    public void testCreateFirstTestMethodJUnit3() throws CoreException
+    {
+        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+        IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
 
-		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3,"foo");
-		IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
-		
-		assertEquals("testGetNumberOne", createTestMethod.getElementName());
-		assertFalse(createTestMethod.getSource().startsWith("@Test"));
-		assertTrue(createTestMethod.getSource().contains("foo"));
-		IMethod[] methods = testcaseType.getMethods();
-		assertEquals(1, methods.length);
-		assertEquals(createTestMethod, methods[0]);
-	}
-	
-	public void testCreateFirstTestMethodJUnit4() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
-		IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+        TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, "foo");
+        IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
 
-		TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4,"foo");
-		IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
-		
-		assertEquals("testGetNumberOne", createTestMethod.getElementName());
-		assertTrue(createTestMethod.getSource().startsWith("@Test"));
-		assertTrue(createTestMethod.getSource().contains("foo"));
-		
-		IMethod[] methods = testcaseType.getMethods();
-		assertEquals(1, methods.length);
-		assertEquals(createTestMethod, methods[0]);
-	}
+        assertEquals("testGetNumberOne", createTestMethod.getElementName());
+        assertFalse(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue(createTestMethod.getSource().contains("foo"));
+        IMethod[] methods = testcaseType.getMethods();
+        assertEquals(1, methods.length);
+        assertEquals(createTestMethod, methods[0]);
+    }
 
-	public void testCreateSecondTestMethodJUnit3() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
-		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
-		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
-		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3,"foo");
-		IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
-		assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
-		assertFalse(createTestMethod.getSource().startsWith("@Test"));
-		assertTrue(createTestMethod.getSource().contains("foo"));
-		
-		IMethod[] methods = testcaseType.getMethods();
-		assertEquals(2, methods.length);
-	}
-	
-	public void testCreateSecondTestMethodJUnit4() throws CoreException {
-		IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-		IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
-		WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
-		IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
-		
-		TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4,"foo");
-		IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
-		assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
-		assertTrue(createTestMethod.getSource().startsWith("@Test"));
-		assertTrue(createTestMethod.getSource().contains("foo"));
-		
-		IMethod[] methods = testcaseType.getMethods();
-		assertEquals(2, methods.length);		
-	}
+    public void testCreateFirstTestMethodJUnit4() throws CoreException
+    {
+        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+        IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
+        IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod);
+
+        assertEquals("testGetNumberOne", createTestMethod.getElementName());
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue(createTestMethod.getSource().contains("foo"));
+
+        IMethod[] methods = testcaseType.getMethods();
+        assertEquals(1, methods.length);
+        assertEquals(createTestMethod, methods[0]);
+    }
+
+    public void testCreateSecondTestMethodJUnit3() throws CoreException
+    {
+        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+        IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, "foo");
+        IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
+        assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
+        assertFalse(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue(createTestMethod.getSource().contains("foo"));
+
+        IMethod[] methods = testcaseType.getMethods();
+        assertEquals(2, methods.length);
+    }
+
+    public void testCreateSecondTestMethodJUnit4() throws CoreException
+    {
+        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
+        IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1");
+        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
+        IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod);
+        assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue(createTestMethod.getSource().contains("foo"));
+
+        IMethod[] methods = testcaseType.getMethods();
+        assertEquals(2, methods.length);
+    }
 
 }

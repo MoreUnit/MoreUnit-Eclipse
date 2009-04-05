@@ -15,24 +15,27 @@ import org.moreunit.handler.EditorActionExecutor;
 public class JumpAction implements IEditorActionDelegate
 {
 
-  private IEditorPart editorPart;
+    private IEditorPart editorPart;
 
-  public void setActiveEditor(IAction action, IEditorPart targetEditor)
-  {
-    editorPart = targetEditor;
-  }
+    public void setActiveEditor(IAction action, IEditorPart targetEditor)
+    {
+        editorPart = targetEditor;
+    }
 
-  public void run(IAction action)
-  {
-    EditorActionExecutor.getInstance().executeJumpAction(editorPart);
-  }
+    public void run(IAction action)
+    {
+        EditorActionExecutor.getInstance().executeJumpAction(editorPart);
+    }
 
-  public void selectionChanged(IAction action, ISelection selection)
-  {
-  }
+    public void selectionChanged(IAction action, ISelection selection)
+    {
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8 2009/04/05 19:07:42 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.7 2009/04/05 19:05:12 gianasista
 // Switch to gnu code formatter
 //

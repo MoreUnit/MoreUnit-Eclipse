@@ -15,105 +15,125 @@ import org.moreunit.ui.MethodPage;
 
 /**
  * @author vera
- * 
  */
-public class MethodTreeContentProvider implements ITreeContentProvider {
+public class MethodTreeContentProvider implements ITreeContentProvider
+{
 
-	IType classType;
-	List<IMethod> methods = new ArrayList<IMethod>();
-	private boolean isPrivateFiltered = false;
-	private boolean isGetterFiltered = false;
+    IType classType;
+    List<IMethod> methods = new ArrayList<IMethod>();
+    private boolean isPrivateFiltered = false;
+    private boolean isGetterFiltered = false;
 
-	public MethodTreeContentProvider(IType javaFileFile) {
-		this.classType = javaFileFile;
-		resetMethods(javaFileFile);
-	}
+    public MethodTreeContentProvider(IType javaFileFile)
+    {
+        this.classType = javaFileFile;
+        resetMethods(javaFileFile);
+    }
 
-	private void resetMethods(IType javaFileFile) {
-		methods = new ArrayList<IMethod>();
-		if (javaFileFile == null) {
-			return;
-		}
-		if (!TypeFacade.isTestCase(javaFileFile))
-			try {
-				ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
-				IMethod[] allMethods = javaFileFile.getMethods();
+    private void resetMethods(IType javaFileFile)
+    {
+        methods = new ArrayList<IMethod>();
+        if(javaFileFile == null)
+        {
+            return;
+        }
+        if(! TypeFacade.isTestCase(javaFileFile))
+            try
+            {
+                ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
+                IMethod[] allMethods = javaFileFile.getMethods();
 
-				for (IMethod method : allMethods) {
-					if (typeFacade.getCorrespondingTestMethods(method).size() == 0)
-						methods.add(method);
-				}
-			} catch (JavaModelException e) {
-				methods = new ArrayList<IMethod>();
-			}
-	}
+                for (IMethod method : allMethods)
+                {
+                    if(typeFacade.getCorrespondingTestMethods(method).size() == 0)
+                        methods.add(method);
+                }
+            }
+            catch (JavaModelException e)
+            {
+                methods = new ArrayList<IMethod>();
+            }
+    }
 
-	public Object[] getChildren(Object parentElement) {
-		return null;
-	}
+    public Object[] getChildren(Object parentElement)
+    {
+        return null;
+    }
 
-	public Object getParent(Object element) {
-		return null;
-	}
+    public Object getParent(Object element)
+    {
+        return null;
+    }
 
-	public boolean hasChildren(Object element) {
-		return false;
-	}
+    public boolean hasChildren(Object element)
+    {
+        return false;
+    }
 
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof MethodPage)
-			resetMethods(((MethodPage) inputElement).getInputType());
+    public Object[] getElements(Object inputElement)
+    {
+        if(inputElement instanceof MethodPage)
+            resetMethods(((MethodPage) inputElement).getInputType());
 
-		List<IMethod> resultMethodList = new ArrayList<IMethod>();
-		if (isPrivateFiltered)
-			resultMethodList.addAll(filterPrivateMethods(methods));
-		else
-			resultMethodList.addAll(methods);
+        List<IMethod> resultMethodList = new ArrayList<IMethod>();
+        if(isPrivateFiltered)
+            resultMethodList.addAll(filterPrivateMethods(methods));
+        else
+            resultMethodList.addAll(methods);
 
-		if (isGetterFiltered) {
-			return filterGetterAndSetter(resultMethodList).toArray();
-		}
+        if(isGetterFiltered)
+        {
+            return filterGetterAndSetter(resultMethodList).toArray();
+        }
 
-		return resultMethodList.toArray();
-	}
+        return resultMethodList.toArray();
+    }
 
-	public void dispose() {
-		methods = null;
-	}
+    public void dispose()
+    {
+        methods = null;
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+    {
+    }
 
-	private List<IMethod> filterPrivateMethods(List<IMethod> methodList) {
-		List<IMethod> resultList = new ArrayList<IMethod>();
-		FilterMethodVisitor privateMethodVisitor = new FilterMethodVisitor(classType);
+    private List<IMethod> filterPrivateMethods(List<IMethod> methodList)
+    {
+        List<IMethod> resultList = new ArrayList<IMethod>();
+        FilterMethodVisitor privateMethodVisitor = new FilterMethodVisitor(classType);
 
-		for (IMethod method : methodList) {
-			if (!privateMethodVisitor.isPrivateMethod(method))
-				resultList.add(method);
-		}
+        for (IMethod method : methodList)
+        {
+            if(! privateMethodVisitor.isPrivateMethod(method))
+                resultList.add(method);
+        }
 
-		return resultList;
-	}
+        return resultList;
+    }
 
-	private List<IMethod> filterGetterAndSetter(List<IMethod> methodList) {
-		List<IMethod> resultList = new ArrayList<IMethod>();
-		FilterMethodVisitor getterMethodVisitor = new FilterMethodVisitor(classType);
+    private List<IMethod> filterGetterAndSetter(List<IMethod> methodList)
+    {
+        List<IMethod> resultList = new ArrayList<IMethod>();
+        FilterMethodVisitor getterMethodVisitor = new FilterMethodVisitor(classType);
 
-		for (IMethod method : methodList) {
-			if (!getterMethodVisitor.isGetterMethod(method) && !getterMethodVisitor.isSetterMethod(method))
-				resultList.add(method);
-		}
+        for (IMethod method : methodList)
+        {
+            if(! getterMethodVisitor.isGetterMethod(method) && ! getterMethodVisitor.isSetterMethod(method))
+                resultList.add(method);
+        }
 
-		return resultList;
-	}
+        return resultList;
+    }
 
-	public void setPrivateFiltered(boolean isPrivateFiltered) {
-		this.isPrivateFiltered = isPrivateFiltered;
-	}
+    public void setPrivateFiltered(boolean isPrivateFiltered)
+    {
+        this.isPrivateFiltered = isPrivateFiltered;
+    }
 
-	public void setGetterFiltered(boolean isGetterFiltered) {
-		this.isGetterFiltered = isGetterFiltered;
-	}
+    public void setGetterFiltered(boolean isGetterFiltered)
+    {
+        this.isGetterFiltered = isGetterFiltered;
+    }
 
 }
