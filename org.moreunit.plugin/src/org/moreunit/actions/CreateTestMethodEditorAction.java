@@ -13,8 +13,7 @@ import org.moreunit.log.LogHandler;
  * This class delegates the menu action from the editor to create a new
  * testmethod.
  */
-public class CreateTestMethodEditorAction
-    implements IEditorActionDelegate
+public class CreateTestMethodEditorAction implements IEditorActionDelegate
 {
 
   IEditorPart editorPart;
@@ -36,6 +35,9 @@ public class CreateTestMethodEditorAction
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2 2009/04/05 19:00:39 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.1.1.1 2006/08/13 14:31:15 gianasista
 // initial
 //
