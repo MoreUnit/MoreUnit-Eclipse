@@ -1,5 +1,3 @@
-
-
 package org.moreunit.actions;
 
 import org.eclipse.jdt.core.IMethod;
@@ -52,6 +50,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9 2009/04/05 19:05:12 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.8 2009/04/05 19:00:38 gianasista
 // Switch to gnu code formatter
 //

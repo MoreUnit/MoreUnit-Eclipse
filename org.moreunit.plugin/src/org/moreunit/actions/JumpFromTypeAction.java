@@ -1,5 +1,3 @@
-
-
 package org.moreunit.actions;
 
 import org.eclipse.jdt.core.IType;
@@ -34,6 +32,9 @@ public class JumpFromTypeAction implements IObjectActionDelegate
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5 2009/04/05 19:05:12 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.4 2009/04/05 19:00:39 gianasista
 // Switch to gnu code formatter
 //

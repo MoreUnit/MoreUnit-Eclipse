@@ -1,5 +1,3 @@
-
-
 package org.moreunit.annotation;
 
 import org.eclipse.ui.IPartListener;
