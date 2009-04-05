@@ -1,5 +1,3 @@
-
-
 package org.moreunit.actions;
 
 import org.eclipse.jface.action.IAction;
@@ -35,6 +33,9 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3 2009/04/05 19:05:12 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.2 2009/04/05 19:00:39 gianasista
 // Switch to gnu code formatter
 //

@@ -16,24 +16,21 @@ import org.moreunit.preferences.Preferences;
  * This class delegates the action from the menu in the package explorer to
  * create a new testmethod.
  */
-public class CreateTestMethodHierarchyAction
-    implements IObjectActionDelegate
+public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
 {
 
   IWorkbenchPart workbenchPart;
 
   ISelection selection;
 
-  public void setActivePart(final IAction action,
-                            final IWorkbenchPart targetPart)
+  public void setActivePart(final IAction action, final IWorkbenchPart targetPart)
   {
     this.workbenchPart = targetPart;
   }
 
   public void run(final IAction action)
   {
-    if ((this.selection != null)
-        && (this.selection instanceof IStructuredSelection))
+    if ((this.selection != null) && (this.selection instanceof IStructuredSelection))
       {
         Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
         if (firstElement instanceof IMethod)
@@ -41,12 +38,7 @@ public class CreateTestMethodHierarchyAction
             IMethod method = (IMethod) firstElement;
             if (! TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType()))
               {
-                TestmethodCreator testmethodCreator = new TestmethodCreator(
-                                                                            method.getCompilationUnit(),
-                                                                            Preferences.getInstance().getTestType(
-                                                                                                                  method.getJavaProject()),
-                                                                            Preferences.getInstance().getTestMethodDefaultContent(
-                                                                                                                                  method.getJavaProject()));
+                TestmethodCreator testmethodCreator = new TestmethodCreator(method.getCompilationUnit(), Preferences.getInstance().getTestType(method.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(method.getJavaProject()));
                 testmethodCreator.createTestMethod(method);
               }
           }
@@ -60,6 +52,9 @@ public class CreateTestMethodHierarchyAction
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8 2009/04/05 19:00:38 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.7 2009/01/23 21:18:44 gianasista
 // Reformat
 //

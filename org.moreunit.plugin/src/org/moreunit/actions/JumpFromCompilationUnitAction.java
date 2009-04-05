@@ -10,8 +10,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.moreunit.handler.EditorActionExecutor;
 
-public class JumpFromCompilationUnitAction
-    implements IObjectActionDelegate
+public class JumpFromCompilationUnitAction implements IObjectActionDelegate
 {
 
   private ICompilationUnit compilationUnit;
@@ -35,6 +34,9 @@ public class JumpFromCompilationUnitAction
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2 2009/04/05 19:00:39 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.1 2006/10/02 18:22:24 channingwalton
 // added actions for jumping from views. added some tests for project
 // properties. improved some of the text

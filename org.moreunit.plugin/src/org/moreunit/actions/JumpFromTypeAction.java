@@ -10,8 +10,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.moreunit.handler.EditorActionExecutor;
 
-public class JumpFromTypeAction
-    implements IObjectActionDelegate
+public class JumpFromTypeAction implements IObjectActionDelegate
 {
 
   private IType type;
@@ -23,8 +22,7 @@ public class JumpFromTypeAction
 
   public void run(IAction action)
   {
-    EditorActionExecutor.getInstance().executeJumpAction(
-                                                         type.getCompilationUnit());
+    EditorActionExecutor.getInstance().executeJumpAction(type.getCompilationUnit());
   }
 
   public void selectionChanged(IAction action, ISelection selection)
@@ -36,6 +34,9 @@ public class JumpFromTypeAction
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4 2009/04/05 19:00:39 gianasista
+// Switch to gnu code formatter
+//
 // Revision 1.3 2009/01/23 21:19:13 gianasista
 // Organize Imports
 //
