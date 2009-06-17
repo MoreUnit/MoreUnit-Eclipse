@@ -1,10 +1,13 @@
 package org.moreunit.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class WordTokenizerTest extends TestCase
+import org.junit.Test;
+
+public class WordTokenizerTest
 {
 
+    @Test
     public void testWordTokenizer()
     {
         WordTokenizer wordTokenizer = new WordTokenizer("Oa");

@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BaseToolsTest extends TestCase
+import static org.junit.Assert.*;
+
+public class BaseToolsTest
 {
 
+    @Test
     public void testGetTestedClass()
     {
         String className = "Eins";
@@ -39,6 +42,7 @@ public class BaseToolsTest extends TestCase
         assertTrue(collection.isEmpty());
     }
 
+    @Test
     public void testGetTestedClassWithMultipleSuffixes()
     {
         String[] suffixes = new String[] { "SystemTest", "Test" };
@@ -50,6 +54,7 @@ public class BaseToolsTest extends TestCase
         assertEquals(Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
     }
 
+    @Test
     public void testGetTestedClassWithPackagePrefix() throws Exception
     {
         String className = "test.EinsTest";
@@ -63,6 +68,7 @@ public class BaseToolsTest extends TestCase
         assertEquals("Test without prefix but package prefix set", Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
     }
 
+    @Test
     public void testGetTestedClassWithPackageSuffix() throws Exception
     {
         String className = "test.EinsTest";
@@ -76,6 +82,7 @@ public class BaseToolsTest extends TestCase
         assertEquals("Test without suffix but package prefix set", Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
     }
 
+    @Test
     public void testRemoveSuffixFromTestCase()
     {
         String testClassName = "com.my.test.MyTest";
@@ -87,6 +94,7 @@ public class BaseToolsTest extends TestCase
         assertEquals("MyTest", BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix));
     }
 
+    @Test
     public void testGetListOfUnqualifiedTypeNames()
     {
         String testString = "One";
@@ -114,6 +122,7 @@ public class BaseToolsTest extends TestCase
         assertEquals("oneTwo", result.get(1));
     }
 
+    @Test
     public void testReturnsListOfUnqualifiedTypeNamesSortedByRawLength() throws Exception
     {
         ArrayList<String> testedClasses = new ArrayList<String>();

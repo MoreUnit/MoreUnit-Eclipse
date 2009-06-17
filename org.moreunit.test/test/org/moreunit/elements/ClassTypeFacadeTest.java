@@ -13,13 +13,16 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
 import org.moreunit.util.StringConstants;
+import static org.junit.Assert.*;
 
 public class ClassTypeFacadeTest extends SimpleProjectTestCase
 {
 
+    @Test
     public void testGetOneCorrespondingTestCase() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -31,6 +34,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         assertEquals(testcaseType, oneCorrespondingTestCase);
     }
 
+    @Test
     public void testGetOneCorrespondingTestCaseWithEnum() throws CoreException
     {
         String sourceCode = getEnumSourceFile();
@@ -50,6 +54,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         return source.toString();
     }
 
+    @Test
     public void testGetCorrespondingTestMethodWithTestMethod() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -63,6 +68,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         assertEquals(getNumberOneTestMethod, correspondingTestMethod);
     }
 
+    @Test
     public void testHasTestMethodWithTestMethod() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -75,6 +81,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         assertTrue(classTypeFacade.hasTestMethod(getNumberOneMethod));
     }
 
+    @Test
     public void testGetCorrespondingTestMethodWithoutTestMethod() throws JavaModelException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -86,6 +93,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         assertNull(classTypeFacade.getCorrespondingTestMethod(methodWithoutCorrespondingTestMethod, testcaseType));
     }
 
+    @Test
     public void testHasTestMethodWithoutTestMethod() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -96,6 +104,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         assertFalse(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod));
     }
 
+    @Test
     public void testGetCorrespondingTestMethods() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");

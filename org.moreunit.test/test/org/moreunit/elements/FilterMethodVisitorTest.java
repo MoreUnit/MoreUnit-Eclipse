@@ -11,9 +11,11 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.junit.Test;
 import org.moreunit.WorkspaceHelper;
 import org.moreunit.WorkspaceTestCase;
 import org.moreunit.util.StringConstants;
+import static org.junit.Assert.*;
 
 /**
  * @author vera
@@ -29,7 +31,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
     private static final String JAVA_CLASS_NAME = "FilterMethodVisitorUT";
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -38,11 +40,12 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
     }
 
     @Override
-    protected void tearDown() throws Exception
+    public void tearDown() throws Exception
     {
         super.tearDown();
     }
 
+    @Test
     public void testGetPrivateMethods() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -57,6 +60,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
     }
 
+    @Test
     public void testGetPrivateMethodsOverloaded() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -70,6 +74,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
     }
 
+    @Test
     public void testGetPrivateMethodsOverloaded2() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -83,6 +88,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
     }
 
+    @Test
     public void testIsPrivateMethod() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -98,6 +104,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertFalse(filterMethodVisitor.isPrivateMethod(defaultMethod));
     }
 
+    @Test
     public void testIsPrivateMethodOverloaded() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -109,6 +116,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertTrue(filterMethodVisitor.isPrivateMethod(overloadedPrivateMethod));
     }
 
+    @Test
     public void testGetFieldDeclarations() throws CoreException
     {
         ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", JAVA_CLASS_NAME), getClassSourceWithFields(JAVA_CLASS_NAME, "fieldName1", "fieldName2"), false, null);
@@ -139,6 +147,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         return result.toString();
     }
 
+    @Test
     public void testGetGetterMethods() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -152,6 +161,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         WorkspaceHelper.assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));
     }
 
+    @Test
     public void testGetSetterMethods() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
@@ -164,6 +174,7 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         WorkspaceHelper.assertSameMethodName(fieldName1SetterMethod, getterMethods.get(0));
     }
 
+    @Test
     public void testIsGetterMethod() throws CoreException
     {
         ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", JAVA_CLASS_NAME), getClassSourceWithFields(JAVA_CLASS_NAME, "fieldName1", "fieldName2"), false, null);

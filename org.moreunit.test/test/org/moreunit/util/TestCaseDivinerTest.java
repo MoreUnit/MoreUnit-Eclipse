@@ -6,8 +6,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
+import static org.junit.Assert.*;
 
 /**
  * @author giana 13.05.2006 13:49:29
@@ -17,6 +19,7 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
 
     IPackageFragmentRoot junitSourceRoot;
 
+    @Test
     public void testGetMatchesOnlySuffix() throws CoreException
     {
         IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com");
@@ -44,6 +47,7 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         assertTrue(result.contains(testNGHelloType));
     }
 
+    @Test
     public void testGetMatchesPrefixes() throws CoreException
     {
         IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com");
@@ -62,6 +66,7 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         assertFalse(result.contains(testNGHelloType));
     }
 
+    @Test
     public void testGetMatchesWhenPackageNameDiffers() throws CoreException
     {
         IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com.foo.bar");
@@ -82,6 +87,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/04/05 19:15:32  gianasista
+// code formatter
+//
 // Revision 1.5 2009/01/25 20:11:43 gianasista
 // Test refactoring
 //

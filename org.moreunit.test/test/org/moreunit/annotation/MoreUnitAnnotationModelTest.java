@@ -11,8 +11,10 @@ import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
+import static org.junit.Assert.*;
 
 public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
 {
@@ -20,7 +22,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
     private IType testcaseType;
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -29,7 +31,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
     }
 
     @Override
-    protected void tearDown() throws Exception
+    public void tearDown() throws Exception
     {
         super.tearDown();
 
@@ -37,6 +39,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         testcaseType = null;
     }
 
+    @Test
     public void testUpdateAnnotationsMethodWithTest() throws JavaModelException, PartInitException
     {
         // Method
@@ -61,6 +64,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         return new MoreUnitAnnotationModel(document, openedEditor);
     }
 
+    @Test
     public void testUpdateAnnotationsWithoutTest() throws JavaModelException, PartInitException
     {
         // Method
@@ -71,6 +75,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         assertFalse(result.hasNext());
     }
 
+    @Test
     public void testAttach() throws PartInitException, JavaModelException
     {
         ITextEditor openedEditor = (ITextEditor) JavaUI.openInEditor(cutType); // this
@@ -79,7 +84,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
                                                                                // attach
         checkAnnotationModelAttached(openedEditor);
     }
-
+    
     private void checkAnnotationModelAttached(ITextEditor textEditor)
     {
         MoreUnitAnnotationModel annotationModel = getAnnotationModelFromTextEditor(textEditor);
@@ -99,6 +104,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         return (MoreUnitAnnotationModel) modelExtension.getAnnotationModel("org.moreunit.model_key");
     }
 
+    @Test
     public void testDetach() throws PartInitException, JavaModelException
     {
         ITextEditor openedEditor = (ITextEditor) JavaUI.openInEditor(cutType);
@@ -106,6 +112,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         checkAnnotationModelDetached(openedEditor);
     }
 
+    @Test
     public void testAddAnnotation() throws PartInitException, JavaModelException
     {
         MoreUnitAnnotationModel annotationModel = createModelForOpenedTextEditor();
@@ -120,6 +127,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         }
     }
 
+    @Test
     public void testGetPosition() throws PartInitException, JavaModelException
     {
         MoreUnitAnnotationModel annotationModel = createModelForOpenedTextEditor();
@@ -129,6 +137,7 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
         assertEquals(6, result.getLength());
     }
 
+    @Test
     public void testRemoveAnnotation() throws PartInitException, JavaModelException
     {
         MoreUnitAnnotationModel annotationModel = createModelForOpenedTextEditor();

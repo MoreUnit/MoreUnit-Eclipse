@@ -11,8 +11,10 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
+import static org.junit.Assert.*;
 
 public class TestMethodVisitorTest extends SimpleProjectTestCase
 {
@@ -20,12 +22,13 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
     IType testcaseType;
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
         testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
     }
 
+    @Test
     public void testGetTestMethodsOnlyTestAnnotation() throws JavaModelException
     {
         String methodSource = "@Test \n public int getOne() { return 1; }";
@@ -36,6 +39,7 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
         WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
     }
 
+    @Test
     public void testGetTestMethodsTestPrefix() throws JavaModelException
     {
         IMethod testMethodWithPrefix = WorkspaceHelper.createMethodInJavaType(testcaseType, "public int testGetTwo()", "");
@@ -45,6 +49,7 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
         WorkspaceHelper.assertSameMethodName(testMethodWithPrefix, testMethods.get(0));
     }
 
+    @Test
     public void testGetTestMethodsTestAnnotationAndTestPrefix() throws JavaModelException
     {
         String methodSource = "@Test \n public void testGetOne() {  }";
@@ -55,6 +60,7 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
         WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
     }
 
+    @Test
     public void testGetTestMethodsNoTestMethod() throws JavaModelException
     {
         TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);

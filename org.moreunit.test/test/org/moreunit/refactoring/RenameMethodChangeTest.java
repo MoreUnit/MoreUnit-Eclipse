@@ -4,12 +4,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.ltk.core.refactoring.Change;
-import org.moreunit.refactoring.RenameMethodChange;
+import org.junit.Test;
 
-public class RenameMethodChangeTest extends TestCase
+import static org.junit.Assert.*;
+
+public class RenameMethodChangeTest
 {
 
     /*
@@ -29,6 +28,7 @@ public class RenameMethodChangeTest extends TestCase
      * { (IMethod) method.proxy(), (IMethod) renamedMethod.proxy() })); }
      */
 
+    @Test
     public void testPerformReturnsUndoForRenameMethod() throws CoreException
     {
         assertTrue(true);
@@ -40,6 +40,7 @@ public class RenameMethodChangeTest extends TestCase
          */
     }
 
+    @Test
     public void testPerformUndo() throws CoreException
     {
         assertTrue(true);
@@ -56,6 +57,9 @@ public class RenameMethodChangeTest extends TestCase
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2009/04/05 19:15:31  gianasista
+// code formatter
+//
 // Revision 1.3 2009/01/25 20:11:32 gianasista
 // Test refactoring
 //

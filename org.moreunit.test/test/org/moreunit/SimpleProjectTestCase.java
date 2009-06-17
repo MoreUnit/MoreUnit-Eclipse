@@ -28,7 +28,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     protected IPackageFragment testPackage;
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
         sourcesFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCES_FOLDER_NAME);

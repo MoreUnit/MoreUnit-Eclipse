@@ -3,9 +3,11 @@ package org.moreunit.elements;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
 import org.moreunit.preferences.PreferenceConstants;
+import static org.junit.Assert.*;
 
 /**
  * @author vera 02.08.2007 07:37:24
@@ -13,6 +15,7 @@ import org.moreunit.preferences.PreferenceConstants;
 public class TestmethodCreatorTest extends SimpleProjectTestCase
 {
 
+    @Test
     public void testCreateFirstTestMethodJUnit3() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -30,6 +33,7 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
         assertEquals(createTestMethod, methods[0]);
     }
 
+    @Test
     public void testCreateFirstTestMethodJUnit4() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -48,6 +52,7 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
         assertEquals(createTestMethod, methods[0]);
     }
 
+    @Test
     public void testCreateSecondTestMethodJUnit3() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
@@ -65,6 +70,7 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
         assertEquals(2, methods.length);
     }
 
+    @Test
     public void testCreateSecondTestMethodJUnit4() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");

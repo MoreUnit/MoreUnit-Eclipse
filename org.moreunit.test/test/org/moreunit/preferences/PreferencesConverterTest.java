@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
 import org.moreunit.elements.SourceFolderMapping;
+import static org.junit.Assert.*;
 
 public class PreferencesConverterTest extends SimpleProjectTestCase
 {
@@ -22,7 +24,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
     private IPackageFragmentRoot testUnitSourceFolder;
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -34,7 +36,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
     }
 
     @Override
-    protected void tearDown() throws Exception
+    public void tearDown() throws Exception
     {
         super.tearDown();
 
@@ -44,6 +46,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
         testUnitSourceFolder = null;
     }
 
+    @Test
     public void testConvertSourceMappingsToString()
     {
         SourceFolderMapping mapping1 = new SourceFolderMapping(workspaceTestProject, unit1SourceFolder, unit2SourceFolder);
@@ -56,6 +59,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
         assertEquals(unit1SourceFolder.getJavaProject().getElementName() + ":" + unit1SourceFolder.getElementName() + ":" + unit2SourceFolder.getJavaProject().getElementName() + ":" + unit2SourceFolder.getElementName() + "#" + unit2SourceFolder.getJavaProject().getElementName() + ":" + unit2SourceFolder.getElementName() + ":" + unit3SourceFolder.getJavaProject().getElementName() + ":" + unit3SourceFolder.getElementName(), PreferencesConverter.convertSourceMappingsToString(mappingList));
     }
 
+    @Test
     public void testConvertSourceMappingsToStringWithSubfolder()
     {
         SourceFolderMapping mapping1 = new SourceFolderMapping(workspaceTestProject, unit1SourceFolder, testUnitSourceFolder);
@@ -67,11 +71,13 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
 
     }
 
+    @Test
     public void testConvertSourceMappingsToStringLeereListe()
     {
         assertEquals("", PreferencesConverter.convertSourceMappingsToString(new ArrayList<SourceFolderMapping>()));
     }
 
+    @Test
     public void testConvertStringToSourceMappingList()
     {
         String mappingString = unit1SourceFolder.getJavaProject().getElementName() + ":" + unit1SourceFolder.getElementName() + ":" + unit2SourceFolder.getJavaProject().getElementName() + ":" + unit2SourceFolder.getElementName() + "#" + unit2SourceFolder.getJavaProject().getElementName() + ":" + unit2SourceFolder.getElementName() + ":" + unit3SourceFolder.getJavaProject().getElementName() + ":" + unit3SourceFolder.getElementName();
@@ -90,6 +96,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
         assertEquals(unit3SourceFolder, secondMapping.getTestFolder());
     }
 
+    @Test
     public void testConvertStringToSourceMappingListWithSubfolder()
     {
         String mappingString = unit1SourceFolder.getJavaProject().getElementName() + ":" + unit1SourceFolder.getElementName() + ":" + testUnitSourceFolder.getJavaProject().getElementName() + ":" + SOURCEFOLDER_NAME_TEST_UNIT;
@@ -103,6 +110,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
         assertEquals(testUnitSourceFolder, firstMapping.getTestFolder());
     }
 
+    @Test
     public void testConvertArrayToString()
     {
         assertEquals("token1,token2", PreferencesConverter.convertArrayToString(new String[] { "token1", "token2" }));

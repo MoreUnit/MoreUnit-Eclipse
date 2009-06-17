@@ -9,12 +9,15 @@ package org.moreunit.elements;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
+import static org.junit.Assert.*;
 
 public class TestCaseTypeFacadeTest extends SimpleProjectTestCase
 {
 
+    @Test
     public void testGetCorrespondingTestedMethod() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");

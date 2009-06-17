@@ -1,15 +1,17 @@
 package org.moreunit.util;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
+import org.junit.Test;
 import org.moreunit.WorkspaceHelper;
 
-public class PluginToolsTest extends TestCase
+public class PluginToolsTest
 {
+    @Test
     public void testGetJavaProjectsFromWorkspace() throws CoreException
     {
         WorkspaceHelper.createJavaProject("FirstProject");

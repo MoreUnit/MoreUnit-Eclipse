@@ -1,7 +1,5 @@
 package org.moreunit.refactoring;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -11,8 +9,12 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RenameClassChangeTest extends TestCase
+import static org.junit.Assert.*;
+
+public class RenameClassChangeTest
 {
 
     private static final String ELEMENT_NAME_NEW = "Anything";
@@ -29,7 +31,8 @@ public class RenameClassChangeTest extends TestCase
 
     private static final IProgressMonitor PROGRESS_MONITOR = new NullProgressMonitor();
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         /*
          * setUpType(typeToRename, "KebabHouse", compilationUnitToRename,
@@ -39,6 +42,7 @@ public class RenameClassChangeTest extends TestCase
          */
     }
 
+    @Test
     public void testPerformReturnsUndoForRenameType() throws CoreException
     {
         /*
@@ -50,6 +54,7 @@ public class RenameClassChangeTest extends TestCase
          */
     }
 
+    @Test
     public void testPerformUndo() throws CoreException
     {
         /*
@@ -63,6 +68,7 @@ public class RenameClassChangeTest extends TestCase
          */
     }
 
+    @Test
     public void testGetModifiedElement()
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
@@ -117,6 +123,7 @@ public class RenameClassChangeTest extends TestCase
         return newTypeMock;
     }
 
+    @Test
     public void testGetName()
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
@@ -125,6 +132,7 @@ public class RenameClassChangeTest extends TestCase
         assertEquals(expected, change.getName());
     }
 
+    @Test
     public void testIsValid()
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
@@ -132,6 +140,7 @@ public class RenameClassChangeTest extends TestCase
         assertNotNull(change.isValid(PROGRESS_MONITOR));
     }
 
+    @Test
     public void testPerform() throws CoreException
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
@@ -146,6 +155,9 @@ public class RenameClassChangeTest extends TestCase
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2009/04/05 19:15:31  gianasista
+// code formatter
+//
 // Revision 1.3 2009/01/25 20:11:32 gianasista
 // Test refactoring
 //

@@ -11,10 +11,12 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.junit.Test;
 import org.moreunit.WorkspaceHelper;
 import org.moreunit.WorkspaceTestCase;
 import org.moreunit.preferences.DummyPreferencesForTesting;
 import org.moreunit.preferences.Preferences;
+import static org.junit.Assert.*;
 
 public class TypeFacadeTest extends WorkspaceTestCase
 {
@@ -22,7 +24,7 @@ public class TypeFacadeTest extends WorkspaceTestCase
     private IPackageFragment packageFragmentForSources;
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -30,12 +32,14 @@ public class TypeFacadeTest extends WorkspaceTestCase
         packageFragmentForSources = WorkspaceHelper.createNewPackageInSourceFolder(sourceFolder, "com");
     }
 
+    @Test
     public void testIsTestCaseRegularClass() throws CoreException
     {
         IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "Hello");
         assertFalse(TypeFacade.isTestCase(javaClass));
     }
 
+    @Test
     public void testIsTestCaseTestWithSuffix() throws JavaModelException
     {
         initPreferencesWithPrefixesSuffixes(new String[] {}, new String[] { "Test" });
@@ -43,6 +47,7 @@ public class TypeFacadeTest extends WorkspaceTestCase
         assertTrue(TypeFacade.isTestCase(javaClass));
     }
 
+    @Test
     public void testIsTestCaseTestWithPrefix() throws JavaModelException
     {
         initPreferencesWithPrefixesSuffixes(new String[] { "Test" }, new String[] {});
