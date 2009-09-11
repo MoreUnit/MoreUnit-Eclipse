@@ -162,7 +162,10 @@ public class EditorActionExecutor
             try
             {
                 IEditorPart openedEditor = JavaUI.openInEditor(testcaseToJump.getParent());
-                jumpToTestMethodIfPossible(editorPart, openedEditor, testcaseToJump);
+                if(editorPart != null)
+                {
+                    jumpToTestMethodIfPossible(editorPart, openedEditor, testcaseToJump);
+                }
             }
             catch (PartInitException exc)
             {
@@ -210,6 +213,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.12 2009/02/15 17:28:38 gianasista
 // annotations instead of marker
 //
