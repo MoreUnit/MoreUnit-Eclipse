@@ -5,6 +5,7 @@ package org.moreunit.elements;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
@@ -57,7 +58,15 @@ public class TestmethodCreator
     private IMethod createFirstTestMethod(IMethod method)
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-        compilationUnit = classTypeFacade.getOneCorrespondingTestCase(true).getCompilationUnit();
+        IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
+        
+        // This happens if the user chooses cancel from the wizard
+        if(oneCorrespondingTestCase == null)
+        {
+            return null;
+        }
+        
+        compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
 
         if(doesMethodExist(testMethodName))
