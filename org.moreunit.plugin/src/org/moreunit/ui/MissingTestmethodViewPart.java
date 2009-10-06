@@ -112,7 +112,9 @@ public class MissingTestmethodViewPart extends PageBookView
     public void partActivated(IWorkbenchPart part)
     {
         if(activePage == null)
+        {
             super.partActivated(part);
+        }
         else if(PluginTools.isJavaFile(part))
         {
             activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
@@ -125,10 +127,18 @@ public class MissingTestmethodViewPart extends PageBookView
     {
         if(part instanceof EditorPart)
         {
+            
             partActivated(part);
             if(activePage != null)
             {
                 activePage.updateUI();
+            }
+            
+            // Bugfix for #2869899
+            if(getCurrentPage() != activePage && isImportant(part))
+            {
+                PageRec pageRec = getPageRec(activePage);
+                showPageRec(pageRec);
             }
         }
     }
@@ -148,5 +158,12 @@ public class MissingTestmethodViewPart extends PageBookView
             }
         }
     }
+    
+    /*
+    @Override
+    protected void partHidden(IWorkbenchPart part)
+    {
+    }
+    */
 
 }
