@@ -100,14 +100,21 @@ public class TestCaseDiviner
         return compilationUnit.getJavaProject();
     }
 
-    private IType getSource()
+    /*
+     * public for Testing purposes
+     */
+    public IType getSource()
     {
         try
         {
             IType[] allTypes = this.compilationUnit.getAllTypes();
-            if((allTypes.length > 0) && allTypes[0].isClass())
+            if(allTypes.length > 0)
             {
-                return allTypes[0];
+                IType primaryType = allTypes[0]; 
+                if (primaryType.isClass() || primaryType.isEnum())
+                {
+                    return primaryType;
+                }
             }
         }
         catch (JavaModelException exc)
@@ -133,6 +140,9 @@ public class TestCaseDiviner
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.12 2008/03/21 18:21:00 gianasista
 // First version of new property page with source folder mapping
 //

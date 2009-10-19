@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
@@ -84,9 +85,27 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         assertTrue(result.contains(testHelloType));
         assertFalse(result.contains(testNGHelloType));
     }
+
+    /**
+     * Test for #2881409 (Switching in enums)
+     * @throws CoreException
+     */
+    @Test
+    public void testGetSource() throws CoreException 
+    {
+        IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com.foo.bar");
+        IType enumType = WorkspaceHelper.createJavaEnum(comPaket, "Foo");
+        PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] { "Test" });
+        
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(enumType.getCompilationUnit(), preferencesMock);
+        assertNotNull(testCaseDiviner.getSource());
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2009/06/17 19:04:57  gianasista
+// Switched tests to junit4
+//
 // Revision 1.6  2009/04/05 19:15:32  gianasista
 // code formatter
 //

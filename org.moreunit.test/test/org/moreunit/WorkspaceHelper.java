@@ -36,6 +36,9 @@ public class WorkspaceHelper
 {
 
     private static final String CLASSES_FOLDER = "classes";
+    
+    private static final String CLASS_TYPE = "class";
+    private static final String ENUM_TYPE = "enum";
 
     public static IJavaProject createJavaProject(String projectName) throws CoreException
     {
@@ -138,7 +141,17 @@ public class WorkspaceHelper
 
     public static IType createJavaClass(IPackageFragment packageFragment, String javaClassName) throws JavaModelException
     {
-        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), StringConstants.NEWLINE, getClassDeclarationString(javaClassName));
+        return createJavaType(packageFragment, javaClassName, CLASS_TYPE);
+    }
+    
+    public static IType createJavaEnum(IPackageFragment packageFragment, String javaClassName) throws JavaModelException
+    {
+        return createJavaType(packageFragment, javaClassName, ENUM_TYPE);
+    }
+    
+    private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, String type) throws JavaModelException
+    {
+        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), StringConstants.NEWLINE, getTypeDeclarationString(type, javaClassName));
         ICompilationUnit compilationUnit = packageFragment.createCompilationUnit(String.format("%s.java", javaClassName), sourceCode, false, null);
         return compilationUnit.getTypes()[0];
     }
@@ -148,9 +161,9 @@ public class WorkspaceHelper
         return String.format("package %s;%s", packageFragment.getElementName(), StringConstants.NEWLINE);
     }
 
-    private static String getClassDeclarationString(String javaClassName)
+    private static String getTypeDeclarationString(String type, String javaClassName)
     {
-        return String.format("public class %1$s { %2$s%2$s } %2$s", javaClassName, StringConstants.NEWLINE);
+        return String.format("public %1$s %2$s { %3$s%3$s } %3$s", type, javaClassName, StringConstants.NEWLINE);
     }
 
     public static IMethod createMethodInJavaType(IType javaType, String methodDeclaration, String methodSourceCode) throws JavaModelException
