@@ -30,5 +30,8 @@ public class TestCaseTypeFacadeTest extends SimpleProjectTestCase
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
         assertEquals(testedMethod, testCaseTypeFacade.getCorrespondingTestedMethod(testMethod, cutType));
         assertNull(testCaseTypeFacade.getCorrespondingTestedMethod(testMethodWithNoCorrespondingTestedMethod, cutType));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 }

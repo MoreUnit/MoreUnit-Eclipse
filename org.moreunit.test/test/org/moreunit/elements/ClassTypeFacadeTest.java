@@ -32,6 +32,9 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(false);
 
         assertEquals(testcaseType, oneCorrespondingTestCase);
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -42,6 +45,9 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
         assertEquals(0, classTypeFacade.getCorrespondingTestCaseList().size());
+        
+        // cleanup
+        compilationUnit.delete(true, null);
     }
 
     private String getEnumSourceFile()
@@ -66,6 +72,9 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
         IMethod correspondingTestMethod = classTypeFacade.getCorrespondingTestMethod(getNumberOneMethod, testcaseType);
         assertEquals(getNumberOneTestMethod, correspondingTestMethod);
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -79,6 +88,9 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
         assertTrue(classTypeFacade.hasTestMethod(getNumberOneMethod));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -91,17 +103,22 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
         assertNull(classTypeFacade.getCorrespondingTestMethod(methodWithoutCorrespondingTestMethod, testcaseType));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
     public void testHasTestMethodWithoutTestMethod() throws CoreException
     {
         IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-        WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
 
         IMethod methodWithoutCorrespondingTestMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "");
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
         assertFalse(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod));
+        
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -119,5 +136,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         assertEquals(2, correspondingTestMethods.size());
         assertTrue(correspondingTestMethods.contains(getNumberOneTestMethod));
         assertTrue(correspondingTestMethods.contains(getNumberOneTestMethod2));
+        
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 }

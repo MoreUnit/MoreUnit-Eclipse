@@ -184,4 +184,12 @@ public class WorkspaceHelper
 
         return folder;
     }
+    
+    public static void deleteCompilationUnitsForTypes(IType[] types) throws JavaModelException
+    {
+        for(IType type : types)
+        {
+            type.getCompilationUnit().delete(true, null);
+        }
+    }
 }

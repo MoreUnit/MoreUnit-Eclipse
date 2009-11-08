@@ -3,7 +3,11 @@ package org.moreunit.preferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
@@ -22,28 +26,27 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
     private IPackageFragmentRoot unit2SourceFolder;
     private IPackageFragmentRoot unit3SourceFolder;
     private IPackageFragmentRoot testUnitSourceFolder;
+    private IFolder sampleFolder;
 
-    @Override
+    @Before
     public void setUp() throws Exception
     {
-        super.setUp();
-
         unit1SourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_UNIT1);
         unit2SourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_UNIT2);
         unit3SourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_UNIT3);
-        WorkspaceHelper.createFolder(workspaceTestProject, "atest");
+        sampleFolder = WorkspaceHelper.createFolder(workspaceTestProject, "atest");
         testUnitSourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_TEST_UNIT);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception
     {
-        super.tearDown();
-
-        unit1SourceFolder = null;
-        unit2SourceFolder = null;
-        unit3SourceFolder = null;
-        testUnitSourceFolder = null;
+        testUnitSourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
+        sampleFolder.delete(true, null);
+        
+        unit1SourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
+        unit2SourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
+        unit3SourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
     }
 
     @Test

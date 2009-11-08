@@ -3,6 +3,8 @@ package org.moreunit.decorator;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
@@ -12,17 +14,15 @@ public class UnitDecoratorTest extends SimpleProjectTestCase
 {
     private UnitDecorator unitDecorator;
 
-    @Override
+    @Before
     public void setUp() throws Exception
     {
-        super.setUp();
         unitDecorator = new UnitDecorator();
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception
     {
-        super.tearDown();
         unitDecorator = null;
     }
 
@@ -57,8 +57,8 @@ public class UnitDecoratorTest extends SimpleProjectTestCase
 
     private IResource initWorkspaceWithClassAndTestAndReturnResourceOfClass() throws JavaModelException
     {
-        IType classType = WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-        WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        IType classType = WorkspaceHelper.createJavaClass(sourcesPackage, "HelloWorld");
+        WorkspaceHelper.createJavaClass(testPackage, "HelloWorldTest");
 
         return classType.getResource();
     }

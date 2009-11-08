@@ -11,6 +11,8 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
@@ -21,11 +23,16 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
 
     IType testcaseType;
 
-    @Override
+    @Before
     public void setUp() throws Exception
     {
-        super.setUp();
         testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+    }
+    
+    @After
+    public void tearDown() throws JavaModelException 
+    {
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {testcaseType});
     }
 
     @Test

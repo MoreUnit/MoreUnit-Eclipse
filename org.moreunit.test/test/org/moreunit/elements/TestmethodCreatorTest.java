@@ -31,6 +31,9 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
         IMethod[] methods = testcaseType.getMethods();
         assertEquals(1, methods.length);
         assertEquals(createTestMethod, methods[0]);
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -50,6 +53,9 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
         IMethod[] methods = testcaseType.getMethods();
         assertEquals(1, methods.length);
         assertEquals(createTestMethod, methods[0]);
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -68,6 +74,9 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
 
         IMethod[] methods = testcaseType.getMethods();
         assertEquals(2, methods.length);
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
     @Test
@@ -86,6 +95,9 @@ public class TestmethodCreatorTest extends SimpleProjectTestCase
 
         IMethod[] methods = testcaseType.getMethods();
         assertEquals(2, methods.length);
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType, testcaseType});
     }
 
 }

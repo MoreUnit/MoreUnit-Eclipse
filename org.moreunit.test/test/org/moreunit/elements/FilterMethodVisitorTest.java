@@ -11,6 +11,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moreunit.WorkspaceHelper;
 import org.moreunit.WorkspaceTestCase;
@@ -26,23 +28,15 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
     private static final String PACKAGE_NAME = "org";
     private static final String SOURCES_FOLDER_NAME = "sources";
 
-    private IPackageFragment sourcesPackage;
+    private static IPackageFragment sourcesPackage;
 
     private static final String JAVA_CLASS_NAME = "FilterMethodVisitorUT";
 
-    @Override
-    public void setUp() throws Exception
+    @BeforeClass
+    public static void setUpSourceFolder() throws Exception
     {
-        super.setUp();
-
         IPackageFragmentRoot sourcesFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCES_FOLDER_NAME);
         sourcesPackage = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, PACKAGE_NAME);
-    }
-
-    @Override
-    public void tearDown() throws Exception
-    {
-        super.tearDown();
     }
 
     @Test
@@ -58,6 +52,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertEquals(1, privateMethods.size());
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -72,6 +69,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertEquals(2, privateMethods.size());
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -86,6 +86,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertEquals(2, privateMethods.size());
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
         WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -102,6 +105,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertFalse(filterMethodVisitor.isPrivateMethod(publicMethod));
         assertFalse(filterMethodVisitor.isPrivateMethod(protectedMethod));
         assertFalse(filterMethodVisitor.isPrivateMethod(defaultMethod));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -114,6 +120,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
         assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod));
         assertTrue(filterMethodVisitor.isPrivateMethod(overloadedPrivateMethod));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -131,6 +140,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         fieldDeclaration = fieldDeclarations.get(1);
         variable = (VariableDeclarationFragment) fieldDeclaration.fragments().get(0);
         assertEquals("fieldName2", variable.getName().getFullyQualifiedName());
+        
+        // cleanup
+       compilationUnit.delete(true, null);
     }
 
     private String getClassSourceWithFields(String className, String fieldname1, String fieldname2)
@@ -159,6 +171,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertEquals(2, getterMethods.size());
         WorkspaceHelper.assertSameMethodName(fieldName1GetterMethod, getterMethods.get(0));
         WorkspaceHelper.assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -172,6 +187,9 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
         assertEquals(1, getterMethods.size());
         WorkspaceHelper.assertSameMethodName(fieldName1SetterMethod, getterMethods.get(0));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
     }
 
     @Test
@@ -186,5 +204,8 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertTrue(filterMethodVisitor.isGetterMethod(fieldName1GetterMethod));
         assertFalse(filterMethodVisitor.isGetterMethod(getterWithoutFieldMethod));
         assertFalse(filterMethodVisitor.isGetterMethod(fieldName1SetterMethod));
+        
+        // cleanup
+        compilationUnit.delete(true, null);
     }
 }

@@ -16,8 +16,9 @@ import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
 import static org.junit.Assert.*;
 
-public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
+public abstract class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
 {
+    /*
     private IType cutType;
     private IType testcaseType;
 
@@ -151,4 +152,5 @@ public class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
             assertTrue(exc instanceof UnsupportedOperationException);
         }
     }
+    */
 }

@@ -6,8 +6,12 @@ package org.moreunit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaModelException;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.DummyPreferencesForTesting;
 import org.moreunit.preferences.Preferences;
@@ -22,15 +26,14 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     private static final String PACKAGE_NAME = "org";
     private static final String SOURCES_FOLDER_NAME = "sources";
 
-    protected IPackageFragmentRoot sourcesFolder;
-    protected IPackageFragment sourcesPackage;
-    protected IPackageFragmentRoot testFolder;
-    protected IPackageFragment testPackage;
+    protected static IPackageFragmentRoot sourcesFolder;
+    protected static IPackageFragment sourcesPackage;
+    protected static IPackageFragmentRoot testFolder;
+    protected static IPackageFragment testPackage;
 
-    @Override
-    public void setUp() throws Exception
+    @BeforeClass
+    public static void setUpProject() throws Exception
     {
-        super.setUp();
         sourcesFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCES_FOLDER_NAME);
         sourcesPackage = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, PACKAGE_NAME);
         testFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, TEST_FOLDER_NAME);
@@ -38,8 +41,18 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 
         initPreferencesForTestCaseContext();
     }
-
-    private void initPreferencesForTestCaseContext()
+    
+    @AfterClass
+    public static void tearDownProject() throws JavaModelException
+    {
+        sourcesPackage.delete(true, null);
+        sourcesFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
+        
+        testPackage.delete(true, null);
+        testFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
+    }
+    
+    private static void initPreferencesForTestCaseContext()
     {
         Preferences preferences = new DummyPreferencesForTesting();
         preferences.setHasProjectSpecificSettings(workspaceTestProject, true);

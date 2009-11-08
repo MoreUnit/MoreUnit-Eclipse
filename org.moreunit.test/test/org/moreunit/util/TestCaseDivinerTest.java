@@ -46,6 +46,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         assertEquals(2, result.size());
         assertTrue(result.contains(testHelloType));
         assertTrue(result.contains(testNGHelloType));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {fooType, testHelloType, testNGHelloType});
     }
 
     @Test
@@ -65,6 +68,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         assertEquals(1, result.size());
         assertTrue(result.contains(testHelloType));
         assertFalse(result.contains(testNGHelloType));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {fooType, testHelloType, testNGHelloType});
     }
 
     @Test
@@ -84,6 +90,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         assertEquals(1, result.size());
         assertTrue(result.contains(testHelloType));
         assertFalse(result.contains(testNGHelloType));
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {fooType, testHelloType, testNGHelloType});
     }
 
     /**
@@ -99,10 +108,16 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(enumType.getCompilationUnit(), preferencesMock);
         assertNotNull(testCaseDiviner.getSource());
+        
+        // cleanup
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {enumType});
     }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2009/10/19 19:33:54  gianasista
+// Bugfix switching for enums
+//
 // Revision 1.7  2009/06/17 19:04:57  gianasista
 // Switched tests to junit4
 //
