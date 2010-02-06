@@ -1,6 +1,12 @@
 package org.moreunit.handler;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -18,14 +24,19 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
 import org.moreunit.actions.JumpAction;
+import org.moreunit.actions.RunTestAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.extensionpoints.IAddTestMethodContext;
+import org.moreunit.extensionpoints.IAddTestMethodParticipator;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.runner.JunitTestRunner;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.wizards.NewClassWizard;
 
@@ -65,17 +76,68 @@ public class EditorActionExecutor
     public void executeCreateTestMethodAction(IEditorPart editorPart)
     {
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
+        ICompilationUnit compilationUnitCurrentlyEdited = editorPartFacade.getCompilationUnit();
+        
+        ICompilationUnit compilationUnitForUnitUnderTest = null;
+        ICompilationUnit compilationUnitForTestCase = null;
+        
+        if( TypeFacade.isTestCase(compilationUnitCurrentlyEdited.findPrimaryType()) ){
+            compilationUnitForTestCase = compilationUnitCurrentlyEdited;
+        }else{
+            compilationUnitForUnitUnderTest = compilationUnitCurrentlyEdited;
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnitForUnitUnderTest);
+            IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
+            
+            // This happens if the user chooses cancel from the wizard
+            if(oneCorrespondingTestCase == null)
+            {
+                return;
+            }
+            compilationUnitForTestCase = oneCorrespondingTestCase.getCompilationUnit();
+        }
+        
         TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
         IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
+        
+        AddTestMethodContext addTestMethodContext = new AddTestMethodContext(compilationUnitForTestCase, createdMethod);
+        callAddTestMethodParticipants(addTestMethodContext);
+        
 
         if((createdMethod != null) && createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
         {
             markMethodSuffix(editorPartFacade, createdMethod);
+            
         }
 
         if(editorPart instanceof ITextEditor)
         {
             MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
+        }
+    }
+    
+    private void callAddTestMethodParticipants(final IAddTestMethodContext context){
+        try {
+            IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor("org.moreunit.addTestmethodParticipator");
+            System.out.println("found "+ config.length + " contributers to our extension point");
+            for (IConfigurationElement e : config) {
+                final Object o = e.createExecutableExtension("class");
+                if (o instanceof IAddTestMethodParticipator) {
+                  
+                    ISafeRunnable runnable = new ISafeRunnable() {
+                        public void handleException(Throwable exception) {
+                            System.out.println("Exception in client");
+                        }
+
+
+                        public void run() throws Exception {
+                            ((IAddTestMethodParticipator) o).addTestMethod(context);
+                        }
+                    };
+                    SafeRunner.run(runnable);
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -210,9 +272,118 @@ public class EditorActionExecutor
             JavaUI.revealInEditor(openedEditorPart, (IJavaElement) testedMethod);
         }
     }
+
+    public void executeRunTestAction(IEditorPart editorPart)
+    {
+        IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
+        ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
+        executeRunTestAction(editorPart, compilationUnit);
+    }
+
+    public void executeRunTestAction(ICompilationUnit compilationUnit)
+    {
+        executeRunTestAction(null, compilationUnit);
+    }
+
+    private void executeRunTestAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    {
+        IType selectedJavaType = compilationUnit.findPrimaryType();
+
+        IJavaElement testElement = null;
+        if(TypeFacade.isTestCase(selectedJavaType))
+        {
+            testElement = getTestElementFromTestCase(editorPart, selectedJavaType);
+        }
+        else
+        {
+            testElement = getTestElementFromClassUnderTest(editorPart, compilationUnit);
+        }
+
+        if(testElement != null)
+        {
+            runTest(testElement);
+        }
+    }
+
+    /**
+     * Returns the test method that is selected in editor if any, otherwise
+     * returns the test case.
+     */
+    private IJavaElement getTestElementFromTestCase(IEditorPart editorPart, IType testCaseType)
+    {
+        if(editorPart == null)
+        {
+            return testCaseType;
+        }
+
+        IMethod testMethod = new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
+        if(testMethod != null)
+        {
+            return testMethod;
+        }
+
+        return testCaseType;
+    }
+
+    /**
+     * Tries to return a unique test method that corresponds to the method
+     * selected in editor if any; otherwise (if no method is selected or if
+     * several test methods exist for it) returns one corresponding test case if
+     * it exists.
+     */
+    private IJavaElement getTestElementFromClassUnderTest(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    {
+        ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
+
+        if(editorPart != null)
+        {
+            IMethod methodUnderTest = new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
+            if(methodUnderTest != null)
+            {
+                List<IMethod> testMethods = javaFileFacade.getCorrespondingTestMethods(methodUnderTest);
+                if(testMethods.size() == 1)
+                {
+                    return testMethods.get(0);
+                }
+            }
+        }
+
+        return javaFileFacade.getOneCorrespondingTestCase(true);
+    }
+
+    private void runTest(IJavaElement testElement)
+    {
+        String testType = Preferences.getInstance().getTestType(testElement.getJavaProject());
+        if(isJunitTestType(testType))
+        {
+            new JunitTestRunner(testElement).runTest();
+        }
+        else if(isTestNgTestType(testType))
+        {
+            LogHandler.getInstance().handleWarnLog("Can not run TestNG tests yet.");
+        }
+        else
+        {
+            LogHandler.getInstance().handleWarnLog("Unsupported test type.");
+        }
+    }
+
+    private boolean isTestNgTestType(String testType)
+    {
+        return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType);
+    }
+
+    private boolean isJunitTestType(String testType)
+    {
+        return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType) || PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType);
+    }
+
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2009/09/11 19:52:04  gianasista
+// Bugfix: NPE when switching from package explorer without open editor parts
+//
 // Revision 1.13  2009/04/05 19:14:27  gianasista
 // code formatter
 //
