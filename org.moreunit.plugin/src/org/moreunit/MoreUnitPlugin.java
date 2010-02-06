@@ -2,14 +2,9 @@ package org.moreunit;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -105,6 +100,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.7 2009/03/16 20:37:32 gianasista
 // Bugfix, when accessing a java project
 //
