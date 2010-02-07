@@ -377,7 +377,8 @@
    		<view id="org.moreunit.missingtestmethodview"
    			name="Missing Testmethods"
    			class="org.moreunit.ui.MissingTestmethodViewPart"
-   			icon="icons/moreunitLogo.gif"/>
+   			icon="icons/moreunitLogo.gif"
+   			category="org.moreunit.ui"/>
    </extension>
    <!--
    <extension point="org.eclipse.ui.views">
