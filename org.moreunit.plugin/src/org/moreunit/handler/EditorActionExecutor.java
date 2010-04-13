@@ -24,7 +24,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
 import org.moreunit.actions.JumpAction;
-import org.moreunit.actions.RunTestAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
@@ -33,10 +32,9 @@ import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.extensionpoints.IAddTestMethodParticipator;
+import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.runner.JunitTestRunner;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.wizards.NewClassWizard;
 
@@ -354,33 +352,15 @@ public class EditorActionExecutor
     private void runTest(IJavaElement testElement)
     {
         String testType = Preferences.getInstance().getTestType(testElement.getJavaProject());
-        if(isJunitTestType(testType))
-        {
-            new JunitTestRunner(testElement).runTest();
-        }
-        else if(isTestNgTestType(testType))
-        {
-            LogHandler.getInstance().handleWarnLog("Can not run TestNG tests yet.");
-        }
-        else
-        {
-            LogHandler.getInstance().handleWarnLog("Unsupported test type.");
-        }
+        new TestLauncher(testType).launch(testElement);
     }
-
-    private boolean isTestNgTestType(String testType)
-    {
-        return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType);
-    }
-
-    private boolean isJunitTestType(String testType)
-    {
-        return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType) || PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType);
-    }
-
+    
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2010/02/06 21:07:26  gianasista
+// Patch for Running Tests from CUT
+//
 // Revision 1.14  2009/09/11 19:52:04  gianasista
 // Bugfix: NPE when switching from package explorer without open editor parts
 //
