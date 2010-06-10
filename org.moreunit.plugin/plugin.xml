@@ -321,12 +321,32 @@
    
     <extension
          point="org.eclipse.ui.propertyPages">
+      <!--
       <page
             class="org.moreunit.properties.MoreUnitPropertyPage"
             id="org.moreunit.properties"
             name="MoreUnit"
             objectClass="org.eclipse.jdt.core.IJavaProject">
       </page>
+      -->
+       <page class="org.moreunit.properties.MoreUnitPropertyPage"
+             id="org.moreunit.properties"
+             name="MoreUnit">
+		     <enabledWhen>
+		        <adapt
+		           type="org.eclipse.core.resources.IProject">
+		           <and>
+		             <test
+		                 property="org.eclipse.core.resources.projectNature"
+		                 value="org.eclipse.jdt.core.javanature">
+		             </test>
+		             <instanceof
+		                value="org.eclipse.core.resources.IProject">
+		             </instanceof>
+		           </and>
+		         </adapt>
+		      </enabledWhen>
+		  </page>
       <!--   
       <page
             class="org.moreunit.properties.UnitSourcesPropertiesPage"
