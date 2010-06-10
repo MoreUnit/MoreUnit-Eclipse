@@ -2,16 +2,15 @@
 <feature
       id="org.moreunit"
       label="moreUnit Plug-In"
-      version="2.0.0"
+      version="2.0.1"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
-      moreUnit is an eclipse plugin that should assist you writing more unit test.
+      moreUnit is a eclipse plugin that should assist you writing more unit test.
    </description>
 
    <copyright url="http://moreunit.sourceforge.net/kontakt.html">
-      MoreUnit-Team (Jones Craig, Ombredanne Philippe, Wahler Vera,
-Walton Channing)
+      MoreUnit-Team (Henneberger Vera, Walton Channing)
    </copyright>
 
    <license>
