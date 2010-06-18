@@ -1,18 +1,23 @@
 package org.moreunit.elements;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.ui.MemberChooseDialog;
 import org.moreunit.ui.TestcaseChooseDialog;
+import org.moreunit.util.MethodTestCallerFinder;
 import org.moreunit.util.TestCaseDiviner;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
@@ -114,11 +119,15 @@ public class ClassTypeFacade extends TypeFacade
 
     public List<IMethod> getCorrespondingTestMethods(IMethod method)
     {
-        List<IMethod> result = new ArrayList<IMethod>();
-
         Set<IType> allTestCases = getCorrespondingTestCaseList();
+        return getTestMethodsForTestCases(method, allTestCases);
+    }
 
-        for (IType testCaseType : allTestCases)
+    private List<IMethod> getTestMethodsForTestCases(IMethod method, Set<IType> testCases)
+    {
+        List<IMethod> result = new ArrayList<IMethod>();
+        
+        for (IType testCaseType : testCases)
         {
             result.addAll(getTestMethodsForTestCase(method, testCaseType));
         }
@@ -173,5 +182,65 @@ public class ClassTypeFacade extends TypeFacade
         }
 
         return this.testCaseDiviner;
+    }
+
+    /**
+     * Returns one test method calling the given method of this class. If there
+     * are more than one test methods the user has to make a choice via a
+     * dialog. If no test method is found <code>null</code> is returned.
+     * 
+     * @return one of the calling test methods
+     */
+    public IMember getOneCorrespondingTestCaseOrMethod(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
+    {
+        Set<IType> testCases = getCorrespondingTestCaseList();
+
+        Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
+        if(method != null)
+        {
+            testMethods.addAll(getTestMethodsForTestCases(method, testCases));
+            if(extendedSearch)
+            {
+                testMethods.addAll(getTestMethodsCalling(method));
+            }
+        }
+
+        IMember testMemberToJump = null;
+        boolean openDialog = false;
+        if(testMethods.size() == 1)
+        {
+            testMemberToJump = testMethods.iterator().next();
+        }
+        else if(testMethods.size() > 1)
+        {
+            openDialog = true;
+        }
+        else
+        {
+            if(testCases.size() == 1)
+            {
+                testMemberToJump = testCases.iterator().next();
+            }
+            else if(testCases.size() > 1)
+            {
+                openDialog = true;
+            }
+            else if(createIfNecessary)
+            {
+                testMemberToJump = new NewTestCaseWizard(getType()).open();
+            }
+        }
+
+        if(openDialog)
+        {
+            testMemberToJump = new MemberChooseDialog(promptText, testCases, testMethods).getChoice();
+        }
+
+        return testMemberToJump;
+    }
+
+    private Set<IMethod> getTestMethodsCalling(IMethod method)
+    {
+        return new MethodTestCallerFinder(method).getMatches(new NullProgressMonitor());
     }
 }

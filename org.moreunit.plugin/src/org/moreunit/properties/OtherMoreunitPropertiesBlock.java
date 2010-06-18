@@ -38,6 +38,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Text superClassTextField;
 
     private Button flexibleNamingCheckbox;
+    private Button extendedSearchCheckbox;
 
     private GridData layoutForTextFields;
     private GridData layoutForOneLineControls;
@@ -72,6 +73,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         createPackagePrefixSuffixTextFields(composite);
         createSuperClassTextField(composite);
         createFlexibleNamingCheckbox(composite);
+        createExtendedSearchCheckbox(composite);
 
         checkStateOfMethodPrefixButton();
 
@@ -181,6 +183,14 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         flexibleNamingCheckbox.setLayoutData(layoutForOneLineControls);
         flexibleNamingCheckbox.setSelection(preferences.shouldUseFlexibleTestCaseNaming(javaProject));
     }
+    
+    private void createExtendedSearchCheckbox(Composite parent)
+    {
+        extendedSearchCheckbox = new Button(parent, SWT.CHECK);
+        extendedSearchCheckbox.setText(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH);
+        extendedSearchCheckbox.setLayoutData(layoutForOneLineControls);
+        extendedSearchCheckbox.setSelection(preferences.shouldUseTestMethodExtendedSearch(javaProject));
+    }
 
     public void saveProperties()
     {
@@ -206,6 +216,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         preferences.setTestSuperClass(javaProject, superClassTextField.getText());
 
         preferences.setShouldUseFlexibleTestCaseNaming(javaProject, flexibleNamingCheckbox.getSelection());
+        preferences.setShouldUseTestMethodExtendedSearch(javaProject, extendedSearchCheckbox.getSelection());
     }
 
     private boolean isJunit4OrTestNgTestTypeSelected()

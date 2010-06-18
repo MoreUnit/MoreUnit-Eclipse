@@ -1,11 +1,14 @@
 package org.moreunit.elements;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -14,12 +17,15 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.ui.MemberChooseDialog;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
 import org.moreunit.util.SearchScopeSingelton;
 import org.moreunit.util.SearchTools;
+import org.moreunit.util.TestMethodCalleeFinder;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
+import org.moreunit.wizards.NewClassWizard;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
@@ -133,6 +139,22 @@ public class TestCaseTypeFacade extends TypeFacade
     {
         return PluginTools.getSourceFolder(compilationUnit);
     }
+    
+    public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Set<IType> classesUnderTest)
+    {
+        List<IMethod> result = new ArrayList<IMethod>();
+        
+        for (IType classUnderTest : classesUnderTest)
+        {
+            IMethod testedMethod = getCorrespondingTestedMethod(testMethod, classUnderTest);
+            if(testedMethod != null)
+            {
+                result.add(testedMethod);
+            }
+        }
+
+        return result;
+    }
 
     public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest)
     {
@@ -157,6 +179,66 @@ public class TestCaseTypeFacade extends TypeFacade
         }
 
         return null;
+    }
+    
+    /**
+     * Returns one method called by the given test method of this test case. If
+     * there are more than one methods the user has to make a choice via a
+     * dialog. If no method is found <code>null</code> is returned.
+     * 
+     * @return one of the called methods
+     */
+    public IMember getOneCorrespondingClassOrMethodUnderTest(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
+    {
+        Set<IType> classesUnderTest = new LinkedHashSet<IType>(getCorrespondingClassesUnderTest());
+
+        Set<IMethod> methodsUnderTest = new LinkedHashSet<IMethod>();
+        if(method != null)
+        {
+            methodsUnderTest.addAll(getCorrespondingTestedMethods(method, classesUnderTest));
+            if(extendedSearch)
+            {
+                methodsUnderTest.addAll(getMethodsCalledBy(method));
+            }
+        }
+
+        IMember memberToJump = null;
+        boolean openDialog = false;
+        if(methodsUnderTest.size() == 1)
+        {
+            memberToJump = methodsUnderTest.iterator().next();
+        }
+        else if(methodsUnderTest.size() > 1)
+        {
+            openDialog = true;
+        }
+        else
+        {
+            if(classesUnderTest.size() == 1)
+            {
+                memberToJump = classesUnderTest.iterator().next();
+            }
+            else if(classesUnderTest.size() > 1)
+            {
+                openDialog = true;
+            }
+            else if(createIfNecessary)
+            {
+                memberToJump = new NewClassWizard(getType()).open();
+            }
+        }
+
+        if(openDialog)
+        {
+            memberToJump = new MemberChooseDialog(promptText, classesUnderTest, methodsUnderTest).getChoice();
+        }
+
+        return memberToJump;
+    }
+
+    private Set<IMethod> getMethodsCalledBy(IMethod method)
+    {
+        return new TestMethodCalleeFinder(method).getMatches(new NullProgressMonitor());
     }
 
     /**
@@ -226,6 +308,9 @@ public class TestCaseTypeFacade extends TypeFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.20 2009/01/08 19:58:12 gianasista
 // Patch from Zach for more flexible test method naming
 //

@@ -3,6 +3,8 @@
  */
 package org.moreunit.elements;
 
+import java.util.ArrayList;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -74,11 +76,11 @@ public class TestmethodCreator
 
         // TODO move this into the testMethodDiviner
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            return createJUnit4Testmethod(testMethodName);
+            return createJUnit4Testmethod(testMethodName, null);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-            return createJUnit3Testmethod(testMethodName);
+            return createJUnit3Testmethod(testMethodName, null);
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            return createTestNgTestMethod(testMethodName);
+            return createTestNgTestMethod(testMethodName, null);
 
         return null;
     }
@@ -107,31 +109,61 @@ public class TestmethodCreator
                 testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 
             if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-                return createJUnit4Testmethod(testMethodName);
+                return createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod));
             else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-                return createJUnit3Testmethod(testMethodName);
+                return createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod));
             else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-                return createTestNgTestMethod(testMethodName);
+                return createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod));
         }
 
         return null;
     }
-
-    protected IMethod createJUnit3Testmethod(String testMethodName)
+    
+    /**
+     * If a additional test method should be created it would be nice if this method
+     * is placed directly below the test method.
+     * As the {@link IType} createTestMethod placed the method above the sibling
+     * the method after the testmethod must be the sibling parameter for this method.
+     * This method returns null if the testmethod is the last method in the type
+     * @return
+     */
+    private IMethod getSiblingForInsert(IMethod testMethod)
     {
-        return createMethod(testMethodName, getJUnit3MethodStub(testMethodName));
+        try
+        {
+            IMethod[] methods = compilationUnit.findPrimaryType().getMethods();
+            for(int i=0;i<methods.length;i++)
+            {
+                boolean isNotLastMethodInClass = i<methods.length-1;
+                if(testMethod == methods[i] && isNotLastMethodInClass)
+                {
+                    return methods[i+1];
+                }
+            }
+        }
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+        
+        return null;
     }
 
-    private IMethod createTestNgTestMethod(String testMethodName)
+    protected IMethod createJUnit3Testmethod(String testMethodName, IMethod sibling)
     {
-        return createMethod(testMethodName, getTestNgMethodStub(testMethodName));
+        return createMethod(testMethodName, getJUnit3MethodStub(testMethodName), sibling);
+    }
+
+    private IMethod createTestNgTestMethod(String testMethodName, IMethod sibling)
+    {
+        return createMethod(testMethodName, getTestNgMethodStub(testMethodName), sibling);
     }
 
     private String getTestNgMethodStub(String testmethodName)
     {
         StringBuffer methodContent = new StringBuffer();
         methodContent.append("@Test").append(StringConstants.NEWLINE);
-        methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append(defaultTestMethodContent).append(StringConstants.NEWLINE).append("}");
+        methodContent.append(getTestMethodString(testmethodName));
 
         return methodContent.toString();
     }
@@ -139,33 +171,47 @@ public class TestmethodCreator
     private String getJUnit3MethodStub(String testmethodName)
     {
         StringBuffer methodContent = new StringBuffer();
-        methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append(defaultTestMethodContent).append(StringConstants.NEWLINE).append("}");
+        methodContent.append(getTestMethodString(testmethodName));
 
         return methodContent.toString();
     }
 
-    protected IMethod createJUnit4Testmethod(String testMethodName)
+    protected IMethod createJUnit4Testmethod(String testMethodName, IMethod sibling)
     {
-        return createMethod(testMethodName, getJUnit4MethodStub(testMethodName));
+        return createMethod(testMethodName, getJUnit4MethodStub(testMethodName), sibling);
     }
 
     private String getJUnit4MethodStub(String testmethodName)
     {
         StringBuffer methodContent = new StringBuffer();
         methodContent.append("@Test").append(StringConstants.NEWLINE);
-        methodContent.append("public void ").append(testmethodName).append("() {").append(StringConstants.NEWLINE).append(defaultTestMethodContent).append(StringConstants.NEWLINE).append("}");
+        methodContent.append(getTestMethodString(testmethodName));
 
         return methodContent.toString();
     }
+    
+    private String getTestMethodString(String testmethodName)
+    {
+        String recommendedLineSeparator = StringConstants.NEWLINE;
+        try
+        {
+            recommendedLineSeparator = compilationUnit.findRecommendedLineSeparator();
+        }
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+        return String.format("public void %s()%s{%s%s%s}", testmethodName, recommendedLineSeparator, StringConstants.NEWLINE, defaultTestMethodContent, StringConstants.NEWLINE);
+    }
 
-    private IMethod createMethod(String methodName, String methodString)
+    private IMethod createMethod(String methodName, String methodString, IMethod sibling)
     {
         if(doesMethodExist(methodName))
             return null;
 
         try
         {
-            return compilationUnit.findPrimaryType().createMethod(methodString, null, true, null);
+            return compilationUnit.findPrimaryType().createMethod(methodString, sibling, true, null);
         }
         catch (JavaModelException exc)
         {

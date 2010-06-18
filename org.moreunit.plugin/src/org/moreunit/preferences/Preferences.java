@@ -44,6 +44,7 @@ public class Preferences
         workbenchStore.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
         workbenchStore.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
         workbenchStore.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
+        workbenchStore.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
     }
 
     public static Preferences getInstance()
@@ -352,10 +353,27 @@ public class Preferences
 
         return null;
     }
+    
+    public boolean shouldUseTestMethodExtendedSearch(IJavaProject javaProject)
+    {
+        if(store(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
+        {
+            return store(javaProject).getBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
+        }
+        return store(javaProject).getDefaultBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
+    }
+
+    public void setShouldUseTestMethodExtendedSearch(IJavaProject javaProject, boolean shouldUseExtendedSearch)
+    {
+        getProjectStore(javaProject).setValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, shouldUseExtendedSearch);
+    }
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.20 2009/03/16 20:37:58 gianasista
 // Bugfix for missing preferences
 //

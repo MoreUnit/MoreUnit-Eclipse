@@ -19,6 +19,7 @@ public interface PreferenceConstants
     String TEST_PACKAGE_SUFFIX = "org.moreunit.package_suffix";
     String FLEXIBEL_TESTCASE_NAMING = "org.moreunit.flexiblenaming";
     String UNIT_SOURCE_FOLDER = "org.moreunit.unitsourcefolder";
+    String EXTENDED_TEST_METHOD_SEARCH = "org.moreunit.extendedTestMethodSearch";
 
     String TEST_TYPE = "org.moreunit.test_type";
     String TEST_TYPE_VALUE_JUNIT_3 = "junit3";
@@ -37,6 +38,7 @@ public interface PreferenceConstants
     String DEFAULT_PRAEFIX = "Test";
     String DEFAULT_SUFFIX = "Test";
     String DEFAULT_TEST_SUPERCLASS = "";
+    boolean DEFAULT_EXTENDED_TEST_METHOD_SEARCH = false;
 
     String TEXT_FLEXIBLE_NAMING = "Enable flexible naming of tests";
     String TEXT_TEST_SUPERCLASS = "Test superclass";
@@ -50,6 +52,7 @@ public interface PreferenceConstants
     String TEXT_JUNIT_3_8 = "JUnit 3.8";
     String TEXT_TEST_METHOD_TYPE = "Use test-prefix for test-methods (e.g. testFoo())";
     String TEXT_TEST_SOURCE_FOLDER = "Directory for testcases";
+    String TEXT_EXTENDED_TEST_METHOD_SEARCH = "Enable extended search for test methods";
 
     String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
     String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";

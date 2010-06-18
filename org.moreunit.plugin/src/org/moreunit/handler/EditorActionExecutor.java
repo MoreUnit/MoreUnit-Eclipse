@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
@@ -36,7 +37,6 @@ import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.MoreUnitContants;
-import org.moreunit.wizards.NewClassWizard;
 
 /**
  * Handles the actions which are delegated from the handlers:<br>
@@ -157,8 +157,13 @@ public class EditorActionExecutor
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
-        JavaUI.revealInEditor(testCaseTypeFacade.getEditorPart(), (IJavaElement) newMethod);
+        revealInEditor(testCaseTypeFacade.getEditorPart(), newMethod);
         selectionProvider.setSelection(exactSelection);
+    }
+    
+    private static void revealInEditor(IEditorPart editorPart, IMethod method)
+    {
+        JavaUI.revealInEditor(editorPart, (IJavaElement) method);
     }
 
     public void executeJumpAction(IEditorPart editorPart)
@@ -175,100 +180,61 @@ public class EditorActionExecutor
 
     private void executeJumpAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
     {
+        IMethod methodUnderCursorPosition = getMethodUnderCursorPosition(editorPart);
+        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
+        String promptText = "Jump to...";
+
+        IMember memberToJump = null;
         if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
         {
-            executeJumpFromTest(editorPart, new TestCaseTypeFacade(compilationUnit));
+            memberToJump = new TestCaseTypeFacade(compilationUnit).getOneCorrespondingClassOrMethodUnderTest(methodUnderCursorPosition, true, extendedSearch, promptText);
         }
         else
         {
-            executeJumpToTest(editorPart, new ClassTypeFacade(compilationUnit));
+            memberToJump = new ClassTypeFacade(compilationUnit).getOneCorrespondingTestCaseOrMethod(methodUnderCursorPosition, true, extendedSearch, promptText);
+        }
+
+        if(memberToJump != null)
+        {
+            jumpToMember(memberToJump);
         }
     }
 
-    private void executeJumpFromTest(IEditorPart editorPart, TestCaseTypeFacade javaFileFacade)
+    private IMethod getMethodUnderCursorPosition(IEditorPart editorPart)
     {
-        IType classUnderTest = javaFileFacade.getCorrespondingClassUnderTest();
-        if(classUnderTest == null)
+        return editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
+    }
+
+    private void jumpToMember(IMember memberToJump)
+    {
+        if(memberToJump instanceof IMethod)
         {
-            classUnderTest = new NewClassWizard(javaFileFacade.getType()).open();
+            IMethod methodToJump = (IMethod) memberToJump;
+            IEditorPart openedEditor = openInEditor(methodToJump.getDeclaringType().getParent());
+            revealInEditor(openedEditor, methodToJump);
         }
-        if(classUnderTest != null)
+        else
         {
-            try
-            {
-                IEditorPart openedEditorPart = JavaUI.openInEditor(classUnderTest.getParent());
-                if(editorPart != null)
-                {
-                    jumpToMethodUnderTestIfPossible(classUnderTest, editorPart, openedEditorPart);
-                }
-            }
-            catch (PartInitException exc)
-            {
-                LogHandler.getInstance().handleExceptionLog(exc);
-            }
-            catch (JavaModelException exc)
-            {
-                LogHandler.getInstance().handleExceptionLog(exc);
-            }
+            openInEditor(memberToJump.getParent());
         }
     }
 
-    private void executeJumpToTest(IEditorPart editorPart, ClassTypeFacade javaFileFacade)
+    private static IEditorPart openInEditor(IJavaElement element)
     {
-        IType testcaseToJump = javaFileFacade.getOneCorrespondingTestCase(true);
-
-        if(testcaseToJump != null)
+        IEditorPart openedEditorPart = null;
+        try
         {
-            try
-            {
-                IEditorPart openedEditor = JavaUI.openInEditor(testcaseToJump.getParent());
-                if(editorPart != null)
-                {
-                    jumpToTestMethodIfPossible(editorPart, openedEditor, testcaseToJump);
-                }
-            }
-            catch (PartInitException exc)
-            {
-                LogHandler.getInstance().handleExceptionLog(exc);
-            }
-            catch (JavaModelException exc)
-            {
-                LogHandler.getInstance().handleExceptionLog(exc);
-            }
+            openedEditorPart = JavaUI.openInEditor(element);
         }
-    }
-
-    private void jumpToTestMethodIfPossible(IEditorPart oldEditorPart, IEditorPart openedEditorPart, final IType testCaseType)
-    {
-        EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
-        IMethod method = (oldEditorPartFacade).getMethodUnderCursorPosition();
-        if(method == null)
+        catch (PartInitException exc)
         {
-            return;
+            LogHandler.getInstance().handleExceptionLog(exc);
         }
-
-        IMethod testMethod = oldEditorPartFacade.getFirstTestMethodForMethodUnderCursorPosition(testCaseType);
-        if(testMethod != null)
+        catch (JavaModelException exc)
         {
-            JavaUI.revealInEditor(openedEditorPart, (IJavaElement) testMethod);
+            LogHandler.getInstance().handleExceptionLog(exc);
         }
-    }
-
-    private void jumpToMethodUnderTestIfPossible(IType classUnderTest, IEditorPart oldEditorPart, IEditorPart openedEditorPart) throws JavaModelException
-    {
-        EditorPartFacade oldEditorPartFacade = new EditorPartFacade(oldEditorPart);
-        IMethod methode = (oldEditorPartFacade).getMethodUnderCursorPosition();
-        if(methode == null)
-        {
-            return;
-        }
-
-        TestCaseTypeFacade testCase = new TestCaseTypeFacade(oldEditorPartFacade.getCompilationUnit());
-        IMethod testedMethod = testCase.getCorrespondingTestedMethod(methode, classUnderTest);
-        if(testedMethod != null)
-        {
-            JavaUI.revealInEditor(openedEditorPart, (IJavaElement) testedMethod);
-        }
+        return openedEditorPart;
     }
 
     public void executeRunTestAction(IEditorPart editorPart)
@@ -358,6 +324,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2010/04/13 19:17:11  gianasista
+// support for launching testNG tests
+//
 // Revision 1.15  2010/02/06 21:07:26  gianasista
 // Patch for Running Tests from CUT
 //

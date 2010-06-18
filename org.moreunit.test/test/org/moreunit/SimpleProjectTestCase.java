@@ -4,13 +4,18 @@
 package org.moreunit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.DummyPreferencesForTesting;
@@ -30,6 +35,8 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     protected static IPackageFragment sourcesPackage;
     protected static IPackageFragmentRoot testFolder;
     protected static IPackageFragment testPackage;
+
+    private Set<IType> typesToClean;
 
     @BeforeClass
     public static void setUpProject() throws Exception
@@ -51,7 +58,19 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
         testPackage.delete(true, null);
         testFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
     }
-    
+
+    @Before
+    public void setUpTestCase()
+    {
+        typesToClean = new HashSet<IType>();
+    }
+
+    @After
+    public void tearDownTestCase() throws JavaModelException
+    {
+        WorkspaceHelper.deleteCompilationUnitsForTypes(typesToClean.toArray(new IType[0]));
+    }
+
     private static void initPreferencesForTestCaseContext()
     {
         Preferences preferences = new DummyPreferencesForTesting();
@@ -62,5 +81,29 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 
         preferences.setSuffixes(workspaceTestProject, new String[] { "Test" });
         preferences.setPrefixes(workspaceTestProject, new String[] {});
+    }
+
+    protected IType createJavaClass(String javaClassName, boolean deleteCompilationUnitAfterTest) throws JavaModelException
+    {
+        return createJavaClass(sourcesPackage, javaClassName, deleteCompilationUnitAfterTest);
+    }
+
+    protected IType createTestCase(String javaClassName, boolean deleteCompilationUnitAfterTest) throws JavaModelException
+    {
+        return createJavaClass(testPackage, javaClassName, deleteCompilationUnitAfterTest);
+    }
+
+    private IType createJavaClass(IPackageFragment packageFragment, String javaClassName, boolean deleteCompilationUnitAfterTest) throws JavaModelException
+    {
+        IType type = WorkspaceHelper.createJavaClass(packageFragment, javaClassName);
+        if(deleteCompilationUnitAfterTest)
+        {
+            if(typesToClean == null)
+            {
+                throw new IllegalStateException("Argument 'deleteCompilationUnitAfterTest' can only be used during the time between @Before and @After.");
+            }
+            typesToClean.add(type);
+        }
+        return type;
     }
 }
