@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -176,7 +176,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             {
                 ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getCompilationUnit());
 
-                IMethod[] methods = classTypeFacade.getType().getMethods();
+                IType type = classTypeFacade.getType();
+                if(type == null)
+                {
+                    // this could happen if the resource is out of sync with the filesystem
+                    return;
+                }
+                IMethod[] methods = type.getMethods();
                 for (IMethod method : methods)
                 {
                     if(classTypeFacade.hasTestMethod(method))
