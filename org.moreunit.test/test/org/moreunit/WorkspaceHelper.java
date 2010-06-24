@@ -50,6 +50,14 @@ public class WorkspaceHelper
     {
         IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
         IProject project = workspaceRoot.getProject(projectName);
+        
+        // If project existed, delete if first, because create would throw an exception
+        // otherwise
+        if (project.exists()) {
+            project.delete(true, true, null);
+        }
+        
+        // Create and open project
         project.create(null);
         project.open(null);
 
