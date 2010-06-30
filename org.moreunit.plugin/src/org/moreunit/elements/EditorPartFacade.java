@@ -103,7 +103,7 @@ public class EditorPartFacade
         return classTypeFacade.getCorrespondingTestMethod(methodUnderCursorPosition, testcaseType);
     }
 
-    public List getTestmethodsForMethodUnderCursorPosition()
+    public List<IMethod> getTestmethodsForMethodUnderCursorPosition()
     {
         if(TypeFacade.isTestCase(getCompilationUnit().findPrimaryType()))
             return null;
@@ -123,6 +123,9 @@ public class EditorPartFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.5 2009/03/25 20:27:25 gianasista
 // Bugfix: NPE when opening class-files
 //

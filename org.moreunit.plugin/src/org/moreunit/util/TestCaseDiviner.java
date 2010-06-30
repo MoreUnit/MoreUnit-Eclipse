@@ -29,7 +29,7 @@ public class TestCaseDiviner
 
     private Preferences preferences;
 
-    private Map<IJavaProject, IJavaSearchScope> serachScopePerProjectMap = new HashMap<IJavaProject, IJavaSearchScope>();
+    //private Map<IJavaProject, IJavaSearchScope> serachScopePerProjectMap = new HashMap<IJavaProject, IJavaSearchScope>();
 
     public TestCaseDiviner(ICompilationUnit compilationUnit, Preferences preferences)
     {
@@ -140,6 +140,9 @@ public class TestCaseDiviner
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2009/10/19 19:33:16  gianasista
+// Bugfix switching for enums
+//
 // Revision 1.13  2009/04/05 19:14:27  gianasista
 // code formatter
 //

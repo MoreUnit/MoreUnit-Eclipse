@@ -19,7 +19,7 @@ import org.moreunit.util.PluginTools;
 
 public class MissingClassTreeContentProvider implements ITreeContentProvider
 {
-    private List<IType> classesNotUnderTest = new ArrayList<IType>();
+    //private List<IType> classesNotUnderTest = new ArrayList<IType>();
 
     public Object[] getChildren(Object arg0)
     {

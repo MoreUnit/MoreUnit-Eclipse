@@ -3,8 +3,6 @@
  */
 package org.moreunit.elements;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;

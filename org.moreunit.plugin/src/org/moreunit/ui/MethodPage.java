@@ -147,10 +147,10 @@ public class MethodPage extends Page implements IElementChangedListener
             return;
         }
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit());
-        for (Iterator<IMethod> allSelected = selection.iterator(); allSelected.hasNext();)
+        //TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit());
+        for (Iterator<?> allSelected = selection.iterator(); allSelected.hasNext();)
         {
-            IMethod selectedMethod = allSelected.next();
+            IMethod selectedMethod = (IMethod) allSelected.next();
             TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(this.editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(this.editorPartFacade.getJavaProject()));
             testmethodCreator.createTestMethod(selectedMethod);
         }

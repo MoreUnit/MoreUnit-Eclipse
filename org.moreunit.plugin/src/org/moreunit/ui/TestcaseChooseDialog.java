@@ -43,7 +43,8 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
 
     public TestcaseChooseDialog(String titleText, String infoText, Set<IType> testcaseSet)
     {
-        super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.PRIMARY_MODAL, true, false, false, false, StringConstants.EMPTY_STRING, StringConstants.EMPTY_STRING);
+        //super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.PRIMARY_MODAL, true, false, false, false, StringConstants.EMPTY_STRING, StringConstants.EMPTY_STRING);
+        super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.PRIMARY_MODAL, true, false, false, false, false, StringConstants.EMPTY_STRING, StringConstants.EMPTY_STRING);
 
         this.testcaseSet = testcaseSet;
         setInfoText(StringConstants.EMPTY_STRING);

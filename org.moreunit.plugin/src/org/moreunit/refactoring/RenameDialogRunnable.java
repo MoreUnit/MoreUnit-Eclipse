@@ -38,7 +38,7 @@ public class RenameDialogRunnable implements Runnable
     {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getShell();
 
-        List corrspondingTests = javaFile.getCorrespondingTestMethods(renamedMethod);
+        List<IMethod> corrspondingTests = javaFile.getCorrespondingTestMethods(renamedMethod);
         ListDialog listDialog = new ListDialog(shell);
         listDialog.setMessage("Should the following methods be renamed either?");
         listDialog.setTitle("Rename tests");
@@ -68,6 +68,9 @@ public class RenameDialogRunnable implements Runnable
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.2 2009/01/08 19:58:30 gianasista
 // Patch from Zach for more flexible test method naming
 //

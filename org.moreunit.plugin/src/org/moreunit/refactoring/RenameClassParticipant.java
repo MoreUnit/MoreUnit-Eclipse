@@ -90,7 +90,8 @@ public class RenameClassParticipant extends RenameParticipant
                 renameJavaElementDescriptor.setNewName(getNewTestName(typeToRename));
                 RefactoringStatus refactoringStatus = new RefactoringStatus();
                 Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
-                RefactoringStatus checkAllConditions = renameRefactoring.checkAllConditions(pm);
+                //RefactoringStatus checkAllConditions = renameRefactoring.checkAllConditions(pm);
+                renameRefactoring.checkAllConditions(pm);
                 changes.add(renameRefactoring.createChange(pm));
             }
 
@@ -122,6 +123,9 @@ public class RenameClassParticipant extends RenameParticipant
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.5 2008/02/20 19:23:02 gianasista
 // Rename of classes for constants
 //

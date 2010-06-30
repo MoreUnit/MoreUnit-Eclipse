@@ -21,12 +21,12 @@ import org.moreunit.util.PluginTools;
 public class Preferences
 {
 
-    private static final String[] LOOKUP_ORDER = { ProjectScope.SCOPE, ConfigurationScope.SCOPE };
+    //private static final String[] LOOKUP_ORDER = { ProjectScope.SCOPE, ConfigurationScope.SCOPE };
     private static Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
     private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
-    private static final IScopeContext workbenchScopeContext = new ConfigurationScope();
-    private static Map<IJavaProject, ProjectScope> preferenceScopeMap = new HashMap<IJavaProject, ProjectScope>();
+    //private static final IScopeContext workbenchScopeContext = new ConfigurationScope();
+    //private static Map<IJavaProject, ProjectScope> preferenceScopeMap = new HashMap<IJavaProject, ProjectScope>();
 
     private static Preferences instance = new Preferences();
 
@@ -371,6 +371,9 @@ public class Preferences
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.22  2010/06/18 20:05:53  gianasista
+// extended test method search
+//
 // Revision 1.21  2009/04/05 19:14:27  gianasista
 // code formatter
 //

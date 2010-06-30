@@ -155,7 +155,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private void clear(AnnotationModelEvent event)
     {
-        Iterator iterator = getAnnotationIterator();
+        Iterator<MoreUnitAnnotation> iterator = getAnnotationIterator();
         while (iterator.hasNext())
         {
             MoreUnitAnnotation annotation = (MoreUnitAnnotation) iterator.next();
@@ -278,7 +278,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
     }
 
-    public Iterator getAnnotationIterator()
+    public Iterator<MoreUnitAnnotation> getAnnotationIterator()
     {
         return annotations.iterator();
     }

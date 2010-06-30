@@ -132,7 +132,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     // private Button fJUnit4Toggle;
     private boolean fIsJunit4;
     private IStatus fJunit4Status; // status
-    private boolean fIsJunit4Enabled;
+    //private boolean fIsJunit4Enabled;
     private Link fLink;
     private Label fImage;
 
@@ -273,7 +273,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     public void setJUnit4(boolean isJUnit4, boolean isEnabled)
     {
-        fIsJunit4Enabled = isEnabled;
+        //fIsJunit4Enabled = isEnabled;
         /*
          * if (fJUnit4Toggle != null && !fJUnit4Toggle.isDisposed()) {
          * fJUnit4Toggle.setSelection(isJUnit4);
@@ -617,7 +617,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         if("a3".equals(data)) { // add and configure JUnit 3 //$NON-NLS-1$
             String id = BUILD_PATH_PAGE_ID;
-            Map input = new HashMap();
+            Map<Object, Object> input = new HashMap<Object, Object>();
             IClasspathEntry newEntry = BuildPathSupport.getJUnit3ClasspathEntry();
             input.put(BUILD_PATH_KEY_ADD_ENTRY, newEntry);
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
@@ -625,7 +625,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else if("a4".equals(data)) { // add and configure JUnit 4 //$NON-NLS-1$
             String id = BUILD_PATH_PAGE_ID;
-            Map input = new HashMap();
+            Map<Object, Object> input = new HashMap<Object, Object>();
             IClasspathEntry newEntry = BuildPathSupport.getJUnit4ClasspathEntry();
             input.put(BUILD_PATH_KEY_ADD_ENTRY, newEntry);
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
@@ -633,14 +633,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else if("b".equals(data)) { // open build path //$NON-NLS-1$
             String id = BUILD_PATH_PAGE_ID;
-            Map input = new HashMap();
+            Map<Object, Object> input = new HashMap<Object, Object>();
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, id, new String[] { id }, input).open();
         }
         else if("c".equals(data)) { // open compliance //$NON-NLS-1$
             String buildPath = BUILD_PATH_PAGE_ID;
             String complianceId = COMPLIANCE_PAGE_ID;
-            Map input = new HashMap();
+            Map<Object, Object> input = new HashMap<Object, Object>();
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             input.put(KEY_NO_LINK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, complianceId, new String[] { buildPath, complianceId }, data).open();
@@ -1048,15 +1048,15 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return;
         /* find overloaded methods */
         IMethod[] allMethodsArray = fPage2.getAllMethods();
-        List allMethods = new ArrayList();
+        List<IMethod> allMethods = new ArrayList<IMethod>();
         allMethods.addAll(Arrays.asList(allMethodsArray));
-        List overloadedMethods = getOverloadedMethods(allMethods);
+        List<IMethod> overloadedMethods = getOverloadedMethods(allMethods);
 
         /*
          * used when for example both sum and Sum methods are present. Then sum
          * -> testSum Sum -> testSum1
          */
-        List names = new ArrayList();
+        List<String> names = new ArrayList<String>();
         for (int i = 0; i < methods.length; i++)
         {
             IMethod method = methods[i];
@@ -1202,15 +1202,15 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         buffer.append(delimiter);
     }
 
-    private List getOverloadedMethods(List allMethods)
+    private List<IMethod> getOverloadedMethods(List<IMethod> allMethods)
     {
-        List overloadedMethods = new ArrayList();
+        List<IMethod> overloadedMethods = new ArrayList<IMethod>();
         for (int i = 0; i < allMethods.size(); i++)
         {
             IMethod current = (IMethod) allMethods.get(i);
             String currentName = current.getElementName();
             boolean currentAdded = false;
-            for (ListIterator iter = allMethods.listIterator(i + 1); iter.hasNext();)
+            for (ListIterator<IMethod> iter = allMethods.listIterator(i + 1); iter.hasNext();)
             {
                 IMethod iterMethod = (IMethod) iter.next();
                 if(iterMethod.getElementName().equals(currentName))

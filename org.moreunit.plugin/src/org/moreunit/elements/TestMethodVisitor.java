@@ -50,7 +50,7 @@ public class TestMethodVisitor extends ASTVisitor
 
     private boolean hasTestAnnotation(MethodDeclaration methodDeclaration)
     {
-        List modifiers = methodDeclaration.modifiers();
+        List<?> modifiers = methodDeclaration.modifiers();
         for (Object modifier : modifiers)
         {
             if(modifier instanceof MarkerAnnotation)

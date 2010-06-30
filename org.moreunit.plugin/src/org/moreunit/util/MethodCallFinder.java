@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.jdt.internal.corext.callhierarchy.MethodWrapper;
 
-@SuppressWarnings("restriction")
+//@SuppressWarnings("restriction")
 public abstract class MethodCallFinder
 {
 

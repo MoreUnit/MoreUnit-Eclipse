@@ -64,13 +64,15 @@ public class MissingTestclassViewPart extends PageBookView
     @Override
     protected boolean isImportant(IWorkbenchPart workbenchPart)
     {
-        List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
+        //List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
         IProject selectedProject = ResourcesPlugin.getWorkspace().getRoot().getProject();
         // TODO this one place where I'm a little stuck
         System.out.println(selectedProject);
+        /*
         for (IJavaProject javaProject : javaProjectsFromWorkspace)
         {
         }
+        */
         return (PluginTools.isJavaFile(workbenchPart));
 
     }

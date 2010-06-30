@@ -113,13 +113,15 @@ public class MissingClassPage extends Page implements IElementChangedListener
         return SearchScopeSingelton.getInstance().getSearchScope(sourceFolder);
     }
 
+    /*
     private void updateUi()
     {
         treeViewer.setContentProvider(new MissingClassTreeContentProvider());
         treeViewer.setLabelProvider(new JavaElementLabelProvider());
         treeViewer.setInput(this);
-    }
+    }*/
 
+    /*
     private void createToolbar()
     {
         refreshAction = new Action("Refresh")
@@ -136,6 +138,6 @@ public class MissingClassPage extends Page implements IElementChangedListener
         toolBarManager.add(refreshAction);
         // TODO I'm also a little stuck here, I've spent a little too much time
         // trying to get a nice menu / combo box, in the toolbar
-    }
+    }*/
 
 }

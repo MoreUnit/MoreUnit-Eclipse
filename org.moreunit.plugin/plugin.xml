@@ -176,6 +176,12 @@
 			textPreferenceKey="org.moreunit.text_preference">
 		</specification>
 	</extension>
+ <extension
+       point="org.eclipse.ui.editors.annotationTypes">
+    <type
+          name="org.moreunit.testCaseAnnotation">
+    </type>
+ </extension>
 
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
@@ -201,7 +207,7 @@
         name="MoreUnit">
 			<keywordReference id="org.moreunit.keywordReference.junit"/>
             <keywordReference id="org.moreunit.keywordReference.moreunit"/>
-            <keywordReference id="org.moreunit.keywordReference.test"/>
+            <!--<keywordReference id="org.moreunit.keywordReference.test"/>-->
 		</page>
 		<!--
 		<page id="org.moreunit.moreunitPreferencePage_details"

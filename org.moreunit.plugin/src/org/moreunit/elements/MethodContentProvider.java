@@ -2,6 +2,7 @@ package org.moreunit.elements;
 
 import java.util.List;
 
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -14,9 +15,9 @@ import org.eclipse.jface.viewers.Viewer;
 public class MethodContentProvider implements IStructuredContentProvider
 {
 
-    List methods;
+    List<IMethod> methods;
 
-    public MethodContentProvider(List methods)
+    public MethodContentProvider(List<IMethod> methods)
     {
         this.methods = methods;
     }
@@ -36,6 +37,9 @@ public class MethodContentProvider implements IStructuredContentProvider
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.1.1.1 2006/08/13 14:31:15 gianasista
 // initial
 //

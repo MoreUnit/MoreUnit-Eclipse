@@ -114,6 +114,7 @@ public class FilterMethodVisitor extends ASTVisitor
 
         for (FieldDeclaration fieldDeclaration : fieldDeclarations)
         {
+            @SuppressWarnings("unchecked")
             List<VariableDeclarationFragment> variableDeclarationFragments = fieldDeclaration.fragments();
             for (VariableDeclarationFragment declarationFragment : variableDeclarationFragments)
             {
@@ -167,6 +168,7 @@ public class FilterMethodVisitor extends ASTVisitor
 
     private boolean sameParameters(IMethod method, MethodDeclaration methodDeclaration)
     {
+        @SuppressWarnings("unchecked")
         List<SingleVariableDeclaration> parameters = methodDeclaration.parameters();
         String[] parameterTypes = method.getParameterTypes();
 
