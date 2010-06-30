@@ -6,7 +6,7 @@
          <meta.schema plugin="org.moreunit" id="addTestmethodParticipator" name="Add Testmethod Participator"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         Extension Point that will allow clients to modify the created test method.
       </documentation>
    </annotation>
 
@@ -67,7 +67,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         2.0.2
       </documentation>
    </annotation>
 
@@ -76,7 +76,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         Will be added in future.
       </documentation>
    </annotation>
 
@@ -85,7 +85,7 @@
          <meta.section type="apiinfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         See Interface desriptions IAddTestMethodContext and IAddTestMethodParticipator.
       </documentation>
    </annotation>
 
@@ -94,9 +94,26 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         Will be added in future release.
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         MoreUnit-Plugin for Eclipse V3.5.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the Eclipse Public License - v 1.0.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See Eclipse Public License for more details.
+
+      </documentation>
+   </annotation>
 
 </schema>

@@ -1,3 +1,14 @@
+/**
+ * MoreUnit-Plugin for Eclipse V3.5.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the Eclipse Public License - v 1.0.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See Eclipse Public License for more details.
+ */
 package org.moreunit.handler;
 
 import java.util.List;
@@ -50,7 +61,7 @@ import org.moreunit.util.MoreUnitContants;
  * </ul>
  * The handler is a singelton.
  * 
- * @author vera 25.10.2005
+ * @author vera 25.10.2005, extended andreas 16.06.2010
  */
 public class EditorActionExecutor
 {
@@ -94,13 +105,22 @@ public class EditorActionExecutor
             compilationUnitForTestCase = oneCorrespondingTestCase.getCompilationUnit();
         }
         
+        // Create test method template
         TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
-        IMethod createdMethod = testmethodCreator.createTestMethod(editorPartFacade.getMethodUnderCursorPosition());
-        
-        AddTestMethodContext addTestMethodContext = new AddTestMethodContext(compilationUnitForTestCase, createdMethod);
-        callAddTestMethodParticipants(addTestMethodContext);
-        
+        IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
+        IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
+        // Call extensions on our extension point, allowing to modify the created testmethod
+        AddTestMethodContext addTestMethodContext = new AddTestMethodContext(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest);
+        callAddTestMethodParticipants(addTestMethodContext);
+
+        // If test modified test method is given, use it
+        IMethod modifiedTestMethod = addTestMethodContext.getTestMethod();
+        if(modifiedTestMethod != null)
+        {
+            createdMethod = modifiedTestMethod;
+        }
+        
         if((createdMethod != null) && createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
         {
             markMethodSuffix(editorPartFacade, createdMethod);
@@ -324,6 +344,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2010/06/18 20:05:38  gianasista
+// extended test method search
+//
 // Revision 1.16  2010/04/13 19:17:11  gianasista
 // support for launching testNG tests
 //
