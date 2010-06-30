@@ -27,7 +27,7 @@ public class RenameClassChangeTest
      * mock(ICompilationUnit.class);
      */
     // private NullProgressMonitor progressMonitor = new NullProgressMonitor();
-    private RenameClassChange change;
+    //private RenameClassChange change;
 
     private static final IProgressMonitor PROGRESS_MONITOR = new NullProgressMonitor();
 
@@ -155,6 +155,9 @@ public class RenameClassChangeTest
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/06/17 19:04:46  gianasista
+// Switched tests to junit4
+//
 // Revision 1.4  2009/04/05 19:15:31  gianasista
 // code formatter
 //

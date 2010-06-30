@@ -15,8 +15,8 @@ public class RenameMethodChangeTest
      * private Mock declaringType = mock(IType.class); private Mock method =
      * mock(IMethod.class); private Mock renamedMethod = mock(IMethod.class);
      */
-    private NullProgressMonitor progressMonitor = new NullProgressMonitor();
-    private RenameMethodChange change;
+    //private NullProgressMonitor progressMonitor = new NullProgressMonitor();
+    //private RenameMethodChange change;
 
     /*
      * protected void setUp() throws Exception { setUpMethod(method, "getKebab",
@@ -57,6 +57,9 @@ public class RenameMethodChangeTest
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/06/17 19:04:46  gianasista
+// Switched tests to junit4
+//
 // Revision 1.4  2009/04/05 19:15:31  gianasista
 // code formatter
 //
