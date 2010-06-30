@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class TestCaseDivinerTest extends SimpleProjectTestCase
 {
 
-    IPackageFragmentRoot junitSourceRoot;
+    //private IPackageFragmentRoot junitSourceRoot;
 
     @Test
     public void testGetMatchesOnlySuffix() throws CoreException
@@ -115,6 +115,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2009/11/08 20:09:51  gianasista
+// Refactoring of tests
+//
 // Revision 1.8  2009/10/19 19:33:54  gianasista
 // Bugfix switching for enums
 //
