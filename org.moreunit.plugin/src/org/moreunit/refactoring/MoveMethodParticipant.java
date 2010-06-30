@@ -33,8 +33,8 @@ public class MoveMethodParticipant extends MoveParticipant
 
     IMethod movedMethod;
     private ClassTypeFacade javaFileFacade;
-    TestMethodDivinerFactory testMethodDivinerFactory;
-    TestMethodDiviner testMethodDiviner;
+    private TestMethodDivinerFactory testMethodDivinerFactory;
+    //private TestMethodDiviner testMethodDiviner;
 
     // JavaFileFacade javaFileFacade;
 
@@ -47,7 +47,8 @@ public class MoveMethodParticipant extends MoveParticipant
         
         javaFileFacade = new ClassTypeFacade(movedMethod.getCompilationUnit());
         testMethodDivinerFactory = new TestMethodDivinerFactory(movedMethod.getCompilationUnit());
-        testMethodDiviner = testMethodDivinerFactory.create();
+        //testMethodDiviner = testMethodDivinerFactory.create();
+        testMethodDivinerFactory.create();
         return true;
     }
 
@@ -112,6 +113,9 @@ public class MoveMethodParticipant extends MoveParticipant
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2010/03/23 20:09:27  gianasista
+// Support for move method refactorings
+//
 // Revision 1.5  2009/04/05 19:14:27  gianasista
 // code formatter
 //

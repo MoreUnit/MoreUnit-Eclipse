@@ -22,8 +22,8 @@ public class TestMethodVisitor extends ASTVisitor
 {
 
     private List<MethodDeclaration> testmethods = new ArrayList<MethodDeclaration>();
-    TestMethodDivinerFactory testMethodDivinerFactory;
-    TestMethodDiviner testMethodDiviner;
+    private TestMethodDivinerFactory testMethodDivinerFactory;
+    //private TestMethodDiviner testMethodDiviner;
 
     public TestMethodVisitor(IType classType)
     {
@@ -31,7 +31,8 @@ public class TestMethodVisitor extends ASTVisitor
         testParser.setSource(classType.getCompilationUnit());
         testParser.createAST(null).accept(this);
         testMethodDivinerFactory = new TestMethodDivinerFactory(classType.getCompilationUnit());
-        testMethodDiviner = testMethodDivinerFactory.create();
+        //testMethodDiviner = testMethodDivinerFactory.create();
+        testMethodDivinerFactory.create();
     }
 
     // TODO move into testMethodDiviner

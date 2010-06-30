@@ -31,7 +31,11 @@ public class MoreUnitPlugin extends AbstractUIPlugin
      */
     public MoreUnitPlugin()
     {
-        plugin = this;
+        setInstance(this);
+    }
+    
+    private static void setInstance(MoreUnitPlugin instance) {
+        plugin = instance;
     }
 
     /**
@@ -100,6 +104,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2010/02/06 21:03:39  gianasista
+// Organize Imports
+//
 // Revision 1.8  2009/04/05 19:14:27  gianasista
 // code formatter
 //

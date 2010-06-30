@@ -32,10 +32,10 @@ import org.moreunit.util.TestCaseDiviner;
 
 public class MissingClassPage extends Page implements IElementChangedListener
 {
-    TreeViewer treeViewer;
+    //private TreeViewer treeViewer;
     private ICompilationUnit compilationUnit;
-    Action refreshAction;
-    boolean display = false;
+    //private Action refreshAction;
+    //private boolean display = false;
 
     public MissingClassPage(ICompilationUnit compilationUnit)
     {
@@ -58,10 +58,10 @@ public class MissingClassPage extends Page implements IElementChangedListener
     @Override
     public Control getControl()
     {
-        if(treeViewer != null)
-        {
-            return treeViewer.getControl();
-        }
+        //if(treeViewer != null)
+        //{
+        //    return treeViewer.getControl();
+        //}
         return null;
     }
 

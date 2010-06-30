@@ -17,13 +17,13 @@ import org.moreunit.preferences.Preferences;
 public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
 {
 
-    IWorkbenchPart workbenchPart;
+    //private IWorkbenchPart workbenchPart;
 
-    ISelection selection;
+    private ISelection selection;
 
     public void setActivePart(final IAction action, final IWorkbenchPart targetPart)
     {
-        this.workbenchPart = targetPart;
+        //this.workbenchPart = targetPart;
     }
 
     public void run(final IAction action)
@@ -50,6 +50,9 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.10 2009/04/05 19:07:42 gianasista
 // Switch to gnu code formatter
 //

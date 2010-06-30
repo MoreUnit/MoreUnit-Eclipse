@@ -94,9 +94,10 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
             {
                 if(tree.equals(e.getSource()))
                 {
-                    Object o = tree.getItem(new Point(e.x, e.y));
-                    if(o instanceof TreeItem)
-                    {
+                    //Object o = tree.getItem(new Point(e.x, e.y));
+                    TreeItem o = tree.getItem(new Point(e.x, e.y));
+                    //if(o instanceof TreeItem)
+                    //{
                         if(! o.equals(fLastItem))
                         {
                             fLastItem = (TreeItem) o;
@@ -124,7 +125,7 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
                                 tree.setSelection(new TreeItem[] { fLastItem });
                             }
                         }
-                    }
+                    //}
                 }
             }
         });
@@ -190,7 +191,8 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
         return viewer;
     }
 
-    private class TestCaseContentProvider implements ITreeContentProvider
+    //private class TestCaseContentProvider implements ITreeContentProvider
+    private static class TestCaseContentProvider implements ITreeContentProvider
     {
 
         Object[] resultList;
@@ -239,6 +241,12 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
 
     private void runEventLoop(Shell loopShell)
     {
+        
+        // NullSafe
+        if (loopShell == null) {
+            return;
+        }
+        
         Display display = loopShell.getDisplay();
 
         while (loopShell != null && ! loopShell.isDisposed() && treeViewer != null)

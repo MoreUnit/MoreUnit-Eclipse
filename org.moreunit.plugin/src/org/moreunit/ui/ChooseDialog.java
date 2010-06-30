@@ -91,9 +91,10 @@ public abstract class ChooseDialog<T> extends PopupDialog implements DisposeList
             {
                 if(tree.equals(e.getSource()))
                 {
-                    Object o = tree.getItem(new Point(e.x, e.y));
-                    if(o instanceof TreeItem)
-                    {
+                    //Object o = tree.getItem(new Point(e.x, e.y));
+                    TreeItem o = tree.getItem(new Point(e.x, e.y));
+                    //if(o instanceof TreeItem)
+                    //{
                         if(! o.equals(fLastItem))
                         {
                             fLastItem = (TreeItem) o;
@@ -121,7 +122,7 @@ public abstract class ChooseDialog<T> extends PopupDialog implements DisposeList
                                 tree.setSelection(new TreeItem[] { fLastItem });
                             }
                         }
-                    }
+                    //}
                 }
             }
         });
@@ -201,6 +202,12 @@ public abstract class ChooseDialog<T> extends PopupDialog implements DisposeList
 
     private void runEventLoop(Shell loopShell)
     {
+        
+        // NullSafe
+        if (loopShell == null) {
+            return;
+        }
+        
         Display display = loopShell.getDisplay();
 
         while (loopShell != null && ! loopShell.isDisposed() && treeViewer != null)

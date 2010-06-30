@@ -33,9 +33,9 @@ import org.moreunit.preferences.Preferences;
 public class MethodPage extends Page implements IElementChangedListener
 {
 
-    ListViewer listViewer;
-    EditorPartFacade editorPartFacade;
-    TreeViewer treeViewer;
+    //private ListViewer listViewer;
+    private EditorPartFacade editorPartFacade;
+    private TreeViewer treeViewer;
 
     Action addTestAction;
     Action filterPrivateAction;
