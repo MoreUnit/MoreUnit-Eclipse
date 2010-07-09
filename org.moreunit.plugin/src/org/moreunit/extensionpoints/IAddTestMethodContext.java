@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 
 /**
- * Holds test context, that can will be used by extension-point 
+ * Holds test context, that will be used by extension-point 
  * <code>addTestmethodParticipator</code> to give implementors the chance to modify the
  * created test method.
  * 

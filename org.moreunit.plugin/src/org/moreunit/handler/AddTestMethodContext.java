@@ -29,7 +29,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     private final IMethod methodUnderTest;
 
     /**
-     * Konstruktor für AddTestMethodContext.
+     * Constructor for AddTestMethodContext.
      * 
      * @param testClassCompilationUnit Test class.
      * @param newTestMethod Test method.
