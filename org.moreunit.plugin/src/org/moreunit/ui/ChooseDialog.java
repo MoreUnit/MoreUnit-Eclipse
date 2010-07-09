@@ -188,8 +188,8 @@ public abstract class ChooseDialog<T> extends PopupDialog implements DisposeList
         viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new JavaElementLabelProvider());
-        viewer.setInput(this);
         viewer.setSelection(contentProvider.getDefaultSelection());
+        viewer.setInput(this);
         return viewer;
     }
 

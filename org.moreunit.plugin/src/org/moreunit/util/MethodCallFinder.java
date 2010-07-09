@@ -6,6 +6,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.jdt.internal.corext.callhierarchy.MethodWrapper;
 
@@ -43,13 +45,32 @@ public abstract class MethodCallFinder
             {
                 continue;
             }
-            IMethod method = (IMethod) member;
+            IMethod method = getFirstMethodInNonAnonymousType(member);
             if(methodMatch(method))
             {
                 testCallers.add(method);
             }
         }
         return testCallers;
+    }
+
+    private IMethod getFirstMethodInNonAnonymousType(IMember member)
+    {
+        IMethod method = (IMethod) member;
+        try
+        {
+            while (method.getParent() instanceof IType
+                    && ((IType) method.getParent()).isAnonymous()
+                    && method.getParent().getParent() instanceof IMethod)
+            {
+                method = (IMethod) method.getParent().getParent();
+            }
+        }
+        catch (JavaModelException e)
+        {
+            // OK: method = method
+        }
+        return method;
     }
 
     abstract protected boolean methodMatch(IMethod method);
