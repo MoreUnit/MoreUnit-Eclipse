@@ -17,10 +17,17 @@ public class LogHandler
     {
     }
 
-    public void handleExceptionLog(Exception exception)
+    public void handleExceptionLog(String message, Throwable throwable)
     {
-        System.out.println("moreunit: (EXC) " + exception.getMessage());
-        exception.printStackTrace();
+        System.out.println("moreunit: (EXC) " + message);
+        System.out.println("moreunit: (EXC) " + throwable.getMessage());
+        throwable.printStackTrace();
+    }
+
+    public void handleExceptionLog(Throwable throwable)
+    {
+        System.out.println("moreunit: (EXC) " + throwable.getMessage());
+        throwable.printStackTrace();
     }
 
     public void handleInfoLog(String infoMessage)
@@ -35,6 +42,9 @@ public class LogHandler
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2 2009/04/05 19:14:27 gianasista
+// code formatter
+//
 // Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
 // initial
 //
