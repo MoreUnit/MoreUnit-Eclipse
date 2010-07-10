@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.moreunit.MoreUnitPlugin;
 import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
 import org.moreunit.actions.JumpAction;
@@ -86,17 +87,20 @@ public class EditorActionExecutor
     {
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
         ICompilationUnit compilationUnitCurrentlyEdited = editorPartFacade.getCompilationUnit();
-        
+
         ICompilationUnit compilationUnitForUnitUnderTest = null;
         ICompilationUnit compilationUnitForTestCase = null;
-        
-        if( TypeFacade.isTestCase(compilationUnitCurrentlyEdited.findPrimaryType()) ){
+
+        if(TypeFacade.isTestCase(compilationUnitCurrentlyEdited.findPrimaryType()))
+        {
             compilationUnitForTestCase = compilationUnitCurrentlyEdited;
-        }else{
+        }
+        else
+        {
             compilationUnitForUnitUnderTest = compilationUnitCurrentlyEdited;
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnitForUnitUnderTest);
             IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
-            
+
             // This happens if the user chooses cancel from the wizard
             if(oneCorrespondingTestCase == null)
             {
@@ -104,13 +108,14 @@ public class EditorActionExecutor
             }
             compilationUnitForTestCase = oneCorrespondingTestCase.getCompilationUnit();
         }
-        
+
         // Create test method template
         TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
         IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
         IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
-        // Call extensions on our extension point, allowing to modify the created testmethod
+        // Call extensions on our extension point, allowing to modify the
+        // created testmethod
         AddTestMethodContext addTestMethodContext = new AddTestMethodContext(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest);
         callAddTestMethodParticipants(addTestMethodContext);
 
@@ -120,11 +125,11 @@ public class EditorActionExecutor
         {
             createdMethod = modifiedTestMethod;
         }
-        
+
         if((createdMethod != null) && createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
         {
             markMethodSuffix(editorPartFacade, createdMethod);
-            
+
         }
 
         if(editorPart instanceof ITextEditor)
@@ -132,30 +137,61 @@ public class EditorActionExecutor
             MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
         }
     }
-    
-    private void callAddTestMethodParticipants(final IAddTestMethodContext context){
-        try {
-            IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor("org.moreunit.addTestmethodParticipator");
-            System.out.println("found "+ config.length + " contributers to our extension point");
-            for (IConfigurationElement e : config) {
-                final Object o = e.createExecutableExtension("class");
-                if (o instanceof IAddTestMethodParticipator) {
-                  
-                    ISafeRunnable runnable = new ISafeRunnable() {
-                        public void handleException(Throwable exception) {
-                            System.out.println("Exception in client");
+
+    /**
+     * Try to find extensions to the extension point and, if any, run them.
+     * 
+     * @param context Context for extension runner.
+     */
+    private void callAddTestMethodParticipants(final IAddTestMethodContext context)
+    {
+
+        // Create ExtensionID
+        String extensionName = "addTestmethodParticipator";
+        String extensionID = MoreUnitPlugin.PLUGIN_ID + "." + extensionName;
+
+        // Search extensions
+        try
+        {
+            IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionID);
+
+            // Run all extensions found
+            for (IConfigurationElement e : config)
+            {
+
+                // Create Object from class definition
+                final Object extension = e.createExecutableExtension("class");
+                LogHandler.getInstance().handleInfoLog("Found extension to " + extensionName + ": " + extension.getClass());
+
+                // Cast and try to start extension
+                if(extension instanceof IAddTestMethodParticipator)
+                {
+
+                    // Create safe runner
+                    ISafeRunnable runnable = new ISafeRunnable()
+                    {
+                        public void handleException(Throwable throwable)
+                        {
+                            LogHandler.getInstance().handleExceptionLog("Error running extension", throwable);
                         }
 
-
-                        public void run() throws Exception {
-                            ((IAddTestMethodParticipator) o).addTestMethod(context);
+                        public void run() throws Exception
+                        {
+                            LogHandler.getInstance().handleInfoLog("Run extension");
+                            ((IAddTestMethodParticipator) extension).addTestMethod(context);
                         }
                     };
                     SafeRunner.run(runnable);
                 }
+                else
+                {
+                    LogHandler.getInstance().handleWarnLog("Bad class for extension point");
+                }
             }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+        }
+        catch (Exception e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
         }
     }
 
@@ -180,7 +216,7 @@ public class EditorActionExecutor
         revealInEditor(testCaseTypeFacade.getEditorPart(), newMethod);
         selectionProvider.setSelection(exactSelection);
     }
-    
+
     private static void revealInEditor(IEditorPart editorPart, IMethod method)
     {
         JavaUI.revealInEditor(editorPart, (IJavaElement) method);
@@ -340,23 +376,27 @@ public class EditorActionExecutor
         String testType = Preferences.getInstance().getTestType(testElement.getJavaProject());
         new TestLauncher(testType).launch(testElement);
     }
-    
+
 }
 
 // $Log: not supported by cvs2svn $
-// Revision 1.17  2010/06/18 20:05:38  gianasista
+// Revision 1.18 2010/06/30 22:54:41 makkimesser
+// ExtensionPoint extended
+// Documentation added/improved
+//
+// Revision 1.17 2010/06/18 20:05:38 gianasista
 // extended test method search
 //
-// Revision 1.16  2010/04/13 19:17:11  gianasista
+// Revision 1.16 2010/04/13 19:17:11 gianasista
 // support for launching testNG tests
 //
-// Revision 1.15  2010/02/06 21:07:26  gianasista
+// Revision 1.15 2010/02/06 21:07:26 gianasista
 // Patch for Running Tests from CUT
 //
-// Revision 1.14  2009/09/11 19:52:04  gianasista
+// Revision 1.14 2009/09/11 19:52:04 gianasista
 // Bugfix: NPE when switching from package explorer without open editor parts
 //
-// Revision 1.13  2009/04/05 19:14:27  gianasista
+// Revision 1.13 2009/04/05 19:14:27 gianasista
 // code formatter
 //
 // Revision 1.12 2009/02/15 17:28:38 gianasista
