@@ -24,7 +24,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
 {
 
     private final ICompilationUnit testClassCompilationUnit;
-    private final IMethod newTestMethod;
+    private IMethod testMethod;
     private final ICompilationUnit classUnderTestCompilationUnit;
     private final IMethod methodUnderTest;
 
@@ -36,10 +36,10 @@ public class AddTestMethodContext implements IAddTestMethodContext
      * @param classUnderTestCompilationUnit Class under test.
      * @param methodUnderTest Method under test.
      */
-    public AddTestMethodContext(ICompilationUnit testClassCompilationUnit, IMethod newTestMethod, ICompilationUnit classUnderTestCompilationUnit, IMethod methodUnderTest)
+    public AddTestMethodContext(ICompilationUnit testClassCompilationUnit, IMethod testMethod, ICompilationUnit classUnderTestCompilationUnit, IMethod methodUnderTest)
     {
         this.testClassCompilationUnit = testClassCompilationUnit;
-        this.newTestMethod = newTestMethod;
+        this.testMethod = testMethod;
         this.classUnderTestCompilationUnit = classUnderTestCompilationUnit;
         this.methodUnderTest = methodUnderTest;
     }
@@ -57,7 +57,15 @@ public class AddTestMethodContext implements IAddTestMethodContext
      */
     public IMethod getTestMethod()
     {
-        return newTestMethod;
+        return testMethod;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setTestMethod(IMethod testMethod)
+    {
+        this.testMethod = testMethod;
     }
 
     /**
@@ -74,5 +82,24 @@ public class AddTestMethodContext implements IAddTestMethodContext
     public IMethod getMethodUnderTest()
     {
         return methodUnderTest;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("AddTestMethodContext [classUnderTestCompilationUnit=");
+        builder.append(classUnderTestCompilationUnit.getElementName());
+        builder.append(", methodUnderTest=");
+        builder.append(methodUnderTest.getElementName());
+        builder.append(", testMethod=");
+        builder.append(testMethod.getElementName());
+        builder.append(", testClassCompilationUnit=");
+        builder.append(testClassCompilationUnit.getElementName());
+        builder.append("]");
+        return builder.toString();
     }
 }

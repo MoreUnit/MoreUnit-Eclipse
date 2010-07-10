@@ -15,9 +15,9 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 
 /**
- * Holds test context, that will be used by extension-point 
- * <code>addTestmethodParticipator</code> to give implementors the chance to modify the
- * created test method.
+ * Holds test context, that will be used by extension-point
+ * <code>addTestmethodParticipator</code> to give implementors the chance to
+ * modify the created test method.
  * 
  * @author vera, extended andreas 16.06.2010
  */
@@ -25,25 +25,36 @@ public interface IAddTestMethodContext
 {
     /**
      * Returns the test class, that is the class under test.
+     * 
      * @return Test class.
      */
     ICompilationUnit getTestClass();
-    
+
     /**
      * Returns the test method, that is the method implementing the test case.
+     * 
      * @return Test method.
      */
     IMethod getTestMethod();
-    
+
     /**
      * Return the class under test.
+     * 
      * @return Class under test.
      */
     ICompilationUnit getClassUnderTest();
-    
+
     /**
      * Returns the method under test.
+     * 
      * @return Method under test.
      */
     IMethod getMethodUnderTest();
+
+    /**
+     * Sets the test method.
+     * 
+     * @param testMethod Testmethod.
+     */
+    void setTestMethod(IMethod testMethod);
 }
