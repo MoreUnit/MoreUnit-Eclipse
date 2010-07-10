@@ -13,9 +13,8 @@ package org.moreunit.extensionpoints;
 
 /**
  * Interface definies the method that will be called, wenn clients implement the
- * extension point <code>addTestmethodParticipator</code>.
- * 
- * Implementors get the test method context and can so modify the created test method.
+ * extension point <code>addTestmethodParticipator</code>. Implementors get the
+ * test method context and can so modify the created test method.
  * 
  * @author vera, extended andreas 16.06.2010
  */
@@ -23,6 +22,10 @@ public interface IAddTestMethodParticipator
 {
     /**
      * Give the test method context to client, that may modify testmethod.
+     * <p>
+     * Do not forget to update the context after the test method was replaced
+     * {@link IAddTestMethodContext#setTestMethod(org.eclipse.jdt.core.IMethod)}.
+     * 
      * @param context Test method context.
      */
     void addTestMethod(IAddTestMethodContext context);

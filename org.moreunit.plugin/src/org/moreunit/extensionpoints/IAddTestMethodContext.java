@@ -53,6 +53,9 @@ public interface IAddTestMethodContext
 
     /**
      * Sets the test method.
+     * <p>
+     * Updates the context, after the test method has been replaced from an
+     * extension.
      * 
      * @param testMethod Testmethod.
      */

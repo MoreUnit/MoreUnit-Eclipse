@@ -76,7 +76,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         Will be added in future.
+         See plugin org.moreunit.extension, that can be checked out from MoreUnit-CVS.
       </documentation>
    </annotation>
 
@@ -94,7 +94,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         Will be added in future release.
+         See plugin org.moreunit.extension, that can be checked out from MoreUnit-CVS.
       </documentation>
    </annotation>
 
@@ -112,7 +112,6 @@ This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See Eclipse Public License for more details.
-
       </documentation>
    </annotation>
 
