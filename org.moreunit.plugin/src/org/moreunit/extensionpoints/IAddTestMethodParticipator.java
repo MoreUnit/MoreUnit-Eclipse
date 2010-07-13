@@ -12,7 +12,7 @@
 package org.moreunit.extensionpoints;
 
 /**
- * Interface definies the method that will be called, wenn clients implement the
+ * Interface defines the method that will be called, when clients implement the
  * extension point <code>addTestmethodParticipator</code>. Implementors get the
  * test method context and can so modify the created test method.
  * 
