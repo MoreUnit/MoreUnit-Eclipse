@@ -29,7 +29,7 @@ public class MemberContentProviderTest
     @Test
     public void testGetElementsWhenNoTypeNorMethodIsProvided()
     {
-        Object[] elements = new MemberContentProvider(types, methods).getElements(null);
+        Object[] elements = new MemberContentProvider(types, methods, null).getElements(null);
         assertEquals(0, elements.length);
     }
 
@@ -40,7 +40,7 @@ public class MemberContentProviderTest
         types.add(mockType("type3"));
         types.add(mockType("type1"));
 
-        MemberContentProvider contentProvider = new MemberContentProvider(types, methods);
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
         assertEquals(3, elements.length);
@@ -62,7 +62,7 @@ public class MemberContentProviderTest
         methods.add(mockMethod(type2, "method2A"));
         methods.add(mockMethod(type1, "method1A"));
 
-        MemberContentProvider contentProvider = new MemberContentProvider(types, methods);
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
         assertEquals(2, elements.length);
@@ -88,7 +88,7 @@ public class MemberContentProviderTest
         IType type2 = mockType("type2"); // not added to type set
         methods.add(mockMethod(type2, "method2A"));
 
-        MemberContentProvider contentProvider = new MemberContentProvider(types, methods);
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
         assertEquals(2, elements.length);
@@ -113,7 +113,7 @@ public class MemberContentProviderTest
         IType type2 = mockType("type2");
         types.add(type2);
 
-        MemberContentProvider contentProvider = new MemberContentProvider(types, methods);
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
         assertEquals(3, elements.length);

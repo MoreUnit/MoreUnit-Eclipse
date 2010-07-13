@@ -9,9 +9,9 @@ import org.eclipse.jdt.core.IType;
 public class MemberChooseDialog extends ChooseDialog<IMember>
 {
 
-    public MemberChooseDialog(String title, Set<IType> types, Set<IMethod> methods)
+    public MemberChooseDialog(String title, Set<IType> types, Set<IMethod> methods, IMember defaultSelection)
     {
-        super(title, new MemberContentProvider(types, methods));
+        super(title, new MemberContentProvider(types, methods, defaultSelection));
     }
 
 }

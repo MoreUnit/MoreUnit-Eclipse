@@ -1,12 +1,12 @@
 package org.moreunit.elements;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
@@ -15,8 +15,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.ui.MemberChooseDialog;
 import org.moreunit.ui.TestcaseChooseDialog;
+import org.moreunit.util.MethodCallFinder;
 import org.moreunit.util.MethodTestCallerFinder;
 import org.moreunit.util.TestCaseDiviner;
 import org.moreunit.util.TestMethodDiviner;
@@ -193,54 +193,25 @@ public class ClassTypeFacade extends TypeFacade
      */
     public IMember getOneCorrespondingTestCaseOrMethod(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
     {
-        Set<IType> testCases = getCorrespondingTestCaseList();
-
-        Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
-        if(method != null)
-        {
-            testMethods.addAll(getTestMethodsForTestCases(method, testCases));
-            if(extendedSearch)
-            {
-                testMethods.addAll(getTestMethodsCalling(method));
-            }
-        }
-
-        IMember testMemberToJump = null;
-        boolean openDialog = false;
-        if(testMethods.size() == 1)
-        {
-            testMemberToJump = testMethods.iterator().next();
-        }
-        else if(testMethods.size() > 1)
-        {
-            openDialog = true;
-        }
-        else
-        {
-            if(testCases.size() == 1)
-            {
-                testMemberToJump = testCases.iterator().next();
-            }
-            else if(testCases.size() > 1)
-            {
-                openDialog = true;
-            }
-            else if(createIfNecessary)
-            {
-                testMemberToJump = new NewTestCaseWizard(getType()).open();
-            }
-        }
-
-        if(openDialog)
-        {
-            testMemberToJump = new MemberChooseDialog(promptText, testCases, testMethods).getChoice();
-        }
-
-        return testMemberToJump;
+        return getOneCorrespondingMember(method, createIfNecessary, extendedSearch, promptText);
     }
 
-    private Set<IMethod> getTestMethodsCalling(IMethod method)
+    @Override
+    protected Set<IType> getCorrespondingClasses()
     {
-        return new MethodTestCallerFinder(method).getMatches(new NullProgressMonitor());
+        return new LinkedHashSet<IType>(getCorrespondingTestCaseList());
     }
+
+    @Override
+    protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Set<IType> classes)
+    {
+        return getTestMethodsForTestCases(method, classes);
+    }
+
+    @Override
+    protected MethodCallFinder getCallRelationshipFinder(IMethod method)
+    {
+        return new MethodTestCallerFinder(method);
+    }
+
 }

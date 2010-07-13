@@ -1,8 +1,14 @@
 package org.moreunit.elements;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -10,6 +16,11 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.ui.MemberChooseDialog;
+import org.moreunit.util.MemberJumpHistory;
+import org.moreunit.util.MethodCallFinder;
+import org.moreunit.util.MethodTestCallerFinder;
+import org.moreunit.wizards.NewTestCaseWizard;
 
 /**
  * @author vera 23.05.2006 20:21:57
@@ -107,4 +118,84 @@ public abstract class TypeFacade
         return compilationUnit.getJavaProject();
     }
 
+    protected IMember getOneCorrespondingMember(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
+    {
+        Set<IType> proposedClasses = getCorrespondingClasses();
+
+        Set<IMethod> proposedMethods = new LinkedHashSet<IMethod>();
+        if(method != null)
+        {
+            proposedMethods.addAll(getCorrespondingMethodsInClasses(method, proposedClasses));
+            if(extendedSearch)
+            {
+                proposedMethods.addAll(getCallRelationshipFinder(method).getMatches(new NullProgressMonitor()));
+            }
+        }
+
+        IMember memberToJump = null;
+        boolean openDialog = false;
+        if(proposedMethods.size() == 1)
+        {
+            memberToJump = proposedMethods.iterator().next();
+        }
+        else if(proposedMethods.size() > 1)
+        {
+            openDialog = true;
+        }
+        else
+        {
+            if(proposedClasses.size() == 1)
+            {
+                memberToJump = proposedClasses.iterator().next();
+            }
+            else if(proposedClasses.size() > 1)
+            {
+                openDialog = true;
+            }
+            else if(createIfNecessary)
+            {
+                memberToJump = new NewTestCaseWizard(getType()).open();
+            }
+        }
+
+        if(openDialog)
+        {
+            memberToJump = openDialog(promptText, proposedClasses, proposedMethods, method);
+        }
+
+        registerJump(method, memberToJump);
+        return memberToJump;
+    }
+
+    abstract protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Set<IType> classes);
+
+    abstract protected Set<IType> getCorrespondingClasses();
+
+    abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method);
+
+    private IMember openDialog(String promptText, Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMethod method)
+    {
+        IMember startMember = method != null ? method : getType();
+        IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
+        return new MemberChooseDialog(promptText, proposedClasses, proposedMethods, defaultSelection).getChoice();
+    }
+
+    private IMember getDefaultSelection(Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMember startMember)
+    {
+        IMember selection = MemberJumpHistory.getInstance().getLastCorrespondingJumpMember(startMember);
+        if(proposedClasses.contains(selection) || proposedMethods.contains(selection))
+        {
+            return selection;
+        }
+        return null;
+    }
+
+    private void registerJump(IMethod fromMethod, IMember toMember)
+    {
+        if(toMember != null)
+        {
+            IMember startMember = fromMethod != null ? fromMethod : getType();
+            MemberJumpHistory.getInstance().registerJump(startMember, toMember);
+        }
+    }
 }

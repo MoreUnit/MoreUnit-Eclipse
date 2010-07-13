@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.StringConstants;
 
-public abstract class ChooseDialog<T> extends PopupDialog implements DisposeListener
+public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 {
 
     private TreeViewer treeViewer;
@@ -41,6 +41,13 @@ public abstract class ChooseDialog<T> extends PopupDialog implements DisposeList
         setInfoText(StringConstants.EMPTY_STRING);
         this.contentProvider = contentProvider;
         create();
+        afterCreation();
+    }
+
+    private void afterCreation()
+    {
+        // selection must be set after creation to not mess up dialog layout
+        treeViewer.setSelection(contentProvider.getDefaultSelection());
     }
 
     private static Shell getDefaultShell()
@@ -188,7 +195,6 @@ public abstract class ChooseDialog<T> extends PopupDialog implements DisposeList
         viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new JavaElementLabelProvider());
-        viewer.setSelection(contentProvider.getDefaultSelection());
         viewer.setInput(this);
         return viewer;
     }

@@ -26,7 +26,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     private final Object[] types;
     private final ISelection defaultSelection;
 
-    public MemberContentProvider(Set<IType> types, Set<IMethod> methods)
+    public MemberContentProvider(Set<IType> types, Set<IMethod> methods, IMember memberProposedForSelection)
     {
         methodsByType = groupMethodsByType(methods);
 
@@ -35,7 +35,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         allTypes.addAll(sortTypes(methodsByType.keySet()));
         this.types = allTypes.toArray();
 
-        defaultSelection = getDefaultSelection(sortedTypes);
+        defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
     }
 
     private Map<IType, List<IMethod>> groupMethodsByType(Set<IMethod> methods)
@@ -68,19 +68,23 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         return list;
     }
 
-    private ISelection getDefaultSelection(List<IType> types)
+    private ISelection getDefaultSelection(IMember memberProposedForSelection, List<IType> types)
     {
-        IMember defaultSelection = null;
-        if(! types.isEmpty())
+        IMember defaultSelectedMember = null;
+        if(memberProposedForSelection != null)
         {
-            defaultSelection = types.get(0);
-            List<IMethod> methods = methodsByType.get(defaultSelection);
+            defaultSelectedMember = memberProposedForSelection;
+        }
+        else if(! types.isEmpty())
+        {
+            defaultSelectedMember = types.get(0);
+            List<IMethod> methods = methodsByType.get(defaultSelectedMember);
             if(methods != null && ! methods.isEmpty())
             {
-                defaultSelection = methods.get(0);
+                defaultSelectedMember = methods.get(0);
             }
         }
-        return defaultSelection == null ? null : new StructuredSelection(defaultSelection);
+        return defaultSelectedMember == null ? null : new StructuredSelection(defaultSelectedMember);
     }
 
     public Object[] getChildren(Object parentElement)

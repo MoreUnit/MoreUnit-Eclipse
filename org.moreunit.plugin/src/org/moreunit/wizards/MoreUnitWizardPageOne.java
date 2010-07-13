@@ -62,6 +62,7 @@ import org.eclipse.jdt.internal.ui.refactoring.contentassist.ControlContentAssis
 import org.eclipse.jdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
 
 import org.eclipse.jdt.internal.junit.BasicElementLabels;
+import org.eclipse.jdt.internal.junit.JUnitCorePlugin;
 import org.eclipse.jdt.internal.junit.Messages;
 import org.eclipse.jdt.internal.junit.buildpath.BuildPathSupport;
 import org.eclipse.jdt.internal.junit.ui.IJUnitHelpContextIds;
@@ -232,7 +233,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 }
                 catch (JavaModelException e)
                 {
-                    JUnitPlugin.log(e);
+                    JUnitCorePlugin.log(e);
                 }
             }
         }
@@ -245,7 +246,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             IJavaProject project = element.getJavaProject();
             try
             {
-                isJunit4 = project.findType(JUnitPlugin.JUNIT4_ANNOTATION_NAME) != null;
+                isJunit4 = project.findType(JUnitCorePlugin.JUNIT4_ANNOTATION_NAME) != null;
             }
             catch (JavaModelException e)
             {
@@ -309,7 +310,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else
         {
-            setSuperClass(JUnitPlugin.TEST_SUPERCLASS_NAME, true);
+            setSuperClass(JUnitCorePlugin.TEST_SUPERCLASS_NAME, true);
         }
         handleFieldChanged(JUNIT4TOGGLE);
     }
@@ -1092,7 +1093,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             }
             if(isJUnit4())
             {
-                buffer.append('@').append(imports.addImport(JUnitPlugin.JUNIT4_ANNOTATION_NAME)).append(getLineDelimiter());
+                buffer.append('@').append(imports.addImport(JUnitCorePlugin.JUNIT4_ANNOTATION_NAME)).append(getLineDelimiter());
             }
             else if(isTestNgSelected())
             {
@@ -1269,7 +1270,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                             status.setError(WizardMessages.NewTestCaseWizardPageOne_error_java5required);
                             return status;
                         }
-                        if(project.findType(JUnitPlugin.JUNIT4_ANNOTATION_NAME) == null)
+                        if(project.findType(JUnitCorePlugin.JUNIT4_ANNOTATION_NAME) == null)
                         {
                             status.setWarning(WizardMessages.NewTestCaseWizardPageOne__error_junit4NotOnbuildpath);
                             return status;
@@ -1277,7 +1278,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     }
                     else
                     {
-                        if(project.findType(JUnitPlugin.TEST_SUPERCLASS_NAME) == null)
+                        if(project.findType(JUnitCorePlugin.TEST_SUPERCLASS_NAME) == null)
                         {
                             status.setWarning(WizardMessages.NewTestCaseWizardPageOne_error_junitNotOnbuildpath);
                             return status;
@@ -1327,7 +1328,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 }
                 if(! TestSearchEngine.isTestImplementor(type))
                 { // TODO: expensive!
-                    status.setError(Messages.format(WizardMessages.NewTestCaseWizardPageOne_error_superclass_not_implementing_test_interface, BasicElementLabels.getJavaElementName(JUnitPlugin.TEST_INTERFACE_NAME)));
+                    status.setError(Messages.format(WizardMessages.NewTestCaseWizardPageOne_error_superclass_not_implementing_test_interface, BasicElementLabels.getJavaElementName(JUnitCorePlugin.TEST_INTERFACE_NAME)));
                     return status;
                 }
             }
