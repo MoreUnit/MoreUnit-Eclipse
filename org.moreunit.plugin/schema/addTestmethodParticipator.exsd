@@ -49,10 +49,12 @@
 
    <element name="client">
       <complexType>
-         <attribute name="class" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Class that has to implement interface
+org.moreunit.extensionpoints.IAddTestMethodParticipator.
+The method addTestMethod will be called while executing the extension.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.moreunit.extensionpoints.IAddTestMethodParticipator"/>
@@ -67,7 +69,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         2.0.2
+         2.1.0
       </documentation>
    </annotation>
 
