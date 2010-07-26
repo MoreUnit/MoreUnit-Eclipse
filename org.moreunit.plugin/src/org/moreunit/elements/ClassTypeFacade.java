@@ -184,18 +184,6 @@ public class ClassTypeFacade extends TypeFacade
         return this.testCaseDiviner;
     }
 
-    /**
-     * Returns one test method calling the given method of this class. If there
-     * are more than one test methods the user has to make a choice via a
-     * dialog. If no test method is found <code>null</code> is returned.
-     * 
-     * @return one of the calling test methods
-     */
-    public IMember getOneCorrespondingTestCaseOrMethod(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
-    {
-        return getOneCorrespondingMember(method, createIfNecessary, extendedSearch, promptText);
-    }
-
     @Override
     protected Set<IType> getCorrespondingClasses()
     {

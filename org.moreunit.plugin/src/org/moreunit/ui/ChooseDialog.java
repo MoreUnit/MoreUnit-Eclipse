@@ -34,7 +34,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
     private T selectedElement;
     private final ITreeContentAndDefaultSelectionProvider contentProvider;
 
-    protected ChooseDialog(String titleText, ITreeContentAndDefaultSelectionProvider contentProvider)
+    public ChooseDialog(String titleText, ITreeContentAndDefaultSelectionProvider contentProvider)
     {
         super(getDefaultShell(), PopupDialog.INFOPOPUP_SHELLSTYLE, true, false, false, false, false, titleText, null);
 

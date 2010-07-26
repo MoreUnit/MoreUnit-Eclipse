@@ -16,10 +16,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.ui.MemberChooseDialog;
+import org.moreunit.ui.ChooseDialog;
+import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MemberJumpHistory;
 import org.moreunit.util.MethodCallFinder;
-import org.moreunit.util.MethodTestCallerFinder;
 import org.moreunit.wizards.NewTestCaseWizard;
 
 /**
@@ -29,6 +29,15 @@ public abstract class TypeFacade
 {
 
     ICompilationUnit compilationUnit;
+    
+    public static TypeFacade createFacade(ICompilationUnit compilationUnit)
+    {
+        if(isTestCase(compilationUnit.findPrimaryType()))
+        {
+            return new TestCaseTypeFacade(compilationUnit);
+        }
+        return new ClassTypeFacade(compilationUnit);
+    }
 
     public static boolean isTestCase(IType type)
     {
@@ -118,7 +127,26 @@ public abstract class TypeFacade
         return compilationUnit.getJavaProject();
     }
 
-    protected IMember getOneCorrespondingMember(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
+    /**
+     * Returns one member corresponding to the given method of this type or to
+     * this type (for instance a test method calling the given method if this
+     * type is a class under test, or a method under test called by the given
+     * test method if this type is a test case, or a test case corresponding to
+     * this class, etc...). If there are several resulting members the user has
+     * to make a choice via a dialog. If no member is found <code>null</code> is
+     * returned.
+     * 
+     * @param method the method to search for correspondence or
+     *            <code>null</code> to only search based on this type
+     * @param createIfNecessary whether to propose the creation of a type if no
+     *            correspondence is found
+     * @param extendedSearch whether to also search for method calls (together
+     *            with search by method name)
+     * @param promptText the prompt text to display in the dialog asking the
+     *            user to choose for a member
+     * @return one corresponding member or <code>null</code>
+     */
+    public IMember getOneCorrespondingMember(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
     {
         Set<IType> proposedClasses = getCorrespondingClasses();
 
@@ -177,7 +205,8 @@ public abstract class TypeFacade
     {
         IMember startMember = method != null ? method : getType();
         IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
-        return new MemberChooseDialog(promptText, proposedClasses, proposedMethods, defaultSelection).getChoice();
+        MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection);
+        return new ChooseDialog<IMember>(promptText, contentProvider).getChoice();
     }
 
     private IMember getDefaultSelection(Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMember startMember)

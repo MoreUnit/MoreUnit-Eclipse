@@ -11,9 +11,12 @@
  */
 package org.moreunit.handler;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
@@ -40,11 +43,11 @@ import org.moreunit.actions.JumpAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
-import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.extensionpoints.IAddTestMethodParticipator;
+import org.moreunit.launch.JunitTestLaunchShortcut;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -238,18 +241,9 @@ public class EditorActionExecutor
     {
         IMethod methodUnderCursorPosition = getMethodUnderCursorPosition(editorPart);
         boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
-        String promptText = "Jump to...";
 
-        IMember memberToJump = null;
-        if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
-        {
-            memberToJump = new TestCaseTypeFacade(compilationUnit).getOneCorrespondingClassOrMethodUnderTest(methodUnderCursorPosition, true, extendedSearch, promptText);
-        }
-        else
-        {
-            memberToJump = new ClassTypeFacade(compilationUnit).getOneCorrespondingTestCaseOrMethod(methodUnderCursorPosition, true, extendedSearch, promptText);
-        }
-
+        TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
+        IMember memberToJump = typeFacade.getOneCorrespondingMember(methodUnderCursorPosition, true, extendedSearch, "Jump to...");
         if(memberToJump != null)
         {
             jumpToMember(memberToJump);
@@ -380,6 +374,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2010/07/10 15:04:56  makkimesser
+// Call of extensions refactored
+//
 // Revision 1.18 2010/06/30 22:54:41 makkimesser
 // ExtensionPoint extended
 // Documentation added/improved

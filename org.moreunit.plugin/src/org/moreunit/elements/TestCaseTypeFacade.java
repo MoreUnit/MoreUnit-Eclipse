@@ -180,18 +180,6 @@ public class TestCaseTypeFacade extends TypeFacade
         return null;
     }
 
-    /**
-     * Returns one method called by the given test method of this test case. If
-     * there are more than one methods the user has to make a choice via a
-     * dialog. If no method is found <code>null</code> is returned.
-     * 
-     * @return one of the called methods
-     */
-    public IMember getOneCorrespondingClassOrMethodUnderTest(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
-    {
-        return getOneCorrespondingMember(method, createIfNecessary, extendedSearch, promptText);
-    }
-
     @Override
     protected Set<IType> getCorrespondingClasses()
     {
@@ -277,6 +265,10 @@ public class TestCaseTypeFacade extends TypeFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2010/07/13 06:18:30  ndemengel
+// Adds an history to remember jumps between members.
+// Fixes a minor display problem in ChooseDialog
+//
 // Revision 1.22  2010/06/18 20:03:23  gianasista
 // extended test method search
 //

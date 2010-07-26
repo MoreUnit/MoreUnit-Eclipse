@@ -19,6 +19,9 @@ import org.moreunit.preferences.Preferences;
 import org.moreunit.util.MethodComparator;
 import org.moreunit.util.TestNamingPatternAwareTypeComparator;
 
+/**
+ * A provider of members to display in a tree.
+ */
 public class MemberContentProvider implements ITreeContentAndDefaultSelectionProvider
 {
 
@@ -26,6 +29,22 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     private final Object[] types;
     private final ISelection defaultSelection;
 
+    /**
+     * Constructs a provider that will propose the given types and methods,
+     * ordered as follows:
+     * <ol>
+     * <li>first the given types, ordered by name,</li>
+     * <li>then declaring types of the given methods that would not be already
+     * in the given types, ordered by name,</li>
+     * <li>finally the given methods, as children of their declaring types,
+     * ordered by name.</li>
+     * </ol>
+     * Additionally this provider will propose the given member for selection.
+     * 
+     * @param types types to display first, whether they have methods or not
+     * @param methods methods to display as children of their declaring types
+     * @param memberProposedForSelection the default selection
+     */
     public MemberContentProvider(Set<IType> types, Set<IMethod> methods, IMember memberProposedForSelection)
     {
         methodsByType = groupMethodsByType(methods);
