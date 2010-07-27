@@ -47,7 +47,7 @@ import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.extensionpoints.IAddTestMethodParticipator;
-import org.moreunit.launch.JunitTestLaunchShortcut;
+//import org.moreunit.launch.JunitTestLaunchShortcut;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -374,6 +374,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2010/07/26 18:15:57  ndemengel
+// Refactoring
+//
 // Revision 1.19  2010/07/10 15:04:56  makkimesser
 // Call of extensions refactored
 //
