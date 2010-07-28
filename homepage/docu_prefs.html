@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy, see www.w3.org">
+
+        <title>moreUnit - Documentation</title>
+        <meta http-equiv="content-type" content=
+        "text/html;charset=ISO-8859-1">
+        <meta name="keywords" content="Unit, JUnit, Eclipse">
+        <meta name="copyright" content="Vera Wahler(c) 2005">
+        <meta name="description" content="">
+        <link href="basis.css" rel="stylesheet" type="text/css"
+        media="screen">
+        <!--<link rel="shortcut icon" href="pix/ing.ico">-->
+    </head>
+
+    <body>
+        <div class="all">
+            <div class="navigation">
+                <a href="index.html">Home</a> <a href=
+                "howto.html">HowTo</a> <a href=
+                "docu.html">&gt;Documentation&lt;</a> <a href=
+                "releases.html">Release Notes</a> <a href=
+                "kontakt.html">About</a> <a href=
+                "download.html">Download</a>
+            </div>
+
+            <div class="content">
+                <h1>Available sections</h1>
+                Just click on the section of the documentation you
+                are interested in: 
+
+                <ol>
+                	<li><a href="docu_getting_started.html">
+                	Getting started</a></li>
+					
+                    <li><a href="docu_label.html">Label
+                    decoration</a></li>
+
+                    <li><a href="docu_marker.html">Marker in the
+                    editor</a></li>
+
+                    <li><a href="docu_switching.html">Switching
+                    between test and class unter test</a></li>
+
+                    <li><a href="docu_creation.html">Testcase/testmethod
+                    creation</a></li>
+					
+					<li><a href="docu_runningtest.html">Running a test from class under test.</a></li>
+
+                    <li><a href="docu_view.html">Missing testmethod
+                    view</a></li>
+
+                    <li><a href="docu_refactoring.html">Refactoring
+                    support</a></li>
+
+                    <li>Preferences</li>
+					
+					<li><a href="docu_prop.html">Project specific settings</a></li>
+					
+					<li><a href="docu_extension.html">Extension point</a></li>
+                </ol>
+
+                <h1>Preferences</h1>
+                To use MoreUnit you can/should configure the
+                preference page to fit your personal needs. 
+				All these settings can be configured for the
+				whole workspace or for each project.
+
+                <ul>
+                    <li>Directory for testcases: The directory for
+                    your testcase should be the folder where you
+                    have your tests.<br>
+                     <img src="pix/pref_dir.png" width="250"
+                    height="38" border="0" alt=""><br>
+                    <br>
+                     In the follwoing screenshot the source for
+                    tests are stored in the JUNIT-folder:<br>
+                     <img src="pix/pref_dirExample.png" width="226"
+                    height="193" border="0" alt=""><br>
+                    <br>
+                     If you store your test in a different project
+                    you have to use the project specific settings
+                    and configure the testproject:<br>
+                     <img src="pix/pref_project.png" width="344"
+                    height="231" border="0" alt=""><br>
+                    <br>
+                    </li>
+
+                    <li>Testcase suffixes/prefixes: Please
+                    configure the prefix/suffix-lists to your
+                    preferred naming convention:<br>
+                     <img src="pix/pref_suffix.png" width="405"
+                    height="326" border="0" alt=""></li>
+
+                    <li>Package suffixes/prefixes: If you are using
+                    prefixes / suffixes for your tests you have to
+                    enter the prefxi / suffix here.<br>
+                     For example: If your test for classes in the
+                    package com.foo.* are stored unter
+                    com.foo.test.* you have to enter "test" into
+                    the package suffix property.<br>
+                     <img src="pix/pref_package.png" width="408"
+                    height="55" border="0" alt=""></li>
+
+                    <li>Create JUnit4 methods: If you enable this
+                    option, moreUnit generates JUnit4
+                    testmethods.</li>
+					
+					<li>You can configure a super class which is
+					used in the new test case wizard. You need to
+					enable JUnit4 or TestNG otherwise org.junit.TestCase
+					is used as super class.</li>
+
+                    <li>Enable flexible naming of tests: If you are
+                    having several testcases for each special
+                    situation you should active this option.<br>
+                     Example:<br>
+                     Classname: Foo.java<br>
+                     Tests: FooTest.java, FooSituation1Test.java,
+                    FooSituation2Test.java<br>
+                     Just enter "Test" as your testcase suffix name
+                    in MoreUnit, activate "enable flexible naming
+                    of tests" and MoreUnit will find all tests for
+                    Foo.java. Using the jump to test action
+                    MoreUnit shows a light-weight to let the
+                    developer choose which is the test he wants to
+                    jump to.<br>
+                     <img src="pix/jumpDialog.png" width="179"
+                    height="122" border="0" alt=""></li>
+                </ul>
+            </div>
+
+            <div class="bottom">
+                <a href="http://sourceforge.net"><img src=
+                "http://sflogo.sourceforge.net/sflogo.php?group_id=156007&amp;type=4"
+                 width="125" height="37" border="0" alt=
+                "SourceForge.net Logo"></a>
+            </div>
+        </div>
+    </body>
+</html>
+

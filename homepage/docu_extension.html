@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy, see www.w3.org">
+
+        <title>moreUnit - Documentation</title>
+        <meta http-equiv="content-type" content=
+        "text/html;charset=ISO-8859-1">
+        <meta name="keywords" content="Unit, JUnit, Eclipse">
+        <meta name="copyright" content="Vera Wahler(c) 2005">
+        <meta name="description" content="">
+        <link href="basis.css" rel="stylesheet" type="text/css"
+        media="screen">
+        <!--<link rel="shortcut icon" href="pix/ing.ico">-->
+    </head>
+
+    <body>
+        <div class="all">
+            <div class="navigation">
+                <a href="index.html">Home</a> <a href=
+                "howto.html">HowTo</a> <a href=
+                "docu.html">&gt;Documentation&lt;</a> <a href=
+                "releases.html">Release Notes</a> <a href=
+                "kontakt.html">About</a> <a href=
+                "download.html">Download</a>
+            </div>
+
+            <div class="content">
+                <h1>Available sections</h1>
+                Just click on the section of the documentation you
+                are interested in: 
+
+                <ol>
+                	<li><a href="docu_getting_started.html">
+                	Getting started</a></li>
+					
+                    <li><a href="docu_label.html">Label
+                    decoration</a></li>
+
+                    <li><a href="docu_marker.html">Marker in the
+                    editor</a></li>
+
+                    <li><a href="docu_switching.html">Switching
+                    between test and class unter test</a></li>
+
+                    <li><a href="docu_creation.html">Testcase/testmethod
+                    creation</a></li>
+					
+					<li><a href="docu_runningtest.html">Running a test from class under test.</a></li>
+
+                    <li><a href="docu_view.html">Missing testmethod
+                    view</a></li>
+
+                    <li><a href="docu_refactoring.html">Refactoring
+                    support</a></li>
+
+                    <li><a href=
+                    "docu_prefs.html">Preferences</a></li>
+					
+					<li><a href="docu_prop.html">Project specific settings</a></li>
+					
+					<li>Extension point</li>
+                </ol>
+
+                <h1>Extension point</h1>
+				You can add an extension point to "listen" to test method creation in MoreUnit.<br/>
+				This is a small snippet to declare the extension point in a plugin.xml:<br/><br/>
+				
+				 &lt;extension point="org.moreunit.addTestmethodParticipator"&gt;<br/>
+   					&nbsp;&nbsp;&lt;client class="simplelistener.MyAddTestMethodParticipator"<br/>
+   					&nbsp;&nbsp;&lt;/client&gt;<br/>
+   				 &lt;/extension&gt;<br/><br/><br/>
+				 
+				 And here is a short snippet to replace the created method:<br/><br/>
+				 
+				 public class MyAddTestMethodParticipator implements IAddTestMethodParticipator {<br/>
+				 @Override<br/>
+				public void addTestMethod(IAddTestMethodContext context)<br/> 
+				{<br/>
+					&nbsp;&nbsp;IMethod testMethod = context.getTestMethod();<br/>
+					&nbsp;&nbsp;try {<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;IMethod createMethod = context.getTestClass().findPrimaryType().createMethod("void hello() {}", null, true, null);<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;context.setTestMethod(createMethod);<br/>
+					&nbsp;&nbsp;} catch (JavaModelException e) {<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br/>
+					&nbsp;&nbsp;}<br/>
+				&nbsp;&nbsp;}<br/>
+
+				}<br/>	
+				This is just a starting point, there are still some flaws with this:<br/>
+				If you use the test case creation wizard and check some test methods to be created
+				at that time your participator will not get called because these test methods
+				are not yet created by moreUnit but by the JUnit-eclipse-plugin.<br/><br/>
+				Please check out the org.moreunit.extension-plugin from CVS to get an example plugin.				
+				</div>
+
+            <div class="bottom">
+                <a href="http://sourceforge.net"><img src=
+                "http://sflogo.sourceforge.net/sflogo.php?group_id=156007&amp;type=4"
+                 width="125" height="37" border="0" alt=
+                "SourceForge.net Logo"></a>
+            </div>
+        </div>
+    </body>
+</html>

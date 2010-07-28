@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+    <head>
+        <meta name="generator" content="HTML Tidy, see www.w3.org">
+
+        <title>moreUnit - Documentation</title>
+        <meta http-equiv="content-type" content=
+        "text/html;charset=ISO-8859-1">
+        <meta name="keywords" content="Unit, JUnit, Eclipse">
+        <meta name="copyright" content="Vera Wahler(c) 2005">
+        <meta name="description" content="">
+        <link href="basis.css" rel="stylesheet" type="text/css"
+        media="screen">
+        <!--<link rel="shortcut icon" href="pix/ing.ico">-->
+    </head>
+
+    <body>
+        <div class="all">
+            <div class="navigation">
+                <a href="index.html">Home</a> <a href=
+                "howto.html">HowTo</a> <a href=
+                "docu.html">&gt;Documentation&lt;</a> <a href=
+                "releases.html">Release Notes</a> <a href=
+                "kontakt.html">About</a> <a href=
+                "download.html">Download</a>
+            </div>
+
+            <div class="content">
+                <h1>Available sections</h1>
+                Just click on the section of the documentation you
+                are interested in: 
+
+                <ol>
+                	<li><a href="docu_getting_started.html">
+                	Getting started</a></li>
+					
+                    <li><a href="docu_label.html">Label
+                    decoration</a></li>
+
+                    <li><a href="docu_marker.html">Marker in the
+                    editor</a></li>
+
+                    <li><a href="docu_switching.html">Switching
+                    between test and class unter test</a></li>
+
+                    <li>Testcase/testmethod creation</li>
+					
+					<li><a href="docu_runningtest.html">Running a test from class under test.</a></li>
+
+                    <li><a href="docu_view.html">Missing testmethod
+                    view</a></li>
+
+                    <li><a href="docu_refactoring.html">Refactoring
+                    support</a></li>
+
+                    <li><a href=
+                    "docu_prefs.html">Preferences</a></li>
+					
+					<li><a href="docu_prop.html">Project specific settings</a></li>
+					
+					<li><a href="docu_extension.html">Extension point</a></li>
+                </ol>
+
+                <h1>Testcase/testmethod creation</h1>
+                To generate a test-method stub choose "Generate
+                Test" from the popupmenu within an editor. moreUnit
+                identifies the method under cursor position and
+                generates a testmethod stub. At first moreUnit
+                tries to find a testcase for the underlying
+                resource (if you want to know how this is done,
+                take a look above at "Jump to test"). If no
+                testcase is found the testcase wizard is shown. If
+                the method under cursor position is named
+                "amethodname" the generated test method will be
+                name "testAmethodname". If moreUnit detects a
+                testmethod with this name no method stub is
+                generated.<br>
+                 
+
+                <div class="imagelist">
+                    <img src="pix/creationFrom.png" width="225"
+                    height="134" border="0" alt=""> <img src=
+                    "pix/creationTo.png" width="239" height="161"
+                    border="0" alt="">
+                </div>
+                moreUnit doesn't jump to the testmethod
+                automatically so you have to jump to the testcase
+                if you want to edit it.<br>
+                 The shortcuts for the jump/generate action are
+                configurable. If you want to change the default
+                keys go to WINDOW &rarr; PREFERENCES... &rarr;
+                GENERAL &rarr; KEYS and change the settings of the
+                commands named "CreateTestMethod" and
+                "JumpToTest".<br>
+                 If you use the "Generate test" action on a
+                testmethod moreUnit creates a second
+                testmethod.<br>
+                 <img src="pix/secondTest.png" width="309" height=
+                "236" border="0" alt="">
+            </div>
+
+            <div class="bottom">
+                <a href="http://sourceforge.net"><img src=
+                "http://sflogo.sourceforge.net/sflogo.php?group_id=156007&amp;type=4"
+                 width="125" height="37" border="0" alt=
+                "SourceForge.net Logo"></a>
+            </div>
+        </div>
+    </body>
+</html>
+
