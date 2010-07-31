@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Plug-in
 Bundle-SymbolicName: org.moreunit;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.1.1.qualifier
 Bundle-Activator: org.moreunit.MoreUnitPlugin
 xxBundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -20,7 +20,7 @@ xxEclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-Vendor: www.moreunit.org
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.moreunit;x-friends:="org.moreunit.test",
  org.moreunit.actions;x-friends:="org.moreunit.test",
  org.moreunit.annotation;x-friends:="org.moreunit.test",

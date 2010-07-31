@@ -1,5 +1,5 @@
 #FindBugs User Preferences
-#Thu Jul 01 00:48:56 CEST 2010
+#Sat Jul 31 03:39:07 CEST 2010
 detectorAppendingToAnObjectOutputStream=AppendingToAnObjectOutputStream|true
 detectorBadAppletConstructor=BadAppletConstructor|false
 detectorBadResultSetAccess=BadResultSetAccess|true
