@@ -11,12 +11,9 @@
  */
 package org.moreunit.handler;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
@@ -120,6 +117,7 @@ public class EditorActionExecutor
         // Call extensions on our extension point, allowing to modify the
         // created testmethod
         AddTestMethodContext addTestMethodContext = new AddTestMethodContext(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest);
+        addTestMethodContext.setNewTestClassCreated(testmethodCreator.isNewTestClassCreated());
         callAddTestMethodParticipants(addTestMethodContext);
 
         // If test modified test method is given, use it
@@ -374,6 +372,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2010/07/27 21:48:24  makkimesser
+// Unresolved, unused import deleted, that caused a compiler error
+//
 // Revision 1.20  2010/07/26 18:15:57  ndemengel
 // Refactoring
 //

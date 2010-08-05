@@ -33,6 +33,9 @@ public class TestmethodCreator
     private String defaultTestMethodContent = "";
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
+    
+    // Is a new test class created? Important for extension point clients.
+    private boolean newTestClassCreated = false;
 
     public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent)
     {
@@ -41,6 +44,15 @@ public class TestmethodCreator
         testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
         testMethodDiviner = testMethodDivinerFactory.create();
         this.defaultTestMethodContent = defaultTestMethodContent;
+    }
+
+    /**
+     * Is a new test class created?
+     * @return New test class created?
+     */
+    public boolean isNewTestClassCreated()
+    {
+        return newTestClassCreated;
     }
 
     public IMethod createTestMethod(IMethod method)
@@ -55,6 +67,13 @@ public class TestmethodCreator
         return createFirstTestMethod(method);
     }
 
+    /**
+     * Create the first test method, e.g. create the new test class. This method calls the JUnit
+     * Wizard to create the new test class and tries to find the expected test method corresponding to
+     * the source method under test.
+     * @param method Method under test.
+     * @return Test method, or <code>null</code> if it is not found.
+     */
     private IMethod createFirstTestMethod(IMethod method)
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
@@ -68,7 +87,11 @@ public class TestmethodCreator
         
         compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
+        
+        // Remember, that a new test class was created
+        newTestClassCreated = true;
 
+        // If test method exists, ready
         if(doesMethodExist(testMethodName))
             return null;
 
@@ -80,6 +103,7 @@ public class TestmethodCreator
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
             return createTestNgTestMethod(testMethodName, null);
 
+        // This should never be called;
         return null;
     }
 
@@ -218,7 +242,24 @@ public class TestmethodCreator
         return null;
     }
 
+    /**
+     * Does test method exists? In case of any error, <code>false</code> is returned.
+     * @param testMethodName Name of test method.
+     * @return Test method exists?
+     */
     protected boolean doesMethodExist(String testMethodName)
+    {
+        return findTestMethod(testMethodName) != null;
+    }
+    
+    /**
+     * Try to find the test method. The first match is returned.
+     * <p>
+     * In case of any error, <code>null</code> is returned.
+     * @param testMethodName Name of test method.
+     * @return testmethod, or <code>null</code> if not found.
+     */
+    protected IMethod findTestMethod(String testMethodName)
     {
         try
         {
@@ -227,7 +268,7 @@ public class TestmethodCreator
             {
                 IMethod method = existingTests[i];
                 if(testMethodName.equals(method.getElementName()))
-                    return true;
+                    return method;
             }
         }
         catch (JavaModelException exc)
@@ -235,6 +276,6 @@ public class TestmethodCreator
             LogHandler.getInstance().handleExceptionLog(exc);
         }
 
-        return false;
+        return null;
     }
 }

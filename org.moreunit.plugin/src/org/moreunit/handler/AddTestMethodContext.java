@@ -27,6 +27,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     private IMethod testMethod;
     private final ICompilationUnit classUnderTestCompilationUnit;
     private final IMethod methodUnderTest;
+    private boolean newTestClassCreated = false;
 
     /**
      * Constructor for AddTestMethodContext.
@@ -82,6 +83,24 @@ public class AddTestMethodContext implements IAddTestMethodContext
     public IMethod getMethodUnderTest()
     {
         return methodUnderTest;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isNewTestClassCreated()
+    {
+        return newTestClassCreated;
+    }
+
+    /**
+     * Set the value for new test class creation.
+     * @param newTestClassCreated New test class created?
+     */
+    public void setNewTestClassCreated(boolean newTestClassCreated)
+    {
+    
+        this.newTestClassCreated = newTestClassCreated;
     }
 
     /**

@@ -60,4 +60,10 @@ public interface IAddTestMethodContext
      * @param testMethod Testmethod.
      */
     void setTestMethod(IMethod testMethod);
+    
+    /**
+     * Is a new test class created?
+     * @return New test class?
+     */
+    boolean isNewTestClassCreated();
 }
