@@ -32,13 +32,6 @@
 	      contextId="org.eclipse.jdt.ui.javaEditorScope"
 	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
-    <key
-          commandId="org.moreunit.jumptotestaction"
-          contextId="org.eclipse.jdt.ui.javaEditorScope"
-          platform="gtk"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="ALT+CTRL+J">
-    </key>
 	   <key
           sequence="CTRL+R"
           commandId="org.moreunit.runtestaction"
