@@ -120,9 +120,49 @@ public class EditorPartFacade
         return editorPart;
     }
 
+    /**
+     * Returns the first method that surrounds the cursor position and that is
+     * not part of an anonymous type.
+     */
+    // TODO determine whether this behavior would be preferable to the current
+    // getMethodUnderCursorPosition() in any case
+    public IMethod getFirstNonAnonymousMethodSurroundingCursorPosition()
+    {
+        IMethod method = getFirstMethodSurroundingCursorPosition();
+        return method == null ? null : new MethodFacade(method).getFirstNonAnonymousMethodCallingThisMethod();
+    }
+
+    private IMethod getFirstMethodSurroundingCursorPosition()
+    {
+        IMethod method = null;
+        try
+        {
+            IJavaElement javaElement = getCompilationUnit().getElementAt(getTextSelection().getOffset());
+            if(javaElement instanceof IMethod)
+            {
+                method = (IMethod) javaElement;
+            }
+            else if(javaElement instanceof IType && ((IType) javaElement).isAnonymous() && javaElement.getParent() instanceof IMethod)
+            {
+                method = (IMethod) javaElement.getParent();
+            }
+            else
+                LogHandler.getInstance().handleInfoLog("No method found.");
+        }
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+        return method;
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2010/06/30 22:55:56  makkimesser
+// CodeWarnings resolved
+// Deprecated API removed
+// Missing AnnotationType Extension added
+//
 // Revision 1.6  2009/04/05 19:14:27  gianasista
 // code formatter
 //

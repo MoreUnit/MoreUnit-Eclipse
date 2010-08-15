@@ -40,11 +40,11 @@ import org.moreunit.actions.JumpAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
+import org.moreunit.elements.MethodFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.extensionpoints.IAddTestMethodParticipator;
-//import org.moreunit.launch.JunitTestLaunchShortcut;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -328,10 +328,10 @@ public class EditorActionExecutor
             return testCaseType;
         }
 
-        IMethod testMethod = new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
-        if(testMethod != null)
+        IMethod method = new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
+        if(method != null && new MethodFacade(method).isTestMethod())
         {
-            return testMethod;
+            return method;
         }
 
         return testCaseType;
@@ -372,6 +372,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.22  2010/08/05 21:23:11  makkimesser
+// Provided info to Extension point clients if a new test class is created instead of adding a one test case to an existing test class. So they can handle this in an appropriate way.
+//
 // Revision 1.21  2010/07/27 21:48:24  makkimesser
 // Unresolved, unused import deleted, that caused a compiler error
 //
