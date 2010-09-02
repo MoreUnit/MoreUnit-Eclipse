@@ -7,14 +7,14 @@ import org.moreunit.util.PluginTools;
 
 /**
  * This class delegates the shortcut action from the editor to run the test
- * corresponding to the open type.
+ * corresponding to the open type or selected method.
  */
-public class RunTestActionHandler extends AbstractHandler
+public class RunTestsOfSelectedMemberActionHandler extends AbstractHandler
 {
 
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        EditorActionExecutor.getInstance().executeRunTestAction(PluginTools.getOpenEditorPart());
+        EditorActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(PluginTools.getOpenEditorPart());
         return null;
     }
 }

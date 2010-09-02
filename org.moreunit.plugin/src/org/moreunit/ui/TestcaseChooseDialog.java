@@ -32,6 +32,7 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.util.StringConstants;
 
 /**
+ * TODO delete this class as soon as Feature Requests 3036484 is completed.
  * @author vera
  */
 public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
@@ -100,7 +101,7 @@ public class TestcaseChooseDialog extends PopupDialog implements DisposeListener
                     //{
                         if(! o.equals(fLastItem))
                         {
-                            fLastItem = (TreeItem) o;
+                            fLastItem = o;
                             tree.setSelection(new TreeItem[] { fLastItem });
                         }
                         else if(e.y < tree.getItemHeight() / 4)

@@ -2,20 +2,23 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.ui.TestcaseChooseDialog;
+import org.moreunit.ui.ChooseDialog;
+import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MethodCallFinder;
 import org.moreunit.util.MethodTestCallerFinder;
 import org.moreunit.util.TestCaseDiviner;
@@ -59,22 +62,31 @@ public class ClassTypeFacade extends TypeFacade
 
     /**
      * Returns the corresponding testcase of the javaFileFacade. If there are
-     * more than one testcases the uses has to make a choice via a dialog. If no
+     * more than one testcases the user has to make a choice via a dialog. If no
      * test is found <code>null</code> is returned.
      * 
      * @return one of the corresponding testcases
      */
-    public IType getOneCorrespondingTestCase(boolean createIfNecessary)
+    public IType getOneCorrespondingTestCase(boolean createIfNecessary, boolean extendedSearch, String promptText)
     {
         Set<IType> testcases = getCorrespondingTestCaseList();
-        IType testcaseToJump = null;
-        if(testcases.size() == 1)
+        Set<IType> additionalTestcases = new HashSet<IType>();
+        if(extendedSearch)
         {
+            additionalTestcases.addAll(getTestCasesHavingMethodsThatCallsMethodsOfThisClass());
+        }
+
+        IType testcaseToJump = null;
+        int testcasesCount = testcases.size() + additionalTestcases.size();
+        if(testcasesCount == 1)
+        {
+            testcases.addAll(additionalTestcases);
             testcaseToJump = (IType) testcases.toArray()[0];
         }
-        else if(testcases.size() > 1)
+        else if(testcasesCount > 1)
         {
-            testcaseToJump = (new TestcaseChooseDialog("", "", testcases)).getChoice();
+            MemberContentProvider contentProvider = new MemberContentProvider(testcases, additionalTestcases, null);
+            testcaseToJump = new ChooseDialog<IType>(promptText, contentProvider).getChoice();
         }
         else if(createIfNecessary)
         {
@@ -82,6 +94,30 @@ public class ClassTypeFacade extends TypeFacade
         }
 
         return testcaseToJump;
+    }
+
+    private Collection<IType> getTestCasesHavingMethodsThatCallsMethodsOfThisClass()
+    {
+        Set<IType> testCases = new HashSet<IType>();
+        try
+        {
+            for (IMethod method : this.compilationUnit.findPrimaryType().getMethods())
+            {
+                if((method.getFlags() & ClassFileConstants.AccPrivate) == 0)
+                {
+                    Set<IMethod> testMethods = getCallRelationshipFinder(method).getMatches(new NullProgressMonitor());
+                    for (IMethod testMethod : testMethods)
+                    {
+                        testCases.add(testMethod.getDeclaringType());
+                    }
+                }
+            }
+        }
+        catch (JavaModelException exc)
+        {
+            LogHandler.getInstance().handleExceptionLog(exc);
+        }
+        return testCases;
     }
 
     public Set<IType> getCorrespondingTestCaseList()
@@ -200,6 +236,11 @@ public class ClassTypeFacade extends TypeFacade
     protected MethodCallFinder getCallRelationshipFinder(IMethod method)
     {
         return new MethodTestCallerFinder(method);
+    }
+
+    public IType getOneCorrespondingTestCase(boolean createIfNecessary)
+    {
+        return getOneCorrespondingTestCase(createIfNecessary, false, "Please choose a test case...");
     }
 
 }

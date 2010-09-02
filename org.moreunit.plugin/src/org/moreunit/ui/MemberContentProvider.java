@@ -3,6 +3,7 @@ package org.moreunit.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -52,6 +53,31 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         List<IType> sortedTypes = sortTypes(types);
         Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
         allTypes.addAll(sortTypes(methodsByType.keySet()));
+        this.types = allTypes.toArray();
+
+        defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
+    }
+    
+    /**
+     * Constructs a provider that will propose the given types, ordered as
+     * follows:
+     * <ol>
+     * <li>the main types, ordered by name,</li>
+     * <li>the secondary types, ordered by name.</li>
+     * </ol>
+     * Additionally this provider will propose the given type for selection.
+     * 
+     * @param mainTypes types to display first
+     * @param secondaryTypes types to display after the main ones
+     * @param memberProposedForSelection the default selection
+     */
+    public MemberContentProvider(Set<IType> mainTypes, Set<IType> secondaryTypes, IType memberProposedForSelection)
+    {
+        methodsByType = new HashMap<IType, List<IMethod>>();
+
+        List<IType> sortedTypes = sortTypes(mainTypes);
+        Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
+        allTypes.addAll(sortTypes(secondaryTypes));
         this.types = allTypes.toArray();
 
         defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);

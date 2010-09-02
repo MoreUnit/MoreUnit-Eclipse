@@ -4,21 +4,28 @@
    <extension-point id="addTestmethodParticipator" name="Add Testmethod Participator" schema="schema/addTestmethodParticipator.exsd"/>
    <extension point="org.eclipse.ui.commands">
   		 <command
-	            name="JumpToTest"
+	            name="Jump To Test"
 	            defaultHandler="org.moreunit.handler.JumpActionHandler"
 	            description="Jump to test."
 	            categoryId="org.eclipse.jdt.ui.category.source"
 	            id="org.moreunit.jumptotestaction">
 	   </command>
 	    <command
-                name="RunTest"
+                name="Run Tests"
                 defaultHandler="org.moreunit.handler.RunTestActionHandler"
-                description="Run test."
+                description="Run all tests corresponding to the open class."
                 categoryId="org.eclipse.jdt.ui.category.source"
                 id="org.moreunit.runtestaction">
-       </command>  
+       </command>
+        <command
+                name="Run Tests of Selected Member"
+                defaultHandler="org.moreunit.handler.RunTestsOfSelectedMemberActionHandler"
+                description="Run all tests corresponding to the class or method under the cursor."
+                categoryId="org.eclipse.jdt.ui.category.source"
+                id="org.moreunit.runtestsofselectedmemberaction">
+       </command>
 		<command
-	            name="CreateTestMethod"
+	            name="Create Test Method"
 	            defaultHandler="org.moreunit.handler.CreateTestMethodActionHandler"
 	            description="Creation of a testmethod."
 	            categoryId="org.eclipse.jdt.ui.category.source"
@@ -37,7 +44,13 @@
           commandId="org.moreunit.runtestaction"
           contextId="org.eclipse.jdt.ui.javaEditorScope"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-        </key>  
+        </key>
+       <key
+          sequence="CTRL+ALT+SHIFT+R"
+          commandId="org.moreunit.runtestsofselectedmemberaction"
+          contextId="org.eclipse.jdt.ui.javaEditorScope"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+        </key>    
 	   <key
 	      sequence="CTRL+U"
 	      commandId="org.moreunit.createtestmethod"
@@ -62,7 +75,7 @@
             targetID="#CompilationUnitEditorContext"
             id="org.moreunit.contribution2">
          <action
-               label="Jump to test"
+               label="Jump to Test"
                definitionId="org.moreunit.jumptotestaction"
                class="org.moreunit.actions.JumpAction"
                menubarPath="additions"
@@ -73,11 +86,22 @@
             targetID="#CompilationUnitEditorContext"
             id="org.moreunit.contribution3">
          <action
-               label="Run test"
+               label="Run Tests"
                definitionId="org.moreunit.runtestaction"
                class="org.moreunit.actions.RunTestAction"
                menubarPath="additions"
                id="org.moreunit.actions.runtestaction">
+         </action>
+      </viewerContribution>
+      <viewerContribution
+            targetID="#CompilationUnitEditorContext"
+            id="org.moreunit.contribution3">
+         <action
+               label="Run Tests of Selected Member"
+               definitionId="org.moreunit.runtestsofselectedmemberaction"
+               class="org.moreunit.actions.RunTestsOfSelectedMemberAction"
+               menubarPath="additions"
+               id="org.moreunit.actions.runtestsofselectedmemberaction">
          </action>
       </viewerContribution>
       <objectContribution
@@ -109,7 +133,7 @@
          <action
                class="org.moreunit.actions.RunTestFromCompilationUnitAction"
                id="org.moreunit.plugin.action3"
-               label="Run Test"
+               label="Run Tests"
                menubarPath="additions">
          </action>
       </objectContribution>
@@ -120,7 +144,7 @@
          <action
                class="org.moreunit.actions.RunTestFromTypeAction"
                id="org.moreunit.plugin.action4"
-               label="Run Test"
+               label="Run Tests"
                menubarPath="additions">
          </action>
       </objectContribution>

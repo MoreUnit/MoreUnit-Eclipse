@@ -11,8 +11,6 @@
  */
 package org.moreunit.handler;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -225,8 +223,7 @@ public class EditorActionExecutor
 
     public void executeJumpAction(IEditorPart editorPart)
     {
-        IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-        ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
+        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
         executeJumpAction(editorPart, compilationUnit);
     }
 
@@ -287,17 +284,49 @@ public class EditorActionExecutor
 
     public void executeRunTestAction(IEditorPart editorPart)
     {
+        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
+        executeRunAllTestsAction(editorPart, compilationUnit);
+    }
+
+    private ICompilationUnit createCompilationUnitFrom(IEditorPart editorPart)
+    {
         IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-        ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(file);
-        executeRunTestAction(editorPart, compilationUnit);
+        return JavaCore.createCompilationUnitFrom(file);
     }
 
     public void executeRunTestAction(ICompilationUnit compilationUnit)
     {
-        executeRunTestAction(null, compilationUnit);
+        executeRunAllTestsAction(null, compilationUnit);
     }
 
-    private void executeRunTestAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    private void executeRunAllTestsAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    {
+        IType selectedJavaType = compilationUnit.findPrimaryType();
+
+        IJavaElement testElement = null;
+        if(TypeFacade.isTestCase(selectedJavaType))
+        {
+            testElement = selectedJavaType;
+        }
+        else
+        {
+            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(selectedJavaType.getJavaProject());
+            testElement = new ClassTypeFacade(compilationUnit).getOneCorrespondingTestCase(true, extendedSearch, "Run test...");
+        }
+
+        if(testElement != null)
+        {
+            runTest(testElement);
+        }
+    }
+
+    public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
+    {
+        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
+        executeRunTestsOfSelectedMemberAction(editorPart, compilationUnit);
+    }
+
+    private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
     {
         IType selectedJavaType = compilationUnit.findPrimaryType();
 
@@ -345,22 +374,9 @@ public class EditorActionExecutor
      */
     private IJavaElement getTestElementFromClassUnderTest(IEditorPart editorPart, ICompilationUnit compilationUnit)
     {
-        ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
-
-        if(editorPart != null)
-        {
-            IMethod methodUnderTest = new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
-            if(methodUnderTest != null)
-            {
-                List<IMethod> testMethods = javaFileFacade.getCorrespondingTestMethods(methodUnderTest);
-                if(testMethods.size() == 1)
-                {
-                    return testMethods.get(0);
-                }
-            }
-        }
-
-        return javaFileFacade.getOneCorrespondingTestCase(true);
+        IMethod methodUnderTest = editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
+        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
+        return new ClassTypeFacade(compilationUnit).getOneCorrespondingMember(methodUnderTest, true, extendedSearch, "Run test...");
     }
 
     private void runTest(IJavaElement testElement)
@@ -372,6 +388,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2010/08/15 17:05:00  ndemengel
+// Feature Requests 3036484: part 1, prevents running a non-test method
+//
 // Revision 1.22  2010/08/05 21:23:11  makkimesser
 // Provided info to Extension point clients if a new test class is created instead of adding a one test case to an existing test class. So they can handle this in an appropriate way.
 //
