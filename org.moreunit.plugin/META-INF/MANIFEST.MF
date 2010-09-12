@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.core.manipulation,
  org.eclipse.debug.ui,
- org.eclipse.ui.editors;bundle-version="3.5.0"
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.jdt.launching
 xxEclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

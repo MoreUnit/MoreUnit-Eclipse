@@ -2,7 +2,6 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +9,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -70,10 +70,10 @@ public class ClassTypeFacade extends TypeFacade
     public IType getOneCorrespondingTestCase(boolean createIfNecessary, boolean extendedSearch, String promptText)
     {
         Set<IType> testcases = getCorrespondingTestCaseList();
-        Set<IType> additionalTestcases = new HashSet<IType>();
+        Set<IType> additionalTestcases = new LinkedHashSet<IType>();
         if(extendedSearch)
         {
-            additionalTestcases.addAll(getTestCasesHavingMethodsThatCallsMethodsOfThisClass());
+            additionalTestcases.addAll(getTestCasesHavingMethodsThatCallMethodsOfThisClass());
         }
 
         IType testcaseToJump = null;
@@ -96,9 +96,9 @@ public class ClassTypeFacade extends TypeFacade
         return testcaseToJump;
     }
 
-    private Collection<IType> getTestCasesHavingMethodsThatCallsMethodsOfThisClass()
+    private Collection<IType> getTestCasesHavingMethodsThatCallMethodsOfThisClass()
     {
-        Set<IType> testCases = new HashSet<IType>();
+        Set<IType> testCases = new LinkedHashSet<IType>();
         try
         {
             for (IMethod method : this.compilationUnit.findPrimaryType().getMethods())
@@ -241,6 +241,40 @@ public class ClassTypeFacade extends TypeFacade
     public IType getOneCorrespondingTestCase(boolean createIfNecessary)
     {
         return getOneCorrespondingTestCase(createIfNecessary, false, "Please choose a test case...");
+    }
+
+    public Collection<IType> getCorrespondingTestCases(boolean extendedSearch)
+    {
+        Set<IType> testCases = new LinkedHashSet<IType>(getCorrespondingTestCaseList());
+        if(extendedSearch)
+        {
+            testCases.addAll(getTestCasesHavingMethodsThatCallMethodsOfThisClass());
+        }
+        return testCases;
+    }
+
+    public Collection< ? extends IMember> getCorrespondingTestMembers(IMethod method, boolean extendedSearch)
+    {
+        Set<IType> testCases = getCorrespondingClasses();
+
+        Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
+        if(method == null)
+        {
+            if(extendedSearch)
+            {
+                testCases.addAll(getTestCasesHavingMethodsThatCallMethodsOfThisClass());
+            }
+        }
+        else
+        {
+            testMethods.addAll(getCorrespondingMethodsInClasses(method, testCases));
+            if(extendedSearch)
+            {
+                testMethods.addAll(getCallRelationshipFinder(method).getMatches(new NullProgressMonitor()));
+            }
+        }
+
+        return testMethods.isEmpty() ? testCases : testMethods;
     }
 
 }

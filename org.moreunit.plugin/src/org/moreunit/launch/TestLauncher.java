@@ -1,5 +1,8 @@
 package org.moreunit.launch;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -8,7 +11,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.ILaunchShortcut;
-import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.log.LogHandler;
@@ -39,21 +42,28 @@ public class TestLauncher
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType);
     }
 
-    public void launch(IJavaElement testElement)
+    public void launch(Collection< ? extends IMember> testMembers)
     {
-        ILaunchShortcut launchShortcut = getLaunchShortcut();
+        ILaunchShortcut launchShortcut = getLaunchShortcut(testMembers.size());
         if(launchShortcut == null)
         {
             LogHandler.getInstance().handleWarnLog("Launch shortcut not found: " + testExtensionNamespaceId);
         }
         else
         {
-            launchShortcut.launch(createSelection(testElement), ILaunchManager.RUN_MODE);
+            launchShortcut.launch(createSelection(testMembers), ILaunchManager.RUN_MODE);
         }
     }
 
-    private ILaunchShortcut getLaunchShortcut()
+    private ILaunchShortcut getLaunchShortcut(int testCount)
     {
+        if(testCount > 1 && JUNIT_EXTENSION_NAMESPACE_ID.equals(testExtensionNamespaceId))
+        {
+            // returns our own JUnit launch shortcut, capable of running a test
+            // selection
+            return new JUnitTestSelectionLaunchShortcut();
+        }
+
         IExtension testExtension = getTestExtension();
         if(testExtension == null)
         {
@@ -98,9 +108,9 @@ public class TestLauncher
         return null;
     }
 
-    protected final IStructuredSelection createSelection(IJavaElement javaElement)
+    protected final IStructuredSelection createSelection(Collection< ? extends IMember> members)
     {
-        return new StructuredSelection(javaElement);
+        return new StructuredSelection(new ArrayList<IMember>(members));
     }
 
 }

@@ -1,0 +1,66 @@
+bug: "create test method" opens choice dialog twice
+
+
+[Run Tests of Selected Member]:
+
+If current class is test case class Then
+	If in test method Then
+		"Run" test method
+	Else
+		=> [Run Tests of Current Class]
+	End
+Else
+	If in method Then
+		If there are "test methods corresponding to" it Then
+			"Run" test methods
+		Else If there are "test case classes corresponding to" current class Then
+			=> [Run Tests of Current Class]
+		Else
+			Propose creation of a test case class
+		End
+	Else
+		=> [Run Tests of Current Class]
+	End
+End
+
+
+[Run Tests of Current Class]:
+
+If current class is test case class Then
+	"Run" test case class
+Else
+	If there are "test case classes corresponding to" current class Then
+		"Run" test case classes
+	Else
+		Propose creation of a test case class
+	End
+End
+
+
+With:
+
+"test methods corresponding to": aMethod
+	testMethods <= test methods named from aMethod in classes named from the class declaring aMethod
+	
+	If extended search is active Then
+		testMethods <= testMethods + test methods calling aMethod
+	End
+	
+	<= testMethods
+
+
+"test case classes corresponding to": aClass
+	testCaseClasses <= test case classes named from aClass
+	
+	If extended search is active Then
+		For each non-private method in aClass Then
+			testCaseClasses <= testCaseClasses + classes declaring "test methods corresponding to" method
+		End
+	End
+	
+	<= testCaseClasses
+
+
+"Run":
+	# in first implemtation, if more than one element is to be ran, asks User to choose one
+	Run test element(s)

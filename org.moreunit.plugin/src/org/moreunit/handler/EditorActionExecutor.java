@@ -11,6 +11,9 @@
  */
 package org.moreunit.handler;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -18,6 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
@@ -45,6 +49,7 @@ import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.extensionpoints.IAddTestMethodParticipator;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.MoreUnitContants;
 
@@ -303,21 +308,36 @@ public class EditorActionExecutor
     {
         IType selectedJavaType = compilationUnit.findPrimaryType();
 
-        IJavaElement testElement = null;
+        Collection<IType> testCases = new LinkedHashSet<IType>();
         if(TypeFacade.isTestCase(selectedJavaType))
         {
-            testElement = selectedJavaType;
+            testCases.add(selectedJavaType);
         }
         else
         {
-            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(selectedJavaType.getJavaProject());
-            testElement = new ClassTypeFacade(compilationUnit).getOneCorrespondingTestCase(true, extendedSearch, "Run test...");
+            IJavaProject javaProject = selectedJavaType.getJavaProject();
+            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
+            ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
+            
+            if(isTestSelectionRunSupported(javaProject))
+            {
+                testCases.addAll(typeFacade.getCorrespondingTestCases(extendedSearch));
+            }
+            else
+            {
+                testCases.add(typeFacade.getOneCorrespondingTestCase(true, extendedSearch, "Run test..."));
+            }
         }
 
-        if(testElement != null)
+        if(! testCases.isEmpty())
         {
-            runTest(testElement);
+            runTests(testCases);
         }
+    }
+
+    private boolean isTestSelectionRunSupported(IJavaProject javaProject)
+    {
+        return ! PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(Preferences.getInstance().getTestType(javaProject));
     }
 
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
@@ -330,19 +350,31 @@ public class EditorActionExecutor
     {
         IType selectedJavaType = compilationUnit.findPrimaryType();
 
-        IJavaElement testElement = null;
+        Collection<IMember> testElements = new LinkedHashSet<IMember>();
         if(TypeFacade.isTestCase(selectedJavaType))
         {
-            testElement = getTestElementFromTestCase(editorPart, selectedJavaType);
+            testElements.add(getTestElementFromTestCase(editorPart, selectedJavaType));
         }
         else
         {
-            testElement = getTestElementFromClassUnderTest(editorPart, compilationUnit);
+            IJavaProject javaProject = compilationUnit.getJavaProject();
+            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
+            ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
+            IMethod methodUnderTest = editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
+
+            if(isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
+            {
+                testElements.addAll(typeFacade.getCorrespondingTestMembers(methodUnderTest, extendedSearch));
+            }
+            else
+            {
+                testElements.add(typeFacade.getOneCorrespondingMember(methodUnderTest, true, extendedSearch, "Run test..."));
+            }
         }
 
-        if(testElement != null)
+        if(! testElements.isEmpty())
         {
-            runTest(testElement);
+            runTests(testElements);
         }
     }
 
@@ -350,7 +382,7 @@ public class EditorActionExecutor
      * Returns the test method that is selected in editor if any, otherwise
      * returns the test case.
      */
-    private IJavaElement getTestElementFromTestCase(IEditorPart editorPart, IType testCaseType)
+    private IMember getTestElementFromTestCase(IEditorPart editorPart, IType testCaseType)
     {
         if(editorPart == null)
         {
@@ -366,28 +398,19 @@ public class EditorActionExecutor
         return testCaseType;
     }
 
-    /**
-     * Tries to return a unique test method that corresponds to the method
-     * selected in editor if any; otherwise (if no method is selected or if
-     * several test methods exist for it) returns one corresponding test case if
-     * it exists.
-     */
-    private IJavaElement getTestElementFromClassUnderTest(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    private void runTests(Collection< ? extends IMember> testElements)
     {
-        IMethod methodUnderTest = editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
-        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
-        return new ClassTypeFacade(compilationUnit).getOneCorrespondingMember(methodUnderTest, true, extendedSearch, "Run test...");
+        IJavaElement aTestMember = testElements.iterator().next();
+        String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
+        new TestLauncher(testType).launch(testElements);
     }
-
-    private void runTest(IJavaElement testElement)
-    {
-        String testType = Preferences.getInstance().getTestType(testElement.getJavaProject());
-        new TestLauncher(testType).launch(testElement);
-    }
-
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.24  2010/09/02 10:50:18  ndemengel
+// Feature Requests 3036484: part 2, adds a new shortcut to only run tests corresponding to the selected member, modifies old shortcut to run all tests corresponding to the selected member.
+// Also adds consistency in moreUnit labels.
+//
 // Revision 1.23  2010/08/15 17:05:00  ndemengel
 // Feature Requests 3036484: part 1, prevents running a non-test method
 //
