@@ -23,12 +23,30 @@ import org.moreunit.extensionpoints.IAddTestMethodContext;
 public class AddTestMethodContext implements IAddTestMethodContext
 {
 
+    /*
+     * Final member variables.
+     */
     private final ICompilationUnit testClassCompilationUnit;
-    private IMethod testMethod;
     private final ICompilationUnit classUnderTestCompilationUnit;
     private final IMethod methodUnderTest;
-    private boolean newTestClassCreated = false;
+    private final boolean newTestClassCreated;
 
+    /*
+     * This may be modified, if clients replaced test method.
+     */
+    private IMethod testMethod;
+    
+    /**
+     * Constructor for AddTestMethodContext.
+     * 
+     * @param newTestMethod Test method.
+     * @param methodUnderTest Method under test.
+     */
+    public AddTestMethodContext(IMethod testMethod, IMethod methodUnderTest)
+    {
+        this(testMethod.getCompilationUnit(), testMethod, methodUnderTest.getCompilationUnit(), methodUnderTest, false);
+    }
+    
     /**
      * Constructor for AddTestMethodContext.
      * 
@@ -39,10 +57,25 @@ public class AddTestMethodContext implements IAddTestMethodContext
      */
     public AddTestMethodContext(ICompilationUnit testClassCompilationUnit, IMethod testMethod, ICompilationUnit classUnderTestCompilationUnit, IMethod methodUnderTest)
     {
+        this(testClassCompilationUnit,testMethod,classUnderTestCompilationUnit,methodUnderTest, false);
+    }
+
+    /**
+     * Constructor for AddTestMethodContext.
+     * 
+     * @param testClassCompilationUnit Test class.
+     * @param newTestMethod Test method.
+     * @param classUnderTestCompilationUnit Class under test.
+     * @param methodUnderTest Method under test.
+     * @param newTestClass New test class created?
+     */
+    public AddTestMethodContext(ICompilationUnit testClassCompilationUnit, IMethod testMethod, ICompilationUnit classUnderTestCompilationUnit, IMethod methodUnderTest, boolean newTestClassCreated)
+    {
         this.testClassCompilationUnit = testClassCompilationUnit;
         this.testMethod = testMethod;
         this.classUnderTestCompilationUnit = classUnderTestCompilationUnit;
         this.methodUnderTest = methodUnderTest;
+        this.newTestClassCreated = newTestClassCreated;
     }
 
     /**
@@ -94,16 +127,6 @@ public class AddTestMethodContext implements IAddTestMethodContext
     }
 
     /**
-     * Set the value for new test class creation.
-     * @param newTestClassCreated New test class created?
-     */
-    public void setNewTestClassCreated(boolean newTestClassCreated)
-    {
-    
-        this.newTestClassCreated = newTestClassCreated;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -118,6 +141,8 @@ public class AddTestMethodContext implements IAddTestMethodContext
         builder.append(testMethod.getElementName());
         builder.append(", testClassCompilationUnit=");
         builder.append(testClassCompilationUnit.getElementName());
+        builder.append(", isNewTestClassCreated=");
+        builder.append(isNewTestClassCreated());
         builder.append("]");
         return builder.toString();
     }

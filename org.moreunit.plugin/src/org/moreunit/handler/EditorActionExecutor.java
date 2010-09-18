@@ -15,10 +15,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -35,7 +31,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.moreunit.MoreUnitPlugin;
 import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
 import org.moreunit.actions.JumpAction;
@@ -45,8 +40,8 @@ import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
-import org.moreunit.extensionpoints.IAddTestMethodParticipator;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
@@ -117,14 +112,11 @@ public class EditorActionExecutor
         IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
         IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
-        // Call extensions on our extension point, allowing to modify the
-        // created testmethod
-        AddTestMethodContext addTestMethodContext = new AddTestMethodContext(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest);
-        addTestMethodContext.setNewTestClassCreated(testmethodCreator.isNewTestClassCreated());
-        callAddTestMethodParticipants(addTestMethodContext);
+        // Call extensions on extension point, allowing to modify the created testmethod
+        IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest, testmethodCreator.isNewTestClassCreated());
 
         // If test modified test method is given, use it
-        IMethod modifiedTestMethod = addTestMethodContext.getTestMethod();
+        IMethod modifiedTestMethod = testMethodContext.getTestMethod();
         if(modifiedTestMethod != null)
         {
             createdMethod = modifiedTestMethod;
@@ -139,63 +131,6 @@ public class EditorActionExecutor
         if(editorPart instanceof ITextEditor)
         {
             MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
-        }
-    }
-
-    /**
-     * Try to find extensions to the extension point and, if any, run them.
-     * 
-     * @param context Context for extension runner.
-     */
-    private void callAddTestMethodParticipants(final IAddTestMethodContext context)
-    {
-
-        // Create ExtensionID
-        String extensionName = "addTestmethodParticipator";
-        String extensionID = MoreUnitPlugin.PLUGIN_ID + "." + extensionName;
-
-        // Search extensions
-        try
-        {
-            IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionID);
-
-            // Run all extensions found
-            for (IConfigurationElement e : config)
-            {
-
-                // Create Object from class definition
-                final Object extension = e.createExecutableExtension("class");
-                LogHandler.getInstance().handleInfoLog("Found extension to " + extensionName + ": " + extension.getClass());
-
-                // Cast and try to start extension
-                if(extension instanceof IAddTestMethodParticipator)
-                {
-
-                    // Create safe runner
-                    ISafeRunnable runnable = new ISafeRunnable()
-                    {
-                        public void handleException(Throwable throwable)
-                        {
-                            LogHandler.getInstance().handleExceptionLog("Error running extension", throwable);
-                        }
-
-                        public void run() throws Exception
-                        {
-                            LogHandler.getInstance().handleInfoLog("Run extension");
-                            ((IAddTestMethodParticipator) extension).addTestMethod(context);
-                        }
-                    };
-                    SafeRunner.run(runnable);
-                }
-                else
-                {
-                    LogHandler.getInstance().handleWarnLog("Bad class for extension point");
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            LogHandler.getInstance().handleExceptionLog(e);
         }
     }
 
@@ -407,6 +342,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.25  2010/09/12 13:59:23  ndemengel
+// Adds support for launching multiple test cases with JUnit
+//
 // Revision 1.24  2010/09/02 10:50:18  ndemengel
 // Feature Requests 3036484: part 2, adds a new shortcut to only run tests corresponding to the selected member, modifies old shortcut to run all tests corresponding to the selected member.
 // Also adds consistency in moreUnit labels.
@@ -414,16 +352,18 @@ public class EditorActionExecutor
 // Revision 1.23  2010/08/15 17:05:00  ndemengel
 // Feature Requests 3036484: part 1, prevents running a non-test method
 //
-// Revision 1.22  2010/08/05 21:23:11  makkimesser
-// Provided info to Extension point clients if a new test class is created instead of adding a one test case to an existing test class. So they can handle this in an appropriate way.
+// Revision 1.22 2010/08/05 21:23:11 makkimesser
+// Provided info to Extension point clients if a new test class is created
+// instead of adding a one test case to an existing test class. So they can
+// handle this in an appropriate way.
 //
-// Revision 1.21  2010/07/27 21:48:24  makkimesser
+// Revision 1.21 2010/07/27 21:48:24 makkimesser
 // Unresolved, unused import deleted, that caused a compiler error
 //
-// Revision 1.20  2010/07/26 18:15:57  ndemengel
+// Revision 1.20 2010/07/26 18:15:57 ndemengel
 // Refactoring
 //
-// Revision 1.19  2010/07/10 15:04:56  makkimesser
+// Revision 1.19 2010/07/10 15:04:56 makkimesser
 // Call of extensions refactored
 //
 // Revision 1.18 2010/06/30 22:54:41 makkimesser

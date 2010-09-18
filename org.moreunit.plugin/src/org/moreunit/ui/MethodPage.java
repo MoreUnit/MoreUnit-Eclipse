@@ -13,7 +13,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -23,12 +22,12 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodTreeContentProvider;
-import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.preferences.Preferences;
 
 /**
- * @author vera
+ * @author vera, modified 10.08.2010 andreas BugID: 3042170.
  */
 public class MethodPage extends Page implements IElementChangedListener
 {
@@ -150,9 +149,12 @@ public class MethodPage extends Page implements IElementChangedListener
         //TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit());
         for (Iterator<?> allSelected = selection.iterator(); allSelected.hasNext();)
         {
-            IMethod selectedMethod = (IMethod) allSelected.next();
+            IMethod methodUnderTest = (IMethod) allSelected.next();
             TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(this.editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(this.editorPartFacade.getJavaProject()));
-            testmethodCreator.createTestMethod(selectedMethod);
+            IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
+            
+            // Call extensions on extension point, allowing to modify the created testmethod
+            AddTestMethodParticipatorHandler.getInstance().callExtension(createdMethod, methodUnderTest);
         }
 
         updateUI();
