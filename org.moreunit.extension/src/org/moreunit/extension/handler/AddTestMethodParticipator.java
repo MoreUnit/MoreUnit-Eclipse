@@ -11,32 +11,31 @@
  */
 package org.moreunit.extension.handler;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.Signature;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.extensionpoints.IAddTestMethodParticipator;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.StringConstants;
 
 /**
  * The class <code>AddTestMethodParticipator</code> implements a participator, that
- * modifies the test method created by moreunit.
+ * changes test methods created by moreunit.
  * <p>
  * <b>&copy; AG, D-49326 Melle 2010</b>
+ * <dd>09.08.2010 Gro Catch all exceptions</dd>
  * <p>
  * <dl>
  * <dt><b>Changes:</b></dt>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 09.07.2010
+ * @version 09.08.2010
  * @since 1.5
  */
 public class AddTestMethodParticipator implements IAddTestMethodParticipator {
+
+	/**
+	 * Counter.
+	 */
+	//private static volatile int counter = 0;
 
 	/**
 	 * Constructor for AddTestMethodParticipator.
@@ -51,128 +50,24 @@ public class AddTestMethodParticipator implements IAddTestMethodParticipator {
 	 */
 	public void addTestMethod(final IAddTestMethodContext context) {
 
-		try {
-			doAddTestMethod(context);
-		} catch (Exception e) {
-			LogHandler.getInstance().handleExceptionLog("Exeption running extension", e);
-		}
-	}
-
-	/**
-	 * Run extension code.
-	 * @param context Extension context.
-	 * @throws JavaModelException Error.
-	 */
-	private void doAddTestMethod(final IAddTestMethodContext context)
-		throws JavaModelException {
-
-		// Inits
-		IMethod testMethod = context.getTestMethod();
-
-		// If testMethod is null, the method existed already
-		if (testMethod == null) {
+		// Wenn die Testmethode null ist, ist die Methode bereits vorhanden
+		if (context.getTestMethod() == null && !context.isNewTestClassCreated()) {
 			LogHandler.getInstance().handleInfoLog("TestMethod already exists");
 			return;
 		}
 
-		// Get method under test
-		IMethod methodUnderTest = context.getMethodUnderTest();
+		// Partizipator instanzieren und ausführen
+		try {
 
-		// Info
-		LogHandler.getInstance().handleInfoLog(
-			"TestMethod: " + testMethod.getElementName());
+			// Replace testmethod with a new one
+			//new ReplaceTestMethodParticipator().replaceTestMethod(context);
 
-		// Get Source
-		StringBuilder builder = new StringBuilder(testMethod.getSource());
+			// Modify testmethod with ast manipulation
+			new ModifyTestMethodParticipator().modifyTestMethod(context);
 
-		// Add throws Exception
-		int start = builder.indexOf("public void ");
-		start = builder.indexOf("()", start);
-		start = builder.indexOf("{", start);
-		builder.replace(start, start + 1, "throws Exception {");
-
-		// Extend Annotation
-		String target = "@Test";
-		start = builder.indexOf(target);
-		builder.replace(start, start + target.length(), "@Test(groups = \"Standard\")");
-
-		// Add comment
-		builder.insert(0, createTestMethodComment(methodUnderTest));
-
-		// Delete old method
-		ICompilationUnit testUnit = context.getTestClass();
-		IJavaElement sibling = getSiblingElement(testUnit, testMethod);
-		testMethod.delete(true, null);
-
-		// Create new test method and add it to context
-		IMethod newMethod =
-			testUnit.findPrimaryType().createMethod(builder.toString(), sibling, true,
-				null);
-		context.setTestMethod(newMethod);
-	}
-
-	/**
-	 * Get the sibling of the method.
-	 * @param unit Compilation unit.
-	 * @param method Method.
-	 * @return Sibling element.
-	 * @throws JavaModelException Error.
-	 */
-	private IJavaElement getSiblingElement(final ICompilationUnit unit,
-		final IMethod method) throws JavaModelException {
-
-		// Inits
-		IJavaElement sibling = null;
-
-		// Get the class (eclipse says type), in that our method is defined
-		IType type = method.getDeclaringType();
-		for (IMethod iMethod : type.getMethods()) {
-			if (iMethod.equals(method)) {
-				return sibling;
-			}
-			sibling = iMethod;
+		} catch (Exception e) {
+			LogHandler.getInstance().handleExceptionLog(
+				"Error executing extension: " + this.getClass().getName(), e);
 		}
-
-		// Not found
-		return null;
-	}
-
-	/**
-	 * Create the Testmethod JavaDocComment.
-	 * @param methodUnderTest Method to Test.
-	 * @return JavaDocComment.
-	 */
-	private StringBuilder createTestMethodComment(final IMethod methodUnderTest) {
-
-		// Build ParameterTypeList
-		StringBuilder parameterList = new StringBuilder();
-		for (String parameter : methodUnderTest.getParameterTypes()) {
-			if (parameterList.length() > 0) {
-				parameterList.append(", ");
-			}
-
-			// Add name (without generics)
-			String name = Signature.toString(parameter);
-			name = name.split("<")[0];
-			parameterList.append(name);
-		}
-
-		// Build Comment
-		StringBuilder commentContent = new StringBuilder();
-		commentContent.append("/**") // +
-			.append(StringConstants.NEWLINE) // +
-			.append(" * Test method for {@link ") // +
-			.append(methodUnderTest.getDeclaringType().getFullyQualifiedName()) // +
-			.append("#") // +
-			.append(methodUnderTest.getElementName()) // +
-			.append("(") // +
-			.append(parameterList) // +
-			.append(")") // +
-			.append("}.").append(StringConstants.NEWLINE) // +
-			.append(" * @throws Exception Error.").append(StringConstants.NEWLINE) // +
-			.append(" */").append(StringConstants.NEWLINE);
-
-		// Deliver
-		return commentContent;
 	}
 }
