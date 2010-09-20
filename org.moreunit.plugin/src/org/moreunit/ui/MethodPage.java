@@ -150,7 +150,7 @@ public class MethodPage extends Page implements IElementChangedListener
         for (Iterator<?> allSelected = selection.iterator(); allSelected.hasNext();)
         {
             IMethod methodUnderTest = (IMethod) allSelected.next();
-            TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(this.editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(this.editorPartFacade.getJavaProject()));
+            TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), typeOfTestCaseClassFromJavaFile.getCompilationUnit(), Preferences.getInstance().getTestType(this.editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(this.editorPartFacade.getJavaProject()));
             IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
             
             // Call extensions on extension point, allowing to modify the created testmethod

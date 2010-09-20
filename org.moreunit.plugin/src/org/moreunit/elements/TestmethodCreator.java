@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.moreunit.elements;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -29,6 +26,7 @@ public class TestmethodCreator
 {
 
     private ICompilationUnit compilationUnit;
+    private ICompilationUnit testCaseCompilationUnit;
     private String testType;
     private String defaultTestMethodContent = "";
     TestMethodDivinerFactory testMethodDivinerFactory;
@@ -37,9 +35,22 @@ public class TestmethodCreator
     // Is a new test class created? Important for extension point clients.
     private boolean newTestClassCreated = false;
 
+    /**
+     * @param compilationUnit Could be CUT or a test. createTestMethod will distinguish
+     */
     public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent)
     {
         this.compilationUnit = compilationUnit;
+        this.testType = testType;
+        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+        testMethodDiviner = testMethodDivinerFactory.create();
+        this.defaultTestMethodContent = defaultTestMethodContent;
+    }
+    
+    public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, String testType, String defaultTestMethodContent)
+    {
+        this.compilationUnit = compilationUnit;
+        this.testCaseCompilationUnit = testCaseCompilationUnit;
         this.testType = testType;
         testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
         testMethodDiviner = testMethodDivinerFactory.create();
@@ -62,6 +73,10 @@ public class TestmethodCreator
 
         if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
         {
+            // testcase code is created based on the testCaseCompilationUnit instance
+            // if TestMethodCreator got created with testcase only, the
+            // testCaseCompilationUnit must be set here
+            testCaseCompilationUnit = compilationUnit;
             return createAnotherTestMethod(method);
         }
         return createFirstTestMethod(method);
@@ -77,15 +92,19 @@ public class TestmethodCreator
     private IMethod createFirstTestMethod(IMethod method)
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-        IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
-        
-        // This happens if the user chooses cancel from the wizard
-        if(oneCorrespondingTestCase == null)
+        if(testCaseCompilationUnit == null)
         {
-            return null;
+            IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
+            
+            // This happens if the user chooses cancel from the wizard
+            if(oneCorrespondingTestCase == null)
+            {
+                return null;
+            }
+            testCaseCompilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         }
         
-        compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
+        //compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
         
         // Remember, that a new test class was created
@@ -110,7 +129,7 @@ public class TestmethodCreator
     private IMethod createAnotherTestMethod(IMethod testMethod)
     {
         String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(compilationUnit);
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testCaseCompilationUnit);
         IMethod testedMethod = null;
         try
         {
@@ -153,7 +172,7 @@ public class TestmethodCreator
     {
         try
         {
-            IMethod[] methods = compilationUnit.findPrimaryType().getMethods();
+            IMethod[] methods = testCaseCompilationUnit.findPrimaryType().getMethods();
             for(int i=0;i<methods.length;i++)
             {
                 boolean isNotLastMethodInClass = i<methods.length-1;
@@ -217,7 +236,7 @@ public class TestmethodCreator
         String recommendedLineSeparator = StringConstants.NEWLINE;
         try
         {
-            recommendedLineSeparator = compilationUnit.findRecommendedLineSeparator();
+            recommendedLineSeparator = testCaseCompilationUnit.findRecommendedLineSeparator();
         }
         catch (JavaModelException e)
         {
@@ -233,7 +252,7 @@ public class TestmethodCreator
 
         try
         {
-            return compilationUnit.findPrimaryType().createMethod(methodString, sibling, true, null);
+            return testCaseCompilationUnit.findPrimaryType().createMethod(methodString, sibling, true, null);
         }
         catch (JavaModelException exc)
         {
@@ -263,7 +282,7 @@ public class TestmethodCreator
     {
         try
         {
-            IMethod[] existingTests = compilationUnit.findPrimaryType().getMethods();
+            IMethod[] existingTests = testCaseCompilationUnit.findPrimaryType().getMethods();
             for (int i = 0; i < existingTests.length; i++)
             {
                 IMethod method = existingTests[i];

@@ -108,7 +108,7 @@ public class EditorActionExecutor
         }
 
         // Create test method template
-        TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), compilationUnitForTestCase, Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
         IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
         IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
@@ -342,6 +342,11 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.26  2010/09/18 15:56:55  makkimesser
+// Fixed:
+// task 3042170: Extension point is not called missing testmethods view
+// task 3043350: Extension point incomplete with new testclass
+//
 // Revision 1.25  2010/09/12 13:59:23  ndemengel
 // Adds support for launching multiple test cases with JUnit
 //
