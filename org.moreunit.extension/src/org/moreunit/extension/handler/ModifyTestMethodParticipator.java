@@ -49,10 +49,11 @@ import org.moreunit.log.LogHandler;
  * <dt><b>Changes:</b></dt>
  * <dd>09.08.2010 Gro Handle the case, that a new test class is created, as well. Throw
  * Exceptions, Jump to test method after modification</dd>
+ * <dd>20.09.2010 Gro Bug fixed: 3072086</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 09.08.2010
+ * @version 20.09.2010
  * @since 1.5
  */
 public class ModifyTestMethodParticipator {
@@ -97,24 +98,30 @@ public class ModifyTestMethodParticipator {
 		// Änderungen ab jetzt aufzeichen
 		astRoot.recordModifications();
 
-		// Import zufügen
-		addImport(astRoot, "org.testng.Assert.fail", true);
-
 		// Methode, oder Methoden modifizieren
+		boolean changesDone = false;
 		if (context.isNewTestClassCreated()) {
 			IMethod[] methods = compilationUnit.findPrimaryType().getMethods();
 			for (IMethod iMethod : methods) {
 				if (iMethod.getElementName().startsWith("test")) {
-					modifyMethod(astRoot, iMethod);
+					changesDone = changesDone || modifyMethod(astRoot, iMethod);
 					jumpToMethod(editorPart, iMethod);
 				}
 			}
 		} else {
-			modifyMethod(astRoot, testMethod);
+			changesDone = changesDone || modifyMethod(astRoot, testMethod);
 			jumpToMethod(editorPart, testMethod);
 		}
 
-		// Änderungen committen
+		// Haben wir Änderungen?
+		if (!changesDone) {
+			return;
+		}
+
+		// Import zufügen
+		addImport(astRoot, "org.testng.Assert.fail", true);
+
+		// Änderungen committen 
 		TextEdit edits = astRoot.rewrite(sourceDocument, compilationUnit.getJavaProject().getOptions(true));
 		edits.apply(sourceDocument);
 		String newSource = sourceDocument.get();
@@ -122,11 +129,12 @@ public class ModifyTestMethodParticipator {
 	}
 
 	/**
-	 * Modify the test method.
-	 * @param astRoot Wurzelknoten.
+	 * Modify the test method. A method will not be changed, if it throws an exception.
+	 * @param astRoot Rootnode.
 	 * @param testMethod Test method.
+	 * @return Method changed?
 	 */
-	private void modifyMethod(final CompilationUnit astRoot, final IMethod testMethod) {
+	private boolean modifyMethod(final CompilationUnit astRoot, final IMethod testMethod) {
 
 		// Info
 		LogHandler.getInstance().handleInfoLog("Modify: " + testMethod.getElementName());
@@ -136,6 +144,11 @@ public class ModifyTestMethodParticipator {
 
 		// Astknoten erstellen, der modifiziert werden soll
 		AST astToModify = testMethodDeclaration.getAST();
+
+		// Wenn bereits Fehler geworfen werden, wurde diese Methode bereits verarbeitet
+		if (testMethodDeclaration.thrownExceptions().size() > 0) {
+			return false;
+		}
 
 		// Werfen aller Fehler erlauben
 		rawListAdd(testMethodDeclaration.thrownExceptions(), astToModify.newSimpleName("Exception"));
@@ -164,6 +177,9 @@ public class ModifyTestMethodParticipator {
 
 		// Neue Annotation erzeugen
 		rawListInsertFirst(testMethodDeclaration.modifiers(), newTestAnnotation(astToModify));
+
+		// Methode wurde verändert
+		return true;
 	}
 
 	/**

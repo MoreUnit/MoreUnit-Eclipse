@@ -21,21 +21,17 @@ import org.moreunit.log.LogHandler;
  * <p>
  * <b>&copy; AG, D-49326 Melle 2010</b>
  * <dd>09.08.2010 Gro Catch all exceptions</dd>
+ * <dd>20.09.2010 Gro Comment added</dd>
  * <p>
  * <dl>
  * <dt><b>Changes:</b></dt>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 09.08.2010
+ * @version 20.09.2010
  * @since 1.5
  */
 public class AddTestMethodParticipator implements IAddTestMethodParticipator {
-
-	/**
-	 * Counter.
-	 */
-	//private static volatile int counter = 0;
 
 	/**
 	 * Constructor for AddTestMethodParticipator.
@@ -50,7 +46,12 @@ public class AddTestMethodParticipator implements IAddTestMethodParticipator {
 	 */
 	public void addTestMethod(final IAddTestMethodContext context) {
 
-		// Wenn die Testmethode null ist, ist die Methode bereits vorhanden
+		// Falls "Generate Test" außerhalb einer Methode aufgerufen wird und noch
+		// keine Testklasse vorhanden war, wird über den Wizard eine neue Testklasse
+		// angelegt. In diesem Fall wird die Extension hier allerdings nicht ausgeführt.
+
+		// Wenn die Testmethode null ist, ist die Methode bereits vorhanden, oder es
+		// wurde die Aktion außerhalb einer Methode aufgerufen		
 		if (context.getTestMethod() == null && !context.isNewTestClassCreated()) {
 			LogHandler.getInstance().handleInfoLog("TestMethod already exists");
 			return;
