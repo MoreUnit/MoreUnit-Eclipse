@@ -4,9 +4,9 @@
    <extension-point id="addTestmethodParticipator" name="Add Testmethod Participator" schema="schema/addTestmethodParticipator.exsd"/>
    <extension point="org.eclipse.ui.commands">
   		 <command
-	            name="Jump To Test"
+	            name="Jump to Test/Member under Test"
 	            defaultHandler="org.moreunit.handler.JumpActionHandler"
-	            description="Jump to test."
+	            description="Jump to the test corresponding to the selected member, or the tested member if the selected member is a test."
 	            categoryId="org.eclipse.jdt.ui.category.source"
 	            id="org.moreunit.jumptotestaction">
 	   </command>
@@ -60,26 +60,26 @@
 	</extension>
    
    <extension point="org.eclipse.ui.popupMenus">
-	  <viewerContribution
+      <viewerContribution
             targetID="#CompilationUnitEditorContext"
-            id="org.moreunit.contribution1">
-         <action
-               label="Generate Test"
-               definitionId="org.moreunit.createtestmethod"
-               class="org.moreunit.actions.CreateTestMethodEditorAction"
-               menubarPath="additions"
-               id="org.moreunit.actions.createtestmethodaction">
-         </action>
+            id="org.moreunit.ui.editor.menucontribution">
+         <menu
+             id="org.moreunit.ui.editor.menu.moreunit"
+             label="MoreUnit"
+             icon="icons/moreunitLogo.gif"
+             path="additions">
+             <separator name="top" />
+         </menu>
       </viewerContribution>
       <viewerContribution
             targetID="#CompilationUnitEditorContext"
-            id="org.moreunit.contribution2">
+            id="org.moreunit.contribution3">
          <action
-               label="Jump to Test"
-               definitionId="org.moreunit.jumptotestaction"
-               class="org.moreunit.actions.JumpAction"
-               menubarPath="additions"
-               id="org.moreunit.actions.jumptotestaction">
+               label="Run Tests of Selected Member"
+               definitionId="org.moreunit.runtestsofselectedmemberaction"
+               class="org.moreunit.actions.RunTestsOfSelectedMemberAction"
+               menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
+               id="org.moreunit.actions.runtestsofselectedmemberaction">
          </action>
       </viewerContribution>
       <viewerContribution
@@ -89,42 +89,44 @@
                label="Run Tests"
                definitionId="org.moreunit.runtestaction"
                class="org.moreunit.actions.RunTestAction"
-               menubarPath="additions"
+               menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
                id="org.moreunit.actions.runtestaction">
          </action>
       </viewerContribution>
       <viewerContribution
             targetID="#CompilationUnitEditorContext"
-            id="org.moreunit.contribution3">
+            id="org.moreunit.contribution2">
          <action
-               label="Run Tests of Selected Member"
-               definitionId="org.moreunit.runtestsofselectedmemberaction"
-               class="org.moreunit.actions.RunTestsOfSelectedMemberAction"
-               menubarPath="additions"
-               id="org.moreunit.actions.runtestsofselectedmemberaction">
+               label="Jump to Test/Member under Test"
+               definitionId="org.moreunit.jumptotestaction"
+               class="org.moreunit.actions.JumpAction"
+               menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
+               id="org.moreunit.actions.jumptotestaction">
          </action>
       </viewerContribution>
+      <viewerContribution
+            targetID="#CompilationUnitEditorContext"
+            id="org.moreunit.contribution1">
+         <action
+               label="Generate Test"
+               definitionId="org.moreunit.createtestmethod"
+               class="org.moreunit.actions.CreateTestMethodEditorAction"
+               menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
+               id="org.moreunit.actions.createtestmethodaction">
+         </action>
+      </viewerContribution>
+      
       <objectContribution
             adaptable="false"
-            id="org.moreunit.plugin.jumpFromCompilationUnitContribution"
+            id="org.moreunit.ui.compilationunit.menucontribution"
             objectClass="org.eclipse.jdt.core.ICompilationUnit">
-         <action
-               class="org.moreunit.actions.JumpFromCompilationUnitAction"
-               id="org.moreunit.plugin.action1"
-               label="Jump to Test"
-               menubarPath="additions">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.moreunit.plugin.jumpFromTypeContribution"
-            objectClass="org.eclipse.jdt.core.IType">
-         <action
-               class="org.moreunit.actions.JumpFromTypeAction"
-               id="org.moreunit.plugin.action2"
-               label="Jump to Test"
-               menubarPath="additions">
-         </action>
+         <menu
+             id="org.moreunit.ui.compilationunit.menu.moreunit"
+             label="MoreUnit"
+             icon="icons/moreunitLogo.gif"
+             path="additions">
+            <separator name="top" />
+         </menu>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -134,8 +136,32 @@
                class="org.moreunit.actions.RunTestFromCompilationUnitAction"
                id="org.moreunit.plugin.action3"
                label="Run Tests"
-               menubarPath="additions">
+               menubarPath="org.moreunit.ui.compilationunit.menu.moreunit/top">
          </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.moreunit.plugin.jumpFromCompilationUnitContribution"
+            objectClass="org.eclipse.jdt.core.ICompilationUnit">
+         <action
+               class="org.moreunit.actions.JumpFromCompilationUnitAction"
+               id="org.moreunit.plugin.action1"
+               label="Jump to Test/Member under Test"
+               menubarPath="org.moreunit.ui.compilationunit.menu.moreunit/top">
+         </action>
+      </objectContribution>
+      
+      <objectContribution
+            adaptable="false"
+            id="org.moreunit.ui.type.menucontribution"
+            objectClass="org.eclipse.jdt.core.IType">
+         <menu
+             id="org.moreunit.ui.type.menu.moreunit"
+             label="MoreUnit"
+             icon="icons/moreunitLogo.gif"
+             path="additions">
+            <separator name="top" />
+         </menu>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -145,15 +171,28 @@
                class="org.moreunit.actions.RunTestFromTypeAction"
                id="org.moreunit.plugin.action4"
                label="Run Tests"
-               menubarPath="additions">
+               menubarPath="org.moreunit.ui.type.menu.moreunit/top">
          </action>
       </objectContribution>
+       <objectContribution
+            adaptable="false"
+            id="org.moreunit.plugin.jumpFromTypeContribution"
+            objectClass="org.eclipse.jdt.core.IType">
+         <action
+               class="org.moreunit.actions.JumpFromTypeAction"
+               id="org.moreunit.plugin.action2"
+               label="Jump to Test/Member under Test"
+               menubarPath="org.moreunit.ui.type.menu.moreunit/top">
+         </action>
+      </objectContribution>
+      
       <objectContribution
       	id="org.moreunit.testcreator"
       	objectClass="org.eclipse.jdt.core.IMethod">
       	<action id="org.moreunit.actions.testcreatoraction"
       		label="Generate Test"
       		class="org.moreunit.actions.CreateTestMethodHierarchyAction"
+      		icon="icons/moreunitLogo.gif"
       		menubarPath="additions"/>      		
       </objectContribution>
      </extension>
