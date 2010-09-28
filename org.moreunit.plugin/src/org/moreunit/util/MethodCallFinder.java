@@ -6,6 +6,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.jdt.internal.corext.callhierarchy.MethodWrapper;
 import org.moreunit.elements.MethodFacade;
@@ -18,24 +19,28 @@ public abstract class MethodCallFinder
         CALLEE, CALLER
     }
 
-    private final MethodWrapper method;
+    private final IMethod method;
+    private final MethodWrapper methodWrapper;
 
     protected MethodCallFinder(IMethod method, Direction direction)
     {
+        this.method = method;
         if(Direction.CALLEE == direction)
         {
-            this.method = CallHierarchy.getDefault().getCalleeRoots(new IMethod[] { method })[0];
+            this.methodWrapper = CallHierarchy.getDefault().getCalleeRoots(new IMethod[] { method })[0];
         }
         else
         {
-            this.method = CallHierarchy.getDefault().getCallerRoots(new IMethod[] { method })[0];
+            this.methodWrapper = CallHierarchy.getDefault().getCallerRoots(new IMethod[] { method })[0];
         }
     }
 
     public Set<IMethod> getMatches(IProgressMonitor progressMonitor)
     {
+        CallHierarchy.getDefault().setSearchScope(getSearchScope(this.method));
+
         Set<IMethod> testCallers = new LinkedHashSet<IMethod>();
-        MethodWrapper[] calls = this.method.getCalls(progressMonitor);
+        MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
         for (int i = 0; i < calls.length; i++)
         {
             IMember member = calls[i].getMember();
@@ -50,6 +55,11 @@ public abstract class MethodCallFinder
             }
         }
         return testCallers;
+    }
+
+    private IJavaSearchScope getSearchScope(IMethod method)
+    {
+        return SearchScopeSingelton.getInstance().getSearchScope(PluginTools.getSourceFolder(method.getCompilationUnit()));
     }
 
     private IMethod getFirstNonAnonymousMethod(IMember member)
