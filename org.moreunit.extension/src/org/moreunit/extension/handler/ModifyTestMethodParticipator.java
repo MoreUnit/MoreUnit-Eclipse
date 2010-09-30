@@ -49,11 +49,17 @@ import org.moreunit.log.LogHandler;
  * <dt><b>Changes:</b></dt>
  * <dd>09.08.2010 Gro Handle the case, that a new test class is created, as well. Throw
  * Exceptions, Jump to test method after modification</dd>
- * <dd>20.09.2010 Gro Bug fixed: 3072086</dd>
+ * <dd>20.09.2010 Gro Bug fixed: <a href=
+ * "http://sourceforge.net/tracker/?func=detail&aid=3072086&group_id=156007&atid=798056"
+ * >3072086</a></dd>
+ * <dd>22.09.2010 Gro Bug fixed: <a href=
+ * "http://sourceforge.net/tracker/?func=detail&aid=3072083&group_id=156007&atid=798056"
+ * >3072083</a></dd>
+ * <dd>30.09.2010 Gro Now jump works correctly</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 20.09.2010
+ * @version 30.09.2010
  * @since 1.5
  */
 public class ModifyTestMethodParticipator {
@@ -67,7 +73,19 @@ public class ModifyTestMethodParticipator {
 	}
 
 	/**
-	 * Run extension code.
+	 * Returns the MoreUnit test method type.
+	 * @param context Context.
+	 * @return Test method type.
+	 */
+	private TestType getTestType(final IAddTestMethodContext context) {
+
+		ICompilationUnit cu = context.getClassUnderTest();
+		String typeName = context.getPreferences().getTestType(cu.getJavaProject());
+		return TestType.get(typeName);
+	}
+
+	/**
+	 * Run extension code. Package access only.
 	 * @param context Extension context.
 	 * @throws Exception Error.
 	 */
@@ -75,8 +93,11 @@ public class ModifyTestMethodParticipator {
 
 		// Inits
 		IMethod testMethod = context.getTestMethod();
+		TestType testType = getTestType(context);
+		LogHandler.getInstance().handleInfoLog("Context: " + context);
+		LogHandler.getInstance().handleInfoLog("TestType: " + testType);
 
-		// Testmethode in editor öffnen, sonst funzt die AST-Modifikation nicht
+		// Testmethode im Editor öffnen, sonst funzt die AST-Modifikation nicht
 		IEditorPart editorPart;
 		if (testMethod != null) {
 			editorPart = openMethodInEditor(context.getTestMethod());
@@ -100,17 +121,20 @@ public class ModifyTestMethodParticipator {
 
 		// Methode, oder Methoden modifizieren
 		boolean changesDone = false;
+		IMethod jumpToMethod = null;
 		if (context.isNewTestClassCreated()) {
 			IMethod[] methods = compilationUnit.findPrimaryType().getMethods();
 			for (IMethod iMethod : methods) {
 				if (iMethod.getElementName().startsWith("test")) {
-					changesDone = changesDone || modifyMethod(astRoot, iMethod);
-					jumpToMethod(editorPart, iMethod);
+					if (modifyMethod(astRoot, iMethod, testType)) {
+						jumpToMethod = iMethod;
+						changesDone = true;
+					}
 				}
 			}
 		} else {
-			changesDone = changesDone || modifyMethod(astRoot, testMethod);
-			jumpToMethod(editorPart, testMethod);
+			changesDone = modifyMethod(astRoot, testMethod, testType);
+			jumpToMethod = testMethod;
 		}
 
 		// Haben wir Änderungen?
@@ -119,22 +143,42 @@ public class ModifyTestMethodParticipator {
 		}
 
 		// Import zufügen
-		addImport(astRoot, "org.testng.Assert.fail", true);
+		addImports(astRoot, testType);
 
 		// Änderungen committen 
 		TextEdit edits = astRoot.rewrite(sourceDocument, compilationUnit.getJavaProject().getOptions(true));
 		edits.apply(sourceDocument);
 		String newSource = sourceDocument.get();
 		compilationUnit.getBuffer().setContents(newSource);
+
+		// Konsistent machen
+		if (!compilationUnit.isConsistent()) {
+			LogHandler.getInstance().handleInfoLog("Make consistent " + compilationUnit.getElementName());
+			compilationUnit.makeConsistent(null);
+		}
+
+		// Speichern
+		if (compilationUnit.hasUnsavedChanges()) {
+			LogHandler.getInstance().handleInfoLog("Save " + compilationUnit.getElementName());
+			compilationUnit.save(null, true);
+		}
+
+		// Zur Methode springen, wenn möglich
+		if (jumpToMethod != null) {
+			LogHandler.getInstance().handleInfoLog("Jump to " + jumpToMethod.getElementName());
+			jumpToMethod(editorPart, jumpToMethod);
+		}
 	}
 
 	/**
 	 * Modify the test method. A method will not be changed, if it throws an exception.
 	 * @param astRoot Rootnode.
 	 * @param testMethod Test method.
+	 * @param testType Test type.
 	 * @return Method changed?
 	 */
-	private boolean modifyMethod(final CompilationUnit astRoot, final IMethod testMethod) {
+	private boolean modifyMethod(final CompilationUnit astRoot, final IMethod testMethod,
+		final TestType testType) {
 
 		// Info
 		LogHandler.getInstance().handleInfoLog("Modify: " + testMethod.getElementName());
@@ -142,13 +186,14 @@ public class ModifyTestMethodParticipator {
 		// Methodendeklaration beschaffen
 		MethodDeclaration testMethodDeclaration = findMethodDeclaration(astRoot, testMethod);
 
-		// Astknoten erstellen, der modifiziert werden soll
-		AST astToModify = testMethodDeclaration.getAST();
-
-		// Wenn bereits Fehler geworfen werden, wurde diese Methode bereits verarbeitet
+		// Wenn bereits Fehler geworfen werden, wurde diese Methode bereits verarbeitet, da in den
+		// automatisch und von MoreUnit generierten Methoden keine Exceptions deklariert werden
 		if (testMethodDeclaration.thrownExceptions().size() > 0) {
 			return false;
 		}
+
+		// Astknoten erstellen, der modifiziert werden soll
+		AST astToModify = testMethodDeclaration.getAST();
 
 		// Werfen aller Fehler erlauben
 		rawListAdd(testMethodDeclaration.thrownExceptions(), astToModify.newSimpleName("Exception"));
@@ -172,14 +217,43 @@ public class ModifyTestMethodParticipator {
 		// JavaDoc zuweisen
 		testMethodDeclaration.setJavadoc(javaDoc);
 
-		// Alle Annotationen entfernen (nicht über Iterator, da Liste geändert wird!)
-		removeAnnotations(testMethodDeclaration);
-
-		// Neue Annotation erzeugen
-		rawListInsertFirst(testMethodDeclaration.modifiers(), newTestAnnotation(astToModify));
+		// Nur für TestNG die Annotation ändern
+		if (testType.equals(TestType.TestNG)) {
+			// Alle Annotationen entfernen (nicht über Iterator, da Liste geändert wird!)
+			removeAnnotations(testMethodDeclaration);
+			// Neue Annotation erzeugen
+			rawListInsertFirst(testMethodDeclaration.modifiers(), newTestAnnotation(astToModify));
+		}
 
 		// Methode wurde verändert
 		return true;
+	}
+
+	/**
+	 * Adds the imports with respect to test type.
+	 * @param astRoot Root node to be modified.
+	 * @param testType Test type.
+	 */
+	private void addImports(final CompilationUnit astRoot, final TestType testType) {
+
+		// Import zufügen
+		switch (testType) {
+			case JUnit3:
+				addImport(astRoot, "junit.framework.TestCase", false);
+				break;
+			case JUnit4:
+				addImport(astRoot, "org.junit.Test", false);
+				addImport(astRoot, "org.junit.Assert", false);
+				addImport(astRoot, "org.junit.Assert.fail", true);
+				break;
+			case TestNG:
+				addImport(astRoot, "org.testng.annotations.Test", false);
+				addImport(astRoot, "org.testng.Assert", false);
+				addImport(astRoot, "org.testng.Assert.fail", true);
+				break;
+			default:
+				throw new RuntimeException("Unexpected enum value(TestType): " + testType);
+		}
 	}
 
 	/**

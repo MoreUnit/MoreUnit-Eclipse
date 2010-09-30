@@ -15,8 +15,12 @@ package org.moreunit.extensionpoints;
  * Interface defines the method that will be called, when clients implement the
  * extension point <code>addTestmethodParticipator</code>. Implementors get the
  * test method context and can so modify the created test method.
+ * <p>
+ * <dt><b>Changes:</b></dt>
+ * <dd>16.06.2010 Gro Commented</dd>
  * 
- * @author vera, extended andreas 16.06.2010
+ * @author vera, andreas
+ * @version 16.06.2010
  */
 public interface IAddTestMethodParticipator
 {

@@ -32,9 +32,6 @@ public class TestmethodCreator
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
     
-    // Is a new test class created? Important for extension point clients.
-    private boolean newTestClassCreated = false;
-
     /**
      * @param compilationUnit Could be CUT or a test. createTestMethod will distinguish
      */
@@ -55,15 +52,6 @@ public class TestmethodCreator
         testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
         testMethodDiviner = testMethodDivinerFactory.create();
         this.defaultTestMethodContent = defaultTestMethodContent;
-    }
-
-    /**
-     * Is a new test class created?
-     * @return New test class created?
-     */
-    public boolean isNewTestClassCreated()
-    {
-        return newTestClassCreated;
     }
 
     public IMethod createTestMethod(IMethod method)
@@ -107,9 +95,6 @@ public class TestmethodCreator
         //compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
         
-        // Remember, that a new test class was created
-        newTestClassCreated = true;
-
         // If test method exists, ready
         if(doesMethodExist(testMethodName))
             return null;

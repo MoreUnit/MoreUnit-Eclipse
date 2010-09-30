@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.moreunit.MoreUnitPlugin;
+import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.handler.AddTestMethodContext;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 
 /**
  * Runs client extensions to the extension point
@@ -29,8 +31,16 @@ import org.moreunit.log.LogHandler;
  * <p>
  * This class is a singleton. We guarantee, that clients to this extension point
  * will run never in parallel.
+ * <p>
+ * <dt><b>Changes:</b></dt>
+ * <dd>23.09.2010 Gro Adapted to modified interface
+ * {@link IAddTestMethodContext}, {@link IAddTestMethodContext#getPreferences()}
+ * </dd>
+ * <dd>30.09.2010 Gro The value of {@link IAddTestMethodContext#isNewTestClassCreated()} is now
+ * correctly taken from class {@link ClassTypeFacade}</dd>
  * 
- * @author andreas 10.08.2010
+ * @author andreas
+ * @version 30.09.2010
  */
 public final class AddTestMethodParticipatorHandler
 {
@@ -113,6 +123,11 @@ public final class AddTestMethodParticipatorHandler
     public IAddTestMethodContext callExtension(final IAddTestMethodContext context)
     {
 
+        // Give extensions access to MoreUnit preferences
+        // Maybe we extend this in future to ensure, that clients do not modify
+        // prefs.
+        context.setPreferences(Preferences.getInstance());
+
         // Ignore all exceptions
         try
         {
@@ -145,7 +160,7 @@ public final class AddTestMethodParticipatorHandler
 
             // Create Object from class definition
             final Object extension = e.createExecutableExtension("class");
-            LogHandler.getInstance().handleInfoLog("Found extension to " + extensionName + ": " + extension.getClass());
+            LogHandler.getInstance().handleInfoLog("Found extension to " + extensionName);
 
             // Castable to interface?
             if(! (extension instanceof IAddTestMethodParticipator))
@@ -164,7 +179,7 @@ public final class AddTestMethodParticipatorHandler
 
                 public void run() throws Exception
                 {
-                    LogHandler.getInstance().handleInfoLog("Run extension");
+                    LogHandler.getInstance().handleInfoLog("Run extension class " + extension.getClass().getName());
                     ((IAddTestMethodParticipator) extension).addTestMethod(context);
                 }
             };

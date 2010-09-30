@@ -14,11 +14,22 @@ package org.moreunit.handler;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
+import org.moreunit.preferences.Preferences;
 
 /**
  * Holds test context.
+ * <p>
+ * <dt><b>Changes:</b></dt>
+ * <dd>16.06.2010 Gro Adapted to modified interface
+ * {@link IAddTestMethodContext},
+ * {@link IAddTestMethodContext#isNewTestClassCreated()}</dd>
+ * <dd>23.09.2010 Gro Adapted to modified interface
+ * {@link IAddTestMethodContext}, {@link IAddTestMethodContext#getPreferences()}
+ * </dd>
+ * <dd>30.09.2010 Gro Methode {@link #toString()} improved</dd>
  * 
- * @author vera, extended andreas 16.06.2010
+ * @author vera, andreas
+ * @version 30.09.2010
  */
 public class AddTestMethodContext implements IAddTestMethodContext
 {
@@ -32,10 +43,15 @@ public class AddTestMethodContext implements IAddTestMethodContext
     private final boolean newTestClassCreated;
 
     /*
+     * MoreUnit Preferences.
+     */
+    private Preferences preferences = null;
+
+    /*
      * This may be modified, if clients replaced test method.
      */
     private IMethod testMethod;
-    
+
     /**
      * Constructor for AddTestMethodContext.
      * 
@@ -46,7 +62,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     {
         this(testMethod.getCompilationUnit(), testMethod, methodUnderTest.getCompilationUnit(), methodUnderTest, false);
     }
-    
+
     /**
      * Constructor for AddTestMethodContext.
      * 
@@ -57,7 +73,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
      */
     public AddTestMethodContext(ICompilationUnit testClassCompilationUnit, IMethod testMethod, ICompilationUnit classUnderTestCompilationUnit, IMethod methodUnderTest)
     {
-        this(testClassCompilationUnit,testMethod,classUnderTestCompilationUnit,methodUnderTest, false);
+        this(testClassCompilationUnit, testMethod, classUnderTestCompilationUnit, methodUnderTest, false);
     }
 
     /**
@@ -129,21 +145,38 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    public Preferences getPreferences()
+    {
+        return preferences;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setPreferences(Preferences preferences)
+    {
+        this.preferences = preferences;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("AddTestMethodContext [classUnderTestCompilationUnit=");
+        builder.append("AddTestMethodContext [");
+        builder.append("\n  classUnderTestCompilationUnit=");
         builder.append(classUnderTestCompilationUnit.getElementName());
-        builder.append(", methodUnderTest=");
+        builder.append("\n  methodUnderTest=");
         builder.append(methodUnderTest.getElementName());
-        builder.append(", testMethod=");
+        builder.append("\n  testMethod=");
         builder.append(testMethod.getElementName());
-        builder.append(", testClassCompilationUnit=");
+        builder.append("\n  testClassCompilationUnit=");
         builder.append(testClassCompilationUnit.getElementName());
-        builder.append(", isNewTestClassCreated=");
+        builder.append("\n  isNewTestClassCreated=");
         builder.append(isNewTestClassCreated());
-        builder.append("]");
+        builder.append("\n]");
         return builder.toString();
     }
 }

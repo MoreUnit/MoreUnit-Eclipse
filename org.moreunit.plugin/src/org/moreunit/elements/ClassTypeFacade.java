@@ -29,8 +29,11 @@ import org.moreunit.wizards.NewTestCaseWizard;
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
  * file represented by this instance is not a testcase.
+ * <p>
+ * 30.09.2010 Gro Added Method {@link #isNewTestClassCreated()}
  * 
  * @author vera 23.05.2006 20:28:52
+ * @version 30.09.2010
  */
 public class ClassTypeFacade extends TypeFacade
 {
@@ -38,6 +41,9 @@ public class ClassTypeFacade extends TypeFacade
     private TestCaseDiviner testCaseDiviner;
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
+
+    // Is a new test class created? Important for extension point clients.
+    private boolean newTestClassCreated = false;
 
     public ClassTypeFacade(ICompilationUnit compilationUnit)
     {
@@ -58,6 +64,16 @@ public class ClassTypeFacade extends TypeFacade
         super(file);
         testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
         testMethodDiviner = testMethodDivinerFactory.create();
+    }
+
+    /**
+     * Is a new test class created?
+     * 
+     * @return New test class?
+     */
+    public boolean isNewTestClassCreated()
+    {
+        return newTestClassCreated;
     }
 
     /**
@@ -91,6 +107,13 @@ public class ClassTypeFacade extends TypeFacade
         else if(createIfNecessary)
         {
             testcaseToJump = new NewTestCaseWizard(getType()).open();
+
+            // Remember, if we created a new test class, cause extension point
+            // client need it to know
+            if(testcaseToJump != null)
+            {
+                newTestClassCreated = true;
+            }
         }
 
         return testcaseToJump;
@@ -162,7 +185,7 @@ public class ClassTypeFacade extends TypeFacade
     private List<IMethod> getTestMethodsForTestCases(IMethod method, Set<IType> testCases)
     {
         List<IMethod> result = new ArrayList<IMethod>();
-        
+
         for (IType testCaseType : testCases)
         {
             result.addAll(getTestMethodsForTestCase(method, testCaseType));

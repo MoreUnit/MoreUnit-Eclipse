@@ -59,8 +59,13 @@ import org.moreunit.util.MoreUnitContants;
  * {@link CreateTestMethodHierarchyAction}</li>
  * </ul>
  * The handler is a singelton.
+ * <p>
+ * 30.09.2010 Gro The value of
+ * {@link IAddTestMethodContext#isNewTestClassCreated()} is now correctly taken
+ * from {@link ClassTypeFacade#isNewTestClassCreated()} instead of {@link TestmethodCreator}
  * 
- * @author vera 25.10.2005, extended andreas 16.06.2010
+ * @author vera 25.10.2005
+ * @version 30.09.2010
  */
 public class EditorActionExecutor
 {
@@ -88,6 +93,7 @@ public class EditorActionExecutor
 
         ICompilationUnit compilationUnitForUnitUnderTest = null;
         ICompilationUnit compilationUnitForTestCase = null;
+        boolean newTestClassCreated = false;
 
         if(TypeFacade.isTestCase(compilationUnitCurrentlyEdited.findPrimaryType()))
         {
@@ -98,6 +104,7 @@ public class EditorActionExecutor
             compilationUnitForUnitUnderTest = compilationUnitCurrentlyEdited;
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnitForUnitUnderTest);
             IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
+            newTestClassCreated = classTypeFacade.isNewTestClassCreated();
 
             // This happens if the user chooses cancel from the wizard
             if(oneCorrespondingTestCase == null)
@@ -112,8 +119,9 @@ public class EditorActionExecutor
         IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
         IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
-        // Call extensions on extension point, allowing to modify the created testmethod
-        IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest, testmethodCreator.isNewTestClassCreated());
+        // Call extensions on extension point, allowing to modify the created
+        // testmethod
+        IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest, newTestClassCreated);
 
         // If test modified test method is given, use it
         IMethod modifiedTestMethod = testMethodContext.getTestMethod();
@@ -253,7 +261,7 @@ public class EditorActionExecutor
             IJavaProject javaProject = selectedJavaType.getJavaProject();
             boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
-            
+
             if(isTestSelectionRunSupported(javaProject))
             {
                 testCases.addAll(typeFacade.getCorrespondingTestCases(extendedSearch));
@@ -342,19 +350,24 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
-// Revision 1.26  2010/09/18 15:56:55  makkimesser
+// Revision 1.27 2010/09/20 19:41:05 gianasista
+// Bugfix: second dialog while generate test action
+//
+// Revision 1.26 2010/09/18 15:56:55 makkimesser
 // Fixed:
 // task 3042170: Extension point is not called missing testmethods view
 // task 3043350: Extension point incomplete with new testclass
 //
-// Revision 1.25  2010/09/12 13:59:23  ndemengel
+// Revision 1.25 2010/09/12 13:59:23 ndemengel
 // Adds support for launching multiple test cases with JUnit
 //
-// Revision 1.24  2010/09/02 10:50:18  ndemengel
-// Feature Requests 3036484: part 2, adds a new shortcut to only run tests corresponding to the selected member, modifies old shortcut to run all tests corresponding to the selected member.
+// Revision 1.24 2010/09/02 10:50:18 ndemengel
+// Feature Requests 3036484: part 2, adds a new shortcut to only run tests
+// corresponding to the selected member, modifies old shortcut to run all tests
+// corresponding to the selected member.
 // Also adds consistency in moreUnit labels.
 //
-// Revision 1.23  2010/08/15 17:05:00  ndemengel
+// Revision 1.23 2010/08/15 17:05:00 ndemengel
 // Feature Requests 3036484: part 1, prevents running a non-test method
 //
 // Revision 1.22 2010/08/05 21:23:11 makkimesser
