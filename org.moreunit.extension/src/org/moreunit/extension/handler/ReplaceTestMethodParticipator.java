@@ -29,13 +29,14 @@ import org.moreunit.util.StringConstants;
  * <p>
  * <dl>
  * <dt><b>Changes:</b></dt>
+ * <dd>07.10.2010 Gro Interface {@link ITestMethodParticipator} introduced</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 09.07.2010
+ * @version 07.10.2010
  * @since 1.5
  */
-public class ReplaceTestMethodParticipator {
+public class ReplaceTestMethodParticipator implements ITestMethodParticipator {
 
 	/**
 	 * Constructor for AddTestMethodParticipator.
@@ -50,7 +51,7 @@ public class ReplaceTestMethodParticipator {
 	 * @param context Extension context.
 	 * @throws JavaModelException Error.
 	 */
-	void replaceTestMethod(final IAddTestMethodContext context) throws JavaModelException {
+	public synchronized void modifyTestMethod(final IAddTestMethodContext context) throws JavaModelException {
 
 		// Inits
 		IMethod testMethod = context.getTestMethod();

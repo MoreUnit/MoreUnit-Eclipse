@@ -22,23 +22,33 @@ import org.moreunit.log.LogHandler;
  * <b>&copy; AG, D-49326 Melle 2010</b>
  * <dd>09.08.2010 Gro Catch all exceptions</dd>
  * <dd>20.09.2010 Gro Comment added</dd>
+ * <dd>07.10.2010 Gro Interface {@link ITestMethodParticipator} introduced</dd>
  * <p>
  * <dl>
  * <dt><b>Changes:</b></dt>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 20.09.2010
+ * @version 07.10.2010
  * @since 1.5
  */
 public class AddTestMethodParticipator implements IAddTestMethodParticipator {
+
+	/**
+	 * Participator, that modifies the test method.
+	 */
+	private final ITestMethodParticipator participator;
 
 	/**
 	 * Constructor for AddTestMethodParticipator.
 	 */
 	public AddTestMethodParticipator() {
 
-		// Default-Contructor
+		// Modify testmethod with ast manipulation
+		participator = new ModifyTestMethodParticipator();
+
+		// Replace testmethod with a new one
+		//participator = new ReplaceTestMethodParticipator();
 	}
 
 	/**
@@ -59,13 +69,7 @@ public class AddTestMethodParticipator implements IAddTestMethodParticipator {
 
 		// Partizipator instanzieren und ausführen
 		try {
-
-			// Replace testmethod with a new one
-			//new ReplaceTestMethodParticipator().replaceTestMethod(context);
-
-			// Modify testmethod with ast manipulation
-			new ModifyTestMethodParticipator().modifyTestMethod(context);
-
+			participator.modifyTestMethod(context);
 		} catch (Exception e) {
 			LogHandler.getInstance().handleExceptionLog(
 				"Error executing extension: " + this.getClass().getName(), e);

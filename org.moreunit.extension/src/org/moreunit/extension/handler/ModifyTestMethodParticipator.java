@@ -56,13 +56,20 @@ import org.moreunit.log.LogHandler;
  * "http://sourceforge.net/tracker/?func=detail&aid=3072083&group_id=156007&atid=798056"
  * >3072083</a></dd>
  * <dd>30.09.2010 Gro Now jump works correctly</dd>
+ * <dd>07.10.2010 Gro Error fixed: JavaDoc Link to method under test wrong, Interface
+ * {@link ITestMethodParticipator} introduced</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 30.09.2010
+ * @version 07.10.2010
  * @since 1.5
  */
-public class ModifyTestMethodParticipator {
+public class ModifyTestMethodParticipator implements ITestMethodParticipator {
+
+	/**
+	 * Test method context.
+	 */
+	private IAddTestMethodContext context;
 
 	/**
 	 * Constructor for AddTestMethodParticipator.
@@ -73,26 +80,16 @@ public class ModifyTestMethodParticipator {
 	}
 
 	/**
-	 * Returns the MoreUnit test method type.
-	 * @param context Context.
-	 * @return Test method type.
+	 * {@inheritDoc}
 	 */
-	private TestType getTestType(final IAddTestMethodContext context) {
+	public synchronized void modifyTestMethod(final IAddTestMethodContext context) throws Exception {
 
-		ICompilationUnit cu = context.getClassUnderTest();
-		String typeName = context.getPreferences().getTestType(cu.getJavaProject());
-		return TestType.get(typeName);
-	}
-
-	/**
-	 * Run extension code. Package access only.
-	 * @param context Extension context.
-	 * @throws Exception Error.
-	 */
-	void modifyTestMethod(final IAddTestMethodContext context) throws Exception {
+		// Kontext merken
+		this.context = context;
 
 		// Inits
 		IMethod testMethod = context.getTestMethod();
+		IMethod methodUnderTest = context.getMethodUnderTest();
 		TestType testType = getTestType(context);
 		LogHandler.getInstance().handleInfoLog("Context: " + context);
 		LogHandler.getInstance().handleInfoLog("TestType: " + testType);
@@ -133,7 +130,7 @@ public class ModifyTestMethodParticipator {
 				}
 			}
 		} else {
-			changesDone = modifyMethod(astRoot, testMethod, testType);
+			changesDone = modifyMethod(astRoot, testMethod, testType, methodUnderTest);
 			jumpToMethod = testMethod;
 		}
 
@@ -172,13 +169,34 @@ public class ModifyTestMethodParticipator {
 
 	/**
 	 * Modify the test method. A method will not be changed, if it throws an exception.
+	 * <p>
+	 * As the method under test is not well known, no link to the method under test will
+	 * be created in the JavaDoc.
 	 * @param astRoot Rootnode.
 	 * @param testMethod Test method.
 	 * @param testType Test type.
 	 * @return Method changed?
+	 * @throws JavaModelException Error.
 	 */
 	private boolean modifyMethod(final CompilationUnit astRoot, final IMethod testMethod,
-		final TestType testType) {
+		final TestType testType) throws JavaModelException {
+
+		return modifyMethod(astRoot, testMethod, testType, null);
+	}
+
+	/**
+	 * Modify the test method. A method will not be changed, if it throws an exception.
+	 * <p>
+	 * A link to the method under test will be created in the JavaDoc.
+	 * @param astRoot Rootnode.
+	 * @param testMethod Test method.
+	 * @param testType Test type.
+	 * @param methodUnderTest Method to test.
+	 * @return Method changed?
+	 * @throws JavaModelException Error.
+	 */
+	private boolean modifyMethod(final CompilationUnit astRoot, final IMethod testMethod,
+		final TestType testType, final IMethod methodUnderTest) throws JavaModelException {
 
 		// Info
 		LogHandler.getInstance().handleInfoLog("Modify: " + testMethod.getElementName());
@@ -201,10 +219,10 @@ public class ModifyTestMethodParticipator {
 		// JavaDoc erzeugen
 		Javadoc javaDoc = astToModify.newJavadoc();
 
-		// Beschreibungsfeld
+		// Beschreibungsfeld mit JavaDoc-Link
 		TagElement tagElement = astToModify.newTagElement();
 		rawListAdd(tagElement.fragments(),
-			newTextElement(astToModify, getTestMethodCommentDescription(testMethod)));
+			newTextElement(astToModify, getJavaDocCommentText(methodUnderTest)));
 		rawListAdd(javaDoc.tags(), tagElement);
 
 		// Doku für Werfen aller Fehler
@@ -227,6 +245,18 @@ public class ModifyTestMethodParticipator {
 
 		// Methode wurde verändert
 		return true;
+	}
+
+	/**
+	 * Returns the MoreUnit test method type.
+	 * @param context Context.
+	 * @return Test method type.
+	 */
+	private TestType getTestType(final IAddTestMethodContext context) {
+
+		ICompilationUnit cu = context.getClassUnderTest();
+		String typeName = context.getPreferences().getTestType(cu.getJavaProject());
+		return TestType.get(typeName);
 	}
 
 	/**
@@ -340,8 +370,38 @@ public class ModifyTestMethodParticipator {
 	 * Create the Testmethod JavaDocComment.
 	 * @param methodUnderTest Method to Test.
 	 * @return JavaDocComment.
+	 * @throws JavaModelException Error.
 	 */
-	private String getTestMethodCommentDescription(final IMethod methodUnderTest) {
+	private String getJavaDocCommentText(final IMethod methodUnderTest) throws JavaModelException {
+
+		// Zu testende Methode nicht bekannt, mit Link auf Klasse arbeiten
+		if (methodUnderTest == null) {
+			return getClassJavaDocCommentText(context.getClassUnderTest());
+		} else {
+			// Zu testende Methode bekannt, mit Link auf zu testende Methode arbeiten
+			return getMethodJavaDocCommentText(methodUnderTest);
+		}
+	}
+
+	/**
+	 * Return a JavaDoc comment with a link to the class under test.
+	 * @param classUnderTest Class under test.
+	 * @return JavaDoc comment text.
+	 * @throws JavaModelException Error.
+	 */
+	private String getClassJavaDocCommentText(final ICompilationUnit classUnderTest)
+		throws JavaModelException {
+
+		String linkTarget = classUnderTest.findPrimaryType().getFullyQualifiedName();
+		return "Test method for " + createJavaDocLink(linkTarget) + ".";
+	}
+
+	/**
+	 * Return a JavaDoc comment with a link to the method under test.
+	 * @param methodUnderTest Method under test.
+	 * @return JavaDoc comment text.
+	 */
+	private String getMethodJavaDocCommentText(final IMethod methodUnderTest) {
 
 		// Parameterliste erstellen
 		StringBuilder parameterList = new StringBuilder();
@@ -356,16 +416,24 @@ public class ModifyTestMethodParticipator {
 			parameterList.append(name);
 		}
 
-		// Kommentar bauen und liefern
-		return "Test method for " //+
-			+ "{@link " // +
-			+ methodUnderTest.getDeclaringType().getFullyQualifiedName() // +
+		// Text
+		String linkTarget = methodUnderTest.getDeclaringType().getFullyQualifiedName() // +
 			+ "#" // +
 			+ methodUnderTest.getElementName() // +
-			+ "(" // +
-			+ parameterList // +
-			+ ")" //+
-			+ "}.";
+			+ "(" + parameterList + ")";
+
+		// Kommentar bauen und liefern
+		return "Test method for " + createJavaDocLink(linkTarget) + ".";
+	}
+
+	/**
+	 * Creates a JavaDoc-Link.
+	 * @param target Link target.
+	 * @return JavaDoc-Link.
+	 */
+	private String createJavaDocLink(final String target) {
+
+		return "{@link " + target + "}";
 	}
 
 	/**
