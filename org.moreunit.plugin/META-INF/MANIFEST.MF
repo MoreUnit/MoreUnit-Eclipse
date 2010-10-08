@@ -39,6 +39,7 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test",
    org.eclipse.core.commands,
    org.eclipse.ui",
  org.moreunit.images;x-friends:="org.moreunit";uses:="org.eclipse.jface.resource",
+ org.moreunit.launch,
  org.moreunit.log;x-friends:="org.moreunit.test,org.moreunit.extension",
  org.moreunit.preferences;x-friends:="org.moreunit.test";
   uses:="org.eclipse.jface.preference,

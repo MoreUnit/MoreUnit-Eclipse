@@ -2,6 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="addTestmethodParticipator" name="Add Testmethod Participator" schema="schema/addTestmethodParticipator.exsd"/>
+   <extension-point id="testLaunchSupportAddition" name="Test Launch Support Addition" schema="schema/testLaunchSupportAddition.exsd"/>
    <extension point="org.eclipse.ui.commands">
   		 <command
 	            name="Jump to Test/Member under Test"
