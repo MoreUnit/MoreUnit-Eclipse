@@ -1,15 +1,13 @@
-package org.moreunit.launch;
-
-import java.util.Collection;
+package org.moreunit.extensionpoints;
 
 import org.eclipse.debug.ui.ILaunchShortcut;
-import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.IJavaElement;
 import org.moreunit.preferences.PreferenceConstants;
 
-public interface TestLaunchSupport
+public interface ITestLaunchSupport
 {
 
-    enum TestType
+    public enum TestType
     {
         JUNIT_3(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3), JUNIT_4(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4), TESTNG(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
 
@@ -20,7 +18,7 @@ public interface TestLaunchSupport
             this.preferenceConstant = type;
         }
 
-        static TestType fromPreferenceConstant(String type)
+        public static TestType fromPreferenceConstant(String type)
         {
             for (int i = 0; i < values().length; i++)
             {
@@ -34,7 +32,21 @@ public interface TestLaunchSupport
         }
     }
 
-    boolean isLaunchSupported(TestType testType, Collection< ? extends IMember> testMembers);
+    public enum Cardinality
+    {
+        ONE, SEVERAL;
+
+        public static Cardinality fromElementCount(int count)
+        {
+            if(count <= 0)
+            {
+                throw new IllegalArgumentException("Unsupported cardinality: " + count);
+            }
+            return count == 1 ? ONE : SEVERAL;
+        }
+    }
+
+    boolean isLaunchSupported(TestType testType, Class< ? extends IJavaElement> elementType, Cardinality cardinality);
 
     ILaunchShortcut getShortcut();
 }

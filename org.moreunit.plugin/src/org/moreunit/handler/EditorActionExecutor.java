@@ -42,6 +42,8 @@ import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
+import org.moreunit.extensionpoints.ITestLaunchSupport.Cardinality;
+import org.moreunit.launch.AdditionalTestLaunchShortcutProvider;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
@@ -62,7 +64,8 @@ import org.moreunit.util.MoreUnitContants;
  * <p>
  * 30.09.2010 Gro The value of
  * {@link IAddTestMethodContext#isNewTestClassCreated()} is now correctly taken
- * from {@link ClassTypeFacade#isNewTestClassCreated()} instead of {@link TestmethodCreator}
+ * from {@link ClassTypeFacade#isNewTestClassCreated()} instead of
+ * {@link TestmethodCreator}
  * 
  * @author vera 25.10.2005
  * @version 30.09.2010
@@ -278,9 +281,11 @@ public class EditorActionExecutor
         }
     }
 
+    // TODO Nicolas: refactor this together with org.moreunit.launch.TestLauncher
     private boolean isTestSelectionRunSupported(IJavaProject javaProject)
     {
-        return ! PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(Preferences.getInstance().getTestType(javaProject));
+        String testNg = PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
+        return ! testNg.equals(Preferences.getInstance().getTestType(javaProject)) || AdditionalTestLaunchShortcutProvider.getInstance().isShortcutFor(testNg, IType.class, Cardinality.SEVERAL);
     }
 
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
@@ -350,6 +355,10 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.28 2010/09/30 21:46:09 makkimesser
+// Incomplete - task 3072083: Generate test creates TestNG-tests only
+// http://sourceforge.net/tracker/?group_id=156007&atid=798056&func=detail&assignee=2466398&aid=3072083
+//
 // Revision 1.27 2010/09/20 19:41:05 gianasista
 // Bugfix: second dialog while generate test action
 //

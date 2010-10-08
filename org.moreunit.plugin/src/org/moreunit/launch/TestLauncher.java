@@ -14,9 +14,11 @@ import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.moreunit.extensionpoints.ITestLaunchSupport.Cardinality;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 
+// TODO Nicolas: refactor this class
 public class TestLauncher
 {
     private static final String CONFIG_PROPERTY_CLASS = "class";
@@ -24,9 +26,19 @@ public class TestLauncher
     private static final String TESTNG_EXTENSION_NAMESPACE_ID = "org.testng.eclipse";
 
     private final String testExtensionNamespaceId;
+    private final String testType;
+    private AdditionalTestLaunchShortcutProvider additionalShortcutProvider;
 
     public TestLauncher(String testType)
     {
+        this(testType, AdditionalTestLaunchShortcutProvider.getInstance());
+    }
+
+    public TestLauncher(String testType, AdditionalTestLaunchShortcutProvider additionalShortcutProvider)
+    {
+        this.testType = testType;
+        this.additionalShortcutProvider = additionalShortcutProvider;
+
         if(isTestNgTestType(testType))
         {
             this.testExtensionNamespaceId = TESTNG_EXTENSION_NAMESPACE_ID;
@@ -44,7 +56,7 @@ public class TestLauncher
 
     public void launch(Collection< ? extends IMember> testMembers)
     {
-        ILaunchShortcut launchShortcut = getLaunchShortcut(testMembers.size());
+        ILaunchShortcut launchShortcut = getLaunchShortcut(testMembers);
         if(launchShortcut == null)
         {
             LogHandler.getInstance().handleWarnLog("Launch shortcut not found: " + testExtensionNamespaceId);
@@ -55,9 +67,16 @@ public class TestLauncher
         }
     }
 
-    private ILaunchShortcut getLaunchShortcut(int testCount)
+    private ILaunchShortcut getLaunchShortcut(Collection< ? extends IMember> testMembers)
     {
-        if(testCount > 1 && JUNIT_EXTENSION_NAMESPACE_ID.equals(testExtensionNamespaceId))
+        Class< ? extends IMember> memberClass = testMembers.iterator().next().getClass();
+        ILaunchShortcut shortcut = additionalShortcutProvider.getShorcutFor(testType, memberClass, Cardinality.fromElementCount(testMembers.size()));
+        if(shortcut != null)
+        {
+            return shortcut;
+        }
+
+        if(testMembers.size() > 1 && JUNIT_EXTENSION_NAMESPACE_ID.equals(testExtensionNamespaceId))
         {
             // returns our own JUnit launch shortcut, capable of running a test
             // selection

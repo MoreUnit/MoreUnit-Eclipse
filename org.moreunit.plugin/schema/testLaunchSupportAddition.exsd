@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.moreunit.launch.TestLaunchSupport"/>
+                  <meta.attribute kind="java" basedOn=":org.moreunit.extensionpoints.ITestLaunchSupport"/>
                </appInfo>
             </annotation>
          </attribute>

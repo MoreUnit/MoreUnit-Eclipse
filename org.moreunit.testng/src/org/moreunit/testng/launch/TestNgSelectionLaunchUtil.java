@@ -48,7 +48,21 @@ public class TestNgSelectionLaunchUtil
 
     public static void launchTypesConfiguration(IJavaProject ijp, IType[] types, String mode)
     {
-        launchTypeBasedConfiguration(ijp, "selection", types, mode);
+        launchTypeBasedConfiguration(ijp, createConfigurationName(types), types, mode);
+    }
+
+    private static String createConfigurationName(IType[] types)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < types.length; i++)
+        {
+            if(sb.length() != 0)
+            {
+                sb.append(", ");
+            }
+            sb.append(types[i].getElementName());
+        }
+        return sb.toString();
     }
 
     /* Following methods are copied from org.testng.eclipse.util.LaunchUtil */
