@@ -29,7 +29,6 @@ import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.text.FileTextSearchScope;
 import org.eclipse.ui.PlatformUI;
-import org.testng.TestNG;
 import org.testng.eclipse.TestNGPlugin;
 import org.testng.eclipse.TestNGPluginConstants;
 import org.testng.eclipse.launch.TestNGLaunchConfigurationConstants;
@@ -37,6 +36,7 @@ import org.testng.eclipse.launch.TestNGLaunchConfigurationConstants.LaunchType;
 import org.testng.eclipse.ui.RunInfo;
 import org.testng.eclipse.ui.util.ConfigurationHelper;
 import org.testng.eclipse.util.param.ParameterSolver;
+import org.testng.internal.AnnotationTypeEnum;
 
 /**
  * A partial copy of org.testng.eclipse.util.LaunchUtil utility class that adds
@@ -88,7 +88,12 @@ public class TestNgSelectionLaunchUtil
         workingCopy.setAttribute(TestNGLaunchConfigurationConstants.TYPE, LaunchType.CLASS.ordinal());
         workingCopy.setAttribute(TestNGLaunchConfigurationConstants.ALL_METHODS_LIST, ConfigurationHelper.toClassMethodsMap(classMethods));
         workingCopy.setAttribute(TestNGLaunchConfigurationConstants.CLASS_TEST_LIST, typeNames);
-        workingCopy.setAttribute(TestNGLaunchConfigurationConstants.TESTNG_COMPLIANCE_LEVEL_ATTR, getQuickComplianceLevel(types));
+
+        // constant removed in TestNG Plugin 5.14.2.4
+        // workingCopy.setAttribute(TestNGLaunchConfigurationConstants.TESTNG_COMPLIANCE_LEVEL_ATTR,
+        // getQuickComplianceLevel(types));
+        workingCopy.setAttribute(TestNGPlugin.PLUGIN_ID + ".COMPLIANCE_LEVEL", getQuickComplianceLevel(types));
+
         workingCopy.setAttribute(TestNGLaunchConfigurationConstants.PARAMS, solveParameters(types));
         workingCopy.setAttribute(TestNGLaunchConfigurationConstants.METHOD_TEST_LIST, EMPTY_ARRAY_PARAM);
         workingCopy.setAttribute(TestNGLaunchConfigurationConstants.PACKAGE_TEST_LIST, EMPTY_ARRAY_PARAM);
@@ -195,7 +200,10 @@ public class TestNgSelectionLaunchUtil
         FileSearchResult result = (FileSearchResult) query.getSearchResult();
         Object[] elements = result.getElements();
 
-        return elements != null && elements.length > 0 ? TestNG.JDK_ANNOTATION_TYPE : TestNG.JAVADOC_ANNOTATION_TYPE;
+        // constants removed in TestNG plugin 5.14.2.4
+        // return elements != null && elements.length > 0 ?
+        // TestNG.JDK_ANNOTATION_TYPE : TestNG.JAVADOC_ANNOTATION_TYPE;
+        return elements != null && elements.length > 0 ? AnnotationTypeEnum.JDK.getName() : AnnotationTypeEnum.JAVADOC.getName();
     }
 
     private static String[] getJavaLikeExtensions()
