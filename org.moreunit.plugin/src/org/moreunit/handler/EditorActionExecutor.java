@@ -42,12 +42,10 @@ import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
-import org.moreunit.extensionpoints.ITestLaunchSupport.Cardinality;
-import org.moreunit.launch.AdditionalTestLaunchShortcutProvider;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.util.FeatureDetector;
 import org.moreunit.util.MoreUnitContants;
 
 /**
@@ -75,8 +73,13 @@ public class EditorActionExecutor
 
     private static EditorActionExecutor instance;
 
+    private final FeatureDetector featureDetector;
+    private final TestLauncher testLauncher;
+
     private EditorActionExecutor()
     {
+        featureDetector = new FeatureDetector();
+        testLauncher = new TestLauncher();
     }
 
     public static EditorActionExecutor getInstance()
@@ -265,7 +268,7 @@ public class EditorActionExecutor
             boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
 
-            if(isTestSelectionRunSupported(javaProject))
+            if(featureDetector.isTestSelectionRunSupported(javaProject))
             {
                 testCases.addAll(typeFacade.getCorrespondingTestCases(extendedSearch));
             }
@@ -279,13 +282,6 @@ public class EditorActionExecutor
         {
             runTests(testCases);
         }
-    }
-
-    // TODO Nicolas: refactor this together with org.moreunit.launch.TestLauncher
-    private boolean isTestSelectionRunSupported(IJavaProject javaProject)
-    {
-        String testNg = PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
-        return ! testNg.equals(Preferences.getInstance().getTestType(javaProject)) || AdditionalTestLaunchShortcutProvider.getInstance().isShortcutFor(testNg, IType.class, Cardinality.SEVERAL);
     }
 
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
@@ -310,7 +306,7 @@ public class EditorActionExecutor
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
             IMethod methodUnderTest = editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
 
-            if(isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
+            if(featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
             {
                 testElements.addAll(typeFacade.getCorrespondingTestMembers(methodUnderTest, extendedSearch));
             }
@@ -350,11 +346,14 @@ public class EditorActionExecutor
     {
         IJavaElement aTestMember = testElements.iterator().next();
         String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
-        new TestLauncher(testType).launch(testElements);
+        testLauncher.launch(testType, testElements);
     }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.29 2010/10/08 16:09:28 ndemengel
+// Activates TestNG extension
+//
 // Revision 1.28 2010/09/30 21:46:09 makkimesser
 // Incomplete - task 3072083: Generate test creates TestNG-tests only
 // http://sourceforge.net/tracker/?group_id=156007&atid=798056&func=detail&assignee=2466398&aid=3072083

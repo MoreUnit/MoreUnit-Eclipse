@@ -11,6 +11,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.annotation.AnnotationUpdateListener;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.log.LogHandler;
+import org.moreunit.util.FeatureDetector;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.util.PluginTools;
 import org.osgi.framework.BundleContext;
@@ -44,6 +45,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
+        FeatureDetector.setBundleContext(context);
         PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(new AnnotationUpdateListener());
         MoreUnitAnnotationModel.attachForAllOpenEditor();
         removeMarkerFromOlderMoreUnitVersions();
@@ -104,6 +106,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2010/06/30 23:11:43  makkimesser
+// FindBugs-Warnings resolved
+//
 // Revision 1.9  2010/02/06 21:03:39  gianasista
 // Organize Imports
 //

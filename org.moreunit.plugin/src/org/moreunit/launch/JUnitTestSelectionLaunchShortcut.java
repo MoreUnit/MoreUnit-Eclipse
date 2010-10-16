@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationDelegate;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.log.LogHandler;
 
@@ -38,9 +39,14 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
     @Override
     public void launch(ISelection selection, String mode)
     {
+        // those cases are well supported by JUnitLaunchShortcut, we have no reason to treat them
+        if(! (selection instanceof IStructuredSelection) || ((StructuredSelection) selection).size() < 2)
+        {
+            super.launch(selection, mode);
+        }
+
         try
         {
-            // we know for sure it is a StructuredSelection since we created it
             launch(((StructuredSelection) selection).toList(), mode);
         }
         catch (CoreException e)
