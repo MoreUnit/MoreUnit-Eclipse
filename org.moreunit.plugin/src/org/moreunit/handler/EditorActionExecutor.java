@@ -265,16 +265,15 @@ public class EditorActionExecutor
         else
         {
             IJavaProject javaProject = selectedJavaType.getJavaProject();
-            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
 
             if(featureDetector.isTestSelectionRunSupported(javaProject))
             {
-                testCases.addAll(typeFacade.getCorrespondingTestCases(extendedSearch));
+                testCases.addAll(typeFacade.getCorrespondingTestCases());
             }
             else
             {
-                testCases.add(typeFacade.getOneCorrespondingTestCase(true, extendedSearch, "Run test..."));
+                testCases.add(typeFacade.getOneCorrespondingTestCase(true, "Run test..."));
             }
         }
 
@@ -351,6 +350,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.30  2010/10/16 18:50:04  ndemengel
+// Refactors test launch ands removes unused dialog
+//
 // Revision 1.29 2010/10/08 16:09:28 ndemengel
 // Activates TestNG extension
 //

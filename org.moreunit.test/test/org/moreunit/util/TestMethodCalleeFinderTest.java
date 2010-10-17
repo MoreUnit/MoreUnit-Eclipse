@@ -2,9 +2,8 @@ package org.moreunit.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.moreunit.util.CollectionUtils.asSet;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -18,7 +17,8 @@ import org.moreunit.WorkspaceHelper;
 
 public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
 {
-
+    private IType cutType1;
+    private IType cutType2;
     private IType testcaseType;
     private IMethod getNumber1;
     private IMethod getNumberOne;
@@ -27,9 +27,9 @@ public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
     @Before
     public void setUp() throws JavaModelException
     {
-        IType cutType1 = createJavaClass("Hello1", true);
+        cutType1 = createJavaClass("Hello1", true);
         getNumber1 = WorkspaceHelper.createMethodInJavaType(cutType1, "public void getNumber1()", "return 1;");
-        IType cutType2 = createJavaClass("Hello2", true);
+        cutType2 = createJavaClass("Hello2", true);
         getNumberOne = WorkspaceHelper.createMethodInJavaType(cutType2, "public void getNumberOne()", "return 1;");
         getNumberOneAgain = WorkspaceHelper.createMethodInJavaType(cutType2, "public void getNumberOneAgain()", "return 1;");
         testcaseType = createTestCase("HelloTest", true);
@@ -40,7 +40,7 @@ public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
     {
         IMethod testMethod = createTestMethodWithContent("");
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
         assertTrue(matches.isEmpty());
     }
 
@@ -54,10 +54,10 @@ public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
     {
         IMethod testMethod = createTestMethodWithContent("new Hello1().getNumber1();");
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
         assertEquals(asSet(getNumber1), matches);
     }
-    
+
     @Test
     public void testGetMatchesWithBothMethodsUnderTestAndMethodsNotUnderTest() throws JavaModelException
     {
@@ -66,7 +66,7 @@ public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
           + "new HelloTest().testGetNumberOne();"
         );
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
         assertEquals(asSet(getNumberOne), matches);
     }
 
@@ -79,12 +79,7 @@ public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
           + "new Hello2().getNumberOneAgain();"
         );
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
         assertEquals(asSet(getNumber1, getNumberOne, getNumberOneAgain), matches);
-    }
-
-    private Set<IMethod> asSet(IMethod... methods)
-    {
-        return new HashSet<IMethod>(Arrays.asList(methods));
     }
 }

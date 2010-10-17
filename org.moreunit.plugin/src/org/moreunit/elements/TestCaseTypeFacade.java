@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -193,9 +192,9 @@ public class TestCaseTypeFacade extends TypeFacade
     }
 
     @Override
-    protected MethodCallFinder getCallRelationshipFinder(IMethod method)
+    protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope)
     {
-        return new TestMethodCalleeFinder(method);
+        return new TestMethodCalleeFinder(method, searchScope);
     }
 
     /**
@@ -265,6 +264,9 @@ public class TestCaseTypeFacade extends TypeFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.24  2010/07/26 18:15:57  ndemengel
+// Refactoring
+//
 // Revision 1.23  2010/07/13 06:18:30  ndemengel
 // Adds an history to remember jumps between members.
 // Fixes a minor display problem in ChooseDialog

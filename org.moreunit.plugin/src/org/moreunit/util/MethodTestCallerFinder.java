@@ -1,16 +1,17 @@
 package org.moreunit.util;
 
-import static org.moreunit.util.MethodCallFinder.Direction.CALLER;
+import java.util.Collection;
 
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.moreunit.elements.TypeFacade;
 
 public class MethodTestCallerFinder extends MethodCallFinder
 {
 
-    public MethodTestCallerFinder(IMethod methodUnderTest)
+    public MethodTestCallerFinder(IMethod methodUnderTest, Collection< ? extends IJavaElement> searchScope)
     {
-        super(methodUnderTest, CALLER);
+        super(methodUnderTest, searchScope, Direction.CALLER);
     }
 
     protected boolean methodMatch(IMethod method)

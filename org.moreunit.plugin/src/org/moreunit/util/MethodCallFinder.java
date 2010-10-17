@@ -1,12 +1,15 @@
 package org.moreunit.util;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.jdt.internal.corext.callhierarchy.MethodWrapper;
 import org.moreunit.elements.MethodFacade;
@@ -19,12 +22,11 @@ public abstract class MethodCallFinder
         CALLEE, CALLER
     }
 
-    private final IMethod method;
+    private final IJavaSearchScope searchScope;
     private final MethodWrapper methodWrapper;
 
-    protected MethodCallFinder(IMethod method, Direction direction)
+    protected MethodCallFinder(IMethod method, Collection< ? extends IJavaElement> searchScope, Direction direction)
     {
-        this.method = method;
         if(Direction.CALLEE == direction)
         {
             this.methodWrapper = CallHierarchy.getDefault().getCalleeRoots(new IMethod[] { method })[0];
@@ -33,11 +35,13 @@ public abstract class MethodCallFinder
         {
             this.methodWrapper = CallHierarchy.getDefault().getCallerRoots(new IMethod[] { method })[0];
         }
+
+        this.searchScope = SearchEngine.createJavaSearchScope(JavaElementUtils.toArray(searchScope));
     }
 
     public Set<IMethod> getMatches(IProgressMonitor progressMonitor)
     {
-        CallHierarchy.getDefault().setSearchScope(getSearchScope(this.method));
+        CallHierarchy.getDefault().setSearchScope(searchScope);
 
         Set<IMethod> testCallers = new LinkedHashSet<IMethod>();
         MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
@@ -55,11 +59,6 @@ public abstract class MethodCallFinder
             }
         }
         return testCallers;
-    }
-
-    private IJavaSearchScope getSearchScope(IMethod method)
-    {
-        return SearchScopeSingelton.getInstance().getSearchScope(PluginTools.getSourceFolder(method.getCompilationUnit()));
     }
 
     private IMethod getFirstNonAnonymousMethod(IMember member)

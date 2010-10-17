@@ -123,7 +123,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testgetOneCorrespondingMemberWithoutTestMethod() throws CoreException
+    public void testGetOneCorrespondingMemberWithoutTestMethod() throws CoreException
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(null, false, false, null);
@@ -132,7 +132,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testgetOneCorrespondingMemberWithTestMethod() throws CoreException
+    public void testGetOneCorrespondingMemberWithTestMethod() throws CoreException
     {
         IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
         IMethod getNumberOneTestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
@@ -144,7 +144,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testgetOneCorrespondingMemberWithExtendedSearchAndTestMethodFollowingNamingPattern() throws CoreException
+    public void testGetOneCorrespondingMemberWithExtendedSearchAndTestMethodFollowingNamingPattern() throws CoreException
     {
         IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
         IMethod getNumberOneTestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
@@ -156,7 +156,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testgetOneCorrespondingMemberWithExtendedSearchAndTestMethodCallingMethodUnderTest() throws CoreException
+    public void testGetOneCorrespondingMemberWithExtendedSearchAndTestMethodCallingMethodUnderTest() throws CoreException
     {
         IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
         IMethod giveMe1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGiveMe1()", "new Hello().getNumberOne();");
@@ -168,7 +168,7 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testgetOneCorrespondingMemberWithExtendedSearchAndTestMethodFollowingNamingPatternAndCallingMethodUnderTest() throws CoreException
+    public void testGetOneCorrespondingMemberWithExtendedSearchAndTestMethodFollowingNamingPatternAndCallingMethodUnderTest() throws CoreException
     {
         IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
         IMethod getNumberOneTestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "new Hello().getNumberOne();");
@@ -177,5 +177,24 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(getNumberOneMethod, false, true, null);
 
         assertEquals(getNumberOneTestMethod, oneCorrespondingTestMember);
+    }
+
+    @Test
+    public void testGetOneCorrespondingMemberWithMethodUnderTestOverridingAnotherMethodUnderTest() throws JavaModelException
+    {
+        IType type = createJavaClass("AType", true);
+        WorkspaceHelper.createMethodInJavaType(type, "public void doIt()", "// does it");
+        IType typeTest = createTestCase("ATypeTest", true);
+        WorkspaceHelper.createMethodInJavaType(typeTest, "public void testDoIt()", "new AType().doIt();");
+
+        IType subType = deleteAfterTest(WorkspaceHelper.createJavaClassExtending(sourcesPackage, "ASubType", "AType"));
+        IMethod overridingMethod = WorkspaceHelper.createMethodInJavaType(subType, "public void doIt()", "// does it in another way");
+        IType subTypeTest = createTestCase("ASubTypeTest", true);
+        IMethod overridingMethodTest = WorkspaceHelper.createMethodInJavaType(subTypeTest, "public void testDoIt()", "new ASubType().doIt();");
+
+        ClassTypeFacade classTypeFacade = new ClassTypeFacade(subType.getCompilationUnit());
+        IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(overridingMethod, false, true, null);
+
+        assertEquals(overridingMethodTest, oneCorrespondingTestMember);
     }
 }

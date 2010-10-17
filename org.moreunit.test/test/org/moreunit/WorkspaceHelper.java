@@ -37,8 +37,13 @@ public class WorkspaceHelper
 
     private static final String CLASSES_FOLDER = "classes";
     
-    private static final String CLASS_TYPE = "class";
-    private static final String ENUM_TYPE = "enum";
+    private static enum JavaType {
+        CLASS, ENUM;
+        
+        String toJavaCode() {
+            return toString().toLowerCase();
+        }
+    }
 
     public static IJavaProject createJavaProject(String projectName) throws CoreException
     {
@@ -149,17 +154,29 @@ public class WorkspaceHelper
 
     public static IType createJavaClass(IPackageFragment packageFragment, String javaClassName) throws JavaModelException
     {
-        return createJavaType(packageFragment, javaClassName, CLASS_TYPE);
+        return createJavaType(packageFragment, javaClassName, JavaType.CLASS);
+    }
+
+    public static IType createJavaClassExtending(IPackageFragment packageFragment, String javaClassName, String parentClassName) throws JavaModelException
+    {
+        String declaration = String.format("public %1$s %2$s extends %3$s { %4$s%4$s } %4$s", JavaType.CLASS.toJavaCode(), javaClassName, parentClassName, StringConstants.NEWLINE);
+        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), StringConstants.NEWLINE, declaration);
+        return createJavaType(packageFragment, javaClassName, sourceCode);
     }
     
     public static IType createJavaEnum(IPackageFragment packageFragment, String javaClassName) throws JavaModelException
     {
-        return createJavaType(packageFragment, javaClassName, ENUM_TYPE);
+        return createJavaType(packageFragment, javaClassName, JavaType.ENUM);
     }
     
-    private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, String type) throws JavaModelException
+    private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, JavaType type) throws JavaModelException
     {
         String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), StringConstants.NEWLINE, getTypeDeclarationString(type, javaClassName));
+        return createJavaType(packageFragment, javaClassName, sourceCode);
+    }
+
+    private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, String sourceCode) throws JavaModelException
+    {
         ICompilationUnit compilationUnit = packageFragment.createCompilationUnit(String.format("%s.java", javaClassName), sourceCode, false, null);
         return compilationUnit.getTypes()[0];
     }
@@ -169,9 +186,9 @@ public class WorkspaceHelper
         return String.format("package %s;%s", packageFragment.getElementName(), StringConstants.NEWLINE);
     }
 
-    private static String getTypeDeclarationString(String type, String javaClassName)
+    private static String getTypeDeclarationString(JavaType type, String javaClassName)
     {
-        return String.format("public %1$s %2$s { %3$s%3$s } %3$s", type, javaClassName, StringConstants.NEWLINE);
+        return String.format("public %1$s %2$s { %3$s%3$s } %3$s", type.toJavaCode(), javaClassName, StringConstants.NEWLINE);
     }
 
     public static IMethod createMethodInJavaType(IType javaType, String methodDeclaration, String methodSourceCode) throws JavaModelException

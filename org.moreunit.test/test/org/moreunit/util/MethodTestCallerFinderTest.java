@@ -2,9 +2,8 @@ package org.moreunit.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.moreunit.util.CollectionUtils.asSet;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -34,7 +33,7 @@ public class MethodTestCallerFinderTest extends SimpleProjectTestCase
     @Test
     public void testGetMatchesWithoutTestMethod() throws JavaModelException
     {
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod, asSet(testcaseType)).getMatches(new NullProgressMonitor());
         assertTrue(matches.isEmpty());
     }
 
@@ -43,7 +42,7 @@ public class MethodTestCallerFinderTest extends SimpleProjectTestCase
     {
         IMethod giveMe1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGiveMe1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod, asSet(testcaseType)).getMatches(new NullProgressMonitor());
         assertEquals(asSet(giveMe1TestMethod), matches);
     }
 
@@ -54,12 +53,7 @@ public class MethodTestCallerFinderTest extends SimpleProjectTestCase
         IMethod gimme1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGimme1()", "new Hello().getNumberOne();");
         IMethod getNumber1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumber1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod, asSet(testcaseType)).getMatches(new NullProgressMonitor());
         assertEquals(asSet(giveMe1TestMethod, gimme1TestMethod, getNumber1TestMethod), matches);
-    }
-
-    private Set<IMethod> asSet(IMethod... methods)
-    {
-        return new HashSet<IMethod>(Arrays.asList(methods));
     }
 }

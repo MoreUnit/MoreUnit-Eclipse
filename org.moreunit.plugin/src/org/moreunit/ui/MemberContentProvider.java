@@ -57,7 +57,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
         defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
     }
-    
+
     /**
      * Constructs a provider that will propose the given types, ordered as
      * follows:
@@ -81,6 +81,23 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         this.types = allTypes.toArray();
 
         defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
+    }
+
+    /**
+     * Constructs a provider that will propose the given types. Additionally
+     * this provider will propose the given type for selection.
+     * 
+     * @param types the types to display
+     * @param typeProposedForSelection the default selection
+     */
+    public MemberContentProvider(Set<IType> types, IType typeProposedForSelection)
+    {
+        methodsByType = new HashMap<IType, List<IMethod>>();
+
+        List<IType> sortedTypes = sortTypes(types);
+        this.types = sortedTypes.toArray();
+
+        defaultSelection = getDefaultSelection(typeProposedForSelection, sortedTypes);
     }
 
     private Map<IType, List<IMethod>> groupMethodsByType(Set<IMethod> methods)

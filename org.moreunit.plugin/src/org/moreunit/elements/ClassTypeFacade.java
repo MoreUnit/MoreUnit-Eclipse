@@ -13,7 +13,6 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -83,25 +82,18 @@ public class ClassTypeFacade extends TypeFacade
      * 
      * @return one of the corresponding testcases
      */
-    public IType getOneCorrespondingTestCase(boolean createIfNecessary, boolean extendedSearch, String promptText)
+    public IType getOneCorrespondingTestCase(boolean createIfNecessary, String promptText)
     {
         Set<IType> testcases = getCorrespondingTestCaseList();
-        Set<IType> additionalTestcases = new LinkedHashSet<IType>();
-        if(extendedSearch)
-        {
-            additionalTestcases.addAll(getTestCasesHavingMethodsThatCallMethodsOfThisClass());
-        }
 
         IType testcaseToJump = null;
-        int testcasesCount = testcases.size() + additionalTestcases.size();
-        if(testcasesCount == 1)
+        if(testcases.size() == 1)
         {
-            testcases.addAll(additionalTestcases);
             testcaseToJump = (IType) testcases.toArray()[0];
         }
-        else if(testcasesCount > 1)
+        else if(testcases.size() > 1)
         {
-            MemberContentProvider contentProvider = new MemberContentProvider(testcases, additionalTestcases, null);
+            MemberContentProvider contentProvider = new MemberContentProvider(testcases, null);
             testcaseToJump = new ChooseDialog<IType>(promptText, contentProvider).getChoice();
         }
         else if(createIfNecessary)
@@ -117,30 +109,6 @@ public class ClassTypeFacade extends TypeFacade
         }
 
         return testcaseToJump;
-    }
-
-    private Collection<IType> getTestCasesHavingMethodsThatCallMethodsOfThisClass()
-    {
-        Set<IType> testCases = new LinkedHashSet<IType>();
-        try
-        {
-            for (IMethod method : this.compilationUnit.findPrimaryType().getMethods())
-            {
-                if((method.getFlags() & ClassFileConstants.AccPrivate) == 0)
-                {
-                    Set<IMethod> testMethods = getCallRelationshipFinder(method).getMatches(new NullProgressMonitor());
-                    for (IMethod testMethod : testMethods)
-                    {
-                        testCases.add(testMethod.getDeclaringType());
-                    }
-                }
-            }
-        }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-        return testCases;
     }
 
     public Set<IType> getCorrespondingTestCaseList()
@@ -256,24 +224,19 @@ public class ClassTypeFacade extends TypeFacade
     }
 
     @Override
-    protected MethodCallFinder getCallRelationshipFinder(IMethod method)
+    protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope)
     {
-        return new MethodTestCallerFinder(method);
+        return new MethodTestCallerFinder(method, searchScope);
     }
 
     public IType getOneCorrespondingTestCase(boolean createIfNecessary)
     {
-        return getOneCorrespondingTestCase(createIfNecessary, false, "Please choose a test case...");
+        return getOneCorrespondingTestCase(createIfNecessary, "Please choose a test case...");
     }
 
-    public Collection<IType> getCorrespondingTestCases(boolean extendedSearch)
+    public Collection<IType> getCorrespondingTestCases()
     {
-        Set<IType> testCases = new LinkedHashSet<IType>(getCorrespondingTestCaseList());
-        if(extendedSearch)
-        {
-            testCases.addAll(getTestCasesHavingMethodsThatCallMethodsOfThisClass());
-        }
-        return testCases;
+        return getCorrespondingTestCaseList();
     }
 
     public Collection< ? extends IMember> getCorrespondingTestMembers(IMethod method, boolean extendedSearch)
@@ -281,19 +244,12 @@ public class ClassTypeFacade extends TypeFacade
         Set<IType> testCases = getCorrespondingClasses();
 
         Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
-        if(method == null)
-        {
-            if(extendedSearch)
-            {
-                testCases.addAll(getTestCasesHavingMethodsThatCallMethodsOfThisClass());
-            }
-        }
-        else
+        if(method != null)
         {
             testMethods.addAll(getCorrespondingMethodsInClasses(method, testCases));
             if(extendedSearch)
             {
-                testMethods.addAll(getCallRelationshipFinder(method).getMatches(new NullProgressMonitor()));
+                testMethods.addAll(getCallRelationshipFinder(method, testCases).getMatches(new NullProgressMonitor()));
             }
         }
 

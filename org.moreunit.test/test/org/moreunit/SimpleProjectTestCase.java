@@ -68,7 +68,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     @After
     public void tearDownTestCase() throws JavaModelException
     {
-        WorkspaceHelper.deleteCompilationUnitsForTypes(typesToClean.toArray(new IType[0]));
+        WorkspaceHelper.deleteCompilationUnitsForTypes(typesToClean.toArray(new IType[typesToClean.size()]));
     }
 
     private static void initPreferencesForTestCaseContext()
@@ -98,12 +98,25 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
         IType type = WorkspaceHelper.createJavaClass(packageFragment, javaClassName);
         if(deleteCompilationUnitAfterTest)
         {
-            if(typesToClean == null)
-            {
-                throw new IllegalStateException("Argument 'deleteCompilationUnitAfterTest' can only be used during the time between @Before and @After.");
-            }
-            typesToClean.add(type);
+            deleteAfterTest(type);
         }
+        return type;
+    }
+
+    /**
+     * Registers the given type to be removed from the workspace after test
+     * completion.
+     * 
+     * @param type the type to delete
+     * @return the type (convenient for method chaining)
+     */
+    protected IType deleteAfterTest(IType type)
+    {
+        if(typesToClean == null)
+        {
+            throw new IllegalStateException("Argument 'deleteCompilationUnitAfterTest' can only be used during the time between @Before and @After.");
+        }
+        typesToClean.add(type);
         return type;
     }
 }

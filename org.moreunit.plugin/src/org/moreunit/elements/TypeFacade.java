@@ -156,7 +156,7 @@ public abstract class TypeFacade
             proposedMethods.addAll(getCorrespondingMethodsInClasses(method, proposedClasses));
             if(extendedSearch)
             {
-                proposedMethods.addAll(getCallRelationshipFinder(method).getMatches(new NullProgressMonitor()));
+                proposedMethods.addAll(getCallRelationshipFinder(method, proposedClasses).getMatches(new NullProgressMonitor()));
             }
         }
 
@@ -199,7 +199,7 @@ public abstract class TypeFacade
 
     abstract protected Set<IType> getCorrespondingClasses();
 
-    abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method);
+    abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope);
 
     private IMember openDialog(String promptText, Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMethod method)
     {
