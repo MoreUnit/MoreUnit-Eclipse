@@ -1,5 +1,5 @@
 /**
- * JavaPropertiesOutline-Plugin for Eclipse V3.3.
+ * MoreUnit-Plugin for Eclipse V3.5.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the Eclipse Public License - v 1.0.

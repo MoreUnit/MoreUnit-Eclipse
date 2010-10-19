@@ -1,5 +1,5 @@
 /**
- * JavaPropertiesOutline-Plugin for Eclipse V3.3.
+ * MoreUnit-Plugin for Eclipse V3.5.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the Eclipse Public License - v 1.0.
@@ -22,14 +22,10 @@ import org.moreunit.preferences.Preferences;
 /**
  * This enum holds the test types.
  * <p>
- * <b>&copy; AG, D-49326 Melle 2010</b>
- * <p>
- * <dl>
  * <dt><b>Changes:</b></dt>
- * <dd>19.10.2010 Gro Refactoring: Use PreferenceConstants-Values as internal value</dd>
- * </dl>
+ * <dd>19.10.2010 Gro Refactoring: Merge with class from Nicolas</dd>
  * <p>
- * @author Andreas Groll
+ * @author Nicolas Demengel, Andreas Groll
  * @version 19.10.2010
  * @since 1.5
  */
