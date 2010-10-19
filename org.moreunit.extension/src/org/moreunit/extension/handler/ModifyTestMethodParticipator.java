@@ -37,6 +37,7 @@ import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
+import org.moreunit.extensionpoints.TestType;
 import org.moreunit.log.LogHandler;
 
 /**
@@ -90,7 +91,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Inits
 		IMethod testMethod = context.getTestMethod();
 		IMethod methodUnderTest = context.getMethodUnderTest();
-		TestType testType = getTestType(context);
+		TestType testType = TestType.getTestType(context.getClassUnderTest());
 		LogHandler.getInstance().handleInfoLog("Context: " + context);
 		LogHandler.getInstance().handleInfoLog("TestType: " + testType);
 
@@ -235,8 +236,8 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// JavaDoc zuweisen
 		testMethodDeclaration.setJavadoc(javaDoc);
 
-		// Nur für TestNG die Annotation ändern
-		if (testType.equals(TestType.TestNG)) {
+		// Nur für TESTNG die Annotation ändern
+		if (testType.equals(TestType.TESTNG)) {
 			// Alle Annotationen entfernen (nicht über Iterator, da Liste geändert wird!)
 			removeAnnotations(testMethodDeclaration);
 			// Neue Annotation erzeugen
@@ -248,18 +249,6 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	}
 
 	/**
-	 * Returns the MoreUnit test method type.
-	 * @param context Context.
-	 * @return Test method type.
-	 */
-	private TestType getTestType(final IAddTestMethodContext context) {
-
-		ICompilationUnit cu = context.getClassUnderTest();
-		String typeName = context.getPreferences().getTestType(cu.getJavaProject());
-		return TestType.get(typeName);
-	}
-
-	/**
 	 * Adds the imports with respect to test type.
 	 * @param astRoot Root node to be modified.
 	 * @param testType Test type.
@@ -268,21 +257,21 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 
 		// Import zufügen
 		switch (testType) {
-			case JUnit3:
+			case JUNIT_3:
 				addImport(astRoot, "junit.framework.TestCase", false);
 				break;
-			case JUnit4:
+			case JUNIT_4:
 				addImport(astRoot, "org.junit.Test", false);
 				addImport(astRoot, "org.junit.Assert", false);
 				addImport(astRoot, "org.junit.Assert.fail", true);
 				break;
-			case TestNG:
+			case TESTNG:
 				addImport(astRoot, "org.testng.annotations.Test", false);
 				addImport(astRoot, "org.testng.Assert", false);
 				addImport(astRoot, "org.testng.Assert.fail", true);
 				break;
 			default:
-				throw new RuntimeException("Unexpected enum value(TestType): " + testType);
+				throw new RuntimeException("Unexpected enum preferenceValue(TestType): " + testType);
 		}
 	}
 

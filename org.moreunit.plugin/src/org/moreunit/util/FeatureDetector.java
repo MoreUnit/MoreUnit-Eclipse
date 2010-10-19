@@ -38,6 +38,15 @@ public class FeatureDetector
 
     public boolean isTestSelectionRunSupported(IJavaProject javaProject)
     {
+
+        /* Gro: Method isShortcurFor should be refactored to use TestType-Class instead of String value
+         * as below, I will do after 2.2.0 has been released!
+        TestType testType = TestType.getTestType(javaProject);
+        return ! testType.equals(TestType.TESTNG)
+             || testNgPluginVersionGreaterThanOrEqualTo(TESTNG_MIN_VERSION_FOR_SELECTION_LAUNCH)
+             || additionalTestLaunchShortcutProvider.isShortcutFor(testType, IType.class, Cardinality.SEVERAL);
+        */
+
         final String testNg = PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
         return ! testNg.equals(preferences.getTestType(javaProject))
             || testNgPluginVersionGreaterThanOrEqualTo(TESTNG_MIN_VERSION_FOR_SELECTION_LAUNCH)

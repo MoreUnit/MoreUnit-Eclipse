@@ -12,8 +12,8 @@ import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jdt.core.IJavaElement;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.extensionpoints.ITestLaunchSupport;
+import org.moreunit.extensionpoints.TestType;
 import org.moreunit.extensionpoints.ITestLaunchSupport.Cardinality;
-import org.moreunit.extensionpoints.ITestLaunchSupport.TestType;
 import org.moreunit.log.LogHandler;
 
 public class AdditionalTestLaunchShortcutProvider
