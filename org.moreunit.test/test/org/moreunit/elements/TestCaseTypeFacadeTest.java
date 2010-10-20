@@ -7,9 +7,9 @@ package org.moreunit.elements;
  */
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -39,15 +39,55 @@ public class TestCaseTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testGetCorrespondingTestedMethod() throws CoreException
+    public void testGetCorrespondingTestedMethodsForClassUnderTestWithOneMatch() throws CoreException
     {
         IMethod testedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
         IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberOne()", "");
         IMethod testMethodWithNoCorrespondingTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
-        assertEquals(testedMethod, testCaseTypeFacade.getCorrespondingTestedMethod(testMethod, cutType));
-        assertNull(testCaseTypeFacade.getCorrespondingTestedMethod(testMethodWithNoCorrespondingTestedMethod, cutType));
+
+        List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
+        expectedTestedMethods.add(testedMethod);
+        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, cutType));
+
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod, cutType).isEmpty());
+    }
+
+    @Test
+    public void testGetCorrespondingTestedMethodsForClassUnderTestWithSeveralMatches() throws CoreException
+    {
+        IMethod possiblyTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumber()", "return 9;");
+        IMethod possiblyTestedMethod2 = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2;");
+        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberTwoAndNine()", "");
+        IMethod testMethodWithNoCorrespondingTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
+
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+
+        List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
+        expectedTestedMethods.add(possiblyTestedMethod);
+        expectedTestedMethods.add(possiblyTestedMethod2);
+        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, cutType));
+
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod, cutType).isEmpty());
+    }
+
+    @Test
+    public void testGetCorrespondingTestedMethodsForClassUnderTestWhenOneMethodNameIsAPerfectMatch() throws CoreException
+    {
+        // not perfect match
+        WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumber()", "return 1;");
+        IMethod perfectMatch = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2;");
+        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberTwo()", "");
+        IMethod testMethodWithNoCorrespondingTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
+
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+
+        List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
+        expectedTestedMethods.add(perfectMatch);
+        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, cutType));
+
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod, cutType).isEmpty());
     }
 
     @Test

@@ -141,21 +141,18 @@ public class TestCaseTypeFacade extends TypeFacade
     public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Set<IType> classesUnderTest)
     {
         List<IMethod> result = new ArrayList<IMethod>();
-        
+
         for (IType classUnderTest : classesUnderTest)
         {
-            IMethod testedMethod = getCorrespondingTestedMethod(testMethod, classUnderTest);
-            if(testedMethod != null)
-            {
-                result.add(testedMethod);
-            }
+            result.addAll(getCorrespondingTestedMethods(testMethod, classUnderTest));
         }
 
         return result;
     }
 
-    public IMethod getCorrespondingTestedMethod(IMethod testMethod, IType classUnderTest)
+    public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, IType classUnderTest)
     {
+        List<IMethod> testedMethods = new ArrayList<IMethod>();
         try
         {
             String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
@@ -164,9 +161,18 @@ public class TestCaseTypeFacade extends TypeFacade
                 IMethod[] foundTestMethods = classUnderTest.getMethods();
                 for (IMethod method : foundTestMethods)
                 {
-                    if(testedMethodName.startsWith(method.getElementName()) && method.exists())
+                    if(method.exists())
                     {
-                        return method;
+                        if(testedMethodName.equals(method.getElementName()))
+                        {
+                            testedMethods.clear();
+                            testedMethods.add(method);
+                            break;
+                        }
+                        if(testedMethodName.startsWith(method.getElementName()))
+                        {
+                            testedMethods.add(method);
+                        }
                     }
                 }
             }
@@ -176,7 +182,7 @@ public class TestCaseTypeFacade extends TypeFacade
             LogHandler.getInstance().handleExceptionLog(exc);
         }
 
-        return null;
+        return testedMethods;
     }
 
     @Override
@@ -264,6 +270,9 @@ public class TestCaseTypeFacade extends TypeFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.25  2010/10/17 11:02:34  ndemengel
+// Reviews extended method search (simplified for better accuracy)
+//
 // Revision 1.24  2010/07/26 18:15:57  ndemengel
 // Refactoring
 //
