@@ -4,7 +4,7 @@
     <head>
         <meta name="generator" content="HTML Tidy, see www.w3.org">
 
-        <title>moreUnit - Home</title>
+        <title>MoreUnit - Release Notes</title>
         <meta http-equiv="content-type" content=
         "text/html;charset=ISO-8859-1">
         <meta name="keywords" content="Unit, JUnit, Eclipse">
@@ -30,12 +30,13 @@
 				<h1>2010-10-XX: Version 2.2.0 released</h1>
 				<ul>
 					<li>Extension point enhancements</li>
-					<li>Extended method search</li>
-					<li>Better support for TestNG</li>
+					<li>Extended method search has been improved (better performance and accuracy)</li>
+					<li>Different actions for running a single test method or the whole test case</li>
+					<li>Better support for TestNG (now runs several test cases at once)</li>
 				</ul>
 				<h1>2010-08-12: Version 2.1.3 released</h1>
 				<ul>
-					<li>Fix: Java 5 compatibilty</li>
+					<li>Fix: Java 5 compatibility</li>
 				</ul>
 				<h1>2010-08-01: Version 2.1.2 released</h1>
 				<ul>
@@ -43,32 +44,33 @@
 				</ul>
             	<h1>2010-07-31: Version 2.1.1 released</h1>
 				<ul>
-					<li>History for switching if there are multiple tests.</li>
+					<li>History for switching if there are multiple tests</li>
+					<li>Extended method search</li>
 					<li>Further improvements to the extension point</li>
 					<li>Bugfixing</li>
 				</ul>
             	<h1>2010-06-14: Version 2.0.1 released</h1>				
 				<ul>
 					<li>Please uninstall older versions of MoreUnit before switching to the new release.</li>
-					<li>New Update site (was necessary because of a new feature id moreUnit -> org.moreunit)</li>
+					<li>New Update site (was necessary because of a new feature id moreUnit -&gt; org.moreUnit)</li>
 					<li>Update site is p2 enabled now</li>
 					<li>Running test from class under test (thanks to Nicolas Demengel for his patch).</li>
-					<li>Started to add extension points for moreUnit (thanks to Thomas Heilbronner for his patch)</li>
+					<li>Started to add extension points for MoreUnit (thanks to Thomas Heilbronner for his patch)</li>
 				</ul>
             	<h1>2009-03-25: Version 1.3.3 released</h1>
             	<ul>					
-					<li>Bugfix (Excpetion when opening class-files)</li>					
+					<li>Bugfix (Exception when opening class-files)</li>					
 				</ul>
 				
             	<h1>2009-03-23: Version 1.3.2 released</h1>
             	<ul>					
-					<li>Important Bugfix (Exeption when opening non-java-files)</li>					
+					<li>Important Bugfix (Exception when opening non-java-files)</li>					
 				</ul>
             	
             	<h1>2009-03-22: Version 1.3.1 released</h1>
 				
 				<ul>					
-					<li>Prefix for testmethod names is now configurable.</li>
+					<li>Prefix for test method names is now configurable.</li>
 					<li>Marker in the editor can be configured via preferences</li>
 					<li>Minor Bugfixes</li>
 				</ul>
@@ -76,7 +78,7 @@
             	<h1>2008-12-23: Version 1.2.0 released</h1>
 				
 				<ul>
-					<li>TestNG support for testcase creation wizard</li>
+					<li>TestNG support for test case creation wizard</li>
 					<li>package rename > tests get moved to new package name</li>
 					<li>Bugfixing</li>
 				</ul>
@@ -84,7 +86,7 @@
             	<h1>2008-09-13: Version 1.1.4 released</h1>
 				
 				<ul>
-					<li>Redesign project specific settings (mapping between test and sourcefolder)</li>
+					<li>Redesign project specific settings (mapping between test and source folder)</li>
 					<li>Project specific settings are stored in the .settings folder within the project folder</li>
 					<li>Improved performance</li>
 				</ul>
@@ -104,21 +106,21 @@
                     file.</li>
 
                     <li>New configuration on the preference page
-                    for flexible testcase naming (if you enable
+                    for flexible test case naming (if you enable
                     this feature and for example use "Test" as
-                    suffix for testcases MoreUnit will detect
-                    FooFlexibleTest.java as testcase too).</li>
+                    suffix for test cases MoreUnit will detect
+                    FooFlexibleTest.java as test case too).</li>
                 </ul>
 
                 <h1>2006-12-01: Version 0.7.0 released</h1>
 
                 <ul>
-                    <li>Several Bugfixes. Take a look at bugzilla
+                    <li>Several Bugfixes. Take a look at Bugzilla
                     for details: [1580067, 1579660, 1579476,
                     1579278]</li>
 
-                    <li>Using the "Generate test" on a testmethod
-                    creates a second testmethod.</li>
+                    <li>Using the "Generate test" on a test method
+                    creates a second test method.</li>
                 </ul>
 
                 <h1>2006-10-22: Version 0.6.1 released</h1>
@@ -151,11 +153,11 @@
                     are merged.</li>
 
                     <li>JUnit4 support is implemented (configurable
-                    at the moreunit-preference page)</li>
+                    at the MoreUnit-preference page)</li>
 
-                    <li>The create a new testcase the eclipse
-                    testcase wizard is used (initalized with the
-                    moreunit-specific preferences).</li>
+                    <li>To create a new test case the Eclipse
+                    test case wizard is used (initialized with the
+                    MoreUnit-specific preferences).</li>
 
                     <li>Minor Bugfixes and smaller
                     enhancements.</li>
@@ -166,36 +168,36 @@
                 <ul>
                     <li>MoreUnit offers refactoring support now.
                     Rename of class or methods leads to a dialog to
-                    rename corresponding testcase or methods
+                    rename corresponding test case or methods
                     either.</li>
 
-                    <li>Suffix for testcase (usually Test) can be
+                    <li>Suffix for test case (usually Test) can be
                     configured via the preferences.</li>
 
-                    <li>Older versions of moreUnit only offered the
-                    possiblity to jump via a shortcut to the
-                    corresonding testcase or testmethod. Since
+                    <li>Older versions of MoreUnit only offered the
+                    possibility to jump via a shortcut to the
+                    corresponding test case or test method. Since
                     version 0.4.3 it is possible to switch between
-                    testcase/testmethod and class/method under test
+                    test case/test method and class/method under test
                     with the same shortcut. (Thanks to Jiming Liu,
                     who asked for this feature request)</li>
 
                     <li>Java template preferences (comments) are
-                    used for new testcases.</li>
+                    used for new test cases.</li>
 
-                    <li>Switched moreUnit java 1.5</li>
+                    <li>Switched MoreUnit java 1.5</li>
                 </ul>
 
                 <h1>2006-03-23: Version 0.3.2 released</h1>
 
                 <ul>
                     <li>New marker icon (if you had already
-                    installed a version of moreUnit you have to
-                    start eclipse once without moreUnit and
+                    installed a version of MoreUnit you have to
+                    start Eclipse once without MoreUnit and
                     afterwards you can install the newest version,
                     don't know what the problem is, but if you
                     don't go this way, no new marker icon will
-                    appear) for tested methods and moreUnit got
+                    appear) for tested methods and MoreUnit got
                     extended to recognize test-methods.</li>
 
                     <li>Marker icons are now persistent and will be
@@ -203,12 +205,12 @@
                     restart.</li>
 
                     <li>Moved actions to add / delete marker from
-                    the workspace to the project popup-menu in the
+                    the workspace to the project pop-up menu in the
                     package explorer.</li>
 
                     <li>I tried to implement a refactoring support
-                    for correpsonding tests (rename of class should
-                    rename correpsonding tests) but had problem
+                    for corresponding tests (rename of class should
+                    rename corresponding tests) but had problem
                     with the current API. So if I want to see this
                     feature in this plugin, please vote for this
                     bug at eclipse.org. <a href=
@@ -220,14 +222,14 @@
 
                 <ul>
                     <li>"Jump to test" jumps to the corresponding
-                    testmethod, if possible.</li>
+                    test method, if possible.</li>
 
                     <li>Marker position always beside method
                     signature (they where positioned beside a
                     comment if there was one above the signature in
                     earlier versions)</li>
 
-                    <li>In earlier releases testcases had been
+                    <li>In earlier releases test cases had been
                     created in a wrong project sometimes (under
                     special circumstances), this problem should be
                     fixed now.</li>
@@ -236,8 +238,8 @@
                 <h1>2006-01-08: Version 0.3.0 released</h1>
 
                 <ul>
-                    <li>he plugin works now with eclipse 3.1.1 (and
-                    draw the markers for tested methods)</li>
+                    <li>The plugin works now with Eclipse 3.1.1 (and
+                    draws the markers for tested methods)</li>
 
                     <li>Folder for the tests can now be configured
                     via the preferences panel</li>
