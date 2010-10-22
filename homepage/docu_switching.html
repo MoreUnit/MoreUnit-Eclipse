@@ -65,37 +65,46 @@
 
                 <h1>Switching between test and class under
                 test</h1>
-                From java files which are open in the editor you
-                can jump to the corresponding test case via the
-                pop-up menu of the editor or via the shortcut
+                
+                <p>You can jump from java classes which are open in the editor
+                to the corresponding test cases via the
+                contextual menu of the editor or via the shortcut
                 "Ctrl"+"J". MoreUnit identifies the name of the
-                class under the cursor position. To find the
+                class under the cursor. To find the
                 corresponding test case the prefixes and suffixes
                 from the preferences are used. If exactly one
                 test case is found the file gets opened. If more
                 than one test case is found a dialog is shown and
-                the user can chose which test case he wants to work
-                on.<br>
+                prompts you to choose which test case you want to work
+                on:<br />
                  <img src="pix/dialog.png" width="151" height="103"
-                border="0" alt=""><br>
-                <br>
+                border="0" alt="">
+                </p>
+                
+                <p>
                  If no test case is found the test case wizard is
-                shown initialized with the settings from the
-                preference page.<br>
+                shown, initialized with the settings from the
+                preference page:<br />
                  <img src="pix/wizard.png" width="566" height="498"
-                border="0" alt=""><br>
-                <br>
-                 MoreUnit tries to identify the corresponding
-                test method of the actual cursor position and jumps
-                to the method signature of the test case.<br>
+                border="0" alt="">
+                </p>
+                
+                <p>MoreUnit also tries to identify the test method(s) corresponding
+                to the method under the cursor and directly jumps to it if only one is found.<br />
                  Example: For a method named "addTree" tests named
                 "testAddTree" or "testAddTreeSUFFIX" will be
-                detected as test method.<br>
-                 The shortcuts for the jump/generate action are
+                detected as test method.</p>
+                
+                <p>Also, if you activated the extended method search, a test method
+                that calls your method will be found, whatever its name.<br />
+                Finally, please note that jumping also works the
+                other way, to go back to your production code.</p>
+                
+                <p>The shortcuts for the jump/generate action are
                 configurable. If you want to change the default
                 keys go to WINDOW &rarr; PREFERENCES... &rarr;
                 GENERAL &rarr; KEYS and change the settings of the
-                commands named "CreateTestMethod" and "JumpToTest".
+                commands named "Create Test Method" and "Jump to Test".</p>
             </div>
 
             <div class="bottom">
