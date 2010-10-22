@@ -230,7 +230,7 @@
 		<specification
 			annotationType="org.moreunit.testCaseAnnotation"
 			icon="icons/classHasTest.gif"
-			label="MoreUnit marker"
+			label="MoreUnit Test Marker"
 			overviewRulerPreferenceKey="org.moreunit.overview_ruler"
 			overviewRulerPreferenceValue="false"
 			verticalRulerPreferenceKey="org.moreunit.vertical_ruler"
@@ -250,7 +250,7 @@
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
 			id="org.moreunit.testdecorator"
-			label="Decorate Classes with TestCase"
+			label="Decorate Classes with Test Case"
 			state="true"
 			class="org.moreunit.decorator.UnitDecorator"
 			adaptable="true"
@@ -465,7 +465,7 @@
    <extension point="org.eclipse.ui.views">
    		<category id="org.moreunit.ui" name="MoreUnit"/>
    		<view id="org.moreunit.missingtestmethodview"
-   			name="Missing Testmethods"
+   			name="Missing Test Methods"
    			class="org.moreunit.ui.MissingTestmethodViewPart"
    			icon="icons/moreunitLogo.gif"
    			category="org.moreunit.ui"/>
@@ -484,7 +484,7 @@
    		<view id="org.moreunit.missingtestsview"
    			  class="org.moreunit.ui.MissingTestsViewPart"
    			  icon="icons/moreunitLogo.gif"
-   			  name="Missing tests per project"
+   			  name="Missing Tests per Project"
    			  category="org.moreunit.ui"/>
    </extension>
 </plugin>
