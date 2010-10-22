@@ -12,7 +12,7 @@ import org.osgi.framework.Version;
 
 public class FeatureDetector
 {
-    private static final Version TESTNG_MIN_VERSION_FOR_SELECTION_LAUNCH = new Version("5.14.2.7");
+    private static final Version TESTNG_MIN_VERSION_FOR_SELECTION_LAUNCH = new Version("5.14.2.10");
     private static final String TESTNG_PLUGIN_ID = "org.testng.eclipse";
 
     private static BundleContext bundleContext;
@@ -55,10 +55,8 @@ public class FeatureDetector
 
     private boolean testNgPluginVersionGreaterThanOrEqualTo(Version expected)
     {
-        // disabled for now, there is still an issue with the TestNG plugin
-        return false;
-        // Version actual = getTestNgPluginVersion();
-        // return isGreaterOrEqual(actual, expected);
+        Version actual = getTestNgPluginVersion();
+        return isGreaterOrEqual(actual, expected);
     }
 
     public boolean isGreaterOrEqual(Version actual, Version expected)
