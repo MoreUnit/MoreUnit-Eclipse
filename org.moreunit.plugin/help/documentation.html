@@ -1,66 +1,124 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css"/>
-	<title>MoreUnit - Documentation</title>
-</head>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css" />
+		<title>MoreUnit - Documentation</title>
+    </head>
 
-<body>
-	<h1>Class decoration</h1>
-	Class decoration is implemented very simple. Based on the settings (testcase 
-	prefixes and suffixes) moreUnit tries to find a matching class in the underlying 
-	project. If "Test" is element of your testcase suffix list (this is the default setting
-	 on first installtion) for example Foo gets marked with a small green icon in the 
-	package explorer if a class named FooTest exists in the underlying project.<br>
-	Decoration is disabled by default. You have to enable label decoration via 
-	WINDOW &rarr; PREFERENCES... &rarr; APPEARANCE &rarr; LABEL DECORATIONS &rarr; Decorate Classes with TestCase. 
-	<h1> Method markers in the editor </h1>
-	To enable marker for methods in the editor you have to choose the "Add marker for tested
-	methods"-menu from a popup-menu of a project in the package explorer. It causes a scan of
-	all your Java projects and adds markers in the open editors. You have to choose this 
-	menu-option once after installing the plugin. If you have changed your preferences you 
-	should start a rescan for markers. 
-	<h1>View for missing testmethods</h1>
-	To open the view WINDOW &rarr; SHOW VIEW &rarr; OTHER &rarr; MISSING TESTMETHODS.
-	The view gets synchronized with the open java file and show all methods which do not
-	have a testcase. Within this view there are 3 possible actions:<br>
-	<ul>
-	<li>Filter getter/setter</li>
-	<li>Filter private methods</li>
-	<li>Add testmethods for selected methods</li>
-	</ul>	
-	<h1>Jump to test</h1>
-	From java files which are open in the editor you can jump to the corresponding testcase
-	via the popupmenu of the editor or via the shortcut "Strg"+"J". moreUnit identifies the 
-	name of the class under the cursor position. To find the coresponding testcase the prefixes
-	and suffixes from the preferences are used. If exactly one testcase is found the file gets
-	opened. If more than one testcase is found a dialog is shown and the user can chose which 
-	testcase he wants to work on. If no testcase is found the testcase wizard is show initialized
-	with the settings from the preference page.<br>
-	moreUnit tries to identify the corresponding testmethod of the actual cursor position 
-	and jumps to the method signature of the test case.<br>
-	Example: For a method named "addTree" tests named "testAddTree" or "testAddTreeSUFFIX"
-	will be detected as testmethod.
-	<h1> Generate test</h1>
-	To generate a test-method stub choose "Generate Test" from the popupmenu within an editor. 
-	moreUnit identifies the method under cursor position and generates a testmethod stub. 
-	At first moreUnit tries to find a testcase for the underlying resource (if you want to know 
-	how this is done, take a look above at "Jump to test"). If no testcase is found the testcase 
-	wizard is shown. If the method under cursor position is named "amethodname" the generated 
-	test method will be name "testAmethodname". If moreUnit detects a testmethod with this name 
-	no method stub is generated. moreUnit doesn't jump to the testmethod automatically so you 
-	have to jump to the testcase if you want to edit it.<br>
-	The shortcuts for the jump/generate action are configurable. If you want to change the 
-	default keys go to WINDOW &rarr; PREFERENCES... &rarr; GENERAL &rarr; KEYS and change the 
-	settings of the commands named "CreateTestMethod" and "JumpToTest".<br>
-	If you use the "Generate test" action on a testmethod moreUnit creates a second testmethod. 	
-	<h1>Refactoring support</h1>
-	moreUnit offers some refactoring support. If you rename a class and a corresponding 
-	testcase exists moreUnit pops up a message box and ask if the corresponding testcase 
-	should be renamed either. For methods there is a similar behaviour. If you rename a 
-	method with one or more corresponding testmethods a method dialog with the corresponding 
-	testmethods is shown and you can start rename of the tests at once.
-</body>
+	<body>
+		
+		<h1>Class decoration</h1>
+		
+		<p>Class decoration is implemented in a very simple way. Based on
+		the settings (test case prefixes and suffixes) MoreUnit tries to find a
+		matching class in the underlying project. If for instance "Test" is an
+		element of your test case suffix list (this is the default setting on
+		first installation) Foo will be marked with a small green icon in the
+		package explorer if a class named FooTest exists in the underlying
+		project.</p>
+		
+		<p>Decoration is disabled by default. You have to enable label
+		decoration via WINDOWS &rarr; PREFERENCES &rarr; GENERAL &rarr;
+		APPEARANCE &rarr; LABEL DECORATIONS &rarr; DECORATE CLASSES WITH TEST
+		CASE.</p>
+		
+		
+		<h1>Marker in the editor</h1>
+		
+		<p>After installing and configuring MoreUnit you can see markers in
+		the editor, while coding. If a method has a test method, a green marker
+		will appear in the vertical ruler.</p>
+		
+		<p>If you want MoreUnit markers to appear in the overview ruler or
+		if you want to disable markers in the editor this can be done via the
+		annotation preferences of Eclipse.</p>
+		
+		
+		<h1>Switching between test and class under test</h1>
+		
+		<p>You can jump from java classes which are open in the editor to
+		the corresponding test cases via the contextual menu of the editor or
+		via the shortcut "Ctrl"+"J". MoreUnit identifies the name of the class
+		under the cursor. To find the corresponding test case the prefixes and
+		suffixes from the preferences are used. If exactly one test case is
+		found the file gets opened. If more than one test case is found a dialog
+		is shown and prompts you to choose which test case you want to work on.</p>
+		
+		<p>If no test case is found the test case wizard is shown,
+		initialized with the settings from the preference page.</p>
+		
+		<p>MoreUnit also tries to identify the test method(s) corresponding
+		to the method under the cursor and directly jumps to it if only one is
+		found.<br />
+		Example: For a method named "addTree" tests named "testAddTree" or
+		"testAddTreeSUFFIX" will be detected as test method.</p>
+		
+		<p>Also, if you activated the extended method search, a test method
+		that calls your method will be found, whatever its name.<br />
+		Finally, please note that jumping also works the other way, to go back
+		to your production code.</p>
+		
+		<p>The shortcuts for the jump/generate action are configurable. If
+		you want to change the default keys go to WINDOW &rarr; PREFERENCES...
+		&rarr; GENERAL &rarr; KEYS and change the settings of the commands named
+		"Create Test Method" and "Jump to Test".</p>
+		
+		
+		<h1>Test case/test method creation</h1>
+		
+		<p>To generate a test-method stub choose "Generate Test" from the
+		pop-up menu within an editor. MoreUnit identifies the method under the
+		cursor and generates a test method stub. At first MoreUnit tries to find
+		a test case for the underlying resource (if you want to know how this is
+		done, take a look above at "Jump to test"). If no test case is found the
+		test case wizard is shown. If the method under the cursor is named
+		"amethodname" the generated test method will be name "testAmethodname",
+		assuming you defined "test" as a prefix in MoreUnit preferences. If
+		MoreUnit detects a test method with this name no method stub is
+		generated.</p>
+		
+		<p>MoreUnit doesn't jump to the test method automatically so you
+		have to jump to the test case if you want to edit it.<br />
+		The shortcuts for the jump/generate action are configurable. If you want
+		to change the default keys go to WINDOW &rarr; PREFERENCES... &rarr;
+		GENERAL &rarr; KEYS and change the settings of the commands named
+		"Create Test Method" and "Jump to Test".</p>
+		
+		<p>If you use the "Generate Test" action on a test method MoreUnit
+		creates a second test method.</p>
+		
+		
+		<h1>Running a test from class under test</h1>
+		
+		<p>If you have a class under test you can run the corresponding test
+		case class(es) directly from this class by hitting Ctrl+R.</p>
+		
+		
+		<h1>View for missing test methods</h1>
+		
+		<p>MoreUnit offers a view to show the methods of the classes you are
+		working on which do not have a test method yet. To use this view just
+		open it: WINDOW &rarr; SHOW VIEW &rarr; OTHER... &rarr; MISSING TEST
+		METHODS.<br />
+		This view offers 3 features:</p>
+		<ul>
+			<li>Filter private methods</li>
+			<li>Filter getter/setter</li>
+			<li>Create test methods for selected methods</li>
+		</ul>
+		
+		
+		<h1>Refactoring support</h1>
+		
+		<p>MoreUnit offers some refactoring support. If you rename a class
+		and a corresponding test case exists MoreUnit will rename it too. You
+		can take a look at the refactoring preview. For methods there is a
+		similar behavior: if you rename a method having one or more
+		corresponding test methods, then all those methods are renamed
+		accordingly. Lastly, if you move a class to a different package MoreUnit
+		will move the corresponding tests as well.</p>
+		
+	</body>
 </html>
