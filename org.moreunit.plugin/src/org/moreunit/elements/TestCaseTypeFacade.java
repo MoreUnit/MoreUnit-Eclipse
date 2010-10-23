@@ -78,7 +78,12 @@ public class TestCaseTypeFacade extends TypeFacade
         List<IType> resultList = new ArrayList<IType>();
         try
         {
-            List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
+            List<String> typeNames = testedClasses;
+            if(preferences.shouldUseFlexibleTestCaseNaming(getJavaProject()))
+            {
+                typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
+            }
+                    
             for (String typeName : typeNames)
             {
                 Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit, getSearchScope(compilationUnit));
@@ -92,39 +97,6 @@ public class TestCaseTypeFacade extends TypeFacade
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
-        // System.out.println(
-        // "TestCaseTypeFacade.getCorresponingClassesUnderTest ResultList.size(): "
-        // + resultList.size());
-        return resultList;
-    }
-
-    public static List<IType> getsCorrespondingClassesUnderTest(IType type, ICompilationUnit compilationUnit)
-    {
-        Preferences preferences = Preferences.getInstance();
-        List<String> testedClasses = BaseTools.getTestedClass(type.getTypeQualifiedName(), preferences.getPrefixes(compilationUnit.getJavaProject()), preferences.getSuffixes(compilationUnit.getJavaProject()), preferences.getTestPackagePrefix(compilationUnit.getJavaProject()), preferences.getTestPackageSuffix(compilationUnit.getJavaProject()));
-        if(testedClasses.isEmpty())
-        {
-            return null;
-        }
-
-        List<IType> resultList = new ArrayList<IType>();
-        try
-        {
-            List<String> typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
-            for (String typeName : typeNames)
-            {
-                Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit, getSearchScope(compilationUnit));
-                for (IType searchForResult : searchFor)
-                {
-                    resultList.add(searchForResult);
-                }
-            }
-        }
-        catch (Exception exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-        System.out.println("TestCaseTypeFacade.getCorresponingClassesUnderTest ResultList.size(): " + resultList.size());
         return resultList;
     }
 
@@ -270,6 +242,9 @@ public class TestCaseTypeFacade extends TypeFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.26  2010/10/20 10:40:23  ndemengel
+// Allows to find several methods under test by name for a given test method
+//
 // Revision 1.25  2010/10/17 11:02:34  ndemengel
 // Reviews extended method search (simplified for better accuracy)
 //

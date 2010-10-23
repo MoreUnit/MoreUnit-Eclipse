@@ -14,11 +14,21 @@ public class PreferencesMock extends Preferences
 
     private String[] prefixes;
     private String[] suffixes;
+    
+    private boolean isFlexibleTestCaseNaming;
 
     public PreferencesMock(String[] prefixes, String[] suffixes)
     {
         this.prefixes = prefixes;
         this.suffixes = suffixes;
+        
+        Preferences.setInstance(this);
+    }
+    
+    public PreferencesMock(boolean isFlexibleTestCaseNaming)
+    {
+        this.isFlexibleTestCaseNaming = isFlexibleTestCaseNaming;
+        Preferences.setInstance(this);
     }
 
     public String[] getPrefixes(IJavaProject javaProject)
@@ -40,10 +50,19 @@ public class PreferencesMock extends Preferences
     {
         this.suffixes = suffixes;
     }
+    
+    @Override
+    public boolean shouldUseFlexibleTestCaseNaming(IJavaProject javaProject)
+    {
+        return isFlexibleTestCaseNaming;
+    }
 
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2009/04/05 19:15:32  gianasista
+// code formatter
+//
 // Revision 1.1 2008/02/04 20:41:11 gianasista
 // Initital
 //

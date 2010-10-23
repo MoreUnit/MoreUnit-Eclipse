@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
+import org.moreunit.preferences.Preferences;
+import org.moreunit.util.PreferencesMock;
 
 public class TestCaseTypeFacadeTest extends SimpleProjectTestCase
 {
@@ -162,5 +164,29 @@ public class TestCaseTypeFacadeTest extends SimpleProjectTestCase
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod, false, true, null);
 
         assertEquals(getNumberOneMethod, oneCorrespondingMemberUnderTest);
+    }
+
+    @Test
+    public void testGetCorrespondingClassesUnderTest() throws Exception
+    {
+        createJavaClass("One", true);
+        createJavaClass("OneTwo", true);
+        
+        IType testCaseType = createTestCase("OneTwoTest", true);
+        
+        PreferencesMock preferencesMock = new PreferencesMock(true);
+        preferencesMock.setSuffixes(new String[] {"Test"});
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testCaseType.getCompilationUnit());
+        List<IType> list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
+        assertEquals(2, list.size());
+        assertEquals("OneTwo", list.get(0).getElementName());
+        assertEquals("One", list.get(1).getElementName());
+        
+        preferencesMock = new PreferencesMock(false);
+        preferencesMock.setSuffixes(new String[] {"Test"});
+        testCaseTypeFacade = new TestCaseTypeFacade(testCaseType.getCompilationUnit());
+        list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
+        assertEquals(1, list.size());
+        assertEquals("OneTwo", list.get(0).getElementName());
     }
 }
