@@ -18,5 +18,8 @@
    <feature url="features/org.moreunit_2.2.0.jar" id="org.moreunit" version="2.2.0">
       <category name="moreunit.org"/>
    </feature>
+   <feature url="features/org.moreunit_2.2.1.jar" id="org.moreunit" version="2.2.1">
+      <category name="moreunit.org"/>
+   </feature>
    <category-def name="moreunit.org" label="MoreUnit"/>
 </site>
