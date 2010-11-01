@@ -3,6 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: org.moreunit.test
 Bundle-Version: 2.0.2.qualifier
-Bundle-ClassPath: .,lib/cglib-nodep-2.2.jar,lib/easymock.jar,lib/easymockclassextension.jar
+Bundle-ClassPath: .,
+ lib/asm.jar,
+ lib/cglib.jar,
+ lib/easymock.jar,
+ lib/objenesis.jar
 Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.core.resources,org.eclipse.jdt.core,org.eclipse.jdt.ui,org.eclipse.jface.text,org.eclipse.ui.editors,org.eclipse.jdt.launching,org.eclipse.ltk.core.refactoring,org.eclipse.ltk.ui.refactoring,org.eclipse.ui.workbench.texteditor,org.eclipse.jdt.junit,org.eclipse.jdt.core.manipulation,org.moreunit,org.junit4;bundle-version="4.3.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
