@@ -1,0 +1,92 @@
+This is a draft describing how an extension of MoreUnit could create mock objects in tests.
+
+Use cases:
+* the user creates a test class using MoreUnit: a new setting page is present in the wizard that let him choose dependencies to mock
+* the user right-clicks on a class and asks for all its dependencies to be mocked in a (possibly existing) test class
+* the user right-clicks on a dependency of a class and asks for it to be mocked in a (possibly existing) test class
+* ...
+
+Parts of a Java test class that may be involved in mocking objects:
+* class: annotation(s) or parent that add some mocking features
+* fields: declaration of mocks and object under test, maybe annotated
+* set-up method: creation of mock objects and instantiation of the object under test, maybe annotated
+* (test method: declaration of mocks and object under test, creation of mock objects and instantiation of the object under test)
+
+Description of a "mocking template":
+* parts of the test class involved, each coming together with a template that describes it
+
+Variables supported to define templates:
+* mockObject: the mock object
+* mockObjectClass: the full class name of the mock object
+* mockObjectType: only the type part of the mock object's class name
+* mockObjectN: a Nth mock object, useful to describe the right way to create and use several mock objects
+* mockObjectClassN: the full class name of the Nth mock object
+* mockObjectTypeN: only the type part of the Nth mock object's class name
+* objectUnderTest: the object under test, that will receive the mock object(s)
+* objectUnderTestClass: the full class name of the object under test
+* objectUnderTestType: only the type part of the object under test's class name
+* testCaseType: the type (simple class name) of the test case
+
+Functions available within variables:
+* ${someObject.set(variableObjectOrType)}: will find the right setter to call on ${someObject} to inject ${variableObjectOrType}
+* ${someObject.new(variableObjectOrType, variableObjectOrType2)}: will find the right constructor to call on ${someObject} to inject ${variableObjectOrType} and ${variableObjectOrType2}
+
+Template format:
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mocking-templates version="1.0">
+    <mocking-template>
+        <code-templates>
+            <code-template part="(test-class-annotation
+                |test-class-parent
+                |test-class-fields
+                |before-instance-method
+                |test-method
+                |after-instance-method)">
+                <imports>comma.Separated,list.Of,imports.*</imports>
+                <static-imports>comma.separated,list.of,static.imports.*</static-imports>
+                <code><![ CDATA [
+                    // some Java codes using available ${variables}
+                ]]></code>
+            </code-template>
+        </code-templates>
+    </mocking-template>
+</mocking-templates>
+
+
+Examples:
+
+# A description of how to create mock objects with Mockito annotations and inject them via the setters of the object under test
+<mocking-templates version="1.0">
+    <mocking-template
+        id="org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner"
+        name="Mockito with annotations and JUnit runner">
+        <code-templates>
+            <code-template part="test-class-annotation">
+                <imports>org.junit.runner.RunWith,org.mockito.runners.MockitoJUnitRunner</imports>
+                <code><![ CDATA [
+                    @RunWith(MockitoJUnitRunner.class)
+                ]]></code>
+            </code-template>
+            <code-template part="test-class-fields">
+                <imports>org.mockito.Mock</imports>
+                <code><![ CDATA [
+                    @Mock private ${mockObjectType} ${mockObject};
+                    @Mock private ${mockObjectTypeN} ${mockObjectN};
+                ]]></code>
+            </code-template>
+            <code-template part="before-instance-method">
+                <code><![ CDATA [
+                    ${objectUnderTestType} ${objectUnderTest} = new ${objectUnderTestType}();
+                    ${objectUnderTest}.${set(mockObject)};
+                    ${objectUnderTest}.${set(mockObjectN)};
+                ]]></code>
+            </code-template>
+        </code-templates>
+    </mocking-template>
+</mocking-templates>
+
+Note: insertion algorithm:
+1. search for the first line of code to insert in the code part concerned. If found, search for the next line, and so on.
+2. insert only code that is not already present, just below the already present code if any, otherwise at the end of the part.
+
+Imports are automatically managed when they concern known objects such as @{mockObject}.
