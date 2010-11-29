@@ -70,6 +70,7 @@
              icon="icons/moreunitLogo.gif"
              path="additions">
              <separator name="top" />
+             <separator name="group2" />
          </menu>
       </viewerContribution>
       <viewerContribution
