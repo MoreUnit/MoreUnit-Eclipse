@@ -15,8 +15,8 @@ public class XmlTemplateDefinitionReader
         try
         {
             JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
-            Unmarshaller u = jc.createUnmarshaller();
-            return (MockingTemplates) u.unmarshal(is);
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            return (MockingTemplates) unmarshaller.unmarshal(is);
         }
         catch (JAXBException e)
         {

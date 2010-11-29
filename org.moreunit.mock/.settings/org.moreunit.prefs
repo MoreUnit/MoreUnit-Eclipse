@@ -1,0 +1,10 @@
+#Mon Nov 29 20:26:43 CET 2010
+eclipse.preferences.version=1
+org.moreunit.extendedTestMethodSearch=true
+org.moreunit.flexiblenaming=true
+org.moreunit.prefixes=
+org.moreunit.test.test_methodDefaultContent=org.junit.Assert.fail("Not implemented yet");
+org.moreunit.test_methodType=testMethodTypeNoPrefix
+org.moreunit.test_type=junit4
+org.moreunit.unitsourcefolder=org.moreunit.mock\:src/main/java\:org.moreunit.mock\:src/test/java
+org.moreunit.useprojectsettings=true
