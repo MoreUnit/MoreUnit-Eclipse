@@ -46,10 +46,7 @@ public class POC
             return;
         }
 
-        for (CodeTemplate codeTemplate : templates.iterator().next().codeTemplates())
-        {
-            applyTemplate(type, codeTemplate);
-        }
+        applyTemplate(templates.iterator().next(), type);
     }
 
     public MockingTemplates readTemplates(String templateDirectory)
@@ -100,6 +97,14 @@ public class POC
         }
     }
 
+    public void applyTemplate(MockingTemplate mockingTemplate, IType type)
+    {
+        for (CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
+        {
+            applyTemplate(type, codeTemplate);
+        }
+    }
+
     private void applyTemplate(IType type, final CodeTemplate codeTemplate)
     {
         ICompilationUnit compilationUnit = type.getCompilationUnit();
@@ -122,6 +127,37 @@ public class POC
         try
         {
             Document document = new Document(getSource(compilationUnit));
+
+            // 1st way
+            // // creation of DOM/AST from a ICompilationUnit
+            // ASTParser parser = ASTParser.newParser(AST.JLS3);
+            // parser.setSource(compilationUnit);
+            // CompilationUnit astRoot = (CompilationUnit)
+            // parser.createAST(null);
+            //
+            // // start record of the modifications
+            // astRoot.recordModifications();
+            //
+            // // modify the AST
+            // TypeDeclaration typeDeclaration =
+            // (TypeDeclaration)astRoot.types().get(0);
+            // SingleMemberAnnotation annotation =
+            // astRoot.getAST().newSingleMemberAnnotation();
+            // annotation.setTypeName(astRoot.getAST().newName("RunWith"));
+            // typeDeclaration.modifiers().add(0,annotation);
+            //
+            // // computation of the text edits
+            // TextEdit edits = astRoot.rewrite(document,
+            // compilationUnit.getJavaProject().getOptions(true));
+            //
+            // // computation of the new source code
+            // edits.apply(document);
+            // String newSource = document.get();
+            //
+            // // update of the compilation unit
+            // compilationUnit.getBuffer().setContents(newSource);
+
+            // 2nd way, should be generalizable
             applyTemplate(type, codeTemplate, document);
             ICompilationUnit wc = compilationUnit.getWorkingCopy(new NullProgressMonitor());
             wc.getBuffer().setContents(document.get());
@@ -133,6 +169,14 @@ public class POC
             e1.printStackTrace();
             return;
         }
+        // catch (MalformedTreeException e)
+        // {
+        // e.printStackTrace();
+        // }
+        // catch (BadLocationException e)
+        // {
+        // e.printStackTrace();
+        // }
     }
 
     private void applyTemplate(IType type, final CodeTemplate codeTemplate, IDocument document) throws JavaModelException
@@ -186,9 +230,9 @@ public class POC
 
         try
         {
-            // int offset = type.getNameRange().getOffset();
-            // System.out.println("name offset: " + offset);
-            new InsertEdit(15, templateBuffer.getString()).apply(document);
+            int offset = type.getSourceRange().getOffset();
+            System.out.println("name offset: " + offset);
+            new InsertEdit(offset, templateBuffer.getString()).apply(document);
         }
         catch (MalformedTreeException e)
         {

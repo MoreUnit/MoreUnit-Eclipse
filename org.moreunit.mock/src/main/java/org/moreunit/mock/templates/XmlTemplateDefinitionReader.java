@@ -1,6 +1,5 @@
 package org.moreunit.mock.templates;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.bind.JAXBContext;
@@ -21,18 +20,6 @@ public class XmlTemplateDefinitionReader
         catch (JAXBException e)
         {
             throw new TemplateException("Could not read XML definition", e);
-        }
-        finally
-        {
-            try
-            {
-                is.close();
-            }
-            catch (IOException e)
-            {
-                // TODO loghandler
-                e.printStackTrace();
-            }
         }
     }
 }
