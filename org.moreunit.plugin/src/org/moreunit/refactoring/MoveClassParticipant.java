@@ -16,7 +16,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.jdt.core.refactoring.descriptors.MoveDescriptor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.Refactoring;
@@ -25,9 +24,6 @@ import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -43,6 +39,7 @@ public class MoveClassParticipant extends MoveParticipant
     private ICompilationUnit compilationUnit;
     private ClassTypeFacade javaFileFacade;
 
+    @Override
     protected boolean initialize(Object element)
     {
         compilationUnit = (ICompilationUnit) element;
@@ -50,18 +47,26 @@ public class MoveClassParticipant extends MoveParticipant
         return true;
     }
 
+    @Override
     public String getName()
     {
         return "MoreUnit testcase move operation";
     }
 
+    @Override
     public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
     {
         return new RefactoringStatus();
     }
 
+    @Override
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
+        if(! (getArguments().getDestination() instanceof IPackageFragment))
+        {
+            return null;
+        }
+
         try
         {
             IPackageFragment moveClassDestinationPackage = (IPackageFragment) getArguments().getDestination();
@@ -149,6 +154,9 @@ public class MoveClassParticipant extends MoveParticipant
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.9 2009/04/05 19:14:27 gianasista
+// code formatter
+//
 // Revision 1.8 2008/02/29 21:32:19 gianasista
 // Minor refactorings
 //
