@@ -113,17 +113,7 @@ public class TestmethodCreator
 
     private IMethod createAnotherTestMethod(IMethod testMethod)
     {
-        String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testCaseCompilationUnit);
-        IMethod testedMethod = null;
-        try
-        {
-            testedMethod = BaseTools.getFirstMethodWithSameNamePrefix(testCaseTypeFacade.getCorrespondingClassUnderTest().getMethods(), testedMethodName);
-        }
-        catch (JavaModelException e)
-        {
-            LogHandler.getInstance().handleExceptionLog(e);
-        }
+        IMethod testedMethod = getCorrespondingTestedMethod(testMethod);
 
         if(testedMethod != null)
         {
@@ -141,6 +131,26 @@ public class TestmethodCreator
         }
 
         return null;
+    }
+
+    private IMethod getCorrespondingTestedMethod(IMethod testMethod)
+    {
+        IType classUnderTest = new TestCaseTypeFacade(testCaseCompilationUnit).getCorrespondingClassUnderTest();
+        if (classUnderTest == null) {
+            LogHandler.getInstance().handleWarnLog("Could not retrieve class under test");
+            return null;
+        }
+        
+        try
+        {
+            String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
+            return BaseTools.getFirstMethodWithSameNamePrefix(classUnderTest.getMethods(), testedMethodName);
+        }
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+            return null;
+        }
     }
     
     /**

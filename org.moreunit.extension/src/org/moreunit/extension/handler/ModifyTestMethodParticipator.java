@@ -91,7 +91,15 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Inits
 		IMethod testMethod = context.getTestMethod();
 		IMethod methodUnderTest = context.getMethodUnderTest();
-		TestType testType = TestType.getTestType(context.getClassUnderTest());
+		ICompilationUnit classUnderTest = context.getClassUnderTest();
+
+		// TODO Nicolas to Andreas: I let you determine what to do in the following case
+		if (classUnderTest == null) {
+			LogHandler.getInstance().handleWarnLog("Missing class under test");
+			return;
+		}
+
+		TestType testType = TestType.getTestType(classUnderTest);
 		LogHandler.getInstance().handleInfoLog("Context: " + context);
 		LogHandler.getInstance().handleInfoLog("TestType: " + testType);
 

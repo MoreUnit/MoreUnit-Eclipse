@@ -38,6 +38,7 @@ import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodFacade;
+import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
@@ -97,13 +98,18 @@ public class EditorActionExecutor
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
         ICompilationUnit compilationUnitCurrentlyEdited = editorPartFacade.getCompilationUnit();
 
-        ICompilationUnit compilationUnitForUnitUnderTest = null;
-        ICompilationUnit compilationUnitForTestCase = null;
-        boolean newTestClassCreated = false;
+        final ICompilationUnit compilationUnitForUnitUnderTest;
+        final ICompilationUnit compilationUnitForTestCase;
+        final boolean newTestClassCreated;
 
         if(TypeFacade.isTestCase(compilationUnitCurrentlyEdited.findPrimaryType()))
         {
             compilationUnitForTestCase = compilationUnitCurrentlyEdited;
+            newTestClassCreated = false;
+            
+            // Nicolas to Andreas: prevents NPE in ModifyTestMethodParticipator
+            IType classUnderTest = new TestCaseTypeFacade(compilationUnitForTestCase).getCorrespondingClassUnderTest();
+            compilationUnitForUnitUnderTest = classUnderTest == null ? null : classUnderTest.getCompilationUnit();
         }
         else
         {
@@ -122,6 +128,10 @@ public class EditorActionExecutor
 
         // Create test method template
         TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), compilationUnitForTestCase, Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
+        
+        // TODO Nicolas to Andreas: the method under the cursor is not
+        // necessarily a method under test, the user can create a new test
+        // method from another test method
         IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
         IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
@@ -350,6 +360,9 @@ public class EditorActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.31  2010/10/17 11:02:34  ndemengel
+// Reviews extended method search (simplified for better accuracy)
+//
 // Revision 1.30  2010/10/16 18:50:04  ndemengel
 // Refactors test launch ands removes unused dialog
 //
