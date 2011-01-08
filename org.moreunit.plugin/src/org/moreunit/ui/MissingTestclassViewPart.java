@@ -1,10 +1,5 @@
 package org.moreunit.ui;
 
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IPage;
@@ -39,7 +34,6 @@ public class MissingTestclassViewPart extends PageBookView
     @Override
     protected PageRec doCreatePage(IWorkbenchPart workbenchPart)
     {
-        // TODO I wasn't sure the correct way to get the compilation unit
         if(missingClassPage == null)
         {
             EditorPartFacade editorPartFacade = new EditorPartFacade((IEditorPart) workbenchPart);
@@ -64,17 +58,7 @@ public class MissingTestclassViewPart extends PageBookView
     @Override
     protected boolean isImportant(IWorkbenchPart workbenchPart)
     {
-        //List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
-        IProject selectedProject = ResourcesPlugin.getWorkspace().getRoot().getProject();
-        // TODO this one place where I'm a little stuck
-        System.out.println(selectedProject);
-        /*
-        for (IJavaProject javaProject : javaProjectsFromWorkspace)
-        {
-        }
-        */
         return (PluginTools.isJavaFile(workbenchPart));
-
     }
 
     public boolean refreshWasProjectWasPressed()

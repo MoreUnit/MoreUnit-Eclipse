@@ -18,8 +18,6 @@ import static org.junit.Assert.*;
 public class TestCaseDivinerTest extends SimpleProjectTestCase
 {
 
-    //private IPackageFragmentRoot junitSourceRoot;
-
     @Test
     public void testGetMatchesOnlySuffix() throws CoreException
     {
@@ -31,8 +29,6 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
         IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTestNG");
 
         PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] { "Test" });
-        // TODO
-        // Preferences.setInstance(preferencesMock);
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
         Set<IType> result = testCaseDiviner.getMatches();
         assertNotNull(result);
@@ -115,6 +111,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2010/06/30 22:51:52  makkimesser
+// FindBugs-Warning resolved
+//
 // Revision 1.9  2009/11/08 20:09:51  gianasista
 // Refactoring of tests
 //

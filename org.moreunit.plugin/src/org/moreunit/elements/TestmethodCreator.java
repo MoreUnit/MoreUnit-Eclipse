@@ -128,9 +128,7 @@ public class TestmethodCreator
         if(testedMethod != null)
         {
             String testMethodName = testMethod.getElementName();
-            // TODO verify correct
-            // String testMethodName = MoreUnitContants.TEST_METHOD_PRAEFIX +
-            // BaseTools.firstCharToUpperCase(testedMethod.getElementName());
+            
             if(doesMethodExist(testMethodName))
                 testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 

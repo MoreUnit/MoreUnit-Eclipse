@@ -29,8 +29,6 @@ public class EditorPartFacade
 
     private IEditorPart editorPart;
 
-    // private JavaFileFacade javaFileFacade;
-
     public EditorPartFacade(IEditorPart editorPart)
     {
         this.editorPart = editorPart;
@@ -58,13 +56,6 @@ public class EditorPartFacade
         ISelectionProvider selectionProvider = site.getSelectionProvider();
         return (ITextSelection) selectionProvider.getSelection();
     }
-
-    // public JavaFileFacade getJavaFileFacade() {
-    // if(javaFileFacade == null)
-    // javaFileFacade = new JavaFileFacade(getCompilationUnit());
-    //		
-    // return javaFileFacade;
-    // }
 
     public IMethod getMethodUnderCursorPosition()
     {
@@ -124,7 +115,7 @@ public class EditorPartFacade
      * Returns the first method that surrounds the cursor position and that is
      * not part of an anonymous type.
      */
-    // TODO determine whether this behavior would be preferable to the current
+    // TODO Nicolas: determine whether this behavior would be preferable to the current
     // getMethodUnderCursorPosition() in any case
     public IMethod getFirstNonAnonymousMethodSurroundingCursorPosition()
     {
@@ -158,6 +149,9 @@ public class EditorPartFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2010/08/15 17:05:00  ndemengel
+// Feature Requests 3036484: part 1, prevents running a non-test method
+//
 // Revision 1.7  2010/06/30 22:55:56  makkimesser
 // CodeWarnings resolved
 // Deprecated API removed

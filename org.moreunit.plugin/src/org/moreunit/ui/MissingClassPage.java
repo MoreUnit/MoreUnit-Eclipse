@@ -12,17 +12,11 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.Page;
-import org.moreunit.MoreUnitPlugin;
-import org.moreunit.elements.MissingClassTreeContentProvider;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.PluginTools;
@@ -32,10 +26,7 @@ import org.moreunit.util.TestCaseDiviner;
 
 public class MissingClassPage extends Page implements IElementChangedListener
 {
-    //private TreeViewer treeViewer;
     private ICompilationUnit compilationUnit;
-    //private Action refreshAction;
-    //private boolean display = false;
 
     public MissingClassPage(ICompilationUnit compilationUnit)
     {
@@ -49,19 +40,11 @@ public class MissingClassPage extends Page implements IElementChangedListener
     {
         Combo combo = new Combo(parent, SWT.NONE);
         combo.setItems(new String[] { "A", "B", "C" });
-        /*
-         * if (treeViewer == null) { treeViewer = new TreeViewer(parent);
-         * createToolbar(); }
-         */
     }
 
     @Override
     public Control getControl()
     {
-        //if(treeViewer != null)
-        //{
-        //    return treeViewer.getControl();
-        //}
         return null;
     }
 
@@ -112,32 +95,5 @@ public class MissingClassPage extends Page implements IElementChangedListener
         IPackageFragmentRoot sourceFolder = PluginTools.getSourceFolder(compilationUnit);
         return SearchScopeSingelton.getInstance().getSearchScope(sourceFolder);
     }
-
-    /*
-    private void updateUi()
-    {
-        treeViewer.setContentProvider(new MissingClassTreeContentProvider());
-        treeViewer.setLabelProvider(new JavaElementLabelProvider());
-        treeViewer.setInput(this);
-    }*/
-
-    /*
-    private void createToolbar()
-    {
-        refreshAction = new Action("Refresh")
-        {
-            @Override
-            public void run()
-            {
-                updateUi();
-            }
-        };
-        refreshAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/refresh.png"));
-
-        IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
-        toolBarManager.add(refreshAction);
-        // TODO I'm also a little stuck here, I've spent a little too much time
-        // trying to get a nice menu / combo box, in the toolbar
-    }*/
 
 }
