@@ -5,19 +5,18 @@ import java.io.PrintStream;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
-import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.utils.IOUtils;
 import org.moreunit.wizards.MoreUnitStatus;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
 public class DefaultLogger implements Logger
 {
     private final ILog logger;
 
-    public DefaultLogger()
-    {
-        this(MoreUnitMockPlugin.getDefault().getLog());
-    }
-
+    @Inject
     public DefaultLogger(ILog logger)
     {
         this.logger = logger;

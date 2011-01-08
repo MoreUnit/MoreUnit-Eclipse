@@ -1,10 +1,12 @@
 package org.moreunit.mock;
 
+import static org.ops4j.peaberry.Peaberry.osgiModule;
+import static org.ops4j.peaberry.eclipse.EclipseRegistry.eclipseRegistry;
+
 import java.io.InputStream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.moreunit.mock.log.DefaultLogger;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.MockingTemplates;
@@ -12,6 +14,10 @@ import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
 import org.moreunit.mock.utils.IOUtils;
 import org.moreunit.wizards.MoreUnitStatus;
 import org.osgi.framework.BundleContext;
+
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 public class MoreUnitMockPlugin extends AbstractUIPlugin
 {
@@ -21,6 +27,7 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
 
     private static MoreUnitMockPlugin plugin;
 
+    private Injector injector;
     private Logger logger;
     private PluginResourceLoader pluginResourceLoader;
     private XmlTemplateDefinitionReader templateDefinitionReader;
@@ -35,18 +42,25 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
-        getLog().log(new MoreUnitStatus(IStatus.INFO, "Starting MoreUnit Mock Plugin..."));
+        log("Starting MoreUnit Mock Plugin...");
 
         plugin = this;
 
-        initDependencies(new DefaultLogger(getLog()), new PluginResourceLoader(), new XmlTemplateDefinitionReader(), new MockingTemplateStore());
+        Guice.createInjector(osgiModule(context, eclipseRegistry()), new MockPluginCoreModule()).injectMembers(this);
 
         loadDefaultMockingTemplates();
         getLogger().info("MoreUnit Mock Plugin started.");
     }
 
-    void initDependencies(Logger logger, PluginResourceLoader pluginResourceLoader, XmlTemplateDefinitionReader templateDefinitionReader, MockingTemplateStore templateStore)
+    private void log(String message)
     {
+        getLog().log(new MoreUnitStatus(IStatus.INFO, message));
+    }
+
+    @Inject
+    void initDependencies(Injector injector, Logger logger, PluginResourceLoader pluginResourceLoader, XmlTemplateDefinitionReader templateDefinitionReader, MockingTemplateStore templateStore)
+    {
+        this.injector = injector;
         this.logger = logger;
         this.pluginResourceLoader = pluginResourceLoader;
         this.templateDefinitionReader = templateDefinitionReader;
@@ -98,13 +112,15 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
         getLogger().info("Stopping MoreUnit Mock Plugin...");
 
         mockingTemplateStore.clear();
-        mockingTemplateStore = null;
-        templateDefinitionReader = null;
-        logger = null;
         plugin = null;
 
-        getLog().log(new MoreUnitStatus(IStatus.INFO, "MoreUnit Mock Plugin stopped."));
+        log("MoreUnit Mock Plugin stopped.");
         super.stop(context);
+    }
+
+    public Injector getInjector()
+    {
+        return injector;
     }
 
     public MockingTemplateStore getTemplateStore()

@@ -6,6 +6,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class XmlTemplateDefinitionReader
 {
 

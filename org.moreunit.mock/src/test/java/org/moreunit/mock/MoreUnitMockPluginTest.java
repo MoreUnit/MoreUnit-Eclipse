@@ -38,7 +38,7 @@ public class MoreUnitMockPluginTest
     public void setUp() throws Exception
     {
         plugin = new MoreUnitMockPlugin();
-        plugin.initDependencies(logger, resourceLoader, templateDefinitionReader, templateStore);
+        plugin.initDependencies(null, logger, resourceLoader, templateDefinitionReader, templateStore);
     }
 
     @Test

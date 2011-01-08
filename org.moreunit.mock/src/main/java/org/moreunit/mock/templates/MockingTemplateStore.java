@@ -3,6 +3,9 @@ package org.moreunit.mock.templates;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class MockingTemplateStore
 {
     private final Map<String, MockingTemplate> templates = new HashMap<String, MockingTemplate>();
