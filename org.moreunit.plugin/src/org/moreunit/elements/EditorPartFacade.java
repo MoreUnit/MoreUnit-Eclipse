@@ -3,7 +3,7 @@
  */
 package org.moreunit.elements;
 
-import java.util.List;
+import static org.moreunit.util.Preconditions.checkNotNull;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -27,27 +27,29 @@ import org.moreunit.util.MoreUnitContants;
 public class EditorPartFacade
 {
 
-    private IEditorPart editorPart;
+    private final IEditorPart editorPart;
+    private final IFile file;
 
     public EditorPartFacade(IEditorPart editorPart)
     {
+        checkNotNull(editorPart, "Can not wrap a null editor part");
         this.editorPart = editorPart;
+        this.file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
     }
 
     public IFile getFile()
     {
-        return (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
+        return file;
     }
 
     public boolean isJavaFile()
     {
-        IFile file = getFile();
         return file != null && file.getName().endsWith(MoreUnitContants.JAVA_FILE_EXTENSION);
     }
 
     public ICompilationUnit getCompilationUnit()
     {
-        return JavaCore.createCompilationUnitFrom(getFile());
+        return file == null ? null : JavaCore.createCompilationUnitFrom(file);
     }
 
     public ITextSelection getTextSelection()
@@ -62,13 +64,17 @@ public class EditorPartFacade
         IMethod method = null;
         try
         {
-            IJavaElement javaElement = getCompilationUnit().getElementAt(getTextSelection().getOffset());
+            ICompilationUnit compilationUnit = getCompilationUnit();
+            if(compilationUnit == null)
+                return null;
+
+            IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
             if(javaElement instanceof IMethod)
             {
                 method = (IMethod) javaElement;
             }
             else
-                LogHandler.getInstance().handleInfoLog("No method found.");
+                LogHandler.getInstance().handleInfoLog("No method found under cursor position.");
         }
         catch (JavaModelException e)
         {
@@ -80,30 +86,8 @@ public class EditorPartFacade
 
     public IJavaProject getJavaProject()
     {
-        return getCompilationUnit().getJavaProject();
-    }
-
-    public IMethod getFirstTestMethodForMethodUnderCursorPosition(IType testcaseType)
-    {
-        if(TypeFacade.isTestCase(getCompilationUnit().findPrimaryType()))
-            return null;
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(getCompilationUnit());
-
-        IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-        return classTypeFacade.getCorrespondingTestMethod(methodUnderCursorPosition, testcaseType);
-    }
-
-    public List<IMethod> getTestmethodsForMethodUnderCursorPosition()
-    {
-        if(TypeFacade.isTestCase(getCompilationUnit().findPrimaryType()))
-            return null;
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(getCompilationUnit());
-
-        IMethod methodUnderCursorPosition = getMethodUnderCursorPosition();
-        classTypeFacade.getOneCorrespondingTestCase(false);
-        return classTypeFacade.getCorrespondingTestMethods(methodUnderCursorPosition);
+        ICompilationUnit compilationUnit = getCompilationUnit();
+        return compilationUnit == null ? null : compilationUnit.getJavaProject();
     }
 
     public IEditorPart getEditorPart()
@@ -115,8 +99,8 @@ public class EditorPartFacade
      * Returns the first method that surrounds the cursor position and that is
      * not part of an anonymous type.
      */
-    // TODO Nicolas: determine whether this behavior would be preferable to the current
-    // getMethodUnderCursorPosition() in any case
+    // TODO Nicolas: determine whether this behavior would be preferable to the
+    // current getMethodUnderCursorPosition() in any case
     public IMethod getFirstNonAnonymousMethodSurroundingCursorPosition()
     {
         IMethod method = getFirstMethodSurroundingCursorPosition();
@@ -128,7 +112,11 @@ public class EditorPartFacade
         IMethod method = null;
         try
         {
-            IJavaElement javaElement = getCompilationUnit().getElementAt(getTextSelection().getOffset());
+            ICompilationUnit compilationUnit = getCompilationUnit();
+            if(compilationUnit == null)
+                return null;
+
+            IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
             if(javaElement instanceof IMethod)
             {
                 method = (IMethod) javaElement;
@@ -138,7 +126,7 @@ public class EditorPartFacade
                 method = (IMethod) javaElement.getParent();
             }
             else
-                LogHandler.getInstance().handleInfoLog("No method found.");
+                LogHandler.getInstance().handleInfoLog("No method found surrounding cursor position.");
         }
         catch (JavaModelException e)
         {
@@ -149,15 +137,18 @@ public class EditorPartFacade
 }
 
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2010/08/15 17:05:00  ndemengel
+// Revision 1.9 2011/01/08 18:01:03 ndemengel
+// Removes commented out code and TODOs that are not relevant anymore
+//
+// Revision 1.8 2010/08/15 17:05:00 ndemengel
 // Feature Requests 3036484: part 1, prevents running a non-test method
 //
-// Revision 1.7  2010/06/30 22:55:56  makkimesser
+// Revision 1.7 2010/06/30 22:55:56 makkimesser
 // CodeWarnings resolved
 // Deprecated API removed
 // Missing AnnotationType Extension added
 //
-// Revision 1.6  2009/04/05 19:14:27  gianasista
+// Revision 1.6 2009/04/05 19:14:27 gianasista
 // code formatter
 //
 // Revision 1.5 2009/03/25 20:27:25 gianasista
