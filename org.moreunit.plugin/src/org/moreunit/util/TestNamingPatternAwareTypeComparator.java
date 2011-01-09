@@ -19,7 +19,13 @@ public class TestNamingPatternAwareTypeComparator implements Comparator<IType>
     {
         String type1Name = getNameWithoutTestPrefixAndSufixIfAny(type1);
         String type2Name = getNameWithoutTestPrefixAndSufixIfAny(type2);
-        return Collator.getInstance().compare(type1Name, type2Name);
+        int comparisonResult = Collator.getInstance().compare(type1Name, type2Name);
+        
+        if(comparisonResult == 0)
+        {
+            comparisonResult = Collator.getInstance().compare(type1.getPackageFragment().getElementName(), type2.getPackageFragment().getElementName());
+        }
+        return comparisonResult;
     }
 
     private String getNameWithoutTestPrefixAndSufixIfAny(IType type)

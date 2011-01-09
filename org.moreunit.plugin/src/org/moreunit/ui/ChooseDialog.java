@@ -1,5 +1,6 @@
 package org.moreunit.ui;
 
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -194,7 +195,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         TreeViewer viewer = new TreeViewer(parent, SWT.NO_TRIM);
         viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new JavaElementLabelProvider());
+        viewer.setLabelProvider(new LabelProvider());
         viewer.setInput(this);
         return viewer;
     }
@@ -233,4 +234,17 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         display.update();
     }
 
+    private static class LabelProvider extends JavaElementLabelProvider
+    {
+        @Override
+        public String getText(Object element)
+        {
+            if(element instanceof IType)
+            {
+                IType type = (IType) element;
+                return String.format("%s - %s", type.getElementName(), type.getPackageFragment().getElementName());
+            }
+            return super.getText(element);
+        }
+    }
 }
