@@ -24,6 +24,8 @@ import org.moreunit.util.SearchTools;
 import org.moreunit.util.TestMethodCalleeFinder;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
+import org.moreunit.wizards.NewClassWizard;
+import org.moreunit.wizards.NewClassyWizard;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
@@ -174,74 +176,18 @@ public class TestCaseTypeFacade extends TypeFacade
     {
         return new TestMethodCalleeFinder(method, searchScope);
     }
-
-    /**
-     * Creates a testmethod for the method that should be tested.
-     * 
-     * @param methodToTest The method that should be tested.
-     * @return <code>true</code> if the method was successfully created,
-     *         <code>false</code> if the method already existed or the method
-     *         creation threw an exception.
-     */
-    /*
-     * public boolean createTestMethodForMethod(IMethod methodToTest) { try {
-     * String methodName = methodToTest.getElementName(); methodName =
-     * BaseTools.firstCharToUpperCase(methodName); String testMethodName =
-     * MagicNumbers.TEST_METHOD_PRAEFIX + methodName; if
-     * (doesMethodExist(testMethodName)) return false;
-     * compilationUnit.findPrimaryType
-     * ().createMethod(getTestMethodString(testMethodName), null, true, null);
-     * if (Preferences.instance().shouldUseJunit4Type()) {
-     * compilationUnit.createImport("org.junit.Test", null, null); } return
-     * true; } catch (JavaModelException exc) {
-     * LogHandler.getInstance().handleExceptionLog(exc); } return false; }
-     */
-
-    /**
-     * Creates another testmethod for the given method aTestMethod
-     * 
-     * @param aTestMethod
-     * @return
-     */
-    /*
-     * public IMethod createAnotherTestMethod(IMethod aTestMethod) { try {
-     * String testedMethodName =
-     * BaseTools.getTestedMethod(aTestMethod.getElementName()); IMethod
-     * testedMethod =
-     * BaseTools.getFirstMethodWithSameNamePrefix(getCorrespondingClassUnderTest
-     * ().getMethods(), testedMethodName); if(testedMethod != null) { String
-     * testMethodName = MagicNumbers.TEST_METHOD_PRAEFIX +
-     * BaseTools.firstCharToUpperCase(testedMethod.getElementName()); if
-     * (doesMethodExist(testMethodName)) testMethodName =
-     * testMethodName.concat(MagicNumbers.SUFFIX_NAME); IMethod newTestMethod =
-     * compilationUnit
-     * .findPrimaryType().createMethod(getTestMethodString(testMethodName),
-     * null, true, null); return newTestMethod; } } catch (JavaModelException e)
-     * { LogHandler.getInstance().handleExceptionLog(e); } return null; }
-     */
-
-    /*
-     * private String getTestMethodString(String testMethodName) { if
-     * (Preferences.instance().shouldUseJunit4Type()) { StringBuffer result =
-     * new StringBuffer(); result.append("@Test").append(MagicNumbers.NEWLINE);
-     * result.append("public void ").append(testMethodName).append("()
-     * {").append(MagicNumbers.NEWLINE).append("}"); return result.toString(); }
-     * else { return "public void " + testMethodName + "() {" +
-     * MagicNumbers.NEWLINE + "}"; } }
-     */
-
-    /*
-     * public void createMarkerForTestedClass() throws CoreException { if
-     * (!compilationUnit.exists()) { return; } IResource resource =
-     * this.compilationUnit.getUnderlyingResource(); if (resource == null) {
-     * return; } if (!Flags.isAbstract(getType().getFlags())) { IType
-     * testedClass = getCorrespondingClassUnderTest(); if (testedClass == null)
-     * { return; } new MarkerUpdateRunnable(testedClass, getType()).schedule();
-     * } }
-     */
+    
+    @Override
+    protected NewClassyWizard newCorrespondingClassWizard(IType fromType)
+    {
+        return new NewClassWizard(fromType);
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.27  2010/10/23 19:58:56  gianasista
+// Minor Bugfix and removed unused method
+//
 // Revision 1.26  2010/10/20 10:40:23  ndemengel
 // Allows to find several methods under test by name for a given test method
 //

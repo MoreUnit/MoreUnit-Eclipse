@@ -23,6 +23,7 @@ import org.moreunit.util.MethodTestCallerFinder;
 import org.moreunit.util.TestCaseDiviner;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
+import org.moreunit.wizards.NewClassyWizard;
 import org.moreunit.wizards.NewTestCaseWizard;
 
 /**
@@ -229,6 +230,12 @@ public class ClassTypeFacade extends TypeFacade
         return new MethodTestCallerFinder(method, searchScope);
     }
 
+    @Override
+    protected NewClassyWizard newCorrespondingClassWizard(IType fromType)
+    {
+        return new NewTestCaseWizard(fromType);
+    }
+    
     public IType getOneCorrespondingTestCase(boolean createIfNecessary)
     {
         return getOneCorrespondingTestCase(createIfNecessary, "Please choose a test case...");

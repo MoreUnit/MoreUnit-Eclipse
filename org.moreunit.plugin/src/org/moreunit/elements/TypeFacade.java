@@ -20,7 +20,7 @@ import org.moreunit.ui.ChooseDialog;
 import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MemberJumpHistory;
 import org.moreunit.util.MethodCallFinder;
-import org.moreunit.wizards.NewTestCaseWizard;
+import org.moreunit.wizards.NewClassyWizard;
 
 /**
  * @author vera 23.05.2006 20:21:57
@@ -182,7 +182,7 @@ public abstract class TypeFacade
             }
             else if(createIfNecessary)
             {
-                memberToJump = new NewTestCaseWizard(getType()).open();
+                memberToJump = newCorrespondingClassWizard(getType()).open();
             }
         }
 
@@ -200,6 +200,8 @@ public abstract class TypeFacade
     abstract protected Set<IType> getCorrespondingClasses();
 
     abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope);
+
+    abstract protected NewClassyWizard newCorrespondingClassWizard(IType fromType);
 
     private IMember openDialog(String promptText, Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMethod method)
     {
