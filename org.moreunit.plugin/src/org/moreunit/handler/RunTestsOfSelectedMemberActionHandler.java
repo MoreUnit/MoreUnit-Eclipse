@@ -14,7 +14,7 @@ public class RunTestsOfSelectedMemberActionHandler extends AbstractHandler
 
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        EditorActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(PluginTools.getOpenEditorPart());
+        RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(PluginTools.getOpenEditorPart());
         return null;
     }
 }

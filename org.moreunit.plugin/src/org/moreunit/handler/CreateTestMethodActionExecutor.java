@@ -11,55 +11,41 @@
  */
 package org.moreunit.handler;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
-import org.moreunit.actions.JumpAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
-import org.moreunit.elements.MethodFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
-import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.util.FeatureDetector;
+import org.moreunit.ui.EditorUI;
 import org.moreunit.util.MoreUnitContants;
 
 /**
- * Handles the actions which are delegated from the handlers:<br>
+ * Executes the action "Create test method" launched from the handlers:<br>
  * <ul>
- * <li>key actions like {@link CreateTestMethodActionHandler} and
- * {@link JumpActionHandler}</li>
- * <li>menu action provided by the popup menu in the editor like
- * {@link CreateTestMethodEditorAction} and {@link JumpAction}</li>
- * <li>menu action provided by the popup menu in the package explorer like
+ * <li>key action: {@link CreateTestMethodActionHandler}</li>
+ * <li>menu action provided by the popup menu in the editor:
+ * {@link CreateTestMethodEditorAction}</li>
+ * <li>menu action provided by the popup menu in the package explorer:
  * {@link CreateTestMethodHierarchyAction}</li>
  * </ul>
- * The handler is a singelton.
+ * This executor is a singleton.
  * <p>
  * 30.09.2010 Gro The value of
  * {@link IAddTestMethodContext#isNewTestClassCreated()} is now correctly taken
@@ -69,27 +55,29 @@ import org.moreunit.util.MoreUnitContants;
  * @author vera 25.10.2005
  * @version 30.09.2010
  */
-public class EditorActionExecutor
+public class CreateTestMethodActionExecutor
 {
+    private static CreateTestMethodActionExecutor instance;
 
-    private static EditorActionExecutor instance;
+    private final EditorUI editorUI;
 
-    private final FeatureDetector featureDetector;
-    private final TestLauncher testLauncher;
-
-    private EditorActionExecutor()
+    // package-private for testing purposes
+    CreateTestMethodActionExecutor(EditorUI editorUI)
     {
-        featureDetector = new FeatureDetector();
-        testLauncher = new TestLauncher();
+        this.editorUI = editorUI;
     }
 
-    public static EditorActionExecutor getInstance()
+    private CreateTestMethodActionExecutor()
+    {
+        this(new EditorUI());
+    }
+
+    public static CreateTestMethodActionExecutor getInstance()
     {
         if(instance == null)
         {
-            instance = new EditorActionExecutor();
+            instance = new CreateTestMethodActionExecutor();
         }
-
         return instance;
     }
 
@@ -106,7 +94,7 @@ public class EditorActionExecutor
         {
             compilationUnitForTestCase = compilationUnitCurrentlyEdited;
             newTestClassCreated = false;
-            
+
             // Nicolas to Andreas: prevents NPE in ModifyTestMethodParticipator
             IType classUnderTest = new TestCaseTypeFacade(compilationUnitForTestCase).getCorrespondingClassUnderTest();
             compilationUnitForUnitUnderTest = classUnderTest == null ? null : classUnderTest.getCompilationUnit();
@@ -128,7 +116,7 @@ public class EditorActionExecutor
 
         // Create test method template
         TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), compilationUnitForTestCase, Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
-        
+
         // TODO Nicolas to Andreas: the method under the cursor is not
         // necessarily a method under test, the user can create a new test
         // method from another test method
@@ -176,194 +164,22 @@ public class EditorActionExecutor
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
-        revealInEditor(testCaseTypeFacade.getEditorPart(), newMethod);
+        editorUI.reveal(testCaseTypeFacade.getEditorPart(), newMethod);
         selectionProvider.setSelection(exactSelection);
-    }
-
-    private static void revealInEditor(IEditorPart editorPart, IMethod method)
-    {
-        JavaUI.revealInEditor(editorPart, (IJavaElement) method);
-    }
-
-    public void executeJumpAction(IEditorPart editorPart)
-    {
-        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        executeJumpAction(editorPart, compilationUnit);
-    }
-
-    public void executeJumpAction(ICompilationUnit compilationUnit)
-    {
-        executeJumpAction(null, compilationUnit);
-    }
-
-    private void executeJumpAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
-    {
-        IMethod methodUnderCursorPosition = getMethodUnderCursorPosition(editorPart);
-        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
-
-        TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
-        IMember memberToJump = typeFacade.getOneCorrespondingMember(methodUnderCursorPosition, true, extendedSearch, "Jump to...");
-        if(memberToJump != null)
-        {
-            jumpToMember(memberToJump);
-        }
-    }
-
-    private IMethod getMethodUnderCursorPosition(IEditorPart editorPart)
-    {
-        return editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
-    }
-
-    private void jumpToMember(IMember memberToJump)
-    {
-        if(memberToJump instanceof IMethod)
-        {
-            IMethod methodToJump = (IMethod) memberToJump;
-            IEditorPart openedEditor = openInEditor(methodToJump.getDeclaringType().getParent());
-            revealInEditor(openedEditor, methodToJump);
-        }
-        else
-        {
-            openInEditor(memberToJump.getParent());
-        }
-    }
-
-    private static IEditorPart openInEditor(IJavaElement element)
-    {
-        IEditorPart openedEditorPart = null;
-        try
-        {
-            openedEditorPart = JavaUI.openInEditor(element);
-        }
-        catch (PartInitException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-        return openedEditorPart;
-    }
-
-    public void executeRunTestAction(IEditorPart editorPart)
-    {
-        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        executeRunAllTestsAction(editorPart, compilationUnit);
-    }
-
-    private ICompilationUnit createCompilationUnitFrom(IEditorPart editorPart)
-    {
-        IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-        return JavaCore.createCompilationUnitFrom(file);
-    }
-
-    public void executeRunTestAction(ICompilationUnit compilationUnit)
-    {
-        executeRunAllTestsAction(null, compilationUnit);
-    }
-
-    private void executeRunAllTestsAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
-    {
-        IType selectedJavaType = compilationUnit.findPrimaryType();
-
-        Collection<IType> testCases = new LinkedHashSet<IType>();
-        if(TypeFacade.isTestCase(selectedJavaType))
-        {
-            testCases.add(selectedJavaType);
-        }
-        else
-        {
-            IJavaProject javaProject = selectedJavaType.getJavaProject();
-            ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
-
-            if(featureDetector.isTestSelectionRunSupported(javaProject))
-            {
-                testCases.addAll(typeFacade.getCorrespondingTestCases());
-            }
-            else
-            {
-                testCases.add(typeFacade.getOneCorrespondingTestCase(true, "Run test..."));
-            }
-        }
-
-        if(! testCases.isEmpty())
-        {
-            runTests(testCases);
-        }
-    }
-
-    public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
-    {
-        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        executeRunTestsOfSelectedMemberAction(editorPart, compilationUnit);
-    }
-
-    private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
-    {
-        IType selectedJavaType = compilationUnit.findPrimaryType();
-
-        Collection<IMember> testElements = new LinkedHashSet<IMember>();
-        if(TypeFacade.isTestCase(selectedJavaType))
-        {
-            testElements.add(getTestElementFromTestCase(editorPart, selectedJavaType));
-        }
-        else
-        {
-            IJavaProject javaProject = compilationUnit.getJavaProject();
-            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
-            ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
-            IMethod methodUnderTest = editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
-
-            if(featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
-            {
-                testElements.addAll(typeFacade.getCorrespondingTestMembers(methodUnderTest, extendedSearch));
-            }
-            else
-            {
-                testElements.add(typeFacade.getOneCorrespondingMember(methodUnderTest, true, extendedSearch, "Run test..."));
-            }
-        }
-
-        if(! testElements.isEmpty())
-        {
-            runTests(testElements);
-        }
-    }
-
-    /**
-     * Returns the test method that is selected in editor if any, otherwise
-     * returns the test case.
-     */
-    private IMember getTestElementFromTestCase(IEditorPart editorPart, IType testCaseType)
-    {
-        if(editorPart == null)
-        {
-            return testCaseType;
-        }
-
-        IMethod method = new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
-        if(method != null && new MethodFacade(method).isTestMethod())
-        {
-            return method;
-        }
-
-        return testCaseType;
-    }
-
-    private void runTests(Collection< ? extends IMember> testElements)
-    {
-        IJavaElement aTestMember = testElements.iterator().next();
-        String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
-        testLauncher.launch(testType, testElements);
     }
 }
 
 // $Log: not supported by cvs2svn $
-// Revision 1.31  2010/10/17 11:02:34  ndemengel
+//
+// CreateTestMethodActionExecutor extracted from EditorActionExecutor
+//
+// Revision 1.32 2011/01/08 19:48:08 ndemengel
+// Fixes NullPointerExceptions
+//
+// Revision 1.31 2010/10/17 11:02:34 ndemengel
 // Reviews extended method search (simplified for better accuracy)
 //
-// Revision 1.30  2010/10/16 18:50:04  ndemengel
+// Revision 1.30 2010/10/16 18:50:04 ndemengel
 // Refactors test launch ands removes unused dialog
 //
 // Revision 1.29 2010/10/08 16:09:28 ndemengel

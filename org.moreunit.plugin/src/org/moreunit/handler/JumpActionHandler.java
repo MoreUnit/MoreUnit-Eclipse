@@ -16,12 +16,15 @@ public class JumpActionHandler extends AbstractHandler
 
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        EditorActionExecutor.getInstance().executeJumpAction(PluginTools.getOpenEditorPart());
+        JumpActionExecutor.getInstance().executeJumpAction(PluginTools.getOpenEditorPart());
         return null;
     }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
 // initial
 //

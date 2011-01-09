@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.moreunit.handler.EditorActionExecutor;
+import org.moreunit.handler.RunTestsActionExecutor;
 
 /**
  * This class delegates the action from the menu in the package explorer to run
@@ -23,7 +23,7 @@ public class RunTestFromCompilationUnitAction implements IObjectActionDelegate
 
     public void run(IAction action)
     {
-        EditorActionExecutor.getInstance().executeRunTestAction(compilationUnit);
+        RunTestsActionExecutor.getInstance().executeRunTestAction(compilationUnit);
     }
 
     public void selectionChanged(IAction action, ISelection selection)

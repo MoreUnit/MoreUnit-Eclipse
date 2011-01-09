@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.moreunit.handler.EditorActionExecutor;
+import org.moreunit.handler.JumpActionExecutor;
 
 public class JumpFromTypeAction implements IObjectActionDelegate
 {
@@ -20,7 +20,7 @@ public class JumpFromTypeAction implements IObjectActionDelegate
 
     public void run(IAction action)
     {
-        EditorActionExecutor.getInstance().executeJumpAction(type.getCompilationUnit());
+        JumpActionExecutor.getInstance().executeJumpAction(type.getCompilationUnit());
     }
 
     public void selectionChanged(IAction action, ISelection selection)
@@ -32,6 +32,9 @@ public class JumpFromTypeAction implements IObjectActionDelegate
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.6 2009/04/05 19:07:42 gianasista
 // Switch to gnu code formatter
 //

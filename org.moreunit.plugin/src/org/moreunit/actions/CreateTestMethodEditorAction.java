@@ -4,7 +4,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.moreunit.handler.EditorActionExecutor;
+import org.moreunit.handler.CreateTestMethodActionExecutor;
 import org.moreunit.log.LogHandler;
 
 /**
@@ -14,7 +14,7 @@ import org.moreunit.log.LogHandler;
 public class CreateTestMethodEditorAction implements IEditorActionDelegate
 {
 
-    IEditorPart editorPart;
+    private IEditorPart editorPart;
 
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
@@ -24,7 +24,7 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate
     public void run(IAction action)
     {
         LogHandler.getInstance().handleInfoLog("CreateTestMethodEditorAction.run()");
-        EditorActionExecutor.getInstance().executeCreateTestMethodAction(editorPart);
+        CreateTestMethodActionExecutor.getInstance().executeCreateTestMethodAction(editorPart);
     }
 
     public void selectionChanged(IAction action, ISelection selection)
@@ -33,6 +33,9 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.4 2009/04/05 19:07:42 gianasista
 // Switch to gnu code formatter
 //

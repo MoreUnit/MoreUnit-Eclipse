@@ -19,12 +19,15 @@ public class CreateTestMethodActionHandler extends AbstractHandler
     {
         LogHandler.getInstance().handleInfoLog("CreateTestMethodActionHandler.execute()");
 
-        EditorActionExecutor.getInstance().executeCreateTestMethodAction(PluginTools.getOpenEditorPart());
+        CreateTestMethodActionExecutor.getInstance().executeCreateTestMethodAction(PluginTools.getOpenEditorPart());
         return null;
     }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2009/04/05 19:14:27  gianasista
+// code formatter
+//
 // Revision 1.1.1.1 2006/08/13 14:31:15 gianasista
 // initial
 //
