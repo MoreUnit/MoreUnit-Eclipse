@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
@@ -59,10 +60,12 @@ import org.moreunit.log.LogHandler;
  * <dd>30.09.2010 Gro Now jump works correctly</dd>
  * <dd>07.10.2010 Gro Error fixed: JavaDoc Link to method under test wrong, Interface
  * {@link ITestMethodParticipator} introduced</dd>
+ * <dd>09.01.2011 Dem/Gro Error fixed: {@link NullPointerException} if
+ * <code>methodUnderTest</code> is <code>null</code></dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 07.10.2010
+ * @version 09.01.2011
  * @since 1.5
  */
 public class ModifyTestMethodParticipator implements ITestMethodParticipator {
@@ -93,9 +96,10 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		IMethod methodUnderTest = context.getMethodUnderTest();
 		ICompilationUnit classUnderTest = context.getClassUnderTest();
 
-		// TODO Nicolas to Andreas: I let you determine what to do in the following case
+		// Class under test does not exist in minor cases, just return
 		if (classUnderTest == null) {
-			LogHandler.getInstance().handleWarnLog("Missing class under test");
+			LogHandler.getInstance().handleWarnLog(
+				"Missing class under test for: " + testMethod.getElementName());
 			return;
 		}
 
@@ -151,7 +155,24 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Import zufügen
 		addImports(astRoot, testType);
 
-		// Änderungen committen 
+		// Änderungen committen
+		commitChanges(editorPart, compilationUnit, astRoot, sourceDocument, jumpToMethod);
+	}
+
+	/**
+	 * Commit changes if any.
+	 * @param editorPart EditorPart.
+	 * @param compilationUnit CompilationUnit.
+	 * @param astRoot AST-Rootnode.
+	 * @param sourceDocument Source document.
+	 * @param jumpToMethod Method to jump to.
+	 * @throws BadLocationException Error.
+	 * @throws JavaModelException Error.
+	 */
+	private void commitChanges(final IEditorPart editorPart, final ICompilationUnit compilationUnit,
+		final CompilationUnit astRoot, final IDocument sourceDocument, final IMethod jumpToMethod)
+		throws BadLocationException, JavaModelException {
+
 		TextEdit edits = astRoot.rewrite(sourceDocument, compilationUnit.getJavaProject().getOptions(true));
 		edits.apply(sourceDocument);
 		String newSource = sourceDocument.get();
