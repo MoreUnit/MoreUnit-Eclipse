@@ -28,8 +28,13 @@ import org.moreunit.wizards.NewClassyWizard;
 public abstract class TypeFacade
 {
 
-    ICompilationUnit compilationUnit;
-    
+    public static enum MethodSearchMode
+    {
+        BY_CALL, BY_NAME
+    }
+
+    protected final ICompilationUnit compilationUnit;
+
     public static TypeFacade createFacade(ICompilationUnit compilationUnit)
     {
         if(isTestCase(compilationUnit.findPrimaryType()))
@@ -45,8 +50,12 @@ public abstract class TypeFacade
         {
             return false;
         }
+        return isTestCase(type.getCompilationUnit());
+    }
 
-        IType primaryType = type.getCompilationUnit().findPrimaryType();
+    public static boolean isTestCase(ICompilationUnit compilationUnit)
+    {
+        IType primaryType = compilationUnit.findPrimaryType();
         if(primaryType == null)
         {
             return false;
@@ -54,7 +63,7 @@ public abstract class TypeFacade
 
         String classname = primaryType.getElementName();
         Preferences preferences = Preferences.getInstance();
-        String[] suffixes = preferences.getSuffixes(type.getJavaProject());
+        String[] suffixes = preferences.getSuffixes(compilationUnit.getJavaProject());
         for (String suffix : suffixes)
         {
             if((suffix.length() > 0) && classname.endsWith(suffix))
@@ -63,7 +72,7 @@ public abstract class TypeFacade
             }
         }
 
-        String[] prefixes = preferences.getPrefixes(type.getJavaProject());
+        String[] prefixes = preferences.getPrefixes(compilationUnit.getJavaProject());
         for (String prefix : prefixes)
         {
             if((prefix.length() > 0) && classname.startsWith(prefix))
@@ -151,7 +160,7 @@ public abstract class TypeFacade
         Set<IType> proposedClasses = getCorrespondingClasses();
 
         Set<IMethod> proposedMethods = new LinkedHashSet<IMethod>();
-        if(method != null)
+        if(method != null && ! proposedClasses.isEmpty())
         {
             proposedMethods.addAll(getCorrespondingMethodsInClasses(method, proposedClasses));
             if(extendedSearch)

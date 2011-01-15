@@ -1,5 +1,8 @@
 package org.moreunit.util;
 
+import static org.moreunit.util.Preconditions.checkNotNull;
+import static org.moreunit.util.Preconditions.checkNotNullOrEmpty;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -27,6 +30,10 @@ public abstract class MethodCallFinder
 
     protected MethodCallFinder(IMethod method, Collection< ? extends IJavaElement> searchScope, Direction direction)
     {
+        checkNotNull(method, "Method can not be null");
+        checkNotNullOrEmpty(searchScope, "Missing search scope");
+        checkNotNull(direction, "Missing direction");
+
         if(Direction.CALLEE == direction)
         {
             this.methodWrapper = CallHierarchy.getDefault().getCalleeRoots(new IMethod[] { method })[0];

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -27,37 +29,24 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
+import org.moreunit.elements.TypeFacade;
+import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.log.LogHandler;
 
 /**
  * @author vera 01.02.2009 14:27:06
  */
-public class MoreUnitAnnotationModel implements IAnnotationModel
+public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListener
 {
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
 
-    private List<MoreUnitAnnotation> annotations = new ArrayList<MoreUnitAnnotation>();
-
-    private List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
-
-    private IDocumentListener documentListener = new IDocumentListener()
-    {
-        public void documentChanged(DocumentEvent event)
-        {
-            updateAnnotations();
-        }
-
-        public void documentAboutToBeChanged(DocumentEvent event)
-        {
-        }
-    };
+    private final List<MoreUnitAnnotation> annotations = new ArrayList<MoreUnitAnnotation>();
+    private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
+    private final IDocument document;
+    private final ITextEditor textEditor;
 
     private int openConnections = 0;
-
-    private IDocument document;
-
-    private ITextEditor textEditor;
 
     /*
      * Could be private, but is public for testing.
@@ -158,7 +147,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         Iterator<MoreUnitAnnotation> iterator = getAnnotationIterator();
         while (iterator.hasNext())
         {
-            MoreUnitAnnotation annotation = (MoreUnitAnnotation) iterator.next();
+            MoreUnitAnnotation annotation = iterator.next();
             event.annotationRemoved(annotation, annotation.getPosition());
         }
         annotations.clear();
@@ -166,39 +155,55 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private void updateAnnotations()
     {
+        // long startTime = System.currentTimeMillis();
         AnnotationModelEvent event = new AnnotationModelEvent(this);
         clear(event);
 
-        EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-        if(editorPartFacade.isJavaFile())
+        try
         {
-            try
+            EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+            ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+            if(! editorPartFacade.isJavaFile() || TypeFacade.isTestCase(compilationUnit))
             {
-                ClassTypeFacade classTypeFacade = new ClassTypeFacade(editorPartFacade.getCompilationUnit());
+                return;
+            }
 
-                IType type = classTypeFacade.getType();
-                if(type == null)
-                {
-                    // this could happen if the resource is out of sync with the filesystem
-                    return;
-                }
-                IMethod[] methods = type.getMethods();
-                for (IMethod method : methods)
-                {
-                    if(classTypeFacade.hasTestMethod(method))
-                    {
-                        ISourceRange range = method.getNameRange();
-                        MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
-                        annotations.add(annotation);
-                        event.annotationAdded(annotation);
-                    }
-                }
-            }
-            catch (Exception exc)
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+            IType type = classTypeFacade.getType();
+            if(type == null)
             {
-                LogHandler.getInstance().handleExceptionLog(exc);
+                return; // this could happen if the resource is out of sync with the file system
             }
-            fireModelChanged(event);
+
+            annotateTestedMethods(type, classTypeFacade, event);
+        }
+        catch (Exception exc)
+        {
+            LogHandler.getInstance().handleExceptionLog(exc);
+        }
+        
+        fireModelChanged(event);
+
+        // System.err.println(String.format("updateAnnotations(): %sms", System.currentTimeMillis() - startTime));
+    }
+
+    private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
+    {
+        // TODO Nicolas: only uncomment the following for testing, since performances are far too bad for production.
+        // I let it here for now, just for it to be checked in once into CVS, and I will remove it then unless I can improve it.
+        // boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
+        // MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
+        MethodSearchMode searchMode = MethodSearchMode.BY_NAME;
+
+        for (IMethod method : type.getMethods())
+        {
+            if(classTypeFacade.hasTestMethod(method, searchMode))
+            {
+                ISourceRange range = method.getNameRange();
+                MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
+                annotations.add(annotation);
+                event.annotationAdded(annotation);
+            }
         }
     }
 
@@ -256,7 +261,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
         if(openConnections++ == 0)
         {
-            document.addDocumentListener(documentListener);
+            document.addDocumentListener(this);
         }
     }
 
@@ -274,7 +279,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
         if(--openConnections == 0)
         {
-            document.removeDocumentListener(documentListener);
+            document.removeDocumentListener(this);
         }
     }
 
@@ -300,5 +305,17 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     public void removeAnnotationModelListener(IAnnotationModelListener listener)
     {
         annotationModelListeners.remove(listener);
+    }
+
+    public void documentChanged(DocumentEvent event)
+    {
+        // TODO Nicolas: do we really need to do this on each and every single character change?
+        // maybe it would be preferable to do this only on save, or to define a minimum delay after change
+        updateAnnotations();
+    }
+
+    public void documentAboutToBeChanged(DocumentEvent event)
+    {
+        // void: event ignored
     }
 }

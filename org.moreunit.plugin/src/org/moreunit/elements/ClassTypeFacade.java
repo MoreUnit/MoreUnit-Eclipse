@@ -2,6 +2,7 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -193,10 +194,22 @@ public class ClassTypeFacade extends TypeFacade
         return result;
     }
 
-    public boolean hasTestMethod(IMethod method)
+    public boolean hasTestMethod(IMethod method, MethodSearchMode searchMethod)
     {
-        List<IMethod> correspondingTestMethods = getCorrespondingTestMethods(method);
-        return correspondingTestMethods != null && correspondingTestMethods.size() > 0;
+        final Set<IMethod> correspondingTestMethods = new HashSet<IMethod>();
+        if(searchMethod == MethodSearchMode.BY_CALL)
+        {
+            Set<IType> correspondingClasses = getCorrespondingClasses();
+            if(! correspondingClasses.isEmpty())
+            {
+                correspondingTestMethods.addAll(getCallRelationshipFinder(method, correspondingClasses).getMatches(new NullProgressMonitor()));
+            }
+        }
+        else
+        {
+            correspondingTestMethods.addAll(getCorrespondingTestMethods(method));
+        }
+        return ! correspondingTestMethods.isEmpty();
     }
 
     /**
@@ -248,10 +261,11 @@ public class ClassTypeFacade extends TypeFacade
 
     public Collection< ? extends IMember> getCorrespondingTestMembers(IMethod method, boolean extendedSearch)
     {
+        Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
+
         Set<IType> testCases = getCorrespondingClasses();
 
-        Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
-        if(method != null)
+        if(method != null && ! testCases.isEmpty())
         {
             testMethods.addAll(getCorrespondingMethodsInClasses(method, testCases));
             if(extendedSearch)

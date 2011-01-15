@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.WorkspaceHelper;
+import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.util.StringConstants;
 
 public class ClassTypeFacadeTest extends SimpleProjectTestCase
@@ -82,13 +83,13 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testHasTestMethodWithTestMethod() throws CoreException
+    public void testHasTestMethodFollowingNamingPatternWhenTestMethodExists() throws CoreException
     {
         IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
         WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
-        assertTrue(classTypeFacade.hasTestMethod(getNumberOneMethod));
+        assertTrue(classTypeFacade.hasTestMethod(getNumberOneMethod, MethodSearchMode.BY_NAME));
     }
 
     @Test
@@ -101,11 +102,29 @@ public class ClassTypeFacadeTest extends SimpleProjectTestCase
     }
 
     @Test
-    public void testHasTestMethodWithoutTestMethod() throws CoreException
+    public void testHasTestMethodFollowingNamingPatternWhenTestMethodDoesNotExist() throws CoreException
     {
         IMethod methodWithoutCorrespondingTestMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "");
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
-        assertFalse(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod));
+        assertFalse(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_NAME));
+    }
+
+    @Test
+    public void testHasTestMethodCallingMethodUnderTestWhenTestMethodExists() throws CoreException
+    {
+        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
+        WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testWhichNameDoesNotMatchTestedMethodName()", "new Hello().getNumberOne();");
+
+        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
+        assertTrue(classTypeFacade.hasTestMethod(getNumberOneMethod, MethodSearchMode.BY_CALL));
+    }
+
+    @Test
+    public void testHasTestMethodCallingMethodUnderTestWhenTestMethodDoesNotExist() throws CoreException
+    {
+        IMethod methodWithoutCorrespondingTestMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "");
+        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutType.getCompilationUnit());
+        assertFalse(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_CALL));
     }
 
     @Test
