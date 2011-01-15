@@ -1,8 +1,6 @@
 package org.moreunit.util;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -22,14 +20,13 @@ import org.moreunit.preferences.Preferences;
  */
 public class TestCaseDiviner
 {
-
+    private static final String WC = StringConstants.WILDCARD;
+    
     private ICompilationUnit compilationUnit;
     private Set<IType> matches = new LinkedHashSet<IType>();;
     private IType source;
 
     private Preferences preferences;
-
-    //private Map<IJavaProject, IJavaSearchScope> serachScopePerProjectMap = new HashMap<IJavaProject, IJavaSearchScope>();
 
     public TestCaseDiviner(ICompilationUnit compilationUnit, Preferences preferences)
     {
@@ -77,15 +74,11 @@ public class TestCaseDiviner
         String[] prefixes = this.preferences.getPrefixes(getJavaProject());
         for (String element : prefixes)
         {
-            //this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source
-            // , element, true), this.compilationUnit));
             this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit, getSearchScope()));
         }
         String[] suffixes = this.preferences.getSuffixes(getJavaProject());
         for (String element : suffixes)
         {
-            //this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source
-            // , element, false), this.compilationUnit));
             this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit, getSearchScope()));
         }
     }
@@ -129,7 +122,8 @@ public class TestCaseDiviner
     {
         if(this.preferences.shouldUseFlexibleTestCaseNaming(getJavaProject()))
         {
-            return prefixMatch ? qualifier + StringConstants.WILDCARD + type.getTypeQualifiedName() : type.getTypeQualifiedName() + StringConstants.WILDCARD + qualifier;
+            // TODO Nicolas: should we systematically _surround_ name with wildcards or let the user choose with better options?
+            return prefixMatch ? qualifier + WC + type.getTypeQualifiedName() + WC : type.getTypeQualifiedName() + WC + qualifier;
         }
         else
         {
@@ -140,6 +134,11 @@ public class TestCaseDiviner
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2010/06/30 22:55:56  makkimesser
+// CodeWarnings resolved
+// Deprecated API removed
+// Missing AnnotationType Extension added
+//
 // Revision 1.14  2009/10/19 19:33:16  gianasista
 // Bugfix switching for enums
 //

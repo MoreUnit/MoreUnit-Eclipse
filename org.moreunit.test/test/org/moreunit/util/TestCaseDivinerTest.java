@@ -111,6 +111,9 @@ public class TestCaseDivinerTest extends SimpleProjectTestCase
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2011/01/08 18:01:01  ndemengel
+// Removes commented out code and TO.DO comments that are not relevant anymore
+//
 // Revision 1.10  2010/06/30 22:51:52  makkimesser
 // FindBugs-Warning resolved
 //
