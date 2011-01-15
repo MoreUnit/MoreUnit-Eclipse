@@ -11,7 +11,10 @@
  */
 package org.moreunit.handler;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
@@ -60,16 +63,18 @@ public class CreateTestMethodActionExecutor
     private static CreateTestMethodActionExecutor instance;
 
     private final EditorUI editorUI;
+    private final Preferences preferences;
 
     // package-private for testing purposes
-    CreateTestMethodActionExecutor(EditorUI editorUI)
+    CreateTestMethodActionExecutor(EditorUI editorUI, Preferences preferences)
     {
         this.editorUI = editorUI;
+        this.preferences = preferences;
     }
 
     private CreateTestMethodActionExecutor()
     {
-        this(new EditorUI());
+        this(new EditorUI(), Preferences.getInstance());
     }
 
     public static CreateTestMethodActionExecutor getInstance()
@@ -84,50 +89,22 @@ public class CreateTestMethodActionExecutor
     public void executeCreateTestMethodAction(IEditorPart editorPart)
     {
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-        ICompilationUnit compilationUnitCurrentlyEdited = editorPartFacade.getCompilationUnit();
+        ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+        IMethod originalMethod = editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition();
+        
+        // Creates an intermediate object to clarify code that follows
+        CreationContext context = createContext(compilationUnit, originalMethod);
 
-        final ICompilationUnit compilationUnitForUnitUnderTest;
-        final ICompilationUnit compilationUnitForTestCase;
-        final boolean newTestClassCreated;
+        // Creates test method template
+        IJavaProject project = editorPartFacade.getJavaProject();
+        TestmethodCreator creator = new TestmethodCreator(compilationUnit, context.testCaseUnit, preferences.getTestType(project), preferences.getTestMethodDefaultContent(project));
+        IMethod createdMethod = creator.createTestMethod(originalMethod);
 
-        if(TypeFacade.isTestCase(compilationUnitCurrentlyEdited.findPrimaryType()))
-        {
-            compilationUnitForTestCase = compilationUnitCurrentlyEdited;
-            newTestClassCreated = false;
+        // Calls extensions on extension point, allowing to modify the created test method
+        IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(//
+                context.testCaseUnit, createdMethod, context.unitUnderTest, context.methodUnderTest, context.newTestClassCreated);
 
-            // Nicolas to Andreas: prevents NPE in ModifyTestMethodParticipator
-            IType classUnderTest = new TestCaseTypeFacade(compilationUnitForTestCase).getCorrespondingClassUnderTest();
-            compilationUnitForUnitUnderTest = classUnderTest == null ? null : classUnderTest.getCompilationUnit();
-        }
-        else
-        {
-            compilationUnitForUnitUnderTest = compilationUnitCurrentlyEdited;
-            ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnitForUnitUnderTest);
-            IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
-            newTestClassCreated = classTypeFacade.isNewTestClassCreated();
-
-            // This happens if the user chooses cancel from the wizard
-            if(oneCorrespondingTestCase == null)
-            {
-                return;
-            }
-            compilationUnitForTestCase = oneCorrespondingTestCase.getCompilationUnit();
-        }
-
-        // Create test method template
-        TestmethodCreator testmethodCreator = new TestmethodCreator(editorPartFacade.getCompilationUnit(), compilationUnitForTestCase, Preferences.getInstance().getTestType(editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(editorPartFacade.getJavaProject()));
-
-        // TODO Nicolas to Andreas: the method under the cursor is not
-        // necessarily a method under test, the user can create a new test
-        // method from another test method
-        IMethod methodUnderTest = editorPartFacade.getMethodUnderCursorPosition();
-        IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
-
-        // Call extensions on extension point, allowing to modify the created
-        // testmethod
-        IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(compilationUnitForTestCase, createdMethod, compilationUnitForUnitUnderTest, methodUnderTest, newTestClassCreated);
-
-        // If test modified test method is given, use it
+        // If created test method has been modified, uses it
         IMethod modifiedTestMethod = testMethodContext.getTestMethod();
         if(modifiedTestMethod != null)
         {
@@ -143,6 +120,41 @@ public class CreateTestMethodActionExecutor
         if(editorPart instanceof ITextEditor)
         {
             MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
+        }
+    }
+
+    private CreationContext createContext(ICompilationUnit currentlyEditedUnit, IMethod currentlyEditedMethod)
+    {
+        // TODO class and method under test are pure guesses in the following case, and they may be wrong most of the time
+        // (that said, TestmethodCreator does not perform better at this time, so it is perfectly consistent :D)
+        if(TypeFacade.isTestCase(currentlyEditedUnit.findPrimaryType()))
+        {
+            TestCaseTypeFacade testCase = new TestCaseTypeFacade(currentlyEditedUnit);
+            IType potentialClassUnderTest = testCase.getCorrespondingClassUnderTest(); // might be the wrong class (but it is unlikely)
+
+            if(potentialClassUnderTest == null)
+            {
+                return new CreationContext(null, currentlyEditedUnit, null, false);
+            }
+            else
+            {
+                // may not find the right method or any method at all (only searched by name)
+                List<IMethod> potentialMethodsUnderTest = testCase.getCorrespondingTestedMethods(currentlyEditedMethod, potentialClassUnderTest);
+                IMethod potentialMethodUnderTest = potentialMethodsUnderTest.isEmpty() ? null : potentialMethodsUnderTest.get(0);
+                return new CreationContext(potentialClassUnderTest.getCompilationUnit(), currentlyEditedUnit, potentialMethodUnderTest, false);
+            }
+        }
+        else
+        {
+            ClassTypeFacade classUnderTest = new ClassTypeFacade(currentlyEditedUnit);
+            IType testCase = classUnderTest.getOneCorrespondingTestCase(true);
+
+            // if the user cancels the test case selection wizard
+            if(testCase == null)
+            {
+                return null;
+            }
+            return new CreationContext(currentlyEditedUnit, testCase.getCompilationUnit(), currentlyEditedMethod, classUnderTest.isNewTestClassCreated());
         }
     }
 
@@ -167,9 +179,28 @@ public class CreateTestMethodActionExecutor
         editorUI.reveal(testCaseTypeFacade.getEditorPart(), newMethod);
         selectionProvider.setSelection(exactSelection);
     }
+    
+    private static class CreationContext
+    {
+        final ICompilationUnit unitUnderTest;
+        final ICompilationUnit testCaseUnit;
+        final IMethod methodUnderTest;
+        final boolean newTestClassCreated;
+
+        CreationContext(ICompilationUnit unitUnderTest, ICompilationUnit testCaseUnit, IMethod methodUnderTest, boolean newTestClassCreated)
+        {
+            this.unitUnderTest = unitUnderTest;
+            this.testCaseUnit = testCaseUnit;
+            this.methodUnderTest = methodUnderTest;
+            this.newTestClassCreated = newTestClassCreated;
+        }
+    }
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2011/01/09 13:05:53  ndemengel
+// Clarifies the code by splitting EditorActionExecutor into logically distinct parts: CreateTestMethod-, Jump- and RunTests-ActionExecutor
+//
 //
 // CreateTestMethodActionExecutor extracted from EditorActionExecutor
 //

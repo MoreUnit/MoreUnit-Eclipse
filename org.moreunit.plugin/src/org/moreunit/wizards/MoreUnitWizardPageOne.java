@@ -1208,12 +1208,12 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         List<IMethod> overloadedMethods = new ArrayList<IMethod>();
         for (int i = 0; i < allMethods.size(); i++)
         {
-            IMethod current = (IMethod) allMethods.get(i);
+            IMethod current = allMethods.get(i);
             String currentName = current.getElementName();
             boolean currentAdded = false;
             for (ListIterator<IMethod> iter = allMethods.listIterator(i + 1); iter.hasNext();)
             {
-                IMethod iterMethod = (IMethod) iter.next();
+                IMethod iterMethod = iter.next();
                 if(iterMethod.getElementName().equals(currentName))
                 {
                     // method is overloaded
@@ -1327,7 +1327,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     return status;
                 }
                 if(! TestSearchEngine.isTestImplementor(type))
-                { // TODO: expensive!
+                {
                     status.setError(Messages.format(WizardMessages.NewTestCaseWizardPageOne_error_superclass_not_implementing_test_interface, BasicElementLabels.getJavaElementName(JUnitCorePlugin.TEST_INTERFACE_NAME)));
                     return status;
                 }

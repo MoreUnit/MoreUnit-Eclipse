@@ -140,7 +140,12 @@ public class RunTestsActionExecutor
             IJavaProject javaProject = compilationUnit.getJavaProject();
             boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
-            IMethod methodUnderTest = editorPart == null ? null : new EditorPartFacade(editorPart).getMethodUnderCursorPosition();
+            
+            IMethod methodUnderTest = null;
+            if(editorPart != null)
+            {
+                methodUnderTest = new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
+            }
 
             if(featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
             {
@@ -187,6 +192,9 @@ public class RunTestsActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2011/01/09 13:05:53  ndemengel
+// Clarifies the code by splitting EditorActionExecutor into logically distinct parts: CreateTestMethod-, Jump- and RunTests-ActionExecutor
+//
 //
 // RunTestsActionExecutor extracted from EditorActionExecutor
 //

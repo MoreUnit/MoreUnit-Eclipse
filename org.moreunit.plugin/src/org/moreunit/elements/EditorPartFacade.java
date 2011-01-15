@@ -59,6 +59,11 @@ public class EditorPartFacade
         return (ITextSelection) selectionProvider.getSelection();
     }
 
+    /**
+     * Returns the method that directly surrounds the cursor position, even if
+     * it is part of an anonymous type (you may want to use
+     * {@link #getFirstNonAnonymousMethodSurroundingCursorPosition()} instead).
+     */
     public IMethod getMethodUnderCursorPosition()
     {
         IMethod method = null;
@@ -99,8 +104,6 @@ public class EditorPartFacade
      * Returns the first method that surrounds the cursor position and that is
      * not part of an anonymous type.
      */
-    // TODO Nicolas: determine whether this behavior would be preferable to the
-    // current getMethodUnderCursorPosition() in any case
     public IMethod getFirstNonAnonymousMethodSurroundingCursorPosition()
     {
         IMethod method = getFirstMethodSurroundingCursorPosition();
@@ -137,6 +140,9 @@ public class EditorPartFacade
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2011/01/08 18:50:45  ndemengel
+// Fixes bug 3002049
+//
 // Revision 1.9 2011/01/08 18:01:03 ndemengel
 // Removes commented out code and TODOs that are not relevant anymore
 //

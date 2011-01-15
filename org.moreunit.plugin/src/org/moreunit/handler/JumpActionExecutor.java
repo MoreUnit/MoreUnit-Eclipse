@@ -70,7 +70,7 @@ public class JumpActionExecutor
     public void executeJumpAction(IEditorPart editorPart)
     {
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-        executeJumpAction(editorPartFacade.getCompilationUnit(), editorPartFacade.getMethodUnderCursorPosition());
+        executeJumpAction(editorPartFacade.getCompilationUnit(), editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition());
     }
 
     public void executeJumpAction(ICompilationUnit compilationUnit)
@@ -106,6 +106,9 @@ public class JumpActionExecutor
 }
 
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2011/01/09 13:05:53  ndemengel
+// Clarifies the code by splitting EditorActionExecutor into logically distinct parts: CreateTestMethod-, Jump- and RunTests-ActionExecutor
+//
 //
 // JumpActionExecutor extracted from EditorActionExecutor
 //
