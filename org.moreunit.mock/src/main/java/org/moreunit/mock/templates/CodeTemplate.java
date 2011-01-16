@@ -16,6 +16,17 @@ public class CodeTemplate
     @XmlElement
     private String pattern;
 
+    public CodeTemplate()
+    {
+    }
+
+    public CodeTemplate(String id, String part, String pattern)
+    {
+        this.id = id;
+        this.part = part;
+        this.pattern = pattern;
+    }
+
     public String id()
     {
         return id;

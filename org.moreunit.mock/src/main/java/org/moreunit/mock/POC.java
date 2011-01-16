@@ -11,7 +11,7 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.moreunit.mock.templates.CodeTemplate;
 import org.moreunit.mock.templates.MockingTemplate;
 import org.moreunit.mock.templates.MockingTemplates;
-import org.moreunit.mock.templates.TemplateApplicator;
+import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.mock.templates.TemplateException;
 import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
 
@@ -36,7 +36,7 @@ public class POC
 
         try
         {
-            new TemplateApplicator().applyTemplate(templates.iterator().next(), type);
+            new TemplateProcessor().applyTemplate(templates.iterator().next(), type);
         }
         catch (TemplateException e)
         {

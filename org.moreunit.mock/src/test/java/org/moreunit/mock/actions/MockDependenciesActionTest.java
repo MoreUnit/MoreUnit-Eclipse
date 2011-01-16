@@ -22,7 +22,7 @@ import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.templates.MockingTemplate;
 import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.templates.TemplateApplicator;
+import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.mock.utils.ConversionUtils;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,7 +31,7 @@ public class MockDependenciesActionTest
     @Mock
     private MockingTemplateStore templateStore;
     @Mock
-    private TemplateApplicator templateApplicator;
+    private TemplateProcessor templateApplicator;
     @Mock
     private ConversionUtils conversionUtils;
     @Mock

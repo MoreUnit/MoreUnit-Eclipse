@@ -5,8 +5,9 @@ import java.io.PrintStream;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.utils.IOUtils;
-import org.moreunit.wizards.MoreUnitStatus;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,7 +32,7 @@ public class DefaultLogger implements Logger
     {
         if(debugEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.INFO, "[DEBUG] " + message));
+            logger.log(new Status(IStatus.INFO, MoreUnitMockPlugin.PLUGIN_ID, "[DEBUG] " + message));
         }
     }
 
@@ -44,7 +45,7 @@ public class DefaultLogger implements Logger
     {
         if(infoEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.INFO, String.valueOf(message)));
+            logger.log(new Status(IStatus.INFO, MoreUnitMockPlugin.PLUGIN_ID, String.valueOf(message)));
         }
     }
 
@@ -57,7 +58,7 @@ public class DefaultLogger implements Logger
     {
         if(warnEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.WARNING, String.valueOf(message)));
+            logger.log(new Status(IStatus.WARNING, MoreUnitMockPlugin.PLUGIN_ID, String.valueOf(message)));
         }
     }
 
@@ -70,7 +71,7 @@ public class DefaultLogger implements Logger
     {
         if(errorEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.ERROR, String.valueOf(message)));
+            logger.log(new Status(IStatus.ERROR, MoreUnitMockPlugin.PLUGIN_ID, String.valueOf(message)));
         }
     }
 
@@ -103,7 +104,7 @@ public class DefaultLogger implements Logger
     {
         if(errorEnabled())
         {
-            error(message + ": " + throwable.getMessage());
+            logger.log(new Status(IStatus.ERROR, MoreUnitMockPlugin.PLUGIN_ID, String.valueOf(message), throwable));
         }
     }
 

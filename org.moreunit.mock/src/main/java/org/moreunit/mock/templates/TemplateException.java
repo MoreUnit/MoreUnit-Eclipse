@@ -10,6 +10,11 @@ public class TemplateException extends Exception
         super(message);
     }
 
+    public TemplateException(Throwable cause)
+    {
+        super(cause);
+    }
+
     public TemplateException(String message, Throwable cause)
     {
         super(message, cause);

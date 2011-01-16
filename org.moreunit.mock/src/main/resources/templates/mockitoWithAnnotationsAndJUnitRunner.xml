@@ -10,19 +10,17 @@
                     @${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)
                 ]]></pattern>
             </code-template>
-            <!-- <code-template id="testCaseFieldsDeclaration" part="test-class-fields">
+            <code-template id="testCaseFieldsDeclaration" part="test-class-fields">
                 <pattern><![CDATA[
                     @${mockAnnotation:newType(org.mockito.Mock)} private ${mockObjectType} ${mockObject};
-                    @${mockAnnotation:newType(org.mockito.Mock)} private ${mockObjectTypeN} ${mockObjectN};
                 ]]></pattern>
-            </code-template> -->
-            <!-- <code-template id="objectCreationWithSetterInjection" part="before-instance-method">
+            </code-template>
+            <code-template id="objectCreationWithSetterInjection" part="before-instance-method">
                 <pattern><![CDATA[
                     ${objectUnderTestType} ${objectUnderTest} = new ${objectUnderTestType}();
                     ${:set(objectUnderTest, mockObjectType)};
-                    ${:set(objectUnderTest, mockObjectTypeN)};
                 ]]></pattern>
-            </code-template> -->
+            </code-template>
         </code-templates>
     </mocking-template>
 </mocking-templates>

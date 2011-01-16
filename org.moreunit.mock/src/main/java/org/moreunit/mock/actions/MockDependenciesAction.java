@@ -10,8 +10,8 @@ import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.templates.MockingTemplate;
 import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.templates.TemplateApplicator;
 import org.moreunit.mock.templates.TemplateException;
+import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.mock.utils.ConversionUtils;
 
 import com.google.inject.Inject;
@@ -19,14 +19,14 @@ import com.google.inject.Inject;
 public class MockDependenciesAction implements IEditorActionDelegate
 {
     private final MockingTemplateStore mockingTemplateStore;
-    private final TemplateApplicator templateApplicator;
+    private final TemplateProcessor templateApplicator;
     private final ConversionUtils conversionUtils;
     private final TypeFacadeFactory facadeFactory;
     private final Logger logger;
     private ICompilationUnit compilationUnit;
 
     @Inject
-    public MockDependenciesAction(MockingTemplateStore mockingTemplateStore, TemplateApplicator templateApplicator, ConversionUtils conversionUtils, TypeFacadeFactory facadeFactory, Logger logger)
+    public MockDependenciesAction(MockingTemplateStore mockingTemplateStore, TemplateProcessor templateApplicator, ConversionUtils conversionUtils, TypeFacadeFactory facadeFactory, Logger logger)
     {
         this.mockingTemplateStore = mockingTemplateStore;
         this.templateApplicator = templateApplicator;
@@ -37,7 +37,7 @@ public class MockDependenciesAction implements IEditorActionDelegate
 
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
-        compilationUnit = conversionUtils.getCompilationUnit(targetEditor);
+        compilationUnit = targetEditor == null ? null : conversionUtils.getCompilationUnit(targetEditor);
     }
 
     public void run(IAction action)
@@ -59,7 +59,7 @@ public class MockDependenciesAction implements IEditorActionDelegate
             catch (TemplateException e)
             {
                 // MSG
-                logger.error("Could not apply template to " + testCase.getElementName(), e);
+                logger.error("Could not apply " + template + " to " + testCase.getElementName(), e);
             }
         }
     }
