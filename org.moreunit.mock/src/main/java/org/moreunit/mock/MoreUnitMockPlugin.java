@@ -49,12 +49,19 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
         Guice.createInjector(osgiModule(context, eclipseRegistry()), new MockPluginCoreModule()).injectMembers(this);
 
         loadDefaultMockingTemplates();
-        getLogger().info("MoreUnit Mock Plugin started.");
+        log("MoreUnit Mock Plugin started.");
     }
 
     private void log(String message)
     {
-        getLog().log(new MoreUnitStatus(IStatus.INFO, message));
+        if(logger == null)
+        {
+            getLog().log(new MoreUnitStatus(IStatus.INFO, message));
+        }
+        else
+        {
+            logger.info(message);
+        }
     }
 
     @Inject
@@ -69,14 +76,14 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
 
     void loadDefaultMockingTemplates()
     {
-        getLogger().info("Loading default templates...");
+        logger.info("Loading default templates...");
 
         final String templateFile = TEMPLATE_DIRECTORY + "mockitoWithAnnotationsAndJUnitRunner.xml";
 
         InputStream definitionStream = pluginResourceLoader.getResourceAsStream(templateFile);
         if(definitionStream == null)
         {
-            getLogger().error("Resource not found: " + templateFile);
+            logger.error("Resource not found: " + templateFile);
             return;
         }
 
@@ -84,11 +91,11 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
         {
             MockingTemplates templates = templateDefinitionReader.read(definitionStream);
             mockingTemplateStore.store(templates);
-            getLogger().info("Default templates loaded...");
+            logger.info("Default templates loaded...");
         }
         catch (Exception e)
         {
-            getLogger().error("Could not load default templates", e);
+            logger.error("Could not load default templates", e);
         }
         finally
         {
@@ -96,20 +103,10 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
         }
     }
 
-    public Logger getLogger()
-    {
-        return logger;
-    }
-
-    public String getDefaultTemplateId()
-    {
-        return "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner";
-    }
-
     @Override
     public void stop(BundleContext context) throws Exception
     {
-        getLogger().info("Stopping MoreUnit Mock Plugin...");
+        log("Stopping MoreUnit Mock Plugin...");
 
         mockingTemplateStore.clear();
         plugin = null;
@@ -121,10 +118,5 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
     public Injector getInjector()
     {
         return injector;
-    }
-
-    public MockingTemplateStore getTemplateStore()
-    {
-        return mockingTemplateStore;
     }
 }

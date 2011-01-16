@@ -1,4 +1,4 @@
-#Thu Jul 29 22:45:35 CEST 2010
+#Sun Jan 16 10:37:21 CET 2011
 cleanup.add_default_serial_version_id=true
 cleanup.add_generated_serial_version_id=false
 cleanup.add_missing_annotations=true
@@ -93,7 +93,7 @@ sp_cleanup.remove_trailing_whitespaces_ignore_empty=false
 sp_cleanup.remove_unnecessary_casts=true
 sp_cleanup.remove_unnecessary_nls_tags=false
 sp_cleanup.remove_unused_imports=true
-sp_cleanup.remove_unused_local_variables=true
+sp_cleanup.remove_unused_local_variables=false
 sp_cleanup.remove_unused_private_fields=true
 sp_cleanup.remove_unused_private_members=false
 sp_cleanup.remove_unused_private_methods=true

@@ -42,7 +42,7 @@ public class MoreUnitMockPluginTest
     }
 
     @Test
-    public void shouldThrowExceptionWhenTemplateDefinitionResourceIsNotFound() throws Exception
+    public void should_log_error_when_template_definition_resource_is_not_found() throws Exception
     {
         when(resourceLoader.getResourceAsStream(anyString())).thenReturn(null);
 
@@ -52,7 +52,7 @@ public class MoreUnitMockPluginTest
     }
 
     @Test
-    public void shouldThrowExceptionWhenTemplateDefinitionIsInvalid() throws Exception
+    public void should_log_error_when_template_definition_is_invalid() throws Exception
     {
         InputStream stream = new MockInputStream("<invalidDefinition />");
         when(resourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + "mockitoWithAnnotationsAndJUnitRunner.xml")).thenReturn(stream);
@@ -65,7 +65,7 @@ public class MoreUnitMockPluginTest
     }
 
     @Test
-    public void shouldStoreTemplates() throws Exception
+    public void should_store_templates() throws Exception
     {
         InputStream stream = new MockInputStream("<validDefinition />");
         when(resourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + "mockitoWithAnnotationsAndJUnitRunner.xml")).thenReturn(stream);

@@ -8,6 +8,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class MockingTemplateStore
 {
+    public static final String DEFAULT_TEMPLATE = "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner";
+
     private final Map<String, MockingTemplate> templates = new HashMap<String, MockingTemplate>();
 
     public void store(MockingTemplates mockingTemplates)

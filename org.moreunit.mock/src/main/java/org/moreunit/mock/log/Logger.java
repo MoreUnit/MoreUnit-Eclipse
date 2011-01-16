@@ -4,21 +4,21 @@ public interface Logger
 {
     boolean debugEnabled();
 
-    void debug(String message);
-    
+    void debug(Object message);
+
     boolean infoEnabled();
 
-    void info(String message);
+    void info(Object message);
 
     boolean warnEnabled();
 
-    void warn(String message);
+    void warn(Object message);
 
     boolean errorEnabled();
 
-    void error(String message);
+    void error(Object message);
 
     void error(Throwable throwable);
 
-    void error(String message, Throwable throwable);
+    void error(Object message, Throwable throwable);
 }

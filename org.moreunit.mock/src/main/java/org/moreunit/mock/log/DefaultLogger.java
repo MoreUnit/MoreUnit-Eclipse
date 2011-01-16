@@ -27,7 +27,7 @@ public class DefaultLogger implements Logger
         return true; // not implemented yet
     }
 
-    public void debug(String message)
+    public void debug(Object message)
     {
         if(debugEnabled())
         {
@@ -40,11 +40,11 @@ public class DefaultLogger implements Logger
         return true; // not implemented yet
     }
 
-    public void info(String message)
+    public void info(Object message)
     {
         if(infoEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.INFO, message));
+            logger.log(new MoreUnitStatus(IStatus.INFO, String.valueOf(message)));
         }
     }
 
@@ -53,11 +53,11 @@ public class DefaultLogger implements Logger
         return true; // not implemented yet
     }
 
-    public void warn(String message)
+    public void warn(Object message)
     {
         if(warnEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.WARNING, message));
+            logger.log(new MoreUnitStatus(IStatus.WARNING, String.valueOf(message)));
         }
     }
 
@@ -66,11 +66,11 @@ public class DefaultLogger implements Logger
         return true; // not implemented yet
     }
 
-    public void error(String message)
+    public void error(Object message)
     {
         if(errorEnabled())
         {
-            logger.log(new MoreUnitStatus(IStatus.ERROR, message));
+            logger.log(new MoreUnitStatus(IStatus.ERROR, String.valueOf(message)));
         }
     }
 
@@ -99,7 +99,7 @@ public class DefaultLogger implements Logger
         }
     }
 
-    public void error(String message, Throwable throwable)
+    public void error(Object message, Throwable throwable)
     {
         if(errorEnabled())
         {

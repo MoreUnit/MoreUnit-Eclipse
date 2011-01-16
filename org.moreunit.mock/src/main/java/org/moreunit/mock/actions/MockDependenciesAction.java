@@ -1,84 +1,96 @@
 package org.moreunit.mock.actions;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.moreunit.elements.ClassTypeFacade;
-import org.moreunit.elements.TypeFacade;
-import org.moreunit.mock.MoreUnitMockPlugin;
-import org.moreunit.mock.POC;
+import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.templates.MockingTemplate;
 import org.moreunit.mock.templates.MockingTemplateStore;
+import org.moreunit.mock.templates.TemplateApplicator;
+import org.moreunit.mock.templates.TemplateException;
+import org.moreunit.mock.utils.ConversionUtils;
+
+import com.google.inject.Inject;
 
 public class MockDependenciesAction implements IEditorActionDelegate
 {
-    private static final MoreUnitMockPlugin MOCK_PLUGIN = MoreUnitMockPlugin.getDefault();
-
     private final MockingTemplateStore mockingTemplateStore;
-    private final String defaultTemplateId;
+    private final TemplateApplicator templateApplicator;
+    private final ConversionUtils conversionUtils;
+    private final TypeFacadeFactory facadeFactory;
+    private final Logger logger;
     private ICompilationUnit compilationUnit;
-    private Logger logger;
 
-    public MockDependenciesAction()
+    @Inject
+    public MockDependenciesAction(MockingTemplateStore mockingTemplateStore, TemplateApplicator templateApplicator, ConversionUtils conversionUtils, TypeFacadeFactory facadeFactory, Logger logger)
     {
-        this(MOCK_PLUGIN.getTemplateStore(), MOCK_PLUGIN.getDefaultTemplateId(), MOCK_PLUGIN.getLogger());
-    }
-
-    public MockDependenciesAction(MockingTemplateStore mockingTemplateStore, String defaultTemplateId, Logger logger)
-    {
-        this.defaultTemplateId = defaultTemplateId;
         this.mockingTemplateStore = mockingTemplateStore;
+        this.templateApplicator = templateApplicator;
+        this.conversionUtils = conversionUtils;
+        this.facadeFactory = facadeFactory;
         this.logger = logger;
     }
 
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
-        compilationUnit = createCompilationUnitFrom(targetEditor);
-        System.out.println(compilationUnit);
-    }
-
-    private ICompilationUnit createCompilationUnitFrom(IEditorPart editorPart)
-    {
-        IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-        return JavaCore.createCompilationUnitFrom(file);
+        compilationUnit = conversionUtils.getCompilationUnit(targetEditor);
     }
 
     public void run(IAction action)
     {
-        final boolean pocActive = false;
-        if(pocActive)
+        MockingTemplate template = getTemplate();
+        if(template == null)
         {
-            new POC().test();
-            logger.warn("POC is active");
+            // MSG
             return;
         }
 
-        POC templateApplicator = new POC();
-
-        MockingTemplate template = mockingTemplateStore.get(defaultTemplateId);
-        logger.debug(template.toString());
-
-        if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
+        IType testCase = getTestCaseType(compilationUnit);
+        if(testCase != null) // selection canceled by user
         {
-            templateApplicator.applyTemplate(template, compilationUnit.findPrimaryType());
-        }
-        else
-        {
-            IType testCase = new ClassTypeFacade(compilationUnit).getOneCorrespondingTestCase(true, "Mock dependencies in...");
-            if(testCase != null)
+            try
             {
-                templateApplicator.applyTemplate(template, testCase.getCompilationUnit().findPrimaryType());
+                templateApplicator.applyTemplate(template, testCase);
+            }
+            catch (TemplateException e)
+            {
+                // MSG
+                logger.error("Could not apply template to " + testCase.getElementName(), e);
             }
         }
     }
 
-    public void selectionChanged(IAction arg0, ISelection arg1)
+    private MockingTemplate getTemplate()
+    {
+        final String templateId = MockingTemplateStore.DEFAULT_TEMPLATE;
+
+        MockingTemplate template = mockingTemplateStore.get(templateId);
+        if(template == null)
+        {
+            logger.error("Template not found: " + templateId);
+        }
+
+        logger.debug("MockDependenciesAction: retrieved template: " + template);
+        return template;
+    }
+
+    private IType getTestCaseType(ICompilationUnit editedCompilationUnit)
+    {
+        if(facadeFactory.isTestCase(editedCompilationUnit))
+        {
+            return editedCompilationUnit.findPrimaryType();
+        }
+        else
+        {
+            return facadeFactory.createClassFacade(editedCompilationUnit).getOneCorrespondingTestCase(true, "Mock dependencies in...");
+        }
+    }
+
+    public void selectionChanged(IAction action, ISelection selection)
     {
         // nothing to do
     }

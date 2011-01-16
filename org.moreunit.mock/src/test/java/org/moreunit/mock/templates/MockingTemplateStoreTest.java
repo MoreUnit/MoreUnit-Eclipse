@@ -6,10 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MockingTemplateStoreTest
 {
     private MockingTemplateStore templateStore;
@@ -24,13 +21,13 @@ public class MockingTemplateStoreTest
     }
 
     @Test
-    public void shouldReturnNullWhenIdIsUnknwon() throws Exception
+    public void should_return_null_when_id_is_unknwon() throws Exception
     {
         assertNull(templateStore.get("unkown template ID"));
     }
 
     @Test
-    public void shouldReturnTemplateWhenIdIsKnown() throws Exception
+    public void should_return_template_when_id_is_knwon() throws Exception
     {
         MockingTemplate template = new MockingTemplate("templateID");
         templateStore.store(template.id(), template);
@@ -38,7 +35,7 @@ public class MockingTemplateStoreTest
     }
 
     @Test
-    public void shouldNotContainTemplateAnymoreWhenCleared() throws Exception
+    public void should_not_contain_template_anymore_when_cleared() throws Exception
     {
         MockingTemplate template2 = new MockingTemplate("template2");
         templateStore.store(template2.id(), template2);
@@ -51,7 +48,7 @@ public class MockingTemplateStoreTest
     }
 
     @Test
-    public void shouldKeepExistingTemplatesWhenAddingNewOnes()
+    public void should_keep_existing_templates_when_adding_new_ones() throws Exception
     {
         templateStore.store(new MockingTemplates(new MockingTemplate("templateA"), new MockingTemplate("templateB")));
         assertNotNull(templateStore.get("template1"));
