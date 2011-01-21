@@ -12,6 +12,7 @@
 package org.moreunit.extension.handler;
 
 import java.util.List;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -62,10 +63,13 @@ import org.moreunit.log.LogHandler;
  * {@link ITestMethodParticipator} introduced</dd>
  * <dd>09.01.2011 Dem/Gro Error fixed: {@link NullPointerException} if
  * <code>methodUnderTest</code> is <code>null</code></dd>
+ * <dd>21.01.2011 Gro Improved: Do not create unresolvable links in TestCase-JavaDoc for
+ * private/package-accessable methods under test, that are not listed in JavaDoc. Method
+ * isJavaDocVisible(IMethod) created</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 09.01.2011
+ * @version 21.01.2011
  * @since 1.5
  */
 public class ModifyTestMethodParticipator implements ITestMethodParticipator {
@@ -81,6 +85,19 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	public ModifyTestMethodParticipator() {
 
 		// Default-Contructor
+	}
+
+	/**
+	 * Is the method visible to JavaDoc?
+	 * @param method Method.
+	 * @return Visible.
+	 * @throws JavaModelException Fehler.
+	 */
+	private boolean isJavaDocVisible(final IMethod method) throws JavaModelException {
+
+		// Zugriffsflags holen und prüfen: Sichtbar ab protected!
+		int flags = method.getFlags();
+		return Flags.isProtected(flags) || Flags.isPublic(flags);
 	}
 
 	/**
@@ -418,8 +435,9 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 * Return a JavaDoc comment with a link to the method under test.
 	 * @param methodUnderTest Method under test.
 	 * @return JavaDoc comment text.
+	 * @throws JavaModelException Fehler.
 	 */
-	private String getMethodJavaDocCommentText(final IMethod methodUnderTest) {
+	private String getMethodJavaDocCommentText(final IMethod methodUnderTest) throws JavaModelException {
 
 		// Parameterliste erstellen
 		StringBuilder parameterList = new StringBuilder();
@@ -440,8 +458,29 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 			+ methodUnderTest.getElementName() // +
 			+ "(" + parameterList + ")";
 
-		// Kommentar bauen und liefern
-		return "Test method for " + createJavaDocLink(linkTarget) + ".";
+		// InitKommentar
+		StringBuilder builder = new StringBuilder("Test method for ");
+
+		// Methode sichtbar? Dann Link, sonst als HTML-<code>-Tag
+		if (isJavaDocVisible(methodUnderTest)) {
+			builder.append(createJavaDocLink(linkTarget));
+		} else {
+			builder.append(createCodedTag(linkTarget));
+		}
+
+		// Punkt zugügen und liefern
+		builder.append(".");
+		return builder.toString();
+	}
+
+	/**
+	 * Creates a Coded-Tag.
+	 * @param target Link target.
+	 * @return JavaDoc-Coded-Tag.
+	 */
+	private String createCodedTag(final String target) {
+
+		return "<code>" + target + "</code>";
 	}
 
 	/**
