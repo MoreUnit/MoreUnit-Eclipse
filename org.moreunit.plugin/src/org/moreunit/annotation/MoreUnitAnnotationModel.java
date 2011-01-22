@@ -162,8 +162,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
         try
         {
             EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+            if(! editorPartFacade.isJavaFile())
+            {
+                return;
+            }
+            
             ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
-            if(! editorPartFacade.isJavaFile() || TypeFacade.isTestCase(compilationUnit))
+            if(TypeFacade.isTestCase(compilationUnit))
             {
                 return;
             }
