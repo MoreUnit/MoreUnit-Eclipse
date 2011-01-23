@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="feature_export" name="MoreUnit">
+	<property name="username" value="" />
+	<property name="keyfile" value="${user.home}/.ssh/id_dsa.sf" />
+	<property name="updatesite" value="${user.home}/workspaces/plugindev/org.moreunit.updatesite" />
+	<property name="homepage" value="${user.home}/workspaces/web/plugin" />
+
+	<target name="upload">
+		<scp file="${updatesite}/site.xml" todir="${username},moreunit:pw@web.sourceforge.net:htdocs/org.moreunit.updatesite/" keyfile="${keyfile}" sftp="true">
+		</scp>
+	</target>
+	
+	<target name="upload homepage">
+		<scp file="${homepage}/kontakt.html" todir="${username},moreunit:pw@web.sourceforge.net:htdocs/" keyfile="${keyfile}" sftp="true"></scp>
+		
+		<!--<scp file="${homepage}/pix/site.xml" todir="${username},moreunit:pw@web.sourceforge.net:htdocs/pix/" keyfile="${keyfile}" sftp="true"></scp>
+		
+		<scp file="${homepage}/pix/properties/site.xml" todir="${username},moreunit:pw@web.sourceforge.net:htdocs/pix/properties/" keyfile="${keyfile}" sftp="true"></scp>-->
+	</target>
+	
+	<!-- Task to merge a new release into an existing update site -->
+	
+	<property name="p2.build" value="${user.home}/Desktop/moreunit_V_2_2_1"/>
+	<property name="p2.repo.location" value="${user.home}/workspaces/plugindev/org.moreunit.updatesite"/>
+    
+    <target name="merge_build" description="description">
+	<p2.mirror source="${p2.build}">
+		<destination location="${p2.repo.location}" compressed="true" append="true"/>
+		<slicingoptions includeoptional="false" />
+	</p2.mirror>        
+    </target>
+
+	<target name="feature_export">
+		<pde.exportFeatures destination="/tmp" exportSource="false" exportType="zip" features="moreUnit" filename="moreunit_V_1_2_0.zip" useJARFormat="true" />
+	</target>
+
+	<target name="export">
+		<java fork="true" jar="/Applications/eclipse35M3/plugins/org.eclipse.equinox.launcher_1.0.200.v20080825-1800.jar">
+			<arg value="-application org.eclipse.ant.core.antRunner" />
+			<arg value="-buildfile /Applications/eclipse35M3/plugins/org.eclipse.pde.build_3.5.0.v20081029/scripts/build.xml" />
+			<arg value="-Dbuilder=/Users/vera/workspaces/mu/org.moreunit.build/" />
+		</java>
+	</target>
+</project>
+
+<!--
+java -jar /Applications/eclipse35M3/plugins/org.eclipse.equinox.launcher_1.0.200.v20080825-1800.jar -application org.eclipse.ant.core.antRunner -buildfile /Applications/eclipse35M3/plugins/org.eclipse.pde.build_3.5.0.v20081029/scripts/build.xml -Dbuilder=/Users/vera/workspaces/mu/org.moreunit.build/
+-->
