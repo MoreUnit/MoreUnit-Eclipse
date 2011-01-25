@@ -31,7 +31,28 @@
     </target>
 
 	<target name="feature_export">
-		<pde.exportFeatures destination="/tmp" exportSource="false" exportType="zip" features="moreUnit" filename="moreunit_V_1_2_0.zip" useJARFormat="true" />
+		<pde.exportFeatures destination="/tmp" exportSource="true" exportType="zip" features="org.moreunit" filename="moreunit_V_2_2_1.zip" useJARFormat="true" />
+	</target>
+	
+	
+	<!--
+	/Applications/eclipse36Rcp/eclipse -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher -metadataRepository file:/tmp/repository -artifactRepository file:/tmp/repository -source /tmp/moreunit_V_2_2_1 -compress -publishArtifacts
+	-->
+	<target name="metadata">
+		<exec command="/Applications/eclipse36Rcp/eclipse -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher -metadataRepository file:/tmp/repository -artifactRepository file:/tmp/repository -source /tmp/moreunit_V_2_2_1 -compress -publishArtifacts">
+			<!--
+			<arg value="-application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher -metadataRepository file:/tmp/repository -artifactRepository file:/tmp/repository -source /tmp/moreunit_V_2_2_1 -compress -publishArtifacts"/>
+			<arg value="-metadataRepository file:/tmp/repository"/>
+			<arg value="-artifactRepository file:/tmp/repository"/>
+			<arg value="-source /tmp/moreunit_V_2_2_1"/>
+			<arg value="-compress"/>
+			<arg value="-publishArtifacts"/>
+			-->
+		</exec>
+	</target>
+	
+	<target name="category">
+		<exec command="/Applications/eclipse36Rcp/eclipse -application org.eclipse.equinox.p2.publisher.CategoryPublisher -metadataRepository file:/tmp/repository -categoryDefinition file://Users/vera/workspaces/plugindev/org.moreunit.feature/category.xml -compress"/>
 	</target>
 
 	<target name="export">
