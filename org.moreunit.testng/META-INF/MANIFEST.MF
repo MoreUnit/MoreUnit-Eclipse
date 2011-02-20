@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: MoreUnit TestNG Support (Experimental)
-Bundle-SymbolicName: org.moreunit.testng;singleton:=true
-Bundle-Version: 2.1.4.qualifier
-Fragment-Host: org.testng.eclipse;bundle-version="5.14.1"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.moreunit;bundle-version="2.1.4"
-Bundle-Vendor: moreunit.sourceforge.net

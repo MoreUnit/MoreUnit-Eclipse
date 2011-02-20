@@ -1,8 +1,0 @@
-#Sat Oct 09 11:34:23 CEST 2010
-eclipse.preferences.version=1
-org.moreunit.extendedTestMethodSearch=true
-org.moreunit.flexiblenaming=true
-org.moreunit.prefixes=
-org.moreunit.test_type=junit4
-org.moreunit.unitsourcefolder=org.moreunit.plugin\:src\:org.moreunit.test\:test
-org.moreunit.useprojectsettings=true
