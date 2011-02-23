@@ -21,10 +21,11 @@ import org.osgi.framework.BundleContext;
  * <p>
  * <dl>
  * <dt><b>Changes:</b></dt>
+ * <dd>23.02.2011 Gro Moved to Subversion Repository</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 09.07.2010
+ * @version 23.02.2011
  * @since 1.5
  */
 public class Activator extends Plugin {
