@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -81,18 +82,32 @@ public class MoveClassParticipant extends MoveParticipant
 
             List<Change> changes = new ArrayList<Change>();
             Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
-            for (IType typeToRename : allTestcases)
+            
+            IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
+            String importString = String.format("%s.%s", packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
+            
+            for (IType typeToMove : allTestcases)
             {
                 ICompilationUnit[] members = new ICompilationUnit[1];
-                members[0] = typeToRename.getCompilationUnit();
+                members[0] = typeToMove.getCompilationUnit();
                 ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
 
-                MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToRename, members, newType);
+                MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToMove, members, newType);
                 RefactoringStatus refactoringStatus = new RefactoringStatus();
                 Refactoring createRefactoring = moveDescriptor.createRefactoring(refactoringStatus);
                 createRefactoring.checkAllConditions(pm);
                 Change createChange = createRefactoring.createChange(null);
                 changes.add(createChange);
+                
+                // Because of bug
+                // https://sourceforge.net/tracker/?func=detail&aid=3191142&group_id=156007&atid=798056
+                // we need to check if there is already an import for the CUT in the tests
+                // If not, the moveDescriptor creates a new (wrong) import for the CUT,
+                // to fix this, we remove this wrong import from the testcase
+                if(!typeToMove.getCompilationUnit().getImport(importString).exists())
+                {
+                    changes.add(new CutImportChange(importString, newType));
+                }
             }
 
             if(changes.size() == 1)
