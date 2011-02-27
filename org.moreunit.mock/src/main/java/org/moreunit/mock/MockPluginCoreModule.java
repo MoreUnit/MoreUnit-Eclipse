@@ -1,6 +1,7 @@
 package org.moreunit.mock;
 
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.moreunit.mock.log.DefaultLogger;
 import org.moreunit.mock.log.Logger;
 
@@ -27,5 +28,12 @@ public class MockPluginCoreModule extends AbstractModule
     protected ILog provideLog(MoreUnitMockPlugin plugin)
     {
         return plugin.getLog();
+    }
+
+    @Provides
+    @Inject
+    protected IPreferenceStore provideWorkspacePreferenceStore(MoreUnitMockPlugin plugin)
+    {
+        return plugin.getPreferenceStore();
     }
 }

@@ -1,58 +1,115 @@
 package org.moreunit.mock.templates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.moreunit.mock.model.Category;
+import org.moreunit.mock.model.MockingTemplate;
+import org.moreunit.mock.model.MockingTemplates;
+import org.moreunit.mock.templates.MockingTemplateStore;
 
 public class MockingTemplateStoreTest
 {
     private MockingTemplateStore templateStore;
+
+    private Category category1;
+    private Category category2;
+    private MockingTemplate template1;
 
     @Before
     public void setUp() throws Exception
     {
         templateStore = new MockingTemplateStore();
 
-        MockingTemplate template = new MockingTemplate("template1");
-        templateStore.store(template.id(), template);
+        category1 = new Category("category1", "Category 1");
+        category2 = new Category("category2", "Category 2");
+
+        template1 = new MockingTemplate("template1", "category1");
+
+        templateStore.store(new MockingTemplates(asList(category1), asList(template1)));
     }
 
     @Test
     public void should_return_null_when_id_is_unknwon() throws Exception
     {
-        assertNull(templateStore.get("unkown template ID"));
+        assertThat(templateStore.get("unkown template ID")).isNull();
     }
 
     @Test
     public void should_return_template_when_id_is_knwon() throws Exception
     {
-        MockingTemplate template = new MockingTemplate("templateID");
-        templateStore.store(template.id(), template);
-        assertEquals(template, templateStore.get("templateID"));
+        // given
+        MockingTemplate template = new MockingTemplate("templateID", "category1");
+
+        // when
+        templateStore.store(new MockingTemplates(asList(category1), asList(template)));
+
+        // then
+        assertThat(templateStore.get("templateID")).isEqualTo(template);
     }
 
     @Test
     public void should_not_contain_template_anymore_when_cleared() throws Exception
     {
-        MockingTemplate template2 = new MockingTemplate("template2");
-        templateStore.store(template2.id(), template2);
-        assertEquals(template2, templateStore.get("template2"));
-        assertEquals(new MockingTemplate("template1"), templateStore.get("template1"));
+        // given
+        MockingTemplate template2 = new MockingTemplate("template2", "category1");
 
+        // when
+        templateStore.store(new MockingTemplates(asList(category1), asList(template2)));
+
+        // then
+        assertThat(templateStore.get("template2")).isEqualTo(template2);
+        assertThat(templateStore.get("template1")).isEqualTo(new MockingTemplate("template1"));
+
+        // when
         templateStore.clear();
-        assertNull(templateStore.get("template1"));
-        assertNull(templateStore.get("template2"));
+
+        // then
+        assertThat(templateStore.get("template1")).isNull();
+        assertThat(templateStore.get("template2")).isNull();
     }
 
     @Test
     public void should_keep_existing_templates_when_adding_new_ones() throws Exception
     {
-        templateStore.store(new MockingTemplates(new MockingTemplate("templateA"), new MockingTemplate("templateB")));
-        assertNotNull(templateStore.get("template1"));
-        assertNotNull(templateStore.get("templateA"));
-        assertNotNull(templateStore.get("templateB"));
+        // when
+        templateStore.store(new MockingTemplates(new ArrayList<Category>(),
+                                                 asList(new MockingTemplate("templateA", "category1"), new MockingTemplate("templateB", "category1"))));
+
+        // then
+        assertThat(templateStore.get("template1")).isNotNull();
+        assertThat(templateStore.get("templateA")).isNotNull();
+        assertThat(templateStore.get("templateB")).isNotNull();
+    }
+
+    @Test
+    public void should_store_categories() throws Exception
+    {
+        // when
+        templateStore.store(new MockingTemplates(asList(category2), new ArrayList<MockingTemplate>()));
+
+        // then
+        assertThat(newHashSet(templateStore.getCategories())).isEqualTo(newHashSet(category1, category2));
+        assertThat(templateStore.getCategory("category1")).isEqualTo(category1);
+        assertThat(templateStore.getCategory("category2")).isEqualTo(category2);
+    }
+
+    @Test
+    public void should_retrieve_templates_by_category() throws Exception
+    {
+        MockingTemplate template2 = new MockingTemplate("template2", "category2");
+        MockingTemplate template3 = new MockingTemplate("template3", "category1");
+
+        // when
+        templateStore.store(new MockingTemplates(asList(category1, category2), asList(template2, template3)));
+
+        // then
+        assertThat(templateStore.getTemplates(category1)).isEqualTo(newHashSet(template1, template3));
+        assertThat(templateStore.getTemplates(category2)).isEqualTo(newHashSet(template2));
     }
 }

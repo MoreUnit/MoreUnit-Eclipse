@@ -1,13 +1,16 @@
 package org.moreunit.mock;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.moreunit.mock.MoreUnitMockPlugin.TEMPLATE_DIRECTORY;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +18,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.moreunit.mock.log.Logger;
-import org.moreunit.mock.templates.MockingTemplate;
+import org.moreunit.mock.model.Category;
+import org.moreunit.mock.model.MockingTemplate;
+import org.moreunit.mock.model.MockingTemplates;
+import org.moreunit.mock.templates.MockingTemplateException;
 import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.templates.MockingTemplates;
-import org.moreunit.mock.templates.TemplateException;
 import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,36 +48,47 @@ public class MoreUnitMockPluginTest
     @Test
     public void should_log_error_when_template_definition_resource_is_not_found() throws Exception
     {
+        // given
         when(resourceLoader.getResourceAsStream(anyString())).thenReturn(null);
 
+        // when
         plugin.loadDefaultMockingTemplates();
 
-        verify(logger).error(anyString());
+        // then
+        verify(logger, atLeastOnce()).error(anyString());
     }
 
     @Test
     public void should_log_error_when_template_definition_is_invalid() throws Exception
     {
+        // given
         InputStream stream = new MockInputStream("<invalidDefinition />");
-        when(resourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + "mockitoWithAnnotationsAndJUnitRunner.xml")).thenReturn(stream);
-        TemplateException testException = new TemplateException("test excepstion");
+        when(resourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + "mockito.xml")).thenReturn(stream);
+
+        MockingTemplateException testException = new MockingTemplateException("test excepstion");
         when(templateDefinitionReader.read(stream)).thenThrow(testException);
 
+        // when
         plugin.loadDefaultMockingTemplates();
 
+        // then
         verify(logger).error(anyString(), eq(testException));
     }
 
     @Test
     public void should_store_templates() throws Exception
     {
+        // given
         InputStream stream = new MockInputStream("<validDefinition />");
-        when(resourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + "mockitoWithAnnotationsAndJUnitRunner.xml")).thenReturn(stream);
-        MockingTemplates expectedTemplates = new MockingTemplates(new MockingTemplate("template"));
+        when(resourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + "mockito.xml")).thenReturn(stream);
+
+        MockingTemplates expectedTemplates = new MockingTemplates(new ArrayList<Category>(), asList(new MockingTemplate("template")));
         when(templateDefinitionReader.read(stream)).thenReturn(expectedTemplates);
 
+        // when
         plugin.loadDefaultMockingTemplates();
 
+        // then
         verify(templateStore).store(expectedTemplates);
     }
 

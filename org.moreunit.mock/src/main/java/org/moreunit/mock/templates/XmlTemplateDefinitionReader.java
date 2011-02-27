@@ -6,13 +6,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.moreunit.mock.model.MockingTemplates;
+
+
 import com.google.inject.Singleton;
 
 @Singleton
 public class XmlTemplateDefinitionReader
 {
 
-    public MockingTemplates read(InputStream is) throws TemplateException
+    public MockingTemplates read(InputStream is) throws MockingTemplateException
     {
         try
         {
@@ -22,7 +25,7 @@ public class XmlTemplateDefinitionReader
         }
         catch (JAXBException e)
         {
-            throw new TemplateException("Could not read XML definition", e);
+            throw new MockingTemplateException("Could not read XML definition", e);
         }
     }
 }

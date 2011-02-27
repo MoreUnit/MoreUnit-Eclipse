@@ -3,6 +3,25 @@
 <plugin>
 
    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="Mock Dependencies in Test Case..."
+            defaultHandler="org.moreunit.mock.actions.ExtensionFactory:org.moreunit.mock.actions.MockDependenciesAction"
+            description=""
+            categoryId="org.eclipse.jdt.ui.category.source"
+            id="org.moreunit.mock.commands.mockDependencies" />
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+         sequence="CTRL+ALT+SHIFT+M"
+         commandId="org.moreunit.mock.commands.mockDependencies"
+         contextId="org.eclipse.jdt.ui.javaEditorScope"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+   </extension>
+      
+   <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
             targetID="#CompilationUnitEditorContext"
@@ -11,9 +30,47 @@
                label="Mock Dependencies in Test Case..."
                class="org.moreunit.mock.actions.ExtensionFactory"
                menubarPath="org.moreunit.ui.editor.menu.moreunit/group2"
-               id="org.moreunit.mock.actions.MockDependenciesAction">
-         </action>
+               id="org.moreunit.mock.actions.MockDependenciesAction"
+               definitionId="org.moreunit.mock.commands.mockDependencies" />
       </viewerContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword id="org.moreunit.mock.keywords.mock" label="mock" />
+      <keyword id="org.moreunit.mock.keywords.dependencies" label="dependencies" />
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            id="org.moreunit.mock.preferences.MainPreferencePage"
+            category="org.moreunit.moreunitPreferencePage"
+            name="Mock Generation"
+            class="org.moreunit.mock.actions.ExtensionFactory">
+         <keywordReference id="org.moreunit.mock.keywords.mock" />
+         <keywordReference id="org.moreunit.mock.keywords.dependencies" />
+      </page>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            id="org.moreunit.mock.preferences.MainPropertyPage"
+            category="org.moreunit.properties"
+            name="Mock Generation"
+            class="org.moreunit.mock.actions.ExtensionFactory">
+         <keywordReference id="org.moreunit.mock.keywords.mock" />
+         <keywordReference id="org.moreunit.mock.keywords.dependencies" />
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+               <test
+                     property="org.eclipse.core.resources.projectNature"
+                     value="org.eclipse.jdt.core.javanature" />
+            </adapt>
+         </enabledWhen>
+      </page>
    </extension>
    
 </plugin>

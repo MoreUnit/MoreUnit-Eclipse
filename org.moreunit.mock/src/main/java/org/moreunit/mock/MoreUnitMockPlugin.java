@@ -8,8 +8,8 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.mock.log.Logger;
+import org.moreunit.mock.model.MockingTemplates;
 import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.templates.MockingTemplates;
 import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
 import org.moreunit.mock.utils.IOUtils;
 import org.moreunit.wizards.MoreUnitStatus;
@@ -76,11 +76,26 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
 
     void loadDefaultMockingTemplates()
     {
-        logger.info("Loading default templates...");
+        if(logger.debugEnabled())
+        {
+            logger.debug("Loading default templates...");
+        }
 
-        final String templateFile = TEMPLATE_DIRECTORY + "mockitoWithAnnotationsAndJUnitRunner.xml";
+        // TODO Nicolas: detect available files
+        for (String templateFile : new String[] { "mockito.xml", "easymock.xml" })
+        {
+            loadTemplate(templateFile);
+        }
 
-        InputStream definitionStream = pluginResourceLoader.getResourceAsStream(templateFile);
+        if(logger.debugEnabled())
+        {
+            logger.debug("Default templates loaded...");
+        }
+    }
+
+    private void loadTemplate(final String templateFile)
+    {
+        InputStream definitionStream = pluginResourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + templateFile);
         if(definitionStream == null)
         {
             logger.error("Resource not found: " + templateFile);
@@ -91,7 +106,6 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
         {
             MockingTemplates templates = templateDefinitionReader.read(definitionStream);
             mockingTemplateStore.store(templates);
-            logger.info("Default templates loaded...");
         }
         catch (Exception e)
         {

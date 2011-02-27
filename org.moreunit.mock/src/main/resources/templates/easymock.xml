@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mocking-templates version="1.0">
+    <category id="org.moreunit.mock.easymock" name="EasyMock"/>
+    <mocking-template
+        id="org.moreunit.mock.easymockDefault"
+        category="org.moreunit.mock.easymock"
+        name="Default">
+        <code-template id="dependencyDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                private ${dependencyType} ${dependency} = ${createNiceMockMethod:importStatic(org.easymock.EasyMock.createNiceMock)}createNiceMock(${dependencyType}.class);
+            ]]></pattern>
+        </code-template>
+        <code-template id="objectUnderTestDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                private ${objectUnderTestType} ${objectUnderTest};
+            ]]></pattern>
+        </code-template>
+        <code-template id="objectUnderTestCreation" part="before-instance-method">
+            <exclude-if condition="injection-type" value="constructor"/>
+            <pattern><![CDATA[${objectUnderTest} = new ${objectUnderTestType}();]]></pattern>
+        </code-template>
+        <code-template id="constructorInjection" part="before-instance-method">
+            <include-if condition="injection-type" value="constructor"/>
+            <pattern><![CDATA[${objectUnderTest} = ${:constructWithDependencies(objectUnderTest, dependency)};]]></pattern>
+        </code-template>
+        <code-template id="setterInjection" part="before-instance-method">
+            <include-if condition="injection-type" value="setter"/>
+            <pattern><![CDATA[${:setDependency(objectUnderTest, dependency)};]]></pattern>
+        </code-template>
+        <code-template id="fieldInjection" part="before-instance-method">
+            <include-if condition="injection-type" value="field"/>
+            <pattern><![CDATA[${:assignDependency(objectUnderTest, dependency)};]]></pattern>
+        </code-template>
+    </mocking-template>
+</mocking-templates>

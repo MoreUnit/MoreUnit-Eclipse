@@ -15,6 +15,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultLogger implements Logger
 {
+    private static final Level LOG_LEVEL = Level.valueOf(System.getProperty("org.moreunit.mock.log.level", Level.INFO.name()));
+
     private final ILog logger;
 
     @Inject
@@ -25,7 +27,12 @@ public class DefaultLogger implements Logger
 
     public boolean debugEnabled()
     {
-        return true; // not implemented yet
+        return levelEnabled(Level.DEBUG);
+    }
+
+    private boolean levelEnabled(Level level)
+    {
+        return ! level.isLowerThan(LOG_LEVEL);
     }
 
     public void debug(Object message)
@@ -38,7 +45,7 @@ public class DefaultLogger implements Logger
 
     public boolean infoEnabled()
     {
-        return true; // not implemented yet
+        return levelEnabled(Level.INFO);
     }
 
     public void info(Object message)
@@ -51,7 +58,7 @@ public class DefaultLogger implements Logger
 
     public boolean warnEnabled()
     {
-        return true; // not implemented yet
+        return levelEnabled(Level.WARNING);
     }
 
     public void warn(Object message)
@@ -64,7 +71,7 @@ public class DefaultLogger implements Logger
 
     public boolean errorEnabled()
     {
-        return true; // not implemented yet
+        return levelEnabled(Level.ERROR);
     }
 
     public void error(Object message)
