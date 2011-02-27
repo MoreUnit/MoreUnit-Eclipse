@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit"
       label="MoreUnit Plug-In"
-      version="2.3.0"
+      version="2.3.0.qualifier"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
@@ -104,7 +104,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 
    <includes
          id="org.moreunit.source"
-         version="2.3.0"/>
+         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
@@ -124,7 +124,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="org.moreunit"
          download-size="0"
          install-size="0"
-         version="2.3.0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
