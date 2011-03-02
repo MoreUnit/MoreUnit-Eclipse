@@ -27,9 +27,13 @@ public class DependencyPatternsResolver implements PatternResolver
         StringBuilder buffer = new StringBuilder();
         for (Dependency d : context.dependenciesToMock())
         {
+            String resolvedType = String.format("\\${%sType:newType(%s)}", d.simpleClassName, d.fullyQualifiedClassName);
             String typeParams = buildTypeParametersDeclaration(d.typeParameters, new StringBuilder()).toString();
-            String resolvedTypePattern = String.format("\\${%sType:newType(%s)}%s", d.simpleClassName, d.fullyQualifiedClassName, typeParams);
-            buffer.append(codePattern.replaceAll("\\$\\{dependencyType\\}", resolvedTypePattern).replaceAll("\\$\\{dependency\\}", d.name));
+
+            buffer.append(codePattern.
+                    replaceAll("\\$\\{dependencyType\\}\\s*\\.\\s*class", resolvedType + ".class").
+                    replaceAll("\\$\\{dependencyType\\}", resolvedType + typeParams).
+                    replaceAll("\\$\\{dependency\\}", d.name));
         }
         return buffer.toString();
     }

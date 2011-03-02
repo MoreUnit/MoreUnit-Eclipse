@@ -127,4 +127,18 @@ public class DependencyPatternsResolverTest
                            + ",${SetType:newType(java.util.Set)}<${StringType:newType(java.lang.String)}>"
                            + "> post");
     }
+
+    @Test
+    public void should_not_add_type_parameters_for_classes() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter", asList(new TypeParameter("java.lang.Float"))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType}.class post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}.class post");
+
+        assertThat(resolver.resolve("pre ${dependencyType}  . class post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}.class post");
+    }
 }
