@@ -5,6 +5,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
@@ -81,13 +82,6 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
             return;
         }
 
-        MockingTemplate template = getTemplate();
-        if(template == null)
-        {
-            // MSG
-            return;
-        }
-
         boolean compilationUnitIsTestCase = facadeFactory.isTestCase(compilationUnit);
         IType classUnderTest = getClassUnderTest(compilationUnit, compilationUnitIsTestCase);
         if(classUnderTest == null) // selection canceled by user
@@ -98,6 +92,13 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         IType testCase = getTestCaseType(compilationUnit, compilationUnitIsTestCase);
         if(testCase == null) // selection canceled by user
         {
+            return;
+        }
+
+        MockingTemplate template = getTemplate(classUnderTest.getJavaProject());
+        if(template == null)
+        {
+            // MSG
             return;
         }
 
@@ -112,9 +113,9 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         }
     }
 
-    private MockingTemplate getTemplate()
+    private MockingTemplate getTemplate(IJavaProject project)
     {
-        final String templateId = preferences.getMockingTemplate(compilationUnit.getJavaProject());
+        final String templateId = preferences.getMockingTemplate(project);
 
         MockingTemplate template = mockingTemplateStore.get(templateId);
         if(template == null)
