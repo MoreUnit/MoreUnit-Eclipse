@@ -45,7 +45,6 @@ public class Dependencies extends ArrayList<Dependency>
         initSetterDependencies();
         initFieldDependencies();
 
-        Collections.sort(constructorDependencies);
         Collections.sort(setterDependencies);
         Collections.sort(fieldDependencies);
         Collections.sort(this);

@@ -85,4 +85,10 @@ public class Dependency implements Comparable<Dependency>
     {
         return Collator.getInstance().compare(name, otherDependency.name);
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Dependency[%s]", name);
+    }
 }
