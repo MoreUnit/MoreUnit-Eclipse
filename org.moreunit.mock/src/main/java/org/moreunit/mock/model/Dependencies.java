@@ -1,14 +1,19 @@
 package org.moreunit.mock.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
@@ -21,6 +26,7 @@ public class Dependencies extends ArrayList<Dependency>
 
     private final IType classUnderTest;
     private final IType testCase;
+    private ITypeHierarchy typeHierarchy;
     public final List<Dependency> constructorDependencies = new ArrayList<Dependency>();
     public final List<SetterDependency> setterDependencies = new ArrayList<SetterDependency>();
     public final List<Dependency> fieldDependencies = new ArrayList<Dependency>();
@@ -33,9 +39,16 @@ public class Dependencies extends ArrayList<Dependency>
 
     public void compute() throws JavaModelException
     {
+        typeHierarchy = classUnderTest.newSupertypeHierarchy(new NullProgressMonitor());
+
         initContructorDependencies();
         initSetterDependencies();
         initFieldDependencies();
+
+        Collections.sort(constructorDependencies);
+        Collections.sort(setterDependencies);
+        Collections.sort(fieldDependencies);
+        Collections.sort(this);
     }
 
     private void initContructorDependencies() throws JavaModelException
@@ -71,7 +84,7 @@ public class Dependencies extends ArrayList<Dependency>
 
     private void initSetterDependencies() throws JavaModelException
     {
-        for (IMethod method : classUnderTest.getMethods())
+        for (IMethod method : getAllMethods())
         {
             String methodName = method.getElementName();
             if(method.getNumberOfParameters() == 1 && SETTER_PATTERN.matcher(methodName).matches())
@@ -85,6 +98,16 @@ public class Dependencies extends ArrayList<Dependency>
                 }
             }
         }
+    }
+
+    private Set<IMethod> getAllMethods() throws JavaModelException
+    {
+        Set<IMethod> methods = new HashSet<IMethod>();
+        for (IType type : typeHierarchy.getAllClasses())
+        {
+            Collections.addAll(methods, type.getMethods());
+        }
+        return methods;
     }
 
     private String resolveTypeSignature(String signature) throws JavaModelException
@@ -104,7 +127,7 @@ public class Dependencies extends ArrayList<Dependency>
 
     private void initFieldDependencies() throws JavaModelException
     {
-        for (IField field : classUnderTest.getFields())
+        for (IField field : getAllFields())
         {
             if(isVisibleToTestCase(field) && isAssignable(field))
             {
@@ -117,6 +140,16 @@ public class Dependencies extends ArrayList<Dependency>
                 }
             }
         }
+    }
+
+    private Set<IField> getAllFields() throws JavaModelException
+    {
+        Set<IField> fields = new HashSet<IField>();
+        for (IType type : typeHierarchy.getAllClasses())
+        {
+            Collections.addAll(fields, type.getFields());
+        }
+        return fields;
     }
 
     List<TypeParameter> resolveTypeParameters(String signature) throws JavaModelException

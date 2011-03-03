@@ -3,10 +3,11 @@ package org.moreunit.mock.model;
 import static org.moreunit.util.Preconditions.checkArgument;
 import static org.moreunit.util.Preconditions.checkNotNull;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dependency
+public class Dependency implements Comparable<Dependency>
 {
     public final String fullyQualifiedClassName;
     public final String simpleClassName;
@@ -80,4 +81,8 @@ public class Dependency
         return true;
     }
 
+    public int compareTo(Dependency otherDependency)
+    {
+        return Collator.getInstance().compare(name, otherDependency.name);
+    }
 }
