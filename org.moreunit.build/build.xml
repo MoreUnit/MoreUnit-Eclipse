@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="build_complete" name="MoreUnit">
-	<!--
-		Create this file with the following properties:
-		
-		workspace=...
-		temp_path=...
-		eclipse_path=...
-		
-	  -->
-	<property file="build.properties"/>
-	<property file="moreunit.properties"/>
-	
-	<!--
-	<property name="username" value="" />
-	<property name="keyfile" value="${user.home}/.ssh/id_dsa.sf" />
-	<property name="updatesite" value="${user.home}/workspaces/plugindev/org.moreunit.updatesite" />
-	<property name="homepage" value="${user.home}/workspaces/web/plugin" />
 
-	<target name="upload">
-		<scp file="${updatesite}/site.xml" todir="${username},moreunit:pw@web.sourceforge.net:htdocs/org.moreunit.updatesite/" keyfile="${keyfile}" sftp="true">
-		</scp>
-	</target>
-	
-	<target name="upload homepage">
-		<scp file="${homepage}/kontakt.html" todir="${username},moreunit:pw@web.sourceforge.net:htdocs/" keyfile="${keyfile}" sftp="true"></scp>
-	</target>
-	-->
-	
-	<!-- Task to merge a new release into an existing update site -->
-	
+	<!-- Specify here the feature and version of the feature to build -->
+	<property name="feature_id" value="org.moreunit"/>
 	<property name="main_number" value="2"/>
 	<property name="major_number" value="3"/>
 	<property name="minor_number" value="1"/>
+
+
+	<!-- PROPERTIES INCLUSION -->
+	
+	<!--
+		Create this file with the following properties:
+		
+		workspace = ...
+		temp_path = ...
+		eclipse_path = ...
+		
+		# you will find the following values in the plugins folder of your Eclipse installation:
+		equinox_launcher_jar_name = org.eclipse.equinox.launcher_<version>.jar
+		pde_build_folder_name = org.eclipse.pde.build_<version>
+	  -->
+	<property file="moreunit.properties"/>
+	
+	<!--
+		Create the following file to define the plugins packaged in your feature, in the following format:
+		
+		feature_plugins=plugin_1_folder/**,plugin_2_folder/**
+	-->
+	<property file="${feature_id}.properties"/>
+	
+	<!-- /PROPERTIES INCLUSION -->
+	
 	
 	<property name="version_number" value="${main_number}.${major_number}.${minor_number}"/>
 	<property name="version_number_file" value="${main_number}_${major_number}_${minor_number}"/>
-	
 	<property name="update-site-project" value="${workspace}/org.moreunit.updatesite"/>
-	
 	<property name="repository_folder" value="repository"/>
 	
+	<!-- Task to merge a new release into an existing update site -->
     <target 
     	name="build_complete" 
     	depends="update_version_number, refresh, prepare_build, build_feature, unzip_feature, metadata, category, merge_build" 
@@ -47,11 +46,7 @@
         <echo>Build new release version ${version_number}</echo>
     </target>
 	
-	<!--
-	<property name="p2.build" value="${user.home}/Desktop/moreunit_V_${version_number_file}"/>
-	-->
 	<property name="p2.build" value="${temp_path}/${repository_folder}"/>
-	<!--<property name="p2.repo.location" value="${workspace}/org.moreunit.updatesite"/>-->
 	<property name="p2.repo.location" value="${update-site-project}"/>
     
     <target name="merge_build">
@@ -62,11 +57,11 @@
     </target>
 
 	<target name="feature_export">
-		<pde.exportFeatures destination="${temp_path}" exportSource="true" exportType="zip" features="org.moreunit" filename="moreunit_V_${version_number_file}.zip" useJARFormat="true" />
+		<pde.exportFeatures destination="${temp_path}" exportSource="true" exportType="zip" features="${feature_id}" filename="${feature_id}_V_${version_number_file}.zip" useJARFormat="true" />
 	</target>
 	
 	<target name="unzip_feature">
-		<unzip src="${temp_path}/moreunit.build/moreunitbuild/org.moreunit-build.zip" dest="${temp_path}/moreunit_V_${version_number_file}/"/>
+		<unzip src="${temp_path}/moreunit.build/moreunitbuild/${feature_id}-build.zip" dest="${temp_path}/${feature_id}_V_${version_number_file}/"/>
 	</target>
 	
 	<target name="wait_for_feature">
@@ -76,37 +71,51 @@
 	
 	<target name="refresh">
 		<echo>Refreshing feature.xml, MANIFEST.MF, category.xml</echo>
-		<eclipse.refreshLocal resource="org.moreunit.feature/feature.xml" depth="infinite"/>
+		<eclipse.refreshLocal resource="${feature_id}.feature/feature.xml" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.plugin/META-INF/MANIFEST.MF" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.mock/META-INF/MANIFEST.MF" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.feature/category.xml" depth="infinite"/>
 	</target>
 	
 	<target name="metadata">
-		<exec command="${eclipse_path}/eclipse -application org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher -metadataRepository file:${temp_path}/${repository_folder} -artifactRepository file:${temp_path}/${repository_folder} -source ${temp_path}/moreunit_V_${version_number_file}/moreunit -compress -publishArtifacts"/>
+		<exec executable="${eclipse_path}/eclipse">
+			<arg value="-application"/><arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
+			<arg value="-metadataRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
+			<arg value="-artifactRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
+			<arg value="-source"/><arg value="${temp_path}/${feature_id}_V_${version_number_file}/moreunit"/>
+			<arg value="-compress"/>
+			<arg value="-publishArtifacts"/>
+		</exec>
 	</target>
 	
 	<target name="category">
-		<exec command="${eclipse_path}/eclipse -application org.eclipse.equinox.p2.publisher.CategoryPublisher -metadataRepository file:${temp_path}/${repository_folder} -categoryDefinition file:/${workspace}/org.moreunit.feature/category.xml -compress"/>
+		<exec executable="${eclipse_path}/eclipse">
+			<arg value="-application"/><arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
+			<arg value="-metadataRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
+			<arg value="-categoryDefinition"/><arg value="file:/${workspace}/org.moreunit.feature/category.xml"/>
+			<arg value="-compress"/>
+		</exec>
 	</target>
 
 	<target name="update_version_number">
 		<echo>New version number: ${version_number}</echo>
 		<echo>Update version number in feature.xml</echo>
 		<replaceregexp 
-			file="${workspace}/org.moreunit.feature/feature.xml" 
-			match="version=&quot;[0-9]\.[0-9]\.[0-9]&quot;" 
+			file="${workspace}/${feature_id}.feature/feature.xml" 
+			match="version=&quot;(0\.0\.0|[0-9]\.[0-9]\.[0-9]\.qualifier)&quot;" 
 			replace="version=&quot;${version_number}&quot;"
 			byline="true"/>
 		<echo>Update version number in MANIFEST.MF</echo>
 		<replaceregexp 
-			file="${workspace}/org.moreunit.plugin/META-INF/MANIFEST.MF" 
-			match="Bundle-Version: [0-9]\.[0-9]\.[0-9]" 
+			match="Bundle-Version: (0\.0\.0|[0-9]\.[0-9]\.[0-9]\.qualifier)" 
 			replace="Bundle-Version: ${version_number}"
-			byline="true"/>
+			byline="true">
+			<fileset dir="${workspace}" includes="${feature_plugins}/META-INF/MANIFEST.MF" />
+		</replaceregexp>
 		<echo>Add version to category.xml</echo>
 		<replace file="${workspace}/org.moreunit.feature/category.xml">
 			<replacetoken><![CDATA[<!-- new release -->]]></replacetoken>
-			<replacevalue><![CDATA[<feature url="features/org.moreunit_X.X.X.jar" id="org.moreunit" version="X.X.X">
+			<replacevalue><![CDATA[<feature url="features/FEATURE_ID_X.X.X.jar" id="FEATURE_ID" version="X.X.X">
 		<category name="moreunit.org"/>
 	</feature>
 	<!-- new release -->]]></replacevalue>
@@ -115,29 +124,32 @@
 			file="${workspace}/org.moreunit.feature/category.xml"
 			token="X.X.X" 
 			value="${version_number}"/>
+		<replace 
+			file="${workspace}/org.moreunit.feature/category.xml"
+			token="FEATURE_ID"
+			value="${feature_id}"/>
 	</target>
-	
-	<!--
-		http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.pde.doc.user/guide/tasks/pde_feature_build.htm
-			
-		java -jar /Applications/eclipse36Rcp/plugins/org.eclipse.equinox.launcher_1.1.0.v20100507.jar -application org.eclipse.ant.core.antRunner -buildfile /Applications/eclipse36Rcp/plugins/org.eclipse.pde.build_3.6.0.v20100603/scripts/build.xml -Dbuilder=/Users/vera/workspaces/plugindev/org.moreunit.pde
-	-->
 	
 	<target name="prepare_build">
 		<delete dir="${temp_path}/moreunit.build/"/>
 		<mkdir dir="${temp_path}/moreunit.build/"/>
 		<mkdir dir="${temp_path}/moreunit.build/features"/>
 		<mkdir dir="${temp_path}/moreunit.build/plugins"/>
-		<copydir dest="${temp_path}/moreunit.build/features/org.moreunit.feature/" src="${workspace}/org.moreunit.feature"/>
-		<copydir dest="${temp_path}/moreunit.build/plugins/org.moreunit.plugin/" src="${workspace}/org.moreunit.plugin"/>
+		<copy todir="${temp_path}/moreunit.build/features/${feature_id}.feature">
+			<fileset dir="${workspace}/${feature_id}.feature"/>
+		</copy>
+		<copy todir="${temp_path}/moreunit.build/plugins/">
+			<fileset dir="${workspace}" includes="${feature_plugins}" />
+		</copy>
 	</target>
 	
     <target name="build_feature" description="description">
-    	<!--
-        <java jar="/Applications/eclipse36Rcp/plugins/org.eclipse.equinox.launcher_1.1.0.v20100507.jar" fork="true">
-        	<arg value="-application org.eclipse.ant.core.antRunner -buildfile /Applications/eclipse36Rcp/plugins/org.eclipse.pde.build_3.6.0.v20100603/scripts/build.xml -Dbuilder=${user.home}/workspaces/plugindev/org.moreunit.pde"/>
-    	</java>
-    	-->
-    	<exec command="java -jar ${eclipse_path}/plugins/${equinox_launcher_jar_name} -application org.eclipse.ant.core.antRunner -buildfile ${eclipse_path}/plugins/${pde_build_folder_name}/scripts/build.xml -Dbuilder=${workspace}/org.moreunit.build"/>
+    	<exec executable="java">
+    		<arg value="-jar"/><arg value="${eclipse_path}/plugins/${equinox_launcher_jar_name}"/>
+    		<arg value="-application"/><arg value="org.eclipse.ant.core.antRunner"/>
+    		<arg value="-buildfile"/><arg value="${eclipse_path}/plugins/${pde_build_folder_name}/scripts/build.xml"/>
+    		<arg value="-Dbuilder=${workspace}/org.moreunit.build"/>
+    		<arg value="-Dfeature_id=${feature_id}"/>
+    	</exec>
     </target>
 </project>

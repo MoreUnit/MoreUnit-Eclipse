@@ -18,8 +18,8 @@
  	<target name="allElementsDelegator">
  		<ant antfile="${genericTargets}" target="${target}">
 	 		<property name="type" value="feature" />
-	 		<property name="id" value="org.moreunit" />
-			<property name="elementPath" value="${buildDirectory}/features/org.moreunit.feature" />
+	 		<property name="id" value="${feature_id}" />
+			<property name="elementPath" value="${buildDirectory}/features/${feature_id}.feature" />
  		</ant>
  	</target>
  
