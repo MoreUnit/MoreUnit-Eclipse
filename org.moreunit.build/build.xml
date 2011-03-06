@@ -8,6 +8,7 @@
 		eclipse_path=...
 		
 	  -->
+	<property file="build.properties"/>
 	<property file="moreunit.properties"/>
 	
 	<!--
@@ -30,7 +31,7 @@
 	
 	<property name="main_number" value="2"/>
 	<property name="major_number" value="3"/>
-	<property name="minor_number" value="0"/>
+	<property name="minor_number" value="1"/>
 	
 	<property name="version_number" value="${main_number}.${major_number}.${minor_number}"/>
 	<property name="version_number_file" value="${main_number}_${major_number}_${minor_number}"/>
@@ -137,6 +138,6 @@
         	<arg value="-application org.eclipse.ant.core.antRunner -buildfile /Applications/eclipse36Rcp/plugins/org.eclipse.pde.build_3.6.0.v20100603/scripts/build.xml -Dbuilder=${user.home}/workspaces/plugindev/org.moreunit.pde"/>
     	</java>
     	-->
-    	<exec command="java -jar ${eclipse_path}/plugins/org.eclipse.equinox.launcher_1.1.0.v20100507.jar -application org.eclipse.ant.core.antRunner -buildfile ${eclipse_path}/plugins/org.eclipse.pde.build_3.6.0.v20100603/scripts/build.xml -Dbuilder=${workspace}/org.moreunit.build"/>
+    	<exec command="java -jar ${eclipse_path}/plugins/${equinox_launcher_jar_name} -application org.eclipse.ant.core.antRunner -buildfile ${eclipse_path}/plugins/${pde_build_folder_name}/scripts/build.xml -Dbuilder=${workspace}/org.moreunit.build"/>
     </target>
 </project>
