@@ -1,11 +1,11 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.util.Preconditions.checkArgument;
-import static org.moreunit.util.Preconditions.checkNotNull;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.moreunit.util.Preconditions.checkArgument;
+import static org.moreunit.util.Preconditions.checkNotNull;
 
 public class Dependency implements Comparable<Dependency>
 {
@@ -22,9 +22,12 @@ public class Dependency implements Comparable<Dependency>
     public Dependency(String fullyQualifiedClassName, String name, List<TypeParameter> typeParameters)
     {
         this.fullyQualifiedClassName = checkNotNull(fullyQualifiedClassName);
-        checkArgument(! fullyQualifiedClassName.isEmpty());
+        // String#isEmpty() introduced in Java6
+        // checkArgument(! fullyQualifiedClassName.isEmpty());
+        checkArgument(fullyQualifiedClassName.length() > 0);
         this.name = checkNotNull(name);
-        checkArgument(! name.isEmpty());
+        // checkArgument(! name.isEmpty());
+        checkArgument(name.length() > 0);
         this.typeParameters = checkNotNull(typeParameters);
 
         simpleClassName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".") + 1);
