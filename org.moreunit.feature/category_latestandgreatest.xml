@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.moreunit_2.3.0.201103081610.jar" id="org.moreunit" version="2.3.0.201103081610">
+      <category name="moreunit.org"/>
+   </feature>
+   <category-def name="moreunit.org" label="MoreUnit"/>
+</site>
