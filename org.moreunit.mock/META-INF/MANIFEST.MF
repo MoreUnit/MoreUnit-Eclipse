@@ -16,5 +16,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: moreunit.sourceforge.net
 Import-Package: javax.xml.bind,
- javax.xml.bind.annotation,
- javax.xml.stream;version="1.0.1"
+ javax.xml.bind.annotation
+Bundle-ClassPath: lib/jsr173_api.jar,
+ .
