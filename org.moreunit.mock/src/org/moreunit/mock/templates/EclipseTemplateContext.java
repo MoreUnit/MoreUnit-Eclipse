@@ -16,6 +16,7 @@ import org.eclipse.jface.text.templates.TemplateException;
 /**
  * Contains Eclipse-specific logic to evaluate {@link Template}s.
  */
+@SuppressWarnings("restriction")
 public class EclipseTemplateContext
 {
     /**

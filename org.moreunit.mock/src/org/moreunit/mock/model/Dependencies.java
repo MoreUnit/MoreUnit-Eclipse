@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 
+@SuppressWarnings("restriction")
 public class Dependencies extends ArrayList<Dependency>
 {
     private static final long serialVersionUID = - 8786785084170298943L;

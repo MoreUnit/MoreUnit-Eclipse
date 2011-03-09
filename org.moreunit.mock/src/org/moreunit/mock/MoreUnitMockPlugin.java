@@ -1,23 +1,23 @@
 package org.moreunit.mock;
 
-import static org.ops4j.peaberry.Peaberry.osgiModule;
-import static org.ops4j.peaberry.eclipse.EclipseRegistry.eclipseRegistry;
-
 import java.io.InputStream;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.model.MockingTemplates;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
 import org.moreunit.mock.utils.IOUtils;
-import org.moreunit.wizards.MoreUnitStatus;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+
+import static org.ops4j.peaberry.Peaberry.osgiModule;
+import static org.ops4j.peaberry.eclipse.EclipseRegistry.eclipseRegistry;
 
 public class MoreUnitMockPlugin extends AbstractUIPlugin
 {
@@ -56,7 +56,7 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
     {
         if(logger == null)
         {
-            getLog().log(new MoreUnitStatus(IStatus.INFO, message));
+            getLog().log(new Status(IStatus.INFO, MoreUnitMockPlugin.PLUGIN_ID, message));
         }
         else
         {
