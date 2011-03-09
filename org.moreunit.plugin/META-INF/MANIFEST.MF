@@ -25,7 +25,10 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test",
  org.moreunit.actions;x-friends:="org.moreunit.test",
  org.moreunit.annotation;x-friends:="org.moreunit.test",
  org.moreunit.decorator;x-friends:="org.moreunit.test";uses:="org.eclipse.jface.viewers",
- org.moreunit.elements;x-friends:="org.moreunit.test";
+ org.moreunit.elements;
+  x-friends:="org.moreunit.test,
+   org.moreunit.mock,
+   org.moreunit.mock.test";
   uses:="org.eclipse.jdt.core,
    org.eclipse.jface.viewers,
    org.eclipse.jdt.core.dom,
@@ -76,7 +79,8 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test",
    org.eclipse.swt.widgets",
  org.moreunit.util;
   x-friends:="org.moreunit.test,
-   org.moreunit.extension";
+   org.moreunit.extension,
+   org.moreunit.mock";
   uses:="org.eclipse.jdt.core,
    org.moreunit.preferences,
    org.eclipse.ui",
