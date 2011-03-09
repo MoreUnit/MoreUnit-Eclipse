@@ -220,7 +220,6 @@ litigation.
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.moreunit" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.moreunit.dependencies.guice" version="2.2.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
