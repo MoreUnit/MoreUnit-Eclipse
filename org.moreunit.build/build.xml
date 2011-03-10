@@ -57,6 +57,18 @@
 	<property name="repository_folder" value="repository"/>
 
 	<property name="svn_host" value="https://moreunit.svn.sourceforge.net/svnroot/moreunit"/>
+	
+	<!--
+		Macro to allow expansion of nested properties (needed in update_category)
+		see: http://ant.apache.org/faq.html#propertyvalue-as-name-for-property
+	  -->
+	<macrodef name="propertycopy">
+		<attribute name="name"/>
+		<attribute name="from"/>
+		<sequential>
+			<property name="@{name}" value="${@{from}}"/>
+		</sequential>
+	</macrodef>
 
 	<target
 		name="build_release"
@@ -120,7 +132,7 @@
 		<exec executable="${eclipse_path}/eclipse">
 			<arg value="-application"/><arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
 			<arg value="-metadataRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
-			<arg value="-categoryDefinition"/><arg value="file:/${workspace}/org.moreunit.feature/category.xml"/>
+			<arg value="-categoryDefinition"/><arg value="file:/${workspace}/org.moreunit.build/${category_file_name}"/>
 			<arg value="-compress"/>
 		</exec>
 	</target>
@@ -154,6 +166,12 @@
 		</copy>
 	</target>
 
+	<!--
+		Building the feature.
+		See: http://publib.boulder.ibm.com/infocenter/iadthelp/v7r0/index.jsp?topic=/org.eclipse.pde.doc.user/guide/tasks/pde_feature_build.htm
+		Building more than one feature at a time:
+		See: http://dev.eclipse.org/mhonarc/lists/pde-build-dev/msg00677.html
+	  -->
 	<target name="build_feature" description="description">
 		<exec executable="java">
 			<arg value="-jar"/><arg value="${eclipse_path}/plugins/${equinox_launcher_jar_name}"/>
@@ -216,17 +234,18 @@
 	</target>
 
 	<target name="update_category">
-		<!-- see generateVersionsLists comments, where variable org.moreunit comes from -->
+		<!-- see generateVersionsLists comments, where variable feature_property_name comes from -->
 		<property file="${temp_path}/moreunit.build/finalFeaturesVersions.properties"/>
+		<propertycopy name="feature_property_name" from="${feature_id}"/>
 		<replaceregexp 
-			file="${workspace}/org.moreunit.feature/category_latestandgreatest.xml" 
-			match="features/org.moreunit_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
-			replace="features/org.moreunit_${org.moreunit}.jar"
+			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
+			match="features/${feature_id}_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
+			replace="features/${feature_id}_${feature_property_name}.jar"
 			byline="true"/>
 		<replaceregexp 
-			file="${workspace}/org.moreunit.feature/category_latestandgreatest.xml" 
-			match="version=&quot;[0-9]\.[0-9]\.[0-9]\.*[0-9]*&quot;" 
-			replace="version=&quot;${org.moreunit}&quot;"
+			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
+			match="id=&quot;${feature_id}&quot; version=&quot;[0-9]\.[0-9]\.[0-9]\.*[0-9]*&quot;" 
+			replace="id=&quot;${feature_id}&quot; version=&quot;${feature_property_name}&quot;"
 			byline="true"/>
 
 		<exec executable="/bin/bash">
@@ -234,7 +253,8 @@
 			<arg value="${main_number}" />
 			<arg value="${major_number}" />
 			<arg value="${minor_number}" />
-			<arg value="${workspace}/org.moreunit.feature/category.xml"/>
+			<arg value="${workspace}/org.moreunit.build/category.xml"/>
+			<arg value="${feature_id}" />
 		</exec>
 	</target>
 
@@ -252,27 +272,29 @@
 	<!-- In nightly builds we want to use timestamp-qualifiers, but not in release builds -->
 	<target name="set_qualifier_to_context">
 		<replaceregexp 
-			file="${workspace}/org.moreunit.feature/build.properties" 
+			file="${workspace}/${feature_id}.feature/build.properties" 
 			match="qualifier=none" 
 			replace="qualifier=context"
 			byline="true"/>
 		<replaceregexp 
-			file="${workspace}/org.moreunit.plugin/build.properties" 
 			match="qualifier=none" 
 			replace="qualifier=context"
-			byline="true"/>
+			byline="true">
+			<fileset dir="${workspace}" includes="${feature_plugins}/build.properties" />
+		</replaceregexp>
 	</target>
 
 	<target name="set_qualifier_to_none">
 		<replaceregexp 
-			file="${workspace}/org.moreunit.feature/build.properties" 
+			file="${workspace}/${feature_id}.feature/build.properties" 
 			match="qualifier=context" 
 			replace="qualifier=none"
 			byline="true"/>
 		<replaceregexp 
-			file="${workspace}/org.moreunit.plugin/build.properties" 
 			match="qualifier=context" 
 			replace="qualifier=none"
-			byline="true"/>
+			byline="true">
+			<fileset dir="${workspace}" includes="${feature_plugins}/build.properties" />
+		</replaceregexp>
 	</target>
 </project>
