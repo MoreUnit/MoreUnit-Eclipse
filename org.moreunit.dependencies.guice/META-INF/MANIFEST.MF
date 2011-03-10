@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Dependencies: Guice
 Bundle-SymbolicName: org.moreunit.dependencies.guice
-Bundle-Version: 2.2.1
+Bundle-Version: 2.3.0.qualifier
 Bundle-ClassPath: .,
  aopalliance-1.0.jar,
  guice-customloader-20090412.jar,
