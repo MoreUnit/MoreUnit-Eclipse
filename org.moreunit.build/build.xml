@@ -103,18 +103,15 @@
 		<unzip src="${temp_path}/moreunit.build/moreunitbuild/${feature_id}-build.zip" dest="${temp_path}/${feature_id}_V_${version_number_file}/"/>
 	</target>
 
-	<target name="wait_for_feature">
-		<echo>Wait for feature to be finished</echo>
-		<sleep seconds="30"/>
-	</target>
-
 	<target name="refresh">
 		<echo>Refreshing feature.xml, MANIFEST.MF, category.xml, build.properties</echo>
 		<eclipse.refreshLocal resource="org.moreunit.feature/feature.xml" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.plugin/META-INF/MANIFEST.MF" depth="infinite"/>
-		<eclipse.refreshLocal resource="org.moreunit.feature/category.xml" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.build/category.xml" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.build/category_latestandgreatest.xml" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.feature/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.plugin/build.properties" depth="infinite"/>
+		<!-- TODO mock -->
 	</target>
 
 	<target name="metadata">
