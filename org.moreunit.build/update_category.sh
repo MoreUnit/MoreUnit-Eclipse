@@ -9,10 +9,11 @@
 # $2: property major_number from build.xml
 # $3: property minor_number from build.xml
 # $4: path to category.xml in org.moreunit.feature
+# $5: feature-id (org.moreunit|org.moreunit.mock)
 #
 #################################################################################################
 
-VERSION_REGEX="$1\.$2\."
+VERSION_REGEX="$5_$1\.$2\."
 
 # check, if this main_number-major_number combination is already in the category.xml
 GREP_RESULT=`egrep -o "${VERSION_REGEX}" $4`
@@ -23,7 +24,7 @@ if [ ${#GREP_RESULT} == 0 ]; then
 	echo "This version is not part of the category.xml and will be added"
 	
 	# String of what should be added to category.xml
-	NEW_VERSION="<feature url=\"features/org.moreunit_$1.$2.$3.jar\" id=\"org.moreunit\" version=\"$1.$2.$3\">\\
+	NEW_VERSION="<feature url=\"features/$5_$1.$2.$3.jar\" id=\"$5\" version=\"$1.$2.$3\">\\
 		<category name=\"moreunit.org\"/>\\
 	</feature>\\
 	<!-- new release -->"
