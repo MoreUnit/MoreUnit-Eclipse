@@ -1,0 +1,44 @@
+body	{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+article {
+	width: 500px;
+	margin: 20px;
+}
+
+section {
+	margin-top: 30px;
+}
+
+section h1 {
+	font-size: 1.5em;
+	font-weight: bold;
+	border-bottom: 1px solid black;
+	vertical-align: middle;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+
+figure {
+	display: block;
+	vertical-align:baseline;
+	background:transparent;
+	text-align: center;
+	margin-top: 30px;
+}
+	
+figure img.logo {
+	width: 200px;
+}
+
+figure img.icon {
+	width: 64px;
+	border: 1px solid grey;
+}
+
+figure figcaption {
+	display: block;
+	margin-top: 10px;
+}
