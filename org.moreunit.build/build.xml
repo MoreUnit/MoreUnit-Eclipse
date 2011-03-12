@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="build_nightly" name="MoreUnit">
-	
-	<!-- Specify here the feature and version of the feature to build -->
-	<property name="feature_id" value="org.moreunit.mock"/>
+
+	<!-- Specify the version of the features to build -->
 	<property name="main_number" value="2"/>
 	<property name="major_number" value="3"/>
 	<property name="minor_number" value="0"/>
-	
+
 	<!-- PROPERTIES INCLUSION -->
-	
+
 	<!--
 		Create this file with the following properties:
 		
 		workspace=...
-		temp_path=...
+		temp_path=...     # temporary build-path (be aware to adapt the buildDirectory-property in build.properties too)
 		eclipse_path=...
 		username=...      # SF-Username
 		keyfile=...       # private key for scp
@@ -21,16 +20,12 @@
 		# you will find the following values in the plugins folder of your Eclipse installation:
 		equinox_launcher_jar_name = org.eclipse.equinox.launcher_<version>.jar
 		pde_build_folder_name = org.eclipse.pde.build_<version>
+		
+		moreunit_feature_plugins=org.moreunit.plugin/**
+	  	moreunit_mock_feature_plugins=org.moreunit.mock/**,org.moreunit.dependencies.guice/**
 	  -->
 	<property file="moreunit.properties"/>
 
-	<!--
-		Create the following file to define the plugins packaged in your feature, in the following format:
-		
-		feature_plugins=plugin_1_folder/**,plugin_2_folder/**
-	-->
-	<property file="${feature_id}.properties"/>
-	
 	<!-- /PROPERTIES INCLUSION -->
 
 	<!--
@@ -57,38 +52,46 @@
 	<property name="repository_folder" value="repository"/>
 
 	<property name="svn_host" value="https://moreunit.svn.sourceforge.net/svnroot/moreunit"/>
-	
-	<!--
-		Macro to allow expansion of nested properties (needed in update_category)
-		see: http://ant.apache.org/faq.html#propertyvalue-as-name-for-property
-	  -->
-	<macrodef name="propertycopy">
-		<attribute name="name"/>
-		<attribute name="from"/>
-		<sequential>
-			<property name="@{name}" value="${@{from}}"/>
-		</sequential>
-	</macrodef>
 
+	<!--
+		This task should be used to build a release version.
+		It should export a tagged version from SVN (later GIT) and build this tagged version.
+		(Export is not tested yet)
+	  -->
 	<target
 		name="build_release"
-		depends="prepare_release_properties, prepare_folder_for_release, export_from_svn, build_feature, unzip_feature, metadata, category"
+		depends="prepare_release_properties, prepare_folder_for_release, export_from_svn, build_feature, unzip_features, metadata, category"
 		description="Builds a release version from SVN and updates the update site project">
 		<echo>Build new release version ${version_number}</echo>
 	</target>
 
+	<!--
+		This task should be used in the early phase of a new release cycle.
+		The version number should not be changed.
+		The result of this build uses timestamp-qualifiers to update to new versions.
+	  -->
 	<target
 		name="build_nightly"
-		depends="set_qualifier_to_context, refresh, prepare_latestandgreatest_properties, prepare_folder_for_local_build, build_feature, unzip_feature, metadata, update_category, category, set_qualifier_to_none, refresh"
+		depends="set_qualifier_to_context, refresh, prepare_latestandgreatest_properties, prepare_folder_for_local_build, build_feature, unzip_features, metadata, update_category, category, set_qualifier_to_none, refresh"
 		description="Builds a nightly build and puts it on the latestandgreatest update site">
 	</target>
 
+	<!--
+		This task should be used in the last phase of a release cycle (after feature freeze).
+		Every new prerelease version should have a new minor version number (the first prerelease
+		version should have a new major version number).
+		The result of this build does not use the qualifier.
+		Committing and tagging in SVN (later GIT) is commented out at the moment.
+	  -->
 	<target
 		name="build_pre_release"
-		depends="prepare_release_properties, update_version_number, refresh, prepare_build, build_feature, unzip_feature, metadata, update_category, refresh, category, commit_version_number, tag_version"
+		depends="prepare_release_properties, update_version_number, refresh, prepare_folder_for_local_build, build_feature, unzip_features, metadata, update_category, refresh, category, commit_version_number, tag_version"
 		description="Builds a new pre-release version with a new version number">
 	</target>
 
+	<!--
+	 	Target to merge a new version into an existing update site. 
+	  -->
 	<property name="p2.build" value="${temp_path}/${repository_folder}"/>
 	<property name="p2.repo.location" value="${update-site-project}"/>
 
@@ -99,8 +102,9 @@
 		</p2.mirror>
 	</target>
 
-	<target name="unzip_feature">
-		<unzip src="${temp_path}/moreunit.build/moreunitbuild/${feature_id}-build.zip" dest="${temp_path}/${feature_id}_V_${version_number_file}/"/>
+	<target name="unzip_features">
+		<unzip src="${temp_path}/moreunit.build/moreunitbuild/org.moreunit-build.zip" dest="${temp_path}/org.moreunit_V_${version_number_file}/"/>
+		<unzip src="${temp_path}/moreunit.build/moreunitbuild/org.moreunit.mock-build.zip" dest="${temp_path}/org.moreunit_V_${version_number_file}/"/>
 	</target>
 
 	<target name="refresh">
@@ -111,25 +115,42 @@
 		<eclipse.refreshLocal resource="org.moreunit.build/category_latestandgreatest.xml" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.feature/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.plugin/build.properties" depth="infinite"/>
-		<!-- TODO mock -->
+		<eclipse.refreshLocal resource="org.moreunit.mock.feature/feature.xml" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.mock.feature/build.properties" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.mock.plugin/META-INF/MANIFEST.MF" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.mock.plugin/build.properties" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.dependencies.guice/build.properties" depth="infinite"/>
 	</target>
 
+	<!--
+		This target creates the artifacts.jar and contents.jar for the current export
+	  -->
 	<target name="metadata">
 		<exec executable="${eclipse_path}/eclipse">
-			<arg value="-application"/><arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
-			<arg value="-metadataRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
-			<arg value="-artifactRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
-			<arg value="-source"/><arg value="${temp_path}/${feature_id}_V_${version_number_file}/moreunit"/>
+			<arg value="-application"/>
+			<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher"/>
+			<arg value="-metadataRepository"/>
+			<arg value="file:${temp_path}/${repository_folder}"/>
+			<arg value="-artifactRepository"/>
+			<arg value="file:${temp_path}/${repository_folder}"/>
+			<arg value="-source"/>
+			<arg value="${temp_path}/org.moreunit_V_${version_number_file}/moreunit"/>
 			<arg value="-compress"/>
 			<arg value="-publishArtifacts"/>
 		</exec>
 	</target>
 
+	<!--
+		Adds a category for the current version.
+	  -->
 	<target name="category">
 		<exec executable="${eclipse_path}/eclipse">
-			<arg value="-application"/><arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
-			<arg value="-metadataRepository"/><arg value="file:${temp_path}/${repository_folder}"/>
-			<arg value="-categoryDefinition"/><arg value="file:/${workspace}/org.moreunit.build/${category_file_name}"/>
+			<arg value="-application"/>
+			<arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher"/>
+			<arg value="-metadataRepository"/>
+			<arg value="file:${temp_path}/${repository_folder}"/>
+			<arg value="-categoryDefinition"/>
+			<arg value="file:/${workspace}/org.moreunit.build/${category_file_name}"/>
 			<arg value="-compress"/>
 		</exec>
 	</target>
@@ -138,29 +159,21 @@
 		<echo>New version number: ${version_number}</echo>
 		<echo>Update version number in feature.xml</echo>
 		<replaceregexp 
-			file="${workspace}/${feature_id}.feature/feature.xml" 
 			match="version=&quot;[0-9]\.[0-9]\.[0-9]\.qualifier&quot;" 
 			replace="version=&quot;${version_number}.qualifier&quot;"
-			byline="true"/>
+			byline="true">
+			<fileset dir="${workspace}">
+				<include name="org.moreunit.feature/feature.xml"/>
+				<include name="org.moreunit.mock.feature/feature.xml"/>
+			</fileset>
+		</replaceregexp>
 		<echo>Update version number in MANIFEST.MF</echo>
 		<replaceregexp 
 			match="Bundle-Version: [0-9]\.[0-9]\.[0-9]" 
 			replace="Bundle-Version: ${version_number}"
-			byline="true"/>
-		<fileset dir="${workspace}" includes="${feature_plugins}/META-INF/MANIFEST.MF" />
-	</target>
-
-	<target name="prepare_build">
-		<delete dir="${temp_path}/moreunit.build/"/>
-		<mkdir dir="${temp_path}/moreunit.build/"/>
-		<mkdir dir="${temp_path}/moreunit.build/features"/>
-		<mkdir dir="${temp_path}/moreunit.build/plugins"/>
-		<copy todir="${temp_path}/moreunit.build/features/${feature_id}.feature">
-			<fileset dir="${workspace}/${feature_id}.feature"/>
-		</copy>
-		<copy todir="${temp_path}/moreunit.build/plugins/">
-			<fileset dir="${workspace}" includes="${feature_plugins}" />
-		</copy>
+			byline="true">
+			<fileset dir="${workspace}" includes="${moreunit_feature_plugins}/META-INF/MANIFEST.MF,${moreunit_mock_feature_plugins}/META-INF/MANIFEST.MF" />
+		</replaceregexp>
 	</target>
 
 	<!--
@@ -169,23 +182,23 @@
 		Building more than one feature at a time:
 		See: http://dev.eclipse.org/mhonarc/lists/pde-build-dev/msg00677.html
 	  -->
-	<target name="build_feature" description="description">
+	<target name="build_feature">
 		<exec executable="java">
-			<arg value="-jar"/><arg value="${eclipse_path}/plugins/${equinox_launcher_jar_name}"/>
-			<arg value="-application"/><arg value="org.eclipse.ant.core.antRunner"/>
-			<arg value="-buildfile"/><arg value="${eclipse_path}/plugins/${pde_build_folder_name}/scripts/build.xml"/>
+			<arg value="-jar"/>
+			<arg value="${eclipse_path}/plugins/${equinox_launcher_jar_name}"/>
+			<arg value="-application"/>
+			<arg value="org.eclipse.ant.core.antRunner"/>
+			<arg value="-buildfile"/>
+			<arg value="${eclipse_path}/plugins/${pde_build_folder_name}/scripts/build.xml"/>
 			<arg value="-Dbuilder=${workspace}/org.moreunit.build"/>
-			<arg value="-Dfeature_id=${feature_id}"/>
 		</exec>
 	</target>
 
 	<target name="prepare_release_properties">
-		<property name="version_qualifier" value="none"/>
 		<property name="category_file_name" value="category.xml"/>
 	</target>
 
 	<target name="prepare_latestandgreatest_properties">
-		<property name="version_qualifier" value="context"/>
 		<property name="category_file_name" value="category_latestandgreatest.xml"/>
 	</target>
 
@@ -193,11 +206,17 @@
 	</target>
 
 	<target name="prepare_folder_for_local_build" depends="create_tmp_folders">
-		<copy todir="${temp_path}/moreunit.build/features/${feature_id}.feature">
-			<fileset dir="${workspace}/${feature_id}.feature"/>
+		<copy todir="${temp_path}/moreunit.build/features/org.moreunit.feature">
+			<fileset dir="${workspace}/org.moreunit.feature"/>
+		</copy>
+		<copy todir="${temp_path}/moreunit.build/features/org.moreunit.mock.feature">
+			<fileset dir="${workspace}/org.moreunit.mock.feature"/>
 		</copy>
 		<copy todir="${temp_path}/moreunit.build/plugins/">
-			<fileset dir="${workspace}" includes="${feature_plugins}" />
+			<fileset dir="${workspace}" includes="${moreunit_feature_plugins}" />
+		</copy>
+		<copy todir="${temp_path}/moreunit.build/plugins/">
+			<fileset dir="${workspace}" includes="${moreunit_mock_feature_plugins}" />
 		</copy>
 	</target>
 
@@ -230,19 +249,36 @@
 	-->
 	</target>
 
+	<!--
+		This task updates the category-files (category_latestandgreatest.xml & category.xml).
+		In the latestandgreatest file we just need to update the version numbers.
+		In category.xml we have to scenarios:
+		1) The version (x.x.*) is already in the file, so we need to update this version
+		   number (by updating the minor version number)
+		2) The version (x.x.*) is not in the file, so we need to add this version to the file.
+	  -->
 	<target name="update_category">
 		<!-- see generateVersionsLists comments, where variable feature_property_name comes from -->
 		<property file="${temp_path}/moreunit.build/finalFeaturesVersions.properties"/>
-		<propertycopy name="feature_property_name" from="${feature_id}"/>
 		<replaceregexp 
 			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
-			match="features/${feature_id}_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
-			replace="features/${feature_id}_${feature_property_name}.jar"
+			match="features/org.moreunit_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
+			replace="features/org.moreunit_${org.moreunit}.jar"
 			byline="true"/>
 		<replaceregexp 
 			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
-			match="id=&quot;${feature_id}&quot; version=&quot;[0-9]\.[0-9]\.[0-9]\.*[0-9]*&quot;" 
-			replace="id=&quot;${feature_id}&quot; version=&quot;${feature_property_name}&quot;"
+			match="features/org.moreunit.mock_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
+			replace="features/org.moreunit.mock_${org.moreunit.mock}.jar"
+			byline="true"/>
+		<replaceregexp 
+			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
+			match="id=&quot;org.moreunit&quot; version=&quot;[0-9]\.[0-9]\.[0-9]\.*[0-9]*&quot;" 
+			replace="id=&quot;org.moreunit&quot; version=&quot;${org.moreunit}&quot;"
+			byline="true"/>
+		<replaceregexp 
+			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
+			match="id=&quot;org.moreunit.mock&quot; version=&quot;[0-9]\.[0-9]\.[0-9]\.*[0-9]*&quot;" 
+			replace="id=&quot;org.moreunit.mock&quot; version=&quot;${org.moreunit.mock}&quot;"
 			byline="true"/>
 
 		<exec executable="/bin/bash">
@@ -251,7 +287,16 @@
 			<arg value="${major_number}" />
 			<arg value="${minor_number}" />
 			<arg value="${workspace}/org.moreunit.build/category.xml"/>
-			<arg value="${feature_id}" />
+			<arg value="org.moreunit" />
+		</exec>
+
+		<exec executable="/bin/bash">
+			<arg value="update_category.sh"/>
+			<arg value="${main_number}" />
+			<arg value="${major_number}" />
+			<arg value="${minor_number}" />
+			<arg value="${workspace}/org.moreunit.build/category.xml"/>
+			<arg value="org.moreunit.mock" />
 		</exec>
 	</target>
 
@@ -259,39 +304,37 @@
 		Because of https://issues.apache.org/bugzilla/show_bug.cgi?id=33718
 		it is necessary to add the passphrase attribute. 
 	  -->
-	<target name="copy_build_to_latestandgreatest_updatesite">
+	<target name="copy_build_to_latestandgreatest_updatesite" description="Copies a the result of a build run to the latestandgreatest update site">
 		<scp todir="${username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/org.moreunit.updatetest" passphrase="" keyfile="${keyfile}" sftp="true" verbose="true">
 			<fileset dir="${temp_path}/${repository_folder}">
 			</fileset>
 		</scp>
 	</target>
+	
+	<fileset dir="${workspace}" id="buildprops">
+    	<include name="org.moreunit.feature/build.properties"/>
+    	<include name="org.moreunit.mock.feature/build.properties"/>
+		<include name="${moreunit_feature_plugins}/build.properties"/>
+		<include name="${moreunit_mock_feature_plugins}/build.properties"/>
+	</fileset>
 
 	<!-- In nightly builds we want to use timestamp-qualifiers, but not in release builds -->
 	<target name="set_qualifier_to_context">
-		<replaceregexp 
-			file="${workspace}/${feature_id}.feature/build.properties" 
+		<replaceregexp
 			match="qualifier=none" 
-			replace="qualifier=context"
-			byline="true"/>
-		<replaceregexp 
-			match="qualifier=none" 
-			replace="qualifier=context"
+			replace="qualifier=context" 
 			byline="true">
-			<fileset dir="${workspace}" includes="${feature_plugins}/build.properties" />
+			<fileset refid="buildprops"/>
 		</replaceregexp>
 	</target>
 
 	<target name="set_qualifier_to_none">
-		<replaceregexp 
-			file="${workspace}/${feature_id}.feature/build.properties" 
-			match="qualifier=context" 
-			replace="qualifier=none"
-			byline="true"/>
-		<replaceregexp 
+		<replaceregexp
 			match="qualifier=context" 
 			replace="qualifier=none"
 			byline="true">
-			<fileset dir="${workspace}" includes="${feature_plugins}/build.properties" />
+			<fileset refid="buildprops"/>
 		</replaceregexp>
 	</target>
+
 </project>
