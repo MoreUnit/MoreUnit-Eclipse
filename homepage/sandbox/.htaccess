@@ -1,0 +1,5 @@
+#Redirect permanent /kontakt.html http://moreunit.sourceforge.net/index.html#contact
+#Redirect permanent /docu.html http://moreunit.sourceforge.net/index.html#documentation
+#Redirect permanent /download.html http://moreunit.sourceforge.net/index.html#download
+#Redirect permanent /faq.html http://moreunit.sourceforge.net/index.html#faq
+#Redirect permanent /releases.html http://moreunit.sourceforge.net/index.html#releasenotes

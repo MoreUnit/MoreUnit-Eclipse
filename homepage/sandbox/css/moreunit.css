@@ -1,0 +1,103 @@
+/* Global layout */
+#site-header {
+	background: url('../img/logo.png') no-repeat left top;
+	height: 75px;
+	width: 312px;
+	display: block;
+	text-indent: -9999px;
+	white-space: nowrap;
+	margin: 0 10%;
+}
+
+#site-nav {
+	position: absolute;
+	left: 0;
+	top: 90px;
+	margin: 0 10%;
+}
+
+#site-content {
+	position: absolute;
+	left: 10%;
+	top: 130px;
+	width: 80%;
+}
+
+#site-footer {
+	display: block;
+	margin-top: 50px;
+}
+/* end of Global layout */
+
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+#site-nav li {
+	display: inline;
+	padding-right: 10px;
+}
+
+nav li a.selected {
+	color: black;
+	text-decoration: none;
+}
+
+article header {
+	font-size: 1.7em;
+	font-weight: bold;
+	padding-left: 5px;
+	border-bottom: 2px solid black;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: block;
+}
+
+section h1 {
+	margin-top: 30px;
+	font-size: 1.4em;
+	font-weight: bold;
+}
+
+section h2 {
+	margin-top: 20px;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+section h3 {
+	margin-top: 20px;
+	font-size: 1.1em;
+	font-style: italic;
+}
+
+aside {
+	display: block;
+	margin: 20px;
+}
+
+aside figure {
+	float: left;
+	text-align: center;
+	margin: 0 20px;
+}
+
+aside:after {
+ clear: both;
+ content: ".";
+ display: block;
+ height: 0;
+ visibility: hidden;
+}
+
+figure figcaption {
+	display: block;
+}
+
+
+/** Sections **/
+
+#releasenotes h2 {
+	margin-top: 20px;
+}

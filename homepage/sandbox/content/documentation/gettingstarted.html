@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title>MoreUnit - Documentation</title>
+	</head>
+	<body>
+		<section class="content">
+			<h1>Getting started</h1>
+			<h2>Step 1: Download and Install</h2>
+			<p>Follow the instructions on the <a href="../download.html">download section</a>. If you have chosen not to use the update site, download the
+			ZIP-File. Unzip the file. Copy the files from the &quot;plugins&quot; folder into the &quot;dropins&quot; folder of your Eclipse installation.
+			</p> 
+
+			<h2>Step 2: Activate Decoration of classes</h2>
+			<p>Choose <em>Eclipse|Window &gt; Preferences... &gt; General &gt; Appearance &gt; Label Decorations</em> and activate <em>Decorate Classes with
+			Test Case</em>.</p> 
+
+			<h2>Step 3: Enter your preferences</h2>
+			<h3>a) General preferences</h3>
+			<p>Before you can start you have to configure some preferences.</p>
+			<p>If the source folder for your preferences is not named &quot;junit&quot; you have to enter the name of your test source folder.</p>
+			<p>By default MoreUnit expects your test cases to be named with the suffix &quot;Test&quot;. For example if a class is named
+			<em>HelloWorld</em> then the test case should be named <em>HelloWorldTest</em>. If your suffix differs from this default you have to enter your
+			choice here. Note that you can enter several suffixes. You can define prefixes for your test cases as well.</p>
+			<p>In some projects package prefixes/suffixes are used (e.g. tests of classes in package <em>com.foo.*</em> are saved at <em>test.com.foo.* /
+			com.foo.test.*</em>), which can be configured as well.</p> 
+
+			<h3>b) Project specific	preferences (optional)</h3>
+			<p>If you have sourced out tests to another project you will have to define project specific settings. Select the project and open <em>Properties
+			&gt; MoreUnit</em>. Then choose the project which contains the tests for the underlying project.</p>
+			<p>If you have other settings that differ depending on the projects in your workspace you can define them under <em>Properties &gt; MoreUnit
+			&gt; Other</em>.</p>
+
+			<h2>Step 4: Start coding</h2>
+			<p>Configuration is finished. Start coding :) Switch between class/test case or method/test method with the shortcut <em>Ctrl-J</em>.</p>
+		</section>
+	</body>
+</html>
