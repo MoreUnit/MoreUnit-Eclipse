@@ -60,7 +60,7 @@
 	  -->
 	<target
 		name="build_release"
-		depends="prepare_release_properties, prepare_folder_for_release, export_from_svn, build_feature, unzip_features, metadata, category"
+		depends="prepare_release_properties, get_tagged_sources, prepare_folder_for_release, build_feature, unzip_features, metadata, category"
 		description="Builds a release version from SVN and updates the update site project">
 		<echo>Build new release version ${version_number}</echo>
 	</target>
@@ -203,6 +203,12 @@
 	</target>
 
 	<target name="prepare_folder_for_release" depends="create_tmp_folders">
+		<unzip src="${temp_path}/org.moreunit.plugin.zip" dest="${temp_path}/moreunit.build/plugins/" />
+		<unzip src="${temp_path}/org.moreunit.feature.zip" dest="${temp_path}/moreunit.build/features/" />
+		
+		<unzip src="${temp_path}/org.moreunit.mock.zip" dest="${temp_path}/moreunit.build/plugins/" />
+		<unzip src="${temp_path}/org.moreunit.dependencies.guice.zip" dest="${temp_path}/moreunit.build/plugins/" />
+		<unzip src="${temp_path}/org.moreunit.mock.features.zip" dest="${temp_path}/moreunit.build/features/" />
 	</target>
 
 	<target name="prepare_folder_for_local_build" depends="create_tmp_folders">
@@ -227,10 +233,31 @@
 		<mkdir dir="${temp_path}/moreunit.build/plugins"/>
 	</target>
 
-	<target name="export_from_svn">
-		<echo message="export tagged version from SVN"/>
-		<exec command="svn export ${svn_host}/tags/V_${version_number_file}/org.moreunit.feature ${temp_path}/moreunit.build/features/org.moreunit.feature/" />
-		<exec command="svn export ${svn_host}/tags/V_${version_number_file}/org.moreunit.plugin ${temp_path}/moreunit.build/plugins/org.moreunit.plugin/" />
+	<macrodef name="get_folder_from_repos_def">
+		<attribute name="folder"/>
+		<attribute name="version"/>
+		<attribute name="outputpath"/>
+		<element name="get-folder-from-repos"/>
+		<sequential>
+			<echo>  get @{folder}</echo>
+			<exec executable="git">
+				<arg value="archive"/>
+				<arg value="--format=zip"/>
+				<arg value="--output=@{outputpath}/@{folder}.zip"/>
+				<arg value="--remote=git://moreunit.git.sourceforge.net/gitroot/moreunit/moreunit"/>
+				<arg value="@{version}"/>
+				<arg value="@{folder}"/>
+			</exec>
+		</sequential>
+		</macrodef>
+	
+	<target name="get_tagged_sources">
+		<echo message="get tagged version (V_${version_number_file}) from GIT repository"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.plugin" outputpath="${temp_path}"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.feature" outputpath="${temp_path}"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.mock" outputpath="${temp_path}"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.mock.feature" outputpath="${temp_path}"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.dependencies.guice" outputpath="${temp_path}"/>
 	</target>
 
 	<target name="commit_version_number">
@@ -305,7 +332,19 @@
 		it is necessary to add the passphrase attribute. 
 	  -->
 	<target name="copy_build_to_latestandgreatest_updatesite" description="Copies a the result of a build run to the latestandgreatest update site">
-		<scp todir="${username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/org.moreunit.updatetest" passphrase="" keyfile="${keyfile}" sftp="true" verbose="true">
+		<exec command="ssh -t ${username},moreunit@shell.sourceforge.net create"></exec>
+		<sshexec 
+			host="web.sourceforge.net"
+			username="${username},moreunit"
+			keyfile="${keyfile}"
+			passphrase=""
+			command="rm -rf /home/groups/m/mo/moreunit/htdocs/latestandgreatest/features"/>
+		<sshexec host="web.sourceforge.net"
+			username="${username},moreunit"
+			keyfile="${keyfile}"
+			passphrase=""
+			command="rm -rf /home/groups/m/mo/moreunit/htdocs/latestandgreatest/plugins"/>
+		<scp todir="${username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/latestandgreatest" passphrase="" keyfile="${keyfile}" sftp="true" verbose="true">
 			<fileset dir="${temp_path}/${repository_folder}">
 			</fileset>
 		</scp>
@@ -326,6 +365,13 @@
 			byline="true">
 			<fileset refid="buildprops"/>
 		</replaceregexp>
+	</target>
+	
+	<target name="scptest">
+		<scp todir="${username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/scptest/" passphrase="" keyfile="${keyfile}" sftp="true" verbose="true">
+			<fileset dir="/Users/vera/Desktop/scptest/">
+			</fileset>
+		</scp>
 	</target>
 
 	<target name="set_qualifier_to_none">
