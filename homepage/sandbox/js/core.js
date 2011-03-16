@@ -11,6 +11,7 @@ MU = {
 		
 		$('a').removeClass('selected');
 		$('a[href="content/' + contentParts[0] + '.html"]').addClass('selected');
+		$('a[href="#' + contentId + '"]').addClass('selected');
 		
 		// page already displayed
 		if (MU.currentContent && MU.currentContent.article == contentParts[0] && (!contentParts[1] || MU.currentContent.section == contentParts[1])) {
@@ -75,7 +76,6 @@ MU = {
 					$(cfg.destination).html("Sorry, the requested content could not be loaded...");
 				}
 				else {
-					$($(cfg.destination + elementToRetrieve).get(0)).attr('id', cfg.newContent.section || cfg.newContent.article);
 					MU.adaptLinks(cfg.destination);
 					$('a[href="' + url + '"]').addClass('selected');
 				}
@@ -104,17 +104,20 @@ MU = {
 	adaptLinks: function(selector) {
 		$(selector + ' a').each(function() {
 			$(this).attr('href', $(this).attr('href')
-					.replace(/^index.html$/, './home.html')
-					.replace(/^(\.+)/, 'content'));
+					.replace(/^(\.*\/)?index.html$/, '#home') // index.html => #home
+					.replace(/^(?:\.*\/)*(?:content\/)?(.*)\.html$/, '#$1')); // ../*.html, content/**/*.html => #**/*
 		});
 		$(selector + ' a').click(function(e) {
-			if ($(this).attr('href').indexOf('content') != 0) {
+			var href = $(this).attr('href');
+			if (href.charAt(0) != '#') {
 				return true;
 			}
-			$.history.load($(this).attr('href')
-					.replace(/^(.*content)\//, '')
-					.replace(/\.html/, ''));
+			$.history.load(href.subtr(1));
 			return false;
+		});
+		$(selector + ' img').each(function() {
+			$(this).attr('src', $(this).attr('src')
+					.replace(/^(?:\.*\/)*img\/(.*)$/, 'img/$1')); // ../img/**/* => img/**/*
 		});
 	}
 };
