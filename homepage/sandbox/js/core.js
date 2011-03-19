@@ -10,8 +10,6 @@ MU = {
 		}
 		
 		$('a').removeClass('selected');
-		$('a[href="content/' + contentParts[0] + '.html"]').addClass('selected');
-		$('a[href="#' + contentId + '"]').addClass('selected');
 		
 		// page already displayed
 		if (MU.currentContent && MU.currentContent.article == contentParts[0] && (!contentParts[1] || MU.currentContent.section == contentParts[1])) {
@@ -76,8 +74,10 @@ MU = {
 					$(cfg.destination).html("Sorry, the requested content could not be loaded...");
 				}
 				else {
+					$(cfg.destination + elementToRetrieve).removeClass('content'); // prevents non-JS-mode style to apply
 					MU.adaptLinks(cfg.destination);
-					$('a[href="' + url + '"]').addClass('selected');
+					$('a[href="#' + cfg.newContent.article + '"]').addClass('selected');
+					$('a[href="#' + cfg.contentPath + '"]').addClass('selected');
 				}
 				
 				MU.currentContent = cfg.newContent;
@@ -90,7 +90,7 @@ MU = {
 				}
 			}
 			
-			if (cfg.contentPath == 'home') {
+			if (cfg.contentPath == 'home') { // "home" is embedded into index.html
 				var article = $('#home-content').clone().show();
 				$(cfg.destination).empty().append(article);
 				onLoad(article.html(), 'success');
