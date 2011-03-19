@@ -1,6 +1,10 @@
+.DS_Store
+Thumbs.db
+*/.gitignore
 org.moreunit.plugin/classes/
 org.moreunit.test/classes/
 org.moreunit.mock/classes/
+org.moreunit.mock.test/classes/
 org.moreunit.dependencies.guice/classes/
 org.moreunit.extension/classes/
 org.moreunit.build/moreunit.properties
