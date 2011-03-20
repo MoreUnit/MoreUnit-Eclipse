@@ -10,7 +10,25 @@
 		<header id="site-header"><em>MoreUnit</em> makes it easy to write more unit tests!</header>
 		
 		<section class="content">
-			<h1>TODO</h1>
-		</section>
+			<h1>Switching between test and class under test</h1>
+
+			<p>You can jump from java classes which are open in the editor to the corresponding test cases via the contextual menu of the editor or via the
+			shortcut <em>Ctrl-J</em>. MoreUnit identifies the name of the class under the cursor. To find the corresponding test case the prefixes and suffixes
+			from the preferences are used. If exactly one test case is found the file gets opened. If more than one test case is found a dialog is shown and
+			prompts you to choose which test case you want to work on:</p>
+			<figure><img src="../../img/dialog.png" width="151" height="103" alt="Test selection wizard" /></figure>
+
+			<p>If no test case is found the test case wizard is shown, initialized with the settings from the preference page:</p>
+			<figure><img src="../../img/wizard.png" width="566" height="498" alt="Test creation wizard" /></figure>
+
+			<p>MoreUnit also tries to identify the test method(s) corresponding to the method under the cursor and directly jumps to it if only one is found.
+			<br />Example: For a method named "addTree" tests named "testAddTree" or "testAddTreeSUFFIX" will be detected as test method.</p>
+
+			<p>Also, if you activated the extended method search, a test method that calls your method will be found, whatever its name. <br />Finally, please
+			note that jumping also works the other way, to go back to your production code.</p>
+
+			<p>The shortcuts for the jump/generate action are configurable. If you want to change the default keys go to <em>Window &gt; Preferences... &gt;
+			General &gt; Keys</em> and change the settings of the commands named "Create Test Method" and "Jump to Test".</p>
+	</section>
 	</body>
 </html>
