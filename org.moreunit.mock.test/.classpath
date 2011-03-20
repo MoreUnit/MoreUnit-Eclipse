@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="integration-test"/>
 	<classpathentry kind="lib" path="lib/fest-assert-1.3/fest-assert-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/fest-assert-1.3/lib/fest-util-1.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/guava-r08.jar"/>
