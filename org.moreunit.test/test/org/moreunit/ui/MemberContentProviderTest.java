@@ -1,9 +1,7 @@
 package org.moreunit.ui;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -133,18 +131,16 @@ public class MemberContentProviderTest
 
     private IType mockType(String typeName)
     {
-        IType mock = createNiceMock(IType.class);
-        expect(mock.getElementName()).andStubReturn(typeName);
-        replay(mock);
+        IType mock = mock(IType.class);
+        when(mock.getElementName()).thenReturn(typeName);
         return mock;
     }
 
     private IMethod mockMethod(IType declaringType, String methodName)
     {
-        IMethod mock = createNiceMock(IMethod.class);
-        expect(mock.getElementName()).andStubReturn(methodName);
-        expect(mock.getDeclaringType()).andStubReturn(declaringType);
-        replay(mock);
+        IMethod mock = mock(IMethod.class);
+        when(mock.getElementName()).thenReturn(methodName);
+        when(mock.getDeclaringType()).thenReturn(declaringType);
         return mock;
     }
 }
