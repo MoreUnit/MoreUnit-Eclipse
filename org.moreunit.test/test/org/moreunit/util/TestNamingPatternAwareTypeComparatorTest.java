@@ -1,8 +1,6 @@
 package org.moreunit.util;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.jdt.core.IType;
@@ -22,9 +20,8 @@ public class TestNamingPatternAwareTypeComparatorTest
 
     private IType mockType(String typeName)
     {
-        IType mock = createNiceMock(IType.class);
-        expect(mock.getElementName()).andStubReturn(typeName);
-        replay(mock);
+        IType mock = mock(IType.class);
+        when(mock.getElementName()).thenReturn(typeName);
         return mock;
     }
 }

@@ -1,8 +1,6 @@
 package org.moreunit.util;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 import org.eclipse.jdt.core.IMember;
@@ -36,9 +34,8 @@ public class MemberJumpHistoryTest
 
     private IType mockType(String typeName)
     {
-        IType mock = createNiceMock(IType.class);
-        expect(mock.getElementName()).andStubReturn(typeName);
-        replay(mock);
+        IType mock = mock(IType.class);
+        when(mock.getElementName()).thenReturn(typeName);
         return mock;
     }
 
@@ -61,10 +58,9 @@ public class MemberJumpHistoryTest
 
     private IMethod mockMethod(IType declaringType, String methodName)
     {
-        IMethod mock = createNiceMock(IMethod.class);
-        expect(mock.getElementName()).andStubReturn(methodName);
-        expect(mock.getDeclaringType()).andStubReturn(declaringType);
-        replay(mock);
+        IMethod mock = mock(IMethod.class);
+        when(mock.getElementName()).thenReturn(methodName);
+        when(mock.getDeclaringType()).thenReturn(declaringType);
         return mock;
     }
     

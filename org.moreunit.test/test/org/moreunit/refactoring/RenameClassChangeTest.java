@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import org.easymock.EasyMock;
+import static org.mockito.Mockito.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -19,28 +19,8 @@ public class RenameClassChangeTest
 
     private static final String ELEMENT_NAME_NEW = "Anything";
     private static final String ELEMENT_NAME_OLD = "Something";
-    /*
-     * private Mock typeToRename = mock(IType.class); private Mock renamedType =
-     * mock(IType.class); private Mock parentPackage =
-     * mock(IPackageFragment.class); private Mock compilationUnitToRename =
-     * mock(ICompilationUnit.class); private Mock renamedCompilationUnit =
-     * mock(ICompilationUnit.class);
-     */
-    // private NullProgressMonitor progressMonitor = new NullProgressMonitor();
-    //private RenameClassChange change;
 
     private static final IProgressMonitor PROGRESS_MONITOR = new NullProgressMonitor();
-
-    @Before
-    public void setUp() throws Exception
-    {
-        /*
-         * setUpType(typeToRename, "KebabHouse", compilationUnitToRename,
-         * parentPackage); setUpType(renamedType, "KebabEmporium",
-         * renamedCompilationUnit, parentPackage); change = new
-         * RenameClassChange((IType) typeToRename.proxy(), "KebabEmporium");
-         */
-    }
 
     @Test
     public void testPerformReturnsUndoForRenameType() throws CoreException
@@ -78,48 +58,42 @@ public class RenameClassChangeTest
 
     private IType createTypeRenameMockWithOldElementName()
     {
-        IType createMock = EasyMock.createNiceMock(IType.class);
-        EasyMock.expect(createMock.getElementName()).andReturn(ELEMENT_NAME_OLD).anyTimes();
-        EasyMock.expect(createMock.getParent()).andReturn(createFirstParentMockForTypeToRename()).anyTimes();
-
-        EasyMock.replay(createMock);
-
+        IType createMock = mock(IType.class);
+        when(createMock.getElementName()).thenReturn(ELEMENT_NAME_OLD);
+        IJavaElement firstParentMock = createFirstParentMockForTypeToRename();
+        when(createMock.getParent()).thenReturn(firstParentMock);
         return createMock;
     }
 
     private IJavaElement createFirstParentMockForTypeToRename()
     {
-        IJavaElement parentMock = EasyMock.createNiceMock(IJavaElement.class);
-        EasyMock.expect(parentMock.getElementType()).andReturn(IJavaElement.COMPILATION_UNIT).anyTimes();
-        EasyMock.expect(parentMock.getParent()).andReturn(createPackageFragmentMockWhichContainsTypeNewElementName()).anyTimes();
-        EasyMock.replay(parentMock);
+        IJavaElement parentMock = mock(IJavaElement.class);
+        when(parentMock.getElementType()).thenReturn(IJavaElement.COMPILATION_UNIT);
+        IPackageFragment packageFragmentMock = createPackageFragmentMockWhichContainsTypeNewElementName();
+        when(parentMock.getParent()).thenReturn(packageFragmentMock);
         return parentMock;
     }
 
     private IPackageFragment createPackageFragmentMockWhichContainsTypeNewElementName()
     {
-        IPackageFragment mock = EasyMock.createNiceMock(IPackageFragment.class);
-        EasyMock.expect(mock.getCompilationUnit(ELEMENT_NAME_NEW + ".java")).andReturn(createCompilationUnitMockWithTypeNewElementName()).anyTimes();
-        EasyMock.replay(mock);
-
+        IPackageFragment mock = mock(IPackageFragment.class);
+        ICompilationUnit compilationUnitMock = createCompilationUnitMockWithTypeNewElementName();
+        when(mock.getCompilationUnit(ELEMENT_NAME_NEW + ".java")).thenReturn(compilationUnitMock);
         return mock;
     }
 
     private ICompilationUnit createCompilationUnitMockWithTypeNewElementName()
     {
-        ICompilationUnit compilationUnitMock = EasyMock.createNiceMock(ICompilationUnit.class);
-        EasyMock.expect(compilationUnitMock.getType(ELEMENT_NAME_NEW)).andReturn(createTypeMockWithNewElementName()).anyTimes();
-        EasyMock.replay(compilationUnitMock);
-
+        ICompilationUnit compilationUnitMock = mock(ICompilationUnit.class);
+        IType typeMock = createTypeMockWithNewElementName();
+        when(compilationUnitMock.getType(ELEMENT_NAME_NEW)).thenReturn(typeMock);
         return compilationUnitMock;
     }
 
     private IType createTypeMockWithNewElementName()
     {
-        IType newTypeMock = EasyMock.createNiceMock(IType.class);
-        EasyMock.expect(newTypeMock.getElementName()).andReturn(ELEMENT_NAME_NEW).anyTimes();
-        EasyMock.replay(newTypeMock);
-
+        IType newTypeMock = mock(IType.class);
+        when(newTypeMock.getElementName()).thenReturn(ELEMENT_NAME_NEW);
         return newTypeMock;
     }
 
