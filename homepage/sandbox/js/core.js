@@ -1,4 +1,6 @@
 MU = {
+	version: 3, // to be incremented when delivering new content
+	
 	currentContent: null,
 	
 	loadContent: function(contentId) {
@@ -66,7 +68,7 @@ MU = {
 		$('#site-footer').fadeOut('fast'); // prevents "jumping" effect
 		
 		$(cfg.destination).fadeOut('fast', function() {
-			var url = 'content/' + cfg.contentPath + '.html'
+			var url = 'content/' + cfg.contentPath + '.html?v=' + MU.version;
 			var elementToRetrieve = ' .content';
 			
 			var onLoad = function(response, status, xhr) {

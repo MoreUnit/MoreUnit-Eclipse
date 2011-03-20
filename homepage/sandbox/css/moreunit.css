@@ -79,8 +79,9 @@ a:hover { color: #036; }
 
 /* Global layout */
 body {
-	width: 80%;
-	margin-left: 10%
+	width: 1000px;
+	margin: 0 auto;
+	background: #ffffff url(../img/shadow.png) repeat-y top center;
 }
 
 #site-header {
@@ -90,20 +91,29 @@ body {
 	display: block;
 	text-indent: -9999px;
 	white-space: nowrap;
+	margin: 15px 35px 0 35px;
 }
 
 #site-nav {
 	position: absolute;
-	left: 0;
-	top: 90px;
-	margin: 0 10%;
+	top: 110px;
+	width: 920px;
+	margin: 0 40px;
 }
 
 #site-content { /* acts as body */
 	position: absolute;
-	left: 10%;
 	top: 130px;
-	width: 80%;
+	width: 960px;
+	margin: 0 auto;
+}
+
+#wrapper {
+	margin: 0 40px;
+}
+
+.content {
+	margin: 0 40px;
 }
 
 #site-footer {
@@ -125,29 +135,53 @@ nav li a.selected {
 article header {
 	font-size: 1.7em;
 	font-weight: bold;
-	padding-left: 5px;
 	border-bottom: 2px solid black;
-	margin-top: 20px;
-	margin-bottom: 20px;
+	margin: 20px 0 20px 0;
 	display: block;
 }
 
 section h1 {
-	margin-top: 30px;
+	margin: 25px 0 10px 0;
 	font-size: 1.4em;
 	font-weight: bold;
 }
 
 section h2 {
-	margin-top: 20px;
+	margin: 20px 0 10px 0;
 	font-size: 1.2em;
 	font-weight: bold;
 }
 
 section h3 {
-	margin-top: 20px;
+	margin: 10px 0 5px 0;
 	font-size: 1.1em;
 	font-style: italic;
+}
+
+em {
+	font-style: italic;
+}
+
+p {
+	margin: 10px 0 5px 0;
+	text-align: justify; 
+}
+
+ol li {
+	list-style: decimal-leading-zero;
+	margin-left: 3px;
+}
+
+a img {
+	border: 0;
+}
+
+figure {
+	margin: 10px 10px 20px 10px;
+}
+
+figure figcaption {
+	display: block;
 }
 
 aside {
@@ -155,24 +189,25 @@ aside {
 	margin: 20px;
 }
 
-aside figure {
+div.figure-group {
+	margin: 20px;
+}
+
+aside figure,
+div.figure-group figure {
 	float: left;
 	text-align: center;
 	margin: 0 20px;
 }
 
-aside:after {
+aside:after,
+div.figure-group:after {
  clear: both;
  content: ".";
  display: block;
  height: 0;
  visibility: hidden;
 }
-
-figure figcaption {
-	display: block;
-}
-
 
 /** Sections **/
 
