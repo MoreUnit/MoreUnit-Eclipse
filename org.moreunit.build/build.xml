@@ -4,7 +4,7 @@
 	<!-- Specify the version of the features to build -->
 	<property name="main_number" value="2"/>
 	<property name="major_number" value="4"/>
-	<property name="minor_number" value="0"/>
+	<property name="minor_number" value="1"/>
 
 	<!-- PROPERTIES INCLUSION -->
 
