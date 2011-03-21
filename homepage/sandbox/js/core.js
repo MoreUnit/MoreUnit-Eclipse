@@ -114,7 +114,7 @@ MU = {
 			if (href.charAt(0) != '#') {
 				return true;
 			}
-			$.history.load(href.subtr(1));
+			$.history.load(href.substr(1));
 			return false;
 		});
 		$(selector + ' img').each(function() {
