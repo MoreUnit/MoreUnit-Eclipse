@@ -110,9 +110,13 @@ public class Dependencies extends ArrayList<Dependency>
         return methods;
     }
 
-    private String resolveTypeSignature(String signature) throws JavaModelException
+    String resolveTypeSignature(String signature) throws JavaModelException
     {
         String[][] possibleFieldTypes = classUnderTest.resolveType(signature);
+        if(possibleFieldTypes == null)
+        {
+            return signature;
+        }
 
         if(possibleFieldTypes.length != 0)
         {
