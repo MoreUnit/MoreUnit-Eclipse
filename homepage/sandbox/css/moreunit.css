@@ -81,7 +81,7 @@ a:hover { color: #036; }
 body {
 	width: 1000px;
 	margin: 0 auto;
-	background: #ffffff url(../img/shadow.png) repeat-y top center;
+	background: #ffffff url('../img/shadow.png') repeat-y top center;
 }
 
 #site-header {
@@ -91,21 +91,21 @@ body {
 	display: block;
 	text-indent: -9999px;
 	white-space: nowrap;
-	margin: 15px 35px 0 35px;
+	margin: 15px 35px 0 55px;
 }
 
 #site-nav {
 	position: absolute;
 	top: 110px;
-	width: 920px;
-	margin: 0 40px;
+	width: 880px;
+	margin: 0 60px;
 }
 
 #site-content { /* acts as body */
 	position: absolute;
 	top: 130px;
 	width: 960px;
-	margin: 0 auto;
+	margin: 0 20px;
 }
 
 #wrapper {
@@ -113,7 +113,7 @@ body {
 }
 
 .content {
-	margin: 0 40px;
+	margin: 0 60px;
 }
 
 #site-footer {
@@ -210,6 +210,28 @@ div.figure-group:after {
 }
 
 /** Sections **/
+
+#new {
+	border: 1px solid #444;
+	padding: 10px;
+	border-radius: 15px;
+	margin-top: 40px;
+}
+
+#new h1 {
+	background: #ffffff url('../img/new-small.png') top left no-repeat;
+	font-size: 1.2em;
+	font-weight: bold;
+	border: none;
+	height: 30px;
+	padding: 15px 0 0 60px;
+	margin: 0 0 0 0;
+}
+
+#new p {
+	margin: 0;
+	padding: 10px 5px 5px 5px;
+}
 
 #releasenotes h2 {
 	margin-bottom: 5px;
