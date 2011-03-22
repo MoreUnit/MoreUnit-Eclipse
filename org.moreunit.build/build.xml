@@ -208,7 +208,7 @@
 		
 		<unzip src="${temp_path}/org.moreunit.mock.zip" dest="${temp_path}/moreunit.build/plugins/" />
 		<unzip src="${temp_path}/org.moreunit.dependencies.guice.zip" dest="${temp_path}/moreunit.build/plugins/" />
-		<unzip src="${temp_path}/org.moreunit.mock.features.zip" dest="${temp_path}/moreunit.build/features/" />
+		<unzip src="${temp_path}/org.moreunit.mock.feature.zip" dest="${temp_path}/moreunit.build/features/" />
 	</target>
 
 	<target name="prepare_folder_for_local_build" depends="create_tmp_folders">
