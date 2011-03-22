@@ -215,6 +215,7 @@ div.figure-group:after {
 	border: 1px solid #444;
 	padding: 10px;
 	border-radius: 15px;
+	-moz-border-radius: 15px;
 	margin-top: 40px;
 }
 
