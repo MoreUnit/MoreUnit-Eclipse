@@ -1,5 +1,5 @@
 MU = {
-	version: 3, // to be incremented when delivering new content
+	version: 5, // to be incremented when delivering new content
 	
 	currentContent: null,
 	
@@ -93,9 +93,10 @@ MU = {
 			}
 			
 			if (cfg.contentPath == 'home') { // "home" is embedded into index.html
-				var article = $('#home-content').clone().show();
-				$(cfg.destination).empty().append(article);
-				onLoad(article.html(), 'success');
+				// shivved for IE
+				var shivved = $(innerShiv($('#home-content').html(), false));
+				$(cfg.destination).empty().append(shivved);
+				onLoad($(cfg.destination).html(), 'success');
 			}
 			else {
 				$(cfg.destination).loadShiv(url + elementToRetrieve, onLoad);
