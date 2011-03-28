@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.model.Dependencies;
+import org.moreunit.mock.elements.Dependencies;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.TypeParameter;
 import org.moreunit.mock.templates.MockingContext;
@@ -26,7 +26,7 @@ public class DependencyPatternsResolverTest
     @Before
     public void createResolver() throws Exception
     {
-        dependencies = new Dependencies(null, null);
+        dependencies = new Dependencies(null, null, null);
         when(context.dependenciesToMock()).thenReturn(dependencies);
         resolver = new DependencyPatternsResolver(context);
     }

@@ -1,4 +1,4 @@
-package org.moreunit.mock.model;
+package org.moreunit.mock.elements;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +17,10 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.moreunit.mock.model.Dependency;
+import org.moreunit.mock.model.FieldDependency;
+import org.moreunit.mock.model.SetterDependency;
+import org.moreunit.mock.model.TypeParameter;
 
 @SuppressWarnings("restriction")
 public class Dependencies extends ArrayList<Dependency>
@@ -25,15 +29,17 @@ public class Dependencies extends ArrayList<Dependency>
 
     private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z].*");
 
+    private final NamingRules namingRules;
     private final IType classUnderTest;
     private final IType testCase;
     private ITypeHierarchy typeHierarchy;
     public final List<Dependency> constructorDependencies = new ArrayList<Dependency>();
     public final List<SetterDependency> setterDependencies = new ArrayList<SetterDependency>();
-    public final List<Dependency> fieldDependencies = new ArrayList<Dependency>();
+    public final List<FieldDependency> fieldDependencies = new ArrayList<FieldDependency>();
 
-    public Dependencies(IType classUnderTest, IType testCase)
+    public Dependencies(NamingRules namingRules, IType classUnderTest, IType testCase)
     {
+        this.namingRules = namingRules;
         this.classUnderTest = classUnderTest;
         this.testCase = testCase;
     }
@@ -71,8 +77,7 @@ public class Dependencies extends ArrayList<Dependency>
 
             for (int i = 0; i < parameterNames.length; i++)
             {
-                String signature = Signature.toString(parameterTypes[i]);
-                Dependency dependency = new Dependency(resolveTypeSignature(signature), parameterNames[i], resolveTypeParameters(signature));
+                Dependency dependency = createConstructorDependency(parameterTypes[i], parameterNames[i]);
                 if(! contains(dependency))
                 {
                     constructorDependencies.add(dependency);
@@ -82,6 +87,13 @@ public class Dependencies extends ArrayList<Dependency>
         }
     }
 
+    private Dependency createConstructorDependency(String parameterType, String parameterName) throws JavaModelException
+    {
+        String signature = Signature.toString(parameterType);
+        String dependencyName = namingRules.cleanParameterName(parameterName);
+        return new Dependency(resolveTypeSignature(signature), dependencyName, resolveTypeParameters(signature));
+    }
+
     private void initSetterDependencies() throws JavaModelException
     {
         for (IMethod method : getAllMethods())
@@ -89,8 +101,7 @@ public class Dependencies extends ArrayList<Dependency>
             String methodName = method.getElementName();
             if(method.getNumberOfParameters() == 1 && SETTER_PATTERN.matcher(methodName).matches())
             {
-                String signature = Signature.toString(method.getParameterTypes()[0]);
-                SetterDependency dependency = new SetterDependency(resolveTypeSignature(signature), methodName, resolveTypeParameters(signature));
+                SetterDependency dependency = createSetterDependency(method);
                 if(! contains(dependency))
                 {
                     setterDependencies.add(dependency);
@@ -98,6 +109,12 @@ public class Dependencies extends ArrayList<Dependency>
                 }
             }
         }
+    }
+
+    private SetterDependency createSetterDependency(IMethod method) throws JavaModelException
+    {
+        String signature = Signature.toString(method.getParameterTypes()[0]);
+        return new SetterDependency(resolveTypeSignature(signature), method.getElementName(), resolveTypeParameters(signature));
     }
 
     private Set<IMethod> getAllMethods() throws JavaModelException
@@ -135,8 +152,7 @@ public class Dependencies extends ArrayList<Dependency>
         {
             if(isVisibleToTestCase(field) && isAssignable(field))
             {
-                String signature = Signature.toString(field.getTypeSignature());
-                Dependency dependency = new Dependency(resolveTypeSignature(signature), field.getElementName(), resolveTypeParameters(signature));
+                FieldDependency dependency = createFieldDependency(field);
                 if(! contains(dependency))
                 {
                     fieldDependencies.add(dependency);
@@ -154,6 +170,14 @@ public class Dependencies extends ArrayList<Dependency>
             Collections.addAll(fields, type.getFields());
         }
         return fields;
+    }
+
+    private FieldDependency createFieldDependency(IField field) throws JavaModelException
+    {
+        String signature = Signature.toString(field.getTypeSignature());
+        String fieldName = field.getElementName();
+        String dependencyName = namingRules.cleanFieldName(fieldName);
+        return new FieldDependency(resolveTypeSignature(signature), fieldName, dependencyName, resolveTypeParameters(signature));
     }
 
     List<TypeParameter> resolveTypeParameters(String signature) throws JavaModelException

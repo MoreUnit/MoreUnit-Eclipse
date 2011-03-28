@@ -1,7 +1,5 @@
 package org.moreunit.mock.templates;
 
-import static java.util.Arrays.asList;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,8 +10,9 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
+import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.elements.NamingRules;
 import org.moreunit.mock.model.CodeTemplate;
-import org.moreunit.mock.model.Dependencies;
 import org.moreunit.mock.model.InjectionType;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.Part;
@@ -22,6 +21,8 @@ import org.moreunit.mock.templates.resolvers.DependencyPatternsResolver;
 import org.moreunit.mock.templates.resolvers.FieldInjectionPatternResolver;
 import org.moreunit.mock.templates.resolvers.ObjectUnderTestPatternsResolver;
 import org.moreunit.mock.templates.resolvers.SetterInjectionPatternResolver;
+
+import static java.util.Arrays.asList;
 
 /**
  * Holds information about the current mocking operation.
@@ -64,7 +65,8 @@ public class MockingContext
 
         try
         {
-            Dependencies d = new Dependencies(classUnderTest, testCase.findPrimaryType());
+            NamingRules namingRules = new NamingRules(classUnderTest.getJavaProject());
+            Dependencies d = new Dependencies(namingRules, classUnderTest, testCase.findPrimaryType());
             d.compute();
             return d;
         }

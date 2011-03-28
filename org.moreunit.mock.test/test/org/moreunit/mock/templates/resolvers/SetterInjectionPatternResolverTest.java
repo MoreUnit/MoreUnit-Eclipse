@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.model.Dependencies;
+import org.moreunit.mock.elements.Dependencies;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.templates.MockingContext;
 
@@ -24,7 +24,7 @@ public class SetterInjectionPatternResolverTest
     @Before
     public void createResolver() throws Exception
     {
-        dependencies = new Dependencies(null, null);
+        dependencies = new Dependencies(null, null, null);
         when(context.dependenciesToMock()).thenReturn(dependencies);
         resolver = new SetterInjectionPatternResolver(context);
     }

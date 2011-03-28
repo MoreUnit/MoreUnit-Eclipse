@@ -18,9 +18,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.moreunit.mock.elements.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
-import org.moreunit.mock.model.Dependencies;
 import org.moreunit.mock.model.Dependency;
+import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.InjectionType;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.Part;
@@ -47,7 +48,7 @@ public class MockingContextTest
     {
         when(testCaseCompilationUnit.findPrimaryType()).thenReturn(testCase);
 
-        dependencies = new Dependencies(null, null);
+        dependencies = new Dependencies(null, null, null);
         patternResolvers = new ArrayList<PatternResolver>();
         mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
     }
@@ -86,7 +87,7 @@ public class MockingContextTest
     public void should_detect_field_injections_when_initializing() throws Exception
     {
         // given
-        dependencies.fieldDependencies.add(new Dependency("pack.age.Type", "aType"));
+        dependencies.fieldDependencies.add(new FieldDependency("pack.age.Type", "aType", "aType"));
 
         // when
         mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
@@ -119,7 +120,7 @@ public class MockingContextTest
         // given
         dependencies.constructorDependencies.add(new Dependency("pack.age.Type", "aType"));
         dependencies.setterDependencies.add(new SetterDependency("pack.age2.OtherType", "setIt"));
-        dependencies.fieldDependencies.add(new Dependency("some.where.Thing", "attribute"));
+        dependencies.fieldDependencies.add(new FieldDependency("some.where.Thing", "attribute", "attribute"));
 
         // when
         mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);

@@ -3,7 +3,7 @@ package org.moreunit.mock.templates.resolvers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.moreunit.mock.model.Dependency;
+import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.templates.MockingContext;
 
 public class FieldInjectionPatternResolver extends SimplePatternResolver
@@ -20,9 +20,9 @@ public class FieldInjectionPatternResolver extends SimplePatternResolver
     protected String matched(Matcher matcher)
     {
         StringBuilder buffer = new StringBuilder();
-        for (Dependency d : context.dependenciesToMock().fieldDependencies)
+        for (FieldDependency d : context.dependenciesToMock().fieldDependencies)
         {
-            String resolvedPattern = String.format("\\$\\{objectUnderTest\\}.%s = %s", d.name, d.name);
+            String resolvedPattern = String.format("\\$\\{objectUnderTest\\}.%s = %s", d.fieldName, d.name);
             buffer.append(matcher.replaceAll(resolvedPattern));
         }
         return buffer.toString();

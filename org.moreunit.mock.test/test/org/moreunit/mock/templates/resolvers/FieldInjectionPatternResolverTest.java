@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.model.Dependencies;
-import org.moreunit.mock.model.Dependency;
+import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.templates.MockingContext;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -24,7 +24,7 @@ public class FieldInjectionPatternResolverTest
     @Before
     public void createResolver() throws Exception
     {
-        dependencies = new Dependencies(null, null);
+        dependencies = new Dependencies(null, null, null);
         when(context.dependenciesToMock()).thenReturn(dependencies);
         resolver = new FieldInjectionPatternResolver(context);
     }
@@ -45,29 +45,29 @@ public class FieldInjectionPatternResolverTest
     public void should_assign_one_field_dependency() throws Exception
     {
         // given
-        dependencies.fieldDependencies.add(new Dependency("pack.age.Foo", "foo"));
+        dependencies.fieldDependencies.add(new FieldDependency("pack.age.Foo", "mFoo", "foo"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre ${objectUnderTest}.foo = foo post");
+        assertThat(resolvedPattern).isEqualTo("pre ${objectUnderTest}.mFoo = foo post");
     }
 
     @Test
     public void should_assign_several_field_dependencies() throws Exception
     {
         // given
-        dependencies.fieldDependencies.add(new Dependency("pack.age.Foo", "foo"));
-        dependencies.fieldDependencies.add(new Dependency("some.where.Thing", "bar"));
-        dependencies.fieldDependencies.add(new Dependency("BlobClass", "aBlob"));
+        dependencies.fieldDependencies.add(new FieldDependency("pack.age.Foo", "m_foo", "foo"));
+        dependencies.fieldDependencies.add(new FieldDependency("some.where.Thing", "fBar", "bar"));
+        dependencies.fieldDependencies.add(new FieldDependency("BlobClass", "aBlob", "aBlob"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre ${objectUnderTest}.foo = foo post" +
-                                              "pre ${objectUnderTest}.bar = bar post" +
+        assertThat(resolvedPattern).isEqualTo("pre ${objectUnderTest}.m_foo = foo post" +
+                                              "pre ${objectUnderTest}.fBar = bar post" +
                                               "pre ${objectUnderTest}.aBlob = aBlob post");
     }
 }

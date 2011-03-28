@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.model.Dependencies;
+import org.moreunit.mock.elements.Dependencies;
 import org.moreunit.mock.templates.MockingContext;
 import org.moreunit.mock.templates.PatternResolver;
 
@@ -31,7 +31,7 @@ public class ObjectUnderTestPatternsResolverTest
         when(classUnderTest.getFullyQualifiedName()).thenReturn("some.pack.age.SomeThing");
         when(classUnderTest.getElementName()).thenReturn("SomeThing");
 
-        dependencies = new Dependencies(null, null);
+        dependencies = new Dependencies(null, null, null);
         context = new MockingContext(classUnderTest, null, dependencies, new ArrayList<PatternResolver>());
         resolver = new ObjectUnderTestPatternsResolver(context);
     }

@@ -1,4 +1,4 @@
-package org.moreunit.mock.model;
+package org.moreunit.mock.elements;
 
 import static java.util.Arrays.asList;
 import static org.fest.assertions.Assertions.assertThat;
@@ -19,6 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.moreunit.mock.model.Dependency;
+import org.moreunit.mock.model.FieldDependency;
+import org.moreunit.mock.model.SetterDependency;
+import org.moreunit.mock.model.TypeParameter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DependenciesTest
@@ -32,7 +36,7 @@ public class DependenciesTest
     @Before
     public void createDependencies()
     {
-        dependencies = new Dependencies(classUnderTest, testCase);
+        dependencies = new Dependencies(null, classUnderTest, testCase);
     }
 
     @Test
@@ -113,13 +117,13 @@ public class DependenciesTest
     {
         // given
         mockMethodsAndFieldsRetrieval(classUnderTest);
-        dependencies.fieldDependencies.addAll(asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
+        dependencies.fieldDependencies.addAll(asList(new FieldDependency("x", "zzz", "zzz"), new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG")));
 
         // when
         dependencies.compute();
 
         // then
-        assertThat(dependencies.fieldDependencies).isEqualTo(asList(new Dependency("x", "aaa"), new Dependency("x", "GGG"), new Dependency("x", "zzz")));
+        assertThat(dependencies.fieldDependencies).isEqualTo(asList(new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG"), new FieldDependency("x", "zzz", "zzz")));
     }
 
     @Test
