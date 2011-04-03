@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<script type="text/javascript">window.location.href=window.location.href.replace(/content\//, '#').replace('.html', '')</script>
+		<meta charset="utf-8">
+		<title>MoreUnit - Documentation</title>
+		<link href="../../css/moreunit.css" type="text/css" rel="stylesheet">
+	</head>
+	<body>
+		<header id="site-header"><em>MoreUnit</em> makes it easy to write more unit tests!</header>
+		
+		<section class="content">
+			<h1>Support for mocking frameworks</h1>
+			<p>MoreUnit now proposes you to automatically mock the dependencies of your classes in their associated test cases: just right click in the Java
+			editor and choose <em>MoreUnit &gt; Mock Dependencies in Test Case...</em><p>
+			<figure><img src="../../img/mock-usage-example-menu-action.png" width="642" height="142" alt="Menu action: Mock Dependencies" /></figure>
+
+			<p>As an example, running it on the following code:</p>
+			<figure><img src="../../img/mock-usage-example-input.png" width="791" height="535" alt="A class with dependencies" /></figure>
+			
+			<p>... will produce the following code if you use Mockito:</p>
+			<figure><img src="../../img/mock-usage-example-result-mockito.png" width="569" height="296" alt="Dependencies mocked with Mockito" />
+			</figure>
+			
+			<p>... or the following one if you use EasyMock:</p>
+			<figure><img src="../../img/mock-usage-example-result-easymock.png" width="662" height="248" alt="Dependencies mocked with EasyMock" />
+			</figure>
+			
+			<p>You can choose your preferred mocking framework and result style in the preferences or your workspace or project:</p>
+			<figure><img src="../../img/mock-usage-example-preferences.png" width="664" height="447" alt="Mocking preferences" />
+			</figure>
+			
+			<p>There is more to come! We aim to provide the following features soon:</p>
+			<ul>
+				<li>default values for types that are not mockable: primitive types, their corresponding wrappers, etc...</li>
+				<li>a wizard to select the dependencies to mock when either using the test case creation wizard or the action <em>Mock Dependencies in Test
+				Case...</em></li>
+				<li>support for other mocking frameworks or output styles if you ask for it (see <a href="../about.html">our contact page</a>)</li>
+			</ul>
+		</section>
+	</body>
+</html>
