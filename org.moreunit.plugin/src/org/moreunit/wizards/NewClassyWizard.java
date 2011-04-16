@@ -41,9 +41,21 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
         WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
         if(dialog.open() == Window.OK)
         {
+            typeCreated(createdType);
             return createdType;
         }
+        creationAborted();
         return null;
+    }
+
+    /** To be overridden if needed */
+    protected void typeCreated(IType createdType2)
+    {
+    }
+
+    /** To be overridden if needed */
+    protected void creationAborted()
+    {
     }
 
     public boolean performFinish()

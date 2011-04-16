@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
@@ -18,12 +19,14 @@ import org.moreunit.util.StringConstants;
 
 public class NewTestCaseWizard extends NewClassyWizard
 {
+    private final IJavaProject project;
+    private final Preferences preferences;
+    private final NewTestCaseWizardParticipatorManager participatorManager;
 
     private MoreUnitWizardPageOne pageOne;
     private NewTestCaseWizardPageTwo pageTwo;
-
-    private IJavaProject project;
-    private Preferences preferences;
+    private NewTestCaseWizardContext context;
+    private NewTestCaseWizardComposer wizardComposer;
 
     public NewTestCaseWizard(final IType element)
     {
@@ -31,21 +34,25 @@ public class NewTestCaseWizard extends NewClassyWizard
 
         this.project = element.getJavaProject();
         this.preferences = Preferences.getInstance();
+        this.participatorManager = new NewTestCaseWizardParticipatorManager();
     }
 
     @Override
     public void addPages()
     {
         this.pageTwo = new NewTestCaseWizardPageTwo();
-        // this.pageOne = new MoreUnitNewTestCaseWizardPageOne(this.pageTwo,
-        // this.preferences, project);
         this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, project);
         this.pageOne.setWizard(this);
         this.pageTwo.setWizard(this);
         this.pageOne.init(new StructuredSelection(getType()));
-        initialisePackageFragment();
-        addPage(this.pageOne);
-        addPage(this.pageTwo);
+
+        IPackageFragment fragment = initialisePackageFragment();
+
+        this.context = new NewTestCaseWizardContext(getType(), fragment);
+        this.wizardComposer = participatorManager.createWizardComposer(context);
+        this.wizardComposer.registerBasePage(INewTestCaseWizardPage.TEST_CASE_PAGE, this.pageOne);
+        this.wizardComposer.registerBasePage(INewTestCaseWizardPage.TEST_METHODS_PAGE, this.pageTwo);
+        this.wizardComposer.compose(this);
     }
 
     @Override
@@ -117,7 +124,7 @@ public class NewTestCaseWizard extends NewClassyWizard
         return preferences.getJUnitSourceFolder(this.project);
     }
 
-    private void initialisePackageFragment()
+    private IPackageFragment initialisePackageFragment()
     {
         String testPackagePrefix = this.preferences.getTestPackagePrefix(project);
         String testPackageSuffix = this.preferences.getTestPackageSuffix(project);
@@ -125,43 +132,33 @@ public class NewTestCaseWizard extends NewClassyWizard
         boolean hasPrefix = (testPackagePrefix != null) && (testPackagePrefix.length() > 0);
         boolean hasSuffix = (testPackageSuffix != null) && (testPackageSuffix.length() > 0);
 
-        if(! hasPrefix && ! hasSuffix)
+        IPackageFragment fragment = this.pageOne.getPackageFragment();
+        if(hasPrefix || hasSuffix)
         {
-            return;
+            String fragmentName = fragment.getElementName();
+            if(hasPrefix)
+            {
+                fragmentName = testPackagePrefix + "." + fragmentName;
+            }
+
+            if(hasSuffix)
+            {
+                fragmentName = fragmentName + "." + testPackageSuffix;
+            }
+
+            try
+            {
+                IPackageFragment packageFragment = createPackageFragment(fragmentName);
+                this.pageOne.setPackageFragment(packageFragment, true);
+                fragment = packageFragment;
+            }
+            catch (JavaModelException e)
+            {
+                LogHandler.getInstance().handleWarnLog("Unable to create package fragment root");
+            }
         }
 
-        String fragment = null;
-        if(hasPrefix)
-        {
-            fragment = getPackageFragmentNameWithPrefix();
-        }
-        else
-        {
-            fragment = getPackageFragmentNameWithSuffix();
-        }
-
-        try
-        {
-            IPackageFragment packageFragment = createPackageFragment(fragment);
-            this.pageOne.setPackageFragment(packageFragment, true);
-        }
-        catch (JavaModelException e)
-        {
-            LogHandler.getInstance().handleWarnLog("Unable to create package fragment root");
-        }
-    }
-
-    private String getPackageFragmentNameWithPrefix()
-    {
-        return this.preferences.getTestPackagePrefix(project) + "." + this.pageOne.getPackageFragment().getElementName();
-    }
-
-    private String getPackageFragmentNameWithSuffix()
-    {
-        // return BaseTools.addPackageFragmentSuffixToElementName(pageOne.
-        // getPackageFragment().getElementName(),
-        // Preferences.instance().getTestPackageSuffix());
-        return this.pageOne.getPackageFragment().getElementName() + "." + this.preferences.getTestPackageSuffix(project);
+        return fragment;
     }
 
     @Override
@@ -175,6 +172,40 @@ public class NewTestCaseWizard extends NewClassyWizard
     protected IPackageFragmentRoot getPackageFragmentRoot()
     {
         return this.pageOne.getPackageFragmentRoot();
+    }
+
+    @Override
+    protected void typeCreated(IType createdType)
+    {
+        super.typeCreated(createdType);
+        participatorManager.testCaseCreated(getContext());
+    }
+
+    private NewTestCaseWizardContext getContext()
+    {
+        if(context == null)
+        {
+            throw new IllegalStateException("Context is null. It should not be retrieved before addPages() has been called.");
+        }
+        return context;
+    }
+
+    @Override
+    public boolean performCancel()
+    {
+        boolean cancelationAccepted = super.performCancel();
+        if(cancelationAccepted)
+        {
+            participatorManager.testCaseCreationCanceled(getContext());
+        }
+        return cancelationAccepted;
+    }
+
+    @Override
+    protected void creationAborted()
+    {
+        super.creationAborted();
+        participatorManager.testCaseCreationAborted(getContext());
     }
 }
 
