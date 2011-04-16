@@ -30,4 +30,19 @@ public interface INewTestCaseWizardContext
      * @return the test case package fragment
      */
     IPackageFragment getTestCasePackage();
+
+    /**
+     * Stores <tt>value</tt> into this context under the given <tt>key</tt>.
+     */
+    void put(String key, Object value);
+
+    /**
+     * Retrieves the value corresponding to the given key, or returns
+     * <tt>null</tt> if it does not exist.
+     * 
+     * @param <T> the expected type of the value, to which it will be cast
+     * @param key the key under which the value has been stored
+     * @return the required value or <tt>null</tt>
+     */
+    <T> T get(String key);
 }

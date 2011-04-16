@@ -199,5 +199,15 @@ public class NewTestCaseWizardParticipatorManagerTest
         {
             throw new UnsupportedOperationException("Just a fake object...");
         }
+
+        public void put(String key, Object value)
+        {
+            throw new UnsupportedOperationException("Just a fake object...");
+        }
+
+        public <T> T get(String key)
+        {
+            throw new UnsupportedOperationException("Just a fake object...");
+        }
     }
 }

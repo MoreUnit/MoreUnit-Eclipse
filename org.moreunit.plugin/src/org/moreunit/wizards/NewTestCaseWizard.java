@@ -178,7 +178,10 @@ public class NewTestCaseWizard extends NewClassyWizard
     protected void typeCreated(IType createdType)
     {
         super.typeCreated(createdType);
-        participatorManager.testCaseCreated(getContext());
+
+        NewTestCaseWizardContext ctxt = getContext();
+        ctxt.setCreatedTestCase(createdType);
+        participatorManager.testCaseCreated(ctxt);
     }
 
     private NewTestCaseWizardContext getContext()
