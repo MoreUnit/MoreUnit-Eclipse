@@ -1,24 +1,22 @@
-package org.moreunit.mock.elements;
+package org.moreunit.mock.dependencies;
 
 import static java.util.Arrays.asList;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.moreunit.mock.elements.NamingRules;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.SetterDependency;
@@ -28,15 +26,18 @@ import org.moreunit.mock.model.TypeParameter;
 public class DependenciesTest
 {
     @Mock
+    private NamingRules namingRules;
+    @Mock
     private IType classUnderTest;
     @Mock
-    private IType testCase;
+    private DependencyInjectionPointProvider dependencyInjectionPointProvider;
+
     private Dependencies dependencies;
 
     @Before
     public void createDependencies()
     {
-        dependencies = new Dependencies(null, classUnderTest, testCase);
+        dependencies = new Dependencies(classUnderTest, dependencyInjectionPointProvider, namingRules);
     }
 
     @Test
@@ -89,59 +90,56 @@ public class DependenciesTest
     }
 
     @Test
-    public void should_not_sort_constructor_dependencies_after_computation() throws Exception
+    public void should_not_sort_constructor_dependencies_after_init() throws Exception
     {
         // given
         mockMethodsAndFieldsRetrieval(classUnderTest);
-        dependencies.constructorDependencies.addAll(asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
+        dependencies.injectableByConstructor().addAll(asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
 
         // when
-        dependencies.compute();
+        dependencies.init();
 
         // then
-        assertThat(dependencies.constructorDependencies).isEqualTo(asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
+        assertThat(dependencies.injectableByConstructor()).isEqualTo(asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
     }
 
     private void mockMethodsAndFieldsRetrieval(IType type) throws JavaModelException
     {
-        when(type.getMethods()).thenReturn(new IMethod[0]);
-        when(type.getFields()).thenReturn(new IField[0]);
-
-        ITypeHierarchy typeHierarchy = mock(ITypeHierarchy.class);
-        when(type.newSupertypeHierarchy(any(IProgressMonitor.class))).thenReturn(typeHierarchy);
-        when(typeHierarchy.getAllClasses()).thenReturn(new IType[0]);
+        when(dependencyInjectionPointProvider.getConstructors()).thenReturn(Collections.<IMethod> emptySet());
+        when(dependencyInjectionPointProvider.getFields()).thenReturn(Collections.<IField> emptySet());
+        when(dependencyInjectionPointProvider.getSetters()).thenReturn(Collections.<IMethod> emptySet());
     }
 
     @Test
-    public void should_sort_field_dependencies_after_computation() throws Exception
+    public void should_sort_field_dependencies_after_init() throws Exception
     {
         // given
         mockMethodsAndFieldsRetrieval(classUnderTest);
-        dependencies.fieldDependencies.addAll(asList(new FieldDependency("x", "zzz", "zzz"), new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG")));
+        dependencies.injectableByField().addAll(asList(new FieldDependency("x", "zzz", "zzz"), new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG")));
 
         // when
-        dependencies.compute();
+        dependencies.init();
 
         // then
-        assertThat(dependencies.fieldDependencies).isEqualTo(asList(new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG"), new FieldDependency("x", "zzz", "zzz")));
+        assertThat(dependencies.injectableByField()).isEqualTo(asList(new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG"), new FieldDependency("x", "zzz", "zzz")));
     }
 
     @Test
-    public void should_sort_setter_dependencies_after_computation() throws Exception
+    public void should_sort_setter_dependencies_after_init() throws Exception
     {
         // given
         mockMethodsAndFieldsRetrieval(classUnderTest);
-        dependencies.setterDependencies.addAll(asList(new SetterDependency("x", "setZzz"), new SetterDependency("x", "setAaa"), new SetterDependency("x", "setGGG")));
+        dependencies.injectableBySetter().addAll(asList(new SetterDependency("x", "setZzz"), new SetterDependency("x", "setAaa"), new SetterDependency("x", "setGGG")));
 
         // when
-        dependencies.compute();
+        dependencies.init();
 
         // then
-        assertThat(dependencies.setterDependencies).isEqualTo(asList(new SetterDependency("x", "setAaa"), new SetterDependency("x", "setGGG"), new SetterDependency("x", "setZzz")));
+        assertThat(dependencies.injectableBySetter()).isEqualTo(asList(new SetterDependency("x", "setAaa"), new SetterDependency("x", "setGGG"), new SetterDependency("x", "setZzz")));
     }
 
     @Test
-    public void should_sort_all_dependencies_after_computation() throws Exception
+    public void should_sort_all_dependencies_after_init() throws Exception
     {
         // given
         mockMethodsAndFieldsRetrieval(classUnderTest);
@@ -150,7 +148,7 @@ public class DependenciesTest
                                    new Dependency("x", "yyy"), new Dependency("x", "eee"), new Dependency("x", "HHH")));
 
         // when
-        dependencies.compute();
+        dependencies.init();
 
         // then
         assertThat(new ArrayList<Dependency>(dependencies)).isEqualTo(asList(new Dependency("x", "aaa"), new SetterDependency("x", "setBbb"), new Dependency("x", "eee"),

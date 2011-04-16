@@ -22,7 +22,7 @@ public class ConstructorInjectionPatternResolver extends SimplePatternResolver
     {
         StringBuilder buffer = new StringBuilder("new \\$\\{objectUnderTestType\\}(");
 
-        for (Iterator<Dependency> it = context.dependenciesToMock().constructorDependencies.iterator(); it.hasNext();)
+        for (Iterator<Dependency> it = context.dependenciesToMock().injectableByConstructor().iterator(); it.hasNext();)
         {
             buffer.append(it.next().name);
             if(it.hasNext())

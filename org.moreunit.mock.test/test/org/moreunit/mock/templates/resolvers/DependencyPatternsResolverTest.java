@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.TypeParameter;
 import org.moreunit.mock.templates.MockingContext;

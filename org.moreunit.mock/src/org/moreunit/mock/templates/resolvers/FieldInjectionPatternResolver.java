@@ -20,7 +20,7 @@ public class FieldInjectionPatternResolver extends SimplePatternResolver
     protected String matched(Matcher matcher)
     {
         StringBuilder buffer = new StringBuilder();
-        for (FieldDependency d : context.dependenciesToMock().fieldDependencies)
+        for (FieldDependency d : context.dependenciesToMock().injectableByField())
         {
             String resolvedPattern = String.format("\\$\\{objectUnderTest\\}.%s = %s", d.fieldName, d.name);
             buffer.append(matcher.replaceAll(resolvedPattern));

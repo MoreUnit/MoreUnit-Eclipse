@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.FieldDependency;
@@ -50,17 +50,17 @@ public class MockingContextTest
 
         dependencies = new Dependencies(null, null, null);
         patternResolvers = new ArrayList<PatternResolver>();
-        mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
+        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, patternResolvers);
     }
 
     @Test
     public void should_detect_constructor_injections_when_initializing() throws Exception
     {
         // given
-        dependencies.constructorDependencies.add(new Dependency("pack.age.Type", "aType"));
+        dependencies.injectableByConstructor().add(new Dependency("pack.age.Type", "aType"));
 
         // when
-        mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
+        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, patternResolvers);
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
@@ -72,10 +72,10 @@ public class MockingContextTest
     public void should_detect_setter_injections_when_initializing() throws Exception
     {
         // given
-        dependencies.setterDependencies.add(new SetterDependency("pack.age.Type", "setIt"));
+        dependencies.injectableBySetter().add(new SetterDependency("pack.age.Type", "setIt"));
 
         // when
-        mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
+        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, patternResolvers);
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isFalse();
@@ -87,10 +87,10 @@ public class MockingContextTest
     public void should_detect_field_injections_when_initializing() throws Exception
     {
         // given
-        dependencies.fieldDependencies.add(new FieldDependency("pack.age.Type", "aType", "aType"));
+        dependencies.injectableByField().add(new FieldDependency("pack.age.Type", "aType", "aType"));
 
         // when
-        mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
+        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, patternResolvers);
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isFalse();
@@ -102,11 +102,11 @@ public class MockingContextTest
     public void should_detect_several_different_injection_types_when_initializing() throws Exception
     {
         // given
-        dependencies.constructorDependencies.add(new Dependency("pack.age.Type", "aType"));
-        dependencies.setterDependencies.add(new SetterDependency("pack.age2.OtherType", "setIt"));
+        dependencies.injectableByConstructor().add(new Dependency("pack.age.Type", "aType"));
+        dependencies.injectableBySetter().add(new SetterDependency("pack.age2.OtherType", "setIt"));
 
         // when
-        mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
+        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, patternResolvers);
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
@@ -118,12 +118,12 @@ public class MockingContextTest
     public void should_detect_all_injection_types_when_initializing() throws Exception
     {
         // given
-        dependencies.constructorDependencies.add(new Dependency("pack.age.Type", "aType"));
-        dependencies.setterDependencies.add(new SetterDependency("pack.age2.OtherType", "setIt"));
-        dependencies.fieldDependencies.add(new FieldDependency("some.where.Thing", "attribute", "attribute"));
+        dependencies.injectableByConstructor().add(new Dependency("pack.age.Type", "aType"));
+        dependencies.injectableBySetter().add(new SetterDependency("pack.age2.OtherType", "setIt"));
+        dependencies.injectableByField().add(new FieldDependency("some.where.Thing", "attribute", "attribute"));
 
         // when
-        mockingContext = new MockingContext(classUnderTest, testCaseCompilationUnit, dependencies, patternResolvers);
+        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, patternResolvers);
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();

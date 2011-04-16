@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.templates.MockingContext;
 
@@ -45,7 +45,7 @@ public class FieldInjectionPatternResolverTest
     public void should_assign_one_field_dependency() throws Exception
     {
         // given
-        dependencies.fieldDependencies.add(new FieldDependency("pack.age.Foo", "mFoo", "foo"));
+        dependencies.injectableByField().add(new FieldDependency("pack.age.Foo", "mFoo", "foo"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
@@ -58,9 +58,9 @@ public class FieldInjectionPatternResolverTest
     public void should_assign_several_field_dependencies() throws Exception
     {
         // given
-        dependencies.fieldDependencies.add(new FieldDependency("pack.age.Foo", "m_foo", "foo"));
-        dependencies.fieldDependencies.add(new FieldDependency("some.where.Thing", "fBar", "bar"));
-        dependencies.fieldDependencies.add(new FieldDependency("BlobClass", "aBlob", "aBlob"));
+        dependencies.injectableByField().add(new FieldDependency("pack.age.Foo", "m_foo", "foo"));
+        dependencies.injectableByField().add(new FieldDependency("some.where.Thing", "fBar", "bar"));
+        dependencies.injectableByField().add(new FieldDependency("BlobClass", "aBlob", "aBlob"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");

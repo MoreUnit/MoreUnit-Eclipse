@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.templates.MockingContext;
 
@@ -49,7 +49,7 @@ public class ConstructorInjectionPatternResolverTest
     public void should_call_constructor_whith_one_dependency() throws Exception
     {
         // given
-        dependencies.constructorDependencies.add(new Dependency("pack.age.Foo", "foo"));
+        dependencies.injectableByConstructor().add(new Dependency("pack.age.Foo", "foo"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
@@ -62,9 +62,9 @@ public class ConstructorInjectionPatternResolverTest
     public void should_call_constructor_whith_several_dependencies() throws Exception
     {
         // given
-        dependencies.constructorDependencies.add(new Dependency("pack.age.Foo", "foo"));
-        dependencies.constructorDependencies.add(new Dependency("some.where.Thing", "bar"));
-        dependencies.constructorDependencies.add(new Dependency("BlobClass", "aBlob"));
+        dependencies.injectableByConstructor().add(new Dependency("pack.age.Foo", "foo"));
+        dependencies.injectableByConstructor().add(new Dependency("some.where.Thing", "bar"));
+        dependencies.injectableByConstructor().add(new Dependency("BlobClass", "aBlob"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");

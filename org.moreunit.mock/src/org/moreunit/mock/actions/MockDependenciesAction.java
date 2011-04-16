@@ -5,20 +5,20 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
+import org.moreunit.mock.DependencyMocker;
+import org.moreunit.mock.dependencies.Dependencies;
+import org.moreunit.mock.dependencies.DependencyInjectionPointCollector;
+import org.moreunit.mock.elements.NamingRules;
 import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.log.Logger;
-import org.moreunit.mock.model.MockingTemplate;
-import org.moreunit.mock.preferences.Preferences;
-import org.moreunit.mock.templates.MockingTemplateException;
-import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.mock.utils.ConversionUtils;
 import org.moreunit.util.PluginTools;
 
@@ -26,20 +26,16 @@ import com.google.inject.Inject;
 
 public class MockDependenciesAction extends AbstractHandler implements IEditorActionDelegate
 {
-    private final Preferences preferences;
-    private final MockingTemplateStore mockingTemplateStore;
-    private final TemplateProcessor templateApplicator;
+    private final DependencyMocker mocker;
     private final ConversionUtils conversionUtils;
     private final TypeFacadeFactory facadeFactory;
     private final Logger logger;
     private ICompilationUnit compilationUnit;
 
     @Inject
-    public MockDependenciesAction(Preferences preferences, MockingTemplateStore mockingTemplateStore, TemplateProcessor templateApplicator, ConversionUtils conversionUtils, TypeFacadeFactory facadeFactory, Logger logger)
+    public MockDependenciesAction(DependencyMocker mocker, ConversionUtils conversionUtils, TypeFacadeFactory facadeFactory, Logger logger)
     {
-        this.preferences = preferences;
-        this.mockingTemplateStore = mockingTemplateStore;
-        this.templateApplicator = templateApplicator;
+        this.mocker = mocker;
         this.conversionUtils = conversionUtils;
         this.facadeFactory = facadeFactory;
         this.logger = logger;
@@ -95,39 +91,19 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
             return;
         }
 
-        MockingTemplate template = getTemplate(classUnderTest.getJavaProject());
-        if(template == null)
+        Dependencies dependencies = createDependencies(classUnderTest, testCase.getPackageFragment());
+        try
+        {
+            dependencies.init();
+        }
+        catch (JavaModelException e)
         {
             // MSG
+            logger.error("Could not determine dependencies to mock for " + classUnderTest.getElementName());
             return;
         }
 
-        try
-        {
-            templateApplicator.applyTemplate(template, classUnderTest, testCase);
-        }
-        catch (MockingTemplateException e)
-        {
-            // MSG
-            logger.error("Could not apply " + template + " to " + testCase.getElementName(), e);
-        }
-    }
-
-    private MockingTemplate getTemplate(IJavaProject project)
-    {
-        final String templateId = preferences.getMockingTemplate(project);
-
-        MockingTemplate template = mockingTemplateStore.get(templateId);
-        if(template == null)
-        {
-            logger.error("Template not found: " + templateId);
-        }
-
-        if(logger.debugEnabled())
-        {
-            logger.debug("MockDependenciesAction: retrieved template: " + template);
-        }
-        return template;
+        mocker.mockDependencies(dependencies, classUnderTest, testCase);
     }
 
     private IType getClassUnderTest(ICompilationUnit editedCompilationUnit, boolean compilationUnitIsTestCase)
@@ -152,6 +128,13 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         {
             return facadeFactory.createClassFacade(editedCompilationUnit).getOneCorrespondingTestCase(true, "Mock dependencies in...");
         }
+    }
+
+    protected Dependencies createDependencies(IType classUnderTest, IPackageFragment testCasePackage)
+    {
+        DependencyInjectionPointCollector collector = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
+        NamingRules namingRules = new NamingRules(classUnderTest.getJavaProject());
+        return new Dependencies(classUnderTest, collector, namingRules);
     }
 
     public void selectionChanged(IAction action, ISelection selection)

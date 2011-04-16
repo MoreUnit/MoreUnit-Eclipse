@@ -1,53 +1,41 @@
-package org.moreunit.mock.elements;
+package org.moreunit.mock.dependencies;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.moreunit.mock.elements.NamingRules;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.model.TypeParameter;
 
-@SuppressWarnings("restriction")
 public class Dependencies extends ArrayList<Dependency>
 {
     private static final long serialVersionUID = - 8786785084170298943L;
 
-    private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z].*");
-
     private final NamingRules namingRules;
     private final IType classUnderTest;
-    private final IType testCase;
-    private ITypeHierarchy typeHierarchy;
-    public final List<Dependency> constructorDependencies = new ArrayList<Dependency>();
-    public final List<SetterDependency> setterDependencies = new ArrayList<SetterDependency>();
-    public final List<FieldDependency> fieldDependencies = new ArrayList<FieldDependency>();
+    private final DependencyInjectionPointProvider injectionPointProvider;
+    private final List<Dependency> constructorDependencies = new ArrayList<Dependency>();
+    private final List<SetterDependency> setterDependencies = new ArrayList<SetterDependency>();
+    private final List<FieldDependency> fieldDependencies = new ArrayList<FieldDependency>();
 
-    public Dependencies(NamingRules namingRules, IType classUnderTest, IType testCase)
+    public Dependencies(IType classUnderTest, DependencyInjectionPointProvider injectionPointProvider, NamingRules namingRules)
     {
         this.namingRules = namingRules;
         this.classUnderTest = classUnderTest;
-        this.testCase = testCase;
+        this.injectionPointProvider = injectionPointProvider;
     }
 
-    public void compute() throws JavaModelException
+    public void init() throws JavaModelException
     {
-        typeHierarchy = classUnderTest.newSupertypeHierarchy(new NullProgressMonitor());
-
         initContructorDependencies();
         initSetterDependencies();
         initFieldDependencies();
@@ -59,14 +47,12 @@ public class Dependencies extends ArrayList<Dependency>
 
     private void initContructorDependencies() throws JavaModelException
     {
-        int parameterCount = - 1;
         IMethod constructor = null;
-        for (IMethod method : classUnderTest.getMethods())
+        for (IMethod c : injectionPointProvider.getConstructors())
         {
-            if(method.isConstructor() && method.getNumberOfParameters() > parameterCount)
+            if(constructor == null || c.getNumberOfParameters() > constructor.getNumberOfParameters())
             {
-                constructor = method;
-                parameterCount = method.getNumberOfParameters();
+                constructor = c;
             }
         }
 
@@ -96,17 +82,13 @@ public class Dependencies extends ArrayList<Dependency>
 
     private void initSetterDependencies() throws JavaModelException
     {
-        for (IMethod method : getAllMethods())
+        for (IMethod method : injectionPointProvider.getSetters())
         {
-            String methodName = method.getElementName();
-            if(method.getNumberOfParameters() == 1 && SETTER_PATTERN.matcher(methodName).matches())
+            SetterDependency dependency = createSetterDependency(method);
+            if(! contains(dependency))
             {
-                SetterDependency dependency = createSetterDependency(method);
-                if(! contains(dependency))
-                {
-                    setterDependencies.add(dependency);
-                    add(dependency);
-                }
+                setterDependencies.add(dependency);
+                add(dependency);
             }
         }
     }
@@ -117,17 +99,7 @@ public class Dependencies extends ArrayList<Dependency>
         return new SetterDependency(resolveTypeSignature(signature), method.getElementName(), resolveTypeParameters(signature));
     }
 
-    private Set<IMethod> getAllMethods() throws JavaModelException
-    {
-        Set<IMethod> methods = new HashSet<IMethod>();
-        for (IType type : typeHierarchy.getAllClasses())
-        {
-            Collections.addAll(methods, type.getMethods());
-        }
-        return methods;
-    }
-
-    String resolveTypeSignature(String signature) throws JavaModelException
+    private String resolveTypeSignature(String signature) throws JavaModelException
     {
         String[][] possibleFieldTypes = classUnderTest.resolveType(signature);
         if(possibleFieldTypes == null)
@@ -148,28 +120,15 @@ public class Dependencies extends ArrayList<Dependency>
 
     private void initFieldDependencies() throws JavaModelException
     {
-        for (IField field : getAllFields())
+        for (IField field : injectionPointProvider.getFields())
         {
-            if(isVisibleToTestCase(field) && isAssignable(field))
+            FieldDependency dependency = createFieldDependency(field);
+            if(! contains(dependency))
             {
-                FieldDependency dependency = createFieldDependency(field);
-                if(! contains(dependency))
-                {
-                    fieldDependencies.add(dependency);
-                    add(dependency);
-                }
+                fieldDependencies.add(dependency);
+                add(dependency);
             }
         }
-    }
-
-    private Set<IField> getAllFields() throws JavaModelException
-    {
-        Set<IField> fields = new HashSet<IField>();
-        for (IType type : typeHierarchy.getAllClasses())
-        {
-            Collections.addAll(fields, type.getFields());
-        }
-        return fields;
     }
 
     private FieldDependency createFieldDependency(IField field) throws JavaModelException
@@ -232,22 +191,19 @@ public class Dependencies extends ArrayList<Dependency>
         return parameters;
     }
 
-    private boolean isVisibleToTestCase(IMember member) throws JavaModelException
+    public List<Dependency> injectableByConstructor()
     {
-        if((member.getFlags() & ClassFileConstants.AccPublic) != 0)
-        {
-            return true;
-        }
-        else if(classUnderTest.getPackageFragment().equals(testCase.getPackageFragment()))
-        {
-            return (member.getFlags() & ClassFileConstants.AccPrivate) == 0;
-        }
-        return false;
+        return constructorDependencies;
     }
 
-    private boolean isAssignable(IField field) throws JavaModelException
+    public List<SetterDependency> injectableBySetter()
     {
-        return (field.getFlags() & ClassFileConstants.AccFinal) == 0;
+        return setterDependencies;
+    }
+
+    public List<FieldDependency> injectableByField()
+    {
+        return fieldDependencies;
     }
 
     private static class StringIterator implements Iterator<Integer>

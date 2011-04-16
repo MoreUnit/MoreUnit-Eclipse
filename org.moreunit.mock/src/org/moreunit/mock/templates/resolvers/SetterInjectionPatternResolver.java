@@ -20,7 +20,7 @@ public class SetterInjectionPatternResolver extends SimplePatternResolver
     protected String matched(Matcher matcher)
     {
         StringBuilder buffer = new StringBuilder();
-        for (SetterDependency d : context.dependenciesToMock().setterDependencies)
+        for (SetterDependency d : context.dependenciesToMock().injectableBySetter())
         {
             String resolvedPattern = String.format("\\$\\{objectUnderTest\\}.%s(%s)", d.setterMethodName, d.name);
             buffer.append(matcher.replaceAll(resolvedPattern));

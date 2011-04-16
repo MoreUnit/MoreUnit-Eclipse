@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.elements.Dependencies;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.templates.MockingContext;
 
@@ -45,7 +45,7 @@ public class SetterInjectionPatternResolverTest
     public void should_assign_one_setter_dependency() throws Exception
     {
         // given
-        dependencies.setterDependencies.add(new SetterDependency("pack.age.Foo", "setFoo"));
+        dependencies.injectableBySetter().add(new SetterDependency("pack.age.Foo", "setFoo"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:setDependency(objectUnderTest, dependency)} post");
@@ -58,9 +58,9 @@ public class SetterInjectionPatternResolverTest
     public void should_assign_several_setter_dependencies() throws Exception
     {
         // given
-        dependencies.setterDependencies.add(new SetterDependency("pack.age.Foo", "setFoo"));
-        dependencies.setterDependencies.add(new SetterDependency("some.where.Thing", "setBar"));
-        dependencies.setterDependencies.add(new SetterDependency("BlobClass", "setABlob"));
+        dependencies.injectableBySetter().add(new SetterDependency("pack.age.Foo", "setFoo"));
+        dependencies.injectableBySetter().add(new SetterDependency("some.where.Thing", "setBar"));
+        dependencies.injectableBySetter().add(new SetterDependency("BlobClass", "setABlob"));
 
         // when
         String resolvedPattern = resolver.resolve("pre ${:setDependency(objectUnderTest, dependency)} post");

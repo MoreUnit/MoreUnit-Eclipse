@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.MockingTemplate;
 
@@ -23,14 +24,14 @@ public class TemplateProcessor
         this.sourceFormatter = sourceFormatter;
     }
 
-    public void applyTemplate(MockingTemplate mockingTemplate, IType classUnderTest, IType testCase) throws MockingTemplateException
+    public void applyTemplate(MockingTemplate mockingTemplate, Dependencies dependencies, IType classUnderTest, IType testCase) throws MockingTemplateException
     {
         ICompilationUnit testCaseCu = testCase.getCompilationUnit();
         try
         {
             ICompilationUnit workingCopy = createWorkingCopy(testCaseCu);
 
-            MockingContext context = contextFactory.createMockingContext(classUnderTest, workingCopy);
+            MockingContext context = contextFactory.createMockingContext(dependencies, classUnderTest, workingCopy);
             if(! context.hasDependenciesToMock())
             {
                 throw new NoDependenciesToMockException(classUnderTest);

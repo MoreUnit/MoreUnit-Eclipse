@@ -10,8 +10,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
-import org.moreunit.mock.elements.Dependencies;
-import org.moreunit.mock.elements.NamingRules;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.InjectionType;
 import org.moreunit.mock.model.MockingTemplate;
@@ -38,42 +37,22 @@ public class MockingContext
     private IMethod beforeInstanceMethod;
     private String beforeInstanceMethodName;
 
-    public MockingContext(IType classUnderTest, ICompilationUnit testCase) throws MockingTemplateException
+    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase) throws MockingTemplateException
     {
-        this(classUnderTest, testCase, null, null);
+        this(dependencies, classUnderTest, testCase, null);
     }
 
     /**
      * For testing purposes.
      */
-    public MockingContext(IType classUnderTest, ICompilationUnit testCase, Dependencies dependencies, List<PatternResolver> patternResolvers) throws MockingTemplateException
+    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, List<PatternResolver> patternResolvers) throws MockingTemplateException
     {
         this.classUnderTest = classUnderTest;
         this.testCaseCompilationUnit = testCase;
-        this.dependencies = createDependenciesIfNull(dependencies, classUnderTest, testCase);
+        this.dependencies = dependencies;
         this.patternResolvers = createPatternResolversIfNull(patternResolvers);
 
         initialize();
-    }
-
-    private Dependencies createDependenciesIfNull(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase) throws MockingTemplateException
-    {
-        if(dependencies != null)
-        {
-            return dependencies;
-        }
-
-        try
-        {
-            NamingRules namingRules = new NamingRules(classUnderTest.getJavaProject());
-            Dependencies d = new Dependencies(namingRules, classUnderTest, testCase.findPrimaryType());
-            d.compute();
-            return d;
-        }
-        catch (JavaModelException e)
-        {
-            throw new MockingTemplateException("Could not determine dependencies to mock", e, true);
-        }
     }
 
     private List<PatternResolver> createPatternResolversIfNull(List<PatternResolver> patternResolvers)
@@ -92,17 +71,17 @@ public class MockingContext
 
     private void initialize() throws MockingTemplateException
     {
-        if(! dependencies.constructorDependencies.isEmpty())
+        if(! dependencies.injectableByConstructor().isEmpty())
         {
             injectionTypesUsed.add(InjectionType.constructor);
         }
 
-        if(! dependencies.setterDependencies.isEmpty())
+        if(! dependencies.injectableBySetter().isEmpty())
         {
             injectionTypesUsed.add(InjectionType.setter);
         }
 
-        if(! dependencies.fieldDependencies.isEmpty())
+        if(! dependencies.injectableByField().isEmpty())
         {
             injectionTypesUsed.add(InjectionType.field);
         }
