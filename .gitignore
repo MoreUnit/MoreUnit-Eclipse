@@ -1,6 +1,6 @@
 .DS_Store
 Thumbs.db
-*/.gitignore
+.gitignore
 org.moreunit.plugin/classes/
 org.moreunit.test/classes/
 org.moreunit.mock/classes/
