@@ -26,6 +26,10 @@ public class DependencyInjectionPointStore implements DependencyInjectionPointPr
 
     public void setInjectionPoints(Collection<IMember> members)
     {
+        constructors.clear();
+        setters.clear();
+        fields.clear();
+
         try
         {
             for (IMember member : members)

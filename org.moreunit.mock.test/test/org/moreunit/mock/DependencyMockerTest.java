@@ -14,7 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.log.Logger;
+import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
@@ -36,14 +38,37 @@ public class DependencyMockerTest
     @Mock
     private IJavaProject project;
     @Mock
-    private IType classUnderTest = mock(IType.class);
+    private Dependencies dependencies;
     @Mock
-    private IType testCase = mock(IType.class);
+    private IType classUnderTest;
+    @Mock
+    private IType testCase;
 
     @Before
     public void createDependencyMocker() throws Exception
     {
         dependencyMocker = new DependencyMocker(preferences, templateStore, templateApplicator, logger);
+    }
+
+    @Test
+    public void should_abort_when_there_are_dependencies() throws Exception
+    {
+        // given
+        mockTemplateRetrieval();
+
+        when(dependencies.isEmpty()).thenReturn(true);
+
+        // when
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase);
+
+        // then
+        verifyZeroInteractions(templateApplicator);
+    }
+
+    private void mockTemplateRetrieval()
+    {
+        MockingTemplate template = mock(MockingTemplate.class);
+        when(templateStore.get(anyString())).thenReturn(template);
     }
 
     @Test
@@ -53,7 +78,7 @@ public class DependencyMockerTest
         when(templateStore.get(anyString())).thenReturn(null);
 
         // when
-        dependencyMocker.mockDependencies(null, classUnderTest, testCase);
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase);
 
         // then
         verify(logger).error(any());
@@ -69,7 +94,7 @@ public class DependencyMockerTest
         when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
 
         // when
-        dependencyMocker.mockDependencies(null, classUnderTest, testCase);
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase);
 
         // then
         verify(templateStore).get("test-template-id");

@@ -32,6 +32,11 @@ public class DependencyMocker
 
     public void mockDependencies(Dependencies dependencies, IType classUnderTest, IType testCase)
     {
+        if(dependencies.isEmpty())
+        {
+            return;
+        }
+
         MockingTemplate template = getTemplate(classUnderTest.getJavaProject());
         if(template == null)
         {

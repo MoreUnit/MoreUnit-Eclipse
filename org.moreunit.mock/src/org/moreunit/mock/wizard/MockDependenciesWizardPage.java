@@ -2,14 +2,18 @@ package org.moreunit.mock.wizard;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -39,6 +43,10 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 {
     private static final String PAGE_ID = MoreUnitMockPlugin.PLUGIN_ID + ".mockDependenciesWizardPage";
 
+    private static final String DESCRIPTION = "Select dependencies for which mocks should be created.";
+    private static final String CONSTRUCTOR_WARNING = "No constructor has been selected, and the class under test has no default one."
+                                                      + " This will cause a compiler error in the generated test case.";
+
     private final IType classUnderTest;
     private final DependencyInjectionPointProvider injectionPointProvider;
     private final DependencyInjectionPointStore injectionPointStore;
@@ -54,7 +62,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         this.injectionPointStore = injectionPointStore;
         this.logger = logger;
         setTitle("Dependencies To Mock");
-        setDescription("Select dependencies for which mocks should be created.");
+        setDescription(DESCRIPTION);
     }
 
     public String getId()
@@ -129,6 +137,17 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private void doCheckedStateChanged()
     {
+        List<IMember> members = getCheckedInjectionPoints();
+
+        injectionPointStore.setInjectionPoints(members);
+
+        updateSelectedMembersLabel(members);
+
+        updateMessage(members);
+    }
+
+    private List<IMember> getCheckedInjectionPoints()
+    {
         Object[] checked = dependenciesTree.getCheckedElements();
         List<IMember> members = new ArrayList<IMember>(checked.length);
 
@@ -139,8 +158,11 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
                 members.add((IMember) checkedElement);
             }
         }
-        injectionPointStore.setInjectionPoints(members);
+        return members;
+    }
 
+    private void updateSelectedMembersLabel(List<IMember> members)
+    {
         final String label;
         if(members.size() == 1)
         {
@@ -151,6 +173,48 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
             label = MessageFormat.format("{0} members selected", new Object[] { members.size() });
         }
         selectedMembersLabel.setText(label);
+    }
+
+    private void updateMessage(List<IMember> selectedMembers)
+    {
+        Collection<IMethod> selectedConstructors;
+        try
+        {
+            selectedConstructors = injectionPointStore.getConstructors();
+        }
+        catch (JavaModelException e)
+        {
+            // ignored
+            selectedConstructors = Collections.<IMethod> emptyList();
+        }
+
+        if(! selectedMembers.isEmpty() && selectedConstructors.isEmpty() && ! hasDefaultConstructor(classUnderTest))
+        {
+            setMessage(CONSTRUCTOR_WARNING, IMessageProvider.WARNING);
+        }
+        else
+        {
+            setMessage(DESCRIPTION);
+        }
+    }
+
+    private boolean hasDefaultConstructor(IType type)
+    {
+        try
+        {
+            for (IMethod m : type.getMethods())
+            {
+                if(m.isConstructor() && m.getNumberOfParameters() == 0)
+                {
+                    return true;
+                }
+            }
+        }
+        catch (JavaModelException e)
+        {
+            // return false
+        }
+        return false;
     }
 
     private void createSideButtons(Composite container)

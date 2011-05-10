@@ -15,7 +15,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultLogger implements Logger
 {
-    private static final Level LOG_LEVEL = Level.valueOf(System.getProperty("org.moreunit.mock.log.level", Level.INFO.name()));
+    private static final Level LOG_LEVEL = Level.valueOf(System.getProperty("org.moreunit.mock.log.level", Level.INFO.name()).toUpperCase());
 
     private final ILog logger;
 

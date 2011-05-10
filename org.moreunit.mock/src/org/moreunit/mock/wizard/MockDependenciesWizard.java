@@ -8,6 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.moreunit.MoreUnitResources;
 import org.moreunit.mock.MoreUnitMockPlugin;
 
 public class MockDependenciesWizard extends Wizard implements INewWizard
@@ -17,6 +18,7 @@ public class MockDependenciesWizard extends Wizard implements INewWizard
     public MockDependenciesWizard(MockDependenciesWizardPage page)
     {
         addPage(page);
+        setDefaultPageImageDescriptor(new MoreUnitResources().getMediumLogoDescriptor());
     }
 
     public void init(IWorkbench workbench, IStructuredSelection selection)
