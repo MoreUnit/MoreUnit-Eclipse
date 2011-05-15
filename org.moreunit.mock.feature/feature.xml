@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.moreunit.mock"
-      label="[BETA] MoreUnit Mock Support"
+      label="MoreUnit Mock Support (beta)"
       version="2.4.1.qualifier"
       provider-name="moreunit.sourceforge.net">
 
@@ -211,10 +211,11 @@ Agreement more than one year after the cause of action arose.
 Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
-	
-	<includes
-		id="org.moreunit.mock.source"
-		version="0.0.0"/>
+
+   <includes
+         id="org.moreunit.mock.source"
+         version="0.0.0"
+         name="MoreUnit Mock Support (Sources)"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="greaterOrEqual"/>

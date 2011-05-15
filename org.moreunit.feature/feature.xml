@@ -104,6 +104,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 
    <includes
          id="org.moreunit.source"
+         name="MoreUnit Plug-In (Sources)"
          version="0.0.0"/>
 
    <requires>
