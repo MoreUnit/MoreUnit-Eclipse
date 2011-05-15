@@ -6,8 +6,6 @@ package org.moreunit.mock.utils;
  */
 public class Features
 {
-    public static final String NEW_TEST_CASE_WIZARD_DEPENDENCIES_PAGE = "org.moreunit.mock.feature.newTestCaseWizardDependenciesPage";
-
     public static boolean isActive(String feature)
     {
         return Boolean.valueOf(System.getProperty(feature, "false"));

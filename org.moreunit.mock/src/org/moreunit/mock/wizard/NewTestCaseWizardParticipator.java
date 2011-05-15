@@ -6,7 +6,6 @@ import org.moreunit.extensionpoints.INewTestCaseWizardContext;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.extensionpoints.INewTestCaseWizardParticipator;
 import org.moreunit.mock.MoreUnitMockPlugin;
-import org.moreunit.mock.utils.Features;
 
 import com.google.inject.Inject;
 
@@ -26,11 +25,6 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
 
     public Collection<INewTestCaseWizardPage> getPages(INewTestCaseWizardContext context)
     {
-        if(! Features.isActive(Features.NEW_TEST_CASE_WIZARD_DEPENDENCIES_PAGE))
-        {
-            return null;
-        }
-
         if(context.getClassUnderTest() == null || context.getTestCasePackage() == null)
         {
             return null;
@@ -44,11 +38,6 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
 
     public void testCaseCreated(INewTestCaseWizardContext context)
     {
-        if(! Features.isActive(Features.NEW_TEST_CASE_WIZARD_DEPENDENCIES_PAGE))
-        {
-            return;
-        }
-
         MockDependenciesWizardPage page = context.get(PAGE_KEY);
         if(page == null || context.getCreatedTestCase() == null)
         {
