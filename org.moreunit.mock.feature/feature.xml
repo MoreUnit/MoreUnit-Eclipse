@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit.mock"
       label="MoreUnit Mock Support (beta)"
-      version="2.4.1.qualifier"
+      version="2.4.2.qualifier"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
