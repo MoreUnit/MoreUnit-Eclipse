@@ -11,19 +11,24 @@
 		
 		<section class="content">
 			<h1>Support for mocking frameworks</h1>
-			<p>MoreUnit now proposes you to automatically mock the dependencies of your classes in their associated test cases: just right click in the Java
-			editor and choose <em>MoreUnit &gt; Mock Dependencies in Test Case...</em><p>
+			<p>MoreUnit now proposes you to automatically mock the dependencies of your classes in their associated test cases: just select the dependencies
+			that you want to be mocked in the new page that appears in the "New Test Case" wizard:</p>
+			<figure><img src="../../img/mock-usage-example-wizard-page.png" width="552" height="417" alt="'New Test Case' wizard: 'Dependencies To Mock' page"
+			/></figure>
+			
+			<p>This feature is also available for already existing test cases: just right click in the Java editor when viewing either the class under test or
+			the test case and choose <em>MoreUnit &gt; Mock Dependencies in Test Case...</em><p>
 			<figure><img src="../../img/mock-usage-example-menu-action.png" width="642" height="142" alt="Menu action: Mock Dependencies" /></figure>
 
-			<p>As an example, running it on the following code:</p>
-			<figure><img src="../../img/mock-usage-example-input.png" width="791" height="535" alt="A class with dependencies" /></figure>
+			<p>As an example, the previous wizard opened for the following code:</p>
+			<figure><img src="../../img/mock-usage-example-input.png" width="822" height="519" alt="A class with dependencies" /></figure>
 			
-			<p>... will produce the following code if you use Mockito:</p>
-			<figure><img src="../../img/mock-usage-example-result-mockito.png" width="569" height="296" alt="Dependencies mocked with Mockito" />
+			<p>... on validation it will produce the following code if you use Mockito:</p>
+			<figure><img src="../../img/mock-usage-example-result-mockito.png" width="568" height="355" alt="Dependencies mocked with Mockito" />
 			</figure>
 			
 			<p>... or the following one if you use EasyMock:</p>
-			<figure><img src="../../img/mock-usage-example-result-easymock.png" width="662" height="248" alt="Dependencies mocked with EasyMock" />
+			<figure><img src="../../img/mock-usage-example-result-easymock.png" width="658" height="274" alt="Dependencies mocked with EasyMock" />
 			</figure>
 			
 			<p>You can choose your preferred mocking framework and result style in the preferences or your workspace or project:</p>
@@ -32,9 +37,8 @@
 			
 			<p>There is more to come! We aim to provide the following features soon:</p>
 			<ul>
+				<li>support for TestNG</li>
 				<li>default values for types that are not mockable: primitive types, their corresponding wrappers, etc...</li>
-				<li>a wizard to select the dependencies to mock when either using the test case creation wizard or the action <em>Mock Dependencies in Test
-				Case...</em></li>
 				<li>support for other mocking frameworks or output styles if you ask for it (see <a href="../about.html">our contact page</a>)</li>
 			</ul>
 		</section>
