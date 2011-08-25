@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -23,6 +20,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 
 public class PluginTools
 {
@@ -131,6 +129,34 @@ public class PluginTools
             return StringConstants.EMPTY_STRING;
 
         return sourceFolder.getPath().removeFirstSegments(1).toString();
+    }
+    
+    /**
+     * Returns the name of the test-package, which depends on the preferences.
+     * If the user configured a test package prefix or suffix it must be added to the test package name.
+     * 
+     * @param cutPackageName
+     * @param preferences
+     * @param javaProject
+     * @return
+     */
+    public static String getTestPackageName(String cutPackageName, Preferences preferences, IJavaProject javaProject)
+    {
+        String testPackagePrefix = preferences.getTestPackagePrefix(javaProject);
+        String testPackageSuffix = preferences.getTestPackageSuffix(javaProject);
+        String testPackageName = cutPackageName;
+        
+        if(!BaseTools.isStringTrimmedEmpty(testPackagePrefix))
+        {
+            testPackageName = String.format("%s.%s", testPackagePrefix, testPackageName);
+        }
+        
+        if(!BaseTools.isStringTrimmedEmpty(testPackageSuffix))
+        {
+            testPackageName = String.format("%s.%s", testPackageName, testPackageSuffix);
+        }
+        
+        return testPackageName;
     }
 }
 

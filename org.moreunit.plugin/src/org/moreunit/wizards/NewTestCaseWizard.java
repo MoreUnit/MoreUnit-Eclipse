@@ -15,6 +15,7 @@ import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
+import org.moreunit.util.PluginTools;
 import org.moreunit.util.StringConstants;
 
 public class NewTestCaseWizard extends NewClassyWizard
@@ -126,38 +127,19 @@ public class NewTestCaseWizard extends NewClassyWizard
 
     private IPackageFragment initialisePackageFragment()
     {
-        String testPackagePrefix = this.preferences.getTestPackagePrefix(project);
-        String testPackageSuffix = this.preferences.getTestPackageSuffix(project);
-
-        boolean hasPrefix = (testPackagePrefix != null) && (testPackagePrefix.length() > 0);
-        boolean hasSuffix = (testPackageSuffix != null) && (testPackageSuffix.length() > 0);
-
         IPackageFragment fragment = this.pageOne.getPackageFragment();
-        if(hasPrefix || hasSuffix)
+        String fragmentName = PluginTools.getTestPackageName(fragment.getElementName(), preferences, project);
+        try
         {
-            String fragmentName = fragment.getElementName();
-            if(hasPrefix)
-            {
-                fragmentName = testPackagePrefix + "." + fragmentName;
-            }
-
-            if(hasSuffix)
-            {
-                fragmentName = fragmentName + "." + testPackageSuffix;
-            }
-
-            try
-            {
-                IPackageFragment packageFragment = createPackageFragment(fragmentName);
-                this.pageOne.setPackageFragment(packageFragment, true);
-                fragment = packageFragment;
-            }
-            catch (JavaModelException e)
-            {
-                LogHandler.getInstance().handleWarnLog("Unable to create package fragment root");
-            }
+            IPackageFragment packageFragment = createPackageFragment(fragmentName);
+            this.pageOne.setPackageFragment(packageFragment, true);
+            fragment = packageFragment;
         }
-
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleWarnLog("Unable to create package fragment root");
+        }
+        
         return fragment;
     }
 

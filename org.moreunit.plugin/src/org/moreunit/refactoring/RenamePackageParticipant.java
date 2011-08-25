@@ -23,6 +23,7 @@ import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.util.PluginTools;
 
 /**
  * @author vera 24.11.2008 20:18:09
@@ -81,13 +82,14 @@ public class RenamePackageParticipant extends RenameParticipant
 
         for (IPackageFragmentRoot packageRoot : correspondingPackages)
         {
-            IPackageFragment packageToRename = packageRoot.getPackageFragment(packageFragment.getElementName());
-            if(packageToRename != null)
+            String cutPackageName = packageFragment.getElementName();
+            IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, Preferences.getInstance(), packageFragment.getJavaProject()));
+            if(packageToRename != null && packageToRename.exists())
             {
                 RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
                 RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
                 renameJavaElementDescriptor.setJavaElement(packageToRename);
-                renameJavaElementDescriptor.setNewName(getArguments().getNewName());
+                renameJavaElementDescriptor.setNewName(PluginTools.getTestPackageName(getArguments().getNewName(), Preferences.getInstance(), packageFragment.getJavaProject()));
 
                 RefactoringStatus refactoringStatus = new RefactoringStatus();
                 Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
