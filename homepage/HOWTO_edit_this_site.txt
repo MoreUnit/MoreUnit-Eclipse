@@ -1,0 +1,46 @@
+= Abstract =
+This document explains how this website has been conceived and how to successfully modify it.
+
+= Requirements for the website =
+Since we only publish static content, the site had to stay very *simple*. Furthermore, due to many restrictions applying
+to Sourceforge's web-space (.htaccess unsupported for instance), it is better that way.
+
+That said, it was previously particularly inconvenient to maintain the common parts of the site (header, navigation,
+footer) as they were duplicated in each and every page. So the new site should allow for some kind of *reuse* or
+templating.
+
+Also, being a website for developers, a category of people that notably has some weird ideas regarding what a modern
+browser is (w3m, uh?), it should degrade gracefully to be fully accessible with any user agent. More seriously, fancy
+websites may be a problem for peoples having handicaps or even for common people that are behind some inconvenient
+company firewall.
+ 
+Finally, we are in 2011 and it surely is nicer to have a modern HTML5 website (also HTML5 is richer and cleaner to edit).
+
+= Consequently =
+- This website is fully HTML5.
+- Only its main page (index.html) contains the main navigation links, the header and the footer.
+- All other pages are the simplest possible ones (only content) and they are included in the main page via Ajax calls
+when JavaScript is enabled.
+- All pages are readable without JavaScript (though without the header, navigation and footer).
+- All pages are readable without CSS.
+- It also degrades gracefully for older browser (IE6 included, yep).
+- It is well indexed by Google.
+- Using JavaScript, it redirects the user to the nice version of a page if the user tries to access a raw page (i.e.
+not included in index.html). This case may happens if the user comes from the search results of Google.
+
+Remarks:
+- Actually there is a second level of page inclusion in documentation.html
+- Though still usable it would be a very bad idea to deactivate CSS while still activating JavaScript (loading
+transitions would look odd).
+
+= How to modify the website =
+Edit its pages as with any other standard webpage (remember, it's all HTML5 so don't fear using sections, articles...)
+
+Links to other pages or images must be made relatively to the page you are editing ("../../blah.html",
+"../img/blih.jpg"). However: pages at the same level of the file hierarchy *must* be preceded by "./". This is for the
+replacement of the links to work well (once some content is loaded in the page via Ajax, it shares the location of the
+page that loaded it, ie. index.html).
+
+Because Sourceforge does not let us many liberties to define the cachability of our files by the browser, there is a
+trick to append a version number to the URLs of our pages. Every once you publish new content to the site, you *must*
+increment this version number (first property in js/core.js).
