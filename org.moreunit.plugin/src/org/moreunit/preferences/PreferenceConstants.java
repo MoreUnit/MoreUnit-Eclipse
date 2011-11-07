@@ -51,7 +51,7 @@ public interface PreferenceConstants
     String TEXT_JUNIT_4 = "Junit 4";
     String TEXT_JUNIT_3_8 = "JUnit 3.8";
     String TEXT_TEST_METHOD_TYPE = "Use test-prefix for test-methods (e.g. testFoo())";
-    String TEXT_TEST_SOURCE_FOLDER = "Directory for testcases";
+    String TEXT_TEST_SOURCE_FOLDER = "Test source folder";
     String TEXT_EXTENDED_TEST_METHOD_SEARCH = "Enable extended search for test methods";
 
     String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
