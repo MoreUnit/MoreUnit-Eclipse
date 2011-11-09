@@ -15,6 +15,7 @@ import org.osgi.framework.BundleContext;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 
 import static org.ops4j.peaberry.Peaberry.osgiModule;
 import static org.ops4j.peaberry.eclipse.EclipseRegistry.eclipseRegistry;
@@ -46,10 +47,17 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
 
         plugin = this;
 
-        Guice.createInjector(osgiModule(context, eclipseRegistry()), new MockPluginCoreModule()).injectMembers(this);
+        init(new MockPluginCoreModule());
+
+        log("MoreUnit Mock Plugin started.");
+    }
+
+    void init(Module module)
+    {
+        BundleContext bundleContext = getBundle().getBundleContext();
+        Guice.createInjector(osgiModule(bundleContext, eclipseRegistry()), module).injectMembers(this);
 
         loadDefaultMockingTemplates();
-        log("MoreUnit Mock Plugin started.");
     }
 
     private void log(String message)

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MoreUnit Mock Support - Integration Tests
+Bundle-SymbolicName: org.moreunit.mock.it
+Bundle-Version: 0.0.0
+Fragment-Host: org.moreunit.mock
+Require-Bundle: org.eclipse.jdt.launching,
+ org.junit;bundle-version="4.8.2",
+ org.moreunit.test.dependencies
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: .

@@ -121,4 +121,10 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
     {
         // nothing to do
     }
+
+    // for testing purposes
+    public void setCompilationUnit(ICompilationUnit compilationUnit)
+    {
+        this.compilationUnit = compilationUnit;
+    }
 }
