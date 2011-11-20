@@ -1,0 +1,25 @@
+package te.st;
+
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
+public class SomeConceptTest {
+
+	@Mock
+	private Comparable<String> comparable;
+	
+	@Mock
+	private Runnable runnable;
+	
+	private SomeConcept someConcept;
+	
+	@Before
+	public void createSomeConcept() throws Exception {
+		someConcept = new SomeConcept();
+		someConcept.comparable = comparable;
+		someConcept.runnable = runnable;
+	}
+}

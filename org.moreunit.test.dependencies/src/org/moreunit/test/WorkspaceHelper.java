@@ -1,4 +1,4 @@
-package org.moreunit.mock.it;
+package org.moreunit.test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,20 +27,21 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera 29.11.2008 13:41:52
  */
 public class WorkspaceHelper
 {
-
+    private static final String NEW_LINE = "\n";
     private static final String CLASSES_FOLDER = "classes";
-    
-    private static enum JavaType {
+
+    private static enum JavaType
+    {
         CLASS, ENUM;
-        
-        String toJavaCode() {
+
+        String toJavaCode()
+        {
             return toString().toLowerCase();
         }
     }
@@ -55,13 +56,15 @@ public class WorkspaceHelper
     {
         IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
         IProject project = workspaceRoot.getProject(projectName);
-        
-        // If project existed, delete if first, because create would throw an exception
+
+        // If project existed, delete if first, because create would throw an
+        // exception
         // otherwise
-        if (project.exists()) {
+        if(project.exists())
+        {
             project.delete(true, true, null);
         }
-        
+
         // Create and open project
         project.create(null);
         project.open(null);
@@ -159,19 +162,19 @@ public class WorkspaceHelper
 
     public static IType createJavaClassExtending(IPackageFragment packageFragment, String javaClassName, String parentClassName) throws JavaModelException
     {
-        String declaration = String.format("public %1$s %2$s extends %3$s { %4$s%4$s } %4$s", JavaType.CLASS.toJavaCode(), javaClassName, parentClassName, StringConstants.NEWLINE);
-        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), StringConstants.NEWLINE, declaration);
+        String declaration = String.format("public %1$s %2$s extends %3$s { %4$s%4$s } %4$s", JavaType.CLASS.toJavaCode(), javaClassName, parentClassName, NEW_LINE);
+        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), NEW_LINE, declaration);
         return createJavaType(packageFragment, javaClassName, sourceCode);
     }
-    
+
     public static IType createJavaEnum(IPackageFragment packageFragment, String javaClassName) throws JavaModelException
     {
         return createJavaType(packageFragment, javaClassName, JavaType.ENUM);
     }
-    
+
     private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, JavaType type) throws JavaModelException
     {
-        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), StringConstants.NEWLINE, getTypeDeclarationString(type, javaClassName));
+        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), NEW_LINE, getTypeDeclarationString(type, javaClassName));
         return createJavaType(packageFragment, javaClassName, sourceCode);
     }
 
@@ -183,17 +186,17 @@ public class WorkspaceHelper
 
     private static String getPackageDeclarationString(IPackageFragment packageFragment)
     {
-        return String.format("package %s;%s", packageFragment.getElementName(), StringConstants.NEWLINE);
+        return String.format("package %s;%s", packageFragment.getElementName(), NEW_LINE);
     }
 
     private static String getTypeDeclarationString(JavaType type, String javaClassName)
     {
-        return String.format("public %1$s %2$s { %3$s%3$s } %3$s", type.toJavaCode(), javaClassName, StringConstants.NEWLINE);
+        return String.format("public %1$s %2$s { %3$s%3$s } %3$s", type.toJavaCode(), javaClassName, NEW_LINE);
     }
 
     public static IMethod createMethodInJavaType(IType javaType, String methodDeclaration, String methodSourceCode) throws JavaModelException
     {
-        String completeMethodCodeString = String.format("%s{%s%s}", methodDeclaration, StringConstants.NEWLINE, methodSourceCode);
+        String completeMethodCodeString = String.format("%s{%s%s}", methodDeclaration, NEW_LINE, methodSourceCode);
         return javaType.createMethod(completeMethodCodeString, null, true, null);
     }
 
@@ -209,10 +212,10 @@ public class WorkspaceHelper
 
         return folder;
     }
-    
+
     public static void deleteCompilationUnitsForTypes(IType[] types) throws JavaModelException
     {
-        for(IType type : types)
+        for (IType type : types)
         {
             type.getCompilationUnit().delete(true, null);
         }

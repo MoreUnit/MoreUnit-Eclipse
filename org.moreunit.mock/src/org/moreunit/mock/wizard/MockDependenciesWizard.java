@@ -13,10 +13,12 @@ import org.moreunit.mock.MoreUnitMockPlugin;
 
 public class MockDependenciesWizard extends Wizard implements INewWizard
 {
+    private final WizardFactory wizardFactory;
     private Shell shell;
 
-    public MockDependenciesWizard(MockDependenciesWizardPage page)
+    public MockDependenciesWizard(WizardFactory wizardFactory, MockDependenciesWizardPage page)
     {
+        this.wizardFactory = wizardFactory;
         addPage(page);
         setDefaultPageImageDescriptor(new MoreUnitResources().getMediumLogoDescriptor());
     }
@@ -28,7 +30,8 @@ public class MockDependenciesWizard extends Wizard implements INewWizard
 
     public boolean openAndReturnIfOk()
     {
-        return Window.OK == new WizardDialog(shell, this).open();
+        WizardDialog dialog = wizardFactory.createWizardDialog(shell, this);
+        return Window.OK == dialog.open();
     }
 
     @Override

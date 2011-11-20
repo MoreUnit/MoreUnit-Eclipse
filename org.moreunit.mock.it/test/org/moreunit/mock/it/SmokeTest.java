@@ -5,17 +5,25 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.moreunit.mock.ReplaceInjectionModuleRule;
+import org.moreunit.mock.BindingOverridingRule;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.templates.MockingTemplateStore;
 
 import com.google.common.base.Function;
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 public class SmokeTest
 {
     @Rule
-    public ReplaceInjectionModuleRule injectRule = new ReplaceInjectionModuleRule(new TestModule());
+    public BindingOverridingRule bindingOverridingRule = new BindingOverridingRule(new AbstractModule()
+    {
+        @Override
+        protected void configure()
+        {
+            System.err.println("test module loaded");
+        }
+    });
 
     @Inject
     private MockingTemplateStore templateStore;

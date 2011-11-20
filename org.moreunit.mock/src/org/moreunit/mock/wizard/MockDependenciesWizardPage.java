@@ -230,8 +230,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             public void widgetSelected(SelectionEvent e)
             {
-                dependenciesTree.setCheckedElements((Object[]) dependenciesTree.getInput());
-                doCheckedStateChanged();
+                checkElements(getCheckableElements());
             }
         });
 
@@ -239,8 +238,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             public void widgetSelected(SelectionEvent e)
             {
-                dependenciesTree.setCheckedElements(new Object[0]);
-                doCheckedStateChanged();
+                checkElements(new Object[0]);
             }
         });
     }
@@ -253,6 +251,17 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         button.addSelectionListener(selectionListener);
         LayoutUtil.setButtonDimensionHint(button);
         return button;
+    }
+
+    public Object[] getCheckableElements()
+    {
+        return (Object[]) dependenciesTree.getInput();
+    }
+
+    public void checkElements(Object[] elements)
+    {
+        dependenciesTree.setCheckedElements(elements);
+        doCheckedStateChanged();
     }
 
     private void createSelectedDependenciesLabel(Composite container)

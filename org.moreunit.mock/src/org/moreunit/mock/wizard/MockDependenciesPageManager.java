@@ -16,12 +16,14 @@ import com.google.inject.Inject;
 
 public class MockDependenciesPageManager
 {
+    private final WizardFactory wizardFactory;
     private final DependencyMocker mocker;
     private final Logger logger;
 
     @Inject
-    public MockDependenciesPageManager(DependencyMocker mocker, Logger logger)
+    public MockDependenciesPageManager(WizardFactory wizardFactory, DependencyMocker mocker, Logger logger)
     {
+        this.wizardFactory = wizardFactory;
         this.mocker = mocker;
         this.logger = logger;
     }
@@ -88,6 +90,6 @@ public class MockDependenciesPageManager
 
     protected MockDependenciesWizard newWizard(MockDependenciesWizardPage page)
     {
-        return new MockDependenciesWizard(page);
+        return wizardFactory.createMockDependenciesWizard(page);
     }
 }
