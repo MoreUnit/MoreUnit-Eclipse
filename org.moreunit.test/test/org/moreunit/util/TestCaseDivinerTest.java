@@ -1,16 +1,18 @@
 package org.moreunit.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
-import static org.junit.Assert.*;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author giana 13.05.2006 13:49:29

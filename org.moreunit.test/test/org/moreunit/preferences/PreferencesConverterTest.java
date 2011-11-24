@@ -1,5 +1,7 @@
 package org.moreunit.preferences;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +12,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
 import org.moreunit.elements.SourceFolderMapping;
-import static org.junit.Assert.*;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class PreferencesConverterTest extends SimpleProjectTestCase
 {

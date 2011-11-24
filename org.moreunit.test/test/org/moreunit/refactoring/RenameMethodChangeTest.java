@@ -1,12 +1,9 @@
 package org.moreunit.refactoring;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class RenameMethodChangeTest
 {

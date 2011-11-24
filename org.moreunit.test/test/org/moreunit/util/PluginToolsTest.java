@@ -7,7 +7,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Test;
-import org.moreunit.WorkspaceHelper;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class PluginToolsTest
 {

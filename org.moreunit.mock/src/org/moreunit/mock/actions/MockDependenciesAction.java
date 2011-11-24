@@ -64,7 +64,7 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         execute();
     }
 
-    public void execute()
+    private void execute()
     {
         if(compilationUnit == null)
         {
@@ -120,11 +120,5 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
     public void selectionChanged(IAction action, ISelection selection)
     {
         // nothing to do
-    }
-
-    // for testing purposes
-    public void setCompilationUnit(ICompilationUnit compilationUnit)
-    {
-        this.compilationUnit = compilationUnit;
     }
 }

@@ -1,10 +1,9 @@
 package org.moreunit;
 
 import org.eclipse.jdt.core.IJavaProject;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author vera 29.11.2008 14:14:06

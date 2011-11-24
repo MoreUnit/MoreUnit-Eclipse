@@ -1,13 +1,16 @@
 package org.moreunit.elements;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
 import org.moreunit.preferences.PreferenceConstants;
-import static org.junit.Assert.*;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author vera 02.08.2007 07:37:24

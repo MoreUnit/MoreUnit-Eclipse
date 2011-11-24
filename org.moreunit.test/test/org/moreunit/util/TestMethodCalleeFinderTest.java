@@ -13,7 +13,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
 {

@@ -20,6 +20,7 @@ import org.junit.BeforeClass;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.DummyPreferencesForTesting;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author vera 06.12.2008 16:16:21

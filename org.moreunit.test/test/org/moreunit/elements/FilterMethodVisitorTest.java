@@ -1,5 +1,9 @@
 package org.moreunit.elements;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -11,13 +15,11 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.moreunit.WorkspaceHelper;
 import org.moreunit.WorkspaceTestCase;
+import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.StringConstants;
-import static org.junit.Assert.*;
 
 /**
  * @author vera

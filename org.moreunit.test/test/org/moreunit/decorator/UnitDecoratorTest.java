@@ -1,5 +1,8 @@
 package org.moreunit.decorator;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -7,8 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
-import static org.junit.Assert.*;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class UnitDecoratorTest extends SimpleProjectTestCase
 {

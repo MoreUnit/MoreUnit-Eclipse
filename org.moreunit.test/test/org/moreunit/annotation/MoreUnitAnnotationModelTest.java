@@ -1,20 +1,6 @@
 package org.moreunit.annotation;
 
-import java.util.Iterator;
-
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.source.IAnnotationModelExtension;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
-import static org.junit.Assert.*;
 
 public abstract class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
 {

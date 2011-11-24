@@ -5,6 +5,8 @@ package org.moreunit.elements;
  *
  * 23.05.2006 19:54:02
  */
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
@@ -15,8 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
-import static org.junit.Assert.*;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class TestMethodVisitorTest extends SimpleProjectTestCase
 {

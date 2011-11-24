@@ -73,7 +73,9 @@ Export-Package: com.google.common.annotations,
  org.mockito.stubbing,
  org.mockito.stubbing.answers,
  org.mockito.verification,
- org.moreunit.test,
+ org.moreunit.test.context,
+ org.moreunit.test.context.configs,
+ org.moreunit.test.workspace,
  org.objenesis,
  org.objenesis.instantiator,
  org.objenesis.instantiator.basic,
@@ -85,5 +87,6 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
- org.junit;bundle-version="4.8.2"
+ org.junit;bundle-version="4.8.2",
+ org.moreunit
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
