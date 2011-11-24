@@ -22,7 +22,7 @@
 		pde_build_folder_name = org.eclipse.pde.build_<version>
 		
 		moreunit_feature_plugins=org.moreunit.plugin/**
-	  	moreunit_mock_feature_plugins=org.moreunit.mock/**,org.moreunit.dependencies.guice/**
+	  	moreunit_mock_feature_plugins=org.moreunit.mock/**,org.moreunit.dependencies.guice/**,org.moreunit.dependencies.jaxb/**
 	  -->
 	<property file="moreunit.properties"/>
 
@@ -120,6 +120,7 @@
 		<eclipse.refreshLocal resource="org.moreunit.mock.plugin/META-INF/MANIFEST.MF" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.mock.plugin/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.dependencies.guice/build.properties" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.dependencies.jaxb/build.properties" depth="infinite"/>
 	</target>
 
 	<!--
@@ -208,6 +209,7 @@
 		
 		<unzip src="${temp_path}/org.moreunit.mock.zip" dest="${temp_path}/moreunit.build/plugins/" />
 		<unzip src="${temp_path}/org.moreunit.dependencies.guice.zip" dest="${temp_path}/moreunit.build/plugins/" />
+		<unzip src="${temp_path}/org.moreunit.dependencies.jaxb.zip" dest="${temp_path}/moreunit.build/plugins/" />
 		<unzip src="${temp_path}/org.moreunit.mock.feature.zip" dest="${temp_path}/moreunit.build/features/" />
 	</target>
 
@@ -258,6 +260,7 @@
 		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.mock" outputpath="${temp_path}"/>
 		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.mock.feature" outputpath="${temp_path}"/>
 		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.dependencies.guice" outputpath="${temp_path}"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.dependencies.jaxb" outputpath="${temp_path}"/>
 	</target>
 
 	<target name="commit_version_number">
@@ -355,6 +358,7 @@
 		<include name="org.moreunit.plugin/build.properties"/>
 		<include name="org.moreunit.mock/build.properties"/>
 		<include name="org.moreunit.dependencies.guice/build.properties"/>
+		<include name="org.moreunit.dependencies.jaxb/build.properties"/>
 	</fileset>
 
 	<!-- In nightly builds we want to use timestamp-qualifiers, but not in release builds -->
