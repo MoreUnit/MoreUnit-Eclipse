@@ -1,15 +1,13 @@
 package org.moreunit.preferences;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -30,39 +28,42 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
 
     public MoreUnitPreferencePage()
     {
-        // super(FieldEditorPreferencePage.GRID);
+        setDescription(PreferenceConstants.TEXT_GENERAL_SETTINGS);
     }
 
     @Override
     protected Control createContents(Composite parent)
     {
+        initializeDialogUnits(parent);
+
         Composite contentComposite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(1, true);
-        contentComposite.setLayout(gridLayout);
+        GridLayout layout = new GridLayout();
+        layout.marginWidth = 0;
+        layout.marginRight = 10;
+        layout.numColumns = 2;
+        contentComposite.setLayout(layout);
+        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
         otherMoreunitPropertiesBlock = new OtherMoreunitPropertiesBlock(null);
 
         createTestSourceFolderField(contentComposite);
-        otherMoreunitPropertiesBlock.getControl(contentComposite);
+        otherMoreunitPropertiesBlock.createCompositeWith2ColsParent(contentComposite);
+
+        Dialog.applyDialogFont(contentComposite);
 
         return parent;
     }
 
     private void createTestSourceFolderField(Composite parent)
     {
-        Composite labelAndTextFieldComposite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(2, true);
-        labelAndTextFieldComposite.setLayout(gridLayout);
-
-        GridData gridData = new GridData();
-        gridData.heightHint = 30;
-        labelAndTextFieldComposite.setLayoutData(gridData);
-
-        Label label = new Label(labelAndTextFieldComposite, SWT.NONE);
+        Label label = new Label(parent, SWT.NONE);
         label.setText(PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
+        label.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
 
-        testSourceFolderField = new Text(labelAndTextFieldComposite, SWT.SINGLE | SWT.BORDER);
+        testSourceFolderField = new Text(parent, SWT.SINGLE | SWT.BORDER);
         testSourceFolderField.setLayoutData(otherMoreunitPropertiesBlock.getLayoutForTextFields());
         testSourceFolderField.setText(Preferences.getInstance().getJunitDirectoryFromPreferences(null));
+        testSourceFolderField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
     }
 
     public void init(IWorkbench workbench)
@@ -87,57 +88,6 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
 
         return super.performOk();
     }
-
-    /*
-     * @Override protected void createFieldEditors() { StringFieldEditor
-     * junitDirPreferenceField = new
-     * StringFieldEditor(PreferenceConstants.PREF_JUNIT_PATH,
-     * "Directory for testcases", 10, getFieldEditorParent());
-     * addField(junitDirPreferenceField); String[][] labelAndValues = new
-     * String[][] { {PreferenceConstants.TEXT_JUNIT_3_8,
-     * PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3},
-     * {PreferenceConstants.TEXT_JUNIT_4,
-     * PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4},
-     * {PreferenceConstants.TEXT_TEST_NG,
-     * PreferenceConstants.TEST_TYPE_VALUE_TESTNG} }; addField(new
-     * RadioGroupFieldEditor(PreferenceConstants.TEST_TYPE,
-     * PreferenceConstants.TEXT_TEST_TYPE, 1, labelAndValues,
-     * getFieldEditorParent())); addField(new
-     * StringFieldEditor(PreferenceConstants.PREFIXES,
-     * PreferenceConstants.TEXT_TEST_PREFIXES, 30, getFieldEditorParent()));
-     * addField(new StringFieldEditor(PreferenceConstants.SUFFIXES,
-     * PreferenceConstants.TEXT_TEST_SUFFIXES, 30, getFieldEditorParent()));
-     * addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_PREFIX,
-     * PreferenceConstants.TEXT_PACKAGE_PREFIX, getFieldEditorParent()));
-     * addField(new StringFieldEditor(PreferenceConstants.TEST_PACKAGE_SUFFIX,
-     * PreferenceConstants.TEXT_PACKAGE_SUFFIX, getFieldEditorParent()));
-     * addField(new StringFieldEditor(PreferenceConstants.TEST_SUPERCLASS,
-     * PreferenceConstants.TEXT_TEST_SUPERCLASS, getFieldEditorParent()));
-     * addField(new
-     * BooleanFieldEditor(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING,
-     * PreferenceConstants.TEXT_FLEXIBLE_NAMING, getFieldEditorParent()));
-     * String[][] testMethodLabelsAndValues = new String[][] {
-     * {"Test Methods Prefixed With \"test\""
-     * ,PreferenceConstants.TEST_METHOD_TYPE_JUNIT3},
-     * {"Test Methods With no Prefix"
-     * ,PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX} }; addField(new
-     * RadioGroupFieldEditor(PreferenceConstants.TEST_METHOD_TYPE,
-     * "Test Method Type", 1, testMethodLabelsAndValues,
-     * getFieldEditorParent())); addField(new
-     * StringFieldEditor(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT,
-     * "Test Method Default Content", 30, getFieldEditorParent())); } public
-     * void init(final IWorkbench workbench) {
-     * setPreferenceStore(MoreUnitPlugin.getDefault().getPreferenceStore()); }
-     * @Override protected IPreferenceStore doGetPreferenceStore() { return
-     * MoreUnitPlugin.getDefault().getPreferenceStore(); }
-     * @Override protected String getPageId() { return
-     * PreferenceConstants.PREF_PAGE_ID; }
-     * @Override public boolean performOk() { Preferences.clearProjectCach();
-     * SourceFolderContext.getInstance().initContextForWorkspace();
-     * SearchScopeSingelton.getInstance().resetCachedSearchScopes(); return
-     * super.performOk(); }
-     */
-
 }
 
 // $Log: not supported by cvs2svn $

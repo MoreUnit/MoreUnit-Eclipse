@@ -1,10 +1,8 @@
 package org.moreunit.properties;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -20,13 +18,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.moreunit.SourceFolderContext;
-import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.util.SearchScopeSingelton;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera 11.03.2008 20:33:10
@@ -44,8 +37,10 @@ public class MoreUnitPropertyPage extends PropertyPage
     protected Control createContents(Composite parent)
     {
         Composite contentComposite = new Composite(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(1, true);
-        contentComposite.setLayout(gridLayout);
+        GridLayout layout = new GridLayout();
+        layout.marginWidth = 0;
+        contentComposite.setLayout(layout);
+        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         createCheckboxContent(contentComposite);
         createTabContent(contentComposite);
@@ -86,20 +81,30 @@ public class MoreUnitPropertyPage extends PropertyPage
         TabItem sourceFolderItem = new TabItem(tabFolder, SWT.NONE);
         sourceFolderItem.setText("Test source folder");
         firstTabUnitSourceFolder = new UnitSourceFolderBlock(getJavaProject(), this);
-        sourceFolderItem.setControl(firstTabUnitSourceFolder.getControl(tabFolder));
+        sourceFolderItem.setControl(applyTabMargins(firstTabUnitSourceFolder.getControl(tabFolder)));
 
         TabItem otherFolderItem = new TabItem(tabFolder, SWT.NONE);
         otherFolderItem.setText("Other");
         secondTabOtherProperties = new OtherMoreunitPropertiesBlock(getJavaProject());
-        otherFolderItem.setControl(secondTabOtherProperties.getControl(tabFolder));
+        otherFolderItem.setControl(applyTabMargins(secondTabOtherProperties.getControl(tabFolder)));
 
-        GridData gridData = new GridData();
-        gridData.widthHint = 550;
+        GridLayout layout = new GridLayout();
+        layout.marginWidth = 0;
+        tabFolder.setLayout(layout);
+
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.heightHint = 350;
         tabFolder.setLayoutData(gridData);
 
-        tabFolder.pack();
-
         tabFolder.setEnabled(shouldUseProjectspecificSettings());
+    }
+
+    private Composite applyTabMargins(Composite tabControl)
+    {
+        GridLayout firstTabLayout = ((GridLayout) tabControl.getLayout());
+        firstTabLayout.marginRight = 15;
+        firstTabLayout.marginLeft = 15;
+        return tabControl;
     }
 
     private IJavaProject getJavaProject()

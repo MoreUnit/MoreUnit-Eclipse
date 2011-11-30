@@ -31,7 +31,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 {
 
     private TreeViewer sourceFolderTree;
-    //private Button addButton;
+    // private Button addButton;
     private Button removeButton;
     private Button mappingButton;
     private UnitSourcesContentProvider unitSourcesContentProvider;
@@ -50,7 +50,10 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         Composite composite = new Composite(parent, SWT.NONE);
 
         GridLayout layout = new GridLayout(2, false);
+        layout.marginWidth = 0;
         composite.setLayout(layout);
+        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
         createLabel(composite);
         createTreeViewer(composite);
         createButtons(composite);
@@ -89,7 +92,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setFont(composite.getFont());
 
-        //addButton = createAddButton(buttonComposite, composite.getFont());
+        // addButton = createAddButton(buttonComposite, composite.getFont());
         createAddButton(buttonComposite, composite.getFont());
         removeButton = createRemoveButton(buttonComposite, composite.getFont());
         mappingButton = createMappingButton(buttonComposite, composite.getFont());
