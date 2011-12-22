@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MoreUnitSwtBot
+Bundle-SymbolicName: org.moreunit.swtbot.test;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: 
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.swtbot.go,
+ org.moreunit.test;bundle-version="2.0.2",
+ org.eclipse.jdt.core;bundle-version="3.7.0"
