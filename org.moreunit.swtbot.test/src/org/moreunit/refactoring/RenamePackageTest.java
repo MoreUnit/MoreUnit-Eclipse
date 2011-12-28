@@ -59,7 +59,6 @@ public class RenamePackageTest extends SimpleProjectTestCase
 			SWTBotText textWithLabel = bot.textWithLabel("New name:");
 			assertNotNull(textWithLabel);
 			textWithLabel.setText("some.name");
-			System.out.println("Active shell: " + bot.activeShell().getText());
 			bot.shell("Rename Package").activate();
 			SWTBotButton okButton = bot.button("OK");
 			assertNotNull(okButton);
