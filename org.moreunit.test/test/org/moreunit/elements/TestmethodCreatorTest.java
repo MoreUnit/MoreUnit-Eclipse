@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
-import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.preferences.PreferenceConstants;
+import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**

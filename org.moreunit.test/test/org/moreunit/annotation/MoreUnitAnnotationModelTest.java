@@ -1,6 +1,6 @@
 package org.moreunit.annotation;
 
-import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.test.SimpleProjectTestCase;
 
 public abstract class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
 {

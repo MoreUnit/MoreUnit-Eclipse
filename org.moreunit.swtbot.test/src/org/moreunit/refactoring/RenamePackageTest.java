@@ -21,8 +21,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.moreunit.SimpleProjectTestCase;
-import org.moreunit.WorkspaceHelper;
+import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * This should be a testcase for:

@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.PreferencesMock;
 

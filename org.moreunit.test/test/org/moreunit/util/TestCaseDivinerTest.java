@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
-import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**

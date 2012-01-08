@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.SimpleProjectTestCase;
+import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class TestMethodVisitorTest extends SimpleProjectTestCase

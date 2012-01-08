@@ -8,6 +8,7 @@ org.moreunit.mock/classes/
 org.moreunit.mock.it/classes/
 org.moreunit.mock.test/classes/
 org.moreunit.plugin/classes/
+org.moreunit.swtbot.test/classes/
 org.moreunit.test/classes/
 org.moreunit.test.dependencies/classes/
 Thumbs.db

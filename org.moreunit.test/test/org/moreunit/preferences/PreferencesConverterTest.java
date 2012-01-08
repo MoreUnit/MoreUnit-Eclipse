@@ -11,8 +11,8 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.SimpleProjectTestCase;
 import org.moreunit.elements.SourceFolderMapping;
+import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class PreferencesConverterTest extends SimpleProjectTestCase

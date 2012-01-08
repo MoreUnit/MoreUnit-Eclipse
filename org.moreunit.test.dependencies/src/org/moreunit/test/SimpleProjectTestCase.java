@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.moreunit;
+package org.moreunit.test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,13 +18,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.preferences.DummyPreferencesForTesting;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author vera 06.12.2008 16:16:21
  */
+@SuppressWarnings("restriction")
 public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 {
 
@@ -49,13 +49,13 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 
         initPreferencesForTestCaseContext();
     }
-    
+
     @AfterClass
     public static void tearDownProject() throws JavaModelException
     {
         sourcesPackage.delete(true, null);
         sourcesFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
-        
+
         testPackage.delete(true, null);
         testFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
     }

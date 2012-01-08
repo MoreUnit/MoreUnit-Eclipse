@@ -18,9 +18,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.WorkspaceTestCase;
-import org.moreunit.preferences.DummyPreferencesForTesting;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.test.DummyPreferencesForTesting;
+import org.moreunit.test.WorkspaceTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class TypeFacadeTest extends WorkspaceTestCase

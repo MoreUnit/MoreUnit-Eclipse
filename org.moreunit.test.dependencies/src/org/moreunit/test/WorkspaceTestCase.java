@@ -1,4 +1,4 @@
-package org.moreunit;
+package org.moreunit.test;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.AfterClass;

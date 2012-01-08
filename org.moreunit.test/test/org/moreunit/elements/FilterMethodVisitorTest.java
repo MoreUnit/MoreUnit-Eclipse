@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.moreunit.WorkspaceTestCase;
+import org.moreunit.test.WorkspaceTestCase;
 import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.StringConstants;
 
