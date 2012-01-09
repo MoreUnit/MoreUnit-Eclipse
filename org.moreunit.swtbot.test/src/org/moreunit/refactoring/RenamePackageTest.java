@@ -22,6 +22,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
@@ -32,7 +35,8 @@ import org.moreunit.test.workspace.WorkspaceHelper;
  * 
  * @author gianasista
  */
-public class RenamePackageTest extends SimpleProjectTestCase 
+@Context(mainCls = "org:SomeClass")
+public class RenamePackageTest extends ContextTestCase 
 {
 	private static SWTWorkbenchBot bot;
 
@@ -40,33 +44,38 @@ public class RenamePackageTest extends SimpleProjectTestCase
 	public static void initialize() 
 	{
 		bot = new SWTWorkbenchBot();
+		
+		// Init keyboard layout
+		SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
 	}
 
 	@Test
 	public void testRenamePackage() throws Exception 
 	{
-		String packageName = "somepackage";
-		initProjectWithPackage(packageName);
-
 		switchToJavaPerspective();
 
 		try 
 		{
 			SWTBotTreeItem packageToRename = selectAndReturnPackage();
 
-			SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+			// Press rename shortcut
 			packageToRename.pressShortcut(SWT.ALT | SWT.COMMAND, 'r');
+			
+			// fill dialog to rename package
 			SWTBotText textWithLabel = bot.textWithLabel("New name:");
 			assertNotNull(textWithLabel);
 			textWithLabel.setText("some.name");
 			bot.shell("Rename Package").activate();
+			
+			// start rename refactoring
 			SWTBotButton okButton = bot.button("OK");
 			assertNotNull(okButton);
 			okButton.click();
 		} 
 		catch (Exception e) 
 		{
-			fail("Renaming a package must not throw an exception! ("+ e.getMessage() + ")");
+			e.printStackTrace();
+			fail("Renaming a package must not throw an exception! ("+ e + ")");
 		}
 	}
 
@@ -79,17 +88,22 @@ public class RenamePackageTest extends SimpleProjectTestCase
 			fail("Tree in Package Explorer View was not found.");
 
 		SWTBotTree tree = new SWTBotTree((Tree) findControls.get(0));
-		SWTBotTreeItem projectNode = tree.expandNode("WorkspaceTestProject");
+		SWTBotTreeItem projectNode = tree.expandNode(getProjectNameFromContext());
 		tree.select(projectNode);
 
 		SWTBotTreeItem[] projectNodeChildren = projectNode.getItems();
-		projectNodeChildren[1].select();
-		projectNodeChildren[1].expand();
+		SWTBotTreeItem sourcesFolder = projectNodeChildren[1];
+		sourcesFolder.select();
+		sourcesFolder.expand();
 
-		SWTBotTreeItem[] sourcesFolderChildren = projectNodeChildren[1].getItems();
-		sourcesFolderChildren[1].select();
+		SWTBotTreeItem[] packagesInSourceFolder = sourcesFolder.getItems();
+		packagesInSourceFolder[0].select();
 
-		return sourcesFolderChildren[1];
+		return packagesInSourceFolder[0];
+	}
+
+	private String getProjectNameFromContext() {
+		return context.getProjectHandler().get().getElementName();
 	}
 
 	private void switchToJavaPerspective() 
@@ -103,9 +117,4 @@ public class RenamePackageTest extends SimpleProjectTestCase
 		bot.button("OK").click();
 	}
 
-	private void initProjectWithPackage(String packageName) throws JavaModelException 
-	{
-		IPackageFragment somePackage = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, packageName);
-		WorkspaceHelper.createJavaClass(somePackage, "SomeClass");
-	}
 }
