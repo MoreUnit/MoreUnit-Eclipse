@@ -1,0 +1,16 @@
+package te.st;
+
+public class SomeClass {
+	private int fieldName1;
+	private String fieldName2;
+	
+	private void setFieldName1(int value)
+	{
+		return this.fieldName1 = value;
+	}
+	
+	private void setFieldName2(int value)
+	{
+		return this.fieldName2 = value;
+	}
+}

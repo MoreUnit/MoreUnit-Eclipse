@@ -9,82 +9,88 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.preferences.Preferences;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.context.TestType;
+import org.moreunit.test.workspace.CompilationUnitHandler;
+import org.moreunit.test.workspace.MethodHandler;
+import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class MethodFacadeTest extends SimpleProjectTestCase
+@Project(mainCls = "org:AType")
+public class MethodFacadeTest extends ContextTestCase
 {
-    private IType aType;
-
+    private TypeHandler typeHandler;
+    
     @Before
-    public void setUp() throws JavaModelException
+    public void init()
     {
-        aType = createTestCase("AType", true);
+        this.typeHandler = context.getCompilationUnitHandler("org.AType").getPrimaryTypeHandler();
     }
 
+    @Preferences(testType = TestType.TESTNG)
     @Test
     public void testIsTestNgTestMethod() throws JavaModelException
     {
-        Preferences.getInstance().setTestType(workspaceTestProject, PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
-        IMethod method = WorkspaceHelper.createMethodInJavaType(aType, "public void testIt()", "");
-        assertFalse(new MethodFacade(method).isTestMethod());
+        MethodHandler method = typeHandler.addMethod("public void testIt()");
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
-        method = WorkspaceHelper.createMethodInJavaType(aType, "@Test public void testIt2()", "");
-        assertTrue(new MethodFacade(method).isTestMethod());
+        method = typeHandler.addMethod("@Test public void testIt2()");
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
+    @Preferences(testType = TestType.JUNIT4)
     @Test
     public void testIsJunit4TestMethod() throws JavaModelException
     {
-        Preferences.getInstance().setTestType(workspaceTestProject, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
-        IMethod method = WorkspaceHelper.createMethodInJavaType(aType, "public void testIt()", "");
-        assertFalse(new MethodFacade(method).isTestMethod());
+        MethodHandler method = typeHandler.addMethod("public void testIt()");
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
-        method = WorkspaceHelper.createMethodInJavaType(aType, "@Test public void testIt2()", "");
-        assertTrue(new MethodFacade(method).isTestMethod());
+        method = typeHandler.addMethod("@Test public void testIt2()", "");
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
+    @Preferences(testType = TestType.JUNIT3)
     @Test
     public void testIsJunit3TestMethod() throws JavaModelException
     {
-        Preferences.getInstance().setTestType(workspaceTestProject, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
-        IMethod method = WorkspaceHelper.createMethodInJavaType(aType, "protected void testIt()", "");
-        assertFalse(new MethodFacade(method).isTestMethod());
+        MethodHandler method = typeHandler.addMethod("protected void testIt()");
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
-        method = WorkspaceHelper.createMethodInJavaType(aType, "public int testIt2()", "return 1;");
-        assertFalse(new MethodFacade(method).isTestMethod());
+        method = typeHandler.addMethod("public int testIt2()", "return 1;");
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
-        method = WorkspaceHelper.createMethodInJavaType(aType, "@Test void testIt3()", "");
-        assertFalse(new MethodFacade(method).isTestMethod());
+        method = typeHandler.addMethod("@Test void testIt3()");
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
-        method = WorkspaceHelper.createMethodInJavaType(aType, "public void testIt4()", "");
-        assertTrue(new MethodFacade(method).isTestMethod());
+        method = typeHandler.addMethod("public void testIt4()");
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Test
     public void testIsAnonymous() throws JavaModelException
     {
-        IMethod methodUsingAnonymousType = WorkspaceHelper.createMethodInJavaType(aType, "void methodUsingAnonymousType()"
+        MethodHandler method = typeHandler.addMethod("void methodUsingAnonymousType()"
             ,"Object o = new Object() {public String toString(){return \"\";}};");
-        assertFalse(new MethodFacade(methodUsingAnonymousType).isAnonymous());
+        assertFalse(new MethodFacade(method.get()).isAnonymous());
 
-        int offsetInOverriddenToStringMethod = methodUsingAnonymousType.getSourceRange().getOffset() + 60;
-        IMethod overriddenToStringMethod = (IMethod) aType.getCompilationUnit().getElementAt(offsetInOverriddenToStringMethod);
+        int offsetInOverriddenToStringMethod = method.get().getSourceRange().getOffset() + 60;
+        IMethod overriddenToStringMethod = (IMethod) typeHandler.getCompilationUnit().getElementAt(offsetInOverriddenToStringMethod);
         assertTrue(new MethodFacade(overriddenToStringMethod).isAnonymous());
     }
 
     @Test
     public void testGetFirstNonAnonymousMethodCallingThisMethod() throws JavaModelException
     {
-        IMethod methodUsingAnonymousType = WorkspaceHelper.createMethodInJavaType(aType, "void methodUsingAnonymousType()"
+        MethodHandler method = typeHandler.addMethod("void methodUsingAnonymousType()"
             ,"Object o = new Object() {public String toString(){return \"\";}};");
-        assertEquals(methodUsingAnonymousType, new MethodFacade(methodUsingAnonymousType).getFirstNonAnonymousMethodCallingThisMethod());
+        assertEquals(method.get(), new MethodFacade(method.get()).getFirstNonAnonymousMethodCallingThisMethod());
 
-        int offsetInOverriddenToStringMethod = methodUsingAnonymousType.getSourceRange().getOffset() + 60;
-        IMethod overriddenToStringMethod = (IMethod) aType.getCompilationUnit().getElementAt(offsetInOverriddenToStringMethod);
-        assertEquals(methodUsingAnonymousType, new MethodFacade(overriddenToStringMethod).getFirstNonAnonymousMethodCallingThisMethod());
+        int offsetInOverriddenToStringMethod = method.get().getSourceRange().getOffset() + 60;
+        IMethod overriddenToStringMethod = (IMethod) typeHandler.getCompilationUnit().getElementAt(offsetInOverriddenToStringMethod);
+        assertEquals(method.get(), new MethodFacade(overriddenToStringMethod).getFirstNonAnonymousMethodCallingThisMethod());
     }
-
 }

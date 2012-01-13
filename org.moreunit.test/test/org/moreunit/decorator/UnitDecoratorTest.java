@@ -4,64 +4,48 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.context.configs.SimpleJUnit3Project;
+import org.moreunit.test.context.configs.SimpleJUnit4Project;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class UnitDecoratorTest extends SimpleProjectTestCase
+@Context(SimpleJUnit4Project.class)
+public class UnitDecoratorTest extends ContextTestCase
 {
-    private UnitDecorator unitDecorator;
-
-    @Before
-    public void setUp() throws Exception
-    {
-        unitDecorator = new UnitDecorator();
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-        unitDecorator = null;
-    }
+    private UnitDecorator unitDecorator = new UnitDecorator();
 
     @Test
     public void testTryToGetCompilationUnitFromElementIsNoFile()
     {
-        IResource packageFragmentResource = sourcesPackage.getResource();
-        assertNull(unitDecorator.tryToGetCompilationUnitFromElement(packageFragmentResource));
+        IPackageFragmentRoot packageFragmentRoot = context.getProjectHandler().getMainSrcFolderHandler().get();
+        assertNull(unitDecorator.tryToGetCompilationUnitFromElement(packageFragmentRoot.getResource()));
     }
 
     @Test
+    @Preferences(testClassSuffixes="Test")
+    @Project(mainCls = "org:SomeClass", testCls = "org:SomeClassTest")
     public void testTryToGetCompilationUnitFromElementIsTestCase() throws JavaModelException
     {
-        IResource testCaseResource = initWorkspaceWithClassAndTestAndReturnResourceOfTestCase();
+        IResource testCaseResource = context.getCompilationUnit("org.SomeClassTest").getResource();
         assertNull(unitDecorator.tryToGetCompilationUnitFromElement(testCaseResource));
     }
 
-    private IResource initWorkspaceWithClassAndTestAndReturnResourceOfTestCase() throws JavaModelException
-    {
-        WorkspaceHelper.createJavaClass(sourcesPackage, "Hello");
-        IType testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
-
-        return testcaseType.getResource();
-    }
-
     @Test
+    @Preferences(testClassSuffixes="Test")
+    @Project(mainCls = "org:SomeClass", testCls = "org:SomeClassTest")
     public void testTryToGetCompilationUnitFromElementIsNotTestCase() throws JavaModelException
     {
-        IResource classResource = initWorkspaceWithClassAndTestAndReturnResourceOfClass();
+        IResource classResource = context.getCompilationUnit("org.SomeClass").getResource();
         assertNotNull(unitDecorator.tryToGetCompilationUnitFromElement(classResource));
-    }
-
-    private IResource initWorkspaceWithClassAndTestAndReturnResourceOfClass() throws JavaModelException
-    {
-        IType classType = WorkspaceHelper.createJavaClass(sourcesPackage, "HelloWorld");
-        WorkspaceHelper.createJavaClass(testPackage, "HelloWorldTest");
-
-        return classType.getResource();
     }
 }

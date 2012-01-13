@@ -17,31 +17,30 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.workspace.MethodHandler;
+import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class TestMethodVisitorTest extends SimpleProjectTestCase
+@Project(testCls="testing:HelloTest")
+public class TestMethodVisitorTest extends ContextTestCase
 {
 
-    IType testcaseType;
+    TypeHandler testcaseType;
 
     @Before
-    public void setUp() throws Exception
+    public void init() throws Exception
     {
-        testcaseType = WorkspaceHelper.createJavaClass(testPackage, "HelloTest");
+        testcaseType = context.getCompilationUnitHandler("testing.HelloTest").getPrimaryTypeHandler();
     }
     
-    @After
-    public void tearDown() throws JavaModelException 
-    {
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {testcaseType});
-    }
-
     @Test
     public void testGetTestMethodsOnlyTestAnnotation() throws JavaModelException
     {
         String methodSource = "@Test \n public int getOne() { return 1; }";
-        IMethod annotationTestMethod = testcaseType.createMethod(methodSource, null, true, null);
-        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+        IMethod annotationTestMethod = testcaseType.get().createMethod(methodSource, null, true, null);
+        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
         assertEquals(1, testMethods.size());
         WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
@@ -50,19 +49,19 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
     @Test
     public void testGetTestMethodsTestPrefix() throws JavaModelException
     {
-        IMethod testMethodWithPrefix = WorkspaceHelper.createMethodInJavaType(testcaseType, "public int testGetTwo()", "");
-        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+        MethodHandler testMethodWithPrefix = testcaseType.addMethod("public int testGetTwo()");
+        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
         assertEquals(1, testMethods.size());
-        WorkspaceHelper.assertSameMethodName(testMethodWithPrefix, testMethods.get(0));
+        WorkspaceHelper.assertSameMethodName(testMethodWithPrefix.get(), testMethods.get(0));
     }
 
     @Test
     public void testGetTestMethodsTestAnnotationAndTestPrefix() throws JavaModelException
     {
         String methodSource = "@Test \n public void testGetOne() {  }";
-        IMethod annotationTestMethod = testcaseType.createMethod(methodSource, null, true, null);
-        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+        IMethod annotationTestMethod = testcaseType.get().createMethod(methodSource, null, true, null);
+        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
         assertEquals(1, testMethods.size());
         WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
@@ -71,7 +70,7 @@ public class TestMethodVisitorTest extends SimpleProjectTestCase
     @Test
     public void testGetTestMethodsNoTestMethod() throws JavaModelException
     {
-        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType);
+        TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
         assertEquals(0, testMethods.size());
     }

@@ -1,0 +1,13 @@
+package te.st;
+
+public class SomeClass {
+	private int getNumberOne()
+	{
+		return 1;
+	}
+	
+	private int getNumberOne(String parameter)
+	{
+		return 1;
+	}
+}

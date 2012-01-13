@@ -1,0 +1,9 @@
+package testing;
+
+public class Hello1
+{
+	public int getNumber1()
+	{
+		return 1;
+	}
+}

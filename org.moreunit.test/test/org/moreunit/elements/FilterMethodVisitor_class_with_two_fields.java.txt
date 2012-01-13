@@ -1,0 +1,6 @@
+package te.st;
+
+public class SomeClass {
+	private String fieldName1;
+	private String fieldName2;
+}

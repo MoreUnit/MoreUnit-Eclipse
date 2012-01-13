@@ -1,0 +1,14 @@
+package testing;
+
+public class Hello2
+{
+	public int getNumberOne()
+	{
+		return 1;
+	}
+	
+	public void getNumberOneAgain()
+	{
+		return 1;
+	}
+}

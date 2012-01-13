@@ -1,0 +1,24 @@
+package te.st;
+
+public class SomeClass {
+	private int getNumberOne()
+	{
+		return 1;
+	}
+	
+	public int getNumberTwo()
+	{
+		return 2;
+	}
+	
+	public int getNumberThree()
+	{
+		return 3;
+	}
+	
+	int getNumberFour()
+	{
+		return 4;
+	}
+	
+}

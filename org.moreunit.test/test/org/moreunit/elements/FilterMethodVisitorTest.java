@@ -18,15 +18,21 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moreunit.test.WorkspaceTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.configs.SimpleJUnit3Project;
+import org.moreunit.test.context.configs.SimpleJUnit4Project;
+import org.moreunit.test.workspace.MethodHandler;
+import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.StringConstants;
 
 /**
  * @author vera
  */
-public class FilterMethodVisitorTest extends WorkspaceTestCase
+@Context(SimpleJUnit4Project.class)
+public class FilterMethodVisitorTest extends ContextTestCase
 {
-
     private static final String PACKAGE_NAME = "org";
     private static final String SOURCES_FOLDER_NAME = "sources";
 
@@ -34,104 +40,103 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
 
     private static final String JAVA_CLASS_NAME = "FilterMethodVisitorUT";
 
+    /*
     @BeforeClass
     public static void setUpSourceFolder() throws Exception
     {
         IPackageFragmentRoot sourcesFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCES_FOLDER_NAME);
         sourcesPackage = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, PACKAGE_NAME);
     }
+    */
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_one_private_method.java.txt")
     public void testGetPrivateMethods() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
-        WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2");
-        WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberThree()", "return 3");
-        WorkspaceHelper.createMethodInJavaType(cutType, "int getNumberFour()", "return 4");
-
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+        IType typeWithOnePrivateMethod = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOnePrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertEquals(1, privateMethods.size());
-        WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
+        assertEquals("getNumberOne", privateMethods.get(0).getName().toString());
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOnePrivateMethod});
     }
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_overloaded_private_method.java.txt")
     public void testGetPrivateMethodsOverloaded() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
-        WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
+        IType typeWithOverloadedPrivateMethod = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
 
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOverloadedPrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertEquals(2, privateMethods.size());
-        WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
-        WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
+        assertEquals("getNumberOne", privateMethods.get(0).getName().toString());
+        assertEquals("getNumberOne", privateMethods.get(1).getName().toString());
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOverloadedPrivateMethod});
     }
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_overloaded_private_method_2.java.txt")
     public void testGetPrivateMethodsOverloaded2() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(boolean parameter)", "return 1");
-        WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
+        IType typeWithOverloadedPrivateMethod = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
 
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOverloadedPrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertEquals(2, privateMethods.size());
-        WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(0));
-        WorkspaceHelper.assertSameMethodName(privateMethod, privateMethods.get(1));
+        assertEquals("getNumberOne", privateMethods.get(0).getName().toString());
+        assertEquals("getNumberOne", privateMethods.get(1).getName().toString());
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOverloadedPrivateMethod});
     }
 
     @Test
     public void testIsPrivateMethod() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
-        IMethod publicMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2");
-        IMethod protectedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberThree()", "return 3");
-        IMethod defaultMethod = WorkspaceHelper.createMethodInJavaType(cutType, "int getNumberFour()", "return 4");
+        TypeHandler createdClass = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.AnotherClass");
+        MethodHandler privateMethod = createdClass.addMethod("private int getNumberOne()", "return 1");
+        MethodHandler publicMethod = createdClass.addMethod("public int getNumberTwo()", "return 2");
+        MethodHandler protectedMethod = createdClass.addMethod("protected int getNumberThree()", "return 3");
+        MethodHandler defaultMethod = createdClass.addMethod("int getNumberFour()", "return 4");
 
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
-        assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod));
-        assertFalse(filterMethodVisitor.isPrivateMethod(publicMethod));
-        assertFalse(filterMethodVisitor.isPrivateMethod(protectedMethod));
-        assertFalse(filterMethodVisitor.isPrivateMethod(defaultMethod));
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(createdClass.get());
+        assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod.get()));
+        assertFalse(filterMethodVisitor.isPrivateMethod(publicMethod.get()));
+        assertFalse(filterMethodVisitor.isPrivateMethod(protectedMethod.get()));
+        assertFalse(filterMethodVisitor.isPrivateMethod(defaultMethod.get()));
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {createdClass.get()});
     }
 
     @Test
     public void testIsPrivateMethodOverloaded() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod privateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne()", "return 1");
-        IMethod overloadedPrivateMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getNumberOne(String parameter)", "return 1");
+        TypeHandler createdClass = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.AnotherClass");
+        MethodHandler privateMethod = createdClass.addMethod("private int getNumberOne()", "return 1");
+        MethodHandler overloadedPrivateMethod = createdClass.addMethod("private int getNumberOne(String parameter)", "return 2");
 
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
-        assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod));
-        assertTrue(filterMethodVisitor.isPrivateMethod(overloadedPrivateMethod));
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(createdClass.get());
+        assertTrue(filterMethodVisitor.isPrivateMethod(privateMethod.get()));
+        assertTrue(filterMethodVisitor.isPrivateMethod(overloadedPrivateMethod.get()));
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {createdClass.get()});
     }
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_two_fields.java.txt")
     public void testGetFieldDeclarations() throws CoreException
     {
-        ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", JAVA_CLASS_NAME), getClassSourceWithFields(JAVA_CLASS_NAME, "fieldName1", "fieldName2"), false, null);
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(compilationUnit.findPrimaryType());
+        IType typeWithTwoFields = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoFields);
         List<FieldDeclaration> fieldDeclarations = filterMethodVisitor.getFieldDeclarations();
         assertEquals(2, fieldDeclarations.size());
 
@@ -144,70 +149,62 @@ public class FilterMethodVisitorTest extends WorkspaceTestCase
         assertEquals("fieldName2", variable.getName().getFullyQualifiedName());
         
         // cleanup
-       compilationUnit.delete(true, null);
-    }
-
-    private String getClassSourceWithFields(String className, String fieldname1, String fieldname2)
-    {
-        StringBuilder result = new StringBuilder();
-        result.append(String.format("package %s;%s", sourcesPackage.getElementName(), StringConstants.NEWLINE));
-        result.append(String.format("public class %s {%s", className, StringConstants.NEWLINE));
-
-        result.append(String.format("private String %s;%s", fieldname1, StringConstants.NEWLINE));
-        result.append(String.format("private String %s;%s", fieldname2, StringConstants.NEWLINE));
-
-        result.append("}");
-
-        return result.toString();
+       typeWithTwoFields.getCompilationUnit().delete(true, null);
     }
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_two_getter_methods.java.txt")
     public void testGetGetterMethods() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod fieldName1GetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getFieldName1()", "return 1");
-        IMethod fieldName2GetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getFieldName2()", "return 2");
+        IType typeWithTwoGetters = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
 
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoGetters);
         List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
         assertEquals(2, getterMethods.size());
-        WorkspaceHelper.assertSameMethodName(fieldName1GetterMethod, getterMethods.get(0));
-        WorkspaceHelper.assertSameMethodName(fieldName2GetterMethod, getterMethods.get(1));
+        assertEquals("getFieldName1", getterMethods.get(0).getName().toString());
+        assertEquals("getFieldName2", getterMethods.get(1).getName().toString());
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        typeWithTwoGetters.getCompilationUnit().delete(true, null);
     }
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_two_setter_methods.java.txt")
     public void testGetSetterMethods() throws CoreException
     {
-        IType cutType = WorkspaceHelper.createJavaClass(sourcesPackage, JAVA_CLASS_NAME);
-        IMethod fieldName1SetterMethod = WorkspaceHelper.createMethodInJavaType(cutType, "private int getFieldName1()", "return 1");
-        WorkspaceHelper.createMethodInJavaType(cutType, "public int setFieldName2()", "return 2");
+        IType typeWithTwoSetters = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
 
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(cutType);
-        List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
-        assertEquals(1, getterMethods.size());
-        WorkspaceHelper.assertSameMethodName(fieldName1SetterMethod, getterMethods.get(0));
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoSetters);
+        List<MethodDeclaration> setterMethods = filterMethodVisitor.getSetterMethods();
+        assertEquals(2, setterMethods.size());
+        assertEquals("setFieldName1", setterMethods.get(0).getName().toString());
+        assertEquals("setFieldName2", setterMethods.get(1).getName().toString());
         
         // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {cutType});
+        typeWithTwoSetters.getCompilationUnit().delete(true, null);
+
     }
 
     @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_getter.java.txt")
     public void testIsGetterMethod() throws CoreException
     {
-        ICompilationUnit compilationUnit = sourcesPackage.createCompilationUnit(String.format("%s.java", JAVA_CLASS_NAME), getClassSourceWithFields(JAVA_CLASS_NAME, "fieldName1", "fieldName2"), false, null);
-        IMethod fieldName1GetterMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private String getFieldName1()", "return fieldname1;");
-        IMethod getterWithoutFieldMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private int getTheWorld()", "return 1;");
-        IMethod fieldName1SetterMethod = WorkspaceHelper.createMethodInJavaType(compilationUnit.findPrimaryType(), "private int setFieldName1()", "return 1;");
-        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(compilationUnit.findPrimaryType());
-
-        assertTrue(filterMethodVisitor.isGetterMethod(fieldName1GetterMethod));
-        assertFalse(filterMethodVisitor.isGetterMethod(getterWithoutFieldMethod));
-        assertFalse(filterMethodVisitor.isGetterMethod(fieldName1SetterMethod));
+        IType typeWithTwoSetters = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoSetters);
+        IMethod method = typeWithTwoSetters.getMethod("getFieldName1", new String[] {});
+        assertTrue(filterMethodVisitor.isGetterMethod(method));
         
         // cleanup
-        compilationUnit.delete(true, null);
+        typeWithTwoSetters.getCompilationUnit().delete(true, null);
+    }
+
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_getter_without_field.java.txt")
+    public void testIsGetterMethodGetterWithoutField()
+    {
+        IType typeWithTwoSetters = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoSetters);
+        IMethod method = typeWithTwoSetters.getMethod("getTheWorld", new String[] {});
+        assertFalse(filterMethodVisitor.isGetterMethod(method));
     }
 }

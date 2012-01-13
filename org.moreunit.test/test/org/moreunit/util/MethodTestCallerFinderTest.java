@@ -13,47 +13,51 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.workspace.MethodHandler;
+import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class MethodTestCallerFinderTest extends SimpleProjectTestCase
+@Context(mainCls="testing:Hello", testCls="testing:HelloTest")
+public class MethodTestCallerFinderTest extends ContextTestCase
 {
-
-    private IType cutType;
-    private IType testcaseType;
-    private IMethod getNumberOneMethod;
+    private TypeHandler cutType;
+    private TypeHandler testcaseType;
+    private MethodHandler getNumberOneMethod;
 
     @Before
     public void setUp() throws JavaModelException
     {
-        cutType = createJavaClass("Hello", true);
-        testcaseType = createTestCase("HelloTest", true);
-        getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
+        cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
+        testcaseType = context.getCompilationUnitHandler("testing.HelloTest").getPrimaryTypeHandler();
+        getNumberOneMethod = cutType.addMethod("public int getNumberOne()", "return 1;");
     }
 
     @Test
     public void testGetMatchesWithoutTestMethod() throws JavaModelException
     {
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod, asSet(testcaseType)).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertTrue(matches.isEmpty());
     }
 
     @Test
     public void testGetMatchesWithOneTestMethod() throws JavaModelException
     {
-        IMethod giveMe1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGiveMe1()", "new Hello().getNumberOne();");
+        MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod, asSet(testcaseType)).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(giveMe1TestMethod), matches);
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
+        assertEquals(asSet(giveMe1TestMethod.get()), matches);
     }
 
     @Test
     public void testGetMatchesWithSeveralTestMethods() throws JavaModelException
     {
-        IMethod giveMe1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGiveMe1()", "new Hello().getNumberOne();");
-        IMethod gimme1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGimme1()", "new Hello().getNumberOne();");
-        IMethod getNumber1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumber1()", "new Hello().getNumberOne();");
+        MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
+        MethodHandler gimme1TestMethod = testcaseType.addMethod("public void testGimme1()", "new Hello().getNumberOne();");
+        MethodHandler getNumber1TestMethod = testcaseType.addMethod("public void testGetNumber1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod, asSet(testcaseType)).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(giveMe1TestMethod, gimme1TestMethod, getNumber1TestMethod), matches);
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
+        assertEquals(asSet(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get()), matches);
     }
 }

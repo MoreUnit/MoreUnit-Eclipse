@@ -13,11 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class PreferencesConverterTest extends SimpleProjectTestCase
+@Context(SimpleJUnit3Project.class)
+public class PreferencesConverterTest extends ContextTestCase
 {
-
     private static final String SOURCEFOLDER_NAME_UNIT1 = "unit1";
     private static final String SOURCEFOLDER_NAME_UNIT2 = "unit2";
     private static final String SOURCEFOLDER_NAME_UNIT3 = "unit3";
@@ -32,11 +36,12 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
     @Before
     public void setUp() throws Exception
     {
-        unit1SourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_UNIT1);
-        unit2SourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_UNIT2);
-        unit3SourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_UNIT3);
-        sampleFolder = WorkspaceHelper.createFolder(workspaceTestProject, "atest");
-        testUnitSourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCEFOLDER_NAME_TEST_UNIT);
+        // TODO Perhaps this is not the best idea
+        unit1SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT1);
+        unit2SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT2);
+        unit3SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT3);
+        sampleFolder = WorkspaceHelper.createFolder(context.getProjectHandler().get(), "atest");
+        testUnitSourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_TEST_UNIT);
     }
 
     @After
@@ -53,8 +58,8 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
     @Test
     public void testConvertSourceMappingsToString()
     {
-        SourceFolderMapping mapping1 = new SourceFolderMapping(workspaceTestProject, unit1SourceFolder, unit2SourceFolder);
-        SourceFolderMapping mapping2 = new SourceFolderMapping(workspaceTestProject, unit2SourceFolder, unit3SourceFolder);
+        SourceFolderMapping mapping1 = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, unit2SourceFolder);
+        SourceFolderMapping mapping2 = new SourceFolderMapping(context.getProjectHandler().get(), unit2SourceFolder, unit3SourceFolder);
 
         List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
         mappingList.add(mapping1);
@@ -66,7 +71,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
     @Test
     public void testConvertSourceMappingsToStringWithSubfolder()
     {
-        SourceFolderMapping mapping1 = new SourceFolderMapping(workspaceTestProject, unit1SourceFolder, testUnitSourceFolder);
+        SourceFolderMapping mapping1 = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, testUnitSourceFolder);
 
         List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
         mappingList.add(mapping1);
@@ -90,12 +95,12 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
         assertEquals(2, mappingList.size());
 
         SourceFolderMapping firstMapping = mappingList.get(0);
-        assertEquals(workspaceTestProject, firstMapping.getJavaProject());
+        assertEquals(context.getProjectHandler().get(), firstMapping.getJavaProject());
         assertEquals(unit1SourceFolder, firstMapping.getSourceFolder());
         assertEquals(unit2SourceFolder, firstMapping.getTestFolder());
 
         SourceFolderMapping secondMapping = mappingList.get(1);
-        assertEquals(workspaceTestProject, secondMapping.getJavaProject());
+        assertEquals(context.getProjectHandler().get(), secondMapping.getJavaProject());
         assertEquals(unit2SourceFolder, secondMapping.getSourceFolder());
         assertEquals(unit3SourceFolder, secondMapping.getTestFolder());
     }
@@ -109,7 +114,7 @@ public class PreferencesConverterTest extends SimpleProjectTestCase
         assertEquals(1, mappingList.size());
 
         SourceFolderMapping firstMapping = mappingList.get(0);
-        assertEquals(workspaceTestProject, firstMapping.getJavaProject());
+        assertEquals(context.getProjectHandler().get(), firstMapping.getJavaProject());
         assertEquals(unit1SourceFolder, firstMapping.getSourceFolder());
         assertEquals(testUnitSourceFolder, firstMapping.getTestFolder());
     }

@@ -13,73 +13,69 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.workspace.MethodHandler;
+import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class TestMethodCalleeFinderTest extends SimpleProjectTestCase
+@Preferences(testClassSuffixes="Test", testSourcefolder="test")
+@Project(mainSrc="TestMethodCalleeFinder_class1.java.txt,TestMethodCalleeFinder_class2.java.txt", testCls="testing:HelloTest", mainSrcFolder="src", testSrcFolder="test")
+public class TestMethodCalleeFinderTest extends ContextTestCase
 {
-    private IType cutType1;
-    private IType cutType2;
-    private IType testcaseType;
-    private IMethod getNumber1;
-    private IMethod getNumberOne;
-    private IMethod getNumberOneAgain;
+    private TypeHandler cutHello1;
+    private TypeHandler cutHello2;
+    private TypeHandler testCase;
 
     @Before
-    public void setUp() throws JavaModelException
+    public void init()
     {
-        cutType1 = createJavaClass("Hello1", true);
-        getNumber1 = WorkspaceHelper.createMethodInJavaType(cutType1, "public void getNumber1()", "return 1;");
-        cutType2 = createJavaClass("Hello2", true);
-        getNumberOne = WorkspaceHelper.createMethodInJavaType(cutType2, "public void getNumberOne()", "return 1;");
-        getNumberOneAgain = WorkspaceHelper.createMethodInJavaType(cutType2, "public void getNumberOneAgain()", "return 1;");
-        testcaseType = createTestCase("HelloTest", true);
+        cutHello1 = context.getPrimaryTypeHandler("testing.Hello1");
+        cutHello2 = context.getPrimaryTypeHandler("testing.Hello2");
+        testCase = context.getPrimaryTypeHandler("testing.HelloTest");
     }
 
     @Test
     public void testGetMatchesWithoutMethodUnderTest() throws JavaModelException
     {
-        IMethod testMethod = createTestMethodWithContent("");
+        MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()");
+        //IMethod testMethod = createTestMethodWithContent("");
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
         assertTrue(matches.isEmpty());
-    }
-
-    private IMethod createTestMethodWithContent(String methodSourceCode) throws JavaModelException
-    {
-        return WorkspaceHelper.createMethodInJavaType(testcaseType, "public int testGetNumberOne()", methodSourceCode);
     }
 
     @Test
     public void testGetMatchesWithOneMethodUnderTest() throws JavaModelException
     {
-        IMethod testMethod = createTestMethodWithContent("new Hello1().getNumber1();");
+        MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", "new Hello1().getNumber1();");
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(getNumber1), matches);
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        assertEquals(1, matches.size());
+        assertEquals("getNumber1", ((IMethod)matches.toArray()[0]).getElementName());
     }
 
     @Test
     public void testGetMatchesWithBothMethodsUnderTestAndMethodsNotUnderTest() throws JavaModelException
     {
-        IMethod testMethod = createTestMethodWithContent(
-            "new Hello2().getNumberOne();"
-          + "new HelloTest().testGetNumberOne();"
-        );
+        String methodContent = "new Hello2().getNumberOne();\n" +
+                               "new HelloTest().testGetNumberOne();";
+        MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", methodContent);
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(getNumberOne), matches);
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        assertEquals(1, matches.size());
     }
 
     @Test
     public void testGetMatchesWithSeveralMethodsUnderTest() throws JavaModelException
     {
-        IMethod testMethod = createTestMethodWithContent(
-            "new Hello1().getNumber1();"
-          + "new Hello2().getNumberOne();"
-          + "new Hello2().getNumberOneAgain();"
-        );
+        String methodContent = "new Hello1().getNumber1();\n" +
+                               "new Hello2().getNumberOne();\n" +
+                               "new Hello2().getNumberOneAgain();";
+        MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", methodContent);
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod, asSet(cutType1, cutType2)).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(getNumber1, getNumberOne, getNumberOneAgain), matches);
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        assertEquals(3, matches.size());
     }
 }

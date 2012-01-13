@@ -12,103 +12,81 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author giana 13.05.2006 13:49:29
  */
-public class TestCaseDivinerTest extends SimpleProjectTestCase
+public class TestCaseDivinerTest extends ContextTestCase
 {
 
+    @Preferences(testClassSuffixes="Test", testSourcefolder="test")
+    @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
-    public void testGetMatchesOnlySuffix() throws CoreException
+    public void testGetMatchesOneSuffix() throws CoreException
     {
-        IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com");
-        IType fooType = WorkspaceHelper.createJavaClass(comPaket, "Foo");
-
-        IPackageFragment junitComPaket = WorkspaceHelper.createNewPackageInSourceFolder(testFolder, "com");
-        IType testHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTest");
-        IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTestNG");
-
-        PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] { "Test" });
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
+        Set<IType> result = testCaseDiviner.getMatches();
+        assertNotNull(result);
+        
+        assertEquals(1, result.size());
+        assertEquals("FooTest", ((IType)result.toArray()[0]).getElementName());
+    }
+    
+    @Preferences(testClassSuffixes="Test,TestNG", testSourcefolder="test")
+    @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
+    @Test
+    public void testGetMatchesTwoSuffixes() throws CoreException
+    {
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
         assertNotNull(result);
 
-        assertEquals(1, result.size());
-        assertEquals(testHelloType, result.toArray()[0]);
-
-        preferencesMock.setSuffixes(new String[] { "Test", "TestNG" });
-        testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
-        result = testCaseDiviner.getMatches();
         assertEquals(2, result.size());
-        assertTrue(result.contains(testHelloType));
-        assertTrue(result.contains(testNGHelloType));
-        
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {fooType, testHelloType, testNGHelloType});
+        assertEquals("FooTest", ((IType)result.toArray()[0]).getElementName());
+        assertEquals("FooTestNG", ((IType)result.toArray()[1]).getElementName());
     }
 
+    @Preferences(testClassPrefixes="Test", testSourcefolder="test")
+    @Project(mainCls="Foo", testCls="TestFoo;BFooTest", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void testGetMatchesPrefixes() throws CoreException
     {
-        IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com");
-        IType fooType = WorkspaceHelper.createJavaClass(comPaket, "Foo");
-
-        IPackageFragment junitComPaket = WorkspaceHelper.createNewPackageInSourceFolder(testFolder, "com");
-        IType testHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "TestFoo");
-        IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "BFooTest");
-
-        PreferencesMock preferencesMock = new PreferencesMock(new String[] { "Test" }, new String[] {});
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
-        Set<IType> result = testCaseDiviner.getMatches();
-
-        assertEquals(1, result.size());
-        assertTrue(result.contains(testHelloType));
-        assertFalse(result.contains(testNGHelloType));
         
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {fooType, testHelloType, testNGHelloType});
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
+        Set<IType> result = testCaseDiviner.getMatches();
+        assertNotNull(result);
+        
+        assertEquals(1, result.size());
+        assertEquals("TestFoo", ((IType)result.toArray()[0]).getElementName());
     }
 
+    @Preferences(testClassSuffixes="Test", testSourcefolder="test")
+    @Project(mainCls="com:Foo", testCls="org:FooTest;org:FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void testGetMatchesWhenPackageNameDiffers() throws CoreException
     {
-        IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com.foo.bar");
-        IType fooType = WorkspaceHelper.createJavaClass(comPaket, "Foo");
-
-        IPackageFragment junitComPaket = WorkspaceHelper.createNewPackageInSourceFolder(testFolder, "com.something");
-        IType testHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTest");
-        IType testNGHelloType = WorkspaceHelper.createJavaClass(junitComPaket, "FooTestNG");
-
-        PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] { "Test" });
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(fooType.getCompilationUnit(), preferencesMock);
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-
-        assertEquals(1, result.size());
-        assertTrue(result.contains(testHelloType));
-        assertFalse(result.contains(testNGHelloType));
+        assertNotNull(result);
         
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {fooType, testHelloType, testNGHelloType});
+        assertEquals(1, result.size());
+        assertEquals("FooTest", ((IType)result.toArray()[0]).getElementName());
     }
 
     /**
      * Test for #2881409 (Switching in enums)
-     * @throws CoreException
      */
+    @Preferences(testClassSuffixes="Test", testSourcefolder="test")
+    @Project(mainCls="com: enum SomeEnum", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void testGetSource() throws CoreException 
     {
-        IPackageFragment comPaket = WorkspaceHelper.createNewPackageInSourceFolder(sourcesFolder, "com.foo.bar");
-        IType enumType = WorkspaceHelper.createJavaEnum(comPaket, "Foo");
-        PreferencesMock preferencesMock = new PreferencesMock(new String[] {}, new String[] { "Test" });
-        
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(enumType.getCompilationUnit(), preferencesMock);
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.SomeEnum"), org.moreunit.preferences.Preferences.getInstance());
         assertNotNull(testCaseDiviner.getSource());
-        
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {enumType});
     }
 }
 

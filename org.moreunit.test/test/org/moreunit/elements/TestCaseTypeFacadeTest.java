@@ -23,169 +23,189 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.test.SimpleProjectTestCase;
+import org.moreunit.test.context.Context;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.workspace.MethodHandler;
+import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.PreferencesMock;
 
-public class TestCaseTypeFacadeTest extends SimpleProjectTestCase
+@Project(mainCls = "org:Hello", testCls = "org:HelloTest", mainSrcFolder="src", testSrcFolder="test")
+public class TestCaseTypeFacadeTest extends ContextTestCase
 {
 
-    private IType cutType;
-    private IType testcaseType;
-
+    private TypeHandler cutTypeHandler;
+    private TypeHandler testcaseTypeHandler;
+    
     @Before
     public void setUp() throws JavaModelException
     {
-        cutType = createJavaClass("Hello", true);
-        testcaseType = createTestCase("HelloTest", true);
+        cutTypeHandler = context.getPrimaryTypeHandler("org.Hello");
+        testcaseTypeHandler = context.getPrimaryTypeHandler("org.HelloTest");
     }
 
     @Test
     public void testGetCorrespondingTestedMethodsForClassUnderTestWithOneMatch() throws CoreException
     {
-        IMethod testedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
-        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberOne()", "");
-        IMethod testMethodWithNoCorrespondingTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
+        MethodHandler testedMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler testMethod = testcaseTypeHandler.addMethod("public void testGetNumberOne()");
+        MethodHandler testMethodWithNoCorrespondingTestedMethod = testcaseTypeHandler.addMethod("public void testAnything()");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
         List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
-        expectedTestedMethods.add(testedMethod);
-        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, cutType));
-
-        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod, cutType).isEmpty());
+        expectedTestedMethods.add(testedMethod.get());
+        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get()));
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get()).isEmpty());
     }
 
     @Test
     public void testGetCorrespondingTestedMethodsForClassUnderTestWithSeveralMatches() throws CoreException
     {
-        IMethod possiblyTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumber()", "return 9;");
-        IMethod possiblyTestedMethod2 = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2;");
-        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberTwoAndNine()", "");
-        IMethod testMethodWithNoCorrespondingTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
+        MethodHandler possiblyTestedMethod = cutTypeHandler.addMethod("public int getNumber()", "return 9;");
+        MethodHandler possiblyTestedMethod2 = cutTypeHandler.addMethod("public int getNumberTwo()", "return 2;");
+        MethodHandler testMethod = testcaseTypeHandler.addMethod("public void testGetNumberTwoAndNine()");
+        MethodHandler testMethodWithNoCorrespondingTestedMethod = testcaseTypeHandler.addMethod("public void testAnything()");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
         List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
-        expectedTestedMethods.add(possiblyTestedMethod);
-        expectedTestedMethods.add(possiblyTestedMethod2);
-        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, cutType));
+        expectedTestedMethods.add(possiblyTestedMethod.get());
+        expectedTestedMethods.add(possiblyTestedMethod2.get());
+        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get()));
 
-        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod, cutType).isEmpty());
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get()).isEmpty());
     }
 
     @Test
     public void testGetCorrespondingTestedMethodsForClassUnderTestWhenOneMethodNameIsAPerfectMatch() throws CoreException
     {
         // not perfect match
-        WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumber()", "return 1;");
-        IMethod perfectMatch = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberTwo()", "return 2;");
-        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberTwo()", "");
-        IMethod testMethodWithNoCorrespondingTestedMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testAnything()", "");
+        cutTypeHandler.addMethod("public int getNumber()", "return 1;");
+        MethodHandler perfectMatch = cutTypeHandler.addMethod("public int getNumberTwo()", "return 2;");
+        MethodHandler testMethod = testcaseTypeHandler.addMethod("public void testGetNumberTwo()");
+        MethodHandler testMethodWithNoCorrespondingTestedMethod = testcaseTypeHandler.addMethod("public void testAnything()");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
         List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
-        expectedTestedMethods.add(perfectMatch);
-        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, cutType));
+        expectedTestedMethods.add(perfectMatch.get());
+        assertEquals(expectedTestedMethods, testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get()));
 
-        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod, cutType).isEmpty());
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get()).isEmpty());
     }
-
+    
     @Test
     public void testGetCorrespondingTestedMethods() throws CoreException
     {
-        IMethod testedMethod1 = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
-        IType cutType2 = createJavaClass("Hello2", true);
-        IMethod testedMethod2 = WorkspaceHelper.createMethodInJavaType(cutType2, "public int getNumberOne()", "return 1;");
-        IMethod testMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public void testGetNumberOne()", "");
+        MethodHandler testedMethod1 = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        TypeHandler cutType2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.Hello2");
+        MethodHandler testedMethod2 = cutType2.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler testMethod = cutTypeHandler.addMethod("public void testGetNumberOne()");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
-        Set<IType> classesUnderTest = new LinkedHashSet<IType>(Arrays.asList(cutType, cutType2));
-        List<IMethod> correspondingTestMethods = testCaseTypeFacade.getCorrespondingTestedMethods(testMethod, classesUnderTest);
+        Set<IType> classesUnderTest = new LinkedHashSet<IType>(Arrays.asList(cutTypeHandler.get(), cutType2.get()));
+        List<IMethod> correspondingTestMethods = testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), classesUnderTest);
         assertEquals(2, correspondingTestMethods.size());
-        assertTrue(correspondingTestMethods.contains(testedMethod1));
-        assertTrue(correspondingTestMethods.contains(testedMethod2));
+        assertTrue(correspondingTestMethods.contains(testedMethod1.get()));
+        assertTrue(correspondingTestMethods.contains(testedMethod2.get()));
+        cutType2.getCompilationUnit().delete(true, null);
     }
 
     @Test
     public void testgetOneCorrespondingMemberWithoutTestMethod() throws CoreException
     {
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(null, false, false, null);
 
-        assertEquals(cutType, oneCorrespondingMemberUnderTest);
+        assertEquals(cutTypeHandler.get(), oneCorrespondingMemberUnderTest);
     }
 
     @Test
     public void testgetOneCorrespondingMemberWithTestMethod() throws CoreException
     {
-        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
-        IMethod getNumberOneTestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
+        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler getNumberOneTestMethod = testcaseTypeHandler.addMethod("public void testGetNumberOne()");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
-        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod, false, false, null);
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
+        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod.get(), false, false, null);
 
-        assertEquals(getNumberOneMethod, oneCorrespondingMemberUnderTest);
+        assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
     }
 
     @Test
     public void testgetOneCorrespondingMemberWithExtendedSearchAndTestMethodFollowingNamingPattern() throws CoreException
     {
-        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
-        IMethod getNumberOneTestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "");
+        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler getNumberOneTestMethod = testcaseTypeHandler.addMethod("public void testGetNumberOne()");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
-        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod, false, true, null);
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
+        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod.get(), false, true, null);
 
-        assertEquals(getNumberOneMethod, oneCorrespondingMemberUnderTest);
+        assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
     }
 
     @Test
     public void testgetOneCorrespondingMemberWithExtendedSearchAndTestMethodCallingMethodUnderTest() throws CoreException
     {
-        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
-        IMethod giveMe1TestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGiveMe1()", "new Hello().getNumberOne();");
+        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler giveMe1TestMethod = testcaseTypeHandler.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
-        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(giveMe1TestMethod, false, true, null);
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
+        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(giveMe1TestMethod.get(), false, true, null);
 
-        assertEquals(getNumberOneMethod, oneCorrespondingMemberUnderTest);
+        assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
     }
 
     @Test
     public void testgetOneCorrespondingMemberWithExtendedSearchAndTestMethodFollowingNamingPatternAndCallingMethodUnderTest() throws CoreException
     {
-        IMethod getNumberOneMethod = WorkspaceHelper.createMethodInJavaType(cutType, "public int getNumberOne()", "return 1;");
-        IMethod getNumberOneTestMethod = WorkspaceHelper.createMethodInJavaType(testcaseType, "public void testGetNumberOne()", "new Hello().getNumberOne();");
+        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler getNumberOneTestMethod = testcaseTypeHandler.addMethod("public void testGetNumberOne()", "new Hello().getNumberOne();");
 
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseType.getCompilationUnit());
-        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod, false, true, null);
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
+        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(getNumberOneTestMethod.get(), false, true, null);
 
-        assertEquals(getNumberOneMethod, oneCorrespondingMemberUnderTest);
+        assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
     }
 
+    @Preferences(testClassSuffixes="Test", flexibleNaming=true, testSourcefolder="test")
     @Test
-    public void testGetCorrespondingClassesUnderTest() throws Exception
+    public void testGetCorrespondingClassesUnderTestFlexibleNaming() throws Exception
     {
-        createJavaClass("One", true);
-        createJavaClass("OneTwo", true);
+        TypeHandler class1 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.One");
+        TypeHandler class2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.OneTwo");
+        TypeHandler testClass = context.getProjectHandler().getTestSrcFolderHandler().createClass("org.OneTwoTest");
         
-        IType testCaseType = createTestCase("OneTwoTest", true);
-        
-        PreferencesMock preferencesMock = new PreferencesMock(true);
-        preferencesMock.setSuffixes(new String[] {"Test"});
-        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testCaseType.getCompilationUnit());
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
         List<IType> list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
         assertEquals(2, list.size());
         assertEquals("OneTwo", list.get(0).getElementName());
         assertEquals("One", list.get(1).getElementName());
         
-        preferencesMock = new PreferencesMock(false);
-        preferencesMock.setSuffixes(new String[] {"Test"});
-        testCaseTypeFacade = new TestCaseTypeFacade(testCaseType.getCompilationUnit());
-        list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
+        class1.getCompilationUnit().delete(true, null);
+        class2.getCompilationUnit().delete(true, null);
+        testClass.getCompilationUnit().delete(true, null);
+    }
+    
+    @Preferences(testClassSuffixes="Test", flexibleNaming=false, testSourcefolder="test")
+    @Test
+    public void testGetCorrespondingClassesUnderTestNotFlexibleNaming() throws Exception
+    {
+        TypeHandler class1 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.One");
+        TypeHandler class2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.OneTwo");
+        TypeHandler testClass = context.getProjectHandler().getTestSrcFolderHandler().createClass("org.OneTwoTest");
+        
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
+        List<IType> list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
         assertEquals(1, list.size());
         assertEquals("OneTwo", list.get(0).getElementName());
+        
+        class1.getCompilationUnit().delete(true, null);
+        class2.getCompilationUnit().delete(true, null);
+        testClass.getCompilationUnit().delete(true, null);
     }
 }

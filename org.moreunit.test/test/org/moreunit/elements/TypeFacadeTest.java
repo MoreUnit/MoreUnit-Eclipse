@@ -6,6 +6,7 @@ package org.moreunit.elements;
  * 23.05.2006 21:09:05
  */
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -18,65 +19,40 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.preferences.Preferences;
-import org.moreunit.test.DummyPreferencesForTesting;
 import org.moreunit.test.WorkspaceTestCase;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-public class TypeFacadeTest extends WorkspaceTestCase
+public class TypeFacadeTest extends ContextTestCase
 {
 
-    private IPackageFragment packageFragmentForSources;
-    private IPackageFragmentRoot sourceFolder;
-
-    @Before
-    public void setUp() throws Exception
-    {
-        sourceFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, "sources");
-        packageFragmentForSources = WorkspaceHelper.createNewPackageInSourceFolder(sourceFolder, "com");
-    }
-    
-    @After
-    public void tearDown() throws JavaModelException
-    {
-        packageFragmentForSources.delete(true, null);
-        sourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
-    }
-
+    @Preferences(testClassSuffixes="Test")
+    @Project(mainCls="Hello")
     @Test
     public void testIsTestCaseRegularClass() throws CoreException
     {
-        IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "Hello");
-        assertFalse(TypeFacade.isTestCase(javaClass));
-        
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {javaClass});
+        assertFalse(TypeFacade.isTestCase(context.getCompilationUnit("Hello")));
     }
 
+    @Preferences(testClassSuffixes="Test")
+    @Project(mainCls="HelloTest")
     @Test
     public void testIsTestCaseTestWithSuffix() throws JavaModelException
     {
-        initPreferencesWithPrefixesSuffixes(new String[] {}, new String[] { "Test" });
-        IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "HelloTest");
-        assertTrue(TypeFacade.isTestCase(javaClass));
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {javaClass});
+        assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("HelloTest")));
     }
 
+    @Preferences(testClassPrefixes="Test")
+    @Project(mainCls="TestHello")
     @Test
     public void testIsTestCaseTestWithPrefix() throws JavaModelException
     {
-        initPreferencesWithPrefixesSuffixes(new String[] { "Test" }, new String[] {});
-        IType javaClass = WorkspaceHelper.createJavaClass(packageFragmentForSources, "TestHello");
-        assertTrue(TypeFacade.isTestCase(javaClass));
-        // cleanup
-        WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {javaClass});
-    }
-
-    private void initPreferencesWithPrefixesSuffixes(String[] prefixes, String[] suffixes)
-    {
-        Preferences preferences = new DummyPreferencesForTesting();
-        preferences.setPrefixes(workspaceTestProject, prefixes);
-        preferences.setSuffixes(workspaceTestProject, suffixes);
+        String[] prefixes = org.moreunit.preferences.Preferences.getInstance().getPrefixes(context.getProjectHandler().get());
+        String[] suffixes = org.moreunit.preferences.Preferences.getInstance().getSuffixes(context.getProjectHandler().get());
+        assertEquals(1, prefixes.length);
+        assertEquals(0, suffixes.length);
+        assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("TestHello")));
     }
 }
