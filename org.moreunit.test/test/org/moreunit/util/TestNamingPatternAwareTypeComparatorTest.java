@@ -6,16 +6,19 @@ import static org.mockito.Mockito.when;
 
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
-import org.moreunit.preferences.Preferences;
+import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
 
-public class TestNamingPatternAwareTypeComparatorTest
+public class TestNamingPatternAwareTypeComparatorTest extends ContextTestCase
 {
 
+    @Project(name="aProject")
+    @Preferences(testClassSuffixes="Test")
     @Test
     public void testCompareWithTestPrefixes()
     {
-        Preferences preferences = new PreferencesMock(new String[] {}, new String[] { "Test" });
-        TestNamingPatternAwareTypeComparator comparator = new TestNamingPatternAwareTypeComparator(preferences);
+        TestNamingPatternAwareTypeComparator comparator = new TestNamingPatternAwareTypeComparator(org.moreunit.preferences.Preferences.getInstance());
         assertTrue(0 > comparator.compare(mockType("HelloTest"), mockType("HelloOtherTest")));
     }
 

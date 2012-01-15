@@ -27,32 +27,28 @@ import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class TypeFacadeTest extends ContextTestCase
 {
-
-    @Preferences(testClassSuffixes="Test")
+    
     @Project(mainCls="Hello")
+    @Preferences(testClassSuffixes="Test")
     @Test
     public void testIsTestCaseRegularClass() throws CoreException
     {
         assertFalse(TypeFacade.isTestCase(context.getCompilationUnit("Hello")));
     }
 
-    @Preferences(testClassSuffixes="Test")
     @Project(mainCls="HelloTest")
+    @Preferences(testClassSuffixes="Test")
     @Test
     public void testIsTestCaseTestWithSuffix() throws JavaModelException
     {
         assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("HelloTest")));
     }
 
-    @Preferences(testClassPrefixes="Test")
     @Project(mainCls="TestHello")
+    @Preferences(testClassPrefixes="Test")
     @Test
     public void testIsTestCaseTestWithPrefix() throws JavaModelException
     {
-        String[] prefixes = org.moreunit.preferences.Preferences.getInstance().getPrefixes(context.getProjectHandler().get());
-        String[] suffixes = org.moreunit.preferences.Preferences.getInstance().getSuffixes(context.getProjectHandler().get());
-        assertEquals(1, prefixes.length);
-        assertEquals(0, suffixes.length);
         assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("TestHello")));
     }
 }

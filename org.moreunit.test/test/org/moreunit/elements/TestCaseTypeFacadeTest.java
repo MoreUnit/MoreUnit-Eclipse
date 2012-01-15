@@ -22,16 +22,13 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.test.SimpleProjectTestCase;
-import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
-import org.moreunit.test.workspace.WorkspaceHelper;
-import org.moreunit.util.PreferencesMock;
 
+@Preferences(testClassSuffixes="Test", testMethodPrefix=true)
 @Project(mainCls = "org:Hello", testCls = "org:HelloTest", mainSrcFolder="src", testSrcFolder="test")
 public class TestCaseTypeFacadeTest extends ContextTestCase
 {
