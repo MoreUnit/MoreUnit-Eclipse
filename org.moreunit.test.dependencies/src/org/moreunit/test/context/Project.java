@@ -58,7 +58,7 @@ public @interface Project
      * (Optional) The properties to be applied to MoreUnit during the test, for
      * this project.
      */
-    Properties properties() default @Properties;
+    Properties properties() default @Properties(userSetProperties=false);
 
     /**
      * (Optional) A project containing the tests for this project.

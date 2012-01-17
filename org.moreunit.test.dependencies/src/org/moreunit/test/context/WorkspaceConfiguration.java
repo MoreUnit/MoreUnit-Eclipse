@@ -14,6 +14,7 @@ import org.moreunit.preferences.Preferences;
 import org.moreunit.test.workspace.ProjectHandler;
 import org.moreunit.test.workspace.SourceFolderHandler;
 import org.moreunit.test.workspace.WorkspaceHandler;
+import org.moreunit.util.SearchScopeSingelton;
 
 import com.google.common.base.Strings;
 
@@ -156,6 +157,8 @@ class WorkspaceConfiguration
             {
                 ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfig.getProjectName());
                 IJavaProject project = projectHandler.get();
+                if(propertiesConfig.hasUserSetProperties())
+                    prefs.setHasProjectSpecificSettings(project, true);
 
                 applyBasePreferences(prefs, project, propertiesConfig);
 

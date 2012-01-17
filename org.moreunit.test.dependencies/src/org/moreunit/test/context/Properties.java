@@ -20,7 +20,7 @@ public @interface Properties
         testType = TestType.TESTNG,
         testClassSuffixes = "Test")
     class TESTNG {}
-
+    
     /**
      * Another class annotated with @Properties.
      */
@@ -43,4 +43,6 @@ public @interface Properties
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
+    
+    boolean userSetProperties() default true;
 }

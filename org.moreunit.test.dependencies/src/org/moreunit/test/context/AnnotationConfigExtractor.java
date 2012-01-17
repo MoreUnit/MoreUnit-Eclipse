@@ -322,6 +322,7 @@ class AnnotationConfigExtractor
         propertiesConfig.setTestPackageSuffix(properties.testPackageSuffix());
         propertiesConfig.setTestSuperClass(properties.testSuperClass());
         propertiesConfig.setTestType(properties.testType());
+        propertiesConfig.setUserSetProperties(properties.userSetProperties());
         projectConfig.setPropertiesConfig(propertiesConfig);
     }
 
