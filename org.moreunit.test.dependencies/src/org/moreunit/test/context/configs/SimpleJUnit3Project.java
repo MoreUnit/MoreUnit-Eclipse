@@ -9,7 +9,8 @@ import org.moreunit.test.context.TestType;
         testCls = "org:SomeClassTest",
         properties = @Properties(
                 testType = TestType.JUNIT3,
-                testClassSuffixes = "Test"
+                testClassSuffixes = "Test",
+                testMethodPrefix=true
         ))
 public class SimpleJUnit3Project
 {

@@ -17,23 +17,30 @@ import java.util.List;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
 import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
+import org.moreunit.util.SearchScopeSingelton;
 
 @Context(SimpleJUnit3Project.class)
 public class ClassTypeFacadeTest extends ContextTestCase
 {
+    
     @Test
     public void testGetOneCorrespondingTestCase() throws Exception
     {
+        //assertEquals("Test", org.moreunit.preferences.Preferences.getInstance().get
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(false);
 
@@ -42,6 +49,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
     @Test
     @Project(mainCls = "com: enum SomeEnum", properties = @Properties(testType = TestType.JUNIT3, testClassSuffixes = "Test"))
+    //@Project(mainCls = "com: enum SomeEnum", mainSrcFolder="src", testSrcFolder="test", properties = @Properties(testType = TestType.JUNIT3, testClassSuffixes = "Test"))
     public void testGetOneCorrespondingTestCaseWithEnum() throws Exception
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(context.getCompilationUnit("com.SomeEnum"));

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
@@ -36,6 +37,9 @@ class WorkspaceConfiguration
 
     public WorkspaceHandler initWorkspace(Class< ? > loadingClass)
     {
+        SourceFolderContext.getInstance().initContextForWorkspace();
+        SearchScopeSingelton.getInstance().resetCachedSearchScopes();
+        
         WorkspaceHandler wsHandler = newWorkspaceHandler(loadingClass);
 
         createSources(wsHandler);
