@@ -200,21 +200,27 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private boolean hasDefaultConstructor(IType type)
     {
+        int constructorCount = 0;
         try
         {
             for (IMethod m : type.getMethods())
             {
-                if(m.isConstructor() && m.getNumberOfParameters() == 0)
+                if(m.isConstructor())
                 {
-                    return true;
+                    if(m.getNumberOfParameters() == 0)
+                    {
+                        return true;
+                    }
+
+                    constructorCount++;
                 }
             }
         }
         catch (JavaModelException e)
         {
-            // return false
+            // will return false
         }
-        return false;
+        return constructorCount == 0;
     }
 
     private void createSideButtons(Composite container)
