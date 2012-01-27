@@ -43,6 +43,4 @@ public @interface Properties
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
-    
-    boolean userSetProperties() default true;
 }

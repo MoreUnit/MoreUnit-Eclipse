@@ -76,7 +76,7 @@ class AnnotationConfigExtractor
         }
 
         int definitionDepth = 0;
-        while (context != null && context.value() != null && ! context.value().equals(Undefined.class))
+        while (context != null && context.value() != null && context.value() != Undefined.class)
         {
             if(++definitionDepth > maxDefinitionDepth)
             {
@@ -186,7 +186,7 @@ class AnnotationConfigExtractor
     private void extractProjectConfiguration(WorkspaceConfiguration config, Project project)
     {
         int definitionDepth = 0;
-        while (project.value() != null && ! project.value().equals(Undefined.class))
+        while (project.value() != null && project.value() != Undefined.class)
         {
             if(++definitionDepth > maxDefinitionDepth)
             {
@@ -211,7 +211,7 @@ class AnnotationConfigExtractor
         projectConfig.setTestSourceFolder(project.testSrcFolder().trim());
 
         TestProject testProject = project.testProject();
-        if(hasPropertiesDefined(testProject))
+        if(testProject != null && testProject.value() != Default.class)
         {
             if(! Strings.isNullOrEmpty(project.testCls()))
             {
@@ -231,15 +231,10 @@ class AnnotationConfigExtractor
         }
 
         Properties properties = project.properties();
-        if(properties != null)
+        if(properties != null && properties.value() != Default.class)
         {
             extractPropertiesConfiguration(projectConfig, properties);
         }
-    }
-
-    private boolean hasPropertiesDefined(TestProject testProject)
-    {
-        return testProject != null && StringUtils.atLeastOneNotEmpty(testProject.name(), testProject.src(), testProject.cls(), testProject.srcFolder());
     }
 
     private Collection<JavaType> splitTypes(String classes)
@@ -297,7 +292,7 @@ class AnnotationConfigExtractor
     private void extractPropertiesConfiguration(ProjectConfiguration projectConfig, Properties properties)
     {
         int definitionDepth = 0;
-        while (properties.value() != null && ! properties.value().equals(Undefined.class))
+        while (properties.value() != null && properties.value() != Undefined.class)
         {
             if(++definitionDepth > maxDefinitionDepth)
             {
@@ -322,7 +317,6 @@ class AnnotationConfigExtractor
         propertiesConfig.setTestPackageSuffix(properties.testPackageSuffix());
         propertiesConfig.setTestSuperClass(properties.testSuperClass());
         propertiesConfig.setTestType(properties.testType());
-        propertiesConfig.setUserSetProperties(properties.userSetProperties());
         projectConfig.setPropertiesConfig(propertiesConfig);
     }
 
@@ -343,7 +337,7 @@ class AnnotationConfigExtractor
         }
 
         int definitionDepth = 0;
-        while (preferences.value() != null && ! preferences.value().equals(Undefined.class))
+        while (preferences.value() != null && preferences.value() != Undefined.class)
         {
             if(++definitionDepth > maxDefinitionDepth)
             {

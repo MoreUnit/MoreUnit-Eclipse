@@ -26,7 +26,7 @@ public @interface Project
 
     /**
      * Names of the files constituting the initial production sources. The files
-     * themself must be in the same package as the test class using this
+     * themselves must be in the same package as the test class using this
      * configuration.
      */
     String mainSrc() default "";
@@ -43,7 +43,7 @@ public @interface Project
 
     /**
      * (Optional) Names of the files constituting the initial test sources. The
-     * files themself must be in the same package as the test class using this
+     * files themselves must be in the same package as the test class using this
      * configuration.
      */
     String testSrc() default "";
@@ -58,10 +58,10 @@ public @interface Project
      * (Optional) The properties to be applied to MoreUnit during the test, for
      * this project.
      */
-    Properties properties() default @Properties(userSetProperties=false);
+    Properties properties() default @Properties(Default.class);
 
     /**
      * (Optional) A project containing the tests for this project.
      */
-    TestProject testProject() default @TestProject;
+    TestProject testProject() default @TestProject(Default.class);
 }

@@ -30,7 +30,7 @@ public @interface Context
 
     /**
      * Names of the files constituting the initial production sources. The files
-     * themself must be in the same package as the test class using this
+     * themselves must be in the same package as the test class using this
      * configuration.
      */
     String mainSrc() default "";
@@ -42,7 +42,7 @@ public @interface Context
 
     /**
      * (Optional) Names of the files constituting the initial test sources. The
-     * files themself must be in the same package as the test class using this
+     * files themselves must be in the same package as the test class using this
      * configuration.
      */
     String testSrc() default "";

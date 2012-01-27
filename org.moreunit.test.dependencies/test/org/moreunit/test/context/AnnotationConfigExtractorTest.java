@@ -275,6 +275,20 @@ public class AnnotationConfigExtractorTest
     }
     
     @Test
+    public void should_ignore_properties_when_not_provided() throws Exception
+    {
+        // given
+        @Project
+        class AnnotationHolder {}
+
+        // when
+        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+
+        // then
+        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig()).isNull();
+    }
+    
+    @Test
     public void should_load_test_project_from_project_annotation() throws Exception
     {
         // given
