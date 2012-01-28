@@ -1,12 +1,11 @@
 package org.moreunit.refactoring;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.fest.assertions.Assertions.assertThat;
+
 
 import java.util.List;
 
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -21,11 +20,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
-import org.moreunit.test.context.configs.SimpleJUnit3Project;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * This should be a testcase for:
@@ -50,7 +46,7 @@ public class RenamePackageTest extends ContextTestCase
 	}
 
 	@Test
-	public void testRenamePackage() throws Exception 
+	public void should_not_throw_exception_when_renaming_package_while_using_package_prefix_and_suffix() throws Exception 
 	{
 		switchToJavaPerspective();
 
@@ -63,13 +59,13 @@ public class RenamePackageTest extends ContextTestCase
 			
 			// fill dialog to rename package
 			SWTBotText textWithLabel = bot.textWithLabel("New name:");
-			assertNotNull(textWithLabel);
+			assertThat(textWithLabel).isNotNull();
 			textWithLabel.setText("some.name");
 			bot.shell("Rename Package").activate();
 			
 			// start rename refactoring
 			SWTBotButton okButton = bot.button("OK");
-			assertNotNull(okButton);
+			assertThat(okButton).isNotNull();
 			okButton.click();
 		} 
 		catch (Exception e) 
