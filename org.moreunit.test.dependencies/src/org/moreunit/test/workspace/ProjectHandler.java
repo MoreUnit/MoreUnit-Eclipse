@@ -9,7 +9,6 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.moreunit.test.workspace.ProjectHandler.ProjectAssertions;
 
 public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAssertions>
 {
@@ -42,6 +41,11 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         return project;
     }
 
+    public String getName()
+    {
+        return project.getElementName();
+    }
+
     public WorkspaceHandler getWorkspaceHandler()
     {
         return workspaceHandler;
@@ -49,7 +53,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
 
     public ProjectAssertions assertThat()
     {
-        return new ProjectAssertions();
+        return new ProjectAssertions(this);
     }
 
     public SourceFolderHandler getMainSrcFolderHandler()
@@ -72,18 +76,25 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         return testSrcFolderHandler;
     }
 
+    public SourceFolderHandler getSrcFolderHandler(String srcFolderName)
+    {
+        final SourceFolderHandler srcFolderHandler;
+        if(sourceFolders.containsKey(srcFolderName))
+        {
+            srcFolderHandler = sourceFolders.get(srcFolderName);
+        }
+        else
+        {
+            srcFolderHandler = new SourceFolderHandler(this, srcFolderName);
+            sourceFolders.put(srcFolderName, srcFolderHandler);
+        }
+        return srcFolderHandler;
+    }
+
     public void setTestSrcFolderHandler(SourceFolderHandler srcFolderHandler)
     {
         this.testSrcFolderHandler = srcFolderHandler;
         sourceFolders.put(srcFolderHandler.getName(), srcFolderHandler);
-    }
-
-    public static class ProjectAssertions
-    {
-        public void noAssertionsImplementedYet()
-        {
-            throw new UnsupportedOperationException("no assertions implemented yet");
-        }
     }
 
     public CompilationUnitHandler findCompilationUnit(String cuName)
@@ -105,19 +116,9 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         }
 
         ICompilationUnit cu = type.getCompilationUnit();
-        String srcFolderName = cu.getParent().getElementName();
+        String srcFolderName = cu.getParent().getParent().getElementName();
 
-        final SourceFolderHandler srcFolderHandler;
-        if(sourceFolders.containsKey(srcFolderName))
-        {
-            srcFolderHandler = sourceFolders.get(srcFolderName);
-        }
-        else
-        {
-            srcFolderHandler = new SourceFolderHandler(this, srcFolderName);
-        }
-
-        return srcFolderHandler.createHandlerFor(cu);
+        return getSrcFolderHandler(srcFolderName).createHandlerFor(cu);
     }
 
     protected IType findType(String typeName)

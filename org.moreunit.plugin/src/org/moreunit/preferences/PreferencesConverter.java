@@ -12,6 +12,7 @@ import org.moreunit.util.StringConstants;
 /**
  * @author vera 21.03.2008 17:15:43
  */
+// TODO Nicolas: cache
 public class PreferencesConverter
 {
 

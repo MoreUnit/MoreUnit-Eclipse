@@ -141,7 +141,13 @@ public class WorkspaceHelper
     public static IPackageFragmentRoot createSourceFolderInProject(IJavaProject javaProject, String sourceFolderName) throws CoreException
     {
         IFolder folder = javaProject.getProject().getFolder(sourceFolderName);
+        if(folder.exists())
+        {
+            return javaProject.getPackageFragmentRoot(folder);
+        }
+        
         folder.create(false, true, null);
+
         IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(folder);
 
         IClasspathEntry[] oldEntries = javaProject.getRawClasspath();

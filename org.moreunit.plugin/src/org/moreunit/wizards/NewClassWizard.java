@@ -2,23 +2,41 @@ package org.moreunit.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
 public class NewClassWizard extends NewClassyWizard
 {
-
+    private final IJavaProject projectUnderTest;
+    private final IPackageFragmentRoot mainSrcFolder;
+    
     private NewClassWizardPage newClassWizardPage;
-
-    public NewClassWizard(IType element)
+    
+    public NewClassWizard(IType testCase)
     {
-        super(element);
+        super(testCase);
+        projectUnderTest = Preferences.getInstance().getMainProject(testCase.getJavaProject());
+        mainSrcFolder = getSourceFolderForCut(testCase);
+    }
+    
+    private IPackageFragmentRoot getSourceFolderForCut(IType testCase)
+    {
+        String key = getPackageFragmentRootKey();
+        String root = getDialogSettings().get(key);
+        IPackageFragmentRoot fragment = (IPackageFragmentRoot) JavaCore.create(root);
+        if(fragment != null && fragment.exists())
+        {
+            return fragment;
+        }
+        
+        IPackageFragmentRoot testSrcFolder = (IPackageFragmentRoot) testCase.getCompilationUnit().getParent().getParent();
+        return Preferences.getInstance().getMainSourceFolder(projectUnderTest, testSrcFolder);
     }
 
     @Override
@@ -29,7 +47,7 @@ public class NewClassWizard extends NewClassyWizard
         this.newClassWizardPage.init(new StructuredSelection(getType()));
         this.newClassWizardPage.setTypeName(getPotentialTypeName(), true);
         this.newClassWizardPage.setPackageFragment(getPackage(), true);
-        this.newClassWizardPage.setPackageFragmentRoot(getSourceFolderForUnitTest(), true);
+        this.newClassWizardPage.setPackageFragmentRoot(mainSrcFolder, true);
         this.newClassWizardPage.setEnclosingType(null, false);
         this.newClassWizardPage.setSuperClass("", true);
         addPage(this.newClassWizardPage);
@@ -38,53 +56,68 @@ public class NewClassWizard extends NewClassyWizard
     private IPackageFragment getPackage()
     {
         IPackageFragment packageFragment = getType().getPackageFragment();
-        if(packageStartsWithPrefix(packageFragment))
-        {
-            packageFragment = getPackageFragmentStrippedOfPrefix(packageFragment);
-        }
-        return packageFragment;
-    }
+        String packageName = packageFragment.getElementName();
 
-    private boolean packageStartsWithPrefix(IPackageFragment packageFragment)
-    {
-        return false;
-        // return Preferences.instance().hasTestPackagePrefix() &&
-        // packageFragment.getElementName().startsWith(Preferences.instance().
-        // getTestPackagePrefix());
-    }
+        String prefix = Preferences.getInstance().getTestPackagePrefix(projectUnderTest);
+        if(packageName.startsWith(prefix))
+        {
+            packageName = removePrefix(packageName, prefix + ".");
+        }
 
-    private IPackageFragment getPackageFragmentStrippedOfPrefix(final IPackageFragment packageFragment)
-    {
-        // String targetPackage =
-        // packageFragment.getElementName().replaceFirst(Preferences
-        // .instance().getTestPackagePrefix() + "\\.", "");
-        String targetPackage = packageFragment.getElementName();
-        try
+        String suffix = Preferences.getInstance().getTestPackageSuffix(projectUnderTest);
+        if(packageName.endsWith(suffix))
         {
-            return createPackageFragment(targetPackage);
+            packageName = removeSuffix(packageName, "." + suffix);
         }
-        catch (JavaModelException e)
-        {
-            LogHandler.getInstance().handleExceptionLog(e);
-            return null;
-        }
+
+        return mainSrcFolder.getPackageFragment(packageName);
     }
 
     private String getPotentialTypeName()
     {
         Preferences preferences = Preferences.getInstance();
+
+        String[] prefixes = preferences.getPrefixesOrderedByDescLength(projectUnderTest);
+        String[] suffixes = preferences.getSuffixesOrderedByDescLength(projectUnderTest);
+
         String name = getType().getElementName();
-        String[] prefixes = preferences.getPrefixes(getType().getJavaProject());
-        for (String element2 : prefixes)
+        name = removePrefix(name, prefixes);
+        name = removeSuffix(name, suffixes);
+        return name;
+    }
+
+    public static String removeSuffix(String name, String[] possibleSuffixes)
+    {
+        for (String suffix : possibleSuffixes)
         {
-            name = name.replaceAll(element2, "");
-        }
-        String[] suffixes = preferences.getSuffixes(getType().getJavaProject());
-        for (String element2 : suffixes)
-        {
-            name = name.replaceAll(element2, "");
+            if(name.endsWith(suffix))
+            {
+                return removeSuffix(name, suffix);
+            }
         }
         return name;
+    }
+
+    private static String removeSuffix(String name, String suffix)
+    {
+        return name.substring(0, name.length() - suffix.length());
+    }
+
+    public static String removePrefix(String name, String[] possiblePrefixes)
+    {
+        for (String prefix : possiblePrefixes)
+        {
+            if(name.startsWith(prefix))
+            {
+                return removePrefix(name, prefix);
+            }
+        }
+        return name;
+    }
+
+    private static String removePrefix(String name, String prefix)
+    {
+        return name.substring(prefix.length());
     }
 
     @Override

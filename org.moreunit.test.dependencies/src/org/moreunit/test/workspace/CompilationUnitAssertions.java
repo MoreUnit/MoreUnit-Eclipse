@@ -44,4 +44,16 @@ public class CompilationUnitAssertions
         assertThat(cuHandler.get()).isEqualTo(expectedCompilationUnit);
         return this;
     }
+
+    public CompilationUnitAssertions isInSourceFolder(String sourceFolderName)
+    {
+        assertThat(cuHandler.getSourceFolderHandler().getName()).isEqualTo(sourceFolderName);
+        return this;
+    }
+
+    public CompilationUnitAssertions isInProject(ProjectHandler project)
+    {
+        assertThat(cuHandler.getSourceFolderHandler().getProjectHandler()).isEqualTo(project);
+        return this;
+    }
 }

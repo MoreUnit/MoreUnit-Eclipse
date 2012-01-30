@@ -6,13 +6,11 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
-import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
@@ -119,28 +117,20 @@ public class NewTestCaseWizard extends NewClassyWizard
         return result;
     }
 
-    @Override
-    protected IPackageFragmentRoot getSourceFolderForUnitTest()
+    private IPackageFragmentRoot getSourceFolderForUnitTest()
     {
-        return preferences.getJUnitSourceFolder(this.project);
+        return preferences.getTestSourceFolder(project, getPackageFragmentRoot());
     }
 
     private IPackageFragment initialisePackageFragment()
     {
-        IPackageFragment fragment = this.pageOne.getPackageFragment();
-        String fragmentName = PluginTools.getTestPackageName(fragment.getElementName(), preferences, project);
-        try
-        {
-            IPackageFragment packageFragment = createPackageFragment(fragmentName);
-            this.pageOne.setPackageFragment(packageFragment, true);
-            fragment = packageFragment;
-        }
-        catch (JavaModelException e)
-        {
-            LogHandler.getInstance().handleWarnLog("Unable to create package fragment root");
-        }
+        IPackageFragment mainPackageFragment = this.pageOne.getPackageFragment();
+        String fragmentName = PluginTools.getTestPackageName(mainPackageFragment.getElementName(), preferences, project);
+        IPackageFragmentRoot root = Preferences.getInstance().getTestSourceFolder(project, (IPackageFragmentRoot) mainPackageFragment.getParent());
         
-        return fragment;
+        IPackageFragment testPackageFragment = root.getPackageFragment(fragmentName);
+        this.pageOne.setPackageFragment(testPackageFragment, true);
+        return testPackageFragment;
     }
 
     @Override

@@ -119,6 +119,19 @@ public class TestContextRule implements MethodRule
      */
     public ProjectHandler getProjectHandler()
     {
+        return getMainProjectHandler();
+    }
+
+    /**
+     * Returns a handler to manipulate the project created for this test, via
+     * the annotation @Context, or using the annotation @Project - assuming no
+     * specific name was given to it. If a specific name was given to it, please
+     * use {@link #getProjectHandler(String)}.
+     * 
+     * @return a handler for the project
+     */
+    public ProjectHandler getMainProjectHandler()
+    {
         return getProjectHandler(Defaults.PROJECT_NAME);
     }
 

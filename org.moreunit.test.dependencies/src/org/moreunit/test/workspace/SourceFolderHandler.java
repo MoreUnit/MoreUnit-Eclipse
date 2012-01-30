@@ -187,7 +187,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
         TypeName(String fullyQualifiedName)
         {
-            int dotIndex = fullyQualifiedName.indexOf(".");
+            int dotIndex = fullyQualifiedName.lastIndexOf(".");
             if(dotIndex != - 1)
             {
                 packageName = fullyQualifiedName.substring(0, dotIndex);
