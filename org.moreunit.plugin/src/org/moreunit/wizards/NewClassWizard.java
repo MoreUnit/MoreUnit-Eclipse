@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.util.BaseTools;
 
 public class NewClassWizard extends NewClassyWizard
 {
@@ -59,13 +60,13 @@ public class NewClassWizard extends NewClassyWizard
         String packageName = packageFragment.getElementName();
 
         String prefix = Preferences.getInstance().getTestPackagePrefix(projectUnderTest);
-        if(packageName.startsWith(prefix))
+        if(! BaseTools.isStringTrimmedEmpty(prefix) && packageName.startsWith(prefix))
         {
             packageName = removePrefix(packageName, prefix + ".");
         }
 
         String suffix = Preferences.getInstance().getTestPackageSuffix(projectUnderTest);
-        if(packageName.endsWith(suffix))
+        if(! BaseTools.isStringTrimmedEmpty(suffix) && packageName.endsWith(suffix))
         {
             packageName = removeSuffix(packageName, "." + suffix);
         }
@@ -90,7 +91,7 @@ public class NewClassWizard extends NewClassyWizard
     {
         for (String suffix : possibleSuffixes)
         {
-            if(name.endsWith(suffix))
+            if(! BaseTools.isStringTrimmedEmpty(suffix) && name.endsWith(suffix))
             {
                 return removeSuffix(name, suffix);
             }
@@ -107,7 +108,7 @@ public class NewClassWizard extends NewClassyWizard
     {
         for (String prefix : possiblePrefixes)
         {
-            if(name.startsWith(prefix))
+            if(! BaseTools.isStringTrimmedEmpty(prefix) && name.startsWith(prefix))
             {
                 return removePrefix(name, prefix);
             }

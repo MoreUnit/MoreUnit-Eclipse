@@ -83,6 +83,28 @@ public class NewClassWizardTest extends NewClassyWizardTestCase
     @Project(
         mainSrcFolder = "main-src",
         testSrcFolder = "test-src",
+        testCls = "pack: ClassTest",
+        properties = @Properties(testClassSuffixes = "Test"))
+    public void should_create_cut_in_right_package_when_no_package_suffix_nor_prefix() throws Exception
+    {
+        // given
+        NewClassWizard wizard = new NewClassWizard(context.getPrimaryTypeHandler("pack.ClassTest").get());
+
+        willAutomaticallyValidateWhenOpen(wizard);
+
+        // when
+        IType createdType = wizard.open();
+
+        // then
+        ProjectHandler mainProject = context.getProjectHandler();
+        mainProject.assertThat().hasSourceFolder("main-src");
+        context.assertCompilationUnit("pack.Class").isInSourceFolder("main-src").hasPrimaryType(createdType);
+    }
+    
+    @Test
+    @Project(
+        mainSrcFolder = "main-src",
+        testSrcFolder = "test-src",
         testCls = "pre.pack.suf: SomeClassTest",
         properties = @Properties(JUnit3WithVariousPrefixesAndSuffixes.class))
     public void should_create_cut_in_main_source_folder_of_same_project() throws Exception
