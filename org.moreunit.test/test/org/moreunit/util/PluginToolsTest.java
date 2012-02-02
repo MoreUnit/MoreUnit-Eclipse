@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.List;
 
@@ -12,12 +12,12 @@ import org.moreunit.test.workspace.WorkspaceHelper;
 public class PluginToolsTest
 {
     @Test
-    public void testGetJavaProjectsFromWorkspace() throws CoreException
+    public void getJavaProjectsFromWorkspace() throws CoreException
     {
         WorkspaceHelper.createJavaProject("FirstProject");
         WorkspaceHelper.createJavaProject("SecondProject");
 
         List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
-        assertEquals(2, javaProjectsFromWorkspace.size());
+        assertThat(javaProjectsFromWorkspace).hasSize(2);
     }
 }

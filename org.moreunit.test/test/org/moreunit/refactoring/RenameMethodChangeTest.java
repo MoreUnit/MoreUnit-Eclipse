@@ -1,56 +1,12 @@
 package org.moreunit.refactoring;
 
-import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
 public class RenameMethodChangeTest
 {
-
-    /*
-     * private Mock declaringType = mock(IType.class); private Mock method =
-     * mock(IMethod.class); private Mock renamedMethod = mock(IMethod.class);
-     */
-    //private NullProgressMonitor progressMonitor = new NullProgressMonitor();
-    //private RenameMethodChange change;
-
-    /*
-     * protected void setUp() throws Exception { setUpMethod(method, "getKebab",
-     * declaringType); setUpMethod(renamedMethod, "getShishKebab",
-     * declaringType); change = new RenameMethodChange((IMethod) method.proxy(),
-     * "getShishKebab"); // this is not good but I cannot work out how to make
-     * mocks work for this test
-     * declaringType.stubs().method("getMethods").will(returnValue(new IMethod[]
-     * { (IMethod) method.proxy(), (IMethod) renamedMethod.proxy() })); }
-     */
-
-    @Test
-    public void testPerformReturnsUndoForRenameMethod() throws CoreException
-    {
-        assertTrue(true);
-        /*
-         * NullProgressMonitor pm = new NullProgressMonitor();
-         * method.expects(once()).method("rename").with(eq("getShishKebab"),
-         * eq(false), same(pm)); Change undo = change.perform(pm);
-         * assertSame(renamedMethod.proxy(), undo.getModifiedElement());
-         */
-    }
-
-    @Test
-    public void testPerformUndo() throws CoreException
-    {
-        assertTrue(true);
-        /*
-         * method.expects(once()).method("rename").with(eq("getShishKebab"),
-         * eq(false), same(progressMonitor)); Change undo =
-         * change.perform(progressMonitor);
-         * renamedMethod.expects(once()).method("rename").with(eq("getKebab"),
-         * eq(false), same(progressMonitor)); Change redo =
-         * undo.perform(progressMonitor); assertSame(method.proxy(),
-         * redo.getModifiedElement());
-         */
-    }
+    // TODO old test were commented out ...
 }
 
 // $Log: not supported by cvs2svn $

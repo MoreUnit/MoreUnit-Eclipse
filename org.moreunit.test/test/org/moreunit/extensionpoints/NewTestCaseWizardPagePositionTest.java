@@ -1,5 +1,7 @@
 package org.moreunit.extensionpoints;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,22 +13,22 @@ public class NewTestCaseWizardPagePositionTest
     public void after()
     {
         NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.after("a page");
-        assertTrue(pagePosition.isAfter("a page"));
-        assertFalse(pagePosition.isBefore("a page"));
+        assertThat(pagePosition.isAfter("a page")).isTrue();
+        assertThat(pagePosition.isBefore("a page")).isFalse();
 
-        assertFalse(pagePosition.isAfter("another page"));
-        assertFalse(pagePosition.isBefore("another page"));
+        assertThat(pagePosition.isAfter("another page")).isFalse();
+        assertThat(pagePosition.isBefore("another page")).isFalse();
     }
 
     @Test
     public void before()
     {
         NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.before("a page");
-        assertFalse(pagePosition.isAfter("a page"));
-        assertTrue(pagePosition.isBefore("a page"));
+        assertThat(pagePosition.isAfter("a page")).isFalse();
+        assertThat(pagePosition.isBefore("a page")).isTrue();
 
-        assertFalse(pagePosition.isAfter("another page"));
-        assertFalse(pagePosition.isBefore("another page"));
+        assertThat(pagePosition.isAfter("another page")).isFalse();
+        assertThat(pagePosition.isBefore("another page")).isFalse();
     }
 
     @Test(expected = NullPointerException.class)

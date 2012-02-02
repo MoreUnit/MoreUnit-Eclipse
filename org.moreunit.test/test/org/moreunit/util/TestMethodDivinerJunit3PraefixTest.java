@@ -1,56 +1,56 @@
 package org.moreunit.util;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
 public class TestMethodDivinerJunit3PraefixTest
 {
     @Test
-    public void testGetTestMethodName_with_getValue()
+    public void getTestMethodName_with_getValue()
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
-        assertEquals("testGetValue", testMethodDiviner.getTestMethodNameFromMethodName("getValue"));
+        assertThat(testMethodDiviner.getTestMethodNameFromMethodName("getValue")).isEqualTo("testGetValue");
     }
 
     @Test
-    public void testGetTestMethodNameFromMethodName_null() throws Exception
+    public void getTestMethodNameFromMethodName_null() throws Exception
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
-        assertEquals("", testMethodDiviner.getTestMethodNameFromMethodName(null));
+        assertThat(testMethodDiviner.getTestMethodNameFromMethodName(null)).isEqualTo("");
     }
 
     @Test
-    public void testGetTestMethodNameFromMethodName_emptyString() throws Exception
+    public void getTestMethodNameFromMethodName_emptyString() throws Exception
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
-        assertEquals("", testMethodDiviner.getTestMethodNameFromMethodName(""));
+        assertThat(testMethodDiviner.getTestMethodNameFromMethodName("")).isEqualTo("");
     }
 
     @Test
-    public void testGetMethodNameFromTestMethodName_with_getValue_returns_null()
+    public void getMethodNameFromTestMethodName_with_getValue_returns_null()
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
-        assertNull(testMethodDiviner.getMethodNameFromTestMethodName("getValue"));
+        assertThat(testMethodDiviner.getMethodNameFromTestMethodName("getValue")).isNull();
     }
 
     @Test
-    public void testGetMethodNameFromTestMethodName_with_testGetValue_returns_getValue()
+    public void getMethodNameFromTestMethodName_with_testGetValue_returns_getValue()
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
-        assertEquals("getValue", testMethodDiviner.getMethodNameFromTestMethodName("testGetValue"));
+        assertThat(testMethodDiviner.getMethodNameFromTestMethodName("testGetValue")).isEqualTo("getValue");
     }
 
     @Test
-    public void testGetMethodNameFromTestMethodName_with_test_returns_null()
+    public void getMethodNameFromTestMethodName_with_test_returns_null()
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
-        assertNull(testMethodDiviner.getMethodNameFromTestMethodName("test"));
+        assertThat(testMethodDiviner.getMethodNameFromTestMethodName("test")).isNull();
     }
 
     @Test
-    public void testGetTestMethodNameAfterRename()
+    public void getTestMethodNameAfterRename()
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
 

@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,39 +11,39 @@ import org.junit.Test;
 public class LRUCacheTest
 {
     @Test
-    public void testLastReadEntryIsRemovedWhenAddingEntryAfterMaxSizeIsReached()
+    public void should_remove_last_read_entry_when_adding_entry_after_max_size_is_reached()
     {
         LRUCache<String, String> cache = new LRUCache<String, String>(2);
-        assertTrue(cache.isEmpty());
+        assertThat(cache.isEmpty()).isTrue();
 
         cache.put("key1", "val1");
-        assertEquals(1, cache.size());
+        assertThat(cache).hasSize(1);
         cache.put("key2", "val2");
-        assertEquals(2, cache.size());
-        assertEquals("val1", cache.get("key1"));
-        assertEquals("val2", cache.get("key2"));
+        assertThat(cache).hasSize(2);
+        assertThat(cache.get("key1")).isEqualTo("val1");
+        assertThat(cache.get("key2")).isEqualTo("val2");
 
         cache.put("key3", "val3");
-        assertEquals(2, cache.size());
-        assertFalse(cache.containsKey("key1"));
-        assertEquals("val2", cache.get("key2"));
-        assertEquals("val3", cache.get("key3"));
+        assertThat(cache).hasSize(2);
+        assertThat(cache.containsKey("key1")).isFalse();
+        assertThat(cache.get("key2")).isEqualTo("val2");
+        assertThat(cache.get("key3")).isEqualTo("val3");
 
         cache.put("key2", "val2B");
-        assertEquals(2, cache.size());
-        assertEquals("val3", cache.get("key3"));
-        assertEquals("val2B", cache.get("key2"));
+        assertThat(cache).hasSize(2);
+        assertThat(cache.get("key3")).isEqualTo("val3");
+        assertThat(cache.get("key2")).isEqualTo("val2B");
 
         cache.put("key4", "val4");
-        assertEquals(2, cache.size());
-        assertFalse(cache.containsKey("key3"));
-        assertEquals("val2B", cache.get("key2"));
-        assertEquals("val4", cache.get("key4"));
+        assertThat(cache).hasSize(2);
+        assertThat(cache.containsKey("key3")).isFalse();
+        assertThat(cache.get("key2")).isEqualTo("val2B");
+        assertThat(cache.get("key4")).isEqualTo("val4");
 
         cache.put("key5", "val5");
-        assertEquals(2, cache.size());
-        assertFalse(cache.containsKey("key2"));
-        assertEquals("val4", cache.get("key4"));
-        assertEquals("val5", cache.get("key5"));
+        assertThat(cache).hasSize(2);
+        assertThat(cache.containsKey("key2")).isFalse();
+        assertThat(cache.get("key4")).isEqualTo("val4");
+        assertThat(cache.get("key5")).isEqualTo("val5");
     }
 }

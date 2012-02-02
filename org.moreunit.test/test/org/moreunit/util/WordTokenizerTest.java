@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,31 +12,31 @@ public class WordTokenizerTest
 {
 
     @Test
-    public void testWordTokenizer()
+    public void should_split_token_into_words_split_by_upper_case_chars()
     {
         WordTokenizer wordTokenizer = new WordTokenizer("Oa");
-        assertTrue(wordTokenizer.hasMoreElements());
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
 
         wordTokenizer = new WordTokenizer("OneTwoThree");
-        assertTrue(wordTokenizer.hasMoreElements());
-        assertEquals("One", wordTokenizer.nextElement());
-        assertTrue(wordTokenizer.hasMoreElements());
-        assertEquals("Two", wordTokenizer.nextElement());
-        assertTrue(wordTokenizer.hasMoreElements());
-        assertEquals("Three", wordTokenizer.nextElement());
-        assertFalse(wordTokenizer.hasMoreElements());
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
+        assertThat(wordTokenizer.nextElement()).isEqualTo("One");
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
+        assertThat(wordTokenizer.nextElement()).isEqualTo("Two");
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
+        assertThat(wordTokenizer.nextElement()).isEqualTo("Three");
+        assertThat(wordTokenizer.hasMoreElements()).isFalse();
 
         wordTokenizer = new WordTokenizer("abc");
-        assertTrue(wordTokenizer.hasMoreElements());
-        assertEquals("abc", wordTokenizer.nextElement());
-        assertFalse(wordTokenizer.hasMoreElements());
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
+        assertThat(wordTokenizer.nextElement()).isEqualTo("abc");
+        assertThat(wordTokenizer.hasMoreElements()).isFalse();
 
         wordTokenizer = new WordTokenizer("firstSecond");
-        assertTrue(wordTokenizer.hasMoreElements());
-        assertEquals("first", wordTokenizer.nextElement());
-        assertTrue(wordTokenizer.hasMoreElements());
-        assertEquals("Second", wordTokenizer.nextElement());
-        assertFalse(wordTokenizer.hasMoreElements());
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
+        assertThat(wordTokenizer.nextElement()).isEqualTo("first");
+        assertThat(wordTokenizer.hasMoreElements()).isTrue();
+        assertThat(wordTokenizer.nextElement()).isEqualTo("Second");
+        assertThat(wordTokenizer.hasMoreElements()).isFalse();
     }
 
 }

@@ -1,5 +1,7 @@
 package org.moreunit.elements;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +29,7 @@ public class TestmethodCreatorTest extends ContextTestCase
 {
 
     @Test
-    public void testCreateFirstTestMethodJUnit3() throws CoreException
+    public void createTestMethod_should_create_junit3_testmethod() throws CoreException
     {
         TypeHandler cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
         TypeHandler testcaseType = context.getCompilationUnitHandler("testing.HelloTest").getPrimaryTypeHandler();
@@ -36,17 +38,14 @@ public class TestmethodCreatorTest extends ContextTestCase
         TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod.get());
 
-        assertEquals("testGetNumberOne", createTestMethod.getElementName());
-        assertFalse(createTestMethod.getSource().startsWith("@Test"));
-        assertTrue(createTestMethod.getSource().contains("foo"));
+        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
+        assertThat(createTestMethod.getSource()).doesNotContain("@Test").contains("foo");
         IMethod[] methods = testcaseType.get().getMethods();
-        assertEquals(1, methods.length);
-        assertEquals(createTestMethod, methods[0]);
+        assertThat(methods).containsOnly(createTestMethod);
     }
-
     
     @Test
-    public void testCreateFirstTestMethodJUnit4() throws CoreException
+    public void createTestMethod_should_create_junit4_testmethod() throws CoreException
     {
         TypeHandler cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
         TypeHandler testcaseType = context.getCompilationUnitHandler("testing.HelloTest").getPrimaryTypeHandler();
@@ -65,7 +64,7 @@ public class TestmethodCreatorTest extends ContextTestCase
     }
 
     @Test
-    public void testCreateSecondTestMethodJUnit3() throws CoreException
+    public void createTestMethod_should_create_another_junit3_testmethod_when_called_with_testmethod() throws CoreException
     {
         TypeHandler cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
         TypeHandler testcaseType = context.getCompilationUnitHandler("testing.HelloTest").getPrimaryTypeHandler();
@@ -74,16 +73,15 @@ public class TestmethodCreatorTest extends ContextTestCase
 
         TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod.get());
-        assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
-        assertFalse(createTestMethod.getSource().startsWith("@Test"));
-        assertTrue(createTestMethod.getSource().contains("foo"));
+        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOneSuffix");
+        assertThat(createTestMethod.getSource()).doesNotContain("@Test").contains("foo");
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertEquals(2, methods.length);
+        assertThat(methods).hasSize(2);
     }
 
     @Test
-    public void testCreateSecondTestMethodJUnit4() throws CoreException
+    public void createTestMethod_should_create_another_junit4_testmethod_when_called_with_testmethod() throws CoreException
     {
         TypeHandler cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
         TypeHandler testcaseType = context.getCompilationUnitHandler("testing.HelloTest").getPrimaryTypeHandler();
@@ -92,12 +90,11 @@ public class TestmethodCreatorTest extends ContextTestCase
 
         TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(testMethod.get());
-        assertEquals("testGetNumberOneSuffix", createTestMethod.getElementName());
-        assertTrue(createTestMethod.getSource().startsWith("@Test"));
-        assertTrue(createTestMethod.getSource().contains("foo"));
+        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOneSuffix");
+        assertThat(createTestMethod.getSource()).startsWith("@Test").contains("foo");
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertEquals(2, methods.length);
+        assertThat(methods).hasSize(2);
     }
 
 }

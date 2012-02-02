@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,16 +22,16 @@ public class MemberJumpHistoryTest
     }
 
     @Test
-    public void testGetLastMemberReachedFromType()
+    public void getLastCorrespondingJumpMember_test_with_jump_from_type()
     {
         IType fromType = mockType("FromType");
         IType toType = mockType("ToType");
         history.registerJump(fromType, toType);
-        assertEquals(toType, history.getLastCorrespondingJumpMember(fromType));
+        assertThat(history.getLastCorrespondingJumpMember(fromType)).isEqualTo(toType);
 
         IType toType2 = mockType("ToType2");
         history.registerJump(fromType, toType2);
-        assertEquals(toType2, history.getLastCorrespondingJumpMember(fromType));
+        assertThat(history.getLastCorrespondingJumpMember(fromType)).isEqualTo(toType2);
     }
 
     private IType mockType(String typeName)
@@ -40,20 +42,20 @@ public class MemberJumpHistoryTest
     }
 
     @Test
-    public void testGetLastMemberReachedFromMethod()
+    public void getLastCorrespondingJumpMember_test_with_jump_from_method()
     {
         IMethod fromMethod = mockMethod(mockType("FromType"), "fromMethod");
         IType toType = mockType("ToType");
         history.registerJump(fromMethod, toType);
-        assertEquals(toType, history.getLastCorrespondingJumpMember(fromMethod));
+        assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toType);
 
         IMethod toMethod = mockMethod(toType, "toMethod");
         history.registerJump(fromMethod, toMethod);
-        assertEquals(toMethod, history.getLastCorrespondingJumpMember(fromMethod));
+        assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toMethod);
 
         IMethod toMethod2 = mockMethod(mockType("FromType2"), "toMethod2");
         history.registerJump(fromMethod, toMethod2);
-        assertEquals(toMethod2, history.getLastCorrespondingJumpMember(fromMethod));
+        assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toMethod2);
     }
 
     private IMethod mockMethod(IType declaringType, String methodName)
@@ -65,44 +67,44 @@ public class MemberJumpHistoryTest
     }
     
     @Test
-    public void testGetLastMemberHavingReachedType()
+    public void getLastCorrespondingJumpMember_test_having_reached_by_type()
     {
         IType fromType = mockType("FromType");
         IType toType = mockType("ToType");
         history.registerJump(fromType, toType);
-        assertEquals(fromType, history.getLastCorrespondingJumpMember(toType));
+        assertThat(history.getLastCorrespondingJumpMember(toType)).isEqualTo(fromType);
 
         IType fromType2 = mockType("FromType2");
         history.registerJump(fromType2, toType);
-        assertEquals(fromType2, history.getLastCorrespondingJumpMember(toType));
+        assertThat(history.getLastCorrespondingJumpMember(toType)).isEqualTo(fromType2);
         
         IMethod fromMethod = mockMethod(fromType2, "fromMethod");
         history.registerJump(fromMethod, toType);
-        assertEquals(fromMethod, history.getLastCorrespondingJumpMember(toType));
+        assertThat(history.getLastCorrespondingJumpMember(toType)).isEqualTo(fromMethod);
         
-        assertEquals(toType, history.getLastCorrespondingJumpMember(fromType));
-        assertEquals(toType, history.getLastCorrespondingJumpMember(fromType2));
-        assertEquals(toType, history.getLastCorrespondingJumpMember(fromMethod));
+        assertThat(history.getLastCorrespondingJumpMember(fromType)).isEqualTo(toType);
+        assertThat(history.getLastCorrespondingJumpMember(fromType2)).isEqualTo(toType);
+        assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toType);
     }
     
     @Test
-    public void testGetLastMemberHavingReachedMethod()
+    public void getLastCorrespondingJumpMember_test_having_reached_by_method()
     {
         IType fromType = mockType("FromType");
         IMethod toMethod = mockMethod(mockType("ToType"), "toMethod");
         history.registerJump(fromType, toMethod);
-        assertEquals(fromType, history.getLastCorrespondingJumpMember(toMethod));
+        assertThat(history.getLastCorrespondingJumpMember(toMethod)).isEqualTo(fromType);
 
         IType fromType2 = mockType("FromType2");
         history.registerJump(fromType2, toMethod);
-        assertEquals(fromType2, history.getLastCorrespondingJumpMember(toMethod));
+        assertThat(history.getLastCorrespondingJumpMember(toMethod)).isEqualTo(fromType2);
         
         IMethod fromMethod = mockMethod(fromType2, "fromMethod");
         history.registerJump(fromMethod, toMethod);
-        assertEquals(fromMethod, history.getLastCorrespondingJumpMember(toMethod));
+        assertThat(history.getLastCorrespondingJumpMember(toMethod)).isEqualTo(fromMethod);
         
-        assertEquals(toMethod, history.getLastCorrespondingJumpMember(fromType));
-        assertEquals(toMethod, history.getLastCorrespondingJumpMember(fromType2));
-        assertEquals(toMethod, history.getLastCorrespondingJumpMember(fromMethod));
+        assertThat(history.getLastCorrespondingJumpMember(fromType)).isEqualTo(toMethod);
+        assertThat(history.getLastCorrespondingJumpMember(fromType2)).isEqualTo(toMethod);
+        assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toMethod);
     }
 }

@@ -2,9 +2,12 @@ package org.moreunit.elements;
 
 /**
  * @author vera
+
  *
  * 23.05.2006 19:54:02
  */
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -36,42 +39,42 @@ public class TestMethodVisitorTest extends ContextTestCase
     }
     
     @Test
-    public void testGetTestMethodsOnlyTestAnnotation() throws JavaModelException
+    public void getTestMethods_should_detect_annotated_method_as_test() throws JavaModelException
     {
         String methodSource = "@Test \n public int getOne() { return 1; }";
         IMethod annotationTestMethod = testcaseType.get().createMethod(methodSource, null, true, null);
         TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
-        assertEquals(1, testMethods.size());
-        WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
+        assertThat(testMethods).hasSize(1);
+        assertThat(testMethods.get(0).getName().getFullyQualifiedName()).isEqualTo(annotationTestMethod.getElementName());
     }
 
     @Test
-    public void testGetTestMethodsTestPrefix() throws JavaModelException
+    public void getTestMethods_should_detect_test_prefix_as_test() throws JavaModelException
     {
         MethodHandler testMethodWithPrefix = testcaseType.addMethod("public int testGetTwo()");
         TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
-        assertEquals(1, testMethods.size());
-        WorkspaceHelper.assertSameMethodName(testMethodWithPrefix.get(), testMethods.get(0));
+        assertThat(testMethods).hasSize(1);
+        assertThat(testMethods.get(0).getName().getFullyQualifiedName()).isEqualTo(testMethodWithPrefix.get().getElementName());
     }
 
     @Test
-    public void testGetTestMethodsTestAnnotationAndTestPrefix() throws JavaModelException
+    public void getTestMethods_should_detect_annotated_and_test_prefix_as_test() throws JavaModelException
     {
         String methodSource = "@Test \n public void testGetOne() {  }";
         IMethod annotationTestMethod = testcaseType.get().createMethod(methodSource, null, true, null);
         TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
-        assertEquals(1, testMethods.size());
-        WorkspaceHelper.assertSameMethodName(annotationTestMethod, testMethods.get(0));
+        assertThat(testMethods).hasSize(1);
+        assertThat(testMethods.get(0).getName().getFullyQualifiedName()).isEqualTo(annotationTestMethod.getElementName());
     }
 
     @Test
-    public void testGetTestMethodsNoTestMethod() throws JavaModelException
+    public void getTestMethods_should_return_empty_list_when_type_doesn_not_contain_testmethods() throws JavaModelException
     {
         TestMethodVisitor visitor = new TestMethodVisitor(testcaseType.get());
         List<MethodDeclaration> testMethods = visitor.getTestMethods();
-        assertEquals(0, testMethods.size());
+        assertThat(testMethods).isEmpty();
     }
 }

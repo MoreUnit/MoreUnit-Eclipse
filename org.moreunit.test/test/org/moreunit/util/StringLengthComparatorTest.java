@@ -1,27 +1,26 @@
 package org.moreunit.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
 public class StringLengthComparatorTest
 {
     @Test
-    public void testLongerAStringIsGreater() throws Exception
+    public void should_return_positive_integer_when_first_has_greater_length_than_second_parameter() throws Exception
     {
-        assertTrue(0 < new StringLengthComparator().compare("Long", ""));
+        assertThat(new StringLengthComparator().compare("Long", "")).isGreaterThan(0);
     }
 
     @Test
-    public void testLongerBStringIsGreater() throws Exception
+    public void should_return_negative_integer_when_second_has_greater_length_than_first_parameter() throws Exception
     {
-        assertTrue(0 > new StringLengthComparator().compare("", "Long"));
+        assertThat(new StringLengthComparator().compare("", "Long")).isLessThanOrEqualTo(0);
     }
 
     @Test
-    public void testEqualStrings() throws Exception
+    public void should_return_zero_when_called_with_equal_strings() throws Exception
     {
-        assertEquals(0, new StringLengthComparator().compare("Long", "Long"));
+        assertThat(new StringLengthComparator().compare("Long", "Long")).isEqualTo(0);
     }
 }

@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,10 +16,10 @@ public class TestNamingPatternAwareTypeComparatorTest extends ContextTestCase
     @Project(name="aProject")
     @Preferences(testClassSuffixes="Test")
     @Test
-    public void testCompareWithTestPrefixes()
+    public void should_compare_classnames_stripped_from_test_suffix()
     {
         TestNamingPatternAwareTypeComparator comparator = new TestNamingPatternAwareTypeComparator(org.moreunit.preferences.Preferences.getInstance());
-        assertTrue(0 > comparator.compare(mockType("HelloTest"), mockType("HelloOtherTest")));
+        assertThat(comparator.compare(mockType("HelloTest"), mockType("HelloOtherTest"))).isLessThan(0);
     }
 
     private IType mockType(String typeName)

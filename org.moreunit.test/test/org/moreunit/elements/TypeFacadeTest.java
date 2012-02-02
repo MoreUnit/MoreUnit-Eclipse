@@ -6,6 +6,8 @@ package org.moreunit.elements;
  * 23.05.2006 21:09:05
  */
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -31,24 +33,24 @@ public class TypeFacadeTest extends ContextTestCase
     @Project(mainCls="Hello")
     @Preferences(testClassSuffixes="Test")
     @Test
-    public void testIsTestCaseRegularClass() throws CoreException
+    public void isTestCase_should_return_false_when_regular_class() throws CoreException
     {
-        assertFalse(TypeFacade.isTestCase(context.getCompilationUnit("Hello")));
+        assertThat(TypeFacade.isTestCase(context.getCompilationUnit("Hello"))).isFalse();
     }
 
     @Project(mainCls="HelloTest")
     @Preferences(testClassSuffixes="Test")
     @Test
-    public void testIsTestCaseTestWithSuffix() throws JavaModelException
+    public void isTestCase_should_return_true_when_class_has_test_suffix() throws JavaModelException
     {
-        assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("HelloTest")));
+        assertThat(TypeFacade.isTestCase(context.getCompilationUnit("HelloTest"))).isTrue();
     }
 
     @Project(mainCls="TestHello")
     @Preferences(testClassPrefixes="Test")
     @Test
-    public void testIsTestCaseTestWithPrefix() throws JavaModelException
+    public void isTestCase_should_return_true_when_class_has_test_prefix() throws JavaModelException
     {
-        assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("TestHello")));
+        assertThat(TypeFacade.isTestCase(context.getCompilationUnit("TestHello"))).isTrue();
     }
 }

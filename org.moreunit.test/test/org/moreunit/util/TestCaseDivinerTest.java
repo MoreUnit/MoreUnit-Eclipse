@@ -1,21 +1,15 @@
 package org.moreunit.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author giana 13.05.2006 13:49:29
@@ -26,55 +20,54 @@ public class TestCaseDivinerTest extends ContextTestCase
     @Preferences(testClassSuffixes="Test", testSourcefolder="test")
     @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
-    public void testGetMatchesOneSuffix() throws CoreException
+    public void getMatches_should_return_class_which_matches_suffix() throws CoreException
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         
-        assertEquals(1, result.size());
-        assertEquals("FooTest", ((IType)result.toArray()[0]).getElementName());
+        assertThat(result).hasSize(1);
+        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
     }
     
     @Preferences(testClassSuffixes="Test,TestNG", testSourcefolder="test")
     @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
-    public void testGetMatchesTwoSuffixes() throws CoreException
+    public void getMatches_should_find_all_tests_which_match_all_suffixes() throws CoreException
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertNotNull(result);
+        assertThat(result).isNotNull();
 
-        assertEquals(2, result.size());
-        assertEquals("FooTest", ((IType)result.toArray()[0]).getElementName());
-        assertEquals("FooTestNG", ((IType)result.toArray()[1]).getElementName());
+        assertThat(result).hasSize(2);
+        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
+        assertThat(((IType)result.toArray()[1]).getElementName()).isEqualTo("FooTestNG");
     }
 
     @Preferences(testClassPrefixes="Test", testSourcefolder="test")
     @Project(mainCls="Foo", testCls="TestFoo;BFooTest", mainSrcFolder="src", testSrcFolder="test")
     @Test
-    public void testGetMatchesPrefixes() throws CoreException
+    public void getMatches_should_return_class_which_matches_prefix() throws CoreException
     {
-        
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         
-        assertEquals(1, result.size());
-        assertEquals("TestFoo", ((IType)result.toArray()[0]).getElementName());
+        assertThat(result).hasSize(1);
+        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("TestFoo");
     }
 
     @Preferences(testClassSuffixes="Test", testSourcefolder="test")
     @Project(mainCls="com:Foo", testCls="org:FooTest;org:FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
-    public void testGetMatchesWhenPackageNameDiffers() throws CoreException
+    public void getMatches_should_find_matches_when_package_name_differs() throws CoreException
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         
-        assertEquals(1, result.size());
-        assertEquals("FooTest", ((IType)result.toArray()[0]).getElementName());
+        assertThat(result).hasSize(1);
+        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
     }
 
     /**
@@ -83,10 +76,10 @@ public class TestCaseDivinerTest extends ContextTestCase
     @Preferences(testClassSuffixes="Test", testSourcefolder="test")
     @Project(mainCls="com: enum SomeEnum", mainSrcFolder="src", testSrcFolder="test")
     @Test
-    public void testGetSource() throws CoreException 
+    public void getSource_should_not_throw_exception_for_enums() throws CoreException 
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.SomeEnum"), org.moreunit.preferences.Preferences.getInstance());
-        assertNotNull(testCaseDiviner.getSource());
+        assertThat(testCaseDiviner.getSource()).isNotNull();
     }
 }
 

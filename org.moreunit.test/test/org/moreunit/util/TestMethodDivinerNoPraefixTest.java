@@ -1,36 +1,31 @@
 package org.moreunit.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
 public class TestMethodDivinerNoPraefixTest
 {
 
-    public String getMethodNameFromTestMethodName(String testMethodName)
-    {
-        return null;
-    }
-
     @Test
-    public void testGetTestMethodNameFromMethodName() throws Exception
+    public void getTestMethodNameFromMethodName() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertEquals("getFoo", testMethodDivinerNoPraefix.getTestMethodNameFromMethodName("getFoo"));
+        assertThat(testMethodDivinerNoPraefix.getTestMethodNameFromMethodName("getFoo")).isEqualTo("getFoo");
     }
 
     @Test
     public void testGetTestMethodNameAfterRename() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertEquals("get2Foo_getterWorks", testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "getFoo_getterWorks"));
+        assertThat(testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "getFoo_getterWorks")).isEqualTo("get2Foo_getterWorks");
     }
 
     @Test
-    public void testGetMethodNameFromTestMethodName() throws Exception
+    public void getMethodNameFromTestMethodName() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertEquals("getFoo", testMethodDivinerNoPraefix.getMethodNameFromTestMethodName("getFoo"));
+        assertThat(testMethodDivinerNoPraefix.getMethodNameFromTestMethodName("getFoo")).isEqualTo("getFoo");
     }
 
 }

@@ -4,6 +4,8 @@ import org.moreunit.test.SimpleProjectTestCase;
 
 public abstract class MoreUnitAnnotationModelTest extends SimpleProjectTestCase
 {
+    
+    // TODO: Check tests below
     /*
     private IType cutType;
     private IType testcaseType;

@@ -1,8 +1,5 @@
 package org.moreunit.refactoring;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,37 +22,11 @@ public class RenameClassChangeTest
     private static final IProgressMonitor PROGRESS_MONITOR = new NullProgressMonitor();
 
     @Test
-    public void testPerformReturnsUndoForRenameType() throws CoreException
-    {
-        /*
-         * NullProgressMonitor pm = new NullProgressMonitor();
-         * typeToRename.expects
-         * (once()).method("rename").with(eq("KebabEmporium"), eq(false),
-         * same(pm)); Change undo = change.perform(pm);
-         * assertSame(renamedType.proxy(), undo.getModifiedElement());
-         */
-    }
-
-    @Test
-    public void testPerformUndo() throws CoreException
-    {
-        /*
-         * typeToRename.expects(once()).method("rename").with(eq("KebabEmporium")
-         * , eq(false), same(progressMonitor)); Change undo =
-         * change.perform(progressMonitor);
-         * renamedType.expects(once()).method("rename").with(eq("KebabHouse"),
-         * eq(false), same(progressMonitor)); Change redo =
-         * undo.perform(progressMonitor); assertSame(typeToRename.proxy(),
-         * redo.getModifiedElement());
-         */
-    }
-
-    @Test
-    public void testGetModifiedElement()
+    public void getModifiedElement_should_return_type_to_rename()
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
         RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
-        assertEquals(typeMock, change.getModifiedElement());
+        assertThat(change.getModifiedElement()).isEqualTo(typeMock);
     }
 
     private IType createTypeRenameMockWithOldElementName()
@@ -100,33 +71,32 @@ public class RenameClassChangeTest
     }
 
     @Test
-    public void testGetName()
+    public void getName_should_return_descriptive_string()
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
         RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
         String expected = String.format("Rename %s to %s", ELEMENT_NAME_OLD, ELEMENT_NAME_NEW);
-        assertEquals(expected, change.getName());
+        assertThat(change.getName()).isEqualTo(expected);
     }
 
     @Test
-    public void testIsValid()
+    public void issValid_should_return_not_null()
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
         RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
-        assertNotNull(change.isValid(PROGRESS_MONITOR));
+        assertThat(change.isValid(PROGRESS_MONITOR)).isNotNull();
     }
 
     @Test
-    public void testPerform() throws CoreException
+    public void perform_should_return_a_rename_class_change_instance() throws CoreException
     {
         IType typeMock = createTypeRenameMockWithOldElementName();
         RenameClassChange change = new RenameClassChange(typeMock, ELEMENT_NAME_NEW);
         Change perform = change.perform(PROGRESS_MONITOR);
 
-        assertNotNull(perform);
-        assertTrue(perform instanceof RenameClassChange);
+        assertThat(perform).isNotNull().isInstanceOf(RenameClassChange.class);
         String expected = String.format("Rename %s to %s", ELEMENT_NAME_NEW, ELEMENT_NAME_OLD);
-        assertEquals(expected, perform.getName());
+        assertThat(perform.getName()).isEqualTo(expected);
     }
 }
 

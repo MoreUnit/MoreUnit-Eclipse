@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.moreunit.util.CollectionUtils.asSet;
@@ -35,29 +37,29 @@ public class MethodTestCallerFinderTest extends ContextTestCase
     }
 
     @Test
-    public void testGetMatchesWithoutTestMethod() throws JavaModelException
+    public void getMatches_should_return_empty_list_when_no_testmethod_exists() throws JavaModelException
     {
         Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
-        assertTrue(matches.isEmpty());
+        assertThat(matches).isEmpty();
     }
 
     @Test
-    public void testGetMatchesWithOneTestMethod() throws JavaModelException
+    public void getMatches_should_find_only_existing_testmethod() throws JavaModelException
     {
         MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
 
         Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(giveMe1TestMethod.get()), matches);
+        assertThat(matches).contains(giveMe1TestMethod.get());
     }
 
     @Test
-    public void testGetMatchesWithSeveralTestMethods() throws JavaModelException
+    public void getMatches_should_find_all_testmethods() throws JavaModelException
     {
         MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
         MethodHandler gimme1TestMethod = testcaseType.addMethod("public void testGimme1()", "new Hello().getNumberOne();");
         MethodHandler getNumber1TestMethod = testcaseType.addMethod("public void testGetNumber1()", "new Hello().getNumberOne();");
 
         Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
-        assertEquals(asSet(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get()), matches);
+        assertThat(matches).containsOnly(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get());
     }
 }

@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -14,126 +16,121 @@ public class BaseToolsTest
 {
 
     @Test
-    public void testGetTestedClass()
+    public void getTestedClass_should_return_empty_list_when_called_without_prefix()
     {
         String className = "Eins";
         String[] prefixes = new String[] { "Test" };
-        assertEmpty(BaseTools.getTestedClass(className, prefixes, new String[0], null, null));
-
-        className = "EinsTest";
+        assertThat(BaseTools.getTestedClass(className, prefixes, new String[0], null, null)).isEmpty();
+    }
+    
+    @Test
+    public void getTestedClass_should_return_name_without_prefix()
+    {
+        String className = "EinsTest";
         String[] suffixes = new String[] { "Test" };
-        String[] items = { "Eins" };
-        assertEquals(Arrays.asList(items), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
 
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("Eins");
+        
         className = "TestCaseDivinerTest";
         suffixes = new String[] { "Test" };
-        String[] items1 = { "TestCaseDiviner" };
-        assertEquals(Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
-
-        className = null;
-        assertEmpty(BaseTools.getTestedClass(className, new String[0], new String[0], null, null));
-
-        className = "ABC";
-        assertEmpty(BaseTools.getTestedClass(className, new String[0], new String[0], null, null));
-        assertEmpty(BaseTools.getTestedClass(className, null, null, null, null));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("TestCaseDiviner");
     }
-
-    private void assertEmpty(Collection< ? > collection)
-    {
-        assertTrue(collection.isEmpty());
-    }
-
+    
     @Test
-    public void testGetTestedClassWithMultipleSuffixes()
+    public void getTestedClass_should_return_empty_list_when_called_with_null_as_classname()
+    {
+        String className = null;
+        assertThat(BaseTools.getTestedClass(className, new String[0], new String[0], null, null)).isEmpty();
+    }
+    
+    @Test
+    public void getTestedClass_should_return_empty_list_when_called_with_empty_prefix_and_suffix_lists()
+    {
+        String className = "ABC";
+        assertThat(BaseTools.getTestedClass(className, new String[0], new String[0], null, null)).isEmpty();
+    }
+    
+    @Test
+    public void getTestedClass_should_return_empty_list_when_called_with_null_as_prefix_and_suffix_lists()
+    {
+        String className = "ABC";
+        assertThat(BaseTools.getTestedClass(className, null, null, null, null)).isEmpty();
+    }
+    
+    @Test
+    public void getTestedClass_should_handle_more_than_one_suffix()
     {
         String[] suffixes = new String[] { "SystemTest", "Test" };
         String className = "EinsTest";
-        String[] items = { "Eins" };
-        assertEquals(Arrays.asList(items), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("Eins");
         className = "EinsSystemTest";
-        String[] items1 = { "Eins", "EinsSystem" };
-        assertEquals(Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("Eins", "EinsSystem");
     }
 
     @Test
-    public void testGetTestedClassWithPackagePrefix() throws Exception
+    public void getTestedClass_should_handle_package_prefix()
     {
         String className = "test.EinsTest";
         String[] suffixes = new String[] { "Test" };
         String packagePrefix = "test";
-        String[] items = { "Eins" };
-        assertEquals("Test with prefix", Arrays.asList(items), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null)).containsExactly("Eins");
 
         className = "EinsTest";
-        String[] items1 = { "Eins" };
-        assertEquals("Test without prefix but package prefix set", Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null)).containsExactly("Eins");
     }
 
     @Test
-    public void testGetTestedClassWithPackageSuffix() throws Exception
+    public void getTestedClass_should_handle_package_suffix() throws Exception
     {
         String className = "test.EinsTest";
         String[] suffixes = new String[] { "Test" };
         String packageSuffix = "test";
-        String[] items = { "Eins" };
-        assertEquals("Test with prefix", Arrays.asList(items), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("Eins");
 
         className = "EinsTest";
-        String[] items1 = { "Eins" };
-        assertEquals("Test without suffix but package prefix set", Arrays.asList(items1), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("Eins");
     }
 
     @Test
-    public void testRemoveSuffixFromTestCase()
+    public void removeSuffixFromTestCase()
     {
         String testClassName = "com.my.test.MyTest";
         String packageSuffix = "test";
 
-        assertEquals("com.my.MyTest", BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix));
+        assertThat(BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix)).isEqualTo("com.my.MyTest");
 
         testClassName = "test.MyTest";
-        assertEquals("MyTest", BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix));
+        assertThat(BaseTools.removeSuffixFromTestCase(testClassName, packageSuffix)).isEqualTo("MyTest");
     }
 
     @Test
-    public void testGetListOfUnqualifiedTypeNames()
+    public void getListOfUnqualifiedTypeNames()
     {
         String testString = "One";
         List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertEquals(1, result.size());
-        assertEquals("One", result.get(0));
+        assertThat(result).containsExactly("One");
 
         testString = "OneTwo";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertEquals(2, result.size());
-        assertEquals("One", result.get(0));
-        assertEquals("OneTwo", result.get(1));
+        assertThat(result).isEqualTo(Arrays.asList("One", "OneTwo"));
 
         testString = "OneTwoThree";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertEquals(3, result.size());
-        assertEquals("One", result.get(0));
-        assertEquals("OneTwo", result.get(1));
-        assertEquals("OneTwoThree", result.get(2));
+        assertThat(result).isEqualTo(Arrays.asList("One", "OneTwo", "OneTwoThree"));
 
         testString = "oneTwo";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertEquals(2, result.size());
-        assertEquals("one", result.get(0));
-        assertEquals("oneTwo", result.get(1));
+        assertThat(result).isEqualTo(Arrays.asList("one", "oneTwo"));
     }
 
     @Test
-    public void testReturnsListOfUnqualifiedTypeNamesSortedByRawLength() throws Exception
+    public void getListOfUnqualifiedTypeNames_should_return_list_sorted_by_raw_length() throws Exception
     {
         ArrayList<String> testedClasses = new ArrayList<String>();
         testedClasses.add("EinsZweiDrei");
         testedClasses.add("OneTwoThree");
         List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
-        assertEquals("EinsZweiDrei", result.get(0));
-        assertEquals("OneTwoThree", result.get(1));
-        // Yadda, yadda. Just make sure the last one's right, nobody really
-        // cares.
-        assertEquals("One", result.get(5));
+        assertThat(result).startsWith("EinsZweiDrei", "OneTwoThree");
+        assertThat(result).endsWith("One");
     }
 }

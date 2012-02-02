@@ -1,6 +1,6 @@
 package org.moreunit.ui;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,14 +26,14 @@ public class MemberContentProviderTest
     }
 
     @Test
-    public void testGetElementsWhenNoTypeNorMethodIsProvided()
+    public void getElements_should_return_empty_list_when_no_type_nor_method_is_provided()
     {
         Object[] elements = new MemberContentProvider(types, methods, null).getElements(null);
-        assertEquals(0, elements.length);
+        assertThat(elements).isEmpty();
     }
 
     @Test
-    public void testGetElementsWhenNoTypeHasMethods()
+    public void getElements_should_return_types_when_called_with_types()
     {
         types.add(mockType("type2"));
         types.add(mockType("type3"));
@@ -42,14 +42,14 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertEquals(3, elements.length);
-        assertEquals("type1", ((IType) elements[0]).getElementName());
-        assertEquals("type2", ((IType) elements[1]).getElementName());
-        assertEquals("type3", ((IType) elements[2]).getElementName());
+        assertThat(elements).hasSize(3);
+        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type1");
+        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type2");
+        assertThat(((IType) elements[2]).getElementName()).isEqualTo("type3");
     }
 
     @Test
-    public void testGetElementsWhenEveryTypeHasMethods()
+    public void should_build_elements_with_children_when_called_with_types_and_methods()
     {
         IType type2 = mockType("type2");
         types.add(type2);
@@ -64,22 +64,22 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertEquals(2, elements.length);
-        assertEquals("type1", ((IType) elements[0]).getElementName());
-        assertEquals("type2", ((IType) elements[1]).getElementName());
+        assertThat(elements).hasSize(2);
+        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type1");
+        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type2");
 
         Object[] children1 = contentProvider.getChildren(elements[0]);
-        assertEquals(2, children1.length);
-        assertEquals("method1A", ((IMethod) children1[0]).getElementName());
-        assertEquals("method1B", ((IMethod) children1[1]).getElementName());
+        assertThat(children1).hasSize(2);
+        assertThat(((IMethod) children1[0]).getElementName()).isEqualTo("method1A");
+        assertThat(((IMethod) children1[1]).getElementName()).isEqualTo("method1B");
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertEquals(1, children2.length);
-        assertEquals("method2A", ((IMethod) children2[0]).getElementName());
+        assertThat(children2).hasSize(1);
+        assertThat(((IMethod) children2[0]).getElementName()).isEqualTo("method2A");
     }
 
     @Test
-    public void testGetElementsWithSomeMethodTypesNotInGivenTypeSet()
+    public void should_detect_types_when_only_method_is_given()
     {
         IType type1 = mockType("type1");
         types.add(type1);
@@ -90,17 +90,17 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertEquals(2, elements.length);
-        assertEquals("type1", ((IType) elements[0]).getElementName());
-        assertEquals("type2", ((IType) elements[1]).getElementName());
+        assertThat(elements).hasSize(2);
+        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type1");
+        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type2");
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertEquals(1, children2.length);
-        assertEquals("method2A", ((IMethod) children2[0]).getElementName());
+        assertThat(children2).hasSize(1);
+        assertThat(((IMethod) children2[0]).getElementName()).isEqualTo("method2A");
     }
 
     @Test
-    public void testGetElementsWhithBothTypesWithoutMethodsAndTypesHavingMethods()
+    public void should_build_with_types_with_and_without_methods()
     {
         IType type3 = mockType("type3");
         IType type1 = mockType("type1");
@@ -115,19 +115,19 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertEquals(3, elements.length);
-        assertEquals("type2", ((IType) elements[0]).getElementName());
-        assertEquals("type1", ((IType) elements[1]).getElementName());
-        assertEquals("type3", ((IType) elements[2]).getElementName());
+        assertThat(elements).hasSize(3);
+        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type2");
+        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type1");
+        assertThat(((IType) elements[2]).getElementName()).isEqualTo("type3");
 
         Object[] children1 = contentProvider.getChildren(elements[1]);
-        assertEquals(2, children1.length);
-        assertEquals("method1A", ((IMethod) children1[0]).getElementName());
-        assertEquals("method1B", ((IMethod) children1[1]).getElementName());
+        assertThat(children1).hasSize(2);
+        assertThat(((IMethod) children1[0]).getElementName()).isEqualTo("method1A");
+        assertThat(((IMethod) children1[1]).getElementName()).isEqualTo("method1B");
 
         Object[] children3 = contentProvider.getChildren(elements[2]);
-        assertEquals(1, children3.length);
-        assertEquals("method3A", ((IMethod) children3[0]).getElementName());
+        assertThat(children3).hasSize(1);
+        assertThat(((IMethod) children3[0]).getElementName()).isEqualTo("method3A");
     }
 
     private IType mockType(String typeName)
