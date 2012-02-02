@@ -33,8 +33,6 @@ public class SourceFolderMapping
     private IPackageFragmentRoot getPreferredSourceFolder()
     {
         List<IPackageFragmentRoot> packageFragmentRoots = PluginTools.getAllSourceFolderFromProject(javaProject);
-        // IPackageFragmentRoot[] packageFragmentRoots =
-        // javaProject.getPackageFragmentRoots();
         if(hasProjectsNoSourceFolders(packageFragmentRoots))
             return null;
         if(hasProjectsOnlyOneSourceFolder(packageFragmentRoots))
@@ -75,8 +73,9 @@ public class SourceFolderMapping
         return testFolder;
     }
 
-    /*
-     * private boolean isFirstSourceFolderTestFolder(IPackageFragmentRoot
-     * firstSourceFolder) { return firstSourceFolder == testFolder; }
-     */
+    @Override
+    public String toString()
+    {
+        return String.format("%s(%s:%s => %s:%s)", SourceFolderMapping.class.getSimpleName(), sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName());
+    }
 }

@@ -7,6 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 public @interface TestProject
 {
     /**
+     * Another class annotated with @TestProject.
+     */
+    Class< ? > value() default Undefined.class;
+    
+    /**
      * (Optional) This project's name.
      */
     String name() default "";
@@ -17,7 +22,7 @@ public @interface TestProject
     String cls() default "";
 
     /**
-     * Names of the files constituting the initial sources. The files themself
+     * Names of the files constituting the initial sources. The files themselves
      * must be in the same package as the test class using this configuration.
      */
     String src() default "";

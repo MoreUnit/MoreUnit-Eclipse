@@ -6,21 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Properties
 {
-    @Properties(
-        testType = TestType.JUNIT3,
-        testClassSuffixes = "Test")
-    class JUNIT3 {}
-
-    @Properties(
-        testType = TestType.JUNIT4,
-        testClassSuffixes = "Test")
-    class JUNIT4 {}
-
-    @Properties(
-        testType = TestType.TESTNG,
-        testClassSuffixes = "Test")
-    class TESTNG {}
-    
     /**
      * Another class annotated with @Properties.
      */
@@ -43,6 +28,4 @@ public @interface Properties
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
-    
-    boolean userSetProperties() default true;
 }

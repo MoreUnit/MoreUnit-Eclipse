@@ -1,12 +1,8 @@
 package org.moreunit.wizards;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -20,7 +16,8 @@ import org.moreunit.log.LogHandler;
 
 public abstract class NewClassyWizard extends Wizard implements INewWizard
 {
-
+    private WizardDialogFactory dialogFactory = new WizardDialogFactory();
+    
     private final IType element;
     private IType createdType;
 
@@ -38,7 +35,7 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
 
     public IType open()
     {
-        WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
+        WizardDialog dialog = dialogFactory.createWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
         if(dialog.open() == Window.OK)
         {
             typeCreated(createdType);
@@ -85,35 +82,14 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
 
     protected abstract IPackageFragmentRoot getPackageFragmentRoot();
 
-    protected IPackageFragmentRoot getSourceFolderForUnitTest()
-    {
-        String key = getPackageFragmentRootKey();
-        String root = getDialogSettings().get(key);
-        IPackageFragmentRoot fragment = (IPackageFragmentRoot) JavaCore.create(root);
-        if(fragment != null && fragment.exists())
-        {
-            return fragment;
-        }
-        return getPackageFragmentRootFromType();
-    }
-
-    private IPackageFragmentRoot getPackageFragmentRootFromType()
-    {
-        return (IPackageFragmentRoot) getType().getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-    }
-
-    /**
-     * we don't care how the fragment was found, or if it exists because the
-     * class creation wizard just wants the string name from it
-     */
-    protected IPackageFragment createPackageFragment(String targetPackage) throws JavaModelException
-    {
-        return getType().getJavaProject().getPackageFragmentRoots()[0].getPackageFragment(targetPackage);
-    }
-
-    private String getPackageFragmentRootKey()
+    protected final String getPackageFragmentRootKey()
     {
         return getClass().getName() + ".packageFragmentRoot";
+    }
+
+    public void setWizardDialogFactory(WizardDialogFactory factory)
+    {
+        dialogFactory = factory;
     }
 }
 

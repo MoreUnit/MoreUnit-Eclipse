@@ -37,9 +37,6 @@ class WorkspaceConfiguration
 
     public WorkspaceHandler initWorkspace(Class< ? > loadingClass)
     {
-        SourceFolderContext.getInstance().initContextForWorkspace();
-        SearchScopeSingelton.getInstance().resetCachedSearchScopes();
-        
         WorkspaceHandler wsHandler = newWorkspaceHandler(loadingClass);
 
         createSources(wsHandler);
@@ -50,6 +47,9 @@ class WorkspaceConfiguration
 
     protected WorkspaceHandler newWorkspaceHandler(Class< ? > loadingClass)
     {
+        SourceFolderContext.getInstance().initContextForWorkspace();
+        SearchScopeSingelton.getInstance().resetCachedSearchScopes();
+        
         return new WorkspaceHandler(loadingClass);
     }
 
@@ -161,8 +161,8 @@ class WorkspaceConfiguration
             {
                 ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfig.getProjectName());
                 IJavaProject project = projectHandler.get();
-                if(propertiesConfig.hasUserSetProperties())
-                    prefs.setHasProjectSpecificSettings(project, true);
+
+                prefs.setHasProjectSpecificSettings(project, true);
 
                 applyBasePreferences(prefs, project, propertiesConfig);
 

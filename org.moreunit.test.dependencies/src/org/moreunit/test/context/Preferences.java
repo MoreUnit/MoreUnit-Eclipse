@@ -9,24 +9,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 public @interface Preferences
 {
-    @Preferences(
-        testSourcefolder = "test",
-        testType = TestType.JUNIT3,
-        testClassSuffixes = "Test")
-    public static class JUNIT3 {}
-
-    @Preferences(
-        testSourcefolder = "test",
-        testType = TestType.JUNIT4,
-        testClassSuffixes = "Test")
-    public static class JUNIT4 {}
-
-    @Preferences(
-        testSourcefolder = "test",
-        testType = TestType.TESTNG,
-        testClassSuffixes = "Test")
-    public static class TESTNG{}
-
     /**
      * Another class annotated with @Preferences.
      */

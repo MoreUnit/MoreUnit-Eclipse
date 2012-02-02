@@ -1,12 +1,15 @@
 package org.moreunit.preferences;
 
+import static java.util.Arrays.sort;
+import static java.util.Collections.reverseOrder;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -17,16 +20,13 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.PluginTools;
+import org.moreunit.util.StringLengthComparator;
 
 public class Preferences
 {
-
-    //private static final String[] LOOKUP_ORDER = { ProjectScope.SCOPE, ConfigurationScope.SCOPE };
     private static Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
     private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
-    //private static final IScopeContext workbenchScopeContext = new ConfigurationScope();
-    //private static Map<IJavaProject, ProjectScope> preferenceScopeMap = new HashMap<IJavaProject, ProjectScope>();
 
     private static Preferences instance = new Preferences();
 
@@ -168,6 +168,13 @@ public class Preferences
         String preferenceValue = store(javaProject).getString(PreferenceConstants.PREFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
     }
+    
+    public String[] getPrefixesOrderedByDescLength(IJavaProject javaProject)
+    {
+        String[] prefixes = getPrefixes(javaProject);
+        sort(prefixes, reverseOrder(new StringLengthComparator()));
+        return prefixes;
+    }
 
     public void setPrefixes(IJavaProject javaProject, String[] prefixes)
     {
@@ -178,6 +185,13 @@ public class Preferences
     {
         String preferenceValue = store(javaProject).getString(PreferenceConstants.SUFFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
+    }
+
+    public String[] getSuffixesOrderedByDescLength(IJavaProject javaProject)
+    {
+        String[] suffixes = getSuffixes(javaProject);
+        sort(suffixes, reverseOrder(new StringLengthComparator()));
+        return suffixes;
     }
 
     public void setSuffixes(IJavaProject javaProject, String[] suffixes)
@@ -324,21 +338,25 @@ public class Preferences
      * Tries to get the sourcefolder for the unittests. If there are several
      * projects for the tests in the project specific settings, this method
      * chooses the first project from the settings.
+     * 
+     * @deprecated use {@link #getTestSourceFolder(IJavaProject, IPackageFragmentRoot)} instead
      */
+    @Deprecated
     public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject)
     {
         // check for project specific settings
-        List<SourceFolderMapping> mappingList = Preferences.instance.getSourceMappingList(javaProject);
-        if(mappingList != null && mappingList.size() > 0)
+        List<SourceFolderMapping> mappingList = getSourceMappingList(javaProject);
+        if(mappingList != null && ! mappingList.isEmpty())
+        {
             return mappingList.get(0).getTestFolder();
+        }
 
         // check for workspace settings
         try
         {
             String junitFolder = getJunitDirectoryFromPreferences(javaProject);
 
-            IPackageFragmentRoot[] packageFragmentRoots = javaProject.getPackageFragmentRoots();
-            for (IPackageFragmentRoot packageFragmentRoot : packageFragmentRoots)
+            for (IPackageFragmentRoot packageFragmentRoot : javaProject.getPackageFragmentRoots())
             {
                 if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
                 {
@@ -354,6 +372,115 @@ public class Preferences
         return null;
     }
     
+    public IPackageFragmentRoot getTestSourceFolder(IJavaProject javaProject, IPackageFragmentRoot mainSrcFolder)
+    {
+        // check for project specific settings
+        List<SourceFolderMapping> mappings = getSourceMappingList(javaProject);
+        if(mappings != null && ! mappings.isEmpty())
+        {
+            for (SourceFolderMapping mapping : mappings)
+            {
+                if(mapping.getSourceFolder().equals(mainSrcFolder))
+                {
+                    return mapping.getTestFolder();
+                }
+            }
+
+            return mappings.get(0).getTestFolder();
+        }
+
+        // check for workspace settings
+        try
+        {
+            String junitFolder = getJunitDirectoryFromPreferences(javaProject);
+
+            for (IPackageFragmentRoot packageFragmentRoot : javaProject.getPackageFragmentRoots())
+            {
+                if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
+                {
+                    return packageFragmentRoot;
+                }
+            }
+        }
+        catch (JavaModelException exc)
+        {
+            LogHandler.getInstance().handleExceptionLog(exc);
+        }
+
+        return null;
+    }
+    
+    public IPackageFragmentRoot getMainSourceFolder(IJavaProject mainProject, IPackageFragmentRoot testSrcFolder)
+    {
+        // check for project specific settings
+        List<SourceFolderMapping> mappings = getSourceMappingList(mainProject);
+        if(mappings != null && ! mappings.isEmpty())
+        {
+            for (SourceFolderMapping mapping : mappings)
+            {
+                if(mapping.getTestFolder().equals(testSrcFolder))
+                {
+                    return mapping.getSourceFolder();
+                }
+            }
+        }
+
+        // check for workspace settings
+        try
+        {
+            String testSourceFolder = getJunitDirectoryFromPreferences(mainProject);
+
+            IPackageFragmentRoot[] roots = mainProject.getPackageFragmentRoots();
+            if(roots.length == 0)
+            {
+                return null;
+            }
+            if(roots.length == 1)
+            {
+                return roots[0];
+            }
+
+            List<IPackageFragmentRoot> nonTestRoots = new ArrayList<IPackageFragmentRoot>();
+            for (IPackageFragmentRoot root : roots)
+            {
+                if(! PluginTools.getPathStringWithoutProjectName(root).equals(testSourceFolder))
+                {
+                    nonTestRoots.add(root);
+                }
+            }
+
+            return nonTestRoots.get(0);
+        }
+        catch (JavaModelException exc)
+        {
+            LogHandler.getInstance().handleExceptionLog(exc);
+        }
+
+        return null;
+    }
+    
+    public IJavaProject getMainProject(IJavaProject testProject)
+    {
+        for (IPreferenceStore store : stores())
+        {
+            String mappingString = store.getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+            List<SourceFolderMapping> mappings = PreferencesConverter.convertStringToSourceMappingList(mappingString);
+            for (SourceFolderMapping mapping : mappings)
+            {
+                if(mapping.getTestFolder().getJavaProject().equals(testProject))
+                {
+                    return mapping.getJavaProject();
+                }
+            }
+        }
+        return testProject;
+    }
+
+    private Collection<IPreferenceStore> stores()
+    {
+        return preferenceMap.values();
+    }
+    
     public boolean shouldUseTestMethodExtendedSearch(IJavaProject javaProject)
     {
         if(store(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
@@ -367,7 +494,6 @@ public class Preferences
     {
         getProjectStore(javaProject).setValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, shouldUseExtendedSearch);
     }
-
 }
 
 // $Log: not supported by cvs2svn $

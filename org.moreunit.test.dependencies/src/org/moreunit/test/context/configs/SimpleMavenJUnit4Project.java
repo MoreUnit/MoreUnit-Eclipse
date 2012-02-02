@@ -9,10 +9,7 @@ import org.moreunit.test.context.TestType;
         mainSrcFolder = "src/main/java",
         testCls = "org:SomeClassTest",
         testSrcFolder = "src/test/java",
-        properties = @Properties(
-                testType = TestType.JUNIT4,
-                testClassSuffixes = "Test"
-        ))
+        properties = @Properties(SimpleJUnit4Properties.class))
 public class SimpleMavenJUnit4Project
 {
 }
