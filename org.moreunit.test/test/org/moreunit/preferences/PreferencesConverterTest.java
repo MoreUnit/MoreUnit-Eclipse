@@ -2,8 +2,6 @@ package org.moreunit.preferences;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +12,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
-import org.moreunit.test.context.Project;
 import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.workspace.WorkspaceHelper;
 

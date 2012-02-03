@@ -1,25 +1,19 @@
 package org.moreunit.util;
 
 import static org.fest.assertions.Assertions.assertThat;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.moreunit.util.CollectionUtils.asSet;
 
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 @Context(mainCls="testing:Hello", testCls="testing:HelloTest")
 public class MethodTestCallerFinderTest extends ContextTestCase

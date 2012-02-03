@@ -58,33 +58,4 @@ public class TestMethodDivinerJunit3PraefixTest
         assertEquals("testCountAllMembers", testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembers"));
 
     }
-
-    // public void testGetNewTestMethodNameWhenThereIsNoSuffix(){
-    // TestMethodDivinerJunit3Praefix testMethodDiviner = new
-    // TestMethodDivinerJunit3Praefix();
-    // assertEquals("testGetBar",
-    // testMethodDiviner.getNewTestMethodName("testGetFoo", "getFoo",
-    // "getBar"));
-    // }
-    //
-    // public void testGetNewTestMethodNameWhenThereIsASuffix(){
-    // TestMethodDivinerJunit3Praefix testMethodDiviner = new
-    // TestMethodDivinerJunit3Praefix();
-    // assertEquals("testGetBarDoesSomething",
-    // testMethodDiviner.getNewTestMethodName("testGetFooDoesSomething",
-    // "getFoo", "getBar"));
-    // }
-    //
-    // public void
-    // test_GetNewTestMethodName_isSameAsGetTestMethodNameAfterRename() throws
-    // Exception{
-    // TestMethodDivinerJunit3Praefix testMethodDiviner = new
-    // TestMethodDivinerJunit3Praefix();
-    // assertEquals("testCountAllMembersSpecialCase",
-    // testMethodDiviner.getNewTestMethodName("testCountMembersSpecialCase",
-    // "countMembers", "countAllMembers"));
-    // assertEquals("testCountAllMembers",
-    // testMethodDiviner.getNewTestMethodName("testCountMembers",
-    // "countMembers", "countAllMembers"));
-    // }
 }

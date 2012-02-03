@@ -4,26 +4,12 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.moreunit.wizards.NewClassWizard.removePrefix;
 import static org.moreunit.wizards.NewClassWizard.removeSuffix;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.MoreUnitPlugin;
-import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.preferences.Preferences;
-import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestProject;
-import org.moreunit.test.context.TestType;
 import org.moreunit.test.workspace.ProjectHandler;
-import org.moreunit.test.workspace.SourceFolderHandler;
-import org.moreunit.test.workspace.TypeHandler;
-import org.moreunit.wizards.NewClassyWizardTestCase.JUnit3WithVariousPrefixesAndSuffixesPreferences;
 
 public class NewClassWizardTest extends NewClassyWizardTestCase
 {

@@ -2,23 +2,15 @@ package org.moreunit.elements;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
 import org.junit.Test;
 import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
-import org.moreunit.test.context.TestType;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 /**
  * @author vera 02.08.2007 07:37:24
@@ -54,13 +46,13 @@ public class TestmethodCreatorTest extends ContextTestCase
         TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(getNumberOneMethod.get());
 
-        assertEquals("testGetNumberOne", createTestMethod.getElementName());
-        assertTrue(createTestMethod.getSource().startsWith("@Test"));
-        assertTrue(createTestMethod.getSource().contains("foo"));
+        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
+        assertThat(createTestMethod.getSource()).startsWith("@Test");
+        assertThat(createTestMethod.getSource()).contains("foo");
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertEquals(1, methods.length);
-        assertEquals(createTestMethod, methods[0]);
+        assertThat(methods).hasSize(1);
+        assertThat(methods[0]).isEqualTo(createTestMethod);
     }
 
     @Test

@@ -4,19 +4,13 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
-import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 @Context(SimpleJUnit4Project.class)
 public class UnitDecoratorTest extends ContextTestCase

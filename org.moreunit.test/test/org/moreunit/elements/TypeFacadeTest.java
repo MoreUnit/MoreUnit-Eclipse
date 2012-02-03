@@ -8,24 +8,12 @@ package org.moreunit.elements;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.test.WorkspaceTestCase;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class TypeFacadeTest extends ContextTestCase
 {

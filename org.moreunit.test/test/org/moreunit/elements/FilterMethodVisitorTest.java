@@ -2,32 +2,21 @@ package org.moreunit.elements;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.moreunit.test.WorkspaceTestCase;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
-import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera

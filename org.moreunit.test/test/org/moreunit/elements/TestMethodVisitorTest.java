@@ -8,23 +8,17 @@ package org.moreunit.elements;
  */
 import static org.fest.assertions.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.test.SimpleProjectTestCase;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
-import org.moreunit.test.workspace.WorkspaceHelper;
 
 @Project(testCls="testing:HelloTest")
 public class TestMethodVisitorTest extends ContextTestCase
