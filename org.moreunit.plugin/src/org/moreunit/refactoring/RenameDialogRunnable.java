@@ -52,7 +52,7 @@ public class RenameDialogRunnable implements Runnable
             {
                 try
                 {
-                    IMethod testMethod = (IMethod) corrspondingTests.get(i);
+                    IMethod testMethod = corrspondingTests.get(i);
                     String testMethodNameAfterRename = testMethodDiviner.getTestMethodNameAfterRename(renamedMethod.getElementName(), newMethodName, testMethod.getElementName());
                     RenameSupport renameSupport = RenameSupport.create(testMethod, testMethodNameAfterRename, RenameSupport.UPDATE_REFERENCES);
                     renameSupport.perform(shell, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
@@ -66,26 +66,3 @@ public class RenameDialogRunnable implements Runnable
     }
 
 }
-
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2009/04/05 19:14:27  gianasista
-// code formatter
-//
-// Revision 1.2 2009/01/08 19:58:30 gianasista
-// Patch from Zach for more flexible test method naming
-//
-// Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
-// initial
-//
-// Revision 1.1 2006/06/22 20:22:28 gianasista
-// package rename
-//
-// Revision 1.1 2006/06/19 20:08:48 gianasista
-// CVS Refactoring
-//
-// Revision 1.2 2006/05/23 19:39:50 gianasista
-// Splitted JavaFileFacade into two classes
-//
-// Revision 1.1 2006/04/14 17:14:22 gianasista
-// Refactoring Support with dialog
-//

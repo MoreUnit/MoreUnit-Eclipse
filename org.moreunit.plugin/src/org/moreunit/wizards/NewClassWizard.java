@@ -134,32 +134,3 @@ public class NewClassWizard extends NewClassyWizard
         return this.newClassWizardPage.getPackageFragmentRoot();
     }
 }
-
-// $Log: not supported by cvs2svn $
-// Revision 1.5 2009/01/23 21:20:21 gianasista
-// Organize Imports
-//
-// Revision 1.4 2008/02/29 21:34:00 gianasista
-// Minor refactorings
-//
-// Revision 1.3 2008/02/04 20:12:24 gianasista
-// Bugfix: project specific settings
-//
-// Revision 1.2 2007/11/19 21:15:01 gianasista
-// Patch from Bjoern: project specific settings
-//
-// Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
-// initial
-//
-// Revision 1.1 2006/06/22 20:22:29 gianasista
-// package rename
-//
-// Revision 1.1 2006/06/19 20:08:48 gianasista
-// CVS Refactoring
-//
-// Revision 1.2 2006/05/13 18:30:49 gianasista
-// Preferences as singelton (protected constructor for testing purposes)
-//
-// Revision 1.1 2006/05/12 22:33:41 channingwalton
-// added class creation wizards if type to jump to does not exist
-//

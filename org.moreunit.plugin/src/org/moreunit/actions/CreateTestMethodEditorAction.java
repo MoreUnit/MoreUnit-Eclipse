@@ -31,38 +31,3 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate
     {
     }
 }
-
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2009/04/05 19:14:27  gianasista
-// code formatter
-//
-// Revision 1.4 2009/04/05 19:07:42 gianasista
-// Switch to gnu code formatter
-//
-// Revision 1.3 2009/04/05 19:05:12 gianasista
-// Switch to gnu code formatter
-//
-// Revision 1.2 2009/04/05 19:00:39 gianasista
-// Switch to gnu code formatter
-//
-// Revision 1.1.1.1 2006/08/13 14:31:15 gianasista
-// initial
-//
-// Revision 1.1 2006/06/22 20:22:29 gianasista
-// package rename
-//
-// Revision 1.1 2006/06/19 20:08:48 gianasista
-// CVS Refactoring
-//
-// Revision 1.5 2006/05/20 16:04:58 gianasista
-// Rename of MoreUnitActionHandler, new name EditorActionExecutor
-//
-// Revision 1.4 2006/05/12 17:51:41 gianasista
-// added comments
-//
-// Revision 1.3 2006/03/21 20:59:23 gianasista
-// Deleted Info-Log
-//
-// Revision 1.2 2006/01/19 21:39:44 gianasista
-// Added CVS-commit-logging to all java-files
-//

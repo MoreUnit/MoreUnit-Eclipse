@@ -10,19 +10,15 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.refactoring.IJavaRefactorings;
-import org.eclipse.jdt.core.refactoring.descriptors.MoveMethodDescriptor;
 import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
-import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
@@ -111,47 +107,3 @@ public class MoveMethodParticipant extends MoveParticipant
         return null;
     }
 }
-
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2010/03/23 20:09:27  gianasista
-// Support for move method refactorings
-//
-// Revision 1.5  2009/04/05 19:14:27  gianasista
-// code formatter
-//
-// Revision 1.4 2008/03/21 18:20:46 gianasista
-// First version of new property page with source folder mapping
-//
-// Revision 1.3 2007/09/19 19:19:43 gianasista
-// Started move refactoring support
-//
-// Revision 1.2 2006/10/24 18:37:39 channingwalton
-// made the properties page appear on the navigator view and fixed some gui text
-//
-// Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
-// initial
-//
-// Revision 1.1 2006/06/22 20:22:28 gianasista
-// package rename
-//
-// Revision 1.1 2006/06/19 20:08:48 gianasista
-// CVS Refactoring
-//
-// Revision 1.6 2006/05/23 19:42:01 gianasista
-// Splitted JavaFileFacade into two classes
-//
-// Revision 1.5 2006/05/23 19:39:50 gianasista
-// Splitted JavaFileFacade into two classes
-//
-// Revision 1.4 2006/05/20 16:10:39 gianasista
-// todo-comment
-//
-// Revision 1.3 2006/04/14 19:42:09 gianasista
-// *** empty log message ***
-//
-// Revision 1.2 2006/02/12 20:50:06 gianasista
-// Rename refactorings completed for testcases and testmethods
-//
-// Revision 1.1 2006/02/04 21:54:27 gianasista
-// Added classes to listen to refactoring (copy and move of classes and methods)
-//

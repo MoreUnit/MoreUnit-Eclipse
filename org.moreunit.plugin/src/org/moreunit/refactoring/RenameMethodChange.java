@@ -78,19 +78,3 @@ public class RenameMethodChange extends Change
     }
 
 }
-
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1 2006/08/13 14:31:16 gianasista
-// initial
-//
-// Revision 1.1 2006/06/22 20:22:28 gianasista
-// package rename
-//
-// Revision 1.1 2006/06/19 20:08:48 gianasista
-// CVS Refactoring
-//
-// Revision 1.1 2006/06/01 21:00:49 channingwalton
-// made rename methods support undo, it would be nice to figure out how to show
-// a preview too...
-//
-//
