@@ -16,7 +16,7 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
 
-@Preferences(testClassSuffixes="Test", testSourcefolder="test")
+@Preferences(testClassSuffixes="Test", testSrcFolder="test")
 @Project(mainSrc="TestMethodCalleeFinder_class1.java.txt,TestMethodCalleeFinder_class2.java.txt", testCls="testing:HelloTest", mainSrcFolder="src", testSrcFolder="test")
 public class TestMethodCalleeFinderTest extends ContextTestCase
 {

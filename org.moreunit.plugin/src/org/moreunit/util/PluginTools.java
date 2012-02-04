@@ -2,11 +2,14 @@ package org.moreunit.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -24,6 +27,7 @@ import org.moreunit.preferences.Preferences;
 
 public class PluginTools
 {
+    private static final Pattern MAVEN_RESOURCE_FOLDER = Pattern.compile("src/[^/]+/resources");
 
     public static IEditorPart getOpenEditorPart()
     {
@@ -107,12 +111,12 @@ public class PluginTools
         List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
         try
         {
-            IPackageFragmentRoot[] packageFragmentRoots;
-            packageFragmentRoots = javaProject.getPackageFragmentRoots();
-            for (IPackageFragmentRoot packageFragmentsRoot : packageFragmentRoots)
+            for (IPackageFragmentRoot root : javaProject.getPackageFragmentRoots())
             {
-                if(! packageFragmentsRoot.isArchive())
-                    resultList.add(packageFragmentsRoot);
+                if(! root.isArchive() && root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE)
+                {
+                    resultList.add(root);
+                }
             }
         }
         catch (JavaModelException e)
@@ -121,6 +125,52 @@ public class PluginTools
         }
 
         return resultList;
+    }
+    
+    public static List<IPackageFragmentRoot> findJavaSourceFoldersFor(IJavaProject project)
+    {
+        List<IPackageFragmentRoot> javaSrcFolders = new ArrayList<IPackageFragmentRoot>();
+
+        for (IPackageFragmentRoot sourceFolder : getAllSourceFolderFromProject(project))
+        {
+            String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
+
+            if(! (excludesJavaFiles(sourceFolder) || isMavenLikeResourceFolder(sourceFolderPath)))
+            {
+                javaSrcFolders.add(sourceFolder);
+            }
+        }
+
+        return javaSrcFolders;
+    }
+
+    private static boolean excludesJavaFiles(IPackageFragmentRoot srcFolder)
+    {
+        try
+        {
+            IPath[] exclusionPatterns = srcFolder.getRawClasspathEntry().getExclusionPatterns();
+            if(exclusionPatterns != null)
+            {
+                for (IPath pattern : exclusionPatterns)
+                {
+                    if(pattern.toString().equals("**/*.java"))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+
+        return false;
+    }
+    
+    private static boolean isMavenLikeResourceFolder(String srcFolderPath)
+    {
+        return MAVEN_RESOURCE_FOLDER.matcher(srcFolderPath).matches();
     }
 
     public static String getPathStringWithoutProjectName(IPackageFragmentRoot sourceFolder)

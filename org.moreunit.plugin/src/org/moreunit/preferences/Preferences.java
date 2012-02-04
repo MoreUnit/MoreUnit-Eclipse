@@ -8,22 +8,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.log.LogHandler;
 import org.moreunit.util.PluginTools;
 import org.moreunit.util.StringLengthComparator;
 
 public class Preferences
 {
+    private static final Pattern MAVEN_TEST_FOLDER = Pattern.compile("src/test/.*");
+    
     private static Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
     private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
@@ -98,28 +99,64 @@ public class Preferences
 
     private List<SourceFolderMapping> getWorkspaceSpecificSourceMappingList(IJavaProject javaProject)
     {
-        List<SourceFolderMapping> resultList = new ArrayList<SourceFolderMapping>();
-        String testFolderName = workbenchStore.getString(PreferenceConstants.PREF_JUNIT_PATH);
+        List<SourceFolderMapping> mappings = new ArrayList<SourceFolderMapping>();
 
-        IPackageFragmentRoot testFolder = null;
-        List<IPackageFragmentRoot> notTestFolderList = new ArrayList<IPackageFragmentRoot>();
-        for (IPackageFragmentRoot sourceFolder : PluginTools.getAllSourceFolderFromProject(javaProject))
-        {
-            if(sourceFolder.getPath().removeFirstSegments(1).toString().equals(testFolderName))
-                testFolder = sourceFolder;
-            else
-                notTestFolderList.add(sourceFolder);
-        }
+        List<IPackageFragmentRoot> javaSourceFolders = PluginTools.findJavaSourceFoldersFor(javaProject);
 
-        if(testFolder != null)
+        IPackageFragmentRoot testSourceFolder = findDefaultTestSourceFolder(javaSourceFolders);
+
+        List<IPackageFragmentRoot> possibleMainSrcFolders = findPossibleMainSourceFolders(javaSourceFolders);
+
+        if(testSourceFolder != null)
         {
-            for (IPackageFragmentRoot notTestFolderInProject : notTestFolderList)
+            for (IPackageFragmentRoot mainSourceFolder : possibleMainSrcFolders)
             {
-                resultList.add(new SourceFolderMapping(javaProject, notTestFolderInProject, testFolder));
+                mappings.add(new SourceFolderMapping(javaProject, mainSourceFolder, testSourceFolder));
             }
         }
 
-        return resultList;
+        return mappings;
+    }
+
+    private IPackageFragmentRoot findDefaultTestSourceFolder(List<IPackageFragmentRoot> sourceFolders)
+    {
+        String defaultTestSourceFolderPath = workbenchStore.getString(PreferenceConstants.PREF_JUNIT_PATH);
+
+        for (IPackageFragmentRoot sourceFolder : sourceFolders)
+        {
+            String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
+
+            if(sourceFolderPath.equals(defaultTestSourceFolderPath))
+            {
+                return sourceFolder;
+            }
+        }
+
+        return null;
+    }
+
+    private List<IPackageFragmentRoot> findPossibleMainSourceFolders(List<IPackageFragmentRoot> javaSourceFolders)
+    {
+        List<IPackageFragmentRoot> possibleMainSrcFolders = new ArrayList<IPackageFragmentRoot>();
+
+        String defaultTestSourceFolderPath = workbenchStore.getString(PreferenceConstants.PREF_JUNIT_PATH);
+
+        for (IPackageFragmentRoot sourceFolder : javaSourceFolders)
+        {
+            String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
+
+            if(! (sourceFolderPath.equals(defaultTestSourceFolderPath) || isMavenLikeTestFolder(sourceFolderPath)))
+            {
+                possibleMainSrcFolders.add(sourceFolder);
+            }
+        }
+
+        return possibleMainSrcFolders;
+    }
+
+    private static boolean isMavenLikeTestFolder(String srcFolderPath)
+    {
+        return MAVEN_TEST_FOLDER.matcher(srcFolderPath).matches();
     }
 
     protected Preferences()
@@ -342,123 +379,99 @@ public class Preferences
      * @deprecated use {@link #getTestSourceFolder(IJavaProject, IPackageFragmentRoot)} instead
      */
     @Deprecated
-    public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject javaProject)
+    public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject project)
     {
         // check for project specific settings
-        List<SourceFolderMapping> mappingList = getSourceMappingList(javaProject);
-        if(mappingList != null && ! mappingList.isEmpty())
+        List<SourceFolderMapping> mappingList = getSourceMappingList(project);
+        if(! mappingList.isEmpty())
         {
             return mappingList.get(0).getTestFolder();
         }
 
         // check for workspace settings
-        try
-        {
-            String junitFolder = getJunitDirectoryFromPreferences(javaProject);
 
-            for (IPackageFragmentRoot packageFragmentRoot : javaProject.getPackageFragmentRoots())
+        List<IPackageFragmentRoot> javaSourceFolders = PluginTools.findJavaSourceFoldersFor(project);
+        if(javaSourceFolders.isEmpty())
+        {
+            throw new IllegalArgumentException("No source folder defined for project " + project.getElementName());
+        }
+
+        String junitFolder = getJunitDirectoryFromPreferences(project);
+
+        for (IPackageFragmentRoot packageFragmentRoot : javaSourceFolders)
+        {
+            if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
             {
-                if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
-                {
-                    return packageFragmentRoot;
-                }
+                return packageFragmentRoot;
             }
         }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
 
-        return null;
+        return javaSourceFolders.get(0);
     }
     
-    public IPackageFragmentRoot getTestSourceFolder(IJavaProject javaProject, IPackageFragmentRoot mainSrcFolder)
+    public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder)
     {
         // check for project specific settings
-        List<SourceFolderMapping> mappings = getSourceMappingList(javaProject);
-        if(mappings != null && ! mappings.isEmpty())
-        {
-            for (SourceFolderMapping mapping : mappings)
-            {
-                if(mapping.getSourceFolder().equals(mainSrcFolder))
-                {
-                    return mapping.getTestFolder();
-                }
-            }
+        List<SourceFolderMapping> mappings = getSourceMappingList(project);
 
+        for (SourceFolderMapping mapping : mappings)
+        {
+            if(mapping.getSourceFolder().equals(mainSrcFolder))
+            {
+                return mapping.getTestFolder();
+            }
+        }
+
+        if(! mappings.isEmpty())
+        {
+            // falls back to first test folder defined
             return mappings.get(0).getTestFolder();
         }
 
-        // check for workspace settings
-        try
-        {
-            String junitFolder = getJunitDirectoryFromPreferences(javaProject);
+        // no mapping exists: falls back to un-mapped source folders
+        String junitFolder = getJunitDirectoryFromPreferences(project);
 
-            for (IPackageFragmentRoot packageFragmentRoot : javaProject.getPackageFragmentRoots())
+        for (IPackageFragmentRoot packageFragmentRoot : PluginTools.findJavaSourceFoldersFor(project))
+        {
+            if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
             {
-                if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
-                {
-                    return packageFragmentRoot;
-                }
+                return packageFragmentRoot;
             }
         }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
 
-        return null;
+        // falls back to given source folder
+        return mainSrcFolder;
     }
     
     public IPackageFragmentRoot getMainSourceFolder(IJavaProject mainProject, IPackageFragmentRoot testSrcFolder)
     {
-        // check for project specific settings
         List<SourceFolderMapping> mappings = getSourceMappingList(mainProject);
-        if(mappings != null && ! mappings.isEmpty())
+
+        for (SourceFolderMapping mapping : mappings)
         {
-            for (SourceFolderMapping mapping : mappings)
+            if(mapping.getTestFolder().equals(testSrcFolder))
             {
-                if(mapping.getTestFolder().equals(testSrcFolder))
-                {
-                    return mapping.getSourceFolder();
-                }
+                return mapping.getSourceFolder();
             }
         }
 
-        // check for workspace settings
-        try
+        if(! mappings.isEmpty())
         {
-            String testSourceFolder = getJunitDirectoryFromPreferences(mainProject);
-
-            IPackageFragmentRoot[] roots = mainProject.getPackageFragmentRoots();
-            if(roots.length == 0)
-            {
-                return null;
-            }
-            if(roots.length == 1)
-            {
-                return roots[0];
-            }
-
-            List<IPackageFragmentRoot> nonTestRoots = new ArrayList<IPackageFragmentRoot>();
-            for (IPackageFragmentRoot root : roots)
-            {
-                if(! PluginTools.getPathStringWithoutProjectName(root).equals(testSourceFolder))
-                {
-                    nonTestRoots.add(root);
-                }
-            }
-
-            return nonTestRoots.get(0);
-        }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
+            // falls back to first main folder defined
+            return mappings.get(0).getSourceFolder();
         }
 
-        return null;
+        // no mapping exists: falls back to un-mapped source folders
+        List<IPackageFragmentRoot> possibleMainSourceFolders = findPossibleMainSourceFolders(PluginTools.findJavaSourceFoldersFor(mainProject));
+        if(! possibleMainSourceFolders.isEmpty())
+        {
+            return possibleMainSourceFolders.get(0);
+        }
+
+        // falls back to given source folder
+        return testSrcFolder;
     }
-    
+
     public IJavaProject getMainProject(IJavaProject testProject)
     {
         for (IPreferenceStore store : stores())
@@ -473,6 +486,8 @@ public class Preferences
                 }
             }
         }
+
+        // falls back to given project
         return testProject;
     }
 

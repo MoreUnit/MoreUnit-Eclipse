@@ -17,7 +17,7 @@ import org.moreunit.test.context.Project;
 public class TestCaseDivinerTest extends ContextTestCase
 {
 
-    @Preferences(testClassSuffixes="Test", testSourcefolder="test")
+    @Preferences(testClassSuffixes="Test", testSrcFolder="test")
     @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void getMatches_should_return_class_which_matches_suffix() throws CoreException
@@ -30,7 +30,7 @@ public class TestCaseDivinerTest extends ContextTestCase
         assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
     }
     
-    @Preferences(testClassSuffixes="Test,TestNG", testSourcefolder="test")
+    @Preferences(testClassSuffixes="Test,TestNG", testSrcFolder="test")
     @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void getMatches_should_find_all_tests_which_match_all_suffixes() throws CoreException
@@ -44,7 +44,7 @@ public class TestCaseDivinerTest extends ContextTestCase
         assertThat(((IType)result.toArray()[1]).getElementName()).isEqualTo("FooTestNG");
     }
 
-    @Preferences(testClassPrefixes="Test", testSourcefolder="test")
+    @Preferences(testClassPrefixes="Test", testSrcFolder="test")
     @Project(mainCls="Foo", testCls="TestFoo;BFooTest", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void getMatches_should_return_class_which_matches_prefix() throws CoreException
@@ -57,7 +57,7 @@ public class TestCaseDivinerTest extends ContextTestCase
         assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("TestFoo");
     }
 
-    @Preferences(testClassSuffixes="Test", testSourcefolder="test")
+    @Preferences(testClassSuffixes="Test", testSrcFolder="test")
     @Project(mainCls="com:Foo", testCls="org:FooTest;org:FooTestNG", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void getMatches_should_find_matches_when_package_name_differs() throws CoreException
@@ -73,7 +73,7 @@ public class TestCaseDivinerTest extends ContextTestCase
     /**
      * Test for #2881409 (Switching in enums)
      */
-    @Preferences(testClassSuffixes="Test", testSourcefolder="test")
+    @Preferences(testClassSuffixes="Test", testSrcFolder="test")
     @Project(mainCls="com: enum SomeEnum", mainSrcFolder="src", testSrcFolder="test")
     @Test
     public void getSource_should_not_throw_exception_for_enums() throws CoreException 

@@ -84,7 +84,12 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
 
     protected final String getPackageFragmentRootKey()
     {
-        return getClass().getName() + ".packageFragmentRoot";
+        return getClass().getName() + ".packageFragmentRoot." + element.getJavaProject().getElementName();
+    }
+
+    public void resetDialogSettings()
+    {
+        getDialogSettings().put(getPackageFragmentRootKey(), (String) null);
     }
 
     public void setWizardDialogFactory(WizardDialogFactory factory)

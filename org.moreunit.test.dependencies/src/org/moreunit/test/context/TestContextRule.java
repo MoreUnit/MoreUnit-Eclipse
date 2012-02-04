@@ -79,7 +79,7 @@ public class TestContextRule implements MethodRule
      */
     public final CompilationUnitHandler getCompilationUnitHandler(String cuName)
     {
-        return currentStatement().workspaceHandler.getCompilationUnitHandler(cuName);
+        return getWorkspaceHandler().getCompilationUnitHandler(cuName);
     }
 
     /**
@@ -158,13 +158,23 @@ public class TestContextRule implements MethodRule
      */
     public ProjectHandler getProjectHandler(String projectName)
     {
-        return currentStatement().workspaceHandler.getProjectHandler(projectName);
+        return getWorkspaceHandler().getProjectHandler(projectName);
+    }
+
+    public WorkspaceHandler getWorkspaceHandler()
+    {
+        return currentStatement().workspaceHandler;
     }
 
     private StatementInContext currentStatement()
     {
         checkState(currentStatement != null, "No context defined. Are you accessing this rule from outside a test method? or from one that has no Context annotation?");
         return currentStatement;
+    }
+    
+    public boolean isDefined()
+    {
+        return currentStatement != null;
     }
 
     /**

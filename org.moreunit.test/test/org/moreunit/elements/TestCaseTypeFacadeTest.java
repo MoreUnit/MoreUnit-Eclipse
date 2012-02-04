@@ -172,7 +172,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
     }
 
-    @Preferences(testClassSuffixes="Test", flexibleNaming=true, testSourcefolder="test")
+    @Preferences(testClassSuffixes="Test", flexibleNaming=true, testSrcFolder="test")
     @Test
     public void getCorrespondingClassesUnderTest_should_return_more_than_one_test_when_flexible_testcase_naming_is_set() throws Exception
     {
@@ -191,7 +191,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         testClass.getCompilationUnit().delete(true, null);
     }
     
-    @Preferences(testClassSuffixes="Test", flexibleNaming=false, testSourcefolder="test")
+    @Preferences(testClassSuffixes="Test", flexibleNaming=false, testSrcFolder="test")
     @Test
     public void getCorrespondingClassesUnderTest_should_return_only_one_test_when_flexible_testcase_naming_is_not_set() throws Exception
     {

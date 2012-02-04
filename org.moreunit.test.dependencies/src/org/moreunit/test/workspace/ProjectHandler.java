@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -116,8 +117,8 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         }
 
         ICompilationUnit cu = type.getCompilationUnit();
-        String srcFolderName = cu.getParent().getParent().getElementName();
-
+        IPackageFragmentRoot srcFolder = (IPackageFragmentRoot) cu.getParent().getParent();
+        String srcFolderName = SourceFolderHandler.getPathRelativeToProject(srcFolder);
         return getSrcFolderHandler(srcFolderName).createHandlerFor(cu);
     }
 

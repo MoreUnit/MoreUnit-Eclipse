@@ -165,7 +165,12 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
     public String getName()
     {
-        return get().getElementName();
+        return getPathRelativeToProject(get());
+    }
+
+    public static String getPathRelativeToProject(IPackageFragmentRoot srcFolder)
+    {
+        return srcFolder.getPath().removeFirstSegments(1).toString();
     }
 
     public CompilationUnitHandler createHandlerFor(ICompilationUnit cu)

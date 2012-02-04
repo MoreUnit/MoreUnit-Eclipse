@@ -2,6 +2,7 @@ package org.moreunit.wizards;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -20,7 +21,18 @@ public abstract class NewClassyWizardTestCase extends ContextTestCase
     @Before
     public void resetDialogSettings()
     {
-        MoreUnitPlugin.getDefault().getDialogSettings().put(getWizardClass().getName() + ".packageFragmentRoot", (String) null);
+        if(context.isDefined())
+        {
+            IDialogSettings dialogSettings = MoreUnitPlugin.getDefault().getDialogSettings();
+            if(context.getMainProjectHandler() != null)
+            {
+                dialogSettings.put(getWizardClass().getName() + ".packageFragmentRoot." + context.getMainProjectHandler().getName(), (String) null);
+            }
+            if(context.getTestProjectHandler() != null)
+            {
+                dialogSettings.put(getWizardClass().getName() + ".packageFragmentRoot." + context.getTestProjectHandler().getName(), (String) null);
+            }
+        }
     }
 
     abstract protected Class< ? extends NewClassyWizard> getWizardClass();
@@ -73,6 +85,6 @@ public abstract class NewClassyWizardTestCase extends ContextTestCase
         testPackagePrefix = "pre",
         testPackageSuffix = "suf",
         testMethodPrefix = true,
-        testSourcefolder = "default-test-src")
+        testSrcFolder = "default-test-src")
     protected static class JUnit3WithVariousPrefixesAndSuffixesPreferences {}
 }

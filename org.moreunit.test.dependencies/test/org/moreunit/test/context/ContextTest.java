@@ -41,7 +41,7 @@ public class ContextTest extends ContextTestCase
                  testClassSuffixes="Post",
                  testPackagePrefix="pre",
                  testPackageSuffix="post",
-                 testSourcefolder="testsrc",
+                 testSrcFolder="testsrc",
                  testSuperClass="my.SuperClass",
                  testType=TestType.TESTNG)
     @Test

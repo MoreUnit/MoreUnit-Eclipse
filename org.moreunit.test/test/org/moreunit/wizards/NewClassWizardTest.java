@@ -6,9 +6,11 @@ import static org.moreunit.wizards.NewClassWizard.removeSuffix;
 
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
+import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestProject;
+import org.moreunit.test.context.configs.SimpleMavenJUnit4Preferences;
 import org.moreunit.test.workspace.ProjectHandler;
 
 public class NewClassWizardTest extends NewClassyWizardTestCase
@@ -173,5 +175,32 @@ public class NewClassWizardTest extends NewClassyWizardTestCase
         // then
         project.assertThat().hasSourceFolder("main-src2");
         context.assertCompilationUnit("pack.Class").isInSourceFolder("main-src2").hasPrimaryType(createdType);
+    }
+    
+    @Test
+    @Preferences(SimpleMavenJUnit4Preferences.class)
+    public void should_create_cut_in_java_main_source_folder_for_maven_like_projects() throws Exception
+    {
+        // given
+        ProjectHandler project = context.getWorkspaceHandler().addProject("maven-like-project");
+
+        // "getting" source folders creates them
+        project.getSrcFolderHandler("src/main/resources").get();
+        project.getSrcFolderHandler("src/test/resources").get();
+        project.getSrcFolderHandler("src/test/java").get();
+        project.getSrcFolderHandler("src/main/java").get();
+
+        NewClassWizard wizard = new NewClassWizard(project.getSrcFolderHandler("src/test/java").createClass("pack.SomeClassTest").get());
+        
+        // was not handled by the @Before method, since the Java project is created within this method
+        wizard.resetDialogSettings();
+
+        willAutomaticallyValidateWhenOpen(wizard);
+
+        // when
+        IType createdType = wizard.open();
+
+        // then
+        context.assertCompilationUnit("pack.SomeClass").isInSourceFolder("src/main/java").hasPrimaryType(createdType);
     }
 }

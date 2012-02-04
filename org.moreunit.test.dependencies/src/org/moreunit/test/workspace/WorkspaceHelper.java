@@ -27,6 +27,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.moreunit.test.context.StringUtils;
 
 /**
  * @author vera 29.11.2008 13:41:52
@@ -145,8 +146,8 @@ public class WorkspaceHelper
         {
             return javaProject.getPackageFragmentRoot(folder);
         }
-        
-        folder.create(false, true, null);
+
+        createFolder(javaProject, sourceFolderName);
 
         IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(folder);
 
@@ -210,8 +211,30 @@ public class WorkspaceHelper
 
     public static IFolder createFolder(IJavaProject project, String folderName) throws CoreException
     {
-        IFolder folder = project.getProject().getFolder(folderName);
-        folder.create(false, true, null);
+        IFolder srcFolder = project.getProject().getFolder(folderName);
+        if(srcFolder.exists())
+        {
+            return srcFolder;
+        }
+
+        IFolder folder = null;
+
+        for (String part : StringUtils.split(folderName, "/"))
+        {
+            if(folder == null)
+            {
+                folder = project.getProject().getFolder(part);
+            }
+            else
+            {
+                folder = folder.getFolder(part);
+            }
+
+            if(! folder.exists())
+            {
+                folder.create(false, true, null);
+            }
+        }
 
         return folder;
     }

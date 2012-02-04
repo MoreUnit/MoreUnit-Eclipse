@@ -20,7 +20,7 @@ public @interface Preferences
 
     boolean testMethodPrefix() default false;
 
-    String testSourcefolder() default "";
+    String testSrcFolder() default "";
 
     TestType testType() default TestType.UNDEFINED;
 

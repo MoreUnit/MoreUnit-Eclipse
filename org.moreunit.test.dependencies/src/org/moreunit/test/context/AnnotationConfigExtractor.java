@@ -38,12 +38,10 @@ class AnnotationConfigExtractor
             preferences = getAnnotation(annotatedElement, defaultAnnotatedElement, Preferences.class);
 
             Project project = getAnnotation(annotatedElement, defaultAnnotatedElement, Project.class);
-            if(project == null)
+            if(project != null)
             {
-                throw new IllegalConfigurationException("No project defined for " + annotatedElement);
+                extractProjectConfiguration(config, project);
             }
-
-            extractProjectConfiguration(config, project);
         }
         else
         {
@@ -360,7 +358,7 @@ class AnnotationConfigExtractor
         preferencesConfig.setTestClassSuffixes(preferences.testClassSuffixes());
         preferencesConfig.setTestPackagePrefix(preferences.testPackagePrefix());
         preferencesConfig.setTestPackageSuffix(preferences.testPackageSuffix());
-        preferencesConfig.setTestSourceFolder(preferences.testSourcefolder());
+        preferencesConfig.setTestSourceFolder(preferences.testSrcFolder());
         preferencesConfig.setTestSuperClass(preferences.testSuperClass());
         preferencesConfig.setTestType(preferences.testType());
         config.setPreferencesConfig(preferencesConfig);
