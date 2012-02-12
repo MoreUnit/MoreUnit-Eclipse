@@ -4,6 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -42,10 +43,7 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(elements).hasSize(3);
-        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type1");
-        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type2");
-        assertThat(((IType) elements[2]).getElementName()).isEqualTo("type3");
+        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type1", "type2", "type3");
     }
 
     @Test
@@ -64,18 +62,13 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(elements).hasSize(2);
-        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type1");
-        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type2");
+        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type1", "type2");
 
         Object[] children1 = contentProvider.getChildren(elements[0]);
-        assertThat(children1).hasSize(2);
-        assertThat(((IMethod) children1[0]).getElementName()).isEqualTo("method1A");
-        assertThat(((IMethod) children1[1]).getElementName()).isEqualTo("method1B");
+        assertThat(Arrays.asList(children1)).onProperty("elementName").containsExactly("method1A", "method1B");
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertThat(children2).hasSize(1);
-        assertThat(((IMethod) children2[0]).getElementName()).isEqualTo("method2A");
+        assertThat(children2).onProperty("elementName").containsOnly("method2A");
     }
 
     @Test
@@ -90,13 +83,10 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(elements).hasSize(2);
-        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type1");
-        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type2");
+        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type1", "type2");
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertThat(children2).hasSize(1);
-        assertThat(((IMethod) children2[0]).getElementName()).isEqualTo("method2A");
+        assertThat(children2).onProperty("elementName").containsOnly("method2A");
     }
 
     @Test
@@ -115,19 +105,13 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(elements).hasSize(3);
-        assertThat(((IType) elements[0]).getElementName()).isEqualTo("type2");
-        assertThat(((IType) elements[1]).getElementName()).isEqualTo("type1");
-        assertThat(((IType) elements[2]).getElementName()).isEqualTo("type3");
+        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type2", "type1", "type3");
 
         Object[] children1 = contentProvider.getChildren(elements[1]);
-        assertThat(children1).hasSize(2);
-        assertThat(((IMethod) children1[0]).getElementName()).isEqualTo("method1A");
-        assertThat(((IMethod) children1[1]).getElementName()).isEqualTo("method1B");
+        assertThat(Arrays.asList(children1)).onProperty("elementName").containsExactly("method1A", "method1B");
 
         Object[] children3 = contentProvider.getChildren(elements[2]);
-        assertThat(children3).hasSize(1);
-        assertThat(((IMethod) children3[0]).getElementName()).isEqualTo("method3A");
+        assertThat(children3).onProperty("elementName").containsOnly("method3A");
     }
 
     private IType mockType(String typeName)

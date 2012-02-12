@@ -47,8 +47,7 @@ public class TestMethodCalleeFinderTest extends ContextTestCase
         MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", "new Hello1().getNumber1();");
 
         Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
-        assertThat(matches).hasSize(1);
-        assertThat(((IMethod)matches.toArray()[0]).getElementName()).isEqualTo("getNumber1");
+        assertThat(matches).onProperty("elementName").containsOnly("getNumber1");
     }
 
     @Test

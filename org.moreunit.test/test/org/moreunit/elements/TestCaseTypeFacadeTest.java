@@ -109,9 +109,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         Set<IType> classesUnderTest = new LinkedHashSet<IType>(Arrays.asList(cutTypeHandler.get(), cutType2.get()));
         List<IMethod> correspondingTestMethods = testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), classesUnderTest);
-        assertThat(correspondingTestMethods).hasSize(2);
-        assertThat(correspondingTestMethods).contains(testedMethod1.get());
-        assertThat(correspondingTestMethods).contains(testedMethod2.get());
+        assertThat(correspondingTestMethods).containsOnly(testedMethod1.get(), testedMethod2.get());
         cutType2.getCompilationUnit().delete(true, null);
     }
 
@@ -182,9 +180,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
         List<IType> list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
-        assertThat(list).hasSize(2);
-        assertThat(list.get(0).getElementName()).isEqualTo("OneTwo");
-        assertThat(list.get(1).getElementName()).isEqualTo("One");
+        assertThat(list).onProperty("elementName").containsExactly("OneTwo", "One");
         
         class1.getCompilationUnit().delete(true, null);
         class2.getCompilationUnit().delete(true, null);
@@ -201,8 +197,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
         List<IType> list = testCaseTypeFacade.getCorrespondingClassesUnderTest();
-        assertThat(list).hasSize(1);
-        assertThat(list.get(0).getElementName()).isEqualTo("OneTwo");
+        assertThat(list).onProperty("elementName").containsOnly("OneTwo");
         
         class1.getCompilationUnit().delete(true, null);
         class2.getCompilationUnit().delete(true, null);

@@ -24,10 +24,8 @@ public class TestCaseDivinerTest extends ContextTestCase
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertThat(result).isNotNull();
         
-        assertThat(result).hasSize(1);
-        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
+        assertThat(result).onProperty("elementName").containsOnly("FooTest");
     }
     
     @Preferences(testClassSuffixes="Test,TestNG", testSrcFolder="test")
@@ -37,11 +35,7 @@ public class TestCaseDivinerTest extends ContextTestCase
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertThat(result).isNotNull();
-
-        assertThat(result).hasSize(2);
-        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
-        assertThat(((IType)result.toArray()[1]).getElementName()).isEqualTo("FooTestNG");
+        assertThat(result).onProperty("elementName").containsOnly("FooTest", "FooTestNG");
     }
 
     @Preferences(testClassPrefixes="Test", testSrcFolder="test")
@@ -51,10 +45,8 @@ public class TestCaseDivinerTest extends ContextTestCase
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertThat(result).isNotNull();
         
-        assertThat(result).hasSize(1);
-        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("TestFoo");
+        assertThat(result).onProperty("elementName").containsOnly("TestFoo");
     }
 
     @Preferences(testClassSuffixes="Test", testSrcFolder="test")
@@ -64,10 +56,8 @@ public class TestCaseDivinerTest extends ContextTestCase
     {
         TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.Foo"), org.moreunit.preferences.Preferences.getInstance());
         Set<IType> result = testCaseDiviner.getMatches();
-        assertThat(result).isNotNull();
         
-        assertThat(result).hasSize(1);
-        assertThat(((IType)result.toArray()[0]).getElementName()).isEqualTo("FooTest");
+        assertThat(result).onProperty("elementName").containsOnly("FooTest");
     }
 
     /**

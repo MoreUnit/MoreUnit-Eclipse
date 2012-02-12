@@ -51,8 +51,7 @@ public class TestmethodCreatorTest extends ContextTestCase
         assertThat(createTestMethod.getSource()).contains("foo");
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).hasSize(1);
-        assertThat(methods[0]).isEqualTo(createTestMethod);
+        assertThat(methods).containsOnly(createTestMethod);
     }
 
     @Test
