@@ -235,7 +235,7 @@ public class TestmethodCreator
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
-        return String.format("public void %s()%s{%s%s%s}", testmethodName, recommendedLineSeparator, StringConstants.NEWLINE, defaultTestMethodContent, StringConstants.NEWLINE);
+        return String.format("public void %s()%s throws Exception {%s%s%s}", testmethodName, recommendedLineSeparator, StringConstants.NEWLINE, defaultTestMethodContent, StringConstants.NEWLINE);
     }
 
     private IMethod createMethod(String methodName, String methodString, IMethod sibling)
