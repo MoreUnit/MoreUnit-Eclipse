@@ -509,4 +509,106 @@ public class Preferences
     {
         getProjectStore(javaProject).setValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, shouldUseExtendedSearch);
     }
+
+    public static ProjectPreferences forProject(IJavaProject project)
+    {
+        return getInstance().getProjectView(project);
+    }
+
+    public ProjectPreferences getProjectView(IJavaProject project)
+    {
+        return new ProjectPreferences(this, project);
+    }
+
+    public static class ProjectPreferences
+    {
+        private final Preferences prefs;
+        private final IJavaProject project;
+
+        public ProjectPreferences(Preferences prefs, IJavaProject project)
+        {
+            this.prefs = prefs;
+            this.project = project;
+        }
+
+        public String[] getClassPrefixes()
+        {
+            return prefs.getPrefixes(project);
+        }
+
+        public String[] getClassPrefixesOrderedByDescLength()
+        {
+            return prefs.getPrefixesOrderedByDescLength(project);
+        }
+
+        public String[] getClassSuffixes()
+        {
+            return prefs.getSuffixes(project);
+        }
+
+        public String[] getClassSuffixesOrderedByDescLength()
+        {
+            return prefs.getSuffixesOrderedByDescLength(project);
+        }
+
+        public IPackageFragmentRoot getMainSourceFolder(IPackageFragmentRoot testSrcFolder)
+        {
+            return prefs.getMainSourceFolder(project, testSrcFolder);
+        }
+
+        public String getPackagePrefix()
+        {
+            return prefs.getTestPackagePrefix(project);
+        }
+
+        public String getPackageSuffix()
+        {
+            return prefs.getTestPackageSuffix(project);
+        }
+
+        public List<SourceFolderMapping> getSourceFolderMappings()
+        {
+            return prefs.getSourceMappingList(project);
+        }
+
+        public IPackageFragmentRoot getTestSourceFolder(IPackageFragmentRoot mainSrcFolder)
+        {
+            return prefs.getTestSourceFolder(project, mainSrcFolder);
+        }
+
+        public String getTestMethodDefaultContent()
+        {
+            return prefs.getTestMethodDefaultContent(project);
+        }
+
+        public String getTestMethodType()
+        {
+            return prefs.getTestMethodType(project);
+        }
+
+        public String getTestSuperClass()
+        {
+            return prefs.getTestSuperClass(project);
+        }
+
+        public String getTestType()
+        {
+            return prefs.getTestType(project);
+        }
+
+        public boolean hasSpecificSettings()
+        {
+            return prefs.hasProjectSpecificSettings(project);
+        }
+
+        public boolean shouldUseFlexibleTestCaseNaming()
+        {
+            return prefs.shouldUseFlexibleTestCaseNaming(project);
+        }
+
+        public boolean shouldUseTestMethodExtendedSearch()
+        {
+            return prefs.shouldUseTestMethodExtendedSearch(project);
+        }
+    }
 }
