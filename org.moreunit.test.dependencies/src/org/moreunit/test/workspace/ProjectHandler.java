@@ -34,7 +34,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
             {
                 project = WorkspaceHelper.createJavaProject(projectName);
             }
-            catch (CoreException e)
+            catch (Exception e)
             {
                 throw new RuntimeException(e);
             }

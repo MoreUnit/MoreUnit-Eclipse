@@ -6,8 +6,14 @@ import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.junit.JUnitCore;
 import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.PreferenceConstants;
@@ -15,6 +21,7 @@ import org.moreunit.preferences.Preferences;
 import org.moreunit.test.workspace.ProjectHandler;
 import org.moreunit.test.workspace.SourceFolderHandler;
 import org.moreunit.test.workspace.WorkspaceHandler;
+import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.SearchScopeSingelton;
 
 import com.google.common.base.Strings;
@@ -125,6 +132,7 @@ class WorkspaceConfiguration
         Preferences prefs = Preferences.getInstance();
         applyWorkspacePreferences(prefs);
         applyProjectProperties(wsHandler, prefs);
+        applyClasspathUpdate(wsHandler);
     }
 
     private void applyWorkspacePreferences(Preferences prefs)
@@ -172,6 +180,38 @@ class WorkspaceConfiguration
                     IPackageFragmentRoot testSrcFolder = projectHandler.getTestSrcFolderHandler().get();
                     prefs.setMappingList(project, asList(new SourceFolderMapping(project, mainSrcFolder, testSrcFolder)));
                 }
+            }
+        }
+    }
+    
+    private void applyClasspathUpdate(WorkspaceHandler workspaceHandler)
+    {
+        for (ProjectConfiguration projectConfiguration : projectConfigs.values())
+        {
+            ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfiguration.getProjectName());
+            IJavaProject project = projectHandler.get();
+            String testType = Preferences.getInstance().getTestType(project);
+            IPath containerPath = null;
+            if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
+            {
+                containerPath = JUnitCore.JUNIT3_CONTAINER_PATH;
+            }
+            else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
+            {
+                containerPath = JUnitCore.JUNIT4_CONTAINER_PATH;
+            }
+            else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
+            {
+                containerPath = new Path("org.testng.TESTNG_CONTAINER");
+            }
+            try
+            {
+                IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(containerPath, project);
+                WorkspaceHelper.addContainerToProject(project, classpathContainer);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException("Could not apply classpath update: ", e);
             }
         }
     }

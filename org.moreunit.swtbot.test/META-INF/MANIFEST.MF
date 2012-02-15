@@ -5,7 +5,9 @@ Bundle-SymbolicName: org.moreunit.swtbot.test;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: 
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.swtbot.go,
  org.eclipse.jdt.core;bundle-version="3.7.0",
- org.moreunit.test.dependencies
+ org.moreunit.test.dependencies,
+ org.moreunit;bundle-version="2.4.2"
+Import-Package: org.eclipse.jdt.ui

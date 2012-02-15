@@ -1,5 +1,6 @@
 package org.moreunit.refactoring;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -8,48 +9,32 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.finders.ChildrenControlFinder;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetOfType;
-import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Context;
-import org.moreunit.test.context.ContextTestCase;
 
 /**
- * This should be a testcase for:
- * http://sourceforge.net/tracker/?func=detail&aid=3285663&group_id=156007&atid=798056
- * 
- * Renaming a package with use of package prefix and suffix
- * 
  * @author gianasista
  */
 @Context(mainCls = "org:SomeClass")
-public class RenamePackageTest extends ContextTestCase 
+public class RenamePackageTest extends JavaProjectSWTBotTestHelper 
 {
-	private static SWTWorkbenchBot bot;
-
-	@BeforeClass
-	public static void initialize() 
-	{
-		bot = new SWTWorkbenchBot();
-		
-		// Init keyboard layout
-		SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
-	}
-
+	/*
+	 * This should be a testcase for:
+	 * http://sourceforge.net/tracker/?func=detail&aid=3285663&group_id=156007&atid=798056
+	 * 
+	 * Renaming a package with use of package prefix and suffix
+	 */
 	@Test
 	public void should_not_throw_exception_when_renaming_package_while_using_package_prefix_and_suffix() throws Exception 
 	{
-		switchToJavaPerspective();
-
 		try 
 		{
 			SWTBotTreeItem packageToRename = selectAndReturnPackage();
@@ -84,33 +69,22 @@ public class RenamePackageTest extends ContextTestCase
 			fail("Tree in Package Explorer View was not found.");
 
 		SWTBotTree tree = new SWTBotTree((Tree) findControls.get(0));
+		
+		
 		SWTBotTreeItem projectNode = tree.expandNode(getProjectNameFromContext());
 		tree.select(projectNode);
 
-		SWTBotTreeItem[] projectNodeChildren = projectNode.getItems();
-		SWTBotTreeItem sourcesFolder = projectNodeChildren[1];
+		SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
 		sourcesFolder.select();
 		sourcesFolder.expand();
 
-		SWTBotTreeItem[] packagesInSourceFolder = sourcesFolder.getItems();
-		packagesInSourceFolder[0].select();
+		SWTBotTreeItem orgPackage = sourcesFolder.getNode("org");
+		orgPackage.select();
 
-		return packagesInSourceFolder[0];
+		return orgPackage;
 	}
 
 	private String getProjectNameFromContext() {
 		return context.getProjectHandler().get().getElementName();
 	}
-
-	private void switchToJavaPerspective() 
-	{
-		bot.menu("Window").menu("Open Perspective").menu("Other...").click();
-		SWTBotShell openPerspectiveShell = bot.shell("Open Perspective");
-		openPerspectiveShell.activate();
-
-		// select the dialog
-		bot.table().select("Java");
-		bot.button("OK").click();
-	}
-
 }

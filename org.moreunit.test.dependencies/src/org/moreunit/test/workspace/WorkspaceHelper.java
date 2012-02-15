@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -28,6 +29,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.moreunit.test.context.StringUtils;
+import org.eclipse.jdt.junit.JUnitCore;
 
 /**
  * @author vera 29.11.2008 13:41:52
@@ -37,7 +39,7 @@ public class WorkspaceHelper
     private static final String NEW_LINE = "\n";
     private static final String CLASSES_FOLDER = "classes";
 
-    public static IJavaProject createJavaProject(String projectName) throws CoreException
+    public static IJavaProject createJavaProject(String projectName) throws Exception
     {
         IProject project = createNewProject(projectName);
         return createJavaProjectFromProject(project);
@@ -70,7 +72,7 @@ public class WorkspaceHelper
         return (IJavaProject) project.getAdapter(IJavaProject.class);
     }
 
-    private static IJavaProject createJavaProjectFromProject(IProject project) throws CoreException
+    private static IJavaProject createJavaProjectFromProject(IProject project) throws Exception
     {
         IJavaProject javaProject = JavaCore.create(project);
         IProjectDescription description = project.getDescription();
@@ -81,6 +83,16 @@ public class WorkspaceHelper
         addDefaultJreToClassPath(javaProject);
 
         return javaProject;
+    }
+    
+    public static void addContainerToProject(IJavaProject javaProject, IClasspathContainer container) throws IOException, JavaModelException
+    {
+        IClasspathEntry[] entriesToAdd = container.getClasspathEntries();
+        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + entriesToAdd.length];
+        System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+        System.arraycopy(entriesToAdd, 0, newEntries, oldEntries.length, entriesToAdd.length);
+        javaProject.setRawClasspath(newEntries, null);
     }
 
     private static IPackageFragmentRoot createNewClassFolder(IJavaProject javaProject, String classFolderName) throws CoreException

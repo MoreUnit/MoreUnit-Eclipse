@@ -12,7 +12,7 @@ import org.moreunit.test.workspace.WorkspaceHelper;
 public class PluginToolsTest
 {
     @Test
-    public void getJavaProjectsFromWorkspace() throws CoreException
+    public void getJavaProjectsFromWorkspace() throws Exception
     {
         WorkspaceHelper.createJavaProject("FirstProject");
         WorkspaceHelper.createJavaProject("SecondProject");
