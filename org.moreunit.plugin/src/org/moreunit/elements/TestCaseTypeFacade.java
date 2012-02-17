@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -16,6 +16,7 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.MethodCallFinder;
 import org.moreunit.util.PluginTools;
@@ -61,45 +62,56 @@ public class TestCaseTypeFacade extends TypeFacade
 
     public IType getCorrespondingClassUnderTest()
     {
-        List<IType> correspondingClassesUnderTest = getCorrespondingClassesUnderTest();
-        if(correspondingClassesUnderTest == null || correspondingClassesUnderTest.size() == 0)
-            return null;
-
-        return correspondingClassesUnderTest.get(0);
-    }
-
-    public List<IType> getCorrespondingClassesUnderTest()
-    {
-        Preferences preferences = Preferences.getInstance();
-        List<String> testedClasses = BaseTools.getTestedClass(getType().getTypeQualifiedName(), preferences.getPrefixes(getJavaProject()), preferences.getSuffixes(getJavaProject()), preferences.getTestPackagePrefix(getJavaProject()), preferences.getTestPackageSuffix(getJavaProject()));
-        if(testedClasses.isEmpty())
+        Collection<IType> correspondingCuts = getCorrespondingClassesUnderTest(false);
+        if(correspondingCuts.isEmpty())
         {
             return null;
         }
 
-        List<IType> resultList = new ArrayList<IType>();
+        return correspondingCuts.iterator().next();
+    }
+
+    public Collection<IType> getCorrespondingClassesUnderTest(boolean alsoIncludeLikelyMatches)
+    {
+        Collection<IType> matches = new LinkedHashSet<IType>();
+
+        ProjectPreferences prefs = Preferences.forProject(getJavaProject());
+        List<String> testedClasses = BaseTools.getTestedClass(getType().getFullyQualifiedName(), prefs.getClassPrefixes(), prefs.getClassSuffixes(), prefs.getPackagePrefix(), prefs.getPackageSuffix());
+        if(testedClasses.isEmpty())
+        {
+            return matches;
+        }
+
+        List<String> typeNames = testedClasses;
+        if(prefs.shouldUseFlexibleTestCaseNaming())
+        {
+            typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
+        }
+
         try
         {
-            List<String> typeNames = testedClasses;
-            if(preferences.shouldUseFlexibleTestCaseNaming(getJavaProject()))
+            if(alsoIncludeLikelyMatches)
             {
-                typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
-            }
-                    
-            for (String typeName : typeNames)
-            {
-                Set<IType> searchFor = SearchTools.searchFor(typeName, compilationUnit, getSearchScope(compilationUnit));
-                for (IType searchForResult : searchFor)
+                for (String typeName : typeNames)
                 {
-                    resultList.add(searchForResult);
+                    String typeNameOnly = typeName.substring(typeName.lastIndexOf(".") + 1);
+                    matches.addAll(SearchTools.searchFor(typeNameOnly, compilationUnit, getSearchScope(compilationUnit)));
+                }
+            }
+            else
+            {
+                for (String typeName : typeNames)
+                {
+                    matches.addAll(SearchTools.searchFor(typeName, compilationUnit, getSearchScope(compilationUnit)));
                 }
             }
         }
-        catch (Exception exc)
+        catch (CoreException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
-        return resultList;
+
+        return matches;
     }
 
     private static IJavaSearchScope getSearchScope(ICompilationUnit compilationUnit)
@@ -111,8 +123,8 @@ public class TestCaseTypeFacade extends TypeFacade
     {
         return PluginTools.getSourceFolder(compilationUnit);
     }
-    
-    public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Set<IType> classesUnderTest)
+
+    public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Collection<IType> classesUnderTest)
     {
         List<IMethod> result = new ArrayList<IMethod>();
 
@@ -160,23 +172,23 @@ public class TestCaseTypeFacade extends TypeFacade
     }
 
     @Override
-    protected Set<IType> getCorrespondingClasses()
+    protected Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches)
     {
-        return new LinkedHashSet<IType>(getCorrespondingClassesUnderTest());
+        return getCorrespondingClassesUnderTest(alsoIncludeLikelyMatches);
     }
 
     @Override
-    protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Set<IType> classes)
+    protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes)
     {
         return getCorrespondingTestedMethods(method, classes);
     }
 
     @Override
-    protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope)
+    protected MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope)
     {
         return new TestMethodCalleeFinder(method, searchScope);
     }
-    
+
     @Override
     protected NewClassyWizard newCorrespondingClassWizard(IType fromType)
     {

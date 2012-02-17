@@ -1,8 +1,8 @@
 package org.moreunit.refactoring;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -67,7 +67,7 @@ public class MoveMethodParticipant extends MoveParticipant
         SourceType destination = (SourceType) getArguments().getDestination();
         ICompilationUnit destinationCompilationUnit = (ICompilationUnit) destination.getParent();
         ClassTypeFacade destinationFacade = new ClassTypeFacade(destinationCompilationUnit);
-        Set<IType> correspondingTestCaseList = destinationFacade.getCorrespondingTestCaseList();
+        Collection<IType> correspondingTestCaseList = destinationFacade.getCorrespondingTestCases();
         
         // if no tests or more than one, don't do anything
         if(correspondingTestCaseList.size() != 1)
@@ -76,7 +76,7 @@ public class MoveMethodParticipant extends MoveParticipant
         }
         
         // get the destination for the testmethods
-        IType targetType = (IType) correspondingTestCaseList.toArray()[0];
+        IType targetType = correspondingTestCaseList.iterator().next();
         
         List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethods(movedMethod);
         

@@ -1,11 +1,8 @@
 package org.moreunit.decorator;
 
-import java.util.Set;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
@@ -47,8 +44,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
     private boolean hasTestCase(ICompilationUnit compilationUnit)
     {
         ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
-        Set<IType> correspondingTestcases = javaFileFacade.getCorrespondingTestCaseList();
-        return correspondingTestcases != null && correspondingTestcases.size() > 0;
+        return !javaFileFacade.getCorrespondingTestCases().isEmpty();
     }
 
     /**

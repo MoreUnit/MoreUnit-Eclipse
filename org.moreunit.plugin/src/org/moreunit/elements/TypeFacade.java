@@ -1,6 +1,7 @@
 package org.moreunit.elements;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,12 +15,15 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
+import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.ChooseDialog;
+import org.moreunit.ui.CreateNewClassAction;
 import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MemberJumpHistory;
 import org.moreunit.util.MethodCallFinder;
+import org.moreunit.util.StringConstants;
 import org.moreunit.wizards.NewClassyWizard;
 
 /**
@@ -142,85 +146,136 @@ public abstract class TypeFacade
      * type is a class under test, or a method under test called by the given
      * test method if this type is a test case, or a test case corresponding to
      * this class, etc...). If there are several resulting members the user has
-     * to make a choice via a dialog. If no member is found <code>null</code> is
-     * returned.
+     * to make a choice via a dialog. If no member is found <tt>null</tt> is
+     * returned, or a wizard opens to create a new type if
+     * <tt>createIfNecessary</tt> is true.
      * 
-     * @param method the method to search for correspondence or
-     *            <code>null</code> to only search based on this type
-     * @param createIfNecessary whether to propose the creation of a type if no
-     *            correspondence is found
-     * @param extendedSearch whether to also search for method calls (together
-     *            with search by method name)
-     * @param promptText the prompt text to display in the dialog asking the
-     *            user to choose for a member
+     * @param request the details of the request for corresponding member.
      * @return one corresponding member or <code>null</code>
+     * @see CorrespondingMemberRequest
      */
-    public IMember getOneCorrespondingMember(IMethod method, boolean createIfNecessary, boolean extendedSearch, String promptText)
+    public IMember getOneCorrespondingMember(CorrespondingMemberRequest request)
     {
-        Set<IType> proposedClasses = getCorrespondingClasses();
+        final Collection<IType> proposedClasses = getCorrespondingClasses(false);
 
-        Set<IMethod> proposedMethods = new LinkedHashSet<IMethod>();
-        if(method != null && ! proposedClasses.isEmpty())
+        final OneCorrespondingMemberAction action;
+        if(proposedClasses.isEmpty())
         {
-            proposedMethods.addAll(getCorrespondingMethodsInClasses(method, proposedClasses));
-            if(extendedSearch)
-            {
-                proposedMethods.addAll(getCallRelationshipFinder(method, proposedClasses).getMatches(new NullProgressMonitor()));
-            }
+            action = getLikelyCorrespondingClass(request);
+        }
+        else
+        {
+            action = getPerfectCorrespondingMember(request, proposedClasses);
         }
 
-        IMember memberToJump = null;
-        boolean openDialog = false;
+        if(action == null)
+        {
+            return null;
+        }
+
+        IMember memberToJump = action.getCorrespondingMember();
+
+        registerJump(request.getCurrentMethod(), memberToJump);
+        return memberToJump;
+    }
+
+    private OneCorrespondingMemberAction getPerfectCorrespondingMember(CorrespondingMemberRequest request, Collection<IType> proposedClasses)
+    {
+        Collection<IMethod> proposedMethods = findCorrespondingMethodsInClasses(request, proposedClasses);
+
         if(proposedMethods.size() == 1)
         {
-            memberToJump = proposedMethods.iterator().next();
+            return new ReturnMember(proposedMethods.iterator().next());
         }
         else if(proposedMethods.size() > 1)
         {
-            openDialog = true;
+            return new OpenChoiceDialog(request, proposedClasses, proposedMethods, true);
         }
         else
         {
             if(proposedClasses.size() == 1)
             {
-                memberToJump = proposedClasses.iterator().next();
+                return new ReturnMember(proposedClasses.iterator().next());
             }
             else if(proposedClasses.size() > 1)
             {
-                openDialog = true;
+                return new OpenChoiceDialog(request, proposedClasses, true);
             }
-            else if(createIfNecessary)
+            else if(request.shouldCreateClassIfNoResult())
             {
-                memberToJump = newCorrespondingClassWizard(getType()).open();
+                return new OpenNewClassWizard();
             }
         }
-
-        if(openDialog)
-        {
-            memberToJump = openDialog(promptText, proposedClasses, proposedMethods, method);
-        }
-
-        registerJump(method, memberToJump);
-        return memberToJump;
+        return null;
     }
 
-    abstract protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Set<IType> classes);
+    private Collection<IMethod> findCorrespondingMethodsInClasses(CorrespondingMemberRequest request, Collection<IType> classes)
+    {
+        Collection<IMethod> proposedMethods = new LinkedHashSet<IMethod>();
 
-    abstract protected Set<IType> getCorrespondingClasses();
+        if(request.shouldReturn(MemberType.TYPE_OR_METHOD))
+        {
+            IMethod currentMethod = request.getCurrentMethod();
+            if(currentMethod != null && ! classes.isEmpty())
+            {
+                proposedMethods.addAll(getCorrespondingMethodsInClasses(currentMethod, classes));
+                if(request.shouldUseExtendedSearch())
+                {
+                    proposedMethods.addAll(getCallRelationshipFinder(currentMethod, classes).getMatches(new NullProgressMonitor()));
+                }
+            }
+        }
 
-    abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope);
+        return proposedMethods;
+    }
+
+    private OneCorrespondingMemberAction getLikelyCorrespondingClass(CorrespondingMemberRequest request)
+    {
+        Collection<IType> proposedClasses = getCorrespondingClasses(true);
+        if(! proposedClasses.isEmpty())
+        {
+            return new OpenChoiceDialog(request, proposedClasses, false);
+        }
+        else if(request.shouldCreateClassIfNoResult())
+        {
+            return new OpenNewClassWizard();
+        }
+        return null;
+    }
+
+    abstract protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes);
+
+    abstract protected Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches);
+
+    abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope);
 
     abstract protected NewClassyWizard newCorrespondingClassWizard(IType fromType);
 
-    private IMember openDialog(String promptText, Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMethod method)
+    private IMember openDialog(CorrespondingMemberRequest request, Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, boolean perfectMatches)
     {
-        IMember startMember = method != null ? method : getType();
+        String promptText = request.getPromptText();
+        String infoText = null;
+        if(! perfectMatches)
+        {
+            promptText = String.format("%s %s%s", promptText, StringConstants.NEWLINE, "We could find the following classes, but their packages do not match:");
+            infoText = "Please note that theses classes will not be considered for other MoreUnit features such as test launching or refactoring.";
+        }
+
+        IMember startMember = request.getCurrentMethod() != null ? request.getCurrentMethod() : getType();
         IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
-        MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection);
-        return new ChooseDialog<IMember>(promptText, contentProvider).getChoice();
+        MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection).withAction(new CreateNewClassAction()
+        {
+            @Override
+            public IType execute()
+            {
+                return newCorrespondingClassWizard(getType()).open();
+            }
+        });
+
+        return new ChooseDialog<IMember>(promptText, infoText, contentProvider).getChoice();
     }
 
-    private IMember getDefaultSelection(Set<IType> proposedClasses, Set<IMethod> proposedMethods, IMember startMember)
+    private IMember getDefaultSelection(Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, IMember startMember)
     {
         IMember selection = MemberJumpHistory.getInstance().getLastCorrespondingJumpMember(startMember);
         if(proposedClasses.contains(selection) || proposedMethods.contains(selection))
@@ -236,6 +291,60 @@ public abstract class TypeFacade
         {
             IMember startMember = fromMethod != null ? fromMethod : getType();
             MemberJumpHistory.getInstance().registerJump(startMember, toMember);
+        }
+    }
+
+    private static interface OneCorrespondingMemberAction
+    {
+        IMember getCorrespondingMember();
+    }
+
+    public static class ReturnMember implements OneCorrespondingMemberAction
+    {
+        private final IMember member;
+
+        public ReturnMember(IMember member)
+        {
+            this.member = member;
+        }
+
+        public IMember getCorrespondingMember()
+        {
+            return member;
+        }
+    }
+
+    public class OpenChoiceDialog implements OneCorrespondingMemberAction
+    {
+        private final CorrespondingMemberRequest request;
+        private final Collection<IType> proposedClasses;
+        private final Collection<IMethod> proposedMethods;
+        private final boolean perfectMatches;
+
+        public OpenChoiceDialog(CorrespondingMemberRequest request, Collection<IType> proposedClasses, boolean perfectMatches)
+        {
+            this(request, proposedClasses, Collections.<IMethod> emptySet(), perfectMatches);
+        }
+
+        public OpenChoiceDialog(CorrespondingMemberRequest request, Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, boolean perfectMatches)
+        {
+            this.request = request;
+            this.proposedClasses = proposedClasses;
+            this.proposedMethods = proposedMethods;
+            this.perfectMatches = perfectMatches;
+        }
+
+        public IMember getCorrespondingMember()
+        {
+            return openDialog(request, proposedClasses, proposedMethods, perfectMatches);
+        }
+    }
+
+    public class OpenNewClassWizard implements OneCorrespondingMemberAction
+    {
+        public IMember getCorrespondingMember()
+        {
+            return newCorrespondingClassWizard(getType()).open();
         }
     }
 }

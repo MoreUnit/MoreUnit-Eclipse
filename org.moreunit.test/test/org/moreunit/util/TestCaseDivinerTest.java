@@ -2,9 +2,8 @@ package org.moreunit.util;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.Set;
+import java.util.Collection;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
 import org.moreunit.test.context.ContextTestCase;
@@ -14,61 +13,65 @@ import org.moreunit.test.context.Project;
 /**
  * @author giana 13.05.2006 13:49:29
  */
+@Preferences(testClassSuffixes="Test", testSrcFolder="test")
 public class TestCaseDivinerTest extends ContextTestCase
 {
-
     @Preferences(testClassSuffixes="Test", testSrcFolder="test")
-    @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
+    @Project(mainCls="Foo", testCls="FooTest; FooTestNG")
     @Test
-    public void getMatches_should_return_class_which_matches_suffix() throws CoreException
+    public void getMatches_should_return_class_which_matches_suffix() throws Exception
     {
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
-        Set<IType> result = testCaseDiviner.getMatches();
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), getPreferences());
+        Collection<IType> matches = testCaseDiviner.getMatches(false);
         
-        assertThat(result).onProperty("elementName").containsOnly("FooTest");
+        assertThat(matches).hasSize(1);
+        assertThat(matches.iterator().next().getElementName()).isEqualTo("FooTest");
     }
     
     @Preferences(testClassSuffixes="Test,TestNG", testSrcFolder="test")
-    @Project(mainCls="Foo", testCls="FooTest;FooTestNG", mainSrcFolder="src", testSrcFolder="test")
+    @Project(mainCls="Foo", testCls="FooTest; FooTestNG")
     @Test
-    public void getMatches_should_find_all_tests_which_match_all_suffixes() throws CoreException
+    public void getMatches_should_find_all_tests_which_match_all_suffixes() throws Exception
     {
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
-        Set<IType> result = testCaseDiviner.getMatches();
-        assertThat(result).onProperty("elementName").containsOnly("FooTest", "FooTestNG");
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), getPreferences());
+        Collection<IType> matches = testCaseDiviner.getMatches(false);
+
+        assertThat(matches).hasSize(2).onProperty("elementName").contains("FooTest", "FooTestNG");
     }
 
     @Preferences(testClassPrefixes="Test", testSrcFolder="test")
-    @Project(mainCls="Foo", testCls="TestFoo;BFooTest", mainSrcFolder="src", testSrcFolder="test")
+    @Project(mainCls="Foo", testCls="TestFoo; BFooTest")
     @Test
-    public void getMatches_should_return_class_which_matches_prefix() throws CoreException
+    public void getMatches_should_return_class_which_matches_prefix() throws Exception
     {
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), org.moreunit.preferences.Preferences.getInstance());
-        Set<IType> result = testCaseDiviner.getMatches();
-        
-        assertThat(result).onProperty("elementName").containsOnly("TestFoo");
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("Foo"), getPreferences());
+        Collection<IType> matches = testCaseDiviner.getMatches(false);
+
+        assertThat(matches).hasSize(1);
+        assertThat(matches.iterator().next().getElementName()).isEqualTo("TestFoo");
     }
 
-    @Preferences(testClassSuffixes="Test", testSrcFolder="test")
-    @Project(mainCls="com:Foo", testCls="org:FooTest;org:FooTestNG", mainSrcFolder="src", testSrcFolder="test")
+    @Project(mainCls="com:Foo", testCls="org:FooTest; com:FooTest")
     @Test
-    public void getMatches_should_find_matches_when_package_name_differs() throws CoreException
+    public void getMatches_should_find_matches_when_package_name_differs_if_so_requested() throws Exception
     {
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.Foo"), org.moreunit.preferences.Preferences.getInstance());
-        Set<IType> result = testCaseDiviner.getMatches();
-        
-        assertThat(result).onProperty("elementName").containsOnly("FooTest");
+        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.Foo"), getPreferences());
+
+        IType perfectMatch = context.getPrimaryTypeHandler("com.FooTest").get();
+        IType likelyMatch = context.getPrimaryTypeHandler("org.FooTest").get();
+
+        Collection<IType> matches = testCaseDiviner.getMatches(false);
+        assertThat(matches).containsOnly(perfectMatch);
+
+        matches = testCaseDiviner.getMatches(true);
+        assertThat(matches).hasSize(2).contains(perfectMatch, likelyMatch);
     }
 
-    /**
-     * Test for #2881409 (Switching in enums)
-     */
-    @Preferences(testClassSuffixes="Test", testSrcFolder="test")
-    @Project(mainCls="com: enum SomeEnum", mainSrcFolder="src", testSrcFolder="test")
+    // Test for #2881409 (Switching in enums)
+    @Project(mainCls="com: enum SomeEnum")
     @Test
-    public void getSource_should_not_throw_exception_for_enums() throws CoreException 
+    public void getSource_should_not_throw_exception_for_enums() throws Exception 
     {
-        TestCaseDiviner testCaseDiviner = new TestCaseDiviner(context.getCompilationUnit("com.SomeEnum"), org.moreunit.preferences.Preferences.getInstance());
-        assertThat(testCaseDiviner.getSource()).isNotNull();
+        assertThat(TestCaseDiviner.getSource(context.getCompilationUnit("com.SomeEnum"))).isNotNull();
     }
 }

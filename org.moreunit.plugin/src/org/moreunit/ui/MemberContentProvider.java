@@ -25,9 +25,8 @@ import org.moreunit.util.TestNamingPatternAwareTypeComparator;
  */
 public class MemberContentProvider implements ITreeContentAndDefaultSelectionProvider
 {
-
     private final Map<IType, List<IMethod>> methodsByType;
-    private final Object[] types;
+    private Object[] elements;
     private final ISelection defaultSelection;
 
     /**
@@ -46,14 +45,14 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
      * @param methods methods to display as children of their declaring types
      * @param memberProposedForSelection the default selection
      */
-    public MemberContentProvider(Set<IType> types, Set<IMethod> methods, IMember memberProposedForSelection)
+    public MemberContentProvider(Collection<IType> types, Collection<IMethod> methods, IMember memberProposedForSelection)
     {
         methodsByType = groupMethodsByType(methods);
 
         List<IType> sortedTypes = sortTypes(types);
         Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
         allTypes.addAll(sortTypes(methodsByType.keySet()));
-        this.types = allTypes.toArray();
+        this.elements = allTypes.toArray();
 
         defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
     }
@@ -71,14 +70,14 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
      * @param secondaryTypes types to display after the main ones
      * @param memberProposedForSelection the default selection
      */
-    public MemberContentProvider(Set<IType> mainTypes, Set<IType> secondaryTypes, IType memberProposedForSelection)
+    public MemberContentProvider(Collection<IType> mainTypes, Collection<IType> secondaryTypes, IType memberProposedForSelection)
     {
         methodsByType = new HashMap<IType, List<IMethod>>();
 
         List<IType> sortedTypes = sortTypes(mainTypes);
         Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
         allTypes.addAll(sortTypes(secondaryTypes));
-        this.types = allTypes.toArray();
+        this.elements = allTypes.toArray();
 
         defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
     }
@@ -90,17 +89,17 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
      * @param types the types to display
      * @param typeProposedForSelection the default selection
      */
-    public MemberContentProvider(Set<IType> types, IType typeProposedForSelection)
+    public MemberContentProvider(Collection<IType> types, IType typeProposedForSelection)
     {
         methodsByType = new HashMap<IType, List<IMethod>>();
 
         List<IType> sortedTypes = sortTypes(types);
-        this.types = sortedTypes.toArray();
+        this.elements = sortedTypes.toArray();
 
         defaultSelection = getDefaultSelection(typeProposedForSelection, sortedTypes);
     }
 
-    private Map<IType, List<IMethod>> groupMethodsByType(Set<IMethod> methods)
+    private Map<IType, List<IMethod>> groupMethodsByType(Collection<IMethod> methods)
     {
         Map<IType, List<IMethod>> methodsByType = new LinkedHashMap<IType, List<IMethod>>();
         for (IMethod method : methods)
@@ -167,7 +166,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     public Object[] getElements(Object inputElement)
     {
-        return types;
+        return elements;
     }
 
     public void dispose()
@@ -181,6 +180,22 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     public ISelection getDefaultSelection()
     {
         return defaultSelection;
+    }
+
+    public MemberContentProvider withAction(TreeActionElement< ? > action)
+    {
+        List<Object> elements = new ArrayList<Object>();
+        Collections.addAll(elements, this.elements);
+        
+        if(! elements.isEmpty() && ! (elements.get(elements.size() - 1) instanceof SeparatorElement))
+        {
+            elements.add(new SeparatorElement());
+        }
+        
+        elements.add(action);
+        
+        this.elements = elements.toArray();
+        return this;
     }
 
 }

@@ -1,5 +1,7 @@
 package org.moreunit.util;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 /**
  * Encalpsulates the implementation to find the testcases from a given
@@ -20,67 +23,105 @@ import org.moreunit.preferences.Preferences;
  */
 public class TestCaseDiviner
 {
-    private static final String WC = StringConstants.WILDCARD;
-    
-    private ICompilationUnit compilationUnit;
-    private Set<IType> matches = new LinkedHashSet<IType>();;
-    private IType source;
-
-    private Preferences preferences;
+    private final ICompilationUnit compilationUnit;
+    private final ProjectPreferences preferences;
+    private final IType source;
+    private Collection<IType> perfectMatches;
+    private Collection<IType> likelyMatches;
 
     public TestCaseDiviner(ICompilationUnit compilationUnit, Preferences preferences)
     {
-        this.compilationUnit = compilationUnit;
-        this.source = getSource();
-        this.preferences = preferences;
-        try
-        {
-            findPotentialTargets();
-        }
-        catch (CoreException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
+        this(compilationUnit, preferences, getSource(compilationUnit));
     }
 
     public TestCaseDiviner(ICompilationUnit compilationUnit, Preferences preferences, IType source)
     {
         this.compilationUnit = compilationUnit;
+        this.preferences = preferences.getProjectView(getJavaProject());
         this.source = source;
-        this.preferences = preferences;
+    }
+
+    public Collection<IType> getMatches(boolean alsoIncludeLikelyMatches)
+    {
         try
         {
-            findPotentialTargets();
+            if(alsoIncludeLikelyMatches)
+            {
+                if(this.likelyMatches == null)
+                {
+                    this.likelyMatches = findPotentialTargets(true);
+                }
+                return this.likelyMatches;
+            }
+            else
+            {
+                if(this.perfectMatches == null)
+                {
+                    this.perfectMatches = findPotentialTargets(false);
+                }
+                return this.perfectMatches;
+            }
         }
         catch (CoreException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
+
+        return Collections.<IType> emptySet();
     }
 
-    public Set<IType> getMatches()
-    {
-        return this.matches;
-    }
-
-    private void findPotentialTargets() throws CoreException
+    private Collection<IType> findPotentialTargets(boolean withLikelyMatches) throws CoreException
     {
         if(this.source == null)
         {
-            return;
+            return Collections.<IType> emptySet();
         }
 
-        this.matches = new LinkedHashSet<IType>();
-        String[] prefixes = this.preferences.getPrefixes(getJavaProject());
-        for (String element : prefixes)
+        if(withLikelyMatches)
         {
-            this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, true), this.compilationUnit, getSearchScope()));
+            return findPotentialTargetsWithPackage(null);
         }
-        String[] suffixes = this.preferences.getSuffixes(getJavaProject());
-        for (String element : suffixes)
+        else
         {
-            this.matches.addAll(SearchTools.searchFor(getSearchTerm(this.source, element, false), this.compilationUnit, getSearchScope()));
+            String testPackageName = getTestPackageName(source.getPackageFragment().getElementName());
+            return findPotentialTargetsWithPackage(testPackageName);
         }
+    }
+
+    private String getTestPackageName(String cutPackageName)
+    {
+        String testPackagePrefix = this.preferences.getPackagePrefix();
+        String testPackageSuffix = this.preferences.getPackageSuffix();
+        String testPackageName = cutPackageName;
+
+        if(! BaseTools.isStringTrimmedEmpty(testPackagePrefix))
+        {
+            testPackageName = String.format("%s.%s", testPackagePrefix, testPackageName);
+        }
+
+        if(! BaseTools.isStringTrimmedEmpty(testPackageSuffix))
+        {
+            testPackageName = String.format("%s.%s", testPackageName, testPackageSuffix);
+        }
+
+        return testPackageName;
+    }
+
+    private Set<IType> findPotentialTargetsWithPackage(String packageName) throws CoreException
+    {
+        Set<IType> matches = new LinkedHashSet<IType>();
+
+        for (String prefix : this.preferences.getClassPrefixes())
+        {
+            matches.addAll(SearchTools.searchFor(getSearchTerm(packageName, this.source, prefix, true), this.compilationUnit, getSearchScope()));
+        }
+
+        for (String suffix : this.preferences.getClassSuffixes())
+        {
+            matches.addAll(SearchTools.searchFor(getSearchTerm(packageName, this.source, suffix, false), this.compilationUnit, getSearchScope()));
+        }
+
+        return matches;
     }
 
     private IJavaSearchScope getSearchScope()
@@ -96,15 +137,15 @@ public class TestCaseDiviner
     /*
      * public for Testing purposes
      */
-    public IType getSource()
+    public static IType getSource(ICompilationUnit compilationUnit)
     {
         try
         {
-            IType[] allTypes = this.compilationUnit.getAllTypes();
+            IType[] allTypes = compilationUnit.getAllTypes();
             if(allTypes.length > 0)
             {
-                IType primaryType = allTypes[0]; 
-                if (primaryType.isClass() || primaryType.isEnum())
+                IType primaryType = allTypes[0];
+                if(primaryType.isClass() || primaryType.isEnum())
                 {
                     return primaryType;
                 }
@@ -118,16 +159,20 @@ public class TestCaseDiviner
         return null;
     }
 
-    private String getSearchTerm(IType type, String qualifier, boolean prefixMatch)
+    private String getSearchTerm(String packageName, IType type, String qualifier, boolean prefixMatch)
     {
-        if(this.preferences.shouldUseFlexibleTestCaseNaming(getJavaProject()))
+        final String wildCard = this.preferences.shouldUseFlexibleTestCaseNaming() ? StringConstants.WILDCARD : "";
+        String packageDot = packageName == null ? "" : packageName + ".";
+
+        if(prefixMatch)
         {
-            // TODO Nicolas: should we systematically _surround_ name with wildcards or let the user choose with better options?
-            return prefixMatch ? qualifier + WC + type.getTypeQualifiedName() + WC : type.getTypeQualifiedName() + WC + qualifier;
+            // TODO Nicolas: should we systematically _surround_ name with
+            // wildcards or let the user choose with better options?
+            return String.format("%s%s%s%s%s", packageDot, qualifier, wildCard, type.getTypeQualifiedName(), wildCard);
         }
         else
         {
-            return prefixMatch ? qualifier + type.getTypeQualifiedName() : type.getTypeQualifiedName() + qualifier;
+            return String.format("%s%s%s%s", packageDot, type.getTypeQualifiedName(), wildCard, qualifier);
         }
     }
 

@@ -11,6 +11,8 @@
  */
 package org.moreunit.handler;
 
+import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
@@ -18,8 +20,10 @@ import org.eclipse.ui.IEditorPart;
 import org.moreunit.actions.JumpAction;
 import org.moreunit.actions.JumpFromCompilationUnitAction;
 import org.moreunit.actions.JumpFromTypeAction;
+import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.EditorUI;
 
@@ -83,7 +87,15 @@ public class JumpActionExecutor
         boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
 
         TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
-        IMember memberToJump = typeFacade.getOneCorrespondingMember(methodUnderCursorPosition, true, extendedSearch, "Jump to...");
+        
+        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                .withCurrentMethod(methodUnderCursorPosition) //
+                .extendedSearch(extendedSearch) //
+                .createClassIfNoResult("Jump to...") //
+                .build();
+        
+        IMember memberToJump = typeFacade.getOneCorrespondingMember(request);
         if(memberToJump != null)
         {
             jumpToMember(memberToJump);

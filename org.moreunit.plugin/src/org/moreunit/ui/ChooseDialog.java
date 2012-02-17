@@ -16,6 +16,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -26,7 +27,6 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.StringConstants;
 
 public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 {
@@ -37,9 +37,13 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
     public ChooseDialog(String titleText, ITreeContentAndDefaultSelectionProvider contentProvider)
     {
-        super(getDefaultShell(), PopupDialog.INFOPOPUP_SHELLSTYLE, true, false, false, false, false, titleText, null);
+        this(titleText, null, contentProvider);
+    }
 
-        setInfoText(StringConstants.EMPTY_STRING);
+    public ChooseDialog(String titleText, String infoText, ITreeContentAndDefaultSelectionProvider contentProvider)
+    {
+        super(getDefaultShell(), PopupDialog.INFOPOPUP_SHELLSTYLE, true, false, false, false, false, titleText, infoText);
+
         this.contentProvider = contentProvider;
         create();
         afterCreation();
@@ -85,9 +89,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
             public void widgetDefaultSelected(SelectionEvent e)
             {
-                T selectedElement = getSelectedElement();
-                close();
-                handleElementSelected(selectedElement);
+                handleElementSelected();
             }
         });
 
@@ -99,38 +101,34 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
             {
                 if(tree.equals(e.getSource()))
                 {
-                    //Object o = tree.getItem(new Point(e.x, e.y));
                     TreeItem o = tree.getItem(new Point(e.x, e.y));
-                    //if(o instanceof TreeItem)
-                    //{
-                        if(! o.equals(fLastItem))
+                    if(! o.equals(fLastItem))
+                    {
+                        fLastItem = o;
+                        tree.setSelection(new TreeItem[] { fLastItem });
+                    }
+                    else if(e.y < tree.getItemHeight() / 4)
+                    {
+                        // Scroll up
+                        Point p = tree.toDisplay(e.x, e.y);
+                        Item item = treeViewer.scrollUp(p.x, p.y);
+                        if(item instanceof TreeItem)
                         {
-                            fLastItem = (TreeItem) o;
+                            fLastItem = (TreeItem) item;
                             tree.setSelection(new TreeItem[] { fLastItem });
                         }
-                        else if(e.y < tree.getItemHeight() / 4)
+                    }
+                    else if(e.y > tree.getBounds().height - tree.getItemHeight() / 4)
+                    {
+                        // Scroll down
+                        Point p = tree.toDisplay(e.x, e.y);
+                        Item item = treeViewer.scrollDown(p.x, p.y);
+                        if(item instanceof TreeItem)
                         {
-                            // Scroll up
-                            Point p = tree.toDisplay(e.x, e.y);
-                            Item item = treeViewer.scrollUp(p.x, p.y);
-                            if(item instanceof TreeItem)
-                            {
-                                fLastItem = (TreeItem) item;
-                                tree.setSelection(new TreeItem[] { fLastItem });
-                            }
+                            fLastItem = (TreeItem) item;
+                            tree.setSelection(new TreeItem[] { fLastItem });
                         }
-                        else if(e.y > tree.getBounds().height - tree.getItemHeight() / 4)
-                        {
-                            // Scroll down
-                            Point p = tree.toDisplay(e.x, e.y);
-                            Item item = treeViewer.scrollDown(p.x, p.y);
-                            if(item instanceof TreeItem)
-                            {
-                                fLastItem = (TreeItem) item;
-                                tree.setSelection(new TreeItem[] { fLastItem });
-                            }
-                        }
-                    //}
+                    }
                 }
             }
         });
@@ -154,9 +152,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                     TreeItem selection = tree.getSelection()[0];
                     if(selection.equals(o))
                     {
-                        T selectedElement = getSelectedElement();
-                        close();
-                        handleElementSelected(selectedElement);
+                        handleElementSelected();
                     }
                 }
             }
@@ -166,18 +162,32 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         return treeViewer.getControl();
     }
 
-    @SuppressWarnings("unchecked")
-    public T getSelectedElement()
+    public Object getSelectedElement()
     {
         if(treeViewer == null)
             return null;
 
-        return (T) ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
+        return ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
     }
 
-    private void handleElementSelected(T selectedElement)
+    @SuppressWarnings("unchecked")
+    private void handleElementSelected()
     {
-        this.selectedElement = selectedElement;
+        Object selectedElement = getSelectedElement();
+        if(selectedElement instanceof TreeActionElement)
+        {
+            TreeActionElement<T> action = (TreeActionElement<T>) selectedElement;
+            if(! action.provideElement())
+            {
+                return;
+            }
+
+            selectedElement = action.execute();
+        }
+
+        close();
+
+        this.selectedElement = (T) selectedElement;
     }
 
     private void addDisposeListener(DisposeListener listener)
@@ -209,12 +219,13 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
     private void runEventLoop(Shell loopShell)
     {
-        
+
         // NullSafe
-        if (loopShell == null) {
+        if(loopShell == null)
+        {
             return;
         }
-        
+
         Display display = loopShell.getDisplay();
 
         while (loopShell != null && ! loopShell.isDisposed() && treeViewer != null)
@@ -237,9 +248,24 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
     private static class LabelProvider extends JavaElementLabelProvider
     {
         @Override
+        public Image getImage(Object element)
+        {
+            if(element instanceof TreeActionElement)
+            {
+                return ((TreeActionElement< ? >) element).getImage();
+            }
+            Image image = super.getImage(element);
+            return image;
+        }
+
+        @Override
         public String getText(Object element)
         {
-            if(element instanceof IType)
+            if(element instanceof TreeActionElement)
+            {
+                return ((TreeActionElement< ? >) element).getText();
+            }
+            else if(element instanceof IType)
             {
                 IType type = (IType) element;
                 return String.format("%s - %s", type.getElementName(), type.getPackageFragment().getElementName());

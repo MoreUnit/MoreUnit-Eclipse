@@ -2,7 +2,6 @@ package org.moreunit.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -57,20 +56,6 @@ public class RenameClassParticipant extends RenameParticipant
         return new RefactoringStatus();
     }
 
-    /*
-     * public Change createChange(IProgressMonitor pm) throws CoreException,
-     * OperationCanceledException {
-     * LogHandler.getInstance().handleInfoLog("RenameClassParticipant.createChange"
-     * ); if (!getArguments().getUpdateReferences()) { return null; }
-     * List<Change> changes = new ArrayList<Change>(); Set<IType> allTestcases =
-     * javaFileFacade.getCorrespondingTestCaseList(); for (IType typeToRename :
-     * allTestcases) { changes.add(new RenameClassChange(typeToRename,
-     * getNewTestName(typeToRename))); } if (changes.size() == 1) { return
-     * changes.get(0); } if (changes.size() > 0) { return new
-     * CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
-     * } return null; }
-     */
-
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
         if(! getArguments().getUpdateReferences())
@@ -81,9 +66,8 @@ public class RenameClassParticipant extends RenameParticipant
         try
         {
             List<Change> changes = new ArrayList<Change>();
-            Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
             RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
-            for (IType typeToRename : allTestcases)
+            for (IType typeToRename : javaFileFacade.getCorrespondingTestCases())
             {
                 RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
                 renameJavaElementDescriptor.setJavaElement(typeToRename.getCompilationUnit());

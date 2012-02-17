@@ -69,7 +69,7 @@ public class MissingClassPage extends Page implements IElementChangedListener
                 if(! TestCaseTypeFacade.isTestCase(type))
                 {
                     TestCaseDiviner testCaseDiviner = new TestCaseDiviner(compilationUnit, Preferences.getInstance(), type);
-                    if(testCaseDiviner.getMatches().isEmpty())
+                    if(testCaseDiviner.getMatches(false).isEmpty())
                     {
                         classesWithoutTestCases.add(type);
                     }
