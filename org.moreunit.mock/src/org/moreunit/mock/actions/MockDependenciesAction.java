@@ -12,12 +12,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.CorrespondingMemberRequest;
+import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.utils.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 import org.moreunit.util.PluginTools;
 
 import com.google.inject.Inject;
+
+import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
 
 public class MockDependenciesAction extends AbstractHandler implements IEditorActionDelegate
 {
@@ -95,7 +99,12 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
     {
         if(compilationUnitIsTestCase)
         {
-            return (IType) facadeFactory.createTestCaseFacade(editedCompilationUnit).getOneCorrespondingMember(null, true, false, "Class under test...");
+            CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                    .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                    .createClassIfNoResult("Class under test...") //
+                    .build();
+
+            return (IType) facadeFactory.createTestCaseFacade(editedCompilationUnit).getOneCorrespondingMember(request);
         }
         else
         {

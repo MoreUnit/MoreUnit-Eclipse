@@ -30,21 +30,27 @@ public class BaseTools
         if(testCaseClass == null || testCaseClass.length() <= 1)
             return Collections.EMPTY_LIST;
 
-        if(packagePrefix != null && packagePrefix.length() > 0)
+        JavaType testType = new JavaType(testCaseClass);
+
+        String packagePath = testType.packagePath;
+        if(packagePath != null && packagePrefix != null && packagePrefix.length() > 0)
         {
-            testCaseClass = testCaseClass.replaceFirst(packagePrefix + "\\.", "");
+            packagePath = packagePath.replaceFirst("^" + packagePrefix + "\\.", "");
         }
-        if(packageSuffix != null && packageSuffix.length() > 0)
+        if(packagePath != null && packageSuffix != null && packageSuffix.length() > 0)
         {
-            testCaseClass = removeSuffixFromTestCase(testCaseClass, packageSuffix);
+            packagePath = packagePath.replaceFirst("\\b" + packageSuffix + "\\.$", "");
         }
+
         List<String> results = new ArrayList<String>();
         if(suffixes != null)
         {
             for (String suffix : suffixes)
             {
-                if(testCaseClass.endsWith(suffix))
-                    results.add(testCaseClass.substring(0, testCaseClass.length() - suffix.length()));
+                if(testType.typeName.endsWith(suffix))
+                {
+                    results.add(packagePath + testType.typeName.substring(0, testType.typeName.length() - suffix.length()));
+                }
             }
         }
 
@@ -52,33 +58,14 @@ public class BaseTools
         {
             for (String prefix : prefixes)
             {
-                if(testCaseClass.startsWith(prefix))
-                    results.add(testCaseClass.replaceFirst(prefix, StringConstants.EMPTY_STRING));
+                if(testType.typeName.startsWith(prefix))
+                {
+                    results.add(packagePath + testType.typeName.replaceFirst(prefix, ""));
+                }
             }
         }
 
         return results;
-    }
-
-    public static String removeSuffixFromTestCase(String testClassName, String packageSuffix)
-    {
-        String[] pathElements = testClassName.split("\\.");
-        int theLastButOne = pathElements.length - 2;
-        if(theLastButOne < 0)
-            return testClassName;
-        if(pathElements[theLastButOne].equals(packageSuffix))
-        {
-            pathElements[theLastButOne] = StringConstants.EMPTY_STRING;
-
-            StringBuffer result = new StringBuffer();
-            for (int i = 0; i < theLastButOne; i++)
-            {
-                result.append(pathElements[i]).append(StringConstants.STRING_DOT);
-            }
-            return result.append(pathElements[pathElements.length - 1]).toString();
-        }
-
-        return testClassName;
     }
 
     /**
@@ -111,14 +98,6 @@ public class BaseTools
         return null;
     }
 
-    // public static String firstCharToUpperCase(String aString) {
-    // if(aString == null || aString.length() == 0)
-    // return aString;
-    //
-    // String firstChar = String.valueOf(aString.charAt(0));
-    // return aString.replaceFirst(firstChar, firstChar.toUpperCase());
-    // }
-
     /**
      * Returns a list of String which are possible unqualified names for the
      * testedClassString.<br>
@@ -132,15 +111,20 @@ public class BaseTools
      */
     public static List<String> getListOfUnqualifiedTypeNames(String testedClassString)
     {
-        List<String> resultList = new ArrayList<String>();
+        List<String> results = new ArrayList<String>();
+        List<String> typeNames = new ArrayList<String>();
 
-        WordTokenizer wordTokenizer = new WordTokenizer(testedClassString);
+        JavaType testedType = new JavaType(testedClassString);
+
+        WordTokenizer wordTokenizer = new WordTokenizer(testedType.typeName);
         while (wordTokenizer.hasMoreElements())
         {
-            resultList.add(getNewWord(resultList, wordTokenizer.nextElement()));
+            String newTypeName = getNewWord(typeNames, wordTokenizer.nextElement());
+            typeNames.add(newTypeName);
+            results.add(testedType.packagePath + newTypeName);
         }
 
-        return resultList;
+        return results;
     }
 
     public static List<String> getListOfUnqualifiedTypeNames(List<String> testedClasses)
@@ -177,4 +161,24 @@ public class BaseTools
         return aString == null || aString.trim().length() == 0;
     }
 
+    private static class JavaType
+    {
+        final String typeName;
+        final String packagePath;
+
+        JavaType(String possiblyFullyQualifiedTypeName)
+        {
+            int lastDotIdx = possiblyFullyQualifiedTypeName.lastIndexOf(".");
+            if(lastDotIdx == - 1)
+            {
+                typeName = possiblyFullyQualifiedTypeName;
+                packagePath = "";
+            }
+            else
+            {
+                typeName = possiblyFullyQualifiedTypeName.substring(lastDotIdx + 1);
+                packagePath = possiblyFullyQualifiedTypeName.substring(0, lastDotIdx + 1);
+            }
+        }
+    }
 }

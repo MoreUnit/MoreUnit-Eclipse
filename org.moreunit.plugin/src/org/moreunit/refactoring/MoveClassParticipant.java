@@ -2,7 +2,6 @@ package org.moreunit.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -81,12 +80,10 @@ public class MoveClassParticipant extends MoveParticipant
             RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
 
             List<Change> changes = new ArrayList<Change>();
-            Set<IType> allTestcases = javaFileFacade.getCorrespondingTestCaseList();
-            
             IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
             String importString = String.format("%s.%s", packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
             
-            for (IType typeToMove : allTestcases)
+            for (IType typeToMove : javaFileFacade.getCorrespondingTestCases())
             {
                 ICompilationUnit[] members = new ICompilationUnit[1];
                 members[0] = typeToMove.getCompilationUnit();

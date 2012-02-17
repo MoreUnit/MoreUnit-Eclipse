@@ -18,6 +18,7 @@ import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.ChooseDialog;
+import org.moreunit.ui.CreateNewClassAction;
 import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MethodCallFinder;
 import org.moreunit.util.MethodTestCallerFinder;
@@ -86,36 +87,51 @@ public class ClassTypeFacade extends TypeFacade
      */
     public IType getOneCorrespondingTestCase(boolean createIfNecessary, String promptText)
     {
-        Set<IType> testcases = getCorrespondingTestCaseList();
+        Collection<IType> testcases = getCorrespondingTestCases();
 
         IType testcaseToJump = null;
         if(testcases.size() == 1)
         {
-            testcaseToJump = (IType) testcases.toArray()[0];
+            testcaseToJump = testcases.iterator().next();
         }
         else if(testcases.size() > 1)
         {
-            MemberContentProvider contentProvider = new MemberContentProvider(testcases, null);
+            MemberContentProvider contentProvider = new MemberContentProvider(testcases, null).withAction(new CreateNewClassAction()
+            {
+                @Override
+                public IType execute()
+                {
+                    return createNewTestCase();
+                }
+            });
+
             testcaseToJump = new ChooseDialog<IType>(promptText, contentProvider).getChoice();
         }
         else if(createIfNecessary)
         {
-            testcaseToJump = new NewTestCaseWizard(getType()).open();
-
-            // Remember, if we created a new test class, cause extension point
-            // client need it to know
-            if(testcaseToJump != null)
-            {
-                newTestClassCreated = true;
-            }
+            testcaseToJump = createNewTestCase();
         }
 
         return testcaseToJump;
     }
 
-    public Set<IType> getCorrespondingTestCaseList()
+    private IType createNewTestCase()
     {
-        return getTestCaseDiviner().getMatches();
+        IType newType = new NewTestCaseWizard(getType()).open();
+
+        // remember whether we created a new test class, cause extension point
+        // client needs to know it
+        if(newType != null)
+        {
+            newTestClassCreated = true;
+        }
+
+        return newType;
+    }
+
+    public Collection<IType> getCorrespondingTestCases()
+    {
+        return getCorrespondingClasses(false);
     }
 
     public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType)
@@ -148,11 +164,11 @@ public class ClassTypeFacade extends TypeFacade
 
     public List<IMethod> getCorrespondingTestMethods(IMethod method)
     {
-        Set<IType> allTestCases = getCorrespondingTestCaseList();
+        Collection<IType> allTestCases = getCorrespondingTestCases();
         return getTestMethodsForTestCases(method, allTestCases);
     }
 
-    private List<IMethod> getTestMethodsForTestCases(IMethod method, Set<IType> testCases)
+    private List<IMethod> getTestMethodsForTestCases(IMethod method, Collection<IType> testCases)
     {
         List<IMethod> result = new ArrayList<IMethod>();
 
@@ -199,7 +215,7 @@ public class ClassTypeFacade extends TypeFacade
         final Set<IMethod> correspondingTestMethods = new HashSet<IMethod>();
         if(searchMethod == MethodSearchMode.BY_CALL)
         {
-            Set<IType> correspondingClasses = getCorrespondingClasses();
+            Collection<IType> correspondingClasses = getCorrespondingTestCases();
             if(! correspondingClasses.isEmpty())
             {
                 correspondingTestMethods.addAll(getCallRelationshipFinder(method, correspondingClasses).getMatches(new NullProgressMonitor()));
@@ -226,19 +242,19 @@ public class ClassTypeFacade extends TypeFacade
     }
 
     @Override
-    protected Set<IType> getCorrespondingClasses()
+    protected Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches)
     {
-        return new LinkedHashSet<IType>(getCorrespondingTestCaseList());
+        return getTestCaseDiviner().getMatches(alsoIncludeLikelyMatches);
     }
 
     @Override
-    protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Set<IType> classes)
+    protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes)
     {
         return getTestMethodsForTestCases(method, classes);
     }
 
     @Override
-    protected MethodCallFinder getCallRelationshipFinder(IMethod method, Set<IType> searchScope)
+    protected MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope)
     {
         return new MethodTestCallerFinder(method, searchScope);
     }
@@ -248,22 +264,17 @@ public class ClassTypeFacade extends TypeFacade
     {
         return new NewTestCaseWizard(fromType);
     }
-    
+
     public IType getOneCorrespondingTestCase(boolean createIfNecessary)
     {
         return getOneCorrespondingTestCase(createIfNecessary, "Please choose a test case...");
     }
 
-    public Collection<IType> getCorrespondingTestCases()
-    {
-        return getCorrespondingTestCaseList();
-    }
-
     public Collection< ? extends IMember> getCorrespondingTestMembers(IMethod method, boolean extendedSearch)
     {
-        Set<IMethod> testMethods = new LinkedHashSet<IMethod>();
+        Collection<IMethod> testMethods = new LinkedHashSet<IMethod>();
 
-        Set<IType> testCases = getCorrespondingClasses();
+        Collection<IType> testCases = getCorrespondingTestCases();
 
         if(method != null && ! testCases.isEmpty())
         {

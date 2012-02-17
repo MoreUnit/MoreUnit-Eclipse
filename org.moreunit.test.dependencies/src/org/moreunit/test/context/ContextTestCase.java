@@ -6,4 +6,9 @@ public abstract class ContextTestCase
 {
     @Rule
     public final TestContextRule context = new TestContextRule();
+
+    public org.moreunit.preferences.Preferences getPreferences()
+    {
+        return org.moreunit.preferences.Preferences.getInstance();
+    }
 }

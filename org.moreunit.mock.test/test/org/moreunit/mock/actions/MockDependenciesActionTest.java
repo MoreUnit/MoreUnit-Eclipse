@@ -1,5 +1,6 @@
 package org.moreunit.mock.actions;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -19,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.utils.ConversionUtils;
@@ -119,7 +121,7 @@ public class MockDependenciesActionTest
     private TestCaseTypeFacade classFacadeThatWillFoundClassUnderTest(IType classUnderTest)
     {
         TestCaseTypeFacade facade = mock(TestCaseTypeFacade.class);
-        when(facade.getOneCorrespondingMember(eq((IMethod) null), eq(true), anyBoolean(), anyString())).thenReturn(classUnderTest);
+        when(facade.getOneCorrespondingMember(any(CorrespondingMemberRequest.class))).thenReturn(classUnderTest);
         return facade;
     }
 

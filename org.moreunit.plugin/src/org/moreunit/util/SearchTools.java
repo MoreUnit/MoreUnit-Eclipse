@@ -6,7 +6,6 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
@@ -21,7 +20,7 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 public class SearchTools
 {
 
-    public static Set<IType> searchFor(String typeName, IJavaElement sourceCompilationUnit, IJavaSearchScope searchScope) throws JavaModelException, CoreException
+    public static Set<IType> searchFor(String typeName, IJavaElement sourceCompilationUnit, IJavaSearchScope searchScope) throws CoreException
     {
         SearchPattern pattern = SearchPattern.createPattern(typeName, IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
         IJavaSearchScope scope = searchScope;

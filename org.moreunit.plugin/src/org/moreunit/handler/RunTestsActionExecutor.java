@@ -11,6 +11,8 @@
  */
 package org.moreunit.handler;
 
+import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
+
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -28,9 +30,11 @@ import org.moreunit.actions.RunTestFromCompilationUnitAction;
 import org.moreunit.actions.RunTestFromTypeAction;
 import org.moreunit.actions.RunTestsOfSelectedMemberAction;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodFacade;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.FeatureDetector;
@@ -153,7 +157,14 @@ public class RunTestsActionExecutor
             }
             else
             {
-                testElements.add(typeFacade.getOneCorrespondingMember(methodUnderTest, true, extendedSearch, "Run test..."));
+                CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                        .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                        .withCurrentMethod(methodUnderTest) //
+                        .extendedSearch(extendedSearch) //
+                        .createClassIfNoResult("Run test...") //
+                        .build();
+                
+                testElements.add(typeFacade.getOneCorrespondingMember(request));
             }
         }
 
