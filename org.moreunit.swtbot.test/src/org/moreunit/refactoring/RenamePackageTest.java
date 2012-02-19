@@ -1,20 +1,11 @@
 package org.moreunit.refactoring;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import static org.fest.assertions.Assertions.assertThat;
-
-
-import java.util.List;
+import static org.junit.Assert.fail;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.finders.ChildrenControlFinder;
-import org.eclipse.swtbot.swt.finder.matchers.WidgetOfType;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -62,17 +53,7 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 
 	private SWTBotTreeItem selectAndReturnPackage() 
 	{
-		SWTBotView packageExplorerView = bot.viewByTitle("Package Explorer");
-
-		List<Tree> findControls = new ChildrenControlFinder(packageExplorerView.getWidget()).findControls(WidgetOfType.widgetOfType(Tree.class));
-		if (findControls.isEmpty())
-			fail("Tree in Package Explorer View was not found.");
-
-		SWTBotTree tree = new SWTBotTree((Tree) findControls.get(0));
-		
-		
-		SWTBotTreeItem projectNode = tree.expandNode(getProjectNameFromContext());
-		tree.select(projectNode);
+		SWTBotTreeItem projectNode = selectAndReturnJavaProjectFromPackageExplorer();
 
 		SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
 		sourcesFolder.select();
@@ -82,9 +63,5 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 		orgPackage.select();
 
 		return orgPackage;
-	}
-
-	private String getProjectNameFromContext() {
-		return context.getProjectHandler().get().getElementName();
 	}
 }

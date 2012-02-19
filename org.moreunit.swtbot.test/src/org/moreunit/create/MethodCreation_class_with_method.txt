@@ -1,6 +1,6 @@
 package testing;
 
-public class HelloWorld
+public class TheWorld
 {
 	public int getNumber1()
 	{

@@ -2,11 +2,8 @@ package org.moreunit.jump;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
-import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -15,7 +12,6 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
-import org.moreunit.test.context.configs.SimpleJUnit4Properties;
 
 
 public class BasicJumpTest extends JavaProjectSWTBotTestHelper
@@ -38,12 +34,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     	assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClassTest.java");
     }
 
-	private void pressJumpShortcut() 
-	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.CTRL, 'j');
-	}
-    
-    @Test
+	@Test
     @Context(SimpleJUnit4Project.class)
     public void should_jump_to_cut_when_shortcut_is_pressed_in_testcase()
     {
@@ -64,29 +55,11 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     	pressJumpShortcut();
     	waitForChooseDialog();
     	
-    	// choose dialog should show 2 tests
-    	assertThat(bot.tree().rowCount()).isEqualTo(2);
+    	// choose dialog should show 2 tests (and 2 more items for creation of a new test)
+    	assertThat(bot.tree().rowCount()).isEqualTo(4);
     }
 
-	private void waitForChooseDialog() 
-	{
-		bot.waitUntil(new DefaultCondition() 
-		{
-			@Override
-			public boolean test() throws Exception 
-			{
-				return bot.activeShell() != null;
-			}
-			
-			@Override
-			public String getFailureMessage() 
-			{
-				return "ChooseDialog did not appear.";
-			}
-		});
-	}
-    
-    @Project(mainSrc = "BasicJump_class_with_method.txt",
+	@Project(mainSrc = "BasicJump_class_with_method.txt",
     		 testSrc = "BasicJump_test_with_testmethod.txt",
     		 properties = @Properties(
     			        testType = TestType.JUNIT4,
