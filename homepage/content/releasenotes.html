@@ -12,6 +12,20 @@
 		<article class="content" id="releasenotes">
 			<header>Release Notes</header>
 			<section>
+				<h2>2012-02-22: Version 2.4.3 released</h2>
+				<ul>
+					<li>Fix: do not consider potential test cases with packages that do not match the package of the class under test anymore, except as a proposal when jumping (bugs 3482684 & 3386098)</li>
+					<li>Adds a "New Class" entry in the "Jump To..." pop-up menu</li>
+					<li>Fix: the "New Class" wizard is back when "jumping" from a test class that does not have an associated tested class yet</li>
+					<li>The support for mocking frameworks now also works for Eclipse platforms that use Java 5 but do not provide JAXB</li>
+					<li>Fix: occasional exception when moving classes (bug 3285663)</li>
+					<li>The preferences UI has been improved so that it better fits in the dialog, and tooltips appears</li>
+					<li>Improves source folder guesses for Maven-like project (more work to come)</li>
+					<li>Adds "throws Exception" to generated test methods</li>
+					<li>Fix: the "no constructor" warning does not appear anymore when mocking dependencies of a class that has a default constructor</li>
+					<li>Much work has been done (and is still done) to improve testing of MoreUnit :-)</li>
+				</ul>
+				
 				<h2>2011-05-18: Version 2.4.2 released</h2>
 				<ul>
 					<li>Adds a wizard to select which dependencies are to be mocked in a test case</li>

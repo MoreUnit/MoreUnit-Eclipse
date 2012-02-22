@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="build_pre_release" name="MoreUnit">
+<project default="build_nightly" name="MoreUnit">
 
 	<!-- Specify the version of the features to build -->
 	<property name="main_number" value="2"/>
@@ -60,7 +60,7 @@
 	  -->
 	<target
 		name="build_release"
-		depends="prepare_release_properties, get_tagged_sources, prepare_folder_for_release, build_feature, unzip_features, metadata, category"
+		depends="prepare_release_properties, get_tagged_sources, prepare_folder_for_release, build_feature, unzip_features, metadata, category, merge_build"
 		description="Builds a release version from SVN and updates the update site project">
 		<echo>Build new release version ${version_number}</echo>
 	</target>
