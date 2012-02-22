@@ -9,12 +9,10 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.test.context.Context;
 import org.moreunit.test.context.Project;
 
 @Project(mainCls="org:HelloWorld", mainSrcFolder="src", testSrcFolder="test")

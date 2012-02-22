@@ -1,0 +1,9 @@
+package testing;
+
+public class TheWorld
+{
+	public int getNumber1()
+	{
+		return 1;
+	}
+}

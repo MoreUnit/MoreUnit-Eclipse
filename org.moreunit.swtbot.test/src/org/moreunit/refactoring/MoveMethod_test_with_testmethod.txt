@@ -1,0 +1,12 @@
+package testing;
+
+import org.junit.Test;
+
+public class TheWorldTest
+{
+	@Test
+	public void testGetNumber1()
+	{
+		// nothing to test
+	}
+}

@@ -2,23 +2,17 @@ package org.moreunit.create;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
-import org.moreunit.test.workspace.CompilationUnitHandler;
-import org.moreunit.test.workspace.TypeHandler;
 
 
 public class MethodCreationTest extends JavaProjectSWTBotTestHelper

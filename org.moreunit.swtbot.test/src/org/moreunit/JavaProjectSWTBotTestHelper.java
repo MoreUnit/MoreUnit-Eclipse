@@ -23,6 +23,7 @@ import org.eclipse.swtbot.swt.finder.matchers.WidgetOfType;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -74,13 +75,26 @@ public class JavaProjectSWTBotTestHelper
 	
 	private static void switchToJavaPerspective() 
 	{
+		bot.viewByTitle("Welcome").close();
+		
 		bot.menu("Window").menu("Open Perspective").menu("Other...").click();
 		SWTBotShell openPerspectiveShell = bot.shell("Open Perspective");
 		openPerspectiveShell.activate();
-
+		
+		SWTBotTableItem javaPerspectiveItem = null;
+		for(int i=0; i<bot.table().rowCount();i++)
+		{
+			SWTBotTableItem item = bot.table().getTableItem(i);
+			String perspectiveName = item.getText();
+			if("Java".equals(perspectiveName) || "Java (default)".equals(perspectiveName))
+				javaPerspectiveItem = item;
+		}
 		// select the dialog
-		bot.table().select("Java");
+		javaPerspectiveItem.select();
 		bot.button("OK").click();
+		
+		// activating the java perspective takes a short moment
+		bot.sleep(2000);
 	}
 	
 	protected void openResource(String resourceName)
@@ -169,5 +183,22 @@ public class JavaProjectSWTBotTestHelper
 	private String getProjectNameFromContext() 
 	{
 		return context.getProjectHandler().get().getElementName();
+	}
+
+	protected SWTBotTreeItem selectAndReturnPackageWithName(String packageName) {
+		SWTBotTreeItem projectNode = selectAndReturnJavaProjectFromPackageExplorer();
+	
+		SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
+		sourcesFolder.select();
+		sourcesFolder.expand();
+	
+		SWTBotTreeItem orgPackage = sourcesFolder.getNode(packageName);
+		orgPackage.select();
+	
+		return orgPackage;
+	}
+
+	protected void pressMoveShortcut() {
+		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.ALT | SWT.COMMAND, 'v');
 	}
 }

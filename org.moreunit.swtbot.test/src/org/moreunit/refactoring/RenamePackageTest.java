@@ -3,13 +3,18 @@ package org.moreunit.refactoring;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.swt.SWT;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Context;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.context.TestType;
 
 /**
  * @author gianasista
@@ -28,7 +33,7 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 	{
 		try 
 		{
-			SWTBotTreeItem packageToRename = selectAndReturnPackage();
+			SWTBotTreeItem packageToRename = selectAndReturnPackageWithName("org");
 
 			// Press rename shortcut
 			packageToRename.pressShortcut(SWT.ALT | SWT.COMMAND, 'r');
@@ -50,18 +55,46 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 			fail("Renaming a package must not throw an exception! ("+ e + ")");
 		}
 	}
-
-	private SWTBotTreeItem selectAndReturnPackage() 
+	
+	@Project(mainCls="some:First,some:Second", 
+			 mainSrcFolder="src", 
+			 testSrc="test",
+			 testCls="some:SecondTest")
+	@Preferences(testClassSuffixes="Test", 
+	             testType=TestType.JUNIT4)
+	public void should_rename_testpackage_when_renaming_package()
 	{
-		SWTBotTreeItem projectNode = selectAndReturnJavaProjectFromPackageExplorer();
+		SWTBotTreeItem packageToRename = selectAndReturnPackageWithName("org");
 
-		SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
-		sourcesFolder.select();
-		sourcesFolder.expand();
-
-		SWTBotTreeItem orgPackage = sourcesFolder.getNode("org");
-		orgPackage.select();
-
-		return orgPackage;
+		// Press rename shortcut
+		packageToRename.pressShortcut(SWT.ALT | SWT.COMMAND, 'r');
+		
+		// fill dialog to rename package
+		SWTBotText textWithLabel = bot.textWithLabel("New name:");
+		assertThat(textWithLabel).isNotNull();
+		textWithLabel.setText("any");
+		bot.shell("Rename Package").activate();
+		
+		// start rename refactoring
+		SWTBotButton okButton = bot.button("OK");
+		okButton.click();
+		
+		bot.waitUntil(new DefaultCondition() 
+		{
+			@Override
+			public boolean test() throws Exception 
+			{
+				return bot.activeShell() == null;
+			}
+			
+			@Override
+			public String getFailureMessage() 
+			{
+				return "Rename dialog did not disappear.";
+			}
+		});
+		
+		ICompilationUnit testcase = context.getCompilationUnit("any.SecondTest");
+		assertThat(testcase).isNotNull();
 	}
 }
