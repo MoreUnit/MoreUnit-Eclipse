@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="build_nightly" name="MoreUnit">
+<project default="build_pre_release" name="MoreUnit">
 
 	<!-- Specify the version of the features to build -->
 	<property name="main_number" value="2"/>
 	<property name="major_number" value="4"/>
-	<property name="minor_number" value="2"/>
+	<property name="minor_number" value="3"/>
 
 	<!-- PROPERTIES INCLUSION -->
 

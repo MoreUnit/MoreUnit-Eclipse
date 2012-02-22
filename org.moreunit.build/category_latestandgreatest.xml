@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.moreunit_2.4.2.jar" id="org.moreunit" version="2.4.2">
+   <feature url="features/org.moreunit_2.4.3.jar" id="org.moreunit" version="2.4.3">
       <category name="moreunit.org"/>
    </feature>
 	
-   <feature url="features/org.moreunit.mock_2.4.2.jar" id="org.moreunit.mock" version="2.4.2">
+   <feature url="features/org.moreunit.mock_2.4.3.jar" id="org.moreunit.mock" version="2.4.3">
       <category name="moreunit.org"/>
    </feature>
    <category-def name="moreunit.org" label="MoreUnit"/>
