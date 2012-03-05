@@ -39,6 +39,8 @@ import org.moreunit.test.context.TestContextRule;
  */
 public class JavaProjectSWTBotTestHelper 
 {
+	static ShortcutStrategy shortcutStrategy = ShortcutStrategy.createShortcutStrategy();
+	
 	@Rule
 	public final TestContextRule context = new TestContextRule();
 	
@@ -51,7 +53,7 @@ public class JavaProjectSWTBotTestHelper
 		
 		if(!isWorkspacePrepared)
 		{
-			SWTBotPreferences.PLAYBACK_DELAY = 10;
+			SWTBotPreferences.PLAYBACK_DELAY = 50;
 			// Init keyboard layout
 			SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
 			switchToJavaPerspective();
@@ -99,7 +101,7 @@ public class JavaProjectSWTBotTestHelper
 	
 	protected void openResource(String resourceName)
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND | SWT.SHIFT, 'r');
+		KeyboardFactory.getAWTKeyboard().pressShortcut(getCmdOrStrgKeyForShortcutsDependentOnPlattform() | SWT.SHIFT, 'r');
     	SWTBotShell openTypeShell = bot.shell("Open Resource");
     	assertThat(openTypeShell).isNotNull();
     	openTypeShell.activate();
@@ -133,11 +135,6 @@ public class JavaProjectSWTBotTestHelper
 				return null;
 			}
 		});
-	}
-
-	protected void pressJumpShortcut() 
-	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.CTRL, 'j');
 	}
 
 	protected void waitForChooseDialog() 
@@ -185,7 +182,8 @@ public class JavaProjectSWTBotTestHelper
 		return context.getProjectHandler().get().getElementName();
 	}
 
-	protected SWTBotTreeItem selectAndReturnPackageWithName(String packageName) {
+	protected SWTBotTreeItem selectAndReturnPackageWithName(String packageName) 
+	{
 		SWTBotTreeItem projectNode = selectAndReturnJavaProjectFromPackageExplorer();
 	
 		SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
@@ -197,8 +195,19 @@ public class JavaProjectSWTBotTestHelper
 	
 		return orgPackage;
 	}
+	
+	protected ShortcutStrategy getShortcutStrategy()
+	{
+		return shortcutStrategy;
+	}
 
-	protected void pressMoveShortcut() {
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.ALT | SWT.COMMAND, 'v');
+	protected int getCmdOrStrgKeyForShortcutsDependentOnPlattform()
+	{
+		return isRunningOnLinux() ? SWT.CTRL : SWT.COMMAND;
+	}
+
+	protected boolean isRunningOnLinux() 
+	{
+		return System.getProperty("os.name").contains("Linux");
 	}
 }

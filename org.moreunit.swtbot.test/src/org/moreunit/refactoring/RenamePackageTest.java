@@ -4,11 +4,9 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Context;
@@ -33,10 +31,10 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 	{
 		try 
 		{
-			SWTBotTreeItem packageToRename = selectAndReturnPackageWithName("org");
+			selectAndReturnPackageWithName("org");
 
 			// Press rename shortcut
-			packageToRename.pressShortcut(SWT.ALT | SWT.COMMAND, 'r');
+			getShortcutStrategy().pressRenameShortcut();
 			
 			// fill dialog to rename package
 			SWTBotText textWithLabel = bot.textWithLabel("New name:");
@@ -64,10 +62,10 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 	             testType=TestType.JUNIT4)
 	public void should_rename_testpackage_when_renaming_package()
 	{
-		SWTBotTreeItem packageToRename = selectAndReturnPackageWithName("org");
+		selectAndReturnPackageWithName("org");
 
 		// Press rename shortcut
-		packageToRename.pressShortcut(SWT.ALT | SWT.COMMAND, 'r');
+		getShortcutStrategy().pressRenameShortcut();
 		
 		// fill dialog to rename package
 		SWTBotText textWithLabel = bot.textWithLabel("New name:");

@@ -32,7 +32,7 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 		cutEditor.setFocus();
 		int lineNumberOfMethodSignature = 4;
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 27);
-		pressMoveShortcut();
+		getShortcutStrategy().pressMoveShortcut();
 		bot.waitUntil(Conditions.shellIsActive("Move Static Members"));
 		bot.comboBox().setText("testing.TheMoon");
 		SWTBotShell moveDialog = bot.activeShell();

@@ -17,9 +17,8 @@ public class BestMatchJumpTest extends JavaProjectSWTBotTestHelper
 	@Test
 	public void should_jump_to_test_when_two_test_exist_but_one_is_prefect_match()
 	{
-		
 		openResource("SomeClass.java");
-		pressJumpShortcut();
+		getShortcutStrategy().pressJumpShortcut();
 		assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClassTest.java");
 	}
 	
@@ -32,7 +31,7 @@ public class BestMatchJumpTest extends JavaProjectSWTBotTestHelper
     {
 		
     	openResource("SomeClass.java");
-    	pressJumpShortcut();
+    	getShortcutStrategy().pressJumpShortcut();
     	waitForChooseDialog();
     	
     	assertThat(bot.tree().rowCount()).isEqualTo(4);

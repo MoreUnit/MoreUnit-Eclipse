@@ -36,13 +36,13 @@ public class MoveClassTest extends JavaProjectSWTBotTestHelper
 		SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
 		packageItem.expand();
 		packageItem.getNode("SomeClass.java").select();		
-		pressMoveShortcut();
+		getShortcutStrategy().pressMoveShortcut();
 		bot.waitUntil(Conditions.shellIsActive("Move"));
 		SWTBotTreeItem projectItem = bot.tree().getTreeItem(context.getProjectHandler().getName());
 		projectItem.getNode("src").getNode("com").select();
 		SWTBotShell moveDialog = bot.activeShell();
 		bot.button("OK").click();
-		bot.waitUntil(Conditions.shellCloses(moveDialog), 10000);
+		bot.waitUntil(Conditions.shellCloses(moveDialog), 20000);
 	}
 
 	@Project(

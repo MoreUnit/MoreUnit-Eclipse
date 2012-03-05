@@ -4,9 +4,9 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +22,8 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 	
 	private void openProjectPropertiesAndSelectMoreUnitPage()
 	{
-		selectAndReturnJavaProjectFromPackageExplorer();
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND, 'i');
+		SWTBotTreeItem projectItem = selectAndReturnJavaProjectFromPackageExplorer();
+		getShortcutStrategy().openProperties(projectItem);
 
 		// wait for property page
 		bot.waitUntil(new DefaultCondition() 
@@ -52,10 +52,10 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 		
 		SWTBotTreeItem projectItem = bot.tree().getAllItems()[0];
 		projectItem.expand();
-		
+		SWTBotShell addFolderDialog = bot.activeShell();
 		projectItem.getNode("test").select().check();
 		bot.button("Finish").click();
-		
+		bot.waitUntil(Conditions.shellCloses(addFolderDialog));
 		saveAndCloseProps();
 		assertTrue(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext()));
 	}

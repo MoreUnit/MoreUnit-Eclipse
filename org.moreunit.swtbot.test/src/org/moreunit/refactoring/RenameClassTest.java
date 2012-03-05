@@ -2,9 +2,7 @@ package org.moreunit.refactoring;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
@@ -49,11 +47,11 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
 		packageItem.expand();
 		packageItem.getNode("SomeClass.java").select();
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.ALT | SWT.COMMAND, 'r');
+		getShortcutStrategy().pressRenameShortcut();
 		bot.textWithLabel("New name:").setText("AnyClass");
 		bot.button("Finish").click();
 		SWTBotShell renameDialog = bot.activeShell();
-		bot.waitUntil(Conditions.shellCloses(renameDialog), 10000);
+		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
 	}
 	
 }

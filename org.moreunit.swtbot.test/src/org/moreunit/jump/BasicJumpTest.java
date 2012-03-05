@@ -30,7 +30,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     public void should_jump_to_test_when_shortcut_is_pressed_in_cut()
     {
     	openResource("SomeClass.java");
-    	pressJumpShortcut();
+    	getShortcutStrategy().pressJumpShortcut();
     	assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClassTest.java");
     }
 
@@ -39,7 +39,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     public void should_jump_to_cut_when_shortcut_is_pressed_in_testcase()
     {
     	openResource("SomeClassTest.java");
-    	pressJumpShortcut();
+    	getShortcutStrategy().pressJumpShortcut();
     	assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClass.java");
     }
     
@@ -52,7 +52,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     public void should_show_dialog_with_when_jump_shortcut_pressed_in_cut_and_multiple_tests_exists()
     {
     	openResource("SomeClass.java");
-    	pressJumpShortcut();
+    	getShortcutStrategy().pressJumpShortcut();
     	waitForChooseDialog();
     	
     	// choose dialog should show 2 tests (and 2 more items for creation of a new test)
@@ -73,7 +73,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     	// move cursor to method
     	int lineNumberOfMethod = 6;
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
-    	pressJumpShortcut();
+    	getShortcutStrategy().pressJumpShortcut();
     	
     	SWTBotEclipseEditor testEditor = bot.activeEditor().toTextEditor();
     	final int lineNumberOfTestMethod = 7;

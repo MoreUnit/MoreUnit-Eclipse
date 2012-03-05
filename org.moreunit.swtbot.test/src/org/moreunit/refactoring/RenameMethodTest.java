@@ -4,10 +4,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -34,12 +32,23 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		cutEditor.setFocus();
 		int lineNumberOfMethodSignature = 4;
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 20);
-		
+
 		pressRenameShortcutTwiceAndWaitForDialog();
 		renameMethodAndWaitUntilFinished();
 		
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
 		assertThat(methods).onProperty("elementName").containsOnly("testGetNumberOne");
+	}
+	
+	private void pressRenameShortcutTwiceAndWaitForDialog() 
+	{
+		getShortcutStrategy().pressRenameShortcut();
+		getShortcutStrategy().pressRenameShortcut();
+
+		//bot.waitUntil(Conditions.shellIsActive("Rename Method"));
+		// TODO line above does not work under Fedora
+		bot.sleep(3000);
+		//System.out.println("Shell: "+bot.activeShell().getText());
 	}
 
 	protected void renameMethodAndWaitUntilFinished() 
@@ -49,12 +58,4 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		bot.button("OK").click();
 		bot.waitUntil(Conditions.shellCloses(renameDialog));
 	}
-
-	protected void pressRenameShortcutTwiceAndWaitForDialog() 
-	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
-		bot.waitUntil(Conditions.shellIsActive("Rename Method"));
-	}
-
 }

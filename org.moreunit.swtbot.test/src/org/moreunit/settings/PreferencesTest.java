@@ -4,9 +4,6 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -19,7 +16,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
 	private void openPreferencesAndSelectMoreUnitPage()
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND, ',');
+		getShortcutStrategy().openPreferences();
 		bot.tree().select("MoreUnit");
 	}
 	

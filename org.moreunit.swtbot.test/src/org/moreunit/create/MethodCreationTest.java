@@ -4,9 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -34,7 +32,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
     	int lineNumberOfMethod = 6;
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
 		
-		pressGenerateShortcut();
+		getShortcutStrategy().pressGenerateShortcut();
 		
 		// adding the method to the testcase takes a short moment
 		bot.sleep(1000);
@@ -60,7 +58,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
     	int lineNumberOfMethod = 8;
     	testcaseEditor.navigateTo(lineNumberOfMethod, 9);
 		
-		pressGenerateShortcut();
+		getShortcutStrategy().pressGenerateShortcut();
 
 		// wait until the testcase has changes
 		bot.waitUntil(new DefaultCondition() {
@@ -81,8 +79,4 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		assertThat(methods).hasSize(2).onProperty("elementName").contains("testGetNumber1Suffix");
 	}
 	
-	private void pressGenerateShortcut() 
-	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.CTRL, 'u');
-	}
 }
