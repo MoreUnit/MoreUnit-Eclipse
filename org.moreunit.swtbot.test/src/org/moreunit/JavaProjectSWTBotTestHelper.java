@@ -53,7 +53,7 @@ public class JavaProjectSWTBotTestHelper
 		
 		if(!isWorkspacePrepared)
 		{
-			SWTBotPreferences.PLAYBACK_DELAY = 50;
+			SWTBotPreferences.PLAYBACK_DELAY = 10;
 			// Init keyboard layout
 			SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
 			switchToJavaPerspective();

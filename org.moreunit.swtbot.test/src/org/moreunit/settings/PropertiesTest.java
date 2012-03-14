@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
@@ -24,23 +23,9 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 	{
 		SWTBotTreeItem projectItem = selectAndReturnJavaProjectFromPackageExplorer();
 		getShortcutStrategy().openProperties(projectItem);
-
-		// wait for property page
-		bot.waitUntil(new DefaultCondition() 
-		{
-			@Override
-			public boolean test() throws Exception 
-			{
-				return bot.activeShell() != null;
-			}
-			
-			@Override
-			public String getFailureMessage() 
-			{
-				return "Properties page did not appear.";
-			}
-		});
-		
+		bot.waitUntil(Conditions.shellIsActive("Properties for sample-project"));
+		bot.shell("Properties for sample-project").activate();
+		bot.shell("Properties for sample-project").setFocus();
 		bot.tree().select("MoreUnit");
 	}
 	
@@ -48,6 +33,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 	{
 		openProjectPropertiesAndSelectMoreUnitPage();
 		bot.checkBox("Use project specific settings").select();
+		SWTBotShell propertiesDialogShell = bot.activeShell();
 		bot.button("Add").click();
 		
 		SWTBotTreeItem projectItem = bot.tree().getAllItems()[0];
@@ -56,6 +42,8 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 		projectItem.getNode("test").select().check();
 		bot.button("Finish").click();
 		bot.waitUntil(Conditions.shellCloses(addFolderDialog));
+		propertiesDialogShell.setFocus();
+		propertiesDialogShell.activate();
 		saveAndCloseProps();
 		assertTrue(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext()));
 	}

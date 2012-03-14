@@ -4,6 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -17,6 +18,9 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
 	private void openPreferencesAndSelectMoreUnitPage()
 	{
 		getShortcutStrategy().openPreferences();
+		bot.waitUntil(Conditions.shellIsActive("Preferences"));
+		bot.shell("Preferences").activate();
+		bot.shell("Preferences").setFocus();
 		bot.tree().select("MoreUnit");
 	}
 	

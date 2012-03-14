@@ -55,7 +55,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		openResource("TheWorldTest.java");
 		final SWTBotEclipseEditor testcaseEditor = bot.activeEditor().toTextEditor();
 		// move cursor to method
-    	int lineNumberOfMethod = 8;
+    	int lineNumberOfMethod = 9;
     	testcaseEditor.navigateTo(lineNumberOfMethod, 9);
 		
 		getShortcutStrategy().pressGenerateShortcut();

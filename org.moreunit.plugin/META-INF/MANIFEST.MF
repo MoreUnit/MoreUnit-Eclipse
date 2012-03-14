@@ -28,7 +28,8 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreunit.mock",
  org.moreunit.elements;
   x-friends:="org.moreunit.test,
    org.moreunit.mock,
-   org.moreunit.mock.test";
+   org.moreunit.mock.test,
+   org.moreunit.swtbot.test";
   uses:="org.eclipse.jdt.core,
    org.eclipse.jface.viewers,
    org.eclipse.jdt.core.dom,
