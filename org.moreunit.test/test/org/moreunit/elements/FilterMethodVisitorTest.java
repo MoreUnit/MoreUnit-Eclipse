@@ -182,4 +182,96 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = typeWithTwoSetters.getMethod("getTheWorld", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isFalse();
     }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_getter_but_different_type.java.txt")
+    public void isGetterMethod_should_return_false_when_field_has_different_type()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("getTheWorld", new String[] {});
+        assertThat(filterMethodVisitor.isGetterMethod(method)).isFalse();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_getter_and_fieldname_with_underscore.txt")
+    public void isGetterMethod_should_return_true_when_field_starts_with_underscore()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("getFieldName1", new String[] {});
+        assertThat(filterMethodVisitor.isGetterMethod(method)).isTrue();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_getter_and_fieldname_with_member_prefix.txt")
+    public void isGetterMethod_should_return_true_when_field_starts_with_member_prefix()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("getFieldName1", new String[] {});
+        assertThat(filterMethodVisitor.isGetterMethod(method)).isTrue();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_method_and_fieldname.java.txt")
+    public void isGetterMethod_should_return_false_when_method_does_not_start_with_get()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("aFieldName1", new String[] {});
+        assertThat(filterMethodVisitor.isGetterMethod(method)).isFalse();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_setter.java.txt")
+    public void isSetterMethod_should_return_true_when_field_exists()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("setFieldName1", new String[] { "QString;"});
+        assertThat(filterMethodVisitor.isSetterMethod(method)).isTrue();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_setter_with_two_parameters.java.txt")
+    public void isSetterMethod_should_return_false_when_setter_has_more_than_one_parameter()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("setFieldName1", new String[] { "QString;", "I" });
+        assertThat(filterMethodVisitor.isSetterMethod(method)).isFalse();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_setter_with_different_type.java.txt")
+    public void isSetterMethod_should_return_false_when_setter_has_different_type()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("setFieldName1", new String[] { "QString;" });
+        assertThat(filterMethodVisitor.isSetterMethod(method)).isFalse();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_setter_and_fieldname_with_underscore.java.txt")
+    public void isSetterMethod_should_return_true_when_field_starts_with_underscore()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("setFieldName1", new String[] { "QString;"});
+        assertThat(filterMethodVisitor.isSetterMethod(method)).isTrue();
+    }
+    
+    @Test
+    @Context(mainSrc = "FilterMethodVisitor_class_with_setter_and_fieldname_with_member_prefix.java.txt")
+    public void isSetterMethod_should_return_true_when_field_starts_with_member_prefix()
+    {
+        IType type = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
+        FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(type);
+        IMethod method = type.getMethod("setFieldName1", new String[] { "QString;"});
+        assertThat(filterMethodVisitor.isSetterMethod(method)).isTrue();
+    }
+    
+    
 }

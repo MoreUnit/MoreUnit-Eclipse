@@ -1,0 +1,10 @@
+package te.st;
+
+public class SomeClass {
+	private String _fieldName1;
+	
+	public void setFieldName1(String value)
+	{
+		this._fieldName1 = value;
+	}
+}

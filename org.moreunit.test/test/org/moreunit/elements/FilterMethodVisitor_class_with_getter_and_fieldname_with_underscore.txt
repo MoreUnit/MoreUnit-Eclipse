@@ -1,0 +1,10 @@
+package te.st;
+
+public class SomeClass {
+	private String _fieldName1;
+	
+	private String getFieldName1()
+	{
+		return fieldName1;
+	}
+}

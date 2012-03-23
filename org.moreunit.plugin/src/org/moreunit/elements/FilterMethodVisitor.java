@@ -137,10 +137,43 @@ public class FilterMethodVisitor extends ASTVisitor
 
         return false;
     }
+    
+    private boolean hasExactlyOneParameterOfFieldType(FieldDeclaration fieldDeclaration, IMethod method)
+    {
+        String[] parameterTypes = method.getParameterTypes();
+        
+        // Getters must have exactly one parameter
+        if(parameterTypes.length != 1)
+            return false;
+        
+        String fieldTypeSignature = Signature.createTypeSignature(fieldDeclaration.getType().toString(), false);
+        return fieldTypeSignature.equals(parameterTypes[0]);
+    }
 
+    /**
+     * This method should return true, if field and getterVariable have the same name
+     * (the field may start with underscore e.g. _fieldName or may be prefixed with m
+     *  e.g. mFieldName)
+     */
     private boolean sameVariableName(String getterVariableName, VariableDeclarationFragment declarationFragment)
     {
-        return getterVariableName.toLowerCase().equals(declarationFragment.getName().getFullyQualifiedName().toLowerCase());
+        String fieldName = declarationFragment.getName().getFullyQualifiedName().toLowerCase();
+        
+        // check exact name
+        if(getterVariableName.equalsIgnoreCase(fieldName))
+            return true;
+        
+        // check underscore
+        String getterWithUnderscore = String.format("_%s", getterVariableName);
+        if(getterWithUnderscore.equalsIgnoreCase(fieldName))
+            return true;
+        
+        // check m-prefix
+        String getterWithMemberPrefix = String.format("m%s", getterVariableName);
+        if(getterWithMemberPrefix.equalsIgnoreCase(fieldName))
+            return true;
+
+        return false;
     }
 
     private boolean sameVariableType(FieldDeclaration fieldDeclaration, IMethod method)
@@ -158,7 +191,20 @@ public class FilterMethodVisitor extends ASTVisitor
 
     public boolean isSetterMethod(IMethod method)
     {
+        String setterVariableName = method.getElementName().replaceFirst(MoreUnitContants.SETTER_PREFIX, StringConstants.EMPTY_STRING);
+        
+        for (FieldDeclaration fieldDeclaration : fieldDeclarations)
+        {
+            @SuppressWarnings("unchecked")
+            List<VariableDeclarationFragment> variableDeclarationFragments = fieldDeclaration.fragments();
+            for (VariableDeclarationFragment declarationFragment : variableDeclarationFragments)
+            {
+                if(sameVariableName(setterVariableName, declarationFragment) && hasExactlyOneParameterOfFieldType(fieldDeclaration, method))
+                    return true;
+            }
+        }
         return false;
+
     }
 
     private boolean sameMethodName(IMethod method, MethodDeclaration methodDeclaration)

@@ -1,0 +1,9 @@
+package te.st;
+
+public class SomeClass {
+	private int fieldName1;
+	
+	public void setFieldName1(String value)
+	{
+	}
+}
