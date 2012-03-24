@@ -1,12 +1,10 @@
 package org.moreunit.ui;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.IPage;
-import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.MessagePage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
@@ -56,13 +54,13 @@ public class MissingTestmethodViewPart extends PageBookView
         if(activePage == null)
         {
             activePage = new MethodPage(new EditorPartFacade((IEditorPart) part));
-            initPage((IPageBookViewPage) activePage);
+            initPage(activePage);
             activePage.createControl(getPageBook());
         }
         else
         {
             activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
-            initPage((IPageBookViewPage) activePage);
+            initPage(activePage);
         }
         return new PageRec(part, activePage);
     }
@@ -117,8 +115,13 @@ public class MissingTestmethodViewPart extends PageBookView
         }
         else if(PluginTools.isJavaFile(part))
         {
-            activePage.setNewEditorPartFacade(new EditorPartFacade((IEditorPart) part));
-            initPage((IPageBookViewPage) activePage);
+            // only if a different java file is activated, do something
+            EditorPartFacade editorPartFacade = new EditorPartFacade((IEditorPart) part);
+            if(!editorPartFacade.getCompilationUnit().findPrimaryType().equals(activePage.getInputType()))
+            {
+                activePage.setNewEditorPartFacade(editorPartFacade);
+                initPage(activePage);
+            }
         }
     }
 
@@ -158,12 +161,4 @@ public class MissingTestmethodViewPart extends PageBookView
             }
         }
     }
-    
-    /*
-    @Override
-    protected void partHidden(IWorkbenchPart part)
-    {
-    }
-    */
-
 }

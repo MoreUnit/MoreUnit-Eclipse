@@ -31,8 +31,6 @@ import org.moreunit.preferences.Preferences;
  */
 public class MethodPage extends Page implements IElementChangedListener
 {
-
-    //private ListViewer listViewer;
     private EditorPartFacade editorPartFacade;
     private TreeViewer treeViewer;
 
@@ -65,6 +63,8 @@ public class MethodPage extends Page implements IElementChangedListener
     public void setNewEditorPartFacade(EditorPartFacade editorPartFacade)
     {
         this.methodTreeContentProvider = new MethodTreeContentProvider(editorPartFacade.getCompilationUnit().findPrimaryType());
+        this.methodTreeContentProvider.setGetterFiltered(filterGetterAction.isChecked());
+        this.methodTreeContentProvider.setPrivateFiltered(filterPrivateAction.isChecked());
         this.editorPartFacade = editorPartFacade;
         this.treeViewer.setContentProvider(this.methodTreeContentProvider);
     }
@@ -85,7 +85,7 @@ public class MethodPage extends Page implements IElementChangedListener
             }
         };
         this.filterPrivateAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/private.gif"));
-        this.filterPrivateAction.setChecked(true);
+        this.filterPrivateAction.setChecked(false);
         this.filterPrivateAction.setToolTipText("Filter private methods");
 
         this.filterGetterAction = new Action("", IAction.AS_CHECK_BOX)
@@ -97,7 +97,7 @@ public class MethodPage extends Page implements IElementChangedListener
             }
         };
         this.filterGetterAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/getter.gif"));
-        this.filterGetterAction.setChecked(true);
+        this.filterGetterAction.setChecked(false);
         this.filterGetterAction.setToolTipText("Filter getter/setter");
 
         this.addTestAction = new Action("Add...")
@@ -146,7 +146,6 @@ public class MethodPage extends Page implements IElementChangedListener
             return;
         }
 
-        //TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(typeOfTestCaseClassFromJavaFile.getCompilationUnit());
         for (Iterator<?> allSelected = selection.iterator(); allSelected.hasNext();)
         {
             IMethod methodUnderTest = (IMethod) allSelected.next();

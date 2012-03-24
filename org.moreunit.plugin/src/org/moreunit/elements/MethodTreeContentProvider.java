@@ -18,7 +18,6 @@ import org.moreunit.ui.MethodPage;
  */
 public class MethodTreeContentProvider implements ITreeContentProvider
 {
-
     IType classType;
     List<IMethod> methods = new ArrayList<IMethod>();
     private boolean isPrivateFiltered = false;
