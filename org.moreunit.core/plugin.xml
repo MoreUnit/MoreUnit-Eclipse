@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <!--<extension point="org.eclipse.ui.services">
+      <sourceProvider provider="org.moreunit.core.evaluation.CommandSupportedExtensionsProvider">
+         <variable name="org.moreunit.core.commands.jumpCommand.supportedExtensions" priorityLevel="workbench"/>
+      </sourceProvider>
+   </extension>-->
+   
+   <extension point="org.eclipse.ui.commands">
+      <category id="org.moreunit.core.commands.category"
+         name="MoreUnit"/>
+      <command id="org.moreunit.core.commands.jumpCommand"
+         name="Jump To Test/Source"
+         defaultHandler="org.moreunit.core.commands.JumpActionHandler"
+         description="Jump to the test or source associated to the current JS file."
+         categoryId="org.moreunit.core.commands.category"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.bindings">
+      <key sequence="CTRL+J"
+         commandId="org.moreunit.core.commands.jumpCommand"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+   </extension>
+
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester id="org.moreunit.core.expressions.resourceTester"
+         type="org.eclipse.core.resources.IFile"
+         namespace="org.moreunit.core.file"
+         properties="supportsMoreUnitCommand"
+         class="org.moreunit.core.expressions.FileTester">
+      </propertyTester>
+   </extension>
+  
+   <extension point="org.eclipse.core.expressions.definitions">
+      <definition id="org.moreunit.core.definitions.supportsJumpCommand">
+         <iterate ifEmpty="false">
+            <adapt type="org.eclipse.core.resources.IFile">
+               <test property="org.moreunit.core.file.supportsMoreUnitCommand" value="org.moreunit.core.commands.jumpCommand"/>
+            </adapt>
+         </iterate>
+      </definition>
+   </extension>
+   
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+         locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               label="MoreUnit"
+               mnemonic="J"
+               id="org.moreunit.core.menus.menu">
+            <command
+                  commandId="org.moreunit.core.commands.jumpCommand"
+                  mnemonic="J"/>
+            <visibleWhen checkEnabled="false">
+               <or>
+                  <with variable="activeMenuSelection">
+                     <reference definitionId="org.moreunit.core.definitions.supportsJumpCommand"/>
+                  </with>
+                  <with variable="activeMenuEditorInput">
+                     <reference definitionId="org.moreunit.core.definitions.supportsJumpCommand"/>
+                  </with>
+               </or>
+            </visibleWhen>
+         </menu>
+      </menuContribution>
+   </extension>
+   
+   <extension point="org.eclipse.ui.propertyPages">
+      <page id="org.moreunit.core.properties.mainPage"
+         name="MoreUnit"
+         class="org.moreunit.core.properties.GenericPropertyPage">
+         <enabledWhen>
+            <adapt type="org.eclipse.core.resources.IProject"/>
+         </enabledWhen>
+      </page>
+   </extension>
+</plugin>

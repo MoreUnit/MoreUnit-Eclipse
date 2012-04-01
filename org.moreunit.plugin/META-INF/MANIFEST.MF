@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.ui,
- org.eclipse.ui.workbench.texteditor
+ org.eclipse.ui.workbench.texteditor,
+ org.moreunit.core
 xxEclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

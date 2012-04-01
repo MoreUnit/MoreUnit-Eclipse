@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MoreUnit Core Test
+Bundle-SymbolicName: org.moreunit.core.test
+Bundle-Version: 0.0.0
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.moreunit.core,
+ org.eclipse.core.commands,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.junit;bundle-version="4.8.2",
+ org.eclipse.swtbot.go;bundle-version="2.0.0"

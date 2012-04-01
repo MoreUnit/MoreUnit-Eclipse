@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MoreUnit Plug-in Core
+Bundle-SymbolicName: org.moreunit.core;singleton:=true
+Bundle-Version: 2.4.3.qualifier
+Bundle-Activator: org.moreunit.core.MoreUnitCore
+Bundle-Vendor: moreunit.sourceforge.net
+Require-Bundle: org.eclipse.core.expressions,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.search,
+ org.eclipse.ui,
+ org.eclipse.ui.ide
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Export-Package: org.moreunit.core.commands;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.expressions;x-friends:="org.moreunit",
+ org.moreunit.core.matching;x-friends:="org.moreunit.core.test"
