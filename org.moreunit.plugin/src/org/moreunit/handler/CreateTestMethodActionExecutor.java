@@ -28,6 +28,7 @@ import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
@@ -147,14 +148,14 @@ public class CreateTestMethodActionExecutor
         else
         {
             ClassTypeFacade classUnderTest = new ClassTypeFacade(currentlyEditedUnit);
-            IType testCase = classUnderTest.getOneCorrespondingTestCase(true);
+            CorrespondingTestCase testCase = classUnderTest.getOneCorrespondingTestCase(true);
 
             // if the user cancels the test case selection wizard
-            if(testCase == null)
+            if(! testCase.found())
             {
                 return null;
             }
-            return new CreationContext(currentlyEditedUnit, testCase.getCompilationUnit(), currentlyEditedMethod, classUnderTest.isNewTestClassCreated());
+            return new CreationContext(currentlyEditedUnit, testCase.get().getCompilationUnit(), currentlyEditedMethod, testCase.hasJustBeenCreated());
         }
     }
 

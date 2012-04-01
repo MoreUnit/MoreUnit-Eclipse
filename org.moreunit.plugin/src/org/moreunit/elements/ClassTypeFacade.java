@@ -44,9 +44,6 @@ public class ClassTypeFacade extends TypeFacade
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
 
-    // Is a new test class created? Important for extension point clients.
-    private boolean newTestClassCreated = false;
-
     public ClassTypeFacade(ICompilationUnit compilationUnit)
     {
         super(compilationUnit);
@@ -69,64 +66,35 @@ public class ClassTypeFacade extends TypeFacade
     }
 
     /**
-     * Is a new test class created?
-     * 
-     * @return New test class?
-     */
-    public boolean isNewTestClassCreated()
-    {
-        return newTestClassCreated;
-    }
-
-    /**
      * Returns the corresponding testcase of the javaFileFacade. If there are
      * more than one testcases the user has to make a choice via a dialog. If no
      * test is found <code>null</code> is returned.
      * 
      * @return one of the corresponding testcases
      */
-    public IType getOneCorrespondingTestCase(boolean createIfNecessary, String promptText)
+    public CorrespondingTestCase getOneCorrespondingTestCase(boolean createIfNecessary, String promptText)
     {
         Collection<IType> testcases = getCorrespondingTestCases();
 
-        IType testcaseToJump = null;
         if(testcases.size() == 1)
         {
-            testcaseToJump = testcases.iterator().next();
+            return new CorrespondingTestCase(testcases.iterator().next(), false);
         }
         else if(testcases.size() > 1)
         {
-            MemberContentProvider contentProvider = new MemberContentProvider(testcases, null).withAction(new CreateNewClassAction()
-            {
-                @Override
-                public IType execute()
-                {
-                    return createNewTestCase();
-                }
-            });
+            CreateNewTestCaseAction newTestCaseAction = new CreateNewTestCaseAction(getType());
+            MemberContentProvider contentProvider = new MemberContentProvider(testcases, null).withAction(newTestCaseAction);
 
-            testcaseToJump = new ChooseDialog<IType>(promptText, contentProvider).getChoice();
+            IType testCase = new ChooseDialog<IType>(promptText, contentProvider).getChoice();
+            return new CorrespondingTestCase(testCase, newTestCaseAction.testCaseCreated);
         }
         else if(createIfNecessary)
         {
-            testcaseToJump = createNewTestCase();
+            IType testcaseToJump = new NewTestCaseWizard(getType()).open();
+            return new CorrespondingTestCase(testcaseToJump, testcaseToJump != null);
         }
 
-        return testcaseToJump;
-    }
-
-    private IType createNewTestCase()
-    {
-        IType newType = new NewTestCaseWizard(getType()).open();
-
-        // remember whether we created a new test class, cause extension point
-        // client needs to know it
-        if(newType != null)
-        {
-            newTestClassCreated = true;
-        }
-
-        return newType;
+        return new CorrespondingTestCase(null, false);
     }
 
     public Collection<IType> getCorrespondingTestCases()
@@ -265,7 +233,7 @@ public class ClassTypeFacade extends TypeFacade
         return new NewTestCaseWizard(fromType);
     }
 
-    public IType getOneCorrespondingTestCase(boolean createIfNecessary)
+    public CorrespondingTestCase getOneCorrespondingTestCase(boolean createIfNecessary)
     {
         return getOneCorrespondingTestCase(createIfNecessary, "Please choose a test case...");
     }
@@ -288,4 +256,49 @@ public class ClassTypeFacade extends TypeFacade
         return testMethods.isEmpty() ? testCases : testMethods;
     }
 
+    private static class CreateNewTestCaseAction extends CreateNewClassAction
+    {
+        private final IType type;
+        private boolean testCaseCreated;
+
+        public CreateNewTestCaseAction(IType type)
+        {
+            this.type = type;
+        }
+
+        @Override
+        public IType execute()
+        {
+            IType newTestCase = new NewTestCaseWizard(type).open();
+            testCaseCreated = newTestCase != null;
+            return newTestCase;
+        }
+    }
+
+    public static final class CorrespondingTestCase
+    {
+        private final IType testCase;
+        private final boolean justCreated;
+
+        public CorrespondingTestCase(IType testCase, boolean justCreated)
+        {
+            this.testCase = testCase;
+            this.justCreated = justCreated;
+        }
+
+        public boolean found()
+        {
+            return testCase != null;
+        }
+
+        public IType get()
+        {
+            return testCase;
+        }
+
+        public boolean hasJustBeenCreated()
+        {
+            return justCreated;
+        }
+    }
 }

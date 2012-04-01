@@ -131,7 +131,6 @@ public class JavaProjectSWTBotTestHelper
 			
 			@Override
 			public String getFailureMessage() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});

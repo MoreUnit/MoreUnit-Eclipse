@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.util.BaseTools;
@@ -82,17 +83,17 @@ public class TestmethodCreator
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
         if(testCaseCompilationUnit == null)
         {
-            IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
-            
+            CorrespondingTestCase oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
+
             // This happens if the user chooses cancel from the wizard
-            if(oneCorrespondingTestCase == null)
+            if(! oneCorrespondingTestCase.found())
             {
                 return null;
             }
-            testCaseCompilationUnit = oneCorrespondingTestCase.getCompilationUnit();
+            testCaseCompilationUnit = oneCorrespondingTestCase.get().getCompilationUnit();
         }
-        
-        //compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
+
+        // compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
         
         // If test method exists, ready

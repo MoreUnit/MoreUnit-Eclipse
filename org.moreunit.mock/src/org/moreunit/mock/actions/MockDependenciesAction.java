@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.mock.elements.TypeFacadeFactory;
@@ -121,8 +122,8 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         else
         {
             ClassTypeFacade classFacade = facadeFactory.createClassFacade(editedCompilationUnit);
-            IType testCase = classFacade.getOneCorrespondingTestCase(true, "Mock dependencies in...");
-            return classFacade.isNewTestClassCreated() ? null : testCase;
+            CorrespondingTestCase testCase = classFacade.getOneCorrespondingTestCase(true, "Mock dependencies in...");
+            return testCase.hasJustBeenCreated() ? null : testCase.get();
         }
     }
 

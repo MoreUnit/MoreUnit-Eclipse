@@ -3,6 +3,7 @@ package org.moreunit.test.context;
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.asList;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -207,9 +208,17 @@ class WorkspaceConfiguration
             try
             {
                 IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(containerPath, project);
+                if(classpathContainer == null)
+                {
+                    throw new RuntimeException(String.format("Could not found classpath container %s for project %s", containerPath, project));
+                }
                 WorkspaceHelper.addContainerToProject(project, classpathContainer);
             }
-            catch (Exception e)
+            catch (IOException e)
+            {
+                throw new RuntimeException("Could not apply classpath update: ", e);
+            }
+            catch (JavaModelException e)
             {
                 throw new RuntimeException("Could not apply classpath update: ", e);
             }

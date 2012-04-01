@@ -30,6 +30,7 @@ import org.moreunit.actions.RunTestFromCompilationUnitAction;
 import org.moreunit.actions.RunTestFromTypeAction;
 import org.moreunit.actions.RunTestsOfSelectedMemberAction;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodFacade;
@@ -114,7 +115,11 @@ public class RunTestsActionExecutor
             }
             else
             {
-                testCases.add(typeFacade.getOneCorrespondingTestCase(true, "Run test..."));
+                CorrespondingTestCase testCase = typeFacade.getOneCorrespondingTestCase(true, "Run test...");
+                if(testCase.found() && ! testCase.hasJustBeenCreated())
+                {
+                    testCases.add(testCase.get());
+                }
             }
         }
 

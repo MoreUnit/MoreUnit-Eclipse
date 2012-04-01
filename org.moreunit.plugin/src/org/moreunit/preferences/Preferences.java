@@ -371,44 +371,6 @@ public class Preferences
         }
     }
 
-    /**
-     * Tries to get the sourcefolder for the unittests. If there are several
-     * projects for the tests in the project specific settings, this method
-     * chooses the first project from the settings.
-     * 
-     * @deprecated use {@link #getTestSourceFolder(IJavaProject, IPackageFragmentRoot)} instead
-     */
-    @Deprecated
-    public IPackageFragmentRoot getJUnitSourceFolder(IJavaProject project)
-    {
-        // check for project specific settings
-        List<SourceFolderMapping> mappingList = getSourceMappingList(project);
-        if(! mappingList.isEmpty())
-        {
-            return mappingList.get(0).getTestFolder();
-        }
-
-        // check for workspace settings
-
-        List<IPackageFragmentRoot> javaSourceFolders = PluginTools.findJavaSourceFoldersFor(project);
-        if(javaSourceFolders.isEmpty())
-        {
-            throw new IllegalArgumentException("No source folder defined for project " + project.getElementName());
-        }
-
-        String junitFolder = getJunitDirectoryFromPreferences(project);
-
-        for (IPackageFragmentRoot packageFragmentRoot : javaSourceFolders)
-        {
-            if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
-            {
-                return packageFragmentRoot;
-            }
-        }
-
-        return javaSourceFolders.get(0);
-    }
-    
     public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder)
     {
         // check for project specific settings

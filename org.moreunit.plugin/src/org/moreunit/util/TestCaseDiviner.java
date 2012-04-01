@@ -113,12 +113,12 @@ public class TestCaseDiviner
 
         for (String prefix : this.preferences.getClassPrefixes())
         {
-            matches.addAll(SearchTools.searchFor(getSearchTerm(packageName, this.source, prefix, true), this.compilationUnit, getSearchScope()));
+            matches.addAll(SearchTools.searchFor(getSearchTerm(packageName, this.source, prefix, true), getSearchScope()));
         }
 
         for (String suffix : this.preferences.getClassSuffixes())
         {
-            matches.addAll(SearchTools.searchFor(getSearchTerm(packageName, this.source, suffix, false), this.compilationUnit, getSearchScope()));
+            matches.addAll(SearchTools.searchFor(getSearchTerm(packageName, this.source, suffix, false), getSearchScope()));
         }
 
         return matches;

@@ -21,6 +21,6 @@ public class SeparatorElement implements TreeActionElement<Void>
 
     public String getText()
     {
-        return "____________";
+        return "_________________";
     }
 }

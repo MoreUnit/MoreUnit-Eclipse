@@ -95,14 +95,14 @@ public class TestCaseTypeFacade extends TypeFacade
                 for (String typeName : typeNames)
                 {
                     String typeNameOnly = typeName.substring(typeName.lastIndexOf(".") + 1);
-                    matches.addAll(SearchTools.searchFor(typeNameOnly, compilationUnit, getSearchScope(compilationUnit)));
+                    matches.addAll(SearchTools.searchFor(typeNameOnly, getSearchScope(compilationUnit)));
                 }
             }
             else
             {
                 for (String typeName : typeNames)
                 {
-                    matches.addAll(SearchTools.searchFor(typeName, compilationUnit, getSearchScope(compilationUnit)));
+                    matches.addAll(SearchTools.searchFor(typeName, getSearchScope(compilationUnit)));
                 }
             }
         }

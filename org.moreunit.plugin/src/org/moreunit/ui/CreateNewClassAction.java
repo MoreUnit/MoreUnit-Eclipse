@@ -10,6 +10,8 @@ import org.eclipse.swt.graphics.Point;
 
 public abstract class CreateNewClassAction implements TreeActionElement<IType>
 {
+    private static final ImageDescriptor IMG_DESC = new JavaElementImageDescriptor(JavaPluginImages.DESC_TOOL_NEWCLASS, 0, new Point(22, 16));
+
     public boolean provideElement()
     {
         return true;
@@ -19,8 +21,7 @@ public abstract class CreateNewClassAction implements TreeActionElement<IType>
 
     public Image getImage()
     {
-        ImageDescriptor desc = new JavaElementImageDescriptor(JavaPluginImages.DESC_TOOL_NEWCLASS, 0, new Point(22, 16));
-        return JavaPlugin.getImageDescriptorRegistry().get(desc);
+        return JavaPlugin.getImageDescriptorRegistry().get(IMG_DESC);
     }
 
     public String getText()

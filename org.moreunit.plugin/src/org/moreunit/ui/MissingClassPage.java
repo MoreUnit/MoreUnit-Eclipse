@@ -62,7 +62,7 @@ public class MissingClassPage extends Page implements IElementChangedListener
     {
         try
         {
-            Set<IType> results = SearchTools.searchFor("*", compilationUnit, getSearchScope());
+            Set<IType> results = SearchTools.searchFor("*", getSearchScope());
             HashSet<IType> classesWithoutTestCases = new HashSet<IType>();
             for (IType type : results)
             {
