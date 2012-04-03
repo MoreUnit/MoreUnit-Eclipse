@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -13,41 +14,48 @@ import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.moreunit.core.Logger;
 import org.moreunit.core.Preferences;
+import org.moreunit.core.ui.FileContentProvider;
+import org.moreunit.core.ui.FileMatchSelectionDialog;
 
 public class FileMatcher
 {
-
     private static final Pattern ANY_CONTENT = Pattern.compile("");
 
     private final TextSearchEngine searchEngine;
     private final Preferences preferences;
     private final Logger logger;
+    private final FileMatchSelector matchSelector;
 
-    public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, Logger logger)
+    public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, final Logger logger)
+    {
+        this(searchEngine, preferences, new DefaultFileMatchSelector(logger), logger);
+    }
+
+    public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, FileMatchSelector matchSelector, final Logger logger)
     {
         this.searchEngine = searchEngine;
         this.preferences = preferences;
         this.logger = logger;
+        this.matchSelector = matchSelector;
     }
 
     public IFile match(IFile file)
     {
         FileNameEvaluation evaluation = evaluate(file);
 
-        TextSearchScope firstSearchScope = createSearchScope(file, evaluation);
+        ResultCollector rc = new ResultCollector();
+        search(createSearchScope(file, evaluation.getPreferredCorrespondingFilePattern()), rc);
 
-        // TextSearchScope secondSearchScope = createSearchScope(file,
-        // evaluation);
-
-        ResultCollector resultCollector = new ResultCollector();
-
-        search(firstSearchScope, resultCollector);
-
-        if(resultCollector.hasResults())
+        for (String fileNamePattern : evaluation.getOtherCorrespondingFileNames())
         {
-            return resultCollector.firstResult();
+            search(createSearchScope(file, fileNamePattern), rc);
         }
-        return null;
+
+        if(rc.results.size() > 1)
+        {
+            return matchSelector.select(rc.results, null);
+        }
+        return rc.results.isEmpty() ? null : rc.results.iterator().next();
     }
 
     private FileNameEvaluation evaluate(IFile file)
@@ -59,21 +67,11 @@ public class FileMatcher
         return testFilePattern.evaluate(basename);
     }
 
-    private TextSearchScope createSearchScope(IFile file, FileNameEvaluation evaluation)
+    private TextSearchScope createSearchScope(IFile file, String correspondingFileNamePattern)
     {
-        String correspondingFileName = evaluation.getPreferredCorrespondingFilePattern();
-
-        // Collection<String> correspondingFileNames =
-        // testFilePattern.evaluate(selectedFileBasename).getOtherCorrespondingFileNames();
-        // correspondingFileName = correspondingFileNames.iterator().next();
-
-        Pattern searchedFilePattern = Pattern.compile(correspondingFileName + "\\.js");
+        Pattern searchedFilePattern = Pattern.compile(correspondingFileNamePattern + "\\." + file.getFileExtension());
 
         IResource[] rootRessources = { file.getProject() };
-
-        // to extend search to the whole workspace:
-        // IProject[] projects =
-        // ResourcesPlugin.getWorkspace().getRoot().getProjects();
 
         return TextSearchScope.newSearchScope(rootRessources, searchedFilePattern, false);
     }
@@ -95,25 +93,31 @@ public class FileMatcher
         }
     }
 
+    private static class DefaultFileMatchSelector implements FileMatchSelector
+    {
+        private final Logger logger;
+
+        private DefaultFileMatchSelector(Logger logger)
+        {
+            this.logger = logger;
+        }
+
+        public IFile select(Collection<IFile> files, IFile preferredFile)
+        {
+            FileContentProvider contentProvider = new FileContentProvider(files, preferredFile);
+            FileMatchSelectionDialog<IFile> dialog = new FileMatchSelectionDialog<IFile>("Jump to...", contentProvider, logger);
+            return dialog.getChoice();
+        }
+    }
+
     private static class ResultCollector extends TextSearchRequestor
     {
-
-        private final Set<IFile> files = new HashSet<IFile>();
+        private final Set<IFile> results = new LinkedHashSet<IFile>();
 
         @Override
         public boolean acceptFile(IFile file) throws CoreException
         {
-            return files.add(file);
-        }
-
-        public IFile firstResult()
-        {
-            return files.iterator().next();
-        }
-
-        public boolean hasResults()
-        {
-            return ! files.isEmpty();
+            return results.add(file);
         }
     }
 }

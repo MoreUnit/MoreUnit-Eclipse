@@ -37,7 +37,7 @@ public class JumpActionHandler extends AbstractHandler
 
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        IFile selectedFile = getSelectedJsFile(event);
+        IFile selectedFile = getSelectedFile(event);
         if(selectedFile == null)
         {
             return null;
@@ -57,19 +57,19 @@ public class JumpActionHandler extends AbstractHandler
         return null;
     }
 
-    private IFile getSelectedJsFile(ExecutionEvent event)
+    private IFile getSelectedFile(ExecutionEvent event)
     {
         Object firstElement = getUniqueSelectedElement(event);
         if(firstElement instanceof IAdaptable)
         {
-            IFile file = getJsFileFrom((IAdaptable) firstElement);
+            IFile file = toFile((IAdaptable) firstElement);
             if(file != null)
             {
                 return file;
             }
         }
 
-        IFile file = getJsFileFrom(HandlerUtil.getActiveEditorInput(event));
+        IFile file = toFile(HandlerUtil.getActiveEditorInput(event));
         if(file != null)
         {
             return file;
@@ -97,16 +97,9 @@ public class JumpActionHandler extends AbstractHandler
         return selectedElements.iterator().next();
     }
 
-    private IFile getJsFileFrom(IAdaptable adaptable)
+    private IFile toFile(IAdaptable adaptable)
     {
-        if(adaptable != null)
-        {
-            IFile file = (IFile) adaptable.getAdapter(IFile.class);
-            if(file != null && "js".equals(file.getFileExtension())) { //$NON-NLS-1$
-                return file;
-            }
-        }
-        return null;
+        return adaptable == null ? null : (IFile) adaptable.getAdapter(IFile.class);
     }
 
     private void openEditor(IFile file, ExecutionEvent event)

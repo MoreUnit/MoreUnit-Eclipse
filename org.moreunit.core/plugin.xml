@@ -13,7 +13,7 @@
       <command id="org.moreunit.core.commands.jumpCommand"
          name="Jump To Test/Source"
          defaultHandler="org.moreunit.core.commands.JumpActionHandler"
-         description="Jump to the test or source associated to the current JS file."
+         description="Jump to the test or source associated to the current file."
          categoryId="org.moreunit.core.commands.category"/>
    </extension>
 
