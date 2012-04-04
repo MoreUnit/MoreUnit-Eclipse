@@ -2,8 +2,19 @@ This repository is a fork of [MoreUnit's official master repository](http://more
 If you are searching for information regarding MoreUnit of for its official code base, please go to [http://moreunit.sourceforge.net](http://moreunit.sourceforge.net).
 
 
+Where to start?
+---------------
+
+You may work on whatever comes to your mind, but if you're only willing to help without any specific idea, the [issue tracker](https://github.com/ndemengel/hackergarten-moreunit/issues) will provide you with various tasks!
+
+Links:
+
+* [Eclipse Help](http://help.eclipse.org/indigo/index.jsp) (also present in your IDE)
+* [Eclipse Plugin and Eclipse RCP Tutorials](http://www.vogella.de/eclipse.html)
+
+
 LICENSE
-=======
+-------
 
 Eclipse Public License - v 1.0
 
