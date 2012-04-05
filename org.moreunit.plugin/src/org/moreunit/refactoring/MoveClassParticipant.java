@@ -142,7 +142,7 @@ public class MoveClassParticipant extends MoveParticipant
 
     private IPackageFragment getMoveTestsDestinationPackage(IPackageFragment moveClassDestinationPackage)
     {
-        IPackageFragmentRoot unitSourceFolder = Preferences.getInstance().getJUnitSourceFolder(moveClassDestinationPackage.getJavaProject());
+        IPackageFragmentRoot unitSourceFolder = Preferences.getInstance().getTestSourceFolder(moveClassDestinationPackage.getJavaProject(), (IPackageFragmentRoot) moveClassDestinationPackage.getParent());
         if(unitSourceFolder == null || ! unitSourceFolder.exists())
         {
             System.out.println("Kein Source folder");

@@ -1,16 +1,8 @@
 package org.moreunit;
 
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
-import static org.hamcrest.Matchers.allOf;
-
-import java.util.List;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swtbot.swt.finder.finders.MenuFinder;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.hamcrest.Matcher;
 
 public class LinuxShortcutStrategy extends ShortcutStrategy
 {
@@ -53,7 +45,6 @@ public class LinuxShortcutStrategy extends ShortcutStrategy
 				public void run() {
 					for(MenuItem item : findMenus)
 					{
-					// TODO Auto-generated method stubi
 						System.out.println("Item: ["+item.getText()+"] - ID: ["+item.getID()+"]");
 					}
 					

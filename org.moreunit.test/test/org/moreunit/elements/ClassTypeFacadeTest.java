@@ -43,7 +43,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     public void getOneCorrespondingTestCase_should_return_test_for_cut() throws Exception
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(false);
+        IType oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(false).get();
 
         testCaseHandler().assertThat().isEqualTo(oneCorrespondingTestCase);
     }

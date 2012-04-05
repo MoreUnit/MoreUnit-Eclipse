@@ -254,8 +254,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
             {
                 return ((TreeActionElement< ? >) element).getImage();
             }
-            Image image = super.getImage(element);
-            return image;
+            return super.getImage(element);
         }
 
         @Override

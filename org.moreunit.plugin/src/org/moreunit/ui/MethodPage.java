@@ -22,11 +22,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.Page;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodTreeContentProvider;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 /**
  * @author vera, modified 10.08.2010 andreas BugID: 3042170.
@@ -141,20 +143,23 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         }
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(this.editorPartFacade.getEditorPart());
-        IType typeOfTestCaseClassFromJavaFile = classTypeFacade.getOneCorrespondingTestCase(true);
+        CorrespondingTestCase testCase = classTypeFacade.getOneCorrespondingTestCase(true);
 
-        if((typeOfTestCaseClassFromJavaFile == null) || ! typeOfTestCaseClassFromJavaFile.exists())
+        if(! testCase.found() || ! testCase.get().exists())
         {
             return;
         }
 
-        for (Iterator<?> allSelected = selection.iterator(); allSelected.hasNext();)
+        for (Iterator< ? > allSelected = selection.iterator(); allSelected.hasNext();)
         {
             IMethod methodUnderTest = (IMethod) allSelected.next();
-            TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), typeOfTestCaseClassFromJavaFile.getCompilationUnit(), Preferences.getInstance().getTestType(this.editorPartFacade.getJavaProject()), Preferences.getInstance().getTestMethodDefaultContent(this.editorPartFacade.getJavaProject()));
+
+            ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
+            TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit(), prefs.getTestType(), prefs.getTestMethodDefaultContent());
             IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
-            
-            // Call extensions on extension point, allowing to modify the created testmethod
+
+            // Call extensions on extension point, allowing to modify the
+            // created testmethod
             AddTestMethodParticipatorHandler.getInstance().callExtension(createdMethod, methodUnderTest);
         }
 
