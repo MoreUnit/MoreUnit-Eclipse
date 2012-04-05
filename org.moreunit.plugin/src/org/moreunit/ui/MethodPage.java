@@ -12,6 +12,8 @@ import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
@@ -29,7 +31,7 @@ import org.moreunit.preferences.Preferences;
 /**
  * @author vera, modified 10.08.2010 andreas BugID: 3042170.
  */
-public class MethodPage extends Page implements IElementChangedListener
+public class MethodPage extends Page implements IElementChangedListener, IDoubleClickListener
 {
     private EditorPartFacade editorPartFacade;
     private TreeViewer treeViewer;
@@ -56,6 +58,7 @@ public class MethodPage extends Page implements IElementChangedListener
         this.treeViewer.setContentProvider(this.methodTreeContentProvider);
         this.treeViewer.setLabelProvider(new JavaElementLabelProvider());
         this.treeViewer.setInput(this);
+        this.treeViewer.addDoubleClickListener(this);
 
         createToolbar();
     }
@@ -115,7 +118,6 @@ public class MethodPage extends Page implements IElementChangedListener
         toolBarManager.add(this.filterPrivateAction);
         toolBarManager.add(this.filterGetterAction);
         toolBarManager.add(this.addTestAction);
-
     }
 
     private void actionFilterPrivateMethods()
@@ -211,6 +213,14 @@ public class MethodPage extends Page implements IElementChangedListener
     {
         JavaCore.removeElementChangedListener(this);
         super.dispose();
+    }
+
+    public void doubleClick(DoubleClickEvent event)
+    {
+        ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
+        
+        IMethod method = (IMethod) selection.getFirstElement();
+        new EditorUI().open(method);
     }
 
 }
