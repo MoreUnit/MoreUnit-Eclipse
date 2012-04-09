@@ -13,7 +13,7 @@ import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.moreunit.core.Logger;
-import org.moreunit.core.Preferences;
+import org.moreunit.core.preferences.Preferences;
 import org.moreunit.core.ui.FileContentProvider;
 import org.moreunit.core.ui.FileMatchSelectionDialog;
 
@@ -44,11 +44,17 @@ public class FileMatcher
         FileNameEvaluation evaluation = evaluate(file);
 
         ResultCollector rc = new ResultCollector();
-        search(createSearchScope(file, evaluation.getPreferredCorrespondingFilePattern()), rc);
 
-        for (String fileNamePattern : evaluation.getOtherCorrespondingFileNames())
+        TextSearchScope scope = createSearchScope(file, evaluation.getPreferredCorrespondingFilePattern() + "\\." + file.getFileExtension());
+        search(scope, rc);
+
+        if(! evaluation.getOtherCorrespondingFileNames().isEmpty())
         {
-            search(createSearchScope(file, fileNamePattern), rc);
+            scope = createSearchScope(file, evaluation.getOtherCorrespondingFileNames());
+            if(scope != null)
+            {
+                search(scope, rc);
+            }
         }
 
         if(rc.results.size() > 1)
@@ -58,22 +64,44 @@ public class FileMatcher
         return rc.results.isEmpty() ? null : rc.results.iterator().next();
     }
 
+    private TextSearchScope createSearchScope(IFile file, Collection<String> correspondingFileNames)
+    {
+        StringBuilder sb = null;
+        for (String fileName : correspondingFileNames)
+        {
+            if(sb == null)
+            {
+                sb = new StringBuilder("(");
+            }
+            else
+            {
+                sb.append("|");
+            }
+            sb.append(fileName);
+        }
+
+        if(sb == null)
+        {
+            return null;
+        }
+
+        sb.append(")").append("\\.").append(file.getFileExtension());
+        return createSearchScope(file, sb.toString());
+    }
+
     private FileNameEvaluation evaluate(IFile file)
     {
-        TestFileNamePattern testFilePattern = preferences.get(file.getProject()).getTestFileNamePattern();
+        TestFileNamePattern testFilePattern = preferences.get(file.getProject()).readerForLanguage(file.getFileExtension()).getTestFileNamePattern();
 
         String basename = file.getFullPath().removeFileExtension().lastSegment();
 
         return testFilePattern.evaluate(basename);
     }
 
-    private TextSearchScope createSearchScope(IFile file, String correspondingFileNamePattern)
+    private TextSearchScope createSearchScope(IFile file, String fileNamePattern)
     {
-        Pattern searchedFilePattern = Pattern.compile(correspondingFileNamePattern + "\\." + file.getFileExtension());
-
         IResource[] rootRessources = { file.getProject() };
-
-        return TextSearchScope.newSearchScope(rootRessources, searchedFilePattern, false);
+        return TextSearchScope.newSearchScope(rootRessources, Pattern.compile(fileNamePattern), false);
     }
 
     private void search(TextSearchScope scope, TextSearchRequestor requestor)

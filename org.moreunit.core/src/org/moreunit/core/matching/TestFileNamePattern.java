@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
 import static java.util.Collections.sort;
+import static java.util.regex.Pattern.quote;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,6 +42,10 @@ public class TestFileNamePattern
         int varEnd = patternString.indexOf("}");
 
         String pre = patternString.substring(0, varStart);
+        if(pre.endsWith(tokenizer.getSeparator()))
+        {
+            pre = pre.substring(0, pre.length() - tokenizer.getSeparator().length());
+        }
         wcBefore = pre.endsWith(".*");
         if(wcBefore)
         {
@@ -52,6 +57,10 @@ public class TestFileNamePattern
         }
 
         String suf = varEnd + 1 == patternString.length() ? "" : patternString.substring(varEnd + 1);
+        if(suf.startsWith(tokenizer.getSeparator()))
+        {
+            suf = suf.substring(tokenizer.getSeparator().length());
+        }
         wcAfter = suf.startsWith(".*");
         if(wcAfter)
         {
@@ -69,7 +78,8 @@ public class TestFileNamePattern
     {
         if(pattern.matcher(fileBaseName).matches())
         {
-            String cleanName = fileBaseName.replaceFirst("^" + prefix, "").replaceFirst(suffix + "$", "");
+            String separator = String.format("(%s)?", quote(tokenizer.getSeparator()));
+            String cleanName = fileBaseName.replaceFirst("^" + prefix + separator, "").replaceFirst(separator + suffix + "$", "");
 
             TokenizationResult result = tokenizer.tokenize(cleanName);
 

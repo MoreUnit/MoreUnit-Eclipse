@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.moreunit"
-      label="MoreUnit For Java"
+      id="org.moreunit.light"
+      label="MoreUnit Light"
       version="2.4.3.qualifier"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
-      MoreUnit is an Eclipse plug-in that assists you in writing more unit tests. This feature provides advanced tools for writing unit tests in Java.
+      MoreUnit is an Eclipse plug-in that assists you in writing more unit tests. This feature provides basic tools available for all languages.
    </description>
 
    <copyright url="http://moreunit.sourceforge.net/#about">
@@ -103,37 +103,21 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </license>
 
    <includes
-         id="org.moreunit.source"
+         id="org.moreunit.light.source"
          version="0.0.0"
-         name="MoreUnit Plug-In (Sources)"/>
+         name="MoreUnit Light (Sources)"/>
 
    <requires>
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jdt.core.manipulation"/>
-      <import plugin="org.eclipse.jdt.junit"/>
-      <import plugin="org.eclipse.jdt.launching"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.ltk.core.refactoring"/>
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
    </requires>
 
    <plugin
          id="org.moreunit.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.moreunit"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,17 +1,11 @@
 package org.moreunit.core.matching;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CamelCaseNameTokenizer extends NameTokenizer
 {
-
-    private static final String SEPARATOR = "";
-
-    public CamelCaseNameTokenizer()
-    {
-        super(SEPARATOR);
-    }
-
-    @Override
-    protected String nextWord(WordScanner scanner)
+    private String nextWord(WordScanner scanner)
     {
         while (scanner.hasNext())
         {
@@ -26,9 +20,21 @@ public class CamelCaseNameTokenizer extends NameTokenizer
         return scanner.getCurrentWord();
     }
 
-    @Override
-    protected boolean hasNextWord(WordScanner scanner)
+    private boolean hasNextWord(WordScanner scanner)
     {
         return scanner.hasNext();
+    }
+
+    public List<String> getWords(String name)
+    {
+        List<String> words = new ArrayList<String>();
+    
+        WordScanner scanner = new WordScanner(name);
+        while (hasNextWord(scanner))
+        {
+            words.add(nextWord(scanner));
+        }
+        
+        return words;
     }
 }

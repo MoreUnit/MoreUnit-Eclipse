@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension id="${extensionId}"
+      point="org.eclipse.ui.propertyPages">
+      <page id="${pageId}"
+         name="${languageName}"
+         category="org.moreunit.core.properties.mainPage"
+         class="org.moreunit.core.preferences.PropertyPageFactory:${languageExtension}">
+         <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
+         <enabledWhen>
+            <adapt type="org.eclipse.core.resources.IProject"/>
+         </enabledWhen>
+      </page>
+   </extension>
+</plugin>

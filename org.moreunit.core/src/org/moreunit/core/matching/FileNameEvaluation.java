@@ -4,7 +4,6 @@ import java.util.Collection;
 
 public class FileNameEvaluation
 {
-
     private final boolean testFile;
     private final Collection<String> otherCorrespondingFileNames;
     private final String preferredCorrespondingFilePattern;

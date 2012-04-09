@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,15 +41,24 @@ public class CamelCaseNameTokenizerTest extends NameTokenizerTestCase
     @Test
     public void should_return_token_combinations() throws Exception
     {
+        // when
         TokenizationResult result = tokenizer.tokenize("Name");
+
+        // then
         assertTrue(result.getCombinationsFromStart().isEmpty());
         assertTrue(result.getCombinationsFromEnd().isEmpty());
 
+        // when
         result = tokenizer.tokenize("nameWithSeveralParts");
+
+        // then
         assertEquals(asList("name", "nameWith", "nameWithSeveral"), result.getCombinationsFromStart());
         assertEquals(asList("WithSeveralParts", "SeveralParts", "Parts"), result.getCombinationsFromEnd());
 
+        // when
         result = tokenizer.tokenize("Name123WithNumbers");
+
+        // then
         assertEquals(asList("Name", "Name123", "Name123With"), result.getCombinationsFromStart());
         assertEquals(asList("123WithNumbers", "WithNumbers", "Numbers"), result.getCombinationsFromEnd());
     }

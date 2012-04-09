@@ -21,7 +21,7 @@ import org.eclipse.ui.ide.IDE;
 import org.junit.After;
 import org.junit.Before;
 
-public abstract class JsProjectTestCase
+public abstract class TmpProjectTestCase
 {
     protected IProject project;
 
@@ -29,7 +29,7 @@ public abstract class JsProjectTestCase
     public void createProject() throws Exception
     {
         IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        project = workspaceRoot.getProject("js-test-project");
+        project = workspaceRoot.getProject("test-project");
         project.create(null);
         project.open(null);
     }

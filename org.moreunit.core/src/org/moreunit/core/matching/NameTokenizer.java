@@ -10,8 +10,14 @@ import java.util.ListIterator;
 
 public abstract class NameTokenizer
 {
+    private static final String DEFAULT_SEPARATOR = "";
 
     private final String separator;
+
+    public NameTokenizer()
+    {
+        this.separator = DEFAULT_SEPARATOR;
+    }
 
     public NameTokenizer(String separator)
     {
@@ -23,20 +29,30 @@ public abstract class NameTokenizer
         return separator;
     }
 
+    private List<String> removeEmptyWords(List<String> words)
+    {
+        List<String> wordsNotEmpty = new ArrayList<String>();
+        for (String word : words)
+        {
+            if(word.length() != 0)
+            {
+                wordsNotEmpty.add(word);
+            }
+        }
+        return wordsNotEmpty;
+    }
+
     public TokenizationResult tokenize(String name)
     {
         checkName(name);
 
-        List<String> words = new ArrayList<String>();
-
-        WordScanner scanner = new WordScanner(name);
-        while (hasNextWord(scanner))
-        {
-            words.add(nextWord(scanner));
-        }
+        List<String> words = getWords(name);
+        words = removeEmptyWords(words);
 
         return new TokenizationResult(words, getCombinationsFromStart(words), getCombinationsFromEnd(words));
     }
+
+    protected abstract List<String> getWords(String name);
 
     private void checkName(String name)
     {
@@ -46,10 +62,6 @@ public abstract class NameTokenizer
         }
     }
 
-    protected abstract String nextWord(WordScanner scanner);
-
-    protected abstract boolean hasNextWord(WordScanner scanner);
-
     private List<String> getCombinationsFromStart(List<String> tokens)
     {
         if(tokens.size() < 2)
@@ -58,7 +70,7 @@ public abstract class NameTokenizer
         }
 
         List<String> combinations = new ArrayList<String>();
-        String combination = null;
+        StringBuilder combination = null;
 
         for (Iterator<String> it = tokens.iterator(); it.hasNext();)
         {
@@ -70,13 +82,14 @@ public abstract class NameTokenizer
 
             if(combination == null)
             {
-                combination = token;
+                combination = new StringBuilder(token);
             }
             else
             {
-                combination = combination + token;
+                combination.append(separator);
+                combination.append(token);
             }
-            combinations.add(combination);
+            combinations.add(combination.toString());
         }
 
         return combinations;
@@ -90,7 +103,7 @@ public abstract class NameTokenizer
         }
 
         List<String> combinations = new ArrayList<String>();
-        String combination = null;
+        StringBuilder combination = null;
 
         for (ListIterator<String> it = tokens.listIterator(tokens.size()); it.hasPrevious();)
         {
@@ -102,13 +115,14 @@ public abstract class NameTokenizer
 
             if(combination == null)
             {
-                combination = token;
+                combination = new StringBuilder(token);
             }
             else
             {
-                combination = token + combination;
+                combination.insert(0, separator);
+                combination.insert(0, token);
             }
-            combinations.add(0, combination);
+            combinations.add(0, combination.toString());
         }
 
         return combinations;
@@ -116,7 +130,6 @@ public abstract class NameTokenizer
 
     public static class TokenizationResult
     {
-
         private final List<String> tokens;
         private final List<String> combinationsFromStart;
         private final List<String> combinationsFromEnd;

@@ -269,8 +269,9 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
         class="org.moreunit.preferences.MoreUnitPreferencePage"
+        category="org.moreunit.core.preferences.mainPage"
         id="org.moreunit.moreunitPreferencePage"
-        name="MoreUnit">
+        name="Java">
 			<keywordReference id="org.moreunit.keywordReference.junit"/>
             <keywordReference id="org.moreunit.keywordReference.moreunit"/>
             <!--<keywordReference id="org.moreunit.keywordReference.test"/>-->
@@ -402,8 +403,9 @@
       </page>
       -->
        <page class="org.moreunit.properties.MoreUnitPropertyPage"
+             category="org.moreunit.core.properties.mainPage"
              id="org.moreunit.properties"
-             name="MoreUnit">
+             name="Java">
 		     <enabledWhen>
 		        <adapt
 		           type="org.eclipse.core.resources.IProject">

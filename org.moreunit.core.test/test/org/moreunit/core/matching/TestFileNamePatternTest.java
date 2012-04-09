@@ -11,12 +11,12 @@ import org.junit.Test;
 
 public class TestFileNamePatternTest
 {
-    private NameTokenizer nameTokenizer = new CamelCaseNameTokenizer();
+    private NameTokenizer camelCaseTokenizer = new CamelCaseNameTokenizer();
 
     @Test
     public void should_evaluate_test_file_with_prefix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("PreMyFile");
 
@@ -27,7 +27,7 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_test_file_with_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_suffix", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_suffix", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("SomeFile_suffix");
 
@@ -38,7 +38,7 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_test_file_with_prefix_and_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("prefix_${srcFile}Suf", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("prefix_${srcFile}Suf", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("prefix_aFileSuf");
 
@@ -50,7 +50,7 @@ public class TestFileNamePatternTest
     public void should_evaluate_test_file_with_variable_part_before_name() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("Pre*${srcFile}Suf", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Pre*${srcFile}Suf", camelCaseTokenizer);
 
         // when
         FileNameEvaluation evaluation = pattern.evaluate("PreBarMySourceSuf");
@@ -67,10 +67,33 @@ public class TestFileNamePatternTest
     }
 
     @Test
+    public void should_evaluate_test_file_with_variable_part_before_name__with_double_separator() throws Exception
+    {
+        for (String template : asList("pre*${srcFile}__suf", "pre__*${srcFile}__suf", "pre*__${srcFile}__suf", "pre__*__${srcFile}__suf"))
+        {
+            // given
+            TestFileNamePattern pattern = new TestFileNamePattern(template, new SeparatorNameTokenizer("__"));
+
+            // when
+            FileNameEvaluation evaluation = pattern.evaluate("pre__bar__my__source__suf");
+
+            // then
+            assertTrue(evaluation.isTestFile());
+
+            assertEquals("bar__my__source", evaluation.getPreferredCorrespondingFilePattern());
+
+            Collection<String> names = evaluation.getOtherCorrespondingFileNames();
+            assertEquals(2, names.size());
+            assertTrue(names.contains("my__source"));
+            assertTrue(names.contains("source"));
+        }
+    }
+
+    @Test
     public void should_evaluate_test_file_with_variable_part_after_name() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}*Suf", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}*Suf", camelCaseTokenizer);
 
         // when
         FileNameEvaluation evaluation = pattern.evaluate("PreMySourceBazSuf");
@@ -87,10 +110,33 @@ public class TestFileNamePatternTest
     }
 
     @Test
+    public void should_evaluate_test_file_with_variable_part_after_name__with_separator() throws Exception
+    {
+        for (String template : asList("pre_${srcFile}*suf", "pre_${srcFile}_*suf", "pre_${srcFile}*_suf", "pre_${srcFile}_*_suf"))
+        {
+            // given
+            TestFileNamePattern pattern = new TestFileNamePattern(template, new SeparatorNameTokenizer("_"));
+
+            // when
+            FileNameEvaluation evaluation = pattern.evaluate("pre_my_source_baz_suf");
+
+            // then
+            assertTrue(evaluation.isTestFile());
+
+            assertEquals("my_source_baz", evaluation.getPreferredCorrespondingFilePattern());
+
+            Collection<String> names = evaluation.getOtherCorrespondingFileNames();
+            assertEquals(2, names.size());
+            assertTrue(names.contains("my_source"));
+            assertTrue(names.contains("my"));
+        }
+    }
+
+    @Test
     public void should_evaluate_test_file_with_variable_part_before_prefix() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("*Pre${srcFile}Suf", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("*Pre${srcFile}Suf", camelCaseTokenizer);
 
         // when
         FileNameEvaluation evaluation = pattern.evaluate("FooPreMySourceSuf");
@@ -108,7 +154,7 @@ public class TestFileNamePatternTest
     public void should_evaluate_test_file_with_variable_part_after_suffix() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}Suf*", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}Suf*", camelCaseTokenizer);
 
         // when
         FileNameEvaluation evaluation = pattern.evaluate("PreMySourceSufQix");
@@ -126,7 +172,7 @@ public class TestFileNamePatternTest
     public void should_evaluate_test_file_with_variable_parts__extreme_case() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("*Pre*${srcFile}*Suf*", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("*Pre*${srcFile}*Suf*", camelCaseTokenizer);
 
         // when
         FileNameEvaluation evaluation = pattern.evaluate("FooPreBarMySourceBazSufQix");
@@ -143,7 +189,7 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_src_file_with_prefix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("Prefix${srcFile}", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Prefix${srcFile}", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("MyFile");
 
@@ -154,7 +200,7 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_src_file_with_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_suf", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_suf", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("SomeFile");
 
@@ -165,7 +211,7 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_src_file_with_prefix_and_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("pre_${srcFile}Suffix", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("pre_${srcFile}Suffix", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("aFile");
 
@@ -177,7 +223,7 @@ public class TestFileNamePatternTest
     public void should_evaluate_src_file_with_variable_parts() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("*Pre*${srcFile}*Suf*", nameTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("*Pre*${srcFile}*Suf*", camelCaseTokenizer);
 
         // when
         FileNameEvaluation evaluation = pattern.evaluate("Source");

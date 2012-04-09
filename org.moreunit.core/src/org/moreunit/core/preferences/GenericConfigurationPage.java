@@ -1,8 +1,8 @@
-package org.moreunit.core.properties;
+package org.moreunit.core.preferences;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -12,27 +12,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.PropertyPage;
-import org.moreunit.core.MoreUnitCore;
-import org.moreunit.core.Preferences;
-import org.moreunit.core.Preferences.ProjectPreferences;
 import org.moreunit.core.matching.TestFileNamePattern;
 
-public class GenericPropertyPage extends PropertyPage
+class GenericConfigurationPage
 {
-    private final Preferences preferences;
+    private final PreferencePage page;
+    private final LanguagePreferencesWriter prefWriter;
     private Text testFileTemplateField;
+    private Text wordSeparatorField;
 
-    public GenericPropertyPage()
+    public GenericConfigurationPage(PreferencePage page, LanguagePreferencesWriter prefWriter)
     {
-        preferences = MoreUnitCore.get().getPreferences();
+        this.page = page;
+        this.prefWriter = prefWriter;
     }
 
-    @Override
-    protected Control createContents(Composite parent)
+    public Control createContents(Composite parent)
     {
-        initializeDialogUnits(parent);
-
         Composite composite = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
@@ -50,8 +46,6 @@ public class GenericPropertyPage extends PropertyPage
 
     private void createFields(Composite parent)
     {
-        ProjectPreferences projectPreferences = preferences.get((IProject) getElement());
-
         GridData labelAndFieldLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         labelAndFieldLayout.horizontalIndent = 30;
 
@@ -60,7 +54,16 @@ public class GenericPropertyPage extends PropertyPage
 
         testFileTemplateField = new Text(parent, SWT.SINGLE | SWT.BORDER);
         testFileTemplateField.setLayoutData(labelAndFieldLayout);
-        testFileTemplateField.setText(projectPreferences.getTestFileNameTemplate());
+
+        if(prefWriter.getTestFileNameTemplate().length() != 0)
+        {
+            testFileTemplateField.setText(prefWriter.getTestFileNameTemplate());
+        }
+        else
+        {
+            testFileTemplateField.setText(Preferences.DEFAULTS.getTestFileNameTemplate());
+        }
+
         testFileTemplateField.addModifyListener(new ModifyListener()
         {
             public void modifyText(ModifyEvent event)
@@ -68,6 +71,21 @@ public class GenericPropertyPage extends PropertyPage
                 validate();
             }
         });
+
+        Label wordSeparatorLabel = new Label(parent, SWT.NONE);
+        wordSeparatorLabel.setText("Word separator:");
+
+        wordSeparatorField = new Text(parent, SWT.SINGLE | SWT.BORDER);
+        wordSeparatorField.setLayoutData(labelAndFieldLayout);
+
+        if(prefWriter.getFileWordSeparator().length() != 0)
+        {
+            wordSeparatorField.setText(prefWriter.getFileWordSeparator());
+        }
+        else
+        {
+            wordSeparatorField.setText(Preferences.DEFAULTS.getFileWordSeparator());
+        }
 
         GridData rowLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         rowLayout.horizontalSpan = 2;
@@ -77,21 +95,19 @@ public class GenericPropertyPage extends PropertyPage
         explainationLabel.setText("Use the variable " + TestFileNamePattern.SRC_FILE_VARIABLE + " to represent the production source file.");
     }
 
-    @Override
     public boolean performOk()
     {
         saveProperties();
-        return super.performOk();
+        return true;
     }
 
-    @Override
-    protected void performDefaults()
+    public void performDefaults()
     {
-        super.performDefaults();
-        testFileTemplateField.setText(Preferences.DEFAULT_TEST_FILE_NAME_TEMPLATE);
+        wordSeparatorField.setText(Preferences.DEFAULTS.getFileWordSeparator());
+        testFileTemplateField.setText(Preferences.DEFAULTS.getTestFileNameTemplate());
     }
 
-    private void validate()
+    public void validate()
     {
         String testFileTemplate = testFileTemplateField.getText();
 
@@ -111,33 +127,27 @@ public class GenericPropertyPage extends PropertyPage
 
         if(errorMsg == null)
         {
-            setMessage(null);
-            setValid(true);
+            page.setMessage(null);
+            page.setValid(true);
         }
         else
         {
-            setMessage(errorMsg, IMessageProvider.ERROR);
-            setValid(false);
+            page.setMessage(errorMsg, IMessageProvider.ERROR);
+            page.setValid(false);
             testFileTemplateField.forceFocus();
         }
     }
 
-    @Override
-    public void setVisible(boolean visible)
-    {
-        super.setVisible(visible);
-        if(! visible)
-        {
-            return;
-        }
-
-        validate();
-    }
-
     private void saveProperties()
     {
-        ProjectPreferences projectPreferences = preferences.get((IProject) getElement());
-        projectPreferences.setTestFileNameTemplate(testFileTemplateField.getText());
-        projectPreferences.save();
+        prefWriter.setFileWordSeparator(wordSeparatorField.getText());
+        prefWriter.setTestFileNameTemplate(testFileTemplateField.getText());
+        prefWriter.save();
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        wordSeparatorField.setEnabled(enabled);
+        testFileTemplateField.setEnabled(enabled);
     }
 }

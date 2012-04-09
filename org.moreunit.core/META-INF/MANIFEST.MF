@@ -13,6 +13,8 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: org.moreunit.core.commands;x-friends:="org.moreunit.core.test",
+Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.commands;x-friends:="org.moreunit.core.test",
  org.moreunit.core.expressions;x-friends:="org.moreunit",
- org.moreunit.core.matching;x-friends:="org.moreunit.core.test"
+ org.moreunit.core.matching;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.preferences;x-friends:="org.moreunit.core.test"

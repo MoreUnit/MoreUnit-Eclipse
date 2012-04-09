@@ -11,4 +11,4 @@ Require-Bundle: org.moreunit.core,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  org.junit;bundle-version="4.8.2",
- org.eclipse.swtbot.go;bundle-version="2.0.0"
+ org.moreunit.test.dependencies;bundle-version="0.0.0"

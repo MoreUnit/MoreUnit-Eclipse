@@ -1,6 +1,8 @@
 package org.moreunit.core;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.moreunit.core.preferences.PageManager;
+import org.moreunit.core.preferences.Preferences;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -13,6 +15,7 @@ public class MoreUnitCore extends AbstractUIPlugin
     private static MoreUnitCore instance;
 
     private Logger logger;
+    private PageManager pageManager;
     private Preferences preferences;
 
     public static MoreUnitCore get()
@@ -26,11 +29,14 @@ public class MoreUnitCore extends AbstractUIPlugin
         instance = this;
 
         logger = new Logger(getLog());
-        preferences = new Preferences(logger);
+        preferences = new Preferences(getPreferenceStore(), logger);
+        pageManager = new PageManager(preferences, logger);
+        pageManager.startup();
     }
 
     public void stop(BundleContext context) throws Exception
     {
+        pageManager.shutdown();
         preferences = null;
         logger = null;
 
@@ -41,6 +47,11 @@ public class MoreUnitCore extends AbstractUIPlugin
     public Logger getLogger()
     {
         return logger;
+    }
+
+    public PageManager getPageManager()
+    {
+        return pageManager;
     }
 
     public Preferences getPreferences()
