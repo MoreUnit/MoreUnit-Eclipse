@@ -27,6 +27,8 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 
     public static final String PLUGIN_ID = "org.moreunit";
 
+    private AnnotationUpdateListener annotationUpdateListener;
+
     /**
      * The constructor.
      */
@@ -46,7 +48,8 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     {
         super.start(context);
         FeatureDetector.setBundleContext(context);
-        PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(new AnnotationUpdateListener());
+        annotationUpdateListener = new AnnotationUpdateListener();
+        PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(annotationUpdateListener);
         MoreUnitAnnotationModel.attachForAllOpenEditor();
         removeMarkerFromOlderMoreUnitVersions();
     }
@@ -78,6 +81,8 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     public void stop(BundleContext context) throws Exception
     {
         super.stop(context);
+        annotationUpdateListener.dispose();
+        PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().removePartListener(annotationUpdateListener);
         plugin = null;
     }
 

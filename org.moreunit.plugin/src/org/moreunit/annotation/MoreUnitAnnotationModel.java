@@ -10,9 +10,7 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModelEvent;
@@ -36,7 +34,7 @@ import org.moreunit.log.LogHandler;
 /**
  * @author vera 01.02.2009 14:27:06
  */
-public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListener
+public class MoreUnitAnnotationModel implements IAnnotationModel
 {
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
@@ -60,6 +58,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
 
     public static void updateAnnotations(ITextEditor editor)
     {
+        System.out.println("Update annotations");
         IDocumentProvider provider = editor.getDocumentProvider();
         if(provider == null)
         {
@@ -263,11 +262,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
                 LogHandler.getInstance().handleExceptionLog(exc);
             }
         }
-
-        if(openConnections++ == 0)
-        {
-            document.addDocumentListener(this);
-        }
     }
 
     public void disconnect(IDocument document)
@@ -280,11 +274,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
         for (MoreUnitAnnotation annotation : annotations)
         {
             document.removePosition(annotation.getPosition());
-        }
-
-        if(--openConnections == 0)
-        {
-            document.removeDocumentListener(this);
         }
     }
 
@@ -310,17 +299,5 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
     public void removeAnnotationModelListener(IAnnotationModelListener listener)
     {
         annotationModelListeners.remove(listener);
-    }
-
-    public void documentChanged(DocumentEvent event)
-    {
-        // TODO Nicolas: do we really need to do this on each and every single character change?
-        // maybe it would be preferable to do this only on save, or to define a minimum delay after change
-        updateAnnotations();
-    }
-
-    public void documentAboutToBeChanged(DocumentEvent event)
-    {
-        // void: event ignored
     }
 }
