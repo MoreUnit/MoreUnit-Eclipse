@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
@@ -44,8 +48,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     private final IDocument document;
     private final ITextEditor textEditor;
 
-    private int openConnections = 0;
-
     /*
      * Could be private, but is public for testing.
      */
@@ -58,7 +60,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     public static void updateAnnotations(ITextEditor editor)
     {
-        System.out.println("Update annotations");
         IDocumentProvider provider = editor.getDocumentProvider();
         if(provider == null)
         {
@@ -154,41 +155,51 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private void updateAnnotations()
     {
-        // long startTime = System.currentTimeMillis();
-        AnnotationModelEvent event = new AnnotationModelEvent(this);
-        clear(event);
+        final MoreUnitAnnotationModel modelInstance = this;
+        Job updateJob = new Job("Update MoreUnit Annotations") {
 
-        try
-        {
-            EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-            if(! editorPartFacade.isJavaFile())
+            @Override
+            protected IStatus run(IProgressMonitor monitor)
             {
-                return;
+                AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
+                clear(event);
+                
+                try
+                {
+                    EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+                    if(! editorPartFacade.isJavaFile())
+                    {
+                        return Status.OK_STATUS;
+                    }
+                    
+                    ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+                    if(TypeFacade.isTestCase(compilationUnit))
+                    {
+                        return Status.OK_STATUS;
+                    }
+                    
+                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                    IType type = classTypeFacade.getType();
+                    if(type == null)
+                    {
+                        return Status.OK_STATUS; // this could happen if the resource is out of sync with the file system
+                    }
+                    
+                    annotateTestedMethods(type, classTypeFacade, event);
+                }
+                catch (Exception exc)
+                {
+                    LogHandler.getInstance().handleExceptionLog(exc);
+                }
+                
+                fireModelChanged(event);
+                
+                return Status.OK_STATUS;
             }
-            
-            ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
-            if(TypeFacade.isTestCase(compilationUnit))
-            {
-                return;
-            }
-
-            ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-            IType type = classTypeFacade.getType();
-            if(type == null)
-            {
-                return; // this could happen if the resource is out of sync with the file system
-            }
-
-            annotateTestedMethods(type, classTypeFacade, event);
-        }
-        catch (Exception exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
+        };
         
-        fireModelChanged(event);
-
-        // System.err.println(String.format("updateAnnotations(): %sms", System.currentTimeMillis() - startTime));
+        updateJob.setPriority(Job.SHORT);
+        updateJob.schedule();
     }
 
     private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException

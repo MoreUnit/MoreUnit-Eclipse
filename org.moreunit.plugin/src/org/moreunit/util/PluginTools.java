@@ -33,6 +33,10 @@ public class PluginTools
     {
         IWorkbench wb = PlatformUI.getWorkbench();
         IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
+        
+        if(window == null)
+            return null;
+        
         IWorkbenchPage page = window.getActivePage();
 
         if(page != null)
