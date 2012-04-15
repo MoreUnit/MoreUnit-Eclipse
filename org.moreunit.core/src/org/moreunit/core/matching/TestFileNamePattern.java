@@ -12,8 +12,17 @@ import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
 
 public class TestFileNamePattern
 {
-
     public static final String SRC_FILE_VARIABLE = "${srcFile}";
+
+    private static final String VALIDATOR;
+    static
+    {
+        String separatorAndOrStar = "(\\*?(${sep})?)?((${sep})?\\*?)";
+        String authorizedChars = "[^\\(\\|\\)\\*]";
+        String prefixOrSuffix = separatorAndOrStar + "(\\(" + authorizedChars + "+(\\|" + authorizedChars + "+)*\\)|" + authorizedChars + "*)" + separatorAndOrStar;
+
+        VALIDATOR = "^" + prefixOrSuffix + quote(SRC_FILE_VARIABLE) + prefixOrSuffix + "$";
+    }
 
     private static final Comparator<String> byDescendingLength = new Comparator<String>()
     {
@@ -72,6 +81,11 @@ public class TestFileNamePattern
         }
 
         pattern = Pattern.compile(patternString.replace(SRC_FILE_VARIABLE, ".*"));
+    }
+
+    public static boolean isValid(String template, String separator)
+    {
+        return template.matches(VALIDATOR.replace("${sep}", separator));
     }
 
     public FileNameEvaluation evaluate(String fileBaseName)

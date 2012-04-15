@@ -1,8 +1,5 @@
 package org.moreunit.core.ui;
 
-import java.util.Set;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -29,8 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.moreunit.core.Logger;
-import org.moreunit.core.matching.FileMatchSelector;
+import org.moreunit.core.log.Logger;
 
 public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog implements DisposeListener
 {

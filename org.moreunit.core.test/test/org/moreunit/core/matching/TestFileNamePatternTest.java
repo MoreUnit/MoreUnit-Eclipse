@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.moreunit.core.matching.TestFileNamePattern.isValid;
 
 import java.util.Collection;
 
@@ -232,5 +233,50 @@ public class TestFileNamePatternTest
         assertFalse(evaluation.isTestFile());
         assertEquals(".*Pre.*Source.*Suf.*", evaluation.getPreferredCorrespondingFilePattern());
         assertTrue(evaluation.getOtherCorrespondingFileNames().isEmpty());
+    }
+
+    @Test
+    public void should_validate_expresions() throws Exception
+    {
+        String[] withoutSeparator = { "${srcFile}", "*${srcFile}", "${srcFile}*", "*${srcFile}*" //
+        , "Pre${srcFile}", "${srcFile}Suf", "Pre${srcFile}Suf" //
+        , "*Pre${srcFile}", "${srcFile}Suf*", "*Pre${srcFile}Suf*" //
+        , "*Pre*${srcFile}", "${srcFile}*Suf*", "*Pre*${srcFile}*Suf*" //
+        , "(P1|P2)${srcFile}", "${srcFile}(S1|S2)", "*(P1|P2)*${srcFile}*(S1|S2|S3)*" };
+
+        for (String template : withoutSeparator)
+        {
+            assertTrue(isValid(template, ""));
+        }
+
+        String[] withSeparator = { "${srcFile}", "*${srcFile}", "${srcFile}*", "*${srcFile}*" //
+        , "pre_${srcFile}", "${srcFile}_suf", "pre-${srcFile}_suf" //
+        , "*pre${srcFile}", "${srcFile}_suf*", "*pre_${srcFile}_suf*" //
+        , "*_pre*${srcFile}", "${srcFile}*_suf_*", "*pre*_${srcFile}*_suf*" //
+        , "(p1|p2)_${srcFile}", "${srcFile}_(s1|s2)", "*(p1|p2)_*${srcFile}*_(s1|s2|s3)*" };
+
+        for (String template : withSeparator)
+        {
+            assertTrue(isValid(template, "_"));
+        }
+    }
+
+    @Test
+    public void should_invalidate_expresions() throws Exception
+    {
+        String[] withoutSeparator = { "*P*re*${srcFile}*Suf*", "*P1|P2*${srcFile}*(S1|S2)*", "*(P1|P2)*${srcFile}*S1|S2*" //
+        , "(${srcFile})", "${something}" };
+
+        for (String template : withoutSeparator)
+        {
+            assertFalse(isValid(template, ""));
+        }
+
+        String[] withSeparator = { "*pre*_${srcFile}*_s*uf*" };
+
+        for (String template : withSeparator)
+        {
+            assertFalse(isValid(template, "_"));
+        }
     }
 }

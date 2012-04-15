@@ -1,69 +1,56 @@
 package org.moreunit.core.preferences;
 
-import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.swt.widgets.Label;
+import org.moreunit.core.MoreUnitCore;
 
-public class GenericPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
+public class GenericPreferencePage extends PreferencePageBase
 {
-    private final GenericConfigurationPage delegate;
+    private final Language lang;
+    private final Preferences preferences;
+    private final PageManager pageManager;
 
-    public GenericPreferencePage(LanguagePreferencesWriter prefWriter)
+    public GenericPreferencePage(Language lang, LanguagePreferencesWriter prefWriter)
     {
-        this(null, prefWriter);
+        super(lang.getLabel(), prefWriter);
+        this.lang = lang;
+        preferences = MoreUnitCore.get().getPreferences();
+        pageManager = MoreUnitCore.get().getPageManager();
     }
 
-    public GenericPreferencePage(String title, LanguagePreferencesWriter prefWriter)
+    @Override
+    protected void doCreateContent(Composite contentComposite)
     {
-        if(title != null)
+        createBaseContents(contentComposite);
+        createFields(contentComposite);
+    }
+
+    private void createFields(Composite composite)
+    {
+        // place holder
+        new Label(composite, SWT.NONE);
+
+        Button button = new Button(composite, SWT.NONE);
+        button.setText("Delete Configuration");
+        button.addSelectionListener(new SelectionListener()
         {
-            setTitle(title);
-        }
-        delegate = new GenericConfigurationPage(this, prefWriter);
-    }
+            public void widgetSelected(SelectionEvent e)
+            {
+                if(MessageDialog.openConfirm(getShell(), "MoreUnit", "This action is definitive. Please confirm that you want to delete the configuration for " + lang.getLabel() + "."))
+                {
+                    preferences.removeConfiguredLanguage(lang);
+                    pageManager.removePagesFor(lang);
+                }
+            }
 
-    public void init(IWorkbench workbench)
-    {
-    }
-
-    @Override
-    protected Control createContents(Composite parent)
-    {
-        initializeDialogUnits(parent);
-
-        delegate.createContents(parent);
-
-        return parent;
-    }
-
-    @Override
-    public boolean performOk()
-    {
-        if(! delegate.performOk())
-        {
-            return false;
-        }
-        return super.performOk();
-    }
-
-    @Override
-    protected void performDefaults()
-    {
-        super.performDefaults();
-        delegate.performDefaults();
-    }
-
-    @Override
-    public void setVisible(boolean visible)
-    {
-        super.setVisible(visible);
-        if(! visible)
-        {
-            return;
-        }
-
-        delegate.validate();
+            public void widgetDefaultSelected(SelectionEvent e)
+            {
+            }
+        });
     }
 }

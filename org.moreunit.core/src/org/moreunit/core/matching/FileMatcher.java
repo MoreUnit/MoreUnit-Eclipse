@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
-import org.moreunit.core.Logger;
+import org.moreunit.core.log.Logger;
 import org.moreunit.core.preferences.Preferences;
 import org.moreunit.core.ui.FileContentProvider;
 import org.moreunit.core.ui.FileMatchSelectionDialog;
@@ -112,7 +112,7 @@ public class FileMatcher
 
             if(searchStatus.getCode() != IStatus.OK)
             {
-                logger.warning("Search failed with status: " + searchStatus);
+                logger.warn("Search failed with status: " + searchStatus);
             }
         }
         catch (Exception e)

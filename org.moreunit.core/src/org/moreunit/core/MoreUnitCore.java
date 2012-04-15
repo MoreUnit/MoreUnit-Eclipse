@@ -1,6 +1,8 @@
 package org.moreunit.core;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.moreunit.core.log.DefaultLogger;
+import org.moreunit.core.log.Logger;
 import org.moreunit.core.preferences.PageManager;
 import org.moreunit.core.preferences.Preferences;
 import org.osgi.framework.BundleContext;
@@ -28,7 +30,7 @@ public class MoreUnitCore extends AbstractUIPlugin
         super.start(context);
         instance = this;
 
-        logger = new Logger(getLog());
+        logger = new DefaultLogger(getLog(), "org.moreunit.core.log.level");
         preferences = new Preferences(getPreferenceStore(), logger);
         pageManager = new PageManager(preferences, logger);
         pageManager.startup();

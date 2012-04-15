@@ -15,8 +15,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
-import org.moreunit.core.Logger;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.FileMatcher;
 
 public class JumpActionHandler extends AbstractHandler
@@ -82,7 +82,7 @@ public class JumpActionHandler extends AbstractHandler
     {
         if(! (event.getApplicationContext() instanceof EvaluationContext))
         {
-            logger.warning("Unsupported context: " + event.getApplicationContext()); //$NON-NLS-1$
+            logger.warn("Unsupported context: " + event.getApplicationContext()); //$NON-NLS-1$
             return null;
         }
 

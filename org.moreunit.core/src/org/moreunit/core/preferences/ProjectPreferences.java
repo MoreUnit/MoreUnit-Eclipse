@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.moreunit.core.Logger;
+import org.moreunit.core.log.Logger;
 
 public class ProjectPreferences implements WriteablePreferences, ReadablePreferences
 {

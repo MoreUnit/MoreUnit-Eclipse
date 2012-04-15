@@ -1,6 +1,7 @@
 package org.moreunit.core.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -43,7 +44,9 @@ public class GenericPropertyPage extends PropertyPage
 
         createCheckboxContent(contentComposite);
 
-        delegate.createContents(parent);
+        delegate.createContents(contentComposite);
+
+        Dialog.applyDialogFont(contentComposite);
 
         if(prefs.isActive())
         {
@@ -81,8 +84,9 @@ public class GenericPropertyPage extends PropertyPage
             }
         });
 
-        GridData gridData = new GridData();
+        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
+        gridData.horizontalSpan = 2;
         projectSpecificSettingsCheckbox.setLayoutData(gridData);
 
         projectSpecificSettingsCheckbox.setSelection(prefs.isActive());

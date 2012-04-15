@@ -11,11 +11,14 @@ import org.eclipse.core.runtime.IContributor;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.ui.PlatformUI;
-import org.moreunit.core.Logger;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.log.Logger;
 
 public class PageManager
 {
@@ -37,11 +40,11 @@ public class PageManager
     {
         for (Language lang : preferences.getConfiguredLanguages())
         {
-            addPagesFor(lang);
+            addPages(lang);
         }
     }
 
-    public void addPagesFor(Language lang)
+    private void addPages(Language lang)
     {
         addPreferencePage(lang);
         addPropertyPage(lang);
@@ -52,7 +55,8 @@ public class PageManager
         PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
 
         preferenceManager.addTo(MAIN_PAGE, new LanguagePreferenceNode(lang, preferences.writerForLanguage(lang.getExtension())));
-        logger.info("Added preference page for language " + lang);
+
+        logger.debug("Added preference page for language " + lang);
     }
 
     private void addPropertyPage(Language lang)
@@ -74,7 +78,8 @@ public class PageManager
             InputStream is = new ByteArrayInputStream(xml.getBytes());
 
             boolean result = extensionRegistry.addContribution(is, contributor, false, null, null, token);
-            logger.info("Added property page for language " + lang + " with result: " + result);
+
+            logger.debug("Added property page for language " + lang + " with result: " + result);
         }
         catch (IOException e)
         {
@@ -106,15 +111,26 @@ public class PageManager
     {
         for (Language lang : preferences.getConfiguredLanguages())
         {
-            removePreferencePage(lang);
-            removePropertyPage(lang);
+            removePages(lang);
         }
+    }
+
+    private void removePages(Language lang)
+    {
+        removePropertyPage(lang);
+        removePreferencePage(lang);
     }
 
     private void removePreferencePage(Language lang)
     {
-        PlatformUI.getWorkbench().getPreferenceManager().remove(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
-        logger.info("Removed preference page for language " + lang);
+        PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
+
+        IPreferenceNode mainNode = preferenceManager.find(MAIN_PAGE);
+        IPreferenceNode node = mainNode.findSubNode(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
+
+        boolean result = mainNode.remove(node);
+
+        logger.debug("Removed preference page for language " + lang + " with result: " + result);
     }
 
     private void removePropertyPage(Language lang)
@@ -125,7 +141,30 @@ public class PageManager
         IExtension extension = extensionRegistry.getExtension(PROPERTY_PAGE_EXTENSION_ID_BASE + lang.getExtension());
 
         boolean result = extensionRegistry.removeExtension(extension, token);
-        logger.info("Removed property page for language " + lang + " with result: " + result);
+
+        logger.debug("Removed property page for language " + lang + " with result: " + result);
+    }
+
+    public void addPagesFor(Language lang)
+    {
+        addPages(lang);
+        refreshTreeAndOpenPage(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
+    }
+
+    public void removePagesFor(Language lang)
+    {
+        removePages(lang);
+        refreshTreeAndOpenPage(MAIN_PAGE);
+    }
+
+    private void refreshTreeAndOpenPage(String pageId)
+    {
+        PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(null, pageId, null, null);
+        if(pd != null)
+        {
+            pd.getTreeViewer().refresh();
+            pd.open();
+        }
     }
 
     private static class LanguagePreferenceNode extends PreferenceNode
@@ -149,7 +188,7 @@ public class PageManager
         @Override
         public void createPage()
         {
-            setPage(new GenericPreferencePage(getLabelText(), prefWriter));
+            setPage(new GenericPreferencePage(language, prefWriter));
         }
     }
 }

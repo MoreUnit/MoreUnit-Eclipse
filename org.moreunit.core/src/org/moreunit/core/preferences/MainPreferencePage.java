@@ -5,16 +5,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbench;
 import org.moreunit.core.MoreUnitCore;
 
-public class MainPreferencePage extends GenericPreferencePage
+public class MainPreferencePage extends PreferencePageBase
 {
     private final Preferences preferences;
     private final PageManager pageManager;
@@ -27,34 +24,21 @@ public class MainPreferencePage extends GenericPreferencePage
         super(MoreUnitCore.get().getPreferences().writerForAnyLanguage());
         preferences = MoreUnitCore.get().getPreferences();
         pageManager = MoreUnitCore.get().getPageManager();
-        rowLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+
+        rowLayout = new GridData(GridData.FILL_HORIZONTAL);
         rowLayout.horizontalSpan = 2;
     }
 
-    public void init(IWorkbench workbench)
-    {
-    }
-
     @Override
-    protected Control createContents(Composite parent)
+    protected void doCreateContent(Composite contentComposite)
     {
-        Label explainationLabel = new Label(parent, SWT.NONE);
+        Label explainationLabel = new Label(contentComposite, SWT.NONE);
         explainationLabel.setLayoutData(rowLayout);
         explainationLabel.setText("The following configuration will be applied to all languages as a default:");
 
-        Control control = super.createContents(parent);
+        createBaseContents(contentComposite);
 
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = 0;
-        layout.marginRight = 10;
-        layout.numColumns = 2;
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        createFields(composite);
-
-        return control;
+        createFields(contentComposite);
     }
 
     private void createFields(Composite parent)
@@ -63,7 +47,7 @@ public class MainPreferencePage extends GenericPreferencePage
         explainationLabel.setLayoutData(rowLayout);
         explainationLabel.setText("Per-language configurations may also be created:");
 
-        GridData labelAndFieldLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        GridData labelAndFieldLayout = new GridData(GridData.FILL_HORIZONTAL);
         labelAndFieldLayout.horizontalIndent = 30;
 
         Label nameLabel = new Label(parent, SWT.NONE);
@@ -78,8 +62,7 @@ public class MainPreferencePage extends GenericPreferencePage
         extensionField = new Text(parent, SWT.SINGLE | SWT.BORDER);
         extensionField.setLayoutData(labelAndFieldLayout);
 
-        // place holder
-        new Label(parent, SWT.NONE);
+        placeHolder(parent);
 
         Button creationButton = new Button(parent, SWT.NONE);
         creationButton.setText("Create Configuration");
@@ -89,9 +72,9 @@ public class MainPreferencePage extends GenericPreferencePage
             {
                 if(validateNewLanguage())
                 {
-                    Language language = new Language(extensionField.getText().trim(), nameField.getText().trim());
-                    preferences.addConfiguredLanguage(language);
-                    pageManager.addPagesFor(language);
+                    Language lang = new Language(extensionField.getText().trim(), nameField.getText().trim());
+                    preferences.addConfiguredLanguage(lang);
+                    pageManager.addPagesFor(lang);
                 }
                 else
                 {

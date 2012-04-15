@@ -1,15 +1,14 @@
 package org.moreunit.core.preferences;
 
-import org.eclipse.jface.dialogs.Dialog;
+import static org.moreunit.core.utils.Strings.countOccurrences;
+
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.matching.TestFileNamePattern;
@@ -18,6 +17,8 @@ class GenericConfigurationPage
 {
     private final PreferencePage page;
     private final LanguagePreferencesWriter prefWriter;
+    private final GridData labelAndFieldLayout;
+    private final GridData rowLayout;
     private Text testFileTemplateField;
     private Text wordSeparatorField;
 
@@ -25,30 +26,31 @@ class GenericConfigurationPage
     {
         this.page = page;
         this.prefWriter = prefWriter;
-    }
 
-    public Control createContents(Composite parent)
-    {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = 0;
-        layout.marginRight = 10;
-        layout.numColumns = 2;
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        createFields(composite);
-
-        Dialog.applyDialogFont(composite);
-
-        return parent;
-    }
-
-    private void createFields(Composite parent)
-    {
-        GridData labelAndFieldLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        labelAndFieldLayout = new GridData(GridData.FILL_HORIZONTAL);
         labelAndFieldLayout.horizontalIndent = 30;
 
+        rowLayout = new GridData(GridData.FILL_HORIZONTAL);
+        rowLayout.horizontalSpan = 2;
+    }
+
+    public void createContents(Composite parent)
+    {
+        createFileTemplateField(parent);
+
+        createWordSeparatorField(parent);
+
+        placeHolder(parent);
+
+        createExplanations(parent);
+
+        placeHolder(parent);
+
+        createOverviewArea(parent);
+    }
+
+    private void createFileTemplateField(Composite parent)
+    {
         Label testFileTemplateLabel = new Label(parent, SWT.NONE);
         testFileTemplateLabel.setText("Rule for naming test files:");
 
@@ -71,7 +73,10 @@ class GenericConfigurationPage
                 validate();
             }
         });
+    }
 
+    private void createWordSeparatorField(Composite parent)
+    {
         Label wordSeparatorLabel = new Label(parent, SWT.NONE);
         wordSeparatorLabel.setText("Word separator:");
 
@@ -86,13 +91,31 @@ class GenericConfigurationPage
         {
             wordSeparatorField.setText(Preferences.DEFAULTS.getFileWordSeparator());
         }
+    }
 
-        GridData rowLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        rowLayout.horizontalSpan = 2;
+    public void placeHolder(Composite parent)
+    {
+        new Label(parent, SWT.NONE);
+    }
 
-        Label explainationLabel = new Label(parent, SWT.NONE);
-        explainationLabel.setLayoutData(rowLayout);
-        explainationLabel.setText("Use the variable " + TestFileNamePattern.SRC_FILE_VARIABLE + " to represent the production source file.");
+    private void createExplanations(Composite parent)
+    {
+        String[] explanations = { //
+        "Use the variable " + TestFileNamePattern.SRC_FILE_VARIABLE + " to represent the production source file.", //
+        "You may use stars (*) to represent variable parts.", //
+        "You may use parentheses and pipes to define several possible prefixes or suffixes: (pre1|pre2)" };
+
+        for (String e : explanations)
+        {
+            Label lbl = new Label(parent, SWT.NONE);
+            lbl.setLayoutData(rowLayout);
+            lbl.setText(e);
+        }
+    }
+
+    private void createOverviewArea(Composite parent)
+    {
+        // TODO Nicolas
     }
 
     public boolean performOk()
@@ -110,6 +133,7 @@ class GenericConfigurationPage
     public void validate()
     {
         String testFileTemplate = testFileTemplateField.getText();
+        String separator = wordSeparatorField.getText();
 
         String errorMsg = null;
         if(testFileTemplate.isEmpty())
@@ -124,11 +148,20 @@ class GenericConfigurationPage
         {
             errorMsg = "Test files must have a name different from their corresponding source file";
         }
+        else if(! TestFileNamePattern.isValid(testFileTemplate, separator))
+        {
+            errorMsg = "Invalid template: please follow the guidelines.";
+        }
 
         if(errorMsg == null)
         {
             page.setMessage(null);
             page.setValid(true);
+
+            if(countOccurrences(testFileTemplate, "*") > 1)
+            {
+                page.setMessage("Using too many wildcards may degrade search performance and results!", IMessageProvider.WARNING);
+            }
         }
         else
         {

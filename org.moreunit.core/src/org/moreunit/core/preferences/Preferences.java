@@ -12,8 +12,8 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.moreunit.core.Logger;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.TestFileNamePattern;
 
 public class Preferences implements WriteablePreferences, ReadablePreferences
@@ -124,6 +124,11 @@ public class Preferences implements WriteablePreferences, ReadablePreferences
         languages.add(language);
         sort(languages);
 
+        setLanguages(languages);
+    }
+
+    private void setLanguages(List<Language> languages)
+    {
         StringBuilder sb = new StringBuilder();
         for (Language lang : languages)
         {
@@ -134,6 +139,13 @@ public class Preferences implements WriteablePreferences, ReadablePreferences
             sb.append(lang.getExtension()).append(":").append(lang.getLabel());
         }
         store.setValue(LANGUAGES, sb.toString());
+    }
+
+    public void removeConfiguredLanguage(Language language)
+    {
+        List<Language> languages = getConfiguredLanguages();
+        languages.remove(language);
+        setLanguages(languages);
     }
 
     private ScopedPreferenceStore getStore(IProject project)
