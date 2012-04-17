@@ -5,14 +5,14 @@ import java.util.Collection;
 public class FileNameEvaluation
 {
     private final boolean testFile;
-    private final Collection<String> otherCorrespondingFileNames;
-    private final String preferredCorrespondingFilePattern;
+    private final Collection<String> otherCorrespondingFilePatterns;
+    private final Collection<String> preferredCorrespondingFilePatterns;
 
-    public FileNameEvaluation(boolean testFile, String preferredCorrespondingFilePattern, Collection<String> otherCorrespondingFileNames)
+    public FileNameEvaluation(boolean testFile, Collection<String> preferredCorrespondingFilePatterns, Collection<String> otherCorrespondingFilePatterns)
     {
         this.testFile = testFile;
-        this.preferredCorrespondingFilePattern = preferredCorrespondingFilePattern;
-        this.otherCorrespondingFileNames = otherCorrespondingFileNames;
+        this.preferredCorrespondingFilePatterns = preferredCorrespondingFilePatterns;
+        this.otherCorrespondingFilePatterns = otherCorrespondingFilePatterns;
     }
 
     public boolean isTestFile()
@@ -20,13 +20,13 @@ public class FileNameEvaluation
         return testFile;
     }
 
-    public String getPreferredCorrespondingFilePattern()
+    public Collection<String> getPreferredCorrespondingFilePatterns()
     {
-        return preferredCorrespondingFilePattern;
+        return preferredCorrespondingFilePatterns;
     }
 
-    public Collection<String> getOtherCorrespondingFileNames()
+    public Collection<String> getOtherCorrespondingFilePatterns()
     {
-        return otherCorrespondingFileNames;
+        return otherCorrespondingFilePatterns;
     }
 }

@@ -45,12 +45,12 @@ public class FileMatcher
 
         ResultCollector rc = new ResultCollector();
 
-        TextSearchScope scope = createSearchScope(file, evaluation.getPreferredCorrespondingFilePattern() + "\\." + file.getFileExtension());
+        TextSearchScope scope = createSearchScope(file, evaluation.getPreferredCorrespondingFilePatterns());
         search(scope, rc);
 
-        if(! evaluation.getOtherCorrespondingFileNames().isEmpty())
+        if(! evaluation.getOtherCorrespondingFilePatterns().isEmpty())
         {
-            scope = createSearchScope(file, evaluation.getOtherCorrespondingFileNames());
+            scope = createSearchScope(file, evaluation.getOtherCorrespondingFilePatterns());
             if(scope != null)
             {
                 search(scope, rc);
@@ -86,7 +86,9 @@ public class FileMatcher
         }
 
         sb.append(")").append("\\.").append(file.getFileExtension());
-        return createSearchScope(file, sb.toString());
+
+        IResource[] rootRessources = { file.getProject() };
+        return TextSearchScope.newSearchScope(rootRessources, Pattern.compile(sb.toString()), false);
     }
 
     private FileNameEvaluation evaluate(IFile file)
@@ -96,12 +98,6 @@ public class FileMatcher
         String basename = file.getFullPath().removeFileExtension().lastSegment();
 
         return testFilePattern.evaluate(basename);
-    }
-
-    private TextSearchScope createSearchScope(IFile file, String fileNamePattern)
-    {
-        IResource[] rootRessources = { file.getProject() };
-        return TextSearchScope.newSearchScope(rootRessources, Pattern.compile(fileNamePattern), false);
     }
 
     private void search(TextSearchScope scope, TextSearchRequestor requestor)
