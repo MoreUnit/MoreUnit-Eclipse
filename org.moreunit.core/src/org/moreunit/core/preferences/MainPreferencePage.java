@@ -17,7 +17,7 @@ public class MainPreferencePage extends PreferencePageBase
     private final PageManager pageManager;
     private final GridData rowLayout;
     private Text nameField;
-    private Text extensionField;
+    private ExtensionField extensionField;
 
     public MainPreferencePage()
     {
@@ -47,20 +47,17 @@ public class MainPreferencePage extends PreferencePageBase
         explainationLabel.setLayoutData(rowLayout);
         explainationLabel.setText("Per-language configurations may also be created:");
 
-        GridData labelAndFieldLayout = new GridData(GridData.FILL_HORIZONTAL);
-        labelAndFieldLayout.horizontalIndent = 30;
-
         Label nameLabel = new Label(parent, SWT.NONE);
         nameLabel.setText("Language name:");
 
         nameField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        nameField.setLayoutData(labelAndFieldLayout);
+        nameField.setLayoutData(LayoutData.LABEL_AND_FIELD);
 
         Label extensionLabel = new Label(parent, SWT.NONE);
         extensionLabel.setText("Extension:");
 
-        extensionField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        extensionField.setLayoutData(labelAndFieldLayout);
+        extensionField = new ExtensionField(parent, SWT.SINGLE | SWT.BORDER);
+        extensionField.setLayoutData(LayoutData.LABEL_AND_FIELD);
 
         placeHolder(parent);
 
@@ -70,30 +67,26 @@ public class MainPreferencePage extends PreferencePageBase
         {
             public void widgetSelected(SelectionEvent e)
             {
-                if(validateNewLanguage())
-                {
-                    Language lang = new Language(extensionField.getText().trim(), nameField.getText().trim());
-                    preferences.addConfiguredLanguage(lang);
-                    pageManager.addPagesFor(lang);
-                }
-                else
+                if(! extensionField.isValid())
                 {
                     MessageDialog.openWarning(getShell(), "MoreUnit", "Please enter a valid file extension and retry.");
+                    return;
                 }
+
+                if(preferences.hasPreferencesForLanguage(extensionField.getExtension()))
+                {
+                    MessageDialog.openWarning(getShell(), "MoreUnit", "A configuration already exists for file extension *." + extensionField.getExtension());
+                    return;
+                }
+
+                Language lang = new Language(extensionField.getExtension(), nameField.getText().trim());
+                preferences.addConfiguredLanguage(lang);
+                pageManager.addPagesFor(lang);
             }
 
             public void widgetDefaultSelected(SelectionEvent e)
             {
             }
         });
-    }
-
-    private boolean validateNewLanguage()
-    {
-        if(extensionField.getText().trim().length() == 0)
-        {
-            return false;
-        }
-        return true;
     }
 }

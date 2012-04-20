@@ -15,6 +15,8 @@ import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.moreunit.core.MoreUnitCore;
@@ -163,8 +165,20 @@ public class PageManager
         if(pd != null)
         {
             pd.getTreeViewer().refresh();
+            pd.getTreeViewer().setSelection(selectionFor(findNode(pageId)));
             pd.open();
         }
+    }
+
+    private TreeSelection selectionFor(IPreferenceNode node)
+    {
+        return new TreeSelection(new TreePath(new Object[] { node }));
+    }
+
+    private IPreferenceNode findNode(String pageId)
+    {
+        IPreferenceNode mainNode = PlatformUI.getWorkbench().getPreferenceManager().find(MAIN_PAGE);
+        return MAIN_PAGE.equals(pageId) ? mainNode : mainNode.findSubNode(pageId);
     }
 
     private static class LanguagePreferenceNode extends PreferenceNode

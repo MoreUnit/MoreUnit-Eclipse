@@ -17,7 +17,6 @@ class GenericConfigurationPage
 {
     private final PreferencePage page;
     private final LanguagePreferencesWriter prefWriter;
-    private final GridData labelAndFieldLayout;
     private final GridData rowLayout;
     private Text testFileTemplateField;
     private Text wordSeparatorField;
@@ -26,9 +25,6 @@ class GenericConfigurationPage
     {
         this.page = page;
         this.prefWriter = prefWriter;
-
-        labelAndFieldLayout = new GridData(GridData.FILL_HORIZONTAL);
-        labelAndFieldLayout.horizontalIndent = 30;
 
         rowLayout = new GridData(GridData.FILL_HORIZONTAL);
         rowLayout.horizontalSpan = 2;
@@ -55,7 +51,7 @@ class GenericConfigurationPage
         testFileTemplateLabel.setText("Rule for naming test files:");
 
         testFileTemplateField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        testFileTemplateField.setLayoutData(labelAndFieldLayout);
+        testFileTemplateField.setLayoutData(LayoutData.LABEL_AND_FIELD);
 
         if(prefWriter.getTestFileNameTemplate().length() != 0)
         {
@@ -81,7 +77,7 @@ class GenericConfigurationPage
         wordSeparatorLabel.setText("Word separator:");
 
         wordSeparatorField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        wordSeparatorField.setLayoutData(labelAndFieldLayout);
+        wordSeparatorField.setLayoutData(LayoutData.LABEL_AND_FIELD);
 
         if(prefWriter.getFileWordSeparator().length() != 0)
         {
