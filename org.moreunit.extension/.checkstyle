@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fileset-config file-format-version="1.2.0" simple-config="true" sync-formatter="false">
-  <local-check-config name="AG-CheckStyle EclipsePlugins" location="C:\WKDaten\PluginDevelopment\org.moreunit.extension\AG-CheckStyleV5.xml" type="external" description="AG-CheckStyleV5 for Eclipse Plugins">
+	<local-check-config name="AG-CheckStyle EclipsePlugins" location="D:/WKDaten/EclipseWorkspaceMoreUnit/GitRepoMoreUnit/org.moreunit.extension/AG-CheckStyleV5.xml" type="external" description="AG-CheckStyleV5 for Eclipse Plugins">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
   <fileset name="all" enabled="true" check-config-name="AG-CheckStyle EclipsePlugins" local="true">
