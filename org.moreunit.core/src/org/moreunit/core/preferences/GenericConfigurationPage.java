@@ -7,7 +7,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -17,7 +16,6 @@ class GenericConfigurationPage
 {
     private final PreferencePage page;
     private final LanguagePreferencesWriter prefWriter;
-    private final GridData rowLayout;
     private Text testFileTemplateField;
     private Text wordSeparatorField;
 
@@ -25,9 +23,6 @@ class GenericConfigurationPage
     {
         this.page = page;
         this.prefWriter = prefWriter;
-
-        rowLayout = new GridData(GridData.FILL_HORIZONTAL);
-        rowLayout.horizontalSpan = 2;
     }
 
     public void createContents(Composite parent)
@@ -104,7 +99,7 @@ class GenericConfigurationPage
         for (String e : explanations)
         {
             Label lbl = new Label(parent, SWT.NONE);
-            lbl.setLayoutData(rowLayout);
+            lbl.setLayoutData(LayoutData.ROW);
             lbl.setText(e);
         }
     }

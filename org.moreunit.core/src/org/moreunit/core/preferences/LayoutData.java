@@ -9,4 +9,10 @@ public class LayoutData
     {
         LABEL_AND_FIELD.horizontalIndent = 30;
     }
+
+    public static GridData ROW = new GridData(GridData.FILL_HORIZONTAL);
+    static
+    {
+        ROW.horizontalSpan = 2;
+    }
 }

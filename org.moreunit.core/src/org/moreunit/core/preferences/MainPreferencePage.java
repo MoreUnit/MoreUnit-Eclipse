@@ -4,7 +4,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -16,7 +15,6 @@ import org.moreunit.core.languages.LanguageRepository;
 public class MainPreferencePage extends PreferencePageBase
 {
     private final LanguageRepository languageRepository;
-    private final GridData rowLayout;
     private Text nameField;
     private ExtensionField extensionField;
 
@@ -24,16 +22,13 @@ public class MainPreferencePage extends PreferencePageBase
     {
         super(MoreUnitCore.get().getPreferences().writerForAnyLanguage());
         languageRepository = MoreUnitCore.get().getLanguageRepository();
-
-        rowLayout = new GridData(GridData.FILL_HORIZONTAL);
-        rowLayout.horizontalSpan = 2;
     }
 
     @Override
     protected void doCreateContent(Composite contentComposite)
     {
         Label explainationLabel = new Label(contentComposite, SWT.NONE);
-        explainationLabel.setLayoutData(rowLayout);
+        explainationLabel.setLayoutData(LayoutData.ROW);
         explainationLabel.setText("The following configuration will be applied to all languages as a default:");
 
         createBaseContents(contentComposite);
@@ -44,7 +39,7 @@ public class MainPreferencePage extends PreferencePageBase
     private void createFields(Composite parent)
     {
         Label explainationLabel = new Label(parent, SWT.NONE);
-        explainationLabel.setLayoutData(rowLayout);
+        explainationLabel.setLayoutData(LayoutData.ROW);
         explainationLabel.setText("Per-language configurations may also be created:");
 
         Label nameLabel = new Label(parent, SWT.NONE);
