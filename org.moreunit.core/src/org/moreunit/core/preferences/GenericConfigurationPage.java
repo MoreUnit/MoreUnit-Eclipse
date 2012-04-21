@@ -151,8 +151,7 @@ class GenericConfigurationPage
 
         if(errorMsg == null)
         {
-            page.setMessage(null);
-            page.setValid(true);
+            setValid();
 
             if(countOccurrences(testFileTemplate, "*") > 1)
             {
@@ -167,6 +166,12 @@ class GenericConfigurationPage
         }
     }
 
+    private void setValid()
+    {
+        page.setMessage(null);
+        page.setValid(true);
+    }
+
     private void saveProperties()
     {
         prefWriter.setFileWordSeparator(wordSeparatorField.getText());
@@ -178,5 +183,9 @@ class GenericConfigurationPage
     {
         wordSeparatorField.setEnabled(enabled);
         testFileTemplateField.setEnabled(enabled);
+        if(! enabled)
+        {
+            setValid();
+        }
     }
 }
