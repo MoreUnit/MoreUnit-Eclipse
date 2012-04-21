@@ -20,27 +20,33 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.Service;
+import org.moreunit.core.languages.Language;
+import org.moreunit.core.languages.LanguageConfigurationListener;
+import org.moreunit.core.languages.LanguageRepository;
 import org.moreunit.core.log.Logger;
 
-public class PageManager
+public class LanguagePageManager implements Service, LanguageConfigurationListener
 {
     private static final String MAIN_PAGE = "org.moreunit.core.preferences.mainPage";
     private static final String PREFERENCE_PAGE_ID_BASE = "org.moreunit.core.preferences.page.";
     private static final String PROPERTY_PAGE_EXTENSION_ID_BASE = "org.moreunit.core.properties.page.extension.";
     private static final String PROPERTY_PAGE_ID_BASE = "org.moreunit.core.properties.page.";
 
+    private final LanguageRepository languageRepository;
     private final Preferences preferences;
     private final Logger logger;
 
-    public PageManager(Preferences preferences, Logger logger)
+    public LanguagePageManager(LanguageRepository languageRepository, Preferences preferences, Logger logger)
     {
+        this.languageRepository = languageRepository;
         this.preferences = preferences;
         this.logger = logger;
     }
 
-    public void startup()
+    public void start()
     {
-        for (Language lang : preferences.getConfiguredLanguages())
+        for (Language lang : preferences.getLanguages())
         {
             addPages(lang);
         }
@@ -56,7 +62,7 @@ public class PageManager
     {
         PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
 
-        preferenceManager.addTo(MAIN_PAGE, new LanguagePreferenceNode(lang, preferences.writerForLanguage(lang.getExtension())));
+        preferenceManager.addTo(MAIN_PAGE, new LanguagePreferenceNode(lang, preferences.writerForLanguage(lang.getExtension()), languageRepository));
 
         logger.debug("Added preference page for language " + lang);
     }
@@ -109,9 +115,9 @@ public class PageManager
         return sb.toString();
     }
 
-    public void shutdown()
+    public void stop()
     {
-        for (Language lang : preferences.getConfiguredLanguages())
+        for (Language lang : preferences.getLanguages())
         {
             removePages(lang);
         }
@@ -147,13 +153,13 @@ public class PageManager
         logger.debug("Removed property page for language " + lang + " with result: " + result);
     }
 
-    public void addPagesFor(Language lang)
+    public void languageConfigurationAdded(Language lang)
     {
         addPages(lang);
         refreshTreeAndOpenPage(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
     }
 
-    public void removePagesFor(Language lang)
+    public void languageConfigurationRemoved(Language lang)
     {
         removePages(lang);
         refreshTreeAndOpenPage(MAIN_PAGE);
@@ -183,14 +189,16 @@ public class PageManager
 
     private static class LanguagePreferenceNode extends PreferenceNode
     {
+        private final LanguageRepository languageRepository;
         private final Language language;
         private final LanguagePreferencesWriter prefWriter;
 
-        public LanguagePreferenceNode(Language lang, LanguagePreferencesWriter prefWriter)
+        public LanguagePreferenceNode(Language lang, LanguagePreferencesWriter prefWriter, LanguageRepository languageRepository)
         {
             super(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
             this.language = lang;
             this.prefWriter = prefWriter;
+            this.languageRepository = languageRepository;
         }
 
         @Override
@@ -202,7 +210,7 @@ public class PageManager
         @Override
         public void createPage()
         {
-            setPage(new GenericPreferencePage(language, prefWriter));
+            setPage(new GenericPreferencePage(language, prefWriter, languageRepository));
         }
     }
 }

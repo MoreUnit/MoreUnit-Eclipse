@@ -1,4 +1,4 @@
-package org.moreunit.core.preferences;
+package org.moreunit.core.languages;
 
 public class Language implements Comparable<Language>
 {

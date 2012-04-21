@@ -10,11 +10,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.languages.Language;
+import org.moreunit.core.languages.LanguageRepository;
 
 public class MainPreferencePage extends PreferencePageBase
 {
-    private final Preferences preferences;
-    private final PageManager pageManager;
+    private final LanguageRepository languageRepository;
     private final GridData rowLayout;
     private Text nameField;
     private ExtensionField extensionField;
@@ -22,8 +23,7 @@ public class MainPreferencePage extends PreferencePageBase
     public MainPreferencePage()
     {
         super(MoreUnitCore.get().getPreferences().writerForAnyLanguage());
-        preferences = MoreUnitCore.get().getPreferences();
-        pageManager = MoreUnitCore.get().getPageManager();
+        languageRepository = MoreUnitCore.get().getLanguageRepository();
 
         rowLayout = new GridData(GridData.FILL_HORIZONTAL);
         rowLayout.horizontalSpan = 2;
@@ -73,15 +73,14 @@ public class MainPreferencePage extends PreferencePageBase
                     return;
                 }
 
-                if(preferences.hasPreferencesForLanguage(extensionField.getExtension()))
+                if(languageRepository.contains(extensionField.getExtension()))
                 {
                     MessageDialog.openWarning(getShell(), "MoreUnit", "A configuration already exists for file extension *." + extensionField.getExtension());
                     return;
                 }
 
                 Language lang = new Language(extensionField.getExtension(), nameField.getText().trim());
-                preferences.addConfiguredLanguage(lang);
-                pageManager.addPagesFor(lang);
+                languageRepository.add(lang);
             }
 
             public void widgetDefaultSelected(SelectionEvent e)

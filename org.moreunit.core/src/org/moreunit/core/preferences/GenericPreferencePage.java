@@ -8,19 +8,19 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.languages.Language;
+import org.moreunit.core.languages.LanguageRepository;
 
 public class GenericPreferencePage extends PreferencePageBase
 {
     private final Language lang;
-    private final Preferences preferences;
-    private final PageManager pageManager;
+    private final LanguageRepository languageRepository;
 
-    public GenericPreferencePage(Language lang, LanguagePreferencesWriter prefWriter)
+    public GenericPreferencePage(Language lang, LanguagePreferencesWriter prefWriter, LanguageRepository repo)
     {
         super(lang.getLabel(), prefWriter);
         this.lang = lang;
-        preferences = MoreUnitCore.get().getPreferences();
-        pageManager = MoreUnitCore.get().getPageManager();
+        languageRepository = repo;
     }
 
     @Override
@@ -43,8 +43,7 @@ public class GenericPreferencePage extends PreferencePageBase
             {
                 if(MessageDialog.openConfirm(getShell(), "MoreUnit", "This action is definitive. Please confirm that you want to delete the configuration for " + lang.getLabel() + "."))
                 {
-                    preferences.removeConfiguredLanguage(lang);
-                    pageManager.removePagesFor(lang);
+                    languageRepository.remove(lang);
                 }
             }
 

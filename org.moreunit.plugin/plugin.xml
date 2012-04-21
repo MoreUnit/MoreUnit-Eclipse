@@ -491,4 +491,8 @@
    			  name="Missing Tests per Project"
    			  category="org.moreunit.ui"/>
    </extension>
+   
+   <extension point="org.moreunit.core.languages">
+      <language fileExtension="java" name="Java" />
+   </extension>
 </plugin>

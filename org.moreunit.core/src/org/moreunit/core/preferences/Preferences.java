@@ -13,10 +13,12 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.languages.Language;
+import org.moreunit.core.languages.LanguageRepository;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.TestFileNamePattern;
 
-public class Preferences implements WriteablePreferences, ReadablePreferences
+public class Preferences implements WriteablePreferences, ReadablePreferences, LanguageRepository
 {
     public static final Defaults DEFAULTS = new Defaults();
     static final String BASE = "org.moreunit.core.";
@@ -88,9 +90,14 @@ public class Preferences implements WriteablePreferences, ReadablePreferences
         return reader;
     }
 
+    public boolean contains(String language)
+    {
+        return hasPreferencesForLanguage(language);
+    }
+
     public boolean hasPreferencesForLanguage(String language)
     {
-        return getConfiguredLanguages().contains(new Language(language));
+        return getLanguages().contains(new Language(language));
     }
 
     public void activatePreferencesForLanguage(String language, boolean active)
@@ -98,7 +105,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences
         // nothing to do
     }
 
-    public List<Language> getConfiguredLanguages()
+    public List<Language> getLanguages()
     {
         String str = orDefault(store.getString(LANGUAGES), "");
 
@@ -118,9 +125,9 @@ public class Preferences implements WriteablePreferences, ReadablePreferences
         return result;
     }
 
-    public void addConfiguredLanguage(Language language)
+    public void add(Language language)
     {
-        List<Language> languages = getConfiguredLanguages();
+        List<Language> languages = getLanguages();
         languages.add(language);
         sort(languages);
 
@@ -141,9 +148,9 @@ public class Preferences implements WriteablePreferences, ReadablePreferences
         store.setValue(LANGUAGES, sb.toString());
     }
 
-    public void removeConfiguredLanguage(Language language)
+    public void remove(Language language)
     {
-        List<Language> languages = getConfiguredLanguages();
+        List<Language> languages = getLanguages();
         languages.remove(language);
         setLanguages(languages);
     }

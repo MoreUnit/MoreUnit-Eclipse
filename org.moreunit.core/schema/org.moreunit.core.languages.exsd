@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.moreunit.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.moreunit.core" id="languages" name="Languages with specific support"/>
+      </appinfo>
+      <documentation>
+         Allows plug-ins to add specific support for a programming language in MoreUnit. Plug-ins using this point must then declare extension points for any feature to which they want to contribute or provide their own features.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="language"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="language">
+      <annotation>
+         <documentation>
+            A language for which specific support is provided by this plug-in.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="fileExtension" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The file extension used by the programming language, without dot. Example for Clojure: &quot;clj&quot;
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the language. Example for Clojure: &quot;Clojure&quot;
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         3.0.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         Please refere to MoreUnit&apos;s support for Java.
+      </documentation>
+   </annotation>
+
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         MoreUnit-Plugin for Eclipse V3.5+.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the Eclipse Public License - v 1.0.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See Eclipse Public License for more details.
+      </documentation>
+   </annotation>
+
+</schema>

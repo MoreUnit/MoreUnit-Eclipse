@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.moreunit.core.languages" name="Langages having specific support in MoreUnit" schema="schema/org.moreunit.core.languages.exsd"/>
    <!--<extension point="org.eclipse.ui.services">
       <sourceProvider provider="org.moreunit.core.expressions.CommandSupportedExtensionsProvider">
          <variable name="org.moreunit.core.commands.jumpCommand.supportedExtensions" priorityLevel="workbench"/>
