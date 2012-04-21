@@ -85,7 +85,7 @@
    <extension point="org.eclipse.ui.propertyPages">
       <page id="org.moreunit.core.properties.mainPage"
          name="MoreUnit"
-         class="org.moreunit.core.preferences.PropertyPageFactory:anyLanguage">
+         class="org.moreunit.core.preferences.PropertyPageFactory:anyLanguage:The following generic settings apply to languages that do not have specific configuration.">
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
          <enabledWhen>
             <adapt type="org.eclipse.core.resources.IProject"/>

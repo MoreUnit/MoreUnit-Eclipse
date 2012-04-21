@@ -21,10 +21,14 @@ public class GenericPropertyPage extends PropertyPage
     private Button projectSpecificSettingsCheckbox;
     private GenericConfigurationPage delegate;
 
-    public GenericPropertyPage(String languageId)
+    public GenericPropertyPage(String languageId, String description)
     {
         this.languageId = languageId;
         wsPreferences = MoreUnitCore.get().getPreferences();
+        if(description != null)
+        {
+            setDescription(description);
+        }
     }
 
     @Override
