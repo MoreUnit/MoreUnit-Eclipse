@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModelEvent;
@@ -36,7 +38,7 @@ import org.moreunit.log.LogHandler;
 /**
  * @author vera 01.02.2009 14:27:06
  */
-public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListener
+public class MoreUnitAnnotationModel implements IAnnotationModel
 {
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
@@ -45,8 +47,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
     private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
     private final IDocument document;
     private final ITextEditor textEditor;
-
-    private int openConnections = 0;
 
     /*
      * Could be private, but is public for testing.
@@ -155,41 +155,51 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
 
     private void updateAnnotations()
     {
-        // long startTime = System.currentTimeMillis();
-        AnnotationModelEvent event = new AnnotationModelEvent(this);
-        clear(event);
+        final MoreUnitAnnotationModel modelInstance = this;
+        Job updateJob = new Job("Update MoreUnit Annotations") {
 
-        try
-        {
-            EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-            if(! editorPartFacade.isJavaFile())
+            @Override
+            protected IStatus run(IProgressMonitor monitor)
             {
-                return;
+                AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
+                clear(event);
+                
+                try
+                {
+                    EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+                    if(! editorPartFacade.isJavaFile())
+                    {
+                        return Status.OK_STATUS;
+                    }
+                    
+                    ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+                    if(TypeFacade.isTestCase(compilationUnit))
+                    {
+                        return Status.OK_STATUS;
+                    }
+                    
+                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                    IType type = classTypeFacade.getType();
+                    if(type == null)
+                    {
+                        return Status.OK_STATUS; // this could happen if the resource is out of sync with the file system
+                    }
+                    
+                    annotateTestedMethods(type, classTypeFacade, event);
+                }
+                catch (Exception exc)
+                {
+                    LogHandler.getInstance().handleExceptionLog(exc);
+                }
+                
+                fireModelChanged(event);
+                
+                return Status.OK_STATUS;
             }
-            
-            ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
-            if(TypeFacade.isTestCase(compilationUnit))
-            {
-                return;
-            }
-
-            ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-            IType type = classTypeFacade.getType();
-            if(type == null)
-            {
-                return; // this could happen if the resource is out of sync with the file system
-            }
-
-            annotateTestedMethods(type, classTypeFacade, event);
-        }
-        catch (Exception exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
+        };
         
-        fireModelChanged(event);
-
-        // System.err.println(String.format("updateAnnotations(): %sms", System.currentTimeMillis() - startTime));
+        updateJob.setPriority(Job.SHORT);
+        updateJob.schedule();
     }
 
     private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
@@ -263,11 +273,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
                 LogHandler.getInstance().handleExceptionLog(exc);
             }
         }
-
-        if(openConnections++ == 0)
-        {
-            document.addDocumentListener(this);
-        }
     }
 
     public void disconnect(IDocument document)
@@ -280,11 +285,6 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
         for (MoreUnitAnnotation annotation : annotations)
         {
             document.removePosition(annotation.getPosition());
-        }
-
-        if(--openConnections == 0)
-        {
-            document.removeDocumentListener(this);
         }
     }
 
@@ -310,17 +310,5 @@ public class MoreUnitAnnotationModel implements IAnnotationModel, IDocumentListe
     public void removeAnnotationModelListener(IAnnotationModelListener listener)
     {
         annotationModelListeners.remove(listener);
-    }
-
-    public void documentChanged(DocumentEvent event)
-    {
-        // TODO Nicolas: do we really need to do this on each and every single character change?
-        // maybe it would be preferable to do this only on save, or to define a minimum delay after change
-        updateAnnotations();
-    }
-
-    public void documentAboutToBeChanged(DocumentEvent event)
-    {
-        // void: event ignored
     }
 }

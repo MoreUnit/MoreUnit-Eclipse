@@ -4,11 +4,11 @@
       <category name="moreunit.org"/>
    </feature>
    
-   <feature url="features/org.moreunit_2.4.3.jar" id="org.moreunit" version="2.4.3">
+   <feature url="features/org.moreunit_2.4.4.jar" id="org.moreunit" version="2.4.4">
       <category name="moreunit.org"/>
    </feature>
 	
-   <feature url="features/org.moreunit.mock_2.4.3.jar" id="org.moreunit.mock" version="2.4.3">
+   <feature url="features/org.moreunit.mock_2.4.4.jar" id="org.moreunit.mock" version="2.4.4">
       <category name="moreunit.org"/>
    </feature>
    

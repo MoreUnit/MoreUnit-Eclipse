@@ -2,24 +2,25 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.moreunit.ui.MissingClassPage;
 import org.moreunit.ui.MissingTestsViewPart;
 import org.moreunit.util.PluginTools;
 
 public class MissingClassTreeContentProvider implements ITreeContentProvider
 {
-    //private List<IType> classesNotUnderTest = new ArrayList<IType>();
+    
+    public MissingClassTreeContentProvider()
+    {
+        
+    }
 
     public Object[] getChildren(Object arg0)
     {
@@ -56,9 +57,9 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                             ICompilationUnit[] compilationUnits = ((IPackageFragment) javaPackage).getCompilationUnits();
                             for (ICompilationUnit compilationUnit : compilationUnits)
                             {
-                                if(TestCaseTypeFacade.isTestCase(compilationUnit.findPrimaryType()))
+                                ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                                if(!TypeFacade.isTestCase(compilationUnit) && !classTypeFacade.hasTestCase())
                                     elements.add(compilationUnit);
-
                             }
                         }
                     }
@@ -68,27 +69,17 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                     }
                 }
             }
-            // javaProject.get
         }
-        /*
-         * if (inputElement instanceof MissingClassPage){ MissingClassPage page
-         * = (MissingClassPage) inputElement; classesNotUnderTest.clear();
-         * Set<IType> result = page.getClassesNotUnderTest(); if (result !=
-         * null) { classesNotUnderTest.addAll(result); } } return
-         * classesNotUnderTest.toArray();
-         */
 
         return elements.toArray();
     }
 
-    public void dispose()
-    {
-
-    }
-
     public void inputChanged(Viewer arg0, Object arg1, Object arg2)
     {
+    }
 
+    public void dispose()
+    {
     }
 
 }

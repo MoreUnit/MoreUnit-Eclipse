@@ -6,6 +6,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IPartService;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.annotation.AnnotationUpdateListener;
@@ -27,6 +29,8 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 
     public static final String PLUGIN_ID = "org.moreunit";
 
+    private AnnotationUpdateListener annotationUpdateListener;
+
     /**
      * The constructor.
      */
@@ -46,9 +50,23 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     {
         super.start(context);
         FeatureDetector.setBundleContext(context);
-        PlatformUI.getWorkbench().getWorkbenchWindows()[0].getPartService().addPartListener(new AnnotationUpdateListener());
+        annotationUpdateListener = new AnnotationUpdateListener();
+        
+        IPartService partService = getPartService();
+        if(partService != null)
+            partService.addPartListener(annotationUpdateListener);
+        
         MoreUnitAnnotationModel.attachForAllOpenEditor();
         removeMarkerFromOlderMoreUnitVersions();
+    }
+
+    protected IPartService getPartService()
+    {
+        IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+        if(workbenchWindows.length > 0)
+            return workbenchWindows[0].getPartService();
+        
+        return null;
     }
 
     /*
@@ -78,6 +96,12 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     public void stop(BundleContext context) throws Exception
     {
         super.stop(context);
+        annotationUpdateListener.dispose();
+        
+        IPartService partService = getPartService();
+        if(partService != null)
+            partService.removePartListener(annotationUpdateListener);
+        
         plugin = null;
     }
 

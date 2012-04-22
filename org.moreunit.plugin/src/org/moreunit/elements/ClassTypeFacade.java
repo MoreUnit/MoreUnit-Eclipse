@@ -255,6 +255,11 @@ public class ClassTypeFacade extends TypeFacade
 
         return testMethods.isEmpty() ? testCases : testMethods;
     }
+    
+    public boolean hasTestCase()
+    {
+        return !getCorrespondingTestCases().isEmpty();
+    }
 
     private static class CreateNewTestCaseAction extends CreateNewClassAction
     {

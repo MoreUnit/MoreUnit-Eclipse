@@ -29,7 +29,8 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
         if(javaTypeOfResource == null)
             return;
 
-        if(hasTestCase(javaTypeOfResource))
+        ClassTypeFacade javaFileFacade = new ClassTypeFacade(javaTypeOfResource);
+        if(javaFileFacade.hasTestCase())
         {
             handleClassDecoration(decoration);
         }
@@ -39,12 +40,6 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
     {
         ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
         decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
-    }
-
-    private boolean hasTestCase(ICompilationUnit compilationUnit)
-    {
-        ClassTypeFacade javaFileFacade = new ClassTypeFacade(compilationUnit);
-        return !javaFileFacade.getCorrespondingTestCases().isEmpty();
     }
 
     /**
