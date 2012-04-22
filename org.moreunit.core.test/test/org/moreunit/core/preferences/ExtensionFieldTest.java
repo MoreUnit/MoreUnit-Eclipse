@@ -50,6 +50,9 @@ public class ExtensionFieldTest
     {
         when(textField.getText()).thenReturn("rb");
         assertThat(field.getExtension()).isEqualTo("rb");
+        
+        when(textField.getText()).thenReturn("RB");
+        assertThat(field.getExtension()).isEqualTo("rb");
 
         when(textField.getText()).thenReturn(".rb");
         assertThat(field.getExtension()).isEqualTo("rb");

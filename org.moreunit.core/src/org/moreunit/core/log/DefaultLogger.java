@@ -64,6 +64,14 @@ public class DefaultLogger implements Logger
         }
     }
 
+    public void warn(Object message, Throwable throwable)
+    {
+        if(warnEnabled())
+        {
+            log(IStatus.WARNING, message, throwable);
+        }
+    }
+
     public boolean errorEnabled()
     {
         return levelEnabled(Level.ERROR);

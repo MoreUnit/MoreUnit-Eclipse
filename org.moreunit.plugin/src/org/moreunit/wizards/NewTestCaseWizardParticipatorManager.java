@@ -7,11 +7,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.moreunit.MoreUnitPlugin;
+import org.moreunit.core.utils.ExtendedSafeRunner;
+import org.moreunit.core.utils.ExtendedSafeRunner.GenericRunnable;
 import org.moreunit.extensionpoints.INewTestCaseWizardContext;
 import org.moreunit.extensionpoints.INewTestCaseWizardParticipator;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.ExtendedSafeRunner;
-import org.moreunit.util.ExtendedSafeRunner.IGenericRunnable;
 
 public class NewTestCaseWizardParticipatorManager
 {
@@ -41,17 +41,18 @@ public class NewTestCaseWizardParticipatorManager
     // public for testing
     public void addExtensionPagesToComposer(final NewTestCaseWizardComposer composer, final INewTestCaseWizardContext context, Collection<INewTestCaseWizardParticipator> participators)
     {
-        runner.each(participators, new IGenericRunnable<INewTestCaseWizardParticipator>()
+        runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".getPages()", throwable);
             }
 
-            public void run(INewTestCaseWizardParticipator participator) throws Exception
+            public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".getPages()");
                 composer.registerExtensionPages(participator.getPages(context));
+                return null;
             }
         });
     }
@@ -93,17 +94,18 @@ public class NewTestCaseWizardParticipatorManager
     // public for testing
     public void testCaseCreationCanceled(final INewTestCaseWizardContext context, Collection<INewTestCaseWizardParticipator> participators)
     {
-        runner.each(participators, new IGenericRunnable<INewTestCaseWizardParticipator>()
+        runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".testCaseCreationCanceled()", throwable);
             }
 
-            public void run(INewTestCaseWizardParticipator participator) throws Exception
+            public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".testCaseCreationCanceled()");
                 participator.testCaseCreationCanceled(context);
+                return null;
             }
         });
     }
@@ -116,17 +118,18 @@ public class NewTestCaseWizardParticipatorManager
     // public for testing
     public void testCaseCreated(final INewTestCaseWizardContext context, Collection<INewTestCaseWizardParticipator> participators)
     {
-        runner.each(participators, new IGenericRunnable<INewTestCaseWizardParticipator>()
+        runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".testCaseCreated()", throwable);
             }
 
-            public void run(INewTestCaseWizardParticipator participator) throws Exception
+            public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".testCaseCreated()");
                 participator.testCaseCreated(context);
+                return null;
             }
         });
     }
@@ -138,17 +141,18 @@ public class NewTestCaseWizardParticipatorManager
     // public for testing
     public void testCaseCreationAborted(final INewTestCaseWizardContext context, Collection<INewTestCaseWizardParticipator> participators)
     {
-        runner.each(participators, new IGenericRunnable<INewTestCaseWizardParticipator>()
+        runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".testCaseCreationAborted()", throwable);
             }
 
-            public void run(INewTestCaseWizardParticipator participator) throws Exception
+            public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".testCaseCreationAborted()");
                 participator.testCaseCreationAborted(context);
+                return null;
             }
         });
     }

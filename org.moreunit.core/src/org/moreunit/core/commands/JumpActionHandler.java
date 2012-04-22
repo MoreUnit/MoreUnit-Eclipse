@@ -16,6 +16,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.FileMatcher;
 
@@ -23,22 +24,35 @@ public class JumpActionHandler extends AbstractHandler
 {
     private final Logger logger;
     private final FileMatcher fileMatcher;
+    private final JumperExtensionManager extensionManager;
 
     public JumpActionHandler()
     {
-        this(MoreUnitCore.get(), new FileMatcher(TextSearchEngine.create(), MoreUnitCore.get().getPreferences(), MoreUnitCore.get().getLogger()));
+        this(p().getLogger(), new FileMatcher(TextSearchEngine.create(), p().getPreferences(), p().getLogger()), new JumperExtensionManager(p().getLogger()));
     }
 
-    public JumpActionHandler(MoreUnitCore plugin, FileMatcher fileMatcher)
+    private static MoreUnitCore p()
     {
-        this.logger = plugin.getLogger();
+        return MoreUnitCore.get();
+    }
+
+    public JumpActionHandler(Logger logger, FileMatcher fileMatcher, JumperExtensionManager extensionManager)
+    {
+        this.logger = logger;
         this.fileMatcher = fileMatcher;
+        this.extensionManager = extensionManager;
     }
 
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         IFile selectedFile = getSelectedFile(event);
         if(selectedFile == null)
+        {
+            return null;
+        }
+
+        JumpResult jumpResult = extensionManager.jump(new JumpContext(event, selectedFile));
+        if(jumpResult.isDone())
         {
             return null;
         }

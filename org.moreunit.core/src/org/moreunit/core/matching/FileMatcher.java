@@ -93,7 +93,7 @@ public class FileMatcher
 
     private FileNameEvaluation evaluate(IFile file)
     {
-        TestFileNamePattern testFilePattern = preferences.get(file.getProject()).readerForLanguage(file.getFileExtension()).getTestFileNamePattern();
+        TestFileNamePattern testFilePattern = preferences.get(file.getProject()).readerForLanguage(file.getFileExtension().toLowerCase()).getTestFileNamePattern();
 
         String basename = file.getFullPath().removeFileExtension().lastSegment();
 

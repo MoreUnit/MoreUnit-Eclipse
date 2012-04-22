@@ -40,7 +40,7 @@ public class ExtensionField
 
     public String getExtension()
     {
-        return getField().getText().trim().replaceFirst("\\*?\\.", "");
+        return getField().getText().trim().replaceFirst("\\*?\\.", "").toLowerCase();
     }
 
     public boolean isValid()

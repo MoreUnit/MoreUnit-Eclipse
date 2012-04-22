@@ -16,7 +16,7 @@
       <category id="org.moreunit.core.commands.category"
          name="MoreUnit"/>
       <command id="org.moreunit.core.commands.jumpCommand"
-         name="Jump To Test/Source"
+         name="Jump to Test/Source"
          defaultHandler="org.moreunit.core.commands.JumpActionHandler"
          description="Jump to the test or source associated to the current file."
          categoryId="org.moreunit.core.commands.category"/>
@@ -32,16 +32,16 @@
       <propertyTester id="org.moreunit.core.expressions.resourceTester"
          type="org.eclipse.core.resources.IFile"
          namespace="org.moreunit.core.file"
-         properties="supportsMoreUnitCommand"
+         properties="hasDefaultSupport"
          class="org.moreunit.core.expressions.FileTester">
       </propertyTester>
    </extension>
   
    <extension point="org.eclipse.core.expressions.definitions">
-      <definition id="org.moreunit.core.definitions.supportsJumpCommand">
+      <definition id="org.moreunit.core.definitions.languageHasDefaultSupport">
          <iterate ifEmpty="false">
             <adapt type="org.eclipse.core.resources.IFile">
-               <test property="org.moreunit.core.file.supportsMoreUnitCommand" value="org.moreunit.core.commands.jumpCommand"/>
+               <test property="org.moreunit.core.file.hasDefaultSupport" value="true"/>
             </adapt>
          </iterate>
       </definition>
@@ -51,19 +51,20 @@
       <menuContribution
          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <menu
-               label="MoreUnit"
-               mnemonic="J"
-               id="org.moreunit.core.menus.menu">
+            label="MoreUnit"
+            mnemonic="M"
+            icon="icons/moreunitLogo.gif"
+            id="org.moreunit.core.menus.menu">
             <command
-                  commandId="org.moreunit.core.commands.jumpCommand"
-                  mnemonic="J"/>
+               commandId="org.moreunit.core.commands.jumpCommand"
+               mnemonic="J"/>
             <visibleWhen checkEnabled="false">
                <or>
                   <with variable="activeMenuSelection">
-                     <reference definitionId="org.moreunit.core.definitions.supportsJumpCommand"/>
+                     <reference definitionId="org.moreunit.core.definitions.languageHasDefaultSupport"/>
                   </with>
                   <with variable="activeMenuEditorInput">
-                     <reference definitionId="org.moreunit.core.definitions.supportsJumpCommand"/>
+                     <reference definitionId="org.moreunit.core.definitions.languageHasDefaultSupport"/>
                   </with>
                </or>
             </visibleWhen>

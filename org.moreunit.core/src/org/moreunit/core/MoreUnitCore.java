@@ -26,6 +26,7 @@ public class MoreUnitCore extends AbstractUIPlugin
     private List<Service> services = new ArrayList<Service>();
     private Logger logger;
     private LanguagePageManager pageManager;
+    private LanguageExtensionManager languageExtensionManager;
     private MainLanguageRepository languageRepository;
     private Preferences preferences;
 
@@ -42,7 +43,9 @@ public class MoreUnitCore extends AbstractUIPlugin
         logger = new DefaultLogger(getLog(), "org.moreunit.core.log.level");
         preferences = new Preferences(getPreferenceStore(), logger);
 
-        languageRepository = new MainLanguageRepository(preferences, new LanguageExtensionManager(logger));
+        languageExtensionManager = new LanguageExtensionManager(logger);
+
+        languageRepository = new MainLanguageRepository(preferences, languageExtensionManager);
         services.add(languageRepository);
 
         pageManager = new LanguagePageManager(languageRepository, preferences, logger);
@@ -72,6 +75,7 @@ public class MoreUnitCore extends AbstractUIPlugin
         stopServices();
         pageManager = null;
         languageRepository = null;
+        languageExtensionManager = null;
         preferences = null;
         logger = null;
 
@@ -94,6 +98,11 @@ public class MoreUnitCore extends AbstractUIPlugin
                 logger.error("Could not stop service " + s, e);
             }
         }
+    }
+
+    public LanguageExtensionManager getLanguageExtensionManager()
+    {
+        return languageExtensionManager;
     }
 
     public LanguageRepository getLanguageRepository()

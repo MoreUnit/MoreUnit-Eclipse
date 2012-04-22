@@ -5,13 +5,6 @@
    <extension-point id="testLaunchSupportAddition" name="Test Launch Support Addition" schema="schema/testLaunchSupportAddition.exsd"/>
    <extension-point id="newTestCaseWizardParticipator" name="&quot;New Test Case&quot; Wizard Participator" schema="schema/newTestCaseWizardParticipator.exsd"/>
    <extension point="org.eclipse.ui.commands">
-  		 <command
-	            name="Jump to Test/Member under Test"
-	            defaultHandler="org.moreunit.handler.JumpActionHandler"
-	            description="Jump to the test corresponding to the selected member, or the tested member if the selected member is a test."
-	            categoryId="org.eclipse.jdt.ui.category.source"
-	            id="org.moreunit.jumptotestaction">
-	   </command>
 	    <command
                 name="Run Tests"
                 defaultHandler="org.moreunit.handler.RunTestActionHandler"
@@ -35,12 +28,6 @@
 	   </command>
    </extension> 
    <extension point="org.eclipse.ui.bindings">
-   	   <key
-	      sequence="CTRL+J"
-	      commandId="org.moreunit.jumptotestaction"
-	      contextId="org.eclipse.jdt.ui.javaEditorScope"
-	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</key>
 	   <key
           sequence="CTRL+R"
           commandId="org.moreunit.runtestaction"
@@ -61,19 +48,26 @@
 		</key>
 	</extension>
    
-   <extension point="org.eclipse.ui.popupMenus">
-      <viewerContribution
-            targetID="#CompilationUnitEditorContext"
-            id="org.moreunit.ui.editor.menucontribution">
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+         id="org.moreunit.ui.editor.menucontribution"
+         locationURI="popup:#CompilationUnitEditorContext?after=additions">
          <menu
-             id="org.moreunit.ui.editor.menu.moreunit"
-             label="MoreUnit"
-             icon="icons/moreunitLogo.gif"
-             path="additions">
-             <separator name="top" />
-             <separator name="group2" />
+            id="org.moreunit.ui.editor.menu.moreunit"
+            label="MoreUnit"
+            icon="icons/moreunitLogo.gif"
+            path="additions">
+            <command
+               commandId="org.moreunit.core.commands.jumpCommand"
+               mnemonic="J"/>
+            <separator name="top"/>
+            <separator name="group2" visible="true"/>
+            <separator name="additions"/>
          </menu>
-      </viewerContribution>
+      </menuContribution>
+   </extension>
+   
+   <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
             targetID="#CompilationUnitEditorContext"
             id="org.moreunit.contribution3">
@@ -94,17 +88,6 @@
                class="org.moreunit.actions.RunTestAction"
                menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
                id="org.moreunit.actions.runtestaction">
-         </action>
-      </viewerContribution>
-      <viewerContribution
-            targetID="#CompilationUnitEditorContext"
-            id="org.moreunit.contribution2">
-         <action
-               label="Jump to Test/Member under Test"
-               definitionId="org.moreunit.jumptotestaction"
-               class="org.moreunit.actions.JumpAction"
-               menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
-               id="org.moreunit.actions.jumptotestaction">
          </action>
       </viewerContribution>
       <viewerContribution
@@ -493,6 +476,8 @@
    </extension>
    
    <extension point="org.moreunit.core.languages">
-      <language fileExtension="java" name="Java" />
+      <language fileExtension="java" name="Java">
+         <jumper class="org.moreunit.handler.Jumper" />
+      </language>
    </extension>
 </plugin>

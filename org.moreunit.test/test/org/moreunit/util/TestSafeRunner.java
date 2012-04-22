@@ -1,20 +1,19 @@
 package org.moreunit.util;
 
+import org.moreunit.core.utils.ExtendedSafeRunner;
+
 public class TestSafeRunner extends ExtendedSafeRunner
 {
-    @Override
-    public <T> void each(Iterable<T> elements, IGenericRunnable<T> code)
+    public <E, R> R applyTo(E element, ExtendedSafeRunner.GenericRunnable<E, R> code)
     {
-        for (T e : elements)
+        try
         {
-            try
-            {
-                code.run(e);
-            }
-            catch (Throwable t)
-            {
-                code.handleException(t, e);
-            }
+            return code.run(element);
         }
+        catch (Throwable t)
+        {
+            code.handleException(t, element);
+        }
+        return null;
     }
 }

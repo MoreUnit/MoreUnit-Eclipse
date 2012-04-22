@@ -2,6 +2,7 @@ package org.moreunit.core.languages;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -29,7 +30,7 @@ public class LanguageExtensionManager
 
     private Collection<Language> getLanguages()
     {
-        Collection<Language> languages = new ArrayList<Language>();
+        Collection<Language> languages = new HashSet<Language>();
 
         for (IConfigurationElement cfg : Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID))
         {

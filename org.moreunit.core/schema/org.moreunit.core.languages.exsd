@@ -54,6 +54,9 @@
          </documentation>
       </annotation>
       <complexType>
+         <choice minOccurs="0" maxOccurs="1">
+            <element ref="jumper"/>
+         </choice>
          <attribute name="fileExtension" type="string" use="required">
             <annotation>
                <documentation>
@@ -66,6 +69,26 @@
                <documentation>
                   The name of the language. Example for Clojure: &quot;Clojure&quot;
                </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="jumper">
+      <annotation>
+         <documentation>
+            A &quot;jump&quot; implementation for the language.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The class implementing the jump feature.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.moreunit.core.extension.jump.IJumper"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>

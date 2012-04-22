@@ -14,6 +14,8 @@ public interface Logger
 
     void warn(Object message);
 
+    void warn(Object message, Throwable throwable);
+
     boolean errorEnabled();
 
     void error(Object message);
