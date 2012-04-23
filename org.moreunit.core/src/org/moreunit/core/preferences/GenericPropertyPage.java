@@ -34,7 +34,13 @@ public class GenericPropertyPage extends PropertyPage
     @Override
     protected Control createContents(Composite parent)
     {
-        prefs = wsPreferences.get((IProject) getElement()).writerForLanguage(languageId);
+        IProject project = (IProject) getElement().getAdapter(IProject.class);
+        if(project == null)
+        {
+            return parent;
+        }
+
+        prefs = wsPreferences.get(project).writerForLanguage(languageId);
 
         delegate = new GenericConfigurationPage(this, prefs);
 
