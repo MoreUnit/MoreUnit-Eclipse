@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.moreunit.light_2.4.3.jar" id="org.moreunit.light" version="2.4.3">
+   <feature url="features/org.moreunit.light_2.4.4.jar" id="org.moreunit.light" version="2.4.4">
       <category name="moreunit.org"/>
    </feature>
    
