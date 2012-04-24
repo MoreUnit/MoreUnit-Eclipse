@@ -1,5 +1,7 @@
 package org.moreunit.core.commands;
 
+import static org.eclipse.ui.handlers.HandlerUtil.getActiveShell;
+
 import java.util.Collection;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -10,6 +12,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.search.core.text.TextSearchEngine;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -61,7 +65,7 @@ public class JumpActionHandler extends AbstractHandler
 
         if(result == null)
         {
-            MessageDialog.openInformation(HandlerUtil.getActiveShell(event), "MoreUnit", "No matching file found");
+            MessageDialog.openInformation(getActiveShell(event), "MoreUnit", "No matching file found");
         }
         else
         {
@@ -83,7 +87,7 @@ public class JumpActionHandler extends AbstractHandler
             }
         }
 
-        IFile file = toFile(HandlerUtil.getActiveEditorInput(event));
+        IFile file = toFile(getActiveEditorInput(event));
         if(file != null)
         {
             return file;
@@ -138,5 +142,16 @@ public class JumpActionHandler extends AbstractHandler
     {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
         return window == null ? null : window.getActivePage();
+    }
+
+    // implemented in HandlerUtil only since 3.7
+    private static IEditorInput getActiveEditorInput(ExecutionEvent event)
+    {
+        Object o = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
+        if(o instanceof IEditorInput)
+        {
+            return (IEditorInput) o;
+        }
+        return null;
     }
 }
