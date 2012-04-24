@@ -33,6 +33,11 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         this.logger = logger;
     }
 
+    public LanguagePreferencesWriter writerForAnyLanguage()
+    {
+        return writerForLanguage(LanguagePreferences.ANY_LANGUAGE);
+    }
+
     public LanguagePreferencesWriter writerForLanguage(String language)
     {
         if(languagePrefWriters.containsKey(language))

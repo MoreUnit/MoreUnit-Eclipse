@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.moreunit.extension;singleton:=true
 Bundle-Version: 2.4.3.qualifier
 Bundle-Activator: org.moreunit.extension.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.moreunit;bundle-version="2.4.1",
+ org.moreunit.core;bundle-version="2.4.3",
+ org.moreunit;bundle-version="2.4.3",
  org.eclipse.jdt.core;bundle-version="3.5.0",
  org.eclipse.text;bundle-version="3.5.0",
  org.eclipse.ui;bundle-version="3.5.0",

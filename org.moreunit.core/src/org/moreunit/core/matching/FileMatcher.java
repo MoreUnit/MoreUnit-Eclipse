@@ -67,6 +67,7 @@ public class FileMatcher
     private TextSearchScope createSearchScope(IFile file, Collection<String> correspondingFileNames)
     {
         StringBuilder sb = null;
+        // creates an OR pattern with file names
         for (String fileName : correspondingFileNames)
         {
             if(sb == null)
@@ -85,7 +86,19 @@ public class FileMatcher
             return null;
         }
 
-        sb.append(")").append("\\.").append(file.getFileExtension());
+        sb.append(")");
+
+        String extension = file.getFileExtension();
+
+        // creates an OR pattern with the file extension: same case OR lower
+        // case OR upper case (so a file having an extension with a mixed case
+        // different to the one of the current file won't be found, unless we
+        // discover how to specify that only a pattern part should be case
+        // insensitive)
+        sb.append("\\.(").append(extension) //
+        .append("|").append(extension.toLowerCase()) //
+        .append("|").append(extension.toUpperCase()) //
+        .append(")");
 
         IResource[] rootRessources = { file.getProject() };
         return TextSearchScope.newSearchScope(rootRessources, Pattern.compile(sb.toString()), false);

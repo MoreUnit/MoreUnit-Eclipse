@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 

@@ -5,11 +5,11 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.moreunit.core.util.IOUtils;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.model.MockingTemplates;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
-import org.moreunit.mock.utils.IOUtils;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Guice;

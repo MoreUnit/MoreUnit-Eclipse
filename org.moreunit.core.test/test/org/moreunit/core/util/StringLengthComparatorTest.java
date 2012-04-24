@@ -1,8 +1,9 @@
-package org.moreunit.util;
+package org.moreunit.core.util;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
+import org.moreunit.core.util.StringLengthComparator;
 
 public class StringLengthComparatorTest
 {

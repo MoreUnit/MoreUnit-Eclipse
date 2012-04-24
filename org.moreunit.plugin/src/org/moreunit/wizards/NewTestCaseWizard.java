@@ -10,11 +10,11 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
-import org.moreunit.util.StringConstants;
 
 public class NewTestCaseWizard extends NewClassyWizard
 {

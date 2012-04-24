@@ -4,9 +4,9 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.util.PluginTools;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera 03.03.2008 19:54:23

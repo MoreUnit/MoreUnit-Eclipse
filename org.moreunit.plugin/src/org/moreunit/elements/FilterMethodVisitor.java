@@ -18,8 +18,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.util.MoreUnitContants;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera

@@ -17,9 +17,9 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
+import org.moreunit.core.util.StringLengthComparator;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.util.PluginTools;
-import org.moreunit.util.StringLengthComparator;
 
 public class Preferences
 {

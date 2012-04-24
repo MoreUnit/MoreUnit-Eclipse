@@ -1,4 +1,4 @@
-package org.moreunit.mock.utils;
+package org.moreunit.core.util;
 
 import java.io.Closeable;
 import java.io.IOException;

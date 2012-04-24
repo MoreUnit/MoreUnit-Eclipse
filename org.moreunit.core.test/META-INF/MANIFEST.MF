@@ -12,3 +12,5 @@ Require-Bundle: org.moreunit.core,
  org.eclipse.ui.ide,
  org.junit;bundle-version="4.8.2",
  org.moreunit.test.dependencies;bundle-version="0.0.0"
+Bundle-Activator: org.moreunit.core.MoreUnitCoreTest
+Bundle-ActivationPolicy: lazy

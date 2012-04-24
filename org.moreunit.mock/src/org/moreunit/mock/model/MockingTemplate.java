@@ -1,7 +1,5 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.mock.utils.Strings.emptyIfNull;
-
 import java.text.Collator;
 import java.util.List;
 
@@ -9,6 +7,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import static org.moreunit.core.util.Strings.emptyIfNull;
 
 @XmlRootElement(name = "mocking-template")
 public class MockingTemplate implements Comparable<MockingTemplate>

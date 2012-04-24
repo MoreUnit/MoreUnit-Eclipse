@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -23,7 +24,6 @@ import org.moreunit.ui.CreateNewClassAction;
 import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MemberJumpHistory;
 import org.moreunit.util.MethodCallFinder;
-import org.moreunit.util.StringConstants;
 import org.moreunit.wizards.NewClassyWizard;
 
 /**

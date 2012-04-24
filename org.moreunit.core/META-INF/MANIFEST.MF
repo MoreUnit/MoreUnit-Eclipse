@@ -16,7 +16,14 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test",
  org.moreunit.core.commands;x-friends:="org.moreunit.core.test",
  org.moreunit.core.expressions;x-friends:="org.moreunit",
+ org.moreunit.core.extension;x-friends:="org.moreunit.core.test",
  org.moreunit.core.extension.jump,
+ org.moreunit.core.languages;x-friends:="org.moreunit.core.test",
  org.moreunit.core.matching;x-friends:="org.moreunit.core.test",
  org.moreunit.core.preferences;x-friends:="org.moreunit.core.test",
- org.moreunit.core.utils;x-friends:="org.moreunit.core.test,org.moreunit.test"
+ org.moreunit.core.util;
+  x-friends:="org.moreunit,
+   org.moreunit.core.test,
+   org.moreunit.mock,
+   org.moreunit.extension,
+   org.moreunit.test"

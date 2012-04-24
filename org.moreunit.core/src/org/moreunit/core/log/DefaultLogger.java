@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.moreunit.core.MoreUnitCore;
-import org.moreunit.core.utils.IOUtils;
+import org.moreunit.core.util.IOUtils;
 
 public class DefaultLogger implements Logger
 {

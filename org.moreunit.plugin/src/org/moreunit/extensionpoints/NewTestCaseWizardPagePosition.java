@@ -1,7 +1,7 @@
 package org.moreunit.extensionpoints;
 
-import static org.moreunit.util.Preconditions.checkArgument;
-import static org.moreunit.util.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkArgument;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 /**
  * The position of a page in the "New Test Case" wizard: the page may be

@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import org.moreunit.core.utils.ExtendedSafeRunner;
+import org.moreunit.core.util.ExtendedSafeRunner;
 
 public class TestSafeRunner extends ExtendedSafeRunner
 {

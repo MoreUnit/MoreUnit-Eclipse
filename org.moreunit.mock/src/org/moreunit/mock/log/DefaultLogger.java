@@ -6,8 +6,8 @@ import java.io.PrintStream;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.moreunit.core.util.IOUtils;
 import org.moreunit.mock.MoreUnitMockPlugin;
-import org.moreunit.mock.utils.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

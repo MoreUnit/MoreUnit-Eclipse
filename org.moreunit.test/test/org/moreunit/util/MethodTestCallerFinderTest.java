@@ -1,7 +1,7 @@
 package org.moreunit.util;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.moreunit.util.CollectionUtils.asSet;
+import static org.moreunit.core.util.CollectionUtils.asSet;
 
 import java.util.Set;
 

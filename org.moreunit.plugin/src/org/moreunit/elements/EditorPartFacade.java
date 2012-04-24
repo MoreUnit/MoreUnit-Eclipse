@@ -3,7 +3,7 @@
  */
 package org.moreunit.elements;
 
-import static org.moreunit.util.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;

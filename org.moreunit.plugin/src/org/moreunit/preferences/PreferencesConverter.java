@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera 21.03.2008 17:15:43

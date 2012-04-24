@@ -1,4 +1,4 @@
-package org.moreunit.util;
+package org.moreunit.core.util;
 
 import java.io.Serializable;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-package org.moreunit.util;
+package org.moreunit.core.util;
 
 import java.util.HashSet;
 import java.util.Set;

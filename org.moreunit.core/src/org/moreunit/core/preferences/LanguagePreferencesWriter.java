@@ -7,24 +7,22 @@ public class LanguagePreferencesWriter extends LanguagePreferences
         super(languageId, parentPreferences);
     }
 
+    @Override
     public String getFileWordSeparator()
     {
         return getString(LanguagePreferences.FILE_WORD_SEPARATOR);
     }
 
-    public void setFileWordSeparator(String separator)
-    {
-        setValue(FILE_WORD_SEPARATOR, separator);
-    }
-
+    @Override
     public String getTestFileNameTemplate()
     {
         return getString(LanguagePreferences.TEST_FILE_NAME_TEMPLATE);
     }
 
-    public void setTestFileNameTemplate(String template)
+    public void setTestFileNameTemplate(String template, String separator)
     {
         setValue(TEST_FILE_NAME_TEMPLATE, template);
+        setValue(FILE_WORD_SEPARATOR, separator);
     }
 
     public boolean isActive()

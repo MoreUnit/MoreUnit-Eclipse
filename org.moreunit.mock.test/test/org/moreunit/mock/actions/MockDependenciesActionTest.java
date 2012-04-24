@@ -22,7 +22,7 @@ import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.mock.elements.TypeFacadeFactory;
-import org.moreunit.mock.utils.ConversionUtils;
+import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -1,4 +1,4 @@
-package org.moreunit.mock.utils;
+package org.moreunit.mock.util;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;

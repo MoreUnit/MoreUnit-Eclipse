@@ -1,4 +1,4 @@
-package org.moreunit.mock.utils;
+package org.moreunit.core.util;
 
 /**
  * This class helps managing "conditional" features, i.e. features that are not

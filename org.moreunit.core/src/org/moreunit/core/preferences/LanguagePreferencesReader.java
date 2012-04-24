@@ -12,12 +12,14 @@ public class LanguagePreferencesReader extends LanguagePreferences
         this.defaults = defaults;
     }
 
-    public String getFileWordSeparator()
+    @Override
+    protected String getFileWordSeparator()
     {
         return orDefault(getString(LanguagePreferences.FILE_WORD_SEPARATOR), defaults.getFileWordSeparator());
     }
 
-    public String getTestFileNameTemplate()
+    @Override
+    protected String getTestFileNameTemplate()
     {
         return orDefault(getString(LanguagePreferences.TEST_FILE_NAME_TEMPLATE), defaults.getTestFileNameTemplate());
     }

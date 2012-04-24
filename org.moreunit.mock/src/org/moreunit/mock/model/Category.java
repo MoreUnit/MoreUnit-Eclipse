@@ -1,11 +1,11 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.mock.utils.Strings.emptyIfNull;
-
 import java.text.Collator;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import static org.moreunit.core.util.Strings.emptyIfNull;
 
 @XmlRootElement(name = "category")
 public class Category implements Comparable<Category>

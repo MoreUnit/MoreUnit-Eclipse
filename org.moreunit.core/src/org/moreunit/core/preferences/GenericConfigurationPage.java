@@ -1,6 +1,6 @@
 package org.moreunit.core.preferences;
 
-import static org.moreunit.core.utils.Strings.countOccurrences;
+import static org.moreunit.core.util.Strings.countOccurrences;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.PreferencePage;
@@ -169,8 +169,7 @@ class GenericConfigurationPage
 
     private void saveProperties()
     {
-        prefWriter.setFileWordSeparator(wordSeparatorField.getText());
-        prefWriter.setTestFileNameTemplate(testFileTemplateField.getText());
+        prefWriter.setTestFileNameTemplate(testFileTemplateField.getText(), wordSeparatorField.getText());
         prefWriter.save();
     }
 

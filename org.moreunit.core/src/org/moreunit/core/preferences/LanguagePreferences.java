@@ -22,9 +22,9 @@ abstract class LanguagePreferences
         this.parentPreferences = parentPreferences;
     }
 
-    public abstract String getFileWordSeparator();
+    protected abstract String getFileWordSeparator();
 
-    public abstract String getTestFileNameTemplate();
+    protected abstract String getTestFileNameTemplate();
 
     public TestFileNamePattern getTestFileNamePattern()
     {

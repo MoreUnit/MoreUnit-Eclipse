@@ -1,4 +1,4 @@
-package org.moreunit.core.utils;
+package org.moreunit.core.util;
 
 public class Strings
 {

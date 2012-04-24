@@ -2,17 +2,16 @@ package org.moreunit.core.commands;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.extension.ExtensionPoints;
 import org.moreunit.core.extension.jump.IJumpContext;
 import org.moreunit.core.extension.jump.IJumper;
 import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.log.Logger;
-import org.moreunit.core.utils.ExtendedSafeRunner;
-import org.moreunit.core.utils.ExtendedSafeRunner.GenericRunnable;
+import org.moreunit.core.util.ExtendedSafeRunner;
+import org.moreunit.core.util.ExtendedSafeRunner.GenericRunnable;
 
 public class JumperExtensionManager
 {
-    private static final String EXTENSION_ID = MoreUnitCore.PLUGIN_ID + ".languages";
     private static final String JUMPER_EL = "jumper";
     private static final String CLASS_ATTR = "class";
     private static final String FILE_EXTENSION_ATTR = "fileExtension";
@@ -27,7 +26,7 @@ public class JumperExtensionManager
 
     public JumpResult jump(final IJumpContext context)
     {
-        for (IConfigurationElement cfg : Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID))
+        for (IConfigurationElement cfg : Platform.getExtensionRegistry().getConfigurationElementsFor(ExtensionPoints.LANGUAGES))
         {
             if(! context.getSelectedFile().getFileExtension().equalsIgnoreCase(cfg.getAttribute(FILE_EXTENSION_ATTR)))
             {
@@ -41,7 +40,7 @@ public class JumperExtensionManager
                     final Object jumper = el.createExecutableExtension(CLASS_ATTR);
                     if(! (jumper instanceof IJumper))
                     {
-                        logger.warn("Element " + JUMPER_EL + " of point " + EXTENSION_ID + " does not support class: " + el.getClass());
+                        logger.warn("Element " + JUMPER_EL + " of point " + ExtensionPoints.LANGUAGES + " does not support class: " + el.getClass());
                         continue;
                     }
 
@@ -69,7 +68,7 @@ public class JumperExtensionManager
             }
             catch (Exception e)
             {
-                logger.warn("Could not load extension from plug-in \"" + cfg.getContributor().getName() + "\" for point \"" + EXTENSION_ID + "\": " + e.getMessage());
+                logger.warn("Could not load extension from plug-in \"" + cfg.getContributor().getName() + "\" for point \"" + ExtensionPoints.LANGUAGES + "\": " + e.getMessage());
                 continue;
             }
         }
