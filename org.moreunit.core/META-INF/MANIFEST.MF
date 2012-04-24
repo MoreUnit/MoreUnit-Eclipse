@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Plug-in Core
 Bundle-SymbolicName: org.moreunit.core;singleton:=true
-Bundle-Version: 2.4.3.qualifier
+Bundle-Version: 2.4.4.qualifier
 Bundle-Activator: org.moreunit.core.MoreUnitCore
 Bundle-Vendor: moreunit.sourceforge.net
 Require-Bundle: org.eclipse.core.expressions,
