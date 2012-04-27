@@ -2,7 +2,6 @@ package org.moreunit.core.matching;
 
 public class WordScanner
 {
-
     private final char[] name;
     private int index = - 1;
     private int currentWordStart = 0;
@@ -60,26 +59,28 @@ public class WordScanner
         return name[index - offset];
     }
 
-    public void backward()
+    public WordScanner backward()
     {
-        backward(1);
+        return backward(1);
     }
 
-    public void backward(int offset)
+    public WordScanner backward(int offset)
     {
         checkPrevious(offset);
         index -= offset;
+        return this;
     }
 
-    public void forward()
+    public WordScanner forward()
     {
-        forward(1);
+        return forward(1);
     }
 
-    public void forward(int offset)
+    public WordScanner forward(int offset)
     {
         checkNext(offset);
         index += offset;
+        return this;
     }
 
     private void checkNext(int offset)

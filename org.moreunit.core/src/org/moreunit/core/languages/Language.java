@@ -1,5 +1,9 @@
 package org.moreunit.core.languages;
 
+import static org.moreunit.core.util.Preconditions.checkArgument;
+
+import org.moreunit.core.util.Strings;
+
 public class Language implements Comparable<Language>
 {
     private final String extension;
@@ -7,10 +11,7 @@ public class Language implements Comparable<Language>
 
     public Language(String extension, String label)
     {
-        if(extension == null || extension.trim().length() == 0)
-        {
-            throw new IllegalArgumentException("Invalid extension: " + extension);
-        }
+        checkArgument(Strings.isBlank(extension), "Invalid extension: " + extension);
         this.extension = extension.trim();
         this.label = label != null ? label : extension;
     }

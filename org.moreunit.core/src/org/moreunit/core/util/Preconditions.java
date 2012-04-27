@@ -12,7 +12,7 @@ import java.util.Collection;
  * needs arise.
  * </p>
  */
-public class Preconditions
+public final class Preconditions
 {
     /**
      * Checks that the given object reference is not null.
