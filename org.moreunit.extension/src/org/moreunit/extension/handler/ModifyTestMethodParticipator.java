@@ -66,13 +66,33 @@ import org.moreunit.log.LogHandler;
  * <dd>21.01.2011 Gro Improved: Do not create unresolvable links in TestCase-JavaDoc for
  * private/package-accessable methods under test, that are not listed in JavaDoc. Method
  * isJavaDocVisible(IMethod) created</dd>
+ * <dd>30.03.2011 Gro Rules for creation of JavaDoc links added</dd>
+ * <dd>20.04.2012 Gro Problem fixed from changes introduced in MoreUnit 2.4.3</dd>
  * </dl>
  * <p>
  * @author Andreas Groll
- * @version 21.01.2011
+ * @version 20.04.2012
  * @since 1.5
  */
 public class ModifyTestMethodParticipator implements ITestMethodParticipator {
+
+	/**
+	 * Access modifiers for methods linked in JavaDoc.
+	 */
+	private enum JavaDocVisibility {
+		Public, Protected, Package, Private
+	}
+
+	/**
+	 * Visibility for JavaDoc.
+	 */
+	private JavaDocVisibility javaDocVisibility = JavaDocVisibility.Protected;
+
+	/**
+	 * Create a HTML-Link to class for invisible to JavaDoc Methods, or create a coded tag
+	 * only.
+	 */
+	private boolean createLinkForInvisibleJavaDocMethods = false;
 
 	/**
 	 * Test method context.
@@ -85,19 +105,6 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	public ModifyTestMethodParticipator() {
 
 		// Default-Contructor
-	}
-
-	/**
-	 * Is the method visible to JavaDoc?
-	 * @param method Method.
-	 * @return Visible.
-	 * @throws JavaModelException Fehler.
-	 */
-	private boolean isJavaDocVisible(final IMethod method) throws JavaModelException {
-
-		// Zugriffsflags holen und prüfen: Sichtbar ab protected!
-		int flags = method.getFlags();
-		return Flags.isProtected(flags) || Flags.isPublic(flags);
 	}
 
 	/**
@@ -251,17 +258,19 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Methodendeklaration beschaffen
 		MethodDeclaration testMethodDeclaration = findMethodDeclaration(astRoot, testMethod);
 
-		// Wenn bereits Fehler geworfen werden, wurde diese Methode bereits verarbeitet, da in den
-		// automatisch und von MoreUnit generierten Methoden keine Exceptions deklariert werden
-		if (testMethodDeclaration.thrownExceptions().size() > 0) {
+		// Wenn bereits JavaDoc vorhanden ist, wurde diese Methode bereits verarbeitet, da in den
+		// automatisch und von MoreUnit generierten Methoden keine JavaDocs erstellt werden
+		if (testMethodDeclaration.getJavadoc() != null) {
 			return false;
 		}
 
 		// Astknoten erstellen, der modifiziert werden soll
 		AST astToModify = testMethodDeclaration.getAST();
 
-		// Werfen aller Fehler erlauben
-		rawListAdd(testMethodDeclaration.thrownExceptions(), astToModify.newSimpleName("Exception"));
+		// Werfen von Exception erlauben, wenn noch keine Fehler geworfen werden
+		if (testMethodDeclaration.thrownExceptions().size() == 0) {
+			rawListAdd(testMethodDeclaration.thrownExceptions(), astToModify.newSimpleName("Exception"));
+		}
 
 		// JavaDoc erzeugen
 		Javadoc javaDoc = astToModify.newJavadoc();
@@ -462,15 +471,53 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		StringBuilder builder = new StringBuilder("Test method for ");
 
 		// Methode sichtbar? Dann Link, sonst als HTML-<code>-Tag
-		if (isJavaDocVisible(methodUnderTest)) {
-			builder.append(createJavaDocLink(linkTarget));
-		} else {
-			builder.append(createCodedTag(linkTarget));
-		}
+		builder.append(createJavaDocLink(methodUnderTest, linkTarget));
 
 		// Punkt zugügen und liefern
 		builder.append(".");
 		return builder.toString();
+	}
+
+	/**
+	 * Get the Link in the Method JavaDoc.
+	 * @param methodUnderTest Method under Test.
+	 * @param linkTarget Target of Link.
+	 * @return JavaDoc Link.
+	 * @throws JavaModelException Error.
+	 */
+	private String createJavaDocLink(final IMethod methodUnderTest, final String linkTarget)
+		throws JavaModelException {
+
+		// Sichtbare zu testende Methode
+		if (isJavaDocVisible(methodUnderTest)) {
+			return createJavaDocLink(linkTarget);
+		}
+
+		// Nur ein Coded-Tag erzeugen
+		if (!createLinkForInvisibleJavaDocMethods) {
+			return createCodedTag(linkTarget);
+		}
+
+		// Einen Link auf die Klasse für unsichtbare (private) Methode
+		StringBuilder builder = new StringBuilder();
+		int iPos = linkTarget.indexOf("#");
+		if (iPos > 0) {
+			builder.append(createJavaDocLink(linkTarget.substring(0, iPos) + " " + linkTarget));
+		} else {
+			builder.append(createJavaDocLink(linkTarget));
+		}
+		builder.append(" (invisible to JavaDoc)");
+		return builder.toString();
+	}
+
+	/**
+	 * Creates a JavaDoc-Link.
+	 * @param target Link target.
+	 * @return JavaDoc-Link.
+	 */
+	private String createJavaDocLink(final String target) {
+
+		return "{@link " + target + "}";
 	}
 
 	/**
@@ -484,13 +531,28 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	}
 
 	/**
-	 * Creates a JavaDoc-Link.
-	 * @param target Link target.
-	 * @return JavaDoc-Link.
+	 * Is the method visible to JavaDoc?
+	 * @param method Method.
+	 * @return Visible.
+	 * @throws JavaModelException Fehler.
 	 */
-	private String createJavaDocLink(final String target) {
+	private boolean isJavaDocVisible(final IMethod method) throws JavaModelException {
 
-		return "{@link " + target + "}";
+		// Zugriffsflags holen und prüfen: Sichtbar ab protected!
+		int flags = method.getFlags();
+
+		switch (javaDocVisibility) {
+			case Public:
+				return Flags.isPublic(flags);
+			case Protected:
+				return Flags.isPublic(flags) || Flags.isProtected(flags);
+			case Private:
+				return true;
+			case Package:
+				return !Flags.isPrivate(flags);
+			default:
+				throw new RuntimeException("Unexpected Enum Value: " + javaDocVisibility);
+		}
 	}
 
 	/**
