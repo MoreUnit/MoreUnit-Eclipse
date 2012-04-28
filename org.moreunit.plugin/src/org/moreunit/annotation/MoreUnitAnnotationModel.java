@@ -198,7 +198,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             }
         };
         
-        updateJob.setPriority(Job.SHORT);
+        updateJob.setPriority(Job.DECORATE);
         updateJob.schedule();
     }
 
