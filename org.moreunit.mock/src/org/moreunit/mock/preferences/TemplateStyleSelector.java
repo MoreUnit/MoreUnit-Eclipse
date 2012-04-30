@@ -7,6 +7,8 @@ import java.util.List;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,6 +42,7 @@ public class TemplateStyleSelector implements SelectionListener
     private Combo templateCombo;
     private boolean contentCreated;
     private boolean enabled;
+    private MockingTemplate selectedTemplate;
 
     @Inject
     public TemplateStyleSelector(Preferences preferences, MockingTemplateStore templateStore, Logger logger)
@@ -98,6 +101,15 @@ public class TemplateStyleSelector implements SelectionListener
         contentCreated = true;
 
         initStyle();
+
+        parent.addDisposeListener(new DisposeListener()
+        {
+            public void widgetDisposed(DisposeEvent e)
+            {
+                // remembers selected template
+                selectedTemplate = getSelectedTemplate();
+            }
+        });
     }
 
     private Combo createCombo(Composite parent)
@@ -152,11 +164,16 @@ public class TemplateStyleSelector implements SelectionListener
         }
         else
         {
-            MockingTemplate mockingTemplate = templateStore.get(mockingTemplateId);
-            Category category = templateStore.getCategory(mockingTemplate.categoryId());
-            categoryCombo.select(categories.indexOf(category));
-            templateCombo.select(categoryTemplates.indexOf(mockingTemplate));
+            selectTemplate(mockingTemplateId);
         }
+    }
+
+    public void selectTemplate(String mockingTemplateId)
+    {
+        MockingTemplate mockingTemplate = templateStore.get(mockingTemplateId);
+        Category category = templateStore.getCategory(mockingTemplate.categoryId());
+        categoryCombo.select(categories.indexOf(category));
+        templateCombo.select(categoryTemplates.indexOf(mockingTemplate));
     }
 
     private void initStyle()
@@ -176,6 +193,23 @@ public class TemplateStyleSelector implements SelectionListener
 
     public void savePreferences()
     {
+        MockingTemplate template = templateCombo.isDisposed() ? selectedTemplate : getSelectedTemplate();
+        if(template == null)
+        {
+            logger.warn("Could not retrieve selected template");
+            return;
+        }
+
+        preferences.setMockingTemplate(project, template.id());
+
+        if(logger.debugEnabled())
+        {
+            logger.debug(String.format("Defined template %s for %s", template.id(), project == null ? "workspace" : "project " + project.getElementName()));
+        }
+    }
+
+    private MockingTemplate getSelectedTemplate()
+    {
         int selectionIndex = templateCombo.getSelectionIndex();
         // it may happens that the first entry was not automatically selected...
         if(selectionIndex == - 1)
@@ -183,13 +217,7 @@ public class TemplateStyleSelector implements SelectionListener
             selectionIndex = 0;
         }
 
-        MockingTemplate selectedTemplate = categoryTemplates.get(selectionIndex);
-        preferences.setMockingTemplate(project, selectedTemplate.id());
-
-        if(logger.debugEnabled())
-        {
-            logger.debug(String.format("Defined template %s for %s", selectedTemplate.id(), project == null ? "workspace" : "project " + project.getElementName()));
-        }
+        return categoryTemplates.get(selectionIndex);
     }
 
     public void widgetDefaultSelected(SelectionEvent event)

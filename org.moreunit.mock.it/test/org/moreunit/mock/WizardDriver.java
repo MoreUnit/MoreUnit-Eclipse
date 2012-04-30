@@ -14,6 +14,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.moreunit.mock.log.Logger;
+import org.moreunit.mock.preferences.Preferences;
+import org.moreunit.mock.preferences.TemplateStyleSelector;
 import org.moreunit.mock.wizard.MockDependenciesWizard;
 import org.moreunit.mock.wizard.MockDependenciesWizardPage;
 import org.moreunit.mock.wizard.WizardFactory;
@@ -21,7 +24,9 @@ import org.moreunit.mock.wizard.WizardFactory;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 
 /**
  * A driver that allows for simulating user actions when a
@@ -30,15 +35,6 @@ import com.google.inject.Module;
 public final class WizardDriver
 {
     private MockDependenciesPageIsOpenAction action;
-
-    /**
-     * Creates a {@link WizardFactory} producing wizards that can be driven by
-     * this driver.
-     */
-    public WizardFactory createWizardFactory()
-    {
-        return new ConfigurableWizardFactory(this);
-    }
 
     /**
      * Creates a Guice module configured to use this driver.
@@ -50,7 +46,8 @@ public final class WizardDriver
             @Override
             protected void configure()
             {
-                bind(WizardFactory.class).toInstance(createWizardFactory());
+                bind(WizardDriver.class).toInstance(WizardDriver.this);
+                bind(WizardFactory.class).toProvider(WizardFactoryProvider.class);
             }
         };
     }
@@ -68,13 +65,31 @@ public final class WizardDriver
         }
     }
 
+    private static class WizardFactoryProvider implements Provider<WizardFactory>
+    {
+        @Inject
+        private WizardDriver wizardDriver;
+        @Inject
+        private Preferences preferences;
+        @Inject
+        private TemplateStyleSelector templateStyleSelector;
+        @Inject
+        private Logger logger;
+
+        public WizardFactory get()
+        {
+            return new ConfigurableWizardFactory(wizardDriver, preferences, templateStyleSelector, logger);
+        }
+    }
+
     private static class ConfigurableWizardFactory extends WizardFactory
     {
         private final WizardDriver driver;
         private MockDependenciesWizardPage page;
 
-        public ConfigurableWizardFactory(WizardDriver driver)
+        public ConfigurableWizardFactory(WizardDriver driver, Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
         {
+            super(preferences, templateStyleSelector, logger);
             this.driver = driver;
         }
 
@@ -128,6 +143,11 @@ public final class WizardDriver
         public void checkElement(IMember member)
         {
 
+        }
+
+        public void selectTemplate(String templateId)
+        {
+            page.selectTemplate(templateId);
         }
     }
 

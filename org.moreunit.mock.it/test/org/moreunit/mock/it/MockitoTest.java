@@ -16,7 +16,7 @@ public class MockitoTest extends UiTestCase
 {
     @Inject
     private MockDependenciesAction mockDependenciesAction;
-    
+
     @Test
     public void should_mock_all_dependencies_from_class_under_test() throws Exception
     {
@@ -51,6 +51,7 @@ public class MockitoTest extends UiTestCase
         {
             public void execute(MockDependenciesWizardDriver driver)
             {
+                driver.selectTemplate("org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner");
                 driver.checkAllElements();
             }
         });

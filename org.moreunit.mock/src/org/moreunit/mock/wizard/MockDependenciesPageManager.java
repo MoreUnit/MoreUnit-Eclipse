@@ -38,7 +38,7 @@ public class MockDependenciesPageManager
 
             DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(provider, logger);
 
-            return new MockDependenciesWizardPage(classUnderTest, provider, injectionPointStore, logger);
+            return wizardFactory.createMockDependenciesWizardPage(classUnderTest, provider, injectionPointStore);
         }
         catch (JavaModelException e)
         {
@@ -50,6 +50,8 @@ public class MockDependenciesPageManager
 
     public void pageValidated(MockDependenciesWizardPage page, IType testCase)
     {
+        page.validated();
+
         IType classUnderTest = page.getClassUnderTest();
         DependencyInjectionPointProvider injectionPointStore = page.getInjectionPointStore();
 
