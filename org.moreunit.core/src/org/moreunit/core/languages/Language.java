@@ -11,7 +11,7 @@ public class Language implements Comparable<Language>
 
     public Language(String extension, String label)
     {
-        checkArgument(Strings.isBlank(extension), "Invalid extension: " + extension);
+        checkArgument(! Strings.isBlank(extension), "Invalid extension: " + extension);
         this.extension = extension.trim();
         this.label = label != null ? label : extension;
     }
