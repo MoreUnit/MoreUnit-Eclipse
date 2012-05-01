@@ -1,27 +1,24 @@
 package org.moreunit.mock;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.moreunit.mock.log.Logger;
+import org.moreunit.mock.preferences.Preferences;
+import org.moreunit.mock.preferences.TemplateStyleSelector;
 import org.moreunit.mock.wizard.MockDependenciesWizard;
 import org.moreunit.mock.wizard.MockDependenciesWizardPage;
 import org.moreunit.mock.wizard.WizardFactory;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 
 /**
  * A driver that allows for simulating user actions when a
@@ -30,15 +27,6 @@ import com.google.inject.Module;
 public final class WizardDriver
 {
     private MockDependenciesPageIsOpenAction action;
-
-    /**
-     * Creates a {@link WizardFactory} producing wizards that can be driven by
-     * this driver.
-     */
-    public WizardFactory createWizardFactory()
-    {
-        return new ConfigurableWizardFactory(this);
-    }
 
     /**
      * Creates a Guice module configured to use this driver.
@@ -50,9 +38,15 @@ public final class WizardDriver
             @Override
             protected void configure()
             {
-                bind(WizardFactory.class).toInstance(createWizardFactory());
+                bind(WizardDriver.class).toInstance(WizardDriver.this);
+                bind(WizardFactory.class).toProvider(WizardFactoryProvider.class);
             }
         };
+    }
+
+    public MockDependenciesPageActions whenMockDependenciesPageIsOpen()
+    {
+        return new MockDependenciesPageActions(this);
     }
 
     public void whenMockDependenciesPageIsOpen(MockDependenciesPageIsOpenAction action)
@@ -68,13 +62,31 @@ public final class WizardDriver
         }
     }
 
+    private static class WizardFactoryProvider implements Provider<WizardFactory>
+    {
+        @Inject
+        private WizardDriver wizardDriver;
+        @Inject
+        private Preferences preferences;
+        @Inject
+        private TemplateStyleSelector templateStyleSelector;
+        @Inject
+        private Logger logger;
+
+        public WizardFactory get()
+        {
+            return new ConfigurableWizardFactory(wizardDriver, preferences, templateStyleSelector, logger);
+        }
+    }
+
     private static class ConfigurableWizardFactory extends WizardFactory
     {
         private final WizardDriver driver;
         private MockDependenciesWizardPage page;
 
-        public ConfigurableWizardFactory(WizardDriver driver)
+        public ConfigurableWizardFactory(WizardDriver driver, Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
         {
+            super(preferences, templateStyleSelector, logger);
             this.driver = driver;
         }
 
@@ -115,128 +127,89 @@ public final class WizardDriver
             this.page = page;
         }
 
-        public Members getCheckableElements()
-        {
-            return new Members(page.getCheckableElements());
-        }
-
         public void checkAllElements()
         {
-            page.checkElements(page.getCheckableElements());
+            page.checkElements(page.getTreeContentProvider().getTypes());
         }
 
-        public void checkElement(IMember member)
+        public void checkElements(String... elementNames)
         {
+            Set<Object> elementsToCheck = newHashSet();
 
+            for (String elName : elementNames)
+            {
+                for (Object type : page.getTreeContentProvider().getTypes())
+                {
+                    for (Object el : page.getTreeContentProvider().getChildren(type))
+                    {
+                        if(el instanceof IMember && ((IMember) el).getElementName().equals(elName))
+                        {
+                            elementsToCheck.add(el);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            page.checkElements(elementsToCheck.toArray());
+        }
+
+        public void selectTemplate(String templateId)
+        {
+            page.selectTemplate(templateId);
         }
     }
 
-    public static final class Members implements Iterable<IMember>
+    public static class MockDependenciesPageActions
     {
-        private static class SetterPredicate implements Predicate<IMember>
+        private final WizardDriver driver;
+        private String templateId;
+        private boolean checkAllElements;
+        private String[] elementsToCheck;
+
+        public MockDependenciesPageActions(WizardDriver driver)
         {
-            public boolean apply(IMember m)
+            this.driver = driver;
+        }
+
+        public MockDependenciesPageActions selectTemplate(String templateId)
+        {
+            this.templateId = templateId;
+            return this;
+        }
+
+        public MockDependenciesPageActions checkAllElements()
+        {
+            checkAllElements = true;
+            return this;
+        }
+
+        public MockDependenciesPageActions checkElements(String... elementsToCheck)
+        {
+            this.elementsToCheck = elementsToCheck;
+            return this;
+        }
+
+        public void done()
+        {
+            driver.whenMockDependenciesPageIsOpen(new MockDependenciesPageIsOpenAction()
             {
-                try
+                public void execute(MockDependenciesWizardDriver driver)
                 {
-                    return m instanceof IMethod && ! ((IMethod) m).isConstructor();
+                    if(templateId != null)
+                    {
+                        driver.selectTemplate(templateId);
+                    }
+                    if(checkAllElements)
+                    {
+                        driver.checkAllElements();
+                    }
+                    if(elementsToCheck != null)
+                    {
+                        driver.checkElements(elementsToCheck);
+                    }
                 }
-                catch (JavaModelException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        private static class FieldPredicate implements Predicate<IMember>
-        {
-            public boolean apply(IMember m)
-            {
-                return m instanceof IField;
-            }
-        }
-
-        private static class ConstructorPredicate implements Predicate<IMember>
-        {
-            public boolean apply(IMember m)
-            {
-                try
-                {
-                    return m instanceof IMethod && ((IMethod) m).isConstructor();
-                }
-                catch (JavaModelException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        private static class NamePredicate implements Predicate<IMember>
-        {
-            private final String name;
-
-            public NamePredicate(String name)
-            {
-                this.name = name;
-            }
-
-            public boolean apply(IMember m)
-            {
-                return m.getElementName().equals(name);
-            }
-        }
-
-        private final List<IMember> members = newArrayList();
-
-        public Members(Object[] members)
-        {
-            for (Object member : members)
-            {
-                this.members.add((IMember) member);
-            }
-        }
-
-        public IMember get(int index)
-        {
-            return members.get(index);
-        }
-
-        public Iterator<IMember> iterator()
-        {
-            return members.iterator();
-        }
-
-        public IMethod getConstructor(final String name)
-        {
-            return (IMethod) find(members, and(new ConstructorPredicate(), new NamePredicate(name)));
-        }
-
-        public IField getField(final String name)
-        {
-            return (IField) find(members, and(new FieldPredicate(), new NamePredicate(name)));
-        }
-
-        public IMethod getSetter(final String name)
-        {
-            return (IMethod) find(members, and(new SetterPredicate(), new NamePredicate(name)));
-        }
-
-        @SuppressWarnings("unchecked")
-        public List<IMethod> getConstructors()
-        {
-            return newArrayList((Iterable< ? extends IMethod>) Iterables.filter(members, new ConstructorPredicate()));
-        }
-
-        @SuppressWarnings("unchecked")
-        public List<IField> getFields()
-        {
-            return newArrayList((Iterable< ? extends IField>) Iterables.filter(members, new FieldPredicate()));
-        }
-
-        @SuppressWarnings("unchecked")
-        public List<IMethod> getSetters()
-        {
-            return newArrayList((Iterable< ? extends IMethod>) Iterables.filter(members, new SetterPredicate()));
+            });
         }
     }
 }

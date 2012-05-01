@@ -7,7 +7,7 @@ import org.junit.Test;
 
 @Context(mainSrc = "DefaultClassUnderTest.txt",
         testSrc = "DefaultTestCase.txt")
-public class TestContextRuleWithClassAnnotationTest
+public class TestContextRuleWithClassAnnotationTest extends AnnotatedSuperClass
 {
     @Rule
     public TestContextRule context = new TestContextRule(new ConfigExtractorThatDoesNotInteractWithWorkspace());
@@ -22,6 +22,7 @@ public class TestContextRuleWithClassAnnotationTest
     }
 
     @Test
+    // (also verifies that superclass context is not used)
     public void should_load_class_context_when_no_method_context() throws Exception
     {
         assertThat(context.getCompilationUnitHandler("DefaultClassUnderTest").getInitialSource()).isEqualTo("Content of DefaultClassUnderTest.txt");

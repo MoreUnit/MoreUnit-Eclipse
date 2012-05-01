@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -35,6 +36,8 @@ import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
 import org.moreunit.mock.log.Logger;
+import org.moreunit.mock.preferences.Preferences;
+import org.moreunit.mock.preferences.TemplateStyleSelector;
 
 /**
  * Mostly copied from org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo.
@@ -50,16 +53,20 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     private final IType classUnderTest;
     private final DependencyInjectionPointProvider injectionPointProvider;
     private final DependencyInjectionPointStore injectionPointStore;
+    private final Preferences preferences;
+    private final TemplateStyleSelector templateStyleSelector;
     private final Logger logger;
     private ContainerCheckedTreeViewer dependenciesTree;
     private Label selectedMembersLabel;
 
-    public MockDependenciesWizardPage(IType classUnderTest, DependencyInjectionPointProvider injectionPointProvider, DependencyInjectionPointStore injectionPointStore, Logger logger)
+    public MockDependenciesWizardPage(IType classUnderTest, DependencyInjectionPointProvider injectionPointProvider, DependencyInjectionPointStore injectionPointStore, Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
     {
         super(PAGE_ID);
         this.classUnderTest = classUnderTest;
         this.injectionPointProvider = injectionPointProvider;
         this.injectionPointStore = injectionPointStore;
+        this.preferences = preferences;
+        this.templateStyleSelector = templateStyleSelector;
         this.logger = logger;
         setTitle("Dependencies To Mock");
         setDescription(DESCRIPTION);
@@ -84,6 +91,8 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     {
         Composite container = createContainer(parent);
 
+        createTemplateSelector(container);
+
         createDependenciesTreeControls(container);
 
         setControl(container);
@@ -96,7 +105,19 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
         container.setLayout(layout);
+        container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         return container;
+    }
+
+    private void createTemplateSelector(Composite parent)
+    {
+        // uses project or workspace preferences, depending on user choice
+        IJavaProject project = classUnderTest.getJavaProject();
+        if(! preferences.hasSpecificSettings(project))
+        {
+            project = null;
+        }
+        templateStyleSelector.createContents(parent, project);
     }
 
     private void createDependenciesTreeControls(Composite container)
@@ -236,7 +257,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             public void widgetSelected(SelectionEvent e)
             {
-                checkElements(getCheckableElements());
+                checkElements((Object[]) dependenciesTree.getInput());
             }
         });
 
@@ -259,9 +280,9 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         return button;
     }
 
-    public Object[] getCheckableElements()
+    public DependenciesTreeContentProvider getTreeContentProvider()
     {
-        return (Object[]) dependenciesTree.getInput();
+        return (DependenciesTreeContentProvider) dependenciesTree.getContentProvider();
     }
 
     public void checkElements(Object[] elements)
@@ -313,5 +334,16 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     public DependencyInjectionPointStore getInjectionPointStore()
     {
         return injectionPointStore;
+    }
+
+    public void validated()
+    {
+        // saves new user settings for project or workspace
+        templateStyleSelector.savePreferences();
+    }
+
+    public void selectTemplate(String templateId)
+    {
+        templateStyleSelector.selectTemplate(templateId);
     }
 }

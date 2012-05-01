@@ -99,23 +99,19 @@ public class Dependencies extends ArrayList<Dependency>
         return new SetterDependency(resolveTypeSignature(signature), method.getElementName(), resolveTypeParameters(signature));
     }
 
-    private String resolveTypeSignature(String signature) throws JavaModelException
+    String resolveTypeSignature(String signature) throws JavaModelException
     {
-        String[][] possibleFieldTypes = classUnderTest.resolveType(signature);
-        if(possibleFieldTypes == null)
+        // removes type parameters
+        String cleanSignature = signature.replaceFirst("<.+>$", "");
+
+        String[][] possibleFieldTypes = classUnderTest.resolveType(cleanSignature);
+        if(possibleFieldTypes == null || possibleFieldTypes.length == 0)
         {
-            return signature;
+            return cleanSignature;
         }
 
-        if(possibleFieldTypes.length != 0)
-        {
-            String[] fieldType = possibleFieldTypes[0];
-            return fieldType[0] + "." + fieldType[1];
-        }
-        else
-        {
-            return signature;
-        }
+        String[] fieldType = possibleFieldTypes[0];
+        return fieldType[0] + "." + fieldType[1];
     }
 
     private void initFieldDependencies() throws JavaModelException
