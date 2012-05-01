@@ -2,6 +2,7 @@ package org.moreunit.mock.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -31,6 +32,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
     {
         Composite contentComposite = new Composite(parent, SWT.NONE);
         contentComposite.setLayout(new GridLayout(1, true));
+        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         templateStyleSelector.createContents(contentComposite, null);
 

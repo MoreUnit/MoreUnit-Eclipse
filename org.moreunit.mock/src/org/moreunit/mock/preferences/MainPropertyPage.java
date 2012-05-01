@@ -37,6 +37,7 @@ public class MainPropertyPage extends PropertyPage
     {
         Composite contentComposite = new Composite(parent, SWT.NONE);
         contentComposite.setLayout(new GridLayout(1, true));
+        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         createCheckboxContent(contentComposite);
         templateStyleSelector.createContents(contentComposite, project());

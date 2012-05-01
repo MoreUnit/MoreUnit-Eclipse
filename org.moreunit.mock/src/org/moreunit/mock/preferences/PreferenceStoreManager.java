@@ -1,5 +1,6 @@
 package org.moreunit.mock.preferences;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.mock.MoreUnitMockPlugin;
+import org.moreunit.mock.log.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -19,12 +21,14 @@ public class PreferenceStoreManager
     private static final Preference<Boolean> SPECIFIC_SETTINGS = new BooleanPreference("has_specific_settings", false);
 
     private final IPreferenceStore workspaceStore;
+    private final Logger logger;
     private final Map<IJavaProject, IPreferenceStore> projectStores = new HashMap<IJavaProject, IPreferenceStore>();
 
     @Inject
-    public PreferenceStoreManager(IPreferenceStore workspacePreferenceStore)
+    public PreferenceStoreManager(IPreferenceStore workspacePreferenceStore, Logger logger)
     {
         this.workspaceStore = workspacePreferenceStore;
+        this.logger = logger;
     }
 
     public IPreferenceStore getWorkspaceStore()
@@ -40,31 +44,54 @@ public class PreferenceStoreManager
         }
 
         IPreferenceStore store = projectStores.get(project);
-        if(! forWriting && (store == null || ! hasSpecificSettings(project)))
+
+        if(store == null)
+        {
+            ProjectScope scope = new ProjectScope(project.getProject());
+            ScopedPreferenceStore scopedStore = new ScopedPreferenceStore(scope, MoreUnitMockPlugin.PLUGIN_ID);
+            scopedStore.setSearchContexts(new IScopeContext[] { scope });
+            projectStores.put(project, scopedStore);
+
+            store = scopedStore;
+        }
+
+        if(! forWriting && ! hasSpecificSettings(store))
         {
             return workspaceStore;
         }
 
-        if(store != null)
-        {
-            return store;
-        }
+        return store;
+    }
 
-        ProjectScope scope = new ProjectScope(project.getProject());
-        ScopedPreferenceStore scopedStore = new ScopedPreferenceStore(scope, MoreUnitMockPlugin.PLUGIN_ID);
-        scopedStore.setSearchContexts(new IScopeContext[] { scope });
-        projectStores.put(project, scopedStore);
-        return scopedStore;
+    private boolean hasSpecificSettings(IPreferenceStore store)
+    {
+        return store.getBoolean(SPECIFIC_SETTINGS.name);
     }
 
     public void setSpecificSettings(IJavaProject project, boolean projectHasSpecificSettings)
     {
-        getStore(project, true).setValue(SPECIFIC_SETTINGS.name, projectHasSpecificSettings);
+        IPreferenceStore store = getStore(project, true);
+        store.setValue(SPECIFIC_SETTINGS.name, projectHasSpecificSettings);
+        save(project, store);
+    }
+
+    void save(IJavaProject project, IPreferenceStore store)
+    {
+        if(store instanceof ScopedPreferenceStore)
+        {
+            try
+            {
+                ((ScopedPreferenceStore) store).save();
+            }
+            catch (IOException e)
+            {
+                logger.error("Could not store preferences for project " + project.getElementName(), e);
+            }
+        }
     }
 
     public boolean hasSpecificSettings(IJavaProject project)
     {
-        IPreferenceStore projectStore = projectStores.get(project);
-        return projectStore != null && projectStore.getBoolean(SPECIFIC_SETTINGS.name);
+        return getStore(project, true).getBoolean(SPECIFIC_SETTINGS.name);
     }
 }

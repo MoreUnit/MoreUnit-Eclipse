@@ -20,7 +20,7 @@ public class PreferencesTest
     private IPreferenceStore workspacePreferenceStore;
 
     @Test
-    public void should_register_prefenrence_default_values() throws Exception
+    public void should_register_preference_default_values() throws Exception
     {
         when(storeManager.getWorkspaceStore()).thenReturn(workspacePreferenceStore);
 

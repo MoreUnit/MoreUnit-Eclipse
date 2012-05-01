@@ -47,7 +47,9 @@ public class Preferences
 
     public void setMockingTemplate(IJavaProject project, String templateId)
     {
-        store(project, true).setValue(MOCKING_TEMPLATE.name, templateId);
+        IPreferenceStore store = store(project, true);
+        store.setValue(MOCKING_TEMPLATE.name, templateId);
+        storeManager.save(project, store);
     }
 
     public String getMockingTemplate(IJavaProject project)

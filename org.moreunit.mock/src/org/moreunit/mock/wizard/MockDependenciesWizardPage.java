@@ -105,6 +105,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
         container.setLayout(layout);
+        container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         return container;
     }
 
