@@ -56,7 +56,16 @@ public class TestContextRule implements MethodRule
         {
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
-                return testCase.getClass().getAnnotation(annotationClass);
+                T annotation = null;
+
+                Class< ? > cls = testCase.getClass();
+                while (annotation == null && cls != null)
+                {
+                    annotation = cls.getAnnotation(annotationClass);
+                    cls = cls.getSuperclass();
+                }
+
+                return annotation;
             }
         });
 
@@ -171,7 +180,7 @@ public class TestContextRule implements MethodRule
         checkState(currentStatement != null, "No context defined. Are you accessing this rule from outside a test method? or from one that has no Context annotation?");
         return currentStatement;
     }
-    
+
     public boolean isDefined()
     {
         return currentStatement != null;

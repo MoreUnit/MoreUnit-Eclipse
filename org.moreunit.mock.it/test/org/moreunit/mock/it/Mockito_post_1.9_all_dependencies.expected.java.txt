@@ -1,0 +1,29 @@
+package te.st;
+
+import java.util.Comparator;
+import java.util.List;
+
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import te.st.SomeConcept.Thing;
+
+@RunWith(MockitoJUnitRunner.class)
+public class SomeConceptTest {
+
+	@Mock
+	private Callable<Integer> integerProvider;
+	
+	@Mock
+	private Runnable runnable;
+	
+	@Mock
+	private List<Thing> someListOfThings;
+	
+	@Mock
+	private Comparator<String> stringComparator;
+	
+	@InjectMocks
+	private SomeConcept someConcept;
+}

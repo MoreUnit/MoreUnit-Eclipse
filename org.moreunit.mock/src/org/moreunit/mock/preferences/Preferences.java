@@ -14,7 +14,7 @@ public class Preferences
 {
     private static final Set<Preference< ? >> ALL_PREFERENCES = new HashSet<Preference< ? >>();
 
-    public static final Preference<String> MOCKING_TEMPLATE = reg(new StringPreference("mocking_template", "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner"));
+    public static final Preference<String> MOCKING_TEMPLATE = reg(new StringPreference("mocking_template", "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9"));
 
     private static <T> Preference<T> reg(Preference<T> preference)
     {

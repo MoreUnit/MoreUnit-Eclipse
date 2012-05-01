@@ -41,13 +41,37 @@ public class DependenciesTest
     }
 
     @Test
-    public void should_return_an_empty_list_when_there_are_no_type_parameters() throws Exception
+    public void resolveTypeSignature_should_return_type_fully_qualified_name() throws Exception
+    {
+        when(classUnderTest.resolveType("Comparator")).thenReturn(new String[][] { { "java.util", "Comparator" } });
+
+        assertThat(dependencies.resolveTypeSignature("Comparator<String>")).isEqualTo("java.util.Comparator");
+    }
+
+    @Test
+    public void resolveTypeSignature_should_return_input_without_type_parameters_when_unresolved() throws Exception
+    {
+        when(classUnderTest.resolveType("Callable")).thenReturn(null);
+
+        assertThat(dependencies.resolveTypeSignature("Callable<String>")).isEqualTo("Callable");
+    }
+
+    @Test
+    public void resolveTypeSignature_should_return_input_without_type_parameters_when_unresolved__complex_case() throws Exception
+    {
+        when(classUnderTest.resolveType("Callable")).thenReturn(null);
+
+        assertThat(dependencies.resolveTypeSignature("Callable<Map<String, List<Integer>>>")).isEqualTo("Callable");
+    }
+
+    @Test
+    public void resolveTypeParameters_should_return_an_empty_list_when_there_are_no_type_parameters() throws Exception
     {
         assertThat(dependencies.resolveTypeParameters("String")).isEmpty();
     }
 
     @Test
-    public void should_return_one_parameter() throws Exception
+    public void resolveTypeParameters_should_return_one_parameter() throws Exception
     {
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
 
@@ -55,7 +79,7 @@ public class DependenciesTest
     }
 
     @Test
-    public void should_return_several_parameters() throws Exception
+    public void resolveTypeParameters_should_return_several_parameters() throws Exception
     {
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
         when(classUnderTest.resolveType("Integer")).thenReturn(new String[][] { { "java.lang", "Integer" } });
@@ -65,7 +89,7 @@ public class DependenciesTest
     }
 
     @Test
-    public void should_return_nested_parameters() throws Exception
+    public void resolveTypeParameters_should_return_nested_parameters() throws Exception
     {
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
         when(classUnderTest.resolveType("List")).thenReturn(new String[][] { { "java.util", "List" } });
@@ -77,7 +101,7 @@ public class DependenciesTest
     }
 
     @Test
-    public void should_return_several_nested_parameters() throws Exception
+    public void resolveTypeParameters_should_return_several_nested_parameters() throws Exception
     {
         when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });

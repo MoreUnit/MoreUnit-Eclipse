@@ -256,7 +256,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             public void widgetSelected(SelectionEvent e)
             {
-                checkElements(getCheckableElements());
+                checkElements((Object[]) dependenciesTree.getInput());
             }
         });
 
@@ -279,9 +279,9 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         return button;
     }
 
-    public Object[] getCheckableElements()
+    public DependenciesTreeContentProvider getTreeContentProvider()
     {
-        return (Object[]) dependenciesTree.getInput();
+        return (DependenciesTreeContentProvider) dependenciesTree.getContentProvider();
     }
 
     public void checkElements(Object[] elements)

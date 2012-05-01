@@ -1,6 +1,0 @@
-package te.st;
-
-public class SomeConcept {
-	public Runnable runnable;
-	public Comparable<String> comparable;
-}
