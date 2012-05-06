@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * A form field for file extensions.
+ */
 public class ExtensionField
 {
     private static final Pattern ALPHANUM = Pattern.compile("[a-zA-Z0-9]+");
