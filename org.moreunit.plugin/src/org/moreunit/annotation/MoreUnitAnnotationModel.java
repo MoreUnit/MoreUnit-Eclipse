@@ -202,7 +202,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         updateJob.schedule();
     }
 
-    private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
+    private synchronized void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
         // TODO Nicolas: only uncomment the following for testing, since performances are far too bad for production.
         // I let it here for now, just for it to be checked in once into CVS, and I will remove it then unless I can improve it.
