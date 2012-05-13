@@ -1,7 +1,5 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.mock.utils.Strings.emptyIfNull;
-
 import java.text.Collator;
 import java.util.List;
 
@@ -9,6 +7,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import static org.moreunit.mock.utils.Strings.emptyIfNull;
 
 @XmlRootElement(name = "mocking-template")
 public class MockingTemplate implements Comparable<MockingTemplate>
@@ -31,23 +31,20 @@ public class MockingTemplate implements Comparable<MockingTemplate>
         // used by XML unmarshaller
     }
 
-    /**
-     * For testing only.
-     */
+    /** For testing only. */
     public MockingTemplate(String id)
     {
         this.id = id;
     }
 
-    /**
-     * For testing only.
-     */
+    /** For testing only. */
     public MockingTemplate(String id, String categoryId)
     {
         this.id = id;
         this.categoryId = categoryId;
     }
 
+    /** For testing only. */
     public MockingTemplate(String id, String categoryId, String name, List<CodeTemplate> codeTemplates)
     {
         this.id = id;

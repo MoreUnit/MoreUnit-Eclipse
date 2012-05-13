@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -79,7 +80,13 @@ public class TemplateStyleSelector implements SelectionListener
         {
             public void modifyText(ModifyEvent event)
             {
-                Category category = categories.get(categoryCombo.getSelectionIndex());
+                int categoryIdx = categoryCombo.getSelectionIndex();
+                if(categoryIdx == - 1)
+                {
+                    return;
+                }
+
+                Category category = categories.get(categoryIdx);
 
                 if(! category.equals(selectedCategory))
                 {
@@ -119,6 +126,22 @@ public class TemplateStyleSelector implements SelectionListener
         return combo;
     }
 
+    public void reloadTemplates()
+    {
+        categories.clear();
+
+        categories.addAll(templateStore.getCategories());
+        Collections.sort(categories);
+
+        categoryCombo.setItems(categoryNames());
+        templateCombo.setItems(new String[] { "Please select a category first..." });
+
+        if(! categories.isEmpty())
+        {
+            initValues();
+        }
+    }
+
     private String[] categoryNames()
     {
         String[] categoryNames = new String[categories.size()];
@@ -144,7 +167,7 @@ public class TemplateStyleSelector implements SelectionListener
     private void initValues()
     {
         String mockingTemplateId = preferences.getMockingTemplate(project);
-        if(Strings.isBlank(mockingTemplateId))
+        if(Strings.isBlank(mockingTemplateId) || templateStore.get(mockingTemplateId) == null)
         {
             categoryCombo.select(0);
             templateCombo.select(0);
@@ -159,6 +182,8 @@ public class TemplateStyleSelector implements SelectionListener
     {
         MockingTemplate mockingTemplate = templateStore.get(mockingTemplateId);
         Category category = templateStore.getCategory(mockingTemplate.categoryId());
+        Assert.isNotNull(category);
+
         categoryCombo.select(categories.indexOf(category));
         templateCombo.select(categoryTemplates.indexOf(mockingTemplate));
     }
@@ -203,7 +228,10 @@ public class TemplateStyleSelector implements SelectionListener
         {
             selectionIndex = 0;
         }
-
+        if(categoryTemplates.isEmpty())
+        {
+            return null;
+        }
         return categoryTemplates.get(selectionIndex);
     }
 

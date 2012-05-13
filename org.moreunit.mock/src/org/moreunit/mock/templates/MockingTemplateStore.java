@@ -23,7 +23,10 @@ public class MockingTemplateStore
     {
         for (Category category : mockingTemplates.categories())
         {
-            categories.put(category.id(), category);
+            if(! categories.containsKey(category.id()))
+            {
+                categories.put(category.id(), category);
+            }
         }
 
         for (MockingTemplate template : mockingTemplates)
@@ -34,6 +37,11 @@ public class MockingTemplateStore
 
     private void store(MockingTemplate template)
     {
+        if(templates.containsKey(template.id()))
+        {
+            throw new TemplateAlreadyDefinedException(template.id());
+        }
+
         Set<MockingTemplate> categoryTemplates = templatesByCategory.get(template.categoryId());
         if(categoryTemplates == null)
         {
@@ -51,7 +59,9 @@ public class MockingTemplateStore
 
     public void clear()
     {
+        categories.clear();
         templates.clear();
+        templatesByCategory.clear();
     }
 
     public Collection<Category> getCategories()
@@ -67,5 +77,15 @@ public class MockingTemplateStore
     public Category getCategory(String categoryId)
     {
         return categories.get(categoryId);
+    }
+
+    public static class TemplateAlreadyDefinedException extends RuntimeException
+    {
+        private static final long serialVersionUID = - 6594805348873016229L;
+
+        public TemplateAlreadyDefinedException(String templateId)
+        {
+            super(templateId);
+        }
     }
 }
