@@ -34,7 +34,7 @@ public class PluginResourceLoader
     public Collection<URL> findBundleResources(String searchRoot, String filePattern)
     {
         Set<URL> resources = new LinkedHashSet<URL>();
-        Enumeration<URL> bundleEntries = plugin.getBundle().findEntries(RESOURCE_FOLDER + searchRoot, filePattern, true);
+        Enumeration<URL> bundleEntries = plugin.getBundle().findEntries(searchRoot, filePattern, true);
         if(bundleEntries == null)
         {
             // in dev mode, Eclipse prepends the source folder to resources, no
