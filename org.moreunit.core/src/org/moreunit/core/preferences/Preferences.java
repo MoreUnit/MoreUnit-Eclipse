@@ -17,6 +17,7 @@ import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.TestFileNamePattern;
+import org.moreunit.core.matching.TestFolderPathPattern;
 
 public class Preferences implements WriteablePreferences, ReadablePreferences, LanguageRepository
 {
@@ -199,9 +200,21 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         }
 
         @Override
+        public String getSrcFolderPathTemplate()
+        {
+            return TestFolderPathPattern.SRC_PROJECT_VARIABLE;
+        }
+
+        @Override
         public String getTestFileNameTemplate()
         {
             return TestFileNamePattern.SRC_FILE_VARIABLE + "Test";
+        }
+
+        @Override
+        public String getTestFolderPathTemplate()
+        {
+            return TestFolderPathPattern.SRC_PROJECT_VARIABLE;
         }
     }
 }

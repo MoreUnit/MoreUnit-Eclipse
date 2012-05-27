@@ -43,6 +43,7 @@ public class TestFolderPathPatternTest
     @Test
     public void isValid_should_return_true_when_path_starts_with_project_name() throws Exception
     {
+        assertTrue(isValid("${srcProject}", "${srcProject}"));
         assertTrue(isValid("${srcProject}/path", validTestPath));
 
         assertTrue(isValid(validSrcPath, "${srcProject}-test/path"));
@@ -50,7 +51,7 @@ public class TestFolderPathPatternTest
     }
 
     @Test
-    public void isValid_should_ignore_leading_slash() throws Exception
+    public void isValid_should_ignore_leading_separator() throws Exception
     {
         assertTrue(isValid("/${srcProject}/path", validTestPath));
 
@@ -92,6 +93,7 @@ public class TestFolderPathPatternTest
     public void isValid_should_return_false_when_captured_variable_segment_is_not_used() throws Exception
     {
         assertFalse(isValid("${srcProject}/src/(*)/", "${srcProject}/test/"));
+        assertFalse("should ignore protected backslash", isValid("${srcProject}/src/(*)/", "${srcProject}/test/\\"));
     }
 
     @Test
@@ -187,7 +189,15 @@ public class TestFolderPathPatternTest
     }
 
     @Test
-    public void getTestPathFor_should_ignore_leading_and_trailing_slashes_in_patterns() throws Exception
+    public void getTestPathFor_should_find_test_path_when_template_only_contains_project_name() throws Exception
+    {
+        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
+
+        assertThat(p.getTestPathFor(new Path("js-project")).toString()).isEqualTo("js-project");
+    }
+
+    @Test
+    public void getTestPathFor_should_ignore_leading_and_trailing_separators_in_patterns() throws Exception
     {
         TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
 
@@ -195,7 +205,7 @@ public class TestFolderPathPatternTest
     }
 
     @Test
-    public void getTestPathFor_should_ignore_leading_and_trailing_slashes_in_input() throws Exception
+    public void getTestPathFor_should_ignore_leading_and_trailing_separators_in_input() throws Exception
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
 
@@ -291,7 +301,15 @@ public class TestFolderPathPatternTest
     }
 
     @Test
-    public void getSrcPathFor_should_ignore_leading_and_trailing_slashes_in_patterns() throws Exception
+    public void getSrcPathFor_should_find_test_path_when_template_only_contains_project_name() throws Exception
+    {
+        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
+
+        assertThat(p.getSrcPathFor(new Path("js-project")).toString()).isEqualTo("js-project");
+    }
+
+    @Test
+    public void getSrcPathFor_should_ignore_leading_and_trailing_separators_in_patterns() throws Exception
     {
         TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
 
@@ -299,7 +317,7 @@ public class TestFolderPathPatternTest
     }
 
     @Test
-    public void getSrcPathFor_should_ignore_leading_and_trailing_slashes_in_input() throws Exception
+    public void getSrcPathFor_should_ignore_leading_and_trailing_separators_in_input() throws Exception
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
 

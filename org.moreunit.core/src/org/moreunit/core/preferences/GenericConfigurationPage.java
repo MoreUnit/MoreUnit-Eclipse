@@ -11,11 +11,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.matching.TestFileNamePattern;
+import org.moreunit.core.matching.TestFolderPathPattern;
 
 class GenericConfigurationPage
 {
     private final PreferencePage page;
     private final LanguagePreferencesWriter prefWriter;
+    private Text srcFolderTemplateField;
+    private Text testFolderTemplateField;
     private Text testFileTemplateField;
     private Text wordSeparatorField;
 
@@ -28,13 +31,17 @@ class GenericConfigurationPage
     public void createContents(Composite parent)
     {
         createFileTemplateField(parent);
-
         createWordSeparatorField(parent);
+        placeHolder(parent);
+        createFileTplExplanations(parent);
 
         placeHolder(parent);
+        placeHolder(parent);
 
-        createExplanations(parent);
+        createFolderTemplateFields(parent);
+        createFolderTplExplanations(parent);
 
+        placeHolder(parent);
         placeHolder(parent);
 
         createOverviewArea(parent);
@@ -42,8 +49,8 @@ class GenericConfigurationPage
 
     private void createFileTemplateField(Composite parent)
     {
-        Label testFileTemplateLabel = new Label(parent, SWT.NONE);
-        testFileTemplateLabel.setText("Rule for naming test files:");
+        Label label = new Label(parent, SWT.NONE);
+        label.setText("Rule for naming test files:");
 
         testFileTemplateField = new Text(parent, SWT.SINGLE | SWT.BORDER);
         testFileTemplateField.setLayoutData(LayoutData.LABEL_AND_FIELD);
@@ -57,7 +64,12 @@ class GenericConfigurationPage
             testFileTemplateField.setText(Preferences.DEFAULTS.getTestFileNameTemplate());
         }
 
-        testFileTemplateField.addModifyListener(new ModifyListener()
+        addValidationOnModification(testFileTemplateField);
+    }
+
+    private void addValidationOnModification(Text field)
+    {
+        field.addModifyListener(new ModifyListener()
         {
             public void modifyText(ModifyEvent event)
             {
@@ -68,8 +80,8 @@ class GenericConfigurationPage
 
     private void createWordSeparatorField(Composite parent)
     {
-        Label wordSeparatorLabel = new Label(parent, SWT.NONE);
-        wordSeparatorLabel.setText("Word separator:");
+        Label label = new Label(parent, SWT.NONE);
+        label.setText("Word separator:");
 
         wordSeparatorField = new Text(parent, SWT.SINGLE | SWT.BORDER);
         wordSeparatorField.setLayoutData(LayoutData.LABEL_AND_FIELD);
@@ -84,16 +96,71 @@ class GenericConfigurationPage
         }
     }
 
+    private void createFolderTemplateFields(Composite parent)
+    {
+        Label label = new Label(parent, SWT.NONE);
+        label.setText("Rule for locating test files:");
+
+        srcFolderTemplateField = new Text(parent, SWT.SINGLE | SWT.BORDER);
+        srcFolderTemplateField.setLayoutData(LayoutData.LABEL_AND_FIELD);
+
+        if(prefWriter.getSrcFolderPathTemplate().length() != 0)
+        {
+            srcFolderTemplateField.setText(prefWriter.getSrcFolderPathTemplate());
+        }
+        else
+        {
+            srcFolderTemplateField.setText(Preferences.DEFAULTS.getSrcFolderPathTemplate());
+        }
+
+        addValidationOnModification(srcFolderTemplateField);
+
+        placeHolder(parent);
+
+        testFolderTemplateField = new Text(parent, SWT.SINGLE | SWT.BORDER);
+        testFolderTemplateField.setLayoutData(LayoutData.LABEL_AND_FIELD);
+
+        if(prefWriter.getTestFolderPathTemplate().length() != 0)
+        {
+            testFolderTemplateField.setText(prefWriter.getTestFolderPathTemplate());
+        }
+        else
+        {
+            testFolderTemplateField.setText(Preferences.DEFAULTS.getTestFolderPathTemplate());
+        }
+
+        addValidationOnModification(testFolderTemplateField);
+    }
+
+    private void createFolderTplExplanations(Composite parent)
+    {
+        String[] explanations = { //
+        "Use the variable " + TestFolderPathPattern.SRC_PROJECT_VARIABLE + " to represent the production source project.", //
+        "You may use stars '*' to represent variable parts within segments, and double stars '**' for a variable set of segments.", //
+        "You may capture variable parts using parentheses and then reference them using backslashes '\\'.", //
+        "When matching files, the part of the file path that lies after then end of your pattern is automatically used.", //
+        "Examples: the definition '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/(*)-src' => '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/\\1-test'", //
+        "\tallows for finding the file 'my-project/js-test/some/path/to/MyClassTest.js'", //
+        "\tfrom 'my-project/js-src/some/path/to/MyClass.js'" };
+
+        for (String e : explanations)
+        {
+            Label lbl = new Label(parent, SWT.NONE);
+            lbl.setLayoutData(LayoutData.ROW);
+            lbl.setText(e);
+        }
+    }
+
     public void placeHolder(Composite parent)
     {
         new Label(parent, SWT.NONE);
     }
 
-    private void createExplanations(Composite parent)
+    private void createFileTplExplanations(Composite parent)
     {
         String[] explanations = { //
         "Use the variable " + TestFileNamePattern.SRC_FILE_VARIABLE + " to represent the production source file.", //
-        "You may use stars (*) to represent variable parts.", //
+        "You may use stars '*' to represent variable parts.", //
         "You may use parentheses and pipes to define several possible prefixes or suffixes: (pre1|pre2)" };
 
         for (String e : explanations)
@@ -117,17 +184,47 @@ class GenericConfigurationPage
 
     public void performDefaults()
     {
-        wordSeparatorField.setText(Preferences.DEFAULTS.getFileWordSeparator());
+        srcFolderTemplateField.setText(Preferences.DEFAULTS.getSrcFolderPathTemplate());
         testFileTemplateField.setText(Preferences.DEFAULTS.getTestFileNameTemplate());
+        testFolderTemplateField.setText(Preferences.DEFAULTS.getTestFolderPathTemplate());
+        wordSeparatorField.setText(Preferences.DEFAULTS.getFileWordSeparator());
     }
 
     public void validate()
     {
-        String testFileTemplate = testFileTemplateField.getText();
-        String separator = wordSeparatorField.getText();
+        String errorMsg = validateTestFileTemplate();
+        if(errorMsg != null)
+        {
+            testFileTemplateField.forceFocus();
+        }
+        else
+        {
+            errorMsg = validateTestFolderTemplate();
+        }
+
+        if(errorMsg == null)
+        {
+            setValid();
+
+            if(countOccurrences(testFileTemplateField.getText(), "*") > 1)
+            {
+                page.setMessage("Using too many wildcards may degrade search performance and results!", IMessageProvider.WARNING);
+            }
+        }
+        else
+        {
+            page.setMessage(errorMsg, IMessageProvider.ERROR);
+            page.setValid(false);
+        }
+    }
+
+    private String validateTestFileTemplate()
+    {
+        String testFileTemplate = testFileTemplateField.getText().trim();
+        String separator = wordSeparatorField.getText().trim();
 
         String errorMsg = null;
-        if(testFileTemplate.isEmpty())
+        if(testFileTemplate.length() == 0)
         {
             errorMsg = "You must enter a rule for naming test files";
         }
@@ -141,24 +238,30 @@ class GenericConfigurationPage
         }
         else if(! TestFileNamePattern.isValid(testFileTemplate, separator))
         {
-            errorMsg = "Invalid template: please follow the guidelines.";
+            errorMsg = "Invalid file template: please follow the guidelines.";
         }
+        return errorMsg;
+    }
 
-        if(errorMsg == null)
-        {
-            setValid();
+    private String validateTestFolderTemplate()
+    {
+        String srcFolderTpl = srcFolderTemplateField.getText().trim();
+        String tstFolderTpl = testFolderTemplateField.getText().trim();
 
-            if(countOccurrences(testFileTemplate, "*") > 1)
-            {
-                page.setMessage("Using too many wildcards may degrade search performance and results!", IMessageProvider.WARNING);
-            }
-        }
-        else
+        String errorMsg = null;
+        if(srcFolderTpl.length() == 0 || tstFolderTpl.length() == 0)
         {
-            page.setMessage(errorMsg, IMessageProvider.ERROR);
-            page.setValid(false);
-            testFileTemplateField.forceFocus();
+            errorMsg = "You must enter a rule for locating test files";
         }
+        else if(! srcFolderTpl.contains(TestFolderPathPattern.SRC_PROJECT_VARIABLE) || ! tstFolderTpl.contains(TestFolderPathPattern.SRC_PROJECT_VARIABLE))
+        {
+            errorMsg = "The rule for locating test files must use the variable " + TestFolderPathPattern.SRC_PROJECT_VARIABLE;
+        }
+        else if(! TestFolderPathPattern.isValid(srcFolderTpl, tstFolderTpl))
+        {
+            errorMsg = "Invalid folder templates: please follow the guidelines.";
+        }
+        return errorMsg;
     }
 
     private void setValid()
@@ -169,7 +272,8 @@ class GenericConfigurationPage
 
     private void saveProperties()
     {
-        prefWriter.setTestFileNameTemplate(testFileTemplateField.getText(), wordSeparatorField.getText());
+        prefWriter.setTestFileNameTemplate(testFileTemplateField.getText().trim(), wordSeparatorField.getText().trim());
+        prefWriter.setTestFolderPathTemplate(srcFolderTemplateField.getText().trim(), testFolderTemplateField.getText().trim());
         prefWriter.save();
     }
 

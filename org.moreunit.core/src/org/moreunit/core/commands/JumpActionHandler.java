@@ -10,7 +10,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISources;
@@ -22,7 +21,9 @@ import org.eclipse.ui.ide.IDE;
 import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.log.Logger;
+import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.matching.FileMatcher;
+import org.moreunit.core.ui.MessageDialogs;
 
 public class JumpActionHandler extends AbstractHandler
 {
@@ -61,15 +62,22 @@ public class JumpActionHandler extends AbstractHandler
             return null;
         }
 
-        IFile result = fileMatcher.match(selectedFile);
+        try
+        {
+            IFile result = fileMatcher.match(selectedFile);
 
-        if(result == null)
-        {
-            MessageDialog.openInformation(getActiveShell(event), "MoreUnit", "No matching file found");
+            if(result == null)
+            {
+                MessageDialogs.openInformation(getActiveShell(event), "No matching file found");
+            }
+            else
+            {
+                openEditor(result, event);
+            }
         }
-        else
+        catch (DoesNotMatchConfigurationException e)
         {
-            openEditor(result, event);
+            MessageDialogs.openInformation(getActiveShell(event), e.getPath() + " does not match your source folder preferences");
         }
 
         return null;
@@ -130,7 +138,7 @@ public class JumpActionHandler extends AbstractHandler
 
         try
         {
-            IDE.openEditor(activePage, file);
+            IDE.openEditor(activePage, file, true);
         }
         catch (PartInitException e)
         {

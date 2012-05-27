@@ -48,7 +48,6 @@ public class GenericPropertyPage extends PropertyPage
 
         Composite contentComposite = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
-        layout.marginWidth = 0;
         contentComposite.setLayout(layout);
         contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 

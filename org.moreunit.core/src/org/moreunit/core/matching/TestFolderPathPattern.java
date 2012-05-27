@@ -62,9 +62,19 @@ public class TestFolderPathPattern
 
     private static Pattern createTestProjectPattern(String testPathTemplate)
     {
-        String testProjTemplate = testPathTemplate.substring(0, testPathTemplate.indexOf("/"));
+        String testProjTemplate = getProjectName(testPathTemplate);
         String ptn = testProjTemplate.replaceFirst(quote(SRC_PROJECT_VARIABLE), "\\\\E(.*)\\\\Q");
         return compile("\\Q" + ptn + "\\E");
+    }
+
+    private static String getProjectName(String path)
+    {
+        int separatorIdx = path.indexOf("/");
+        if(separatorIdx == - 1)
+        {
+            return path;
+        }
+        return path.substring(0, separatorIdx);
     }
 
     private static String removeSurroundingSlashes(String path)
@@ -145,10 +155,11 @@ public class TestFolderPathPattern
             backslashEscaped = false;
         }
 
+        char lastChar = chars[chars.length - 1];
         // last char was part of a group ref, let's add the ref to the list
-        if(refStart != - 1)
+        if(refStart != - 1 && lastChar != '\\')
         {
-            refs.add(new GroupRef(Integer.valueOf(String.valueOf(chars[chars.length - 1])), refStart, chars.length));
+            refs.add(new GroupRef(Integer.valueOf(String.valueOf(lastChar)), refStart, chars.length));
         }
 
         return refs;
@@ -171,7 +182,7 @@ public class TestFolderPathPattern
     public SourceFolderPath getTestPathFor(IPath srcPath) throws DoesNotMatchConfigurationException
     {
         String p = removeSurroundingSlashes(srcPath.toString());
-        String projectName = p.substring(0, p.indexOf("/"));
+        String projectName = getProjectName(p);
 
         String srcPathTpl = getSrcPathTemplateForSrcProject(projectName);
         String codePathWithinSrcFolder = p.replaceFirst(srcPathTpl, "");
@@ -236,9 +247,8 @@ public class TestFolderPathPattern
             srcPathTpl += codePathWithinSrcFolder;
             tstPathTpl += codePathWithinSrcFolder;
         }
-        
-        srcPathTpl = resolveGroups(p, tstPathTpl, srcPathTpl, tstPath);
 
+        srcPathTpl = resolveGroups(p, tstPathTpl, srcPathTpl, tstPath);
 
         return new SourceFolderPath(srcPathTpl);
     }
