@@ -1,5 +1,8 @@
 package org.moreunit.core.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Strings
 {
     public static boolean isBlank(String string)
@@ -46,5 +49,19 @@ public class Strings
         }
 
         return occurrences;
+    }
+
+    public static String[] split(String str, String separator)
+    {
+        List<String> parts = new ArrayList<String>();
+        for (String part : str.split(separator))
+        {
+            String trimmed = part.trim();
+            if(trimmed.length() != 0)
+            {
+                parts.add(trimmed);
+            }
+        }
+        return parts.toArray(new String[parts.size()]);
     }
 }

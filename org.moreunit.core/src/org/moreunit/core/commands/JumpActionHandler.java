@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -23,7 +24,11 @@ import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.matching.FileMatcher;
+import org.moreunit.core.matching.MatchingFile;
+import org.moreunit.core.resources.FolderCreationException;
+import org.moreunit.core.ui.Dialogs;
 import org.moreunit.core.ui.MessageDialogs;
+import org.moreunit.core.ui.NewFileWizard;
 
 public class JumpActionHandler extends AbstractHandler
 {
@@ -64,15 +69,23 @@ public class JumpActionHandler extends AbstractHandler
 
         try
         {
-            IFile result = fileMatcher.match(selectedFile);
+            MatchingFile match = fileMatcher.match(selectedFile);
 
-            if(result == null)
+            if(! match.isFound())
             {
-                MessageDialogs.openInformation(getActiveShell(event), "No matching file found");
+                try
+                {
+                    NewFileWizard wizard = new NewFileWizard(getWorkbench(event), match.getSrcFolderToCreate(), match.getFileToCreate(), logger);
+                    Dialogs.open(getActiveShell(event), wizard);
+                }
+                catch (FolderCreationException e)
+                {
+                    MessageDialogs.openError(getActiveShell(event), "An error occurred while attempting to create folder " + e.getFolder());
+                }
             }
             else
             {
-                openEditor(result, event);
+                openEditor(match.get(), event);
             }
         }
         catch (DoesNotMatchConfigurationException e)
@@ -161,5 +174,11 @@ public class JumpActionHandler extends AbstractHandler
             return (IEditorInput) o;
         }
         return null;
+    }
+
+    private static IWorkbench getWorkbench(ExecutionEvent event)
+    {
+        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+        return window == null ? null : window.getWorkbench();
     }
 }

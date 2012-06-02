@@ -1,15 +1,17 @@
 package org.moreunit.core.commands;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.window.Window;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.config.Config;
@@ -21,26 +23,23 @@ import org.moreunit.core.languages.Language;
 import org.moreunit.core.matching.FileMatchSelector;
 import org.moreunit.core.preferences.LanguagePreferencesWriter;
 import org.moreunit.core.preferences.Preferences;
+import org.moreunit.core.ui.DrivableWizardDialog;
+import org.moreunit.core.ui.WizardDriver;
 
 public class JumpActionHandlerTest extends TmpProjectTestCase
 {
     private static final String JUMP_COMMAND = "org.moreunit.core.commands.jumpCommand";
 
-    private static CapturingSelector capturingSelector = new CapturingSelector();
+    private CapturingSelector capturingSelector = new CapturingSelector();
 
     private Preferences preferences = MoreUnitCore.get().getPreferences();
 
-    @BeforeClass
-    public static void configurePlugin() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         Config.messageDialogsActivated = false;
         Config.fileMatchSelector = capturingSelector;
-        capturingSelector.fileToReturn = null;
-    }
 
-    @Before
-    public void definePreferences() throws Exception
-    {
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}Test", "");
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}", "${srcProject}");
     }
@@ -118,6 +117,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
+        Config.wizardDriver = new AutoCancelWizard();
+
         // when
         executeCommand(JUMP_COMMAND);
 
@@ -146,6 +147,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         createFile("test/SomeConcept.js");
 
         openEditor(testFile);
+
+        Config.wizardDriver = new AutoCancelWizard();
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -274,6 +277,94 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // then
         assertThat(getFileInActiveEditor()).isEqualTo(testFile2);
         assertThat(capturingSelector.files).hasSize(2).contains(testFile1, testFile2);
+    }
+
+    @Test
+    public void should_create_test_file_when_it_does_not_exist() throws Exception
+    {
+        // given
+        preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
+        preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
+
+        IFile sourceFile = createFile("src/SomeConcept.thing");
+
+        openEditor(sourceFile);
+
+        Config.wizardDriver = new AutoPerformWizard();
+
+        // when
+        executeCommand(JUMP_COMMAND);
+
+        // then
+        IFile testFile = getFile("test/SomeConceptTest.thing");
+        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+    }
+
+    @Test
+    public void should_create_source_file_when_it_does_not_exist() throws Exception
+    {
+        // given
+        preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
+        preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
+
+        IFile testFile = getFile("test/SomeConceptTest.thing");
+
+        openEditor(testFile);
+
+        Config.wizardDriver = new AutoPerformWizard();
+
+        // when
+        executeCommand(JUMP_COMMAND);
+
+        // then
+        IFile sourceFile = createFile("src/SomeConcept.thing");
+        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+    }
+
+    @Test
+    public void should_undo_folder_creation_when_file_creation_is_aborted() throws Exception
+    {
+        // given
+        preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src/folder/with/several/parts", "${srcProject}/test/folder/having/many/parts");
+
+        IFile sourceFile = createFile("src/folder/with/several/parts/SomeConcept.thing");
+
+        createFolder("test/folder/having");
+
+        openEditor(sourceFile);
+
+        Config.wizardDriver = new WizardDriver()
+        {
+            public int open(DrivableWizardDialog dialog)
+            {
+                assertTrue(getFolder("test/folder/having/many/parts").exists());
+                return Window.CANCEL;
+            }
+        };
+
+        // when
+        executeCommand(JUMP_COMMAND);
+
+        // then
+        assertTrue(getFolder("test/folder/having").exists());
+        assertFalse(getFolder("test/folder/having/many/parts").exists());
+    }
+
+    private static class AutoCancelWizard implements WizardDriver
+    {
+        public int open(DrivableWizardDialog dialog)
+        {
+            return Window.CANCEL;
+        }
+    }
+
+    private static class AutoPerformWizard implements WizardDriver
+    {
+        public int open(DrivableWizardDialog dialog)
+        {
+            dialog.getWizard().performFinish();
+            return Window.OK;
+        }
     }
 
     private static class CapturingSelector implements FileMatchSelector

@@ -1,10 +1,14 @@
 package org.moreunit.core.matching;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.moreunit.core.resources.CreatedPart;
+import org.moreunit.core.resources.FolderCreationException;
+import org.moreunit.core.resources.Resources;
 
 public class SourceFolderPath
 {
@@ -33,6 +37,10 @@ public class SourceFolderPath
 
     public IPath getResolvedPart()
     {
+        if(isResolved())
+        {
+            return path;
+        }
         int i = 0;
         for (String s : path.segments())
         {
@@ -63,5 +71,16 @@ public class SourceFolderPath
             folder = folder.substring(1);
         }
         return folder.matches(path.toString());
+    }
+
+    public CreatedPart createResolvedPartIfItDoesNotExist() throws FolderCreationException
+    {
+        IResource resolvedPart = getResolvedPartAsResource();
+        if(resolvedPart instanceof IFolder && ! resolvedPart.exists())
+        {
+            return Resources.createFolder((IFolder) resolvedPart).getCreatedPart();
+        }
+
+        return new CreatedPart(null);
     }
 }

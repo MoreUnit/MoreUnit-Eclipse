@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class FileNameEvaluation
 {
@@ -28,5 +29,15 @@ public class FileNameEvaluation
     public Collection<String> getOtherCorrespondingFilePatterns()
     {
         return otherCorrespondingFilePatterns;
+    }
+
+    public String getPreferredCorrespondingFileName()
+    {
+        Iterator<String> it = preferredCorrespondingFilePatterns.iterator();
+        if(! it.hasNext())
+        {
+            return null;
+        }
+        return it.next().replaceAll("\\.\\*", "");
     }
 }

@@ -15,4 +15,12 @@ public class MessageDialogs
             MessageDialog.openInformation(shell, TITLE, message);
         }
     }
+
+    public static void openError(Shell shell, String message)
+    {
+        if(Config.messageDialogsActivated)
+        {
+            MessageDialog.openError(shell, TITLE, message);
+        }
+    }
 }

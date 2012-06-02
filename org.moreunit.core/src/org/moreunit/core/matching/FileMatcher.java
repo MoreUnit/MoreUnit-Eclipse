@@ -31,7 +31,7 @@ public class FileMatcher
 
     public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, final Logger logger)
     {
-        this(searchEngine, preferences, Config.fileMatchSelector == null ? new DefaultFileMatchSelector(logger) : Config.fileMatchSelector, logger);
+        this(searchEngine, preferences, new DefaultFileMatchSelector(logger), logger);
     }
 
     public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, FileMatchSelector matchSelector, final Logger logger)
@@ -42,7 +42,7 @@ public class FileMatcher
         this.matchSelector = matchSelector;
     }
 
-    public IFile match(IFile file) throws DoesNotMatchConfigurationException
+    public MatchingFile match(IFile file) throws DoesNotMatchConfigurationException
     {
         FileNameEvaluation evaluation = evaluateFileName(file);
         SourceFolderPath correspondingSrcFolder = findSrcFolder(file, evaluation);
@@ -60,11 +60,20 @@ public class FileMatcher
             search(scope, rc);
         }
 
-        if(rc.results.size() > 1)
+        if(rc.results.isEmpty())
         {
-            return matchSelector.select(rc.results, null);
+            return MatchingFile.notFound(correspondingSrcFolder, evaluation.getPreferredCorrespondingFileName() + "." + file.getFileExtension());
         }
-        return rc.results.isEmpty() ? null : rc.results.iterator().next();
+        if(rc.results.size() == 1)
+        {
+            return MatchingFile.found(rc.results.iterator().next());
+        }
+        return MatchingFile.found(getMatchSelector().select(rc.results, null));
+    }
+
+    private FileMatchSelector getMatchSelector()
+    {
+        return Config.fileMatchSelector == null ? matchSelector : Config.fileMatchSelector;
     }
 
     private SourceFolderPath findSrcFolder(IFile file, FileNameEvaluation evaluation) throws DoesNotMatchConfigurationException

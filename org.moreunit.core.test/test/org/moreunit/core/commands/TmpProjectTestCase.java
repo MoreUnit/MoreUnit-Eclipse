@@ -33,7 +33,8 @@ import org.eclipse.ui.ide.IDE;
 import org.junit.After;
 import org.junit.Before;
 import org.moreunit.core.MoreUnitCoreTest;
-import org.moreunit.test.context.StringUtils;
+import org.moreunit.core.resources.FolderCreationException;
+import org.moreunit.core.resources.Resources;
 
 @SuppressWarnings("restriction")
 public abstract class TmpProjectTestCase
@@ -58,53 +59,33 @@ public abstract class TmpProjectTestCase
         project.delete(true, true, null);
     }
 
-    protected IFile createFile(String filePath) throws CoreException
+    protected IFile createFile(String filePath) throws CoreException, FolderCreationException
     {
-        IFile file = project.getFile(filePath);
+        IFile file = getFile(filePath);
 
         IPath fullPath = file.getFullPath();
         if(fullPath.segmentCount() > 2)
         {
-            createFolder(project, fullPath.removeFirstSegments(1).removeLastSegments(1));
+            Resources.createFolder(project, fullPath.removeFirstSegments(1).removeLastSegments(1));
         }
 
         file.create(new ByteArrayInputStream("".getBytes()), IResource.NONE, null);
         return file;
     }
 
-    private static IFolder createFolder(IProject project, IPath folderPath) throws CoreException
-    {
-        IFolder srcFolder = project.getFolder(folderPath);
-        if(srcFolder.exists())
-        {
-            return srcFolder;
-        }
-
-        IFolder folder = null;
-
-        for (String part : StringUtils.split(folderPath.toString(), "/"))
-        {
-            if(folder == null)
-            {
-                folder = project.getFolder(part);
-            }
-            else
-            {
-                folder = folder.getFolder(part);
-            }
-
-            if(! folder.exists())
-            {
-                folder.create(false, true, null);
-            }
-        }
-
-        return folder;
-    }
-
     protected IFile getFile(String filePath) throws CoreException
     {
         return project.getFile(filePath);
+    }
+
+    protected IFolder createFolder(String folderPath) throws FolderCreationException
+    {
+        return Resources.createFolder(getFolder(folderPath)).get();
+    }
+
+    protected IFolder getFolder(String folderPath)
+    {
+        return project.getFolder(folderPath);
     }
 
     protected static void openEditor(IFile sourceFile) throws PartInitException
@@ -119,7 +100,12 @@ public abstract class TmpProjectTestCase
 
     protected static IFile getFileInActiveEditor()
     {
-        return (IFile) getActiveEditor().getEditorInput().getAdapter(IFile.class);
+        IEditorPart editor = getActiveEditor();
+        if(editor == null)
+        {
+            return null;
+        }
+        return (IFile) editor.getEditorInput().getAdapter(IFile.class);
     }
 
     protected static IEditorPart getActiveEditor()

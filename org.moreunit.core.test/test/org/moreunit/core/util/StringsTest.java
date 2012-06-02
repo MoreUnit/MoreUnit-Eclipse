@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.moreunit.core.util.Strings;
 
 public class StringsTest
 {
@@ -70,5 +69,17 @@ public class StringsTest
         assertThat(Strings.countOccurrences("bl_ah", "_")).isEqualTo(1);
         assertThat(Strings.countOccurrences("--bla-h-", "-")).isEqualTo(4);
         assertThat(Strings.countOccurrences("bla<>h<>", "<>")).isEqualTo(2);
+    }
+
+    @Test
+    public void split_should_ignore_blank_parts() throws Exception
+    {
+        assertThat(Strings.split(",a4,,b,   ,cD, ", ",")).isEqualTo(new String[] { "a4", "b", "cD" });
+    }
+
+    @Test
+    public void split_should_trim_parts() throws Exception
+    {
+        assertThat(Strings.split("  aa ; b;c  ", ";")).isEqualTo(new String[] { "aa", "b", "c" });
     }
 }

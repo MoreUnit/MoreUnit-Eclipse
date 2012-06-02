@@ -22,6 +22,8 @@ Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test",
  org.moreunit.core.languages;x-friends:="org.moreunit.core.test",
  org.moreunit.core.matching;x-friends:="org.moreunit.core.test",
  org.moreunit.core.preferences;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.resources;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.ui;x-friends:="org.moreunit.core.test",
  org.moreunit.core.util;
   x-friends:="org.moreunit,
    org.moreunit.core.test,
