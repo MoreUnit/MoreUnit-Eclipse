@@ -51,7 +51,7 @@ public class JumpActionHandler extends AbstractHandler
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         IFile selectedFile = getSelectedFile(event);
-        if(selectedFile == null)
+        if(selectedFile == null || selectedFile.getFileExtension() == null)
         {
             return null;
         }

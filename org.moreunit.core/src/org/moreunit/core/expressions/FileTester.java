@@ -15,11 +15,15 @@ public class FileTester extends PropertyTester
             return false;
         }
 
-        IFile file = (IFile) receiver;
+        String ext = ((IFile) receiver).getFileExtension();
+        if(ext == null)
+        {
+            return false;
+        }
 
         if(HAS_DEFAULT_SUPPORT.equals(method))
         {
-            return !MoreUnitCore.get().getLanguageExtensionManager().extensionExistsForLanguage(file.getFileExtension().toLowerCase()) || "false".equals(expectedValue);
+            return ! MoreUnitCore.get().getLanguageExtensionManager().extensionExistsForLanguage(ext.toLowerCase()) || "false".equals(expectedValue);
         }
 
         return false;
