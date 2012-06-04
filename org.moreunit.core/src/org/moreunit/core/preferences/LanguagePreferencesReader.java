@@ -2,9 +2,6 @@ package org.moreunit.core.preferences;
 
 import static org.moreunit.core.preferences.Preferences.orDefault;
 
-import org.moreunit.core.matching.CamelCaseNameTokenizer;
-import org.moreunit.core.matching.NameTokenizer;
-import org.moreunit.core.matching.SeparatorNameTokenizer;
 import org.moreunit.core.matching.TestFileNamePattern;
 import org.moreunit.core.matching.TestFolderPathPattern;
 
@@ -32,17 +29,7 @@ public class LanguagePreferencesReader extends LanguagePreferences
 
     public TestFileNamePattern getTestFileNamePattern()
     {
-        String separator = getFileWordSeparator();
-        final NameTokenizer tokenizer;
-        if(separator.length() == 0)
-        {
-            tokenizer = new CamelCaseNameTokenizer();
-        }
-        else
-        {
-            tokenizer = new SeparatorNameTokenizer(separator);
-        }
-        return new TestFileNamePattern(getTestFileNameTemplate(), tokenizer);
+        return new TestFileNamePattern(getTestFileNameTemplate(), getFileWordSeparator());
     }
 
     @Override

@@ -2,12 +2,10 @@ package org.moreunit.core.preferences;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
 
@@ -24,20 +22,18 @@ public class GenericPreferencePage extends PreferencePageBase
     }
 
     @Override
-    protected void doCreateContent(Composite contentComposite)
+    protected void doCreateContent(Composite parent)
     {
-        createBaseContents(contentComposite);
-        createFields(contentComposite);
+        createFields(parent);
+        placeHolder(parent, 2);
+        createBaseContents(parent);
     }
 
-    private void createFields(Composite composite)
+    private void createFields(Composite parent)
     {
-        // place holder
-        new Label(composite, SWT.NONE);
-
-        Button button = new Button(composite, SWT.NONE);
+        Button button = new Button(parent, SWT.NONE);
         button.setText("Delete Configuration");
-        button.addSelectionListener(new SelectionListener()
+        button.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
@@ -46,10 +42,8 @@ public class GenericPreferencePage extends PreferencePageBase
                     languageRepository.remove(lang);
                 }
             }
-
-            public void widgetDefaultSelected(SelectionEvent e)
-            {
-            }
         });
+
+        placeHolder(parent, 1);
     }
 }

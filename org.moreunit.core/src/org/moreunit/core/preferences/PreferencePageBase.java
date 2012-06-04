@@ -2,9 +2,6 @@ package org.moreunit.core.preferences;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -37,17 +34,11 @@ abstract class PreferencePageBase extends PreferencePage implements IWorkbenchPr
     {
         initializeDialogUnits(parent);
 
-        Composite contentComposite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = 0;
-        layout.marginRight = 10;
-        layout.numColumns = 2;
-        contentComposite.setLayout(layout);
-        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        delegate.createContainer(parent);
 
-        doCreateContent(contentComposite);
+        doCreateContent(delegate.getBody());
 
-        Dialog.applyDialogFont(contentComposite);
+        Dialog.applyDialogFont(parent);
 
         return parent;
     }
@@ -56,12 +47,12 @@ abstract class PreferencePageBase extends PreferencePage implements IWorkbenchPr
 
     protected void createBaseContents(Composite parent)
     {
-        delegate.createContents(parent);
+        delegate.createContents();
     }
 
-    protected final void placeHolder(Composite parent)
+    protected final void placeHolder(Composite parent, int numColumns)
     {
-        delegate.placeHolder(parent);
+        delegate.placeHolder(parent, numColumns);
     }
 
     @Override

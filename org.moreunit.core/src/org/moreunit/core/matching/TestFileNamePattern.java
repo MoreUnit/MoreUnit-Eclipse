@@ -3,6 +3,7 @@ package org.moreunit.core.matching;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
+import static java.util.Collections.unmodifiableList;
 import static java.util.regex.Pattern.quote;
 
 import java.util.ArrayList;
@@ -105,6 +106,23 @@ public class TestFileNamePattern
         String finalPatternStr = patternString.replace(SRC_FILE_VARIABLE, ".*");
         groups = findGroups(finalPatternStr);
         patterns = createPatterns(finalPatternStr);
+    }
+
+    public TestFileNamePattern(String template, String separator)
+    {
+        this(template, createTokenizer(separator));
+    }
+
+    private static NameTokenizer createTokenizer(String separator)
+    {
+        if(separator.length() == 0)
+        {
+            return new CamelCaseNameTokenizer();
+        }
+        else
+        {
+            return new SeparatorNameTokenizer(separator);
+        }
     }
 
     public static boolean isValid(String template, String separator)
@@ -285,19 +303,24 @@ public class TestFileNamePattern
         return otherFileNames;
     }
 
-    private static class Group
+    public String getSeparator()
     {
-        final int start;
-        final int end;
-        final String[] possibleParts;
+        return separator;
+    }
 
-        Group(String pattern, int start, int end)
+    public static class Group
+    {
+        public final int start;
+        public final int end;
+        public final List<String> possibleParts;
+
+        private Group(String pattern, int start, int end)
         {
             this.start = start;
             this.end = end;
 
             String group = pattern.substring(start + 1, end);
-            possibleParts = group.split("\\|");
+            possibleParts = unmodifiableList(asList(group.split("\\|")));
         }
     }
 }

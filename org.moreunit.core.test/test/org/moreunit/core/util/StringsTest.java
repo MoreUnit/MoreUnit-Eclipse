@@ -82,4 +82,23 @@ public class StringsTest
     {
         assertThat(Strings.split("  aa ; b;c  ", ";")).isEqualTo(new String[] { "aa", "b", "c" });
     }
+
+    @Test
+    public void ucFirst_should_uppercase_first_char() throws Exception
+    {
+        assertThat(Strings.ucFirst("blah")).isEqualTo("Blah");
+    }
+
+    @Test
+    public void ucFirst_should_conserve_case_of_other_chars() throws Exception
+    {
+        assertThat(Strings.ucFirst("bLaH")).isEqualTo("BLaH");
+    }
+
+    @Test
+    public void ucFirst_should_ignore_empty_string() throws Exception
+    {
+        assertThat(Strings.ucFirst(null)).isEqualTo(null);
+        assertThat(Strings.ucFirst("")).isEqualTo("");
+    }
 }

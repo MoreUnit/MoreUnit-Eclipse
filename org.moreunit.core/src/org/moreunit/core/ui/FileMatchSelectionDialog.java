@@ -9,13 +9,13 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -67,27 +67,17 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         treeViewer = createTreeViewer(parent);
 
         final Tree tree = treeViewer.getTree();
-        tree.addKeyListener(new KeyListener()
+        tree.addKeyListener(new KeyAdapter()
         {
             public void keyPressed(KeyEvent e)
             {
                 if(e.character == SWT.ESC)
                     close();
             }
-
-            public void keyReleased(KeyEvent e)
-            {
-                // do nothing
-            }
         });
 
-        tree.addSelectionListener(new SelectionListener()
+        tree.addSelectionListener(new SelectionAdapter()
         {
-            public void widgetSelected(SelectionEvent e)
-            {
-                // do nothing
-            }
-
             public void widgetDefaultSelected(SelectionEvent e)
             {
                 handleElementSelected();

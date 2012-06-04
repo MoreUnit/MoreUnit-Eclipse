@@ -64,4 +64,13 @@ public class Strings
         }
         return parts.toArray(new String[parts.size()]);
     }
+
+    public static String ucFirst(String str)
+    {
+        if(isEmpty(str))
+        {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
 }

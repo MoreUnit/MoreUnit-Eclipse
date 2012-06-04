@@ -3,10 +3,9 @@ package org.moreunit.core.preferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -46,16 +45,13 @@ public class GenericPropertyPage extends PropertyPage
 
         initializeDialogUnits(parent);
 
-        Composite contentComposite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        contentComposite.setLayout(layout);
-        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        delegate.createContainer(parent);
 
-        createCheckboxContent(contentComposite);
+        createCheckboxContent(delegate.getBody());
 
-        delegate.createContents(contentComposite);
+        delegate.createContents();
 
-        Dialog.applyDialogFont(contentComposite);
+        Dialog.applyDialogFont(parent);
 
         if(prefs.isActive())
         {
@@ -74,12 +70,8 @@ public class GenericPropertyPage extends PropertyPage
         projectSpecificSettingsCheckbox = new Button(parent, SWT.CHECK);
         projectSpecificSettingsCheckbox.setText("Use project specific settings");
 
-        projectSpecificSettingsCheckbox.addSelectionListener(new SelectionListener()
+        projectSpecificSettingsCheckbox.addSelectionListener(new SelectionAdapter()
         {
-            public void widgetDefaultSelected(SelectionEvent e)
-            {
-            }
-
             public void widgetSelected(SelectionEvent e)
             {
                 boolean checked = projectSpecificSettingsCheckbox.getSelection();
