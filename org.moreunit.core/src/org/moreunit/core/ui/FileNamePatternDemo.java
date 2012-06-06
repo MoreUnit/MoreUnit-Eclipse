@@ -25,7 +25,6 @@ public abstract class FileNamePatternDemo
     private static final List<String> WORD_POOL = asList("foo", "bar");
 
     private Text inputField;
-    private TestFileNamePattern pattern;
 
     public void createContents(Composite parent)
     {
@@ -59,12 +58,13 @@ public abstract class FileNamePatternDemo
         {
             public void widgetSelected(SelectionEvent e)
             {
-                if(pattern == null)
-                {
-                    patternChanged();
-                }
+                TestFileNamePattern pattern = getPattern();
+                String fileName = inputField.getText().trim();
 
-                String fileName = inputField.getText();
+                if(fileName.length() == 0)
+                {
+                    inputField.setText(generateSourceFileName(pattern));
+                }
 
                 FileNameEvaluation evaluation = pattern.evaluate(fileName);
 
@@ -113,7 +113,6 @@ public abstract class FileNamePatternDemo
 
     public void patternChanged()
     {
-        pattern = getPattern();
-        inputField.setText(generateSourceFileName(pattern));
+        inputField.setText(generateSourceFileName(getPattern()));
     }
 }
