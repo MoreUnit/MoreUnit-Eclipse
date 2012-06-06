@@ -31,23 +31,20 @@ public class MockingTemplate implements Comparable<MockingTemplate>
         // used by XML unmarshaller
     }
 
-    /**
-     * For testing only.
-     */
+    /** For testing only. */
     public MockingTemplate(String id)
     {
         this.id = id;
     }
 
-    /**
-     * For testing only.
-     */
+    /** For testing only. */
     public MockingTemplate(String id, String categoryId)
     {
         this.id = id;
         this.categoryId = categoryId;
     }
 
+    /** For testing only. */
     public MockingTemplate(String id, String categoryId, String name, List<CodeTemplate> codeTemplates)
     {
         this.id = id;

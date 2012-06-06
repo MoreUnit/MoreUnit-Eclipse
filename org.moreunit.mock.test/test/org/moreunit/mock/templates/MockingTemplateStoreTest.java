@@ -3,6 +3,7 @@ package org.moreunit.mock.templates;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ import org.junit.Test;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.MockingTemplates;
-import org.moreunit.mock.templates.MockingTemplateStore;
+import org.moreunit.mock.templates.MockingTemplateStore.TemplateAlreadyDefinedException;
 
 public class MockingTemplateStoreTest
 {
@@ -102,14 +103,46 @@ public class MockingTemplateStoreTest
     @Test
     public void should_retrieve_templates_by_category() throws Exception
     {
+        // given
         MockingTemplate template2 = new MockingTemplate("template2", "category2");
         MockingTemplate template3 = new MockingTemplate("template3", "category1");
 
         // when
-        templateStore.store(new MockingTemplates(asList(category1, category2), asList(template2, template3)));
+        templateStore.store(new MockingTemplates(asList(category2), asList(template2, template3)));
 
         // then
         assertThat(templateStore.getTemplates(category1)).isEqualTo(newHashSet(template1, template3));
         assertThat(templateStore.getTemplates(category2)).isEqualTo(newHashSet(template2));
+    }
+
+    @Test
+    public void should_not_override_categories() throws Exception
+    {
+        // given
+        Category category1bis = new Category("category1", "New name for category 1");
+
+        // when
+        templateStore.store(new MockingTemplates(asList(category1bis), new ArrayList<MockingTemplate>()));
+
+        // then
+        assertThat(templateStore.getCategory("category1").name()).isEqualTo("Category 1");
+    }
+
+    @Test
+    public void should_reject_template_which_already_exists() throws Exception
+    {
+        MockingTemplate template1bis = new MockingTemplate("template1", "category1");
+
+        try
+        {
+            // when
+            templateStore.store(new MockingTemplates(new ArrayList<Category>(), asList(template1bis)));
+            fail("expected TemplateAlreadyDefinedException");
+        }
+        catch (TemplateAlreadyDefinedException e)
+        {
+            // then
+            assertThat(e).hasMessage(template1bis.id());
+        }
     }
 }

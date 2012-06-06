@@ -1,15 +1,11 @@
 package org.moreunit.mock;
 
-import java.io.InputStream;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.moreunit.core.util.IOUtils;
 import org.moreunit.mock.log.Logger;
-import org.moreunit.mock.model.MockingTemplates;
+import org.moreunit.mock.templates.MockingTemplateLoader;
 import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.templates.XmlTemplateDefinitionReader;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Guice;
@@ -24,14 +20,11 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
 {
     public static final String PLUGIN_ID = "org.moreunit.mock"; //$NON-NLS-1$
 
-    static final String TEMPLATE_DIRECTORY = "/templates/";
-
     private static MoreUnitMockPlugin plugin;
 
     private Injector injector;
     private Logger logger;
-    private PluginResourceLoader pluginResourceLoader;
-    private XmlTemplateDefinitionReader templateDefinitionReader;
+    private MockingTemplateLoader templateLoader;
     private MockingTemplateStore mockingTemplateStore;
 
     public static MoreUnitMockPlugin getDefault()
@@ -57,7 +50,7 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
         BundleContext bundleContext = getBundle().getBundleContext();
         Guice.createInjector(osgiModule(bundleContext, eclipseRegistry()), module).injectMembers(this);
 
-        loadDefaultMockingTemplates();
+        templateLoader.loadTemplates();
     }
 
     private void log(String message)
@@ -73,56 +66,12 @@ public class MoreUnitMockPlugin extends AbstractUIPlugin
     }
 
     @Inject
-    void initDependencies(Injector injector, Logger logger, PluginResourceLoader pluginResourceLoader, XmlTemplateDefinitionReader templateDefinitionReader, MockingTemplateStore templateStore)
+    void initDependencies(Injector injector, Logger logger, MockingTemplateLoader templateLoader, MockingTemplateStore templateStore)
     {
         this.injector = injector;
         this.logger = logger;
-        this.pluginResourceLoader = pluginResourceLoader;
-        this.templateDefinitionReader = templateDefinitionReader;
+        this.templateLoader = templateLoader;
         this.mockingTemplateStore = templateStore;
-    }
-
-    void loadDefaultMockingTemplates()
-    {
-        if(logger.debugEnabled())
-        {
-            logger.debug("Loading default templates...");
-        }
-
-        // TODO Nicolas: detect available files
-        for (String templateFile : new String[] { "mockito.xml", "easymock.xml" })
-        {
-            loadTemplate(templateFile);
-        }
-
-        if(logger.debugEnabled())
-        {
-            logger.debug("Default templates loaded...");
-        }
-    }
-
-    private void loadTemplate(final String templateFile)
-    {
-        InputStream definitionStream = pluginResourceLoader.getResourceAsStream(TEMPLATE_DIRECTORY + templateFile);
-        if(definitionStream == null)
-        {
-            logger.error("Resource not found: " + templateFile);
-            return;
-        }
-
-        try
-        {
-            MockingTemplates templates = templateDefinitionReader.read(definitionStream);
-            mockingTemplateStore.store(templates);
-        }
-        catch (Exception e)
-        {
-            logger.error("Could not load default templates", e);
-        }
-        finally
-        {
-            IOUtils.closeQuietly(definitionStream);
-        }
     }
 
     @Override

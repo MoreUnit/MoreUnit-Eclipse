@@ -1,6 +1,7 @@
 package org.moreunit.annotation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
 
-    private final List<MoreUnitAnnotation> annotations = new ArrayList<MoreUnitAnnotation>();
+    private final List<MoreUnitAnnotation> annotations = Collections.synchronizedList(new ArrayList<MoreUnitAnnotation>());
     private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
     private final IDocument document;
     private final ITextEditor textEditor;
@@ -202,7 +203,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         updateJob.schedule();
     }
 
-    private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
+    private synchronized void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
         // TODO Nicolas: only uncomment the following for testing, since performances are far too bad for production.
         // I let it here for now, just for it to be checked in once into CVS, and I will remove it then unless I can improve it.
