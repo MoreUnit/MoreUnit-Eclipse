@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.moreunit.mock.MoreUnitMockPlugin;
@@ -42,6 +43,24 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 
         templateStyleSelector.createContents(contentComposite, null);
 
+        placeHolder(contentComposite);
+
+        Label lbl = new Label(contentComposite, SWT.NONE);
+        lbl.setText("You may add custom templates by placing them in the following folder:");
+
+        lbl = new Label(contentComposite, SWT.NONE);
+        lbl.setText(templateLoader.getTemplatesLocation());
+        GridData data = new GridData();
+        data.horizontalIndent = 15;
+        lbl.setLayoutData(data);
+
+        placeHolder(contentComposite);
+
+        lbl = new Label(contentComposite, SWT.NONE);
+        lbl.setText("Please refer to MoreUnit's documentation for more information.");
+
+        placeHolder(contentComposite);
+
         Button reloadTemplatesBtn = new Button(contentComposite, SWT.NONE);
         reloadTemplatesBtn.setText("Reload templates");
         reloadTemplatesBtn.addSelectionListener(new SelectionAdapter()
@@ -54,6 +73,11 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
         });
 
         return parent;
+    }
+
+    private void placeHolder(Composite parent)
+    {
+        new Label(parent, SWT.NONE);
     }
 
     @Override

@@ -76,4 +76,9 @@ public class PluginResourceLoader
         }
         return true;
     }
+
+    public String getResourcesLocation()
+    {
+        return plugin.getBundle().getLocation();
+    }
 }
