@@ -11,21 +11,22 @@ import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
+import org.moreunit.util.FeatureDetector;
 
 public class NewClassWizard extends NewClassyWizard
 {
     private final IJavaProject projectUnderTest;
     private final IPackageFragmentRoot mainSrcFolder;
-    
+
     private NewClassWizardPage newClassWizardPage;
-    
+
     public NewClassWizard(IType testCase)
     {
         super(testCase);
         projectUnderTest = Preferences.getInstance().getMainProject(testCase.getJavaProject());
         mainSrcFolder = getSourceFolderForCut(testCase);
     }
-    
+
     private IPackageFragmentRoot getSourceFolderForCut(IType testCase)
     {
         String key = getPackageFragmentRootKey();
@@ -35,7 +36,7 @@ public class NewClassWizard extends NewClassyWizard
         {
             return fragment;
         }
-        
+
         IPackageFragmentRoot testSrcFolder = (IPackageFragmentRoot) testCase.getCompilationUnit().getParent().getParent();
         return Preferences.getInstance().getMainSourceFolder(projectUnderTest, testSrcFolder);
     }
@@ -43,7 +44,15 @@ public class NewClassWizard extends NewClassyWizard
     @Override
     public void addPages()
     {
-        this.newClassWizardPage = new NewClassWizardPage();
+        if("groovy".equals(getType().getPath().getFileExtension()))
+        {
+            this.newClassWizardPage = new FeatureDetector().createNewGroovyClassWizardPageIfPossible();
+        }
+
+        if(this.newClassWizardPage == null)
+        {
+            this.newClassWizardPage = new NewClassWizardPage();
+        }
         this.newClassWizardPage.setWizard(this);
         this.newClassWizardPage.init(new StructuredSelection(getType()));
         this.newClassWizardPage.setTypeName(getPotentialTypeName(), true);

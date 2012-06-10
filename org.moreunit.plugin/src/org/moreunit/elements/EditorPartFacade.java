@@ -42,9 +42,9 @@ public class EditorPartFacade
         return file;
     }
 
-    public boolean isJavaFile()
+    public boolean isJavaLikeFile()
     {
-        return file != null && file.getName().endsWith(MoreUnitContants.JAVA_FILE_EXTENSION);
+        return file != null && MoreUnitContants.SUPPORTED_EXTENSIONS.contains(file.getFileExtension());
     }
 
     public ICompilationUnit getCompilationUnit()

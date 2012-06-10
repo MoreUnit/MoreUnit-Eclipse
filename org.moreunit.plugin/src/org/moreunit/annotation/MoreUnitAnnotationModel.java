@@ -168,7 +168,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                 try
                 {
                     EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-                    if(! editorPartFacade.isJavaFile())
+                    if(! editorPartFacade.isJavaLikeFile())
                     {
                         return Status.OK_STATUS;
                     }

@@ -21,7 +21,6 @@ import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.MoreUnitContants;
 import org.moreunit.util.StringConstants;
 
 /**
@@ -74,7 +73,8 @@ public class RenameClassParticipant extends RenameParticipant
                 renameJavaElementDescriptor.setNewName(getNewTestName(typeToRename));
                 RefactoringStatus refactoringStatus = new RefactoringStatus();
                 Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
-                //RefactoringStatus checkAllConditions = renameRefactoring.checkAllConditions(pm);
+                // RefactoringStatus checkAllConditions =
+                // renameRefactoring.checkAllConditions(pm);
                 renameRefactoring.checkAllConditions(pm);
                 changes.add(renameRefactoring.createChange(pm));
             }
@@ -100,7 +100,7 @@ public class RenameClassParticipant extends RenameParticipant
     private String getNewTestName(IType typeToRename)
     {
         String newName = getArguments().getNewName();
-        newName = newName.replaceFirst(MoreUnitContants.JAVA_FILE_EXTENSION, StringConstants.EMPTY_STRING);
+        newName = newName.replaceFirst("\\.[^\\.]*$", StringConstants.EMPTY_STRING);
         return typeToRename.getElementName().replaceFirst(compilationUnit.findPrimaryType().getElementName(), newName);
     }
 

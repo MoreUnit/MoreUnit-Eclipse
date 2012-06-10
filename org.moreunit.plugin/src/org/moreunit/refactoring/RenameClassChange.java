@@ -9,9 +9,9 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
+// TODO Vera: it looks like this class is never used, should we remove it?
 public class RenameClassChange extends Change
 {
-
     private final IType typeToRename;
     private final String newName;
 
@@ -67,9 +67,9 @@ public class RenameClassChange extends Change
         {
             return null;
         }
+        String ext = typeToRename.getPath().getFileExtension();
         IPackageFragment packge = (IPackageFragment) typeToRename.getParent().getParent();
-        IType newType = packge.getCompilationUnit(newName + ".java").getType(newName);
-        return newType;
+        return packge.getCompilationUnit(newName + "." + ext).getType(newName);
     }
 
 }
