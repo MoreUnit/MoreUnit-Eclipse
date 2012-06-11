@@ -69,15 +69,27 @@ public class CodeTemplate
 
         for (InclusionCondition condition : inclusionConditions)
         {
-            if(condition instanceof ExcludeIf && condition.type() == ConditionType.INJECTION_TYPE
-               && context.usesInjectionType(condition.valueAs(InjectionType.class)))
+            if(condition instanceof ExcludeIf)
             {
-                return false;
+                if(condition.type() == ConditionType.INJECTION_TYPE && context.usesInjectionType(condition.valueAs(InjectionType.class)))
+                {
+                    return false;
+                }
+                if(condition.type() == ConditionType.TEST_TYPE && context.isTestType(condition.value()))
+                {
+                    return false;
+                }
             }
-            if(condition instanceof IncludeIf && condition.type() == ConditionType.INJECTION_TYPE
-               && ! context.usesInjectionType(condition.valueAs(InjectionType.class)))
+            else
             {
-                return false;
+                if(condition.type() == ConditionType.INJECTION_TYPE && ! context.usesInjectionType(condition.valueAs(InjectionType.class)))
+                {
+                    return false;
+                }
+                if(condition.type() == ConditionType.TEST_TYPE && ! context.isTestType(condition.value()))
+                {
+                    return false;
+                }
             }
         }
 

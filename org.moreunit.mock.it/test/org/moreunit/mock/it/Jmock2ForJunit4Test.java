@@ -8,10 +8,10 @@ import org.moreunit.test.context.TestType;
         testSrc = "SomeConcept.test.java.txt",
         preferences = @Preferences(testType = TestType.JUNIT4,
                 testClassSuffixes = "Test"))
-public class MockitoPost1_9Test extends MockingTestCase
+public class Jmock2ForJunit4Test extends MockingTestCase
 {
-    public MockitoPost1_9Test()
+    public Jmock2ForJunit4Test()
     {
-        super("Mockito_post_1.9", "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9");
+        super("Jmock2_junit4", "org.moreunit.mock.jmock2ForJUnit4");
     }
 }

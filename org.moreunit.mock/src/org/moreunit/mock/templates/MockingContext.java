@@ -20,6 +20,8 @@ import org.moreunit.mock.templates.resolvers.DependencyPatternsResolver;
 import org.moreunit.mock.templates.resolvers.FieldInjectionPatternResolver;
 import org.moreunit.mock.templates.resolvers.ObjectUnderTestPatternsResolver;
 import org.moreunit.mock.templates.resolvers.SetterInjectionPatternResolver;
+import org.moreunit.preferences.PreferenceConstants;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 import static java.util.Arrays.asList;
 
@@ -28,28 +30,34 @@ import static java.util.Arrays.asList;
  */
 public class MockingContext
 {
+    static final String BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID = "org.moreunit.mock.beforeInstanceMethodCreation";
+
     public final IType classUnderTest;
     public final ICompilationUnit testCaseCompilationUnit;
     private final List<PatternResolver> patternResolvers;
     private final Dependencies dependencies;
+    private final ProjectPreferences preferences;
     private final Set<InjectionType> injectionTypesUsed = new HashSet<InjectionType>();
 
     private IMethod beforeInstanceMethod;
     private String beforeInstanceMethodName;
 
-    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase) throws MockingTemplateException
+    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, ProjectPreferences preferences) throws MockingTemplateException
     {
-        this(dependencies, classUnderTest, testCase, null);
+        this(dependencies, classUnderTest, testCase, preferences, null);
     }
 
     /**
      * For testing purposes.
+     *
+     * @param preferences
      */
-    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, List<PatternResolver> patternResolvers) throws MockingTemplateException
+    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, ProjectPreferences preferences, List<PatternResolver> patternResolvers) throws MockingTemplateException
     {
         this.classUnderTest = classUnderTest;
         this.testCaseCompilationUnit = testCase;
         this.dependencies = dependencies;
+        this.preferences = preferences;
         this.patternResolvers = createPatternResolversIfNull(patternResolvers);
 
         initialize();
@@ -102,7 +110,15 @@ public class MockingContext
     {
         if(beforeInstanceMethodIsRequired(mockingTemplate))
         {
-            beforeInstanceMethodName = "create" + classUnderTest.getElementName();
+            if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(preferences.getTestType()))
+            {
+                beforeInstanceMethodName = "setUp";
+            }
+            else
+            {
+                beforeInstanceMethodName = "create" + classUnderTest.getElementName();
+            }
+
             beforeInstanceMethod = findBeforeMethod(beforeInstanceMethodName);
 
             if(beforeInstanceMethod == null)
@@ -116,7 +132,7 @@ public class MockingContext
     {
         for (CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
         {
-            if(Part.BEFORE_INSTANCE_METHOD == codeTemplate.part())
+            if(Part.BEFORE_INSTANCE_METHOD == codeTemplate.part() && codeTemplate.isIncluded(this))
             {
                 return true;
             }
@@ -139,9 +155,21 @@ public class MockingContext
     private String createBeforeInstanceMethod(TemplateProcessor templateProcessor, String methodBaseName) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
     {
         String methodName = incrementMethodNameIfRequired(methodBaseName);
-        String beforeMethodSource = "@${beforeAnnotation:newType(org.junit.Before)} public void " + methodName + "() throws Exception {}";
 
-        CodeTemplate template = new CodeTemplate("org.moreunit.mock.beforeInstanceMethodCreation", Part.BEFORE_INSTANCE_METHOD_DEFINITION, beforeMethodSource);
+        String beforeMethodSource;
+        if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(preferences.getTestType()))
+        {
+            beforeMethodSource = "";
+        }
+        else
+        {
+            String annotationClass = PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(preferences.getTestType()) ? "org.testng.Before" : "org.junit.Before";
+            beforeMethodSource = "@${beforeAnnotation:newType(" + annotationClass + ")} ";
+        }
+
+        beforeMethodSource += "public void " + methodName + "() throws Exception {}";
+
+        CodeTemplate template = new CodeTemplate(BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, Part.BEFORE_INSTANCE_METHOD_DEFINITION, beforeMethodSource);
         templateProcessor.applyTemplate(template, this);
 
         return methodName;
@@ -169,6 +197,11 @@ public class MockingContext
         return false;
     }
 
+    String getBeforeInstanceMethodName()
+    {
+        return beforeInstanceMethodName;
+    }
+
     public IMethod beforeInstanceMethod() throws JavaModelException
     {
         if(beforeInstanceMethod == null)
@@ -191,5 +224,10 @@ public class MockingContext
     public boolean usesInjectionType(Enum<InjectionType> injectionType)
     {
         return injectionTypesUsed.contains(injectionType);
+    }
+
+    public boolean isTestType(String testType)
+    {
+        return preferences.getTestType().equals(testType);
     }
 }

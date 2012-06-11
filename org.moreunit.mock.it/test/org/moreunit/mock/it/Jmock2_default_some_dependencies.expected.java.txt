@@ -1,0 +1,29 @@
+package te.st;
+
+import java.util.List;
+
+import org.jmock.Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
+
+import te.st.SomeConcept.Thing;
+
+public class SomeConceptTest {
+
+	private final Mockery mockery = new Mockery() { {
+		setImposteriser(ClassImposteriser.INSTANCE);
+	} };
+
+	private Callable<Integer> integerProvider = mockery.mock(Callable.class);
+	
+	private Runnable runnable = mockery.mock(Runnable.class);
+	
+	private List<Thing> someListOfThings = mockery.mock(List.class);
+	
+	private SomeConcept someConcept;
+	
+	public void setUp() throws Exception {
+		someConcept = new SomeConcept(integerProvider);
+		someConcept.setSomeListOfThings(someListOfThings);
+		someConcept.runnable = runnable;
+	}
+}

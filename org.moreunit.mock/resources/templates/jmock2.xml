@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <mocking-templates version="1.0">
-    <category id="org.moreunit.mock.mockito" name="Mockito"/>
+    <category id="org.moreunit.mock.jmock2" name="jMock 2"/>
+    <!-- TODO For JUnit 3: support changing test superclass (to use org.jmock.integration.junit3.MockObjectTestCase in our case) -->
     <mocking-template
-        id="org.moreunit.mock.mockitoWithoutAnnotations"
-        category="org.moreunit.mock.mockito"
-        name="Without annotations">
+        id="org.moreunit.mock.jmock2Default"
+        category="org.moreunit.mock.jmock2"
+        name="Default">
+        <code-template id="mockeryDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+				private final ${mockeryType:newType(org.jmock.Mockery)} ${mockery:newName(mockeryType)} = new ${mockeryType:newType(org.jmock.Mockery)}() {{
+					setImposteriser(${clsimposter:newType(org.jmock.lib.legacy.ClassImposteriser)}.INSTANCE);
+				}};
+            ]]></pattern>
+        </code-template>
         <code-template id="dependencyDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             
-                private ${dependencyType} ${dependency} = ${mockMethod:importStatic(org.mockito.Mockito.mock)}mock(${dependencyType}.class);
+				private ${dependencyType} ${dependency} = ${mockery}.mock(${dependencyType}.class);
             ]]></pattern>
         </code-template>
         <code-template id="objectUnderTestDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             
-                private ${objectUnderTestType} ${objectUnderTest};
+				private ${objectUnderTestType} ${objectUnderTest};
             ]]></pattern>
         </code-template>
         <code-template id="objectUnderTestCreation" part="before-instance-method">
@@ -36,28 +45,32 @@
         </code-template>
     </mocking-template>
     <mocking-template
-        id="org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner"
-        category="org.moreunit.mock.mockito"
-        name="With annotations (Mockito &lt; 1.9)">
-        <code-template id="mockitoRunnerDeclaration" part="test-class-annotation">
-        	<include-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)]]></pattern>
+        id="org.moreunit.mock.jmock2ForJUnit4"
+        category="org.moreunit.mock.jmock2"
+        name="For JUnit 4">
+        <code-template id="jmockRunnerDeclaration" part="test-class-annotation">
+            <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.jmock.integration.junit4.JMock)}.class)
+            ]]></pattern>
+        </code-template>
+        <code-template id="mockeryDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+				private final ${mockeryType:newType(org.jmock.Mockery)} ${mockery:newName(mockeryType)} = new ${mockeryImpl:newType(org.jmock.integration.junit4.JUnit4Mockery)}() {{
+					setImposteriser(${clsimposter:newType(org.jmock.lib.legacy.ClassImposteriser)}.INSTANCE);
+				}};
+            ]]></pattern>
         </code-template>
         <code-template id="dependencyDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             
-                @${mockAnnotation:newType(org.mockito.Mock)} private ${dependencyType} ${dependency};
+				private ${dependencyType} ${dependency} = ${mockery}.mock(${dependencyType}.class);
             ]]></pattern>
         </code-template>
         <code-template id="objectUnderTestDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             
-                private ${objectUnderTestType} ${objectUnderTest};
+				private ${objectUnderTestType} ${objectUnderTest};
             ]]></pattern>
-        </code-template>
-        <code-template id="mockInitialization" part="before-instance-method">
-        	<exclude-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.init(this);]]></pattern>
         </code-template>
         <code-template id="objectUnderTestCreation" part="before-instance-method">
             <exclude-if condition="injection-type" value="constructor"/>
@@ -74,31 +87,6 @@
         <code-template id="fieldInjection" part="before-instance-method">
             <include-if condition="injection-type" value="field"/>
             <pattern><![CDATA[${:assignDependency(objectUnderTest, dependency)};]]></pattern>
-        </code-template>
-    </mocking-template>
-    <mocking-template
-        id="org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9"
-        category="org.moreunit.mock.mockito"
-        name="With annotations (Mockito &gt;= 1.9)">
-        <code-template id="mockitoRunnerDeclaration" part="test-class-annotation">
-        	<include-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)]]></pattern>
-        </code-template>
-        <code-template id="dependencyDeclaration" part="test-class-fields">
-            <pattern><![CDATA[
-            
-                @${mockAnnotation:newType(org.mockito.Mock)} private ${dependencyType} ${dependency};
-            ]]></pattern>
-        </code-template>
-        <code-template id="objectUnderTestDeclaration" part="test-class-fields">
-            <pattern><![CDATA[
-            
-                @${injectMocksAnnotation:newType(org.mockito.InjectMocks)} private ${objectUnderTestType} ${objectUnderTest};
-            ]]></pattern>
-        </code-template>
-        <code-template id="mockInitialization" part="before-instance-method">
-        	<exclude-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.init(this);]]></pattern>
         </code-template>
     </mocking-template>
 </mocking-templates>

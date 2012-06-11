@@ -32,7 +32,7 @@ public class ObjectUnderTestPatternsResolverTest
         when(classUnderTest.getElementName()).thenReturn("SomeThing");
 
         dependencies = new Dependencies(null, null, null);
-        context = new MockingContext(dependencies, classUnderTest, null, new ArrayList<PatternResolver>());
+        context = new MockingContext(dependencies, classUnderTest, null, null, new ArrayList<PatternResolver>());
         resolver = new ObjectUnderTestPatternsResolver(context);
     }
 

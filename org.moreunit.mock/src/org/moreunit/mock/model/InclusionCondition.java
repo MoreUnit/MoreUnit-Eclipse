@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public abstract class InclusionCondition
 {
-    @XmlAttribute(name="condition", required = true)
+    @XmlAttribute(name = "condition", required = true)
     private ConditionType type;
 
     @XmlAttribute(required = true)
@@ -24,6 +24,11 @@ public abstract class InclusionCondition
     public ConditionType type()
     {
         return type;
+    }
+
+    public String value()
+    {
+        return value;
     }
 
     public <E extends Enum<E>> Enum<E> valueAs(Class< ? extends Enum<E>> enumClass)
