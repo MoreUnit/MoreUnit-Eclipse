@@ -1,6 +1,7 @@
 package org.moreunit.mock.preferences;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +29,8 @@ import com.google.inject.Inject;
 
 public class TemplateStyleSelector implements SelectionListener
 {
+    private static final String[] CATEGORY_PROMPT = new String[] { "Please select a category first..." };
+
     private final Preferences preferences;
     private final MockingTemplateStore templateStore;
     private final Logger logger;
@@ -74,7 +77,7 @@ public class TemplateStyleSelector implements SelectionListener
         categoryCombo.setItems(categoryNames());
 
         templateCombo = createCombo(labelAndFieldComposite);
-        templateCombo.setItems(new String[] { "Please select a category first..." });
+        templateCombo.setItems(CATEGORY_PROMPT);
 
         categoryCombo.addModifyListener(new ModifyListener()
         {
@@ -88,7 +91,7 @@ public class TemplateStyleSelector implements SelectionListener
 
                 Category category = categories.get(categoryIdx);
 
-                if(! category.equals(selectedCategory))
+                if(! category.equals(selectedCategory) || Arrays.equals(templateCombo.getItems(), CATEGORY_PROMPT))
                 {
                     categoryTemplates.clear();
                     categoryTemplates.addAll(templateStore.getTemplates(category));
@@ -134,7 +137,7 @@ public class TemplateStyleSelector implements SelectionListener
         Collections.sort(categories);
 
         categoryCombo.setItems(categoryNames());
-        templateCombo.setItems(new String[] { "Please select a category first..." });
+        templateCombo.setItems(CATEGORY_PROMPT);
 
         if(! categories.isEmpty())
         {

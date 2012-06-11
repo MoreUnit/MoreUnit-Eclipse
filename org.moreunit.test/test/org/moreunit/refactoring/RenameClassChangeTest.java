@@ -1,4 +1,5 @@
 package org.moreunit.refactoring;
+
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -6,6 +7,7 @@ import static org.mockito.Mockito.when;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -35,6 +37,7 @@ public class RenameClassChangeTest
         when(createMock.getElementName()).thenReturn(ELEMENT_NAME_OLD);
         IJavaElement firstParentMock = createFirstParentMockForTypeToRename();
         when(createMock.getParent()).thenReturn(firstParentMock);
+        when(createMock.getPath()).thenReturn(new Path("path/to/ELEMENT_NAME_OLD.java"));
         return createMock;
     }
 

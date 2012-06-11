@@ -10,31 +10,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Text;
-
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
-
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.dialogs.SelectionDialog;
-
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -49,18 +24,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
-
 import org.eclipse.jdt.internal.corext.util.JavaConventionsUtil;
-
-import org.eclipse.jdt.ui.CodeGeneration;
-import org.eclipse.jdt.ui.IJavaElementSearchConstants;
-import org.eclipse.jdt.ui.JavaElementLabels;
-import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
-
-import org.eclipse.jdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
-import org.eclipse.jdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
-
 import org.eclipse.jdt.internal.junit.BasicElementLabels;
 import org.eclipse.jdt.internal.junit.JUnitCorePlugin;
 import org.eclipse.jdt.internal.junit.Messages;
@@ -69,29 +33,58 @@ import org.eclipse.jdt.internal.junit.ui.IJUnitHelpContextIds;
 import org.eclipse.jdt.internal.junit.ui.JUnitPlugin;
 import org.eclipse.jdt.internal.junit.util.JUnitStatus;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
+import org.eclipse.jdt.internal.junit.util.JUnitStubUtility.GenStubSettings;
 import org.eclipse.jdt.internal.junit.util.LayoutUtil;
 import org.eclipse.jdt.internal.junit.util.TestSearchEngine;
-import org.eclipse.jdt.internal.junit.util.JUnitStubUtility.GenStubSettings;
 import org.eclipse.jdt.internal.junit.wizards.MethodStubsSelectionButtonGroup;
 import org.eclipse.jdt.internal.junit.wizards.WizardMessages;
+import org.eclipse.jdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
+import org.eclipse.jdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
+import org.eclipse.jdt.ui.CodeGeneration;
+import org.eclipse.jdt.ui.IJavaElementSearchConstants;
+import org.eclipse.jdt.ui.JavaElementLabels;
+import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.dialogs.SelectionDialog;
+import org.moreunit.elements.LanguageType;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.MoreUnitContants;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
 {
-
-    private final static String PAGE_NAME = "NewTestCaseCreationWizardPage"; //$NON-NLS-1$
+    private static final String GROOVY_TEST_CASE = "groovy.util.GroovyTestCase"; //$NON-NLS-1$
+    private static final String PAGE_NAME = "NewTestCaseCreationWizardPage"; //$NON-NLS-1$
 
     /** Field ID of the class under test field. */
-    public final static String CLASS_UNDER_TEST = PAGE_NAME + ".classundertest"; //$NON-NLS-1$
+    public static final String CLASS_UNDER_TEST = PAGE_NAME + ".classundertest"; //$NON-NLS-1$
 
     /**
      * Field ID of the Junit4 toggle
      * 
      * @since 3.2
      */
-    public final static String JUNIT4TOGGLE = PAGE_NAME + ".junit4toggle"; //$NON-NLS-1$
+    public static final String JUNIT4TOGGLE = PAGE_NAME + ".junit4toggle"; //$NON-NLS-1$
 
     private static final String COMPLIANCE_PAGE_ID = "org.eclipse.jdt.ui.propertyPages.CompliancePreferencePage"; //$NON-NLS-1$
     private static final String BUILD_PATH_PAGE_ID = "org.eclipse.jdt.ui.propertyPages.BuildPathsPropertyPage"; //$NON-NLS-1$
@@ -118,7 +111,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private final static int IDX_TEARDOWN = 3;
     private final static int IDX_CONSTRUCTOR = 4;
 
-    private NewTestCaseWizardPageTwo fPage2;
+    private final NewTestCaseWizardPageTwo fPage2;
     private MethodStubsSelectionButtonGroup fMethodStubsButtons;
 
     private String fClassUnderTestText; // model
@@ -133,7 +126,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     // private Button fJUnit4Toggle;
     private boolean fIsJunit4;
     private IStatus fJunit4Status; // status
-    //private boolean fIsJunit4Enabled;
+    // private boolean fIsJunit4Enabled;
     private Link fLink;
     private Label fImage;
 
@@ -141,16 +134,18 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private Button unit4Toggle;
     private Button testNgToggle;
 
-    private Preferences preferences;
-    private IJavaProject javaProject;
+    private final Preferences preferences;
+    private final IJavaProject javaProject;
+    private final LanguageType langType;
 
-    public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, Preferences preferences, IJavaProject javaProject)
+    public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, Preferences preferences, IJavaProject javaProject, LanguageType langType)
     {
         super(true, PAGE_NAME);
         this.preferences = preferences;
         this.javaProject = javaProject;
 
         fPage2 = page2;
+        this.langType = langType;
 
         setTitle(WizardMessages.NewTestCaseWizardPageOne_title);
         setDescription(WizardMessages.NewTestCaseWizardPageOne_description);
@@ -274,7 +269,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     public void setJUnit4(boolean isJUnit4, boolean isEnabled)
     {
-        //fIsJunit4Enabled = isEnabled;
+        // fIsJunit4Enabled = isEnabled;
         /*
          * if (fJUnit4Toggle != null && !fJUnit4Toggle.isDisposed()) {
          * fJUnit4Toggle.setSelection(isJUnit4);
@@ -307,6 +302,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         if(fIsJunit4)
         {
             setSuperClass("java.lang.Object", false); //$NON-NLS-1$
+        }
+        else if(langType == LanguageType.GROOVY)
+        {
+            setSuperClass(GROOVY_TEST_CASE, true);
         }
         else
         {
@@ -1412,5 +1411,31 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             settings.put(STORE_TEARDOWN_CLASS, fMethodStubsButtons.isSelected(IDX_TEARDOWN_CLASS));
             settings.put(STORE_CONSTRUCTOR, fMethodStubsButtons.isSelected(IDX_CONSTRUCTOR));
         }
+    }
+
+    @Override
+    protected String getCompilationUnitName(String typeName)
+    {
+        if(langType == LanguageType.GROOVY)
+        {
+            return typeName + "." + langType.getExtension();
+        }
+        return super.getCompilationUnitName(typeName);
+    }
+
+    @Override
+    public int getModifiers()
+    {
+        int modifiers = super.getModifiers();
+
+        // Groovy classes do not need public/private/protected modifiers
+        if(langType == LanguageType.GROOVY)
+        {
+            modifiers &= ~ F_PUBLIC;
+            modifiers &= ~ F_PRIVATE;
+            modifiers &= ~ F_PROTECTED;
+        }
+
+        return modifiers;
     }
 }

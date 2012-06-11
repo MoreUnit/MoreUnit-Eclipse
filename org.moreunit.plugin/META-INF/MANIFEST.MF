@@ -48,7 +48,8 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreunit.mock",
   x-friends:="org.moreunit.test,
    org.moreunit.extension,
    org.moreunit.test.dependencies,
-   org.moreunit.swtbot.test";
+   org.moreunit.swtbot.test,
+   org.moreunit.mock";
   uses:="org.eclipse.jface.preference,
    org.eclipse.jdt.core,
    org.eclipse.ui,

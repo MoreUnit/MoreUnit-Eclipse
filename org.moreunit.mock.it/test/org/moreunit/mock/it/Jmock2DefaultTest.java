@@ -6,12 +6,12 @@ import org.moreunit.test.context.TestType;
 
 @Context(mainSrc = "SomeConcept.cut.java.txt",
         testSrc = "SomeConcept.test.java.txt",
-        preferences = @Preferences(testType = TestType.JUNIT4,
+        preferences = @Preferences(testType = TestType.JUNIT3,
                 testClassSuffixes = "Test"))
-public class MockitoPost1_9Test extends MockingTestCase
+public class Jmock2DefaultTest extends MockingTestCase
 {
-    public MockitoPost1_9Test()
+    public Jmock2DefaultTest()
     {
-        super("Mockito_post_1.9", "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9");
+        super("Jmock2_default", "org.moreunit.mock.jmock2Default");
     }
 }

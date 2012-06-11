@@ -1,0 +1,22 @@
+package te.st;
+
+import java.util.List;
+
+import te.st.SomeConcept.Thing;
+
+public class SomeConceptTest {
+
+	private Callable<Integer> integerProvider = mock(Callable.class);
+	
+	private Runnable runnable = mock(Runnable.class);
+	
+	private List<Thing> someListOfThings = mock(List.class);
+	
+	private SomeConcept someConcept;
+	
+	public void setUp() throws Exception {
+		someConcept = new SomeConcept(integerProvider);
+		someConcept.setSomeListOfThings(someListOfThings);
+		someConcept.runnable = runnable;
+	}
+}

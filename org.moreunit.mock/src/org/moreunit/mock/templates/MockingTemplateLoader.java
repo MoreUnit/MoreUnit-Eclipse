@@ -70,4 +70,22 @@ public class MockingTemplateLoader
             logger.error("Could not load template " + template, e);
         }
     }
+
+    public String getTemplatesLocation()
+    {
+        String location = resourceLoader.getResourcesLocation();
+
+        if(location.charAt(location.length() - 1) == '/')
+        {
+            location = location.substring(0, location.length() - 1);
+        }
+
+        int lastColumnIdx = location.lastIndexOf(":");
+        if(lastColumnIdx != - 1)
+        {
+            location = location.substring(lastColumnIdx + 1);
+        }
+
+        return location + TEMPLATE_DIRECTORY;
+    }
 }

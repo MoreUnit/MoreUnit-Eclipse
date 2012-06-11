@@ -11,6 +11,7 @@ import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.core.util.StringConstants;
+import org.moreunit.elements.LanguageType;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.BaseTools;
@@ -40,7 +41,7 @@ public class NewTestCaseWizard extends NewClassyWizard
     public void addPages()
     {
         this.pageTwo = new NewTestCaseWizardPageTwo();
-        this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, project);
+        this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, project, LanguageType.forPath(getType().getPath()));
         this.pageOne.setWizard(this);
         this.pageTwo.setWizard(this);
         this.pageOne.init(new StructuredSelection(getType()));
@@ -127,7 +128,7 @@ public class NewTestCaseWizard extends NewClassyWizard
         IPackageFragment mainPackageFragment = this.pageOne.getPackageFragment();
         String fragmentName = PluginTools.getTestPackageName(mainPackageFragment.getElementName(), preferences, project);
         IPackageFragmentRoot root = Preferences.getInstance().getTestSourceFolder(project, (IPackageFragmentRoot) mainPackageFragment.getParent());
-        
+
         IPackageFragment testPackageFragment = root.getPackageFragment(fragmentName);
         this.pageOne.setPackageFragment(testPackageFragment, true);
         return testPackageFragment;

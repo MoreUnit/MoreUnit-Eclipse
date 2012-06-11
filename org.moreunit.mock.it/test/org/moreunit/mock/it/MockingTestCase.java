@@ -4,13 +4,10 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.junit.Test;
 import org.moreunit.mock.UiTestCase;
 import org.moreunit.mock.actions.MockDependenciesAction;
-import org.moreunit.test.context.Context;
 
 import com.google.inject.Inject;
 
-@Context(mainSrc = "Mockito.cut.java.txt",
-        testSrc = "Mockito.test.java.txt")
-public abstract class MockitoTestCase extends UiTestCase
+public abstract class MockingTestCase extends UiTestCase
 {
     private final String expectationQualifier;
     private final String templateId;
@@ -18,7 +15,7 @@ public abstract class MockitoTestCase extends UiTestCase
     @Inject
     private MockDependenciesAction mockDependenciesAction;
 
-    protected MockitoTestCase(String expectationQualifier, String templateId)
+    protected MockingTestCase(String expectationQualifier, String templateId)
     {
         this.expectationQualifier = expectationQualifier;
         this.templateId = templateId;
@@ -38,7 +35,7 @@ public abstract class MockitoTestCase extends UiTestCase
         mockDependenciesAction.execute(null);
 
         // then
-        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn("Mockito_" + expectationQualifier + "_all_dependencies.expected.java.txt");
+        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn(expectationQualifier + "_all_dependencies.expected.java.txt");
     }
 
     @Test
@@ -55,7 +52,7 @@ public abstract class MockitoTestCase extends UiTestCase
         mockDependenciesAction.execute(null);
 
         // then
-        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn("Mockito_" + expectationQualifier + "_all_dependencies.expected.java.txt");
+        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn(expectationQualifier + "_all_dependencies.expected.java.txt");
     }
 
     @Test
@@ -72,6 +69,6 @@ public abstract class MockitoTestCase extends UiTestCase
         mockDependenciesAction.execute(null);
 
         // then
-        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn("Mockito_" + expectationQualifier + "_some_dependencies.expected.java.txt");
+        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn(expectationQualifier + "_some_dependencies.expected.java.txt");
     }
 }
