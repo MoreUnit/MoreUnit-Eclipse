@@ -143,7 +143,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         modelExtension.removeAnnotationModel(MODEL_KEY);
     }
 
-    private void clear(AnnotationModelEvent event)
+    private synchronized void clear(AnnotationModelEvent event)
     {
         Iterator<MoreUnitAnnotation> iterator = getAnnotationIterator();
         while (iterator.hasNext())
