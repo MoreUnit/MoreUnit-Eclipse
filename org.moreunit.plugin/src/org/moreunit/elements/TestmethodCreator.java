@@ -4,12 +4,12 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.util.BaseTools;
 import org.moreunit.util.MoreUnitContants;
-import org.moreunit.util.StringConstants;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
 

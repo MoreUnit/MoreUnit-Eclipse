@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;

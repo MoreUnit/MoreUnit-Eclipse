@@ -1,0 +1,8 @@
+#Sun Apr 01 20:14:43 CEST 2012
+eclipse.preferences.version=1
+org.moreunit.extendedTestMethodSearch=true
+org.moreunit.prefixes=
+org.moreunit.test_methodType=testMethodTypeNoPrefix
+org.moreunit.test_type=junit4
+org.moreunit.unitsourcefolder=org.moreunit.core\:src\:org.moreunit.core.test\:test
+org.moreunit.useprojectsettings=true

@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.PreferencesConverter;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera 14.03.2008 23:09:24

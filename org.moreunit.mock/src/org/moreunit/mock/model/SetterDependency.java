@@ -1,6 +1,6 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.util.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;

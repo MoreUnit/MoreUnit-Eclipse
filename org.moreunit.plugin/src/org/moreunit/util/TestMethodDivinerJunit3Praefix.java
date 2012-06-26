@@ -1,5 +1,6 @@
 package org.moreunit.util;
 
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.log.LogHandler;
 
 public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner

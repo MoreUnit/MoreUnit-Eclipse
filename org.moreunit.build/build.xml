@@ -2,9 +2,9 @@
 <project default="build_nightly" name="MoreUnit">
 
 	<!-- Specify the version of the features to build -->
-	<property name="main_number" value="2"/>
-	<property name="major_number" value="4"/>
-	<property name="minor_number" value="4"/>
+	<property name="main_number" value="3"/>
+	<property name="major_number" value="0"/>
+	<property name="minor_number" value="0"/>
 
 	<!-- PROPERTIES INCLUSION -->
 
@@ -21,7 +21,8 @@
 		equinox_launcher_jar_name = org.eclipse.equinox.launcher_<version>.jar
 		pde_build_folder_name = org.eclipse.pde.build_<version>
 		
-		moreunit_feature_plugins=org.moreunit.plugin/**
+		moreunit_light_feature_plugins=org.moreunit.core/**
+		moreunit_feature_plugins=org.moreunit.core/**,org.moreunit.plugin/**
 	  	moreunit_mock_feature_plugins=org.moreunit.mock/**,org.moreunit.dependencies.guice/**,org.moreunit.dependencies.jaxb/**
 	  -->
 	<property file="moreunit.properties"/>
@@ -103,18 +104,23 @@
 	</target>
 
 	<target name="unzip_features">
+		<unzip src="${temp_path}/moreunit.build/moreunitbuild/org.moreunit.light-build.zip" dest="${temp_path}/org.moreunit_V_${version_number_file}/"/>
 		<unzip src="${temp_path}/moreunit.build/moreunitbuild/org.moreunit-build.zip" dest="${temp_path}/org.moreunit_V_${version_number_file}/"/>
 		<unzip src="${temp_path}/moreunit.build/moreunitbuild/org.moreunit.mock-build.zip" dest="${temp_path}/org.moreunit_V_${version_number_file}/"/>
 	</target>
 
 	<target name="refresh">
 		<echo>Refreshing feature.xml, MANIFEST.MF, category.xml, build.properties</echo>
+		<eclipse.refreshLocal resource="org.moreunit.light.feature/feature.xml" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.light.feature/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.feature/feature.xml" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.feature/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.plugin/META-INF/MANIFEST.MF" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.build/category.xml" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.build/category_latestandgreatest.xml" depth="infinite"/>
-		<eclipse.refreshLocal resource="org.moreunit.feature/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.plugin/build.properties" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.core/META-INF/MANIFEST.MF" depth="infinite"/>
+		<eclipse.refreshLocal resource="org.moreunit.core/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.mock.feature/feature.xml" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.mock.feature/build.properties" depth="infinite"/>
 		<eclipse.refreshLocal resource="org.moreunit.mock.plugin/META-INF/MANIFEST.MF" depth="infinite"/>
@@ -164,6 +170,7 @@
 			replace="version=&quot;${version_number}.qualifier&quot;"
 			byline="true">
 			<fileset dir="${workspace}">
+				<include name="org.moreunit.light.feature/feature.xml"/>
 				<include name="org.moreunit.feature/feature.xml"/>
 				<include name="org.moreunit.mock.feature/feature.xml"/>
 			</fileset>
@@ -173,7 +180,7 @@
 			match="Bundle-Version: [0-9]\.[0-9]\.[0-9]" 
 			replace="Bundle-Version: ${version_number}"
 			byline="true">
-			<fileset dir="${workspace}" includes="${moreunit_feature_plugins}/META-INF/MANIFEST.MF,${moreunit_mock_feature_plugins}/META-INF/MANIFEST.MF" />
+			<fileset dir="${workspace}" includes="${moreunit_light_feature_plugins}/META-INF/MANIFEST.MF,${moreunit_feature_plugins}/META-INF/MANIFEST.MF,${moreunit_mock_feature_plugins}/META-INF/MANIFEST.MF" />
 		</replaceregexp>
 	</target>
 
@@ -204,6 +211,9 @@
 	</target>
 
 	<target name="prepare_folder_for_release" depends="create_tmp_folders">
+		<unzip src="${temp_path}/org.moreunit.core.zip" dest="${temp_path}/moreunit.build/plugins/" />
+		<unzip src="${temp_path}/org.moreunit.light.feature.zip" dest="${temp_path}/moreunit.build/features/" />
+			
 		<unzip src="${temp_path}/org.moreunit.plugin.zip" dest="${temp_path}/moreunit.build/plugins/" />
 		<unzip src="${temp_path}/org.moreunit.feature.zip" dest="${temp_path}/moreunit.build/features/" />
 		
@@ -214,11 +224,17 @@
 	</target>
 
 	<target name="prepare_folder_for_local_build" depends="create_tmp_folders">
+		<copy todir="${temp_path}/moreunit.build/features/org.moreunit.light.feature">
+					<fileset dir="${workspace}/org.moreunit.light.feature"/>
+				</copy>
 		<copy todir="${temp_path}/moreunit.build/features/org.moreunit.feature">
 			<fileset dir="${workspace}/org.moreunit.feature"/>
 		</copy>
 		<copy todir="${temp_path}/moreunit.build/features/org.moreunit.mock.feature">
 			<fileset dir="${workspace}/org.moreunit.mock.feature"/>
+		</copy>
+		<copy todir="${temp_path}/moreunit.build/plugins/">
+			<fileset dir="${workspace}" includes="${moreunit_light_feature_plugins}" />
 		</copy>
 		<copy todir="${temp_path}/moreunit.build/plugins/">
 			<fileset dir="${workspace}" includes="${moreunit_feature_plugins}" />
@@ -255,6 +271,8 @@
 	
 	<target name="get_tagged_sources">
 		<echo message="get tagged version (V_${version_number_file}) from GIT repository"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.core" outputpath="${temp_path}"/>
+		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.light.feature" outputpath="${temp_path}"/>
 		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.plugin" outputpath="${temp_path}"/>
 		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.feature" outputpath="${temp_path}"/>
 		<get_folder_from_repos_def version="V_${version_number_file}" folder="org.moreunit.mock" outputpath="${temp_path}"/>
@@ -292,6 +310,11 @@
 		<property file="${temp_path}/moreunit.build/finalFeaturesVersions.properties"/>
 		<replaceregexp 
 			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
+			match="features/org.moreunit.light_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
+			replace="features/org.moreunit.light_${org.moreunit.light}.jar"
+			byline="true"/>
+		<replaceregexp 
+			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
 			match="features/org.moreunit_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
 			replace="features/org.moreunit_${org.moreunit}.jar"
 			byline="true"/>
@@ -299,6 +322,11 @@
 			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
 			match="features/org.moreunit.mock_[0-9]\.[0-9]\.[0-9]\.*[0-9]*\.jar" 
 			replace="features/org.moreunit.mock_${org.moreunit.mock}.jar"
+			byline="true"/>
+		<replaceregexp 
+			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
+			match="id=&quot;org.moreunit.light&quot; version=&quot;[0-9]\.[0-9]\.[0-9]\.*[0-9]*&quot;" 
+			replace="id=&quot;org.moreunit.light&quot; version=&quot;${org.moreunit.light}&quot;"
 			byline="true"/>
 		<replaceregexp 
 			file="${workspace}/org.moreunit.build/category_latestandgreatest.xml" 
@@ -311,6 +339,15 @@
 			replace="id=&quot;org.moreunit.mock&quot; version=&quot;${org.moreunit.mock}&quot;"
 			byline="true"/>
 
+		<exec executable="/bin/bash">
+			<arg value="update_category.sh"/>
+			<arg value="${main_number}" />
+			<arg value="${major_number}" />
+			<arg value="${minor_number}" />
+			<arg value="${workspace}/org.moreunit.build/category.xml"/>
+			<arg value="org.moreunit.light" />
+		</exec>
+		
 		<exec executable="/bin/bash">
 			<arg value="update_category.sh"/>
 			<arg value="${main_number}" />
@@ -353,9 +390,11 @@
 	</target>
 	
 	<fileset dir="${workspace}" id="buildprops">
+		<include name="org.moreunit.light.feature/build.properties"/>
     	<include name="org.moreunit.feature/build.properties"/>
     	<include name="org.moreunit.mock.feature/build.properties"/>
 		<include name="org.moreunit.plugin/build.properties"/>
+		<include name="org.moreunit.core/build.properties"/>
 		<include name="org.moreunit.mock/build.properties"/>
 		<include name="org.moreunit.dependencies.guice/build.properties"/>
 		<include name="org.moreunit.dependencies.jaxb/build.properties"/>

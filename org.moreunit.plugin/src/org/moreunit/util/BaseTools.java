@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.IMethod;
+import org.moreunit.core.util.StringLengthComparator;
 
 public class BaseTools
 {

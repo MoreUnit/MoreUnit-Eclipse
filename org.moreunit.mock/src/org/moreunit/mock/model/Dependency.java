@@ -1,7 +1,7 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.util.Preconditions.checkArgument;
-import static org.moreunit.util.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkArgument;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 import java.text.Collator;
 import java.util.ArrayList;

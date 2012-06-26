@@ -19,11 +19,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.moreunit.core.util.Strings;
 import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.templates.MockingTemplateStore;
-import org.moreunit.mock.utils.Strings;
 
 import com.google.inject.Inject;
 

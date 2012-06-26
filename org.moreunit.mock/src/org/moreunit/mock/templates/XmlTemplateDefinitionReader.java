@@ -8,8 +8,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.moreunit.core.util.IOUtils;
 import org.moreunit.mock.model.MockingTemplates;
-import org.moreunit.mock.utils.IOUtils;
 
 import com.google.inject.Singleton;
 

@@ -2,6 +2,8 @@
 .gitignore
 homepage/.project
 org.moreunit.build/moreunit.properties
+org.moreunit.core/classes/
+org.moreunit.core.test/classes/
 org.moreunit.dependencies.guice/classes/
 org.moreunit.extension/classes/
 org.moreunit.mock/classes/

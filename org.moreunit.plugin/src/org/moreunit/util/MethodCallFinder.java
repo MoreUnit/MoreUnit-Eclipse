@@ -1,7 +1,7 @@
 package org.moreunit.util;
 
-import static org.moreunit.util.Preconditions.checkNotNull;
-import static org.moreunit.util.Preconditions.checkNotNullOrEmpty;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkNotNullOrEmpty;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;

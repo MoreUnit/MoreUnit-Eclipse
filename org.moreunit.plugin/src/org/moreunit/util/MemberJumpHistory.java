@@ -3,6 +3,7 @@ package org.moreunit.util;
 import java.util.Map;
 
 import org.eclipse.jdt.core.IMember;
+import org.moreunit.core.util.LRUCache;
 
 /**
  * An history to store and restore jumps made between members under tests and

@@ -17,9 +17,9 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.StringConstants;
 
 /**
  * The class <code>ReplaceTestMethodParticipator</code> replaces the test method created

@@ -18,10 +18,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.util.StringConstants;
 
 /**
  * @author vera 04.02.2006 22:19:33
