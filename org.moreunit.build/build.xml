@@ -60,7 +60,7 @@
 	  -->
 	<target
 		name="build_release"
-		depends="prepare_release_properties, get_tagged_sources, prepare_folder_for_release, build_feature, unzip_features, metadata, category, merge_build"
+		depends="prepare_release_properties, get_tagged_sources, prepare_folder_for_release, build_feature, unzip_features, metadata, category"
 		description="Builds a release version from SVN and updates the update site project">
 		<echo>Build new release version ${version_number}</echo>
 	</target>
@@ -87,19 +87,6 @@
 		name="build_pre_release"
 		depends="prepare_release_properties, update_version_number, refresh, prepare_folder_for_local_build, build_feature, unzip_features, metadata, update_category, refresh, category, commit_version_number, tag_version"
 		description="Builds a new pre-release version with a new version number">
-	</target>
-
-	<!--
-	 	Target to merge a new version into an existing update site. 
-	  -->
-	<property name="p2.build" value="${temp_path}/${repository_folder}"/>
-	<property name="p2.repo.location" value="${update-site-project}"/>
-
-	<target name="merge_build">
-		<p2.mirror source="${p2.build}">
-			<destination location="${p2.repo.location}" compressed="true" append="true"/>
-			<slicingoptions includeoptional="false" />
-		</p2.mirror>
 	</target>
 
 	<target name="unzip_features">
