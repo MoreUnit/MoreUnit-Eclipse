@@ -322,20 +322,12 @@
 		it is necessary to add the passphrase attribute. 
 	  -->
 	<target name="copy_build_to_latestandgreatest_updatesite" description="Copies a the result of a build run to the latestandgreatest update site">
-		<zip destfile="${temp_path}/latestandgreatest.zip" basedir="${temp_path}/${repository_folder}"></zip>
-		<scp todir="${username},moreunit@web.sourceforge.net:/home/project-web/moreunit/htdocs" passphrase="" keyfile="${keyfile}" sftp="true" verbose="true">
-			<fileset file="${temp_path}/latestandgreatest.zip"/>
-		</scp>
-		<!-- 
-			 As sourceforge only has a restricted shell when using sshexec, this command
-		     creates a shell and executes the unzip in this shell on the remote server 
-		 -->
-		<exec executable="ssh">
-			<arg value="-t" />
-			<arg value="${username},moreunit@shell.sourceforge.net" />
-			<arg value="create" />
-			<arg value="|" />
-			<arg value="unzip -o /home/project-web/moreunit/htdocs/latestandgreatest.zip" />
+		<exec executable="rsync">
+			<arg value="-avz"/>
+			<arg value="--delete"/>
+			<arg value="-e ssh"/>
+			<arg value="${temp_path}/${repository_folder}/"/>
+			<arg value="${username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/latestandgreatest/"/>
 		</exec>
 	</target>
 	
