@@ -212,11 +212,6 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
-   <includes
-         id="org.moreunit.mock.source"
-         version="0.0.0"
-         name="MoreUnit Mock Support (Sources)"/>
-
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -224,7 +219,7 @@ litigation.
       <import plugin="org.eclipse.jdt.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.moreunit" version="2.3.0" match="greaterOrEqual"/>
+      <import plugin="org.moreunit.plugin"/>
    </requires>
 
    <plugin
@@ -242,7 +237,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.moreunit.mock"
+         id="org.moreunit.mock.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.moreunit</groupId>
+  <artifactId>moreunit</artifactId>
+  <version>2.4.6-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>../org.moreunit.plugin</module>
+    <module>../org.moreunit.feature</module>
+    <module>../org.moreunit.dependencies.guice</module>
+    <module>../org.moreunit.dependencies.jaxb</module>
+    <module>../org.moreunit.mock</module>
+    <module>../org.moreunit.mock.feature</module>
+    <module>../org.moreunit.updatesite</module>
+  </modules>
+
+  <properties>
+    <tycho-version>0.15.0</tycho-version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>juno</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/juno</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-director-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <id>materialize-products</id>
+            <goals>
+              <goal>materialize-products</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>archive-products</id>
+            <goals>
+              <goal>archive-products</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+
+
+  </build>
+
+</project> 
