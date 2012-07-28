@@ -1,9 +1,0 @@
-workspace=${user.home}/projects/eclipse/moreunit
-temp_path=/tmp
-eclipse_path=/Developers/eclipse
-username=gianasista
-keyfile=${user.home}/.ssh/id_rsa
-equinox_launcher_jar_name=org.eclipse.equinox.launcher_1.1.0.v20100507.jar
-pde_build_folder_name=org.eclipse.pde.build_3.6.0.v20100603
-moreunit_feature_plugins=org.moreunit.plugin/**
-moreunit_mock_feature_plugins=org.moreunit.mock/**,org.moreunit.dependencies.guice/**,org.moreunit.dependencies.jaxb/**

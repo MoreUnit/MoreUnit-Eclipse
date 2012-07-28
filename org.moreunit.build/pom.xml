@@ -28,6 +28,14 @@
   </repositories>
 
   <build>
+    <extensions>
+      <!-- Enabling the use of FTP -->
+      <extension>
+        <groupId>org.codehaus.mojo</groupId>
+		<artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
@@ -55,10 +63,28 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
-
-
-
   </build>
-
+  
+  <profiles>
+  	<profile>
+  		<id>latestandgreatest</id>
+  		<properties>
+  			<rsync.dir>latestandgreatest</rsync.dir>
+  		</properties>
+  	</profile>
+  </profiles>
 </project> 

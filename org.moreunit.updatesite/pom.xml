@@ -13,4 +13,33 @@
   <packaging>eclipse-repository</packaging>
 
   <name>org.moreunit.updatesite Build</name>
+  
+  <build>
+  	<plugins>
+  	 <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>exec-maven-plugin</artifactId>
+      <version>1.2.1</version>
+      <executions>
+       <execution>
+        <id>upload-repo</id>
+        <phase>install</phase>
+        <goals>
+         <goal>exec</goal>
+        </goals>
+        <configuration>
+          <executable>rsync</executable>
+          <arguments>
+            <argument>-avz</argument>
+            <argument>--delete</argument>
+            <argument>-e ssh</argument>
+            <argument>${project.build.directory}/repository/</argument>
+            <argument>${sourceforge.username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/${rsync.dir}/</argument>
+          </arguments>
+        </configuration>
+       </execution>
+      </executions>
+     </plugin>
+    </plugins>
+  </build>
 </project> 
