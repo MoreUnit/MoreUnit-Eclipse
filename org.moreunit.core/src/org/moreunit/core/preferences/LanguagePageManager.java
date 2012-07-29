@@ -132,6 +132,11 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
     private void removePreferencePage(Language lang)
     {
         PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
+        if(preferenceManager == null)
+        {
+            logger.debug("Could not remove preference page for language " + lang + ", because PreferenceManager is already gone");
+            return;
+        }
 
         IPreferenceNode mainNode = preferenceManager.find(MAIN_PAGE);
         IPreferenceNode node = mainNode.findSubNode(PREFERENCE_PAGE_ID_BASE + lang.getExtension());

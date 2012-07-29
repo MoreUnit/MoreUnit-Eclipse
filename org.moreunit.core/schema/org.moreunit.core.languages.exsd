@@ -54,9 +54,10 @@
          </documentation>
       </annotation>
       <complexType>
-         <choice minOccurs="0" maxOccurs="1">
-            <element ref="jumper"/>
-         </choice>
+         <sequence>
+            <element ref="condition" minOccurs="0" maxOccurs="1"/>
+            <element ref="jumper" minOccurs="1" maxOccurs="1"/>
+         </sequence>
          <attribute name="fileExtension" type="string" use="required">
             <annotation>
                <documentation>
@@ -89,6 +90,30 @@
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.moreunit.core.extension.jump.IJumper"/>
                </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="condition">
+      <annotation>
+         <documentation>
+            A condition that must evaluate to true for the language configuration to be active.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="type" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The type of condition. Example: &quot;dependency&quot;.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The value to evaluate. For instance, for a condition of type &quot;dependency&quot;, the value must be the ID of a bundle that must be present on the platform for the condition to be true.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

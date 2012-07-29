@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.moreunit.core.extension.LanguageExtensionManager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MainLanguageRepositoryTest

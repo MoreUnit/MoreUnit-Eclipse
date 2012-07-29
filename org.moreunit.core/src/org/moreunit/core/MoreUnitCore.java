@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.moreunit.core.languages.LanguageExtensionManager;
+import org.moreunit.core.extension.LanguageExtensionManager;
 import org.moreunit.core.languages.LanguageRepository;
 import org.moreunit.core.languages.MainLanguageRepository;
 import org.moreunit.core.log.DefaultLogger;
@@ -43,7 +43,7 @@ public class MoreUnitCore extends AbstractUIPlugin
         logger = new DefaultLogger(getLog(), "org.moreunit.core.log.level");
         preferences = new Preferences(getPreferenceStore(), logger);
 
-        languageExtensionManager = new LanguageExtensionManager(logger);
+        languageExtensionManager = new LanguageExtensionManager(context, logger);
 
         languageRepository = new MainLanguageRepository(preferences, languageExtensionManager);
         services.add(languageRepository);

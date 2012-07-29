@@ -20,6 +20,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
 import org.moreunit.core.MoreUnitCore;
+import org.moreunit.core.extension.JumperExtensionManager;
 import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
@@ -38,7 +39,7 @@ public class JumpActionHandler extends AbstractHandler
 
     public JumpActionHandler()
     {
-        this(p().getLogger(), new FileMatcher(TextSearchEngine.create(), p().getPreferences(), p().getLogger()), new JumperExtensionManager(p().getLogger()));
+        this(p().getLogger(), new FileMatcher(TextSearchEngine.create(), p().getPreferences(), p().getLogger()), new JumperExtensionManager());
     }
 
     private static MoreUnitCore p()

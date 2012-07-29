@@ -484,5 +484,9 @@
       <language fileExtension="java" name="Java">
          <jumper class="org.moreunit.handler.Jumper" />
       </language>
+      <language fileExtension="groovy" name="Groovy">
+         <condition type="dependency" value="org.codehaus.groovy.eclipse.ui" />
+         <jumper class="org.moreunit.handler.Jumper" />
+      </language>
    </extension>
 </plugin>
