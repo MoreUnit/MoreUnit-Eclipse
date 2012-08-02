@@ -12,13 +12,13 @@ import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
 
-public class MainPreferencePage extends PreferencePageBase
+public class OtherLanguagesPreferencePage extends PreferencePageBase
 {
     private final LanguageRepository languageRepository;
     private Text nameField;
     private ExtensionField extensionField;
 
-    public MainPreferencePage()
+    public OtherLanguagesPreferencePage()
     {
         super(MoreUnitCore.get().getPreferences().writerForAnyLanguage());
         languageRepository = MoreUnitCore.get().getLanguageRepository();

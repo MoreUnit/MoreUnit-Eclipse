@@ -257,7 +257,7 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
         class="org.moreunit.preferences.MoreUnitPreferencePage"
-        category="org.moreunit.core.preferences.mainPage"
+        category="org.moreunit.core.preferences.featuredLanguagesPage"
         id="org.moreunit.moreunitPreferencePage"
         name="Java">
 			<keywordReference id="org.moreunit.keywordReference.junit"/>
@@ -391,7 +391,7 @@
       </page>
       -->
        <page class="org.moreunit.properties.MoreUnitPropertyPage"
-             category="org.moreunit.core.properties.mainPage"
+             category="org.moreunit.core.properties.featuredLanguagesPage"
              id="org.moreunit.properties"
              name="Java">
 		     <enabledWhen>

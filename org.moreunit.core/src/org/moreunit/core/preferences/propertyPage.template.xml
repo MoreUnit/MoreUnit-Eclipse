@@ -5,7 +5,7 @@
       point="org.eclipse.ui.propertyPages">
       <page id="${pageId}"
          name="${languageName}"
-         category="org.moreunit.core.properties.mainPage"
+         category="org.moreunit.core.properties.otherLanguagesPage"
          class="org.moreunit.core.preferences.PropertyPageFactory:${languageExtension}">
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
          <enabledWhen>

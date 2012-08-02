@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IExecutableExtensionFactory;
  * 
  * <pre>
  * &lt;extension point="org.eclipse.ui.propertyPages"&gt;
- *       &lt;page id="org.moreunit.core.properties.mainPage"
+ *       &lt;page id="org.moreunit.core.properties.otherLanguagesPage"
  *          name="Name of the node in the tree and title of the page"
  *          class="org.moreunit.core.preferences.PropertyPageFactory:someFileExtension:Description of the page"/&gt;
  *    &lt;/extension&gt;

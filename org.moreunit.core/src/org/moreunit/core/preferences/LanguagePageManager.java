@@ -29,6 +29,7 @@ import org.moreunit.core.log.Logger;
 public class LanguagePageManager implements Service, LanguageConfigurationListener
 {
     private static final String MAIN_PAGE = "org.moreunit.core.preferences.mainPage";
+    private static final String OTHER_LANGUAGES_PAGE = "org.moreunit.core.preferences.otherLanguagesPage";
     private static final String PREFERENCE_PAGE_ID_BASE = "org.moreunit.core.preferences.page.";
     private static final String PROPERTY_PAGE_EXTENSION_ID_BASE = "org.moreunit.core.properties.page.extension.";
     private static final String PROPERTY_PAGE_ID_BASE = "org.moreunit.core.properties.page.";
@@ -62,7 +63,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
     {
         PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
 
-        preferenceManager.addTo(MAIN_PAGE, new LanguagePreferenceNode(lang, preferences.writerForLanguage(lang.getExtension()), languageRepository));
+        preferenceManager.addTo(MAIN_PAGE + "/" + OTHER_LANGUAGES_PAGE, new LanguagePreferenceNode(lang, preferences.writerForLanguage(lang.getExtension()), languageRepository));
 
         logger.debug("Added preference page for language " + lang);
     }
@@ -138,10 +139,10 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
             return;
         }
 
-        IPreferenceNode mainNode = preferenceManager.find(MAIN_PAGE);
-        IPreferenceNode node = mainNode.findSubNode(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
+        IPreferenceNode otherLanguagesNode = preferenceManager.find(MAIN_PAGE).findSubNode(OTHER_LANGUAGES_PAGE);
+        IPreferenceNode node = otherLanguagesNode.findSubNode(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
 
-        boolean result = mainNode.remove(node);
+        boolean result = otherLanguagesNode.remove(node);
 
         logger.debug("Removed preference page for language " + lang + " with result: " + result);
     }
@@ -167,7 +168,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
     public void languageConfigurationRemoved(Language lang)
     {
         removePages(lang);
-        refreshTreeAndOpenPage(MAIN_PAGE);
+        refreshTreeAndOpenPage(OTHER_LANGUAGES_PAGE);
     }
 
     private void refreshTreeAndOpenPage(String pageId)
@@ -188,8 +189,8 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     private IPreferenceNode findNode(String pageId)
     {
-        IPreferenceNode mainNode = PlatformUI.getWorkbench().getPreferenceManager().find(MAIN_PAGE);
-        return MAIN_PAGE.equals(pageId) ? mainNode : mainNode.findSubNode(pageId);
+        IPreferenceNode mainNode = PlatformUI.getWorkbench().getPreferenceManager().find(MAIN_PAGE).findSubNode(OTHER_LANGUAGES_PAGE);
+        return OTHER_LANGUAGES_PAGE.equals(pageId) ? mainNode : mainNode.findSubNode(pageId);
     }
 
     private static class LanguagePreferenceNode extends PreferenceNode
