@@ -1,18 +1,19 @@
 package te.st;
 
-import java.util.Comparator;
-import java.util.List;
-
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
+import te.st.SomeConcept.Comparator;
+import te.st.SomeConcept.List;
 import te.st.SomeConcept.Thing;
 
 public class SomeConceptTest {
 
-	private final Mockery mockery = new Mockery() { {
-		setImposteriser(ClassImposteriser.INSTANCE);
-	} };
+	private final Mockery mockery = new Mockery() {
+		{
+			setImposteriser(ClassImposteriser.INSTANCE);
+		}
+	};
 
 	private Callable<Integer> integerProvider = mockery.mock(Callable.class);
 	
@@ -20,7 +21,7 @@ public class SomeConceptTest {
 	
 	private List<Thing> someListOfThings = mockery.mock(List.class);
 	
-	private Comparator<String> stringComparator = mockery .mock(Comparator.class);
+	private Comparator<String> stringComparator = mockery.mock(Comparator.class);
 	
 	private SomeConcept someConcept;
 	

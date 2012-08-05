@@ -9,11 +9,13 @@ import org.eclipse.core.runtime.CoreException;
 public class WorkspaceHandler
 {
     private final Map<String, ProjectHandler> projectHandlers = newHashMap();
+    private final String projectPrefix;
     private final Class< ? > loadingClass;
 
-    public WorkspaceHandler(Class< ? > loadingClass)
+    public WorkspaceHandler(Class< ? > loadingClass, String projectPrefix)
     {
         this.loadingClass = loadingClass;
+        this.projectPrefix = projectPrefix;
     }
 
     public ProjectHandler addProject(String projectName)
@@ -25,7 +27,7 @@ public class WorkspaceHandler
 
     protected ProjectHandler newProjectHandler(WorkspaceHandler workspaceHandler, String projectName)
     {
-        return new ProjectHandler(workspaceHandler, projectName);
+        return new ProjectHandler(workspaceHandler, projectName, projectPrefix);
     }
 
     Class< ? > getLoadingClass()

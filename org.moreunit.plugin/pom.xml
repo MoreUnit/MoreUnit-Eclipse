@@ -11,6 +11,6 @@
 
   <artifactId>org.moreunit.plugin</artifactId>
   <packaging>eclipse-plugin</packaging>
-
-  <name>org.moreunit.plugin Build</name>
+  
+  <name>${project.artifactId}</name>
 </project> 

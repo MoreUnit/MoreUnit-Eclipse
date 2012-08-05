@@ -12,5 +12,5 @@
 	<artifactId>org.moreunit</artifactId>
 	<packaging>eclipse-feature</packaging>
 
-	<name>org.moreunit.feature Build</name>
+	<name>org.moreunit.feature</name>
 </project> 

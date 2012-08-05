@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: org.moreunit.test
-Bundle-Version: 2.0.2.qualifier
+Bundle-Version: 2.4.6.qualifier
 Bundle-ClassPath: .
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -18,6 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.core.manipulation,
  org.moreunit.plugin,
- org.junit4;bundle-version="4.3.1",
- org.moreunit.test.dependencies
+ org.junit4;bundle-version="4.8.0",
+ org.moreunit.test.dependencies,
+ org.testng.eclipse;bundle-version="5.14.2.10"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: moreunit.sourceforge.net

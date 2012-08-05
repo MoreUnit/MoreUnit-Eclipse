@@ -12,5 +12,5 @@
 	<artifactId>org.moreunit.mock</artifactId>
 	<packaging>eclipse-feature</packaging>
 
-	<name>org.moreunit.mock.feature Build</name>
+	<name>org.moreunit.mock.feature</name>
 </project> 

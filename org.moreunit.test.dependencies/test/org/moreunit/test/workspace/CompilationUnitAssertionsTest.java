@@ -27,9 +27,9 @@ public class CompilationUnitAssertionsTest
     @Test
     public void should_normalize_spaces_when_comparing_sources() throws Exception
     {
-        when(actualCu.getActualSource()).thenReturn("public  class SomeClass       {" + NL + "  private String aField; } ");
+        when(actualCu.getActualSource()).thenReturn("public  class SomeClass      " + NL + "{ \t private String aField; } ");
 
-        assertions.whenCreatingSourceThenReturn("   public class     SomeClass { private   String aField; }");
+        assertions.whenCreatingSourceThenReturn("   public class     SomeClass " + NL + "{ private   String aField; }");
 
         assertions.hasSameSourceAsIn("some_file_containing_the_expected_source.txt");
     }

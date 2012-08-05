@@ -1,8 +1,7 @@
 package te.st;
 
-import java.util.Comparator;
-import java.util.List;
-
+import te.st.SomeConcept.Comparator;
+import te.st.SomeConcept.List;
 import te.st.SomeConcept.Thing;
 
 public class SomeConceptTest {

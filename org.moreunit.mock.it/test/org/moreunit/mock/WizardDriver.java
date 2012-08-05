@@ -107,6 +107,7 @@ public final class WizardDriver
                     setBlockOnOpen(false);
                     super.open();
                     driver.mockDependenciesPageOpen(page);
+                    close();
                     return Window.OK;
                 }
             };

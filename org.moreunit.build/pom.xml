@@ -5,18 +5,28 @@
   <artifactId>moreunit</artifactId>
   <version>2.4.6-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <name>MoreUnit Parent</name>
   <modules>
     <module>../org.moreunit.plugin</module>
+    <module>../org.moreunit.test.dependencies</module>
+    <module>../org.moreunit.test</module>
     <module>../org.moreunit.feature</module>
     <module>../org.moreunit.dependencies.guice</module>
     <module>../org.moreunit.dependencies.jaxb</module>
     <module>../org.moreunit.mock</module>
+    <module>../org.moreunit.mock.test</module>
+    <module>../org.moreunit.mock.it</module>
     <module>../org.moreunit.mock.feature</module>
     <module>../org.moreunit.updatesite</module>
   </modules>
 
   <properties>
     <tycho-version>0.15.0</tycho-version>
+    
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    
+    <tests.use.ui>false</tests.use.ui>
   </properties>
 
   <repositories>
@@ -25,29 +35,167 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/releases/juno</url>
     </repository>
+    <repository>
+      <id>testng</id>
+      <layout>p2</layout>
+      <url>http://beust.com/eclipse</url>
+    </repository>
   </repositories>
 
   <build>
     <extensions>
-      <!-- Enabling the use of FTP -->
       <extension>
         <groupId>org.codehaus.mojo</groupId>
 		<artifactId>exec-maven-plugin</artifactId>
         <version>1.2.1</version>
       </extension>
     </extensions>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-maven-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-source-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-compiler-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>target-platform-configuration</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.12.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-surefire-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-p2-director-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <extensions>true</extensions>
-      </plugin>
+
+      <!-- Not tested yet: creating a toolchains.xml file to use the following (see http://maven.apache.org/guides/mini/guide-using-toolchains.html) -->
+      <!--  <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>1.5</version>
+              <vendor>sun</vendor>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin> -->
 
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <resolver>p2</resolver>
+          <environments>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <configuration>
+          <useUIHarness>${tests.use.ui}</useUIHarness>
+          <useUIThread>${tests.use.ui}</useUIThread>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>
-        <version>${tycho-version}</version>
         <executions>
           <execution>
             <id>materialize-products</id>
@@ -64,15 +212,13 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-source-plugin</artifactId>
-        <version>${tycho-version}</version>
+        <artifactId>maven-deploy-plugin</artifactId>
         <executions>
+          <!-- Deactivates standard Maven "deploy" goal at "deploy" phase, that makes no sens for an Eclipse plug-in. -->
+          <!-- Our deployment is handled via the org.moreunit.updatesite module -->
           <execution>
-            <id>plugin-source</id>
-            <goals>
-              <goal>plugin-source</goal>
-            </goals>
+            <id>default-deploy</id>
+            <phase>none</phase>
           </execution>
         </executions>
       </plugin>
@@ -86,5 +232,35 @@
   			<rsync.dir>latestandgreatest</rsync.dir>
   		</properties>
   	</profile>
+  	
+  	<profile>
+  	  <!-- makes test run in UI thread when under OSX -->
+      <id>osx</id>
+      <activation>
+        <property>
+          <name>java.vendor.url</name>
+          <value>http://www.apple.com/</value>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.eclipse.tycho</groupId>
+              <artifactId>tycho-surefire-plugin</artifactId>
+              <version>${tycho-version}</version>
+              <configuration>
+                <argLine>-XstartOnFirstThread</argLine>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
   </profiles>
+
+  <!-- The following warning can be safely ignored: -->
+  <!-- [WARNING] Dependency from [..]/org.moreunit.mock/resources to nested classpath entry YYY can not be represented in Maven model and will not be visible to non-OSGi aware Maven plugins -->
+  <!-- Maven assumes all dependencies are files and these are directories. This would only be a problem for plugins such as findbugs or javadoc, but we don't need to expose these resources to them -->
+  <!-- see http://dev.eclipse.org/mhonarc/lists/tycho-user/msg00896.html -->
 </project> 

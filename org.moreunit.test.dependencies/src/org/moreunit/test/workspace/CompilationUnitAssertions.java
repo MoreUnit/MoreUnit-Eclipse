@@ -30,7 +30,7 @@ public class CompilationUnitAssertions
 
     private String normalizeSpaces(String source)
     {
-        return source.replaceAll("\\s+", " ").trim();
+        return source.replaceAll("\t+", "").replaceAll("[ ]+", " ").replaceAll("[\r\n]+", System.getProperty("line.separator")).trim();
     }
 
     public CompilationUnitAssertions hasPrimaryType(IType expectedType)

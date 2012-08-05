@@ -2,12 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Test Dependencies
 Bundle-SymbolicName: org.moreunit.test.dependencies
-Bundle-Version: 0.0.0
+Bundle-Version: 2.4.6.qualifier
 Bundle-ClassPath: .,
  fest-assert-1.3.jar,
  fest-util-1.1.4.jar,
  guava-r08.jar,
  mockito-all-1.9.0.jar
+Bundle-Vendor: moreunit.sourceforge.net
 Export-Package: com.google.common.annotations,
  com.google.common.base,
  com.google.common.base.internal,
@@ -88,7 +89,9 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
- org.junit;bundle-version="4.8.2",
- org.moreunit.plugin
+ org.eclipse.jface,
+ org.moreunit.plugin,
+ org.junit4;bundle-version="4.8.0",
+ org.testng.eclipse;bundle-version="5.14.2.10"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.eclipse.jdt.junit
