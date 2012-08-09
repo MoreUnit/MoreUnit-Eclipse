@@ -61,8 +61,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_open_test_file_when_in_source_file() throws Exception
     {
         // given
-        IFile sourceFile = createFile("SomeConcept.js");
-        IFile testFile = createFile("SomeConceptTest.js");
+        IFile sourceFile = createFile("SomeConcept.lg");
+        IFile testFile = createFile("SomeConceptTest.lg");
 
         openEditor(sourceFile);
 
@@ -77,8 +77,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_open_source_file_when_in_test_file() throws Exception
     {
         // given
-        IFile sourceFile = createFile("SomeConcept.js");
-        IFile testFile = createFile("SomeConceptTest.js");
+        IFile sourceFile = createFile("SomeConcept.lg");
+        IFile testFile = createFile("SomeConceptTest.lg");
 
         openEditor(testFile);
 
@@ -93,8 +93,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_ignore_file_extension_case() throws Exception
     {
         // given
-        IFile sourceFile = createFile("SomeConcept.JS");
-        IFile testFile = createFile("SomeConceptTest.js");
+        IFile sourceFile = createFile("SomeConcept.LG");
+        IFile testFile = createFile("SomeConceptTest.lg");
 
         openEditor(sourceFile);
 
@@ -111,9 +111,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile sourceFile = createFile("src/SomeConcept.js");
+        IFile sourceFile = createFile("src/SomeConcept.lg");
         // wrong folder: should not be found
-        createFile("src/SomeConceptTest.js");
+        createFile("src/SomeConceptTest.lg");
 
         openEditor(sourceFile);
 
@@ -126,7 +126,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
 
         // given
-        IFile testFile = createFile("test/SomeConceptTest.js");
+        IFile testFile = createFile("test/SomeConceptTest.lg");
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -141,10 +141,10 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile testFile = createFile("test/SomeConceptTest.js");
+        IFile testFile = createFile("test/SomeConceptTest.lg");
 
         // wrong folder: should not be found
-        createFile("test/SomeConcept.js");
+        createFile("test/SomeConcept.lg");
 
         openEditor(testFile);
 
@@ -157,7 +157,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         assertThat(getFileInActiveEditor()).isEqualTo(testFile);
 
         // given
-        IFile sourceFile = createFile("src/SomeConcept.js");
+        IFile sourceFile = createFile("src/SomeConcept.lg");
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -174,8 +174,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         projectPrefs.setTestFileNameTemplate("${srcFile}TEST", "");
         projectPrefs.setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile sourceFile = createFile("src/SomeConcept.js");
-        IFile testFile = createFile("test/SomeConceptTEST.js");
+        IFile sourceFile = createFile("src/SomeConcept.lg");
+        IFile testFile = createFile("test/SomeConceptTEST.lg");
 
         openEditor(sourceFile);
 
@@ -263,9 +263,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
 
-        IFile sourceFile = createFile("SomeConcept.js");
-        IFile testFile1 = createFile("SomeConceptFirstTest.js");
-        IFile testFile2 = createFile("SomeConceptSecondTest.js");
+        IFile sourceFile = createFile("SomeConcept.lg");
+        IFile testFile1 = createFile("SomeConceptFirstTest.lg");
+        IFile testFile2 = createFile("SomeConceptSecondTest.lg");
 
         capturingSelector.fileToReturn = testFile2;
 

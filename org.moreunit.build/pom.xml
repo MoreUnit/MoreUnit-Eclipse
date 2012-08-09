@@ -7,8 +7,10 @@
   <packaging>pom</packaging>
   <name>MoreUnit Parent</name>
   <modules>
+    <module>../org.moreunit.core</module>
     <module>../org.moreunit.plugin</module>
     <module>../org.moreunit.test.dependencies</module>
+    <module>../org.moreunit.core.test</module>
     <module>../org.moreunit.test</module>
     <module>../org.moreunit.feature</module>
     <module>../org.moreunit.dependencies.guice</module>
