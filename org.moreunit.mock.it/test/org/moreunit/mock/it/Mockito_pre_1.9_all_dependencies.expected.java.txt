@@ -1,12 +1,11 @@
 package te.st;
 
-import java.util.Comparator;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import te.st.SomeConcept.Comparator;
+import te.st.SomeConcept.List;
 import te.st.SomeConcept.Thing;
 
 @RunWith(MockitoJUnitRunner.class)

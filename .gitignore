@@ -3,5 +3,6 @@
 target
 classes
 homepage/.project
-org.moreunit.build/moreunit.properties
+org.moreunit.*/classes/
+org.moreunit.*/target/
 Thumbs.db

@@ -1,21 +1,24 @@
 package te.st;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
 public class SomeConcept {
 
 	public Runnable runnable;
 	public Comparator<String> stringComparator;
 	private	Set<Double> someHiddenProperty;
-	
+
 	public SomeConcept(Callable<Integer> integerProvider) {
 	}
-	
+
 	public void setSomeListOfThings(List<Thing> things) {
 	}
-	
-	public static interface Thing {
-	}
+
+
+	public static interface Thing {}
+
+	// used in place of java.util classes, that are not resolved when tests are run with Tycho, no idea why for now...
+	public static interface Comparator<T> {}
+
+	public static interface List<T> {}
+
+	public static interface Set<T> {}
 }

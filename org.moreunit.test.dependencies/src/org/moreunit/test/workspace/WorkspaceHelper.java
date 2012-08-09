@@ -29,7 +29,6 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.moreunit.test.context.StringUtils;
-import org.eclipse.jdt.junit.JUnitCore;
 
 /**
  * @author vera 29.11.2008 13:41:52
@@ -82,9 +81,11 @@ public class WorkspaceHelper
         createNewClassFolder(javaProject, CLASSES_FOLDER);
         addDefaultJreToClassPath(javaProject);
 
+        JavaProjectOptions.applyTo(javaProject);
+
         return javaProject;
     }
-    
+
     public static void addContainerToProject(IJavaProject javaProject, IClasspathContainer container) throws IOException, JavaModelException
     {
         IClasspathEntry[] entriesToAdd = container.getClasspathEntries();

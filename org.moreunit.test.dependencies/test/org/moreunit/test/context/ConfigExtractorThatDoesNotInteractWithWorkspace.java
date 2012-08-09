@@ -29,7 +29,7 @@ public class ConfigExtractorThatDoesNotInteractWithWorkspace extends AnnotationC
         }
 
         @Override
-        protected WorkspaceHandler newWorkspaceHandler(Class< ? > loadingClass)
+        protected WorkspaceHandler newWorkspaceHandler(Class< ? > loadingClass, String projectPrefix)
         {
             return new WorkspaceHandlerThatDoesNotInteractWithWorkspace(loadingClass);
         }
@@ -45,7 +45,7 @@ public class ConfigExtractorThatDoesNotInteractWithWorkspace extends AnnotationC
     {
         private WorkspaceHandlerThatDoesNotInteractWithWorkspace(Class< ? > loadingClass)
         {
-            super(loadingClass);
+            super(loadingClass, "");
         }
 
         @Override
@@ -64,7 +64,7 @@ public class ConfigExtractorThatDoesNotInteractWithWorkspace extends AnnotationC
     {
         private ProjectHandlerThatDoesNotInteractWithWorkspace(WorkspaceHandler workspaceHandler, String projectName)
         {
-            super(workspaceHandler, projectName);
+            super(workspaceHandler, projectName, "");
         }
 
         @Override

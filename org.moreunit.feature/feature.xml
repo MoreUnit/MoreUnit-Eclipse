@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit"
       label="MoreUnit For Java"
-      version="2.4.4.qualifier"
+      version="2.4.6.qualifier"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
@@ -102,11 +102,6 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <includes
-         id="org.moreunit.source"
-         version="0.0.0"
-         name="MoreUnit Plug-In (Sources)"/>
-
    <requires>
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -133,7 +128,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
          unpack="false"/>
 
    <plugin
-         id="org.moreunit"
+         id="org.moreunit.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"

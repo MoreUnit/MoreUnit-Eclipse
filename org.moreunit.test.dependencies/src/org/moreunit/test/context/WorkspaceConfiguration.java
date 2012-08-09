@@ -19,6 +19,7 @@ import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.test.DummyPreferencesForTesting;
 import org.moreunit.test.workspace.ProjectHandler;
 import org.moreunit.test.workspace.SourceFolderHandler;
 import org.moreunit.test.workspace.WorkspaceHandler;
@@ -43,9 +44,9 @@ class WorkspaceConfiguration
     private final Map<String, ProjectConfiguration> projectConfigs = newHashMap();
     private PreferencesConfiguration preferencesConfig;
 
-    public WorkspaceHandler initWorkspace(Class< ? > loadingClass)
+    public WorkspaceHandler initWorkspace(Class< ? > loadingClass, String projectPrefix)
     {
-        WorkspaceHandler wsHandler = newWorkspaceHandler(loadingClass);
+        WorkspaceHandler wsHandler = newWorkspaceHandler(loadingClass, projectPrefix);
 
         createSources(wsHandler);
         applyPreferences(wsHandler);
@@ -53,12 +54,12 @@ class WorkspaceConfiguration
         return wsHandler;
     }
 
-    protected WorkspaceHandler newWorkspaceHandler(Class< ? > loadingClass)
+    protected WorkspaceHandler newWorkspaceHandler(Class< ? > loadingClass, String projectPrefix)
     {
         SourceFolderContext.getInstance().initContextForWorkspace();
         SearchScopeSingelton.getInstance().resetCachedSearchScopes();
-        
-        return new WorkspaceHandler(loadingClass);
+
+        return new WorkspaceHandler(loadingClass, projectPrefix);
     }
 
     private void createSources(WorkspaceHandler wsHandler)
@@ -130,7 +131,7 @@ class WorkspaceConfiguration
 
     protected void applyPreferences(WorkspaceHandler wsHandler)
     {
-        Preferences prefs = Preferences.getInstance();
+        Preferences prefs = new DummyPreferencesForTesting();
         applyWorkspacePreferences(prefs);
         applyProjectProperties(wsHandler, prefs);
         applyClasspathUpdate(wsHandler);
@@ -184,7 +185,7 @@ class WorkspaceConfiguration
             }
         }
     }
-    
+
     private void applyClasspathUpdate(WorkspaceHandler workspaceHandler)
     {
         for (ProjectConfiguration projectConfiguration : projectConfigs.values())
@@ -205,12 +206,16 @@ class WorkspaceConfiguration
             {
                 containerPath = new Path("org.testng.TESTNG_CONTAINER");
             }
+            else
+            {
+                throw new IllegalArgumentException("Unknown test type: '" + testType + "' (project: '" + project.getElementName() + "')");
+            }
             try
             {
                 IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(containerPath, project);
                 if(classpathContainer == null)
                 {
-                    throw new RuntimeException(String.format("Could not found classpath container %s for project %s", containerPath, project));
+                    throw new RuntimeException(String.format("Could not find classpath container %s for project %s", containerPath, project));
                 }
                 WorkspaceHelper.addContainerToProject(project, classpathContainer);
             }

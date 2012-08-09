@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <relativePath>../org.moreunit.build/pom.xml</relativePath>
+    <groupId>org.moreunit</groupId>
+    <artifactId>moreunit</artifactId>
+    <version>2.4.6-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.moreunit.updatesite</artifactId>
+  <packaging>eclipse-repository</packaging>
+
+  <name>${project.artifactId}</name>
+  
+  <build>
+  	<plugins>
+  	 <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>exec-maven-plugin</artifactId>
+      <executions>
+       <execution>
+        <id>upload-repo</id>
+        <phase>deploy</phase>
+        <goals>
+         <goal>exec</goal>
+        </goals>
+        <configuration>
+          <executable>rsync</executable>
+          <arguments>
+            <argument>-avz</argument>
+            <argument>--delete</argument>
+            <argument>-e ssh</argument>
+            <argument>${project.build.directory}/repository/</argument>
+            <argument>${sourceforge.username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/${rsync.dir}/</argument>
+          </arguments>
+        </configuration>
+       </execution>
+      </executions>
+     </plugin>
+    </plugins>
+  </build>
+</project> 

@@ -74,7 +74,8 @@ public class TestContextRule implements MethodRule
             return statement;
         }
 
-        return new StatementInContext(statement, this, config, testCase.getClass());
+        String projectPrefix = testCase.getClass().getName() + "." + method.getName() + "-";
+        return new StatementInContext(statement, this, config, testCase.getClass(), projectPrefix);
     }
 
     /**
@@ -206,11 +207,11 @@ public class TestContextRule implements MethodRule
         private final TestContextRule rule;
         private final WorkspaceHandler workspaceHandler;
 
-        public StatementInContext(Statement statement, TestContextRule rule, WorkspaceConfiguration config, Class< ? > testClass)
+        public StatementInContext(Statement statement, TestContextRule rule, WorkspaceConfiguration config, Class< ? > testClass, String projectPrefix)
         {
             this.statement = statement;
             this.rule = rule;
-            this.workspaceHandler = config.initWorkspace(testClass);
+            this.workspaceHandler = config.initWorkspace(testClass, projectPrefix);
         }
 
         @Override

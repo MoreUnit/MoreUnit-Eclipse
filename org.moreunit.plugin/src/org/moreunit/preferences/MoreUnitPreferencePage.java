@@ -81,7 +81,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
     {
         Preferences.getInstance().setJunitDirectory(testSourceFolderField.getText());
         otherMoreunitPropertiesBlock.saveProperties();
-        Preferences.clearProjectCach();
+        Preferences.getInstance().clearProjectCache();
 
         SourceFolderContext.getInstance().initContextForWorkspace();
         SearchScopeSingelton.getInstance().resetCachedSearchScopes();

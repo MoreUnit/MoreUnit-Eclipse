@@ -4,7 +4,6 @@ import static com.google.common.collect.Maps.newHashMap;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -15,15 +14,17 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
 {
     private final WorkspaceHandler workspaceHandler;
     private final String projectName;
+    private final String prefix;
     private final Map<String, SourceFolderHandler> sourceFolders = newHashMap();
     private IJavaProject project;
     private SourceFolderHandler mainSrcFolderHandler;
     private SourceFolderHandler testSrcFolderHandler;
 
-    public ProjectHandler(WorkspaceHandler workspaceHandler, String projectName)
+    public ProjectHandler(WorkspaceHandler workspaceHandler, String projectName, String prefix)
     {
         this.workspaceHandler = workspaceHandler;
         this.projectName = projectName;
+        this.prefix = prefix;
     }
 
     public IJavaProject get()
@@ -32,7 +33,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         {
             try
             {
-                project = WorkspaceHelper.createJavaProject(projectName);
+                project = WorkspaceHelper.createJavaProject(prefix + projectName);
             }
             catch (Exception e)
             {

@@ -24,28 +24,14 @@ import org.moreunit.util.PluginTools;
 public class Preferences
 {
     private static final Pattern MAVEN_TEST_FOLDER = Pattern.compile("src/test/.*");
-    
-    private static Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
-
-    private static final IPreferenceStore workbenchStore = MoreUnitPlugin.getDefault().getPreferenceStore();
 
     private static Preferences instance = new Preferences();
 
-    static
-    {
-        workbenchStore.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
-        workbenchStore.setDefault(PreferenceConstants.TEST_TYPE, PreferenceConstants.DEFAULT_TEST_TYPE);
-        workbenchStore.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
+    private Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
-        workbenchStore.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_PRAEFIX);
-        workbenchStore.setDefault(PreferenceConstants.SUFFIXES, PreferenceConstants.DEFAULT_SUFFIX);
-        workbenchStore.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
-        workbenchStore.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
-        workbenchStore.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
-        workbenchStore.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
-        workbenchStore.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
-        workbenchStore.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
-        workbenchStore.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
+    protected Preferences()
+    {
+        initStore(getWorkbenchStore());
     }
 
     public static Preferences getInstance()
@@ -59,6 +45,27 @@ public class Preferences
     protected static void setInstance(Preferences preferences)
     {
         instance = preferences;
+    }
+
+    protected static final void initStore(IPreferenceStore store)
+    {
+        store.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
+        store.setDefault(PreferenceConstants.TEST_TYPE, PreferenceConstants.DEFAULT_TEST_TYPE);
+        store.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
+        store.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_PRAEFIX);
+        store.setDefault(PreferenceConstants.SUFFIXES, PreferenceConstants.DEFAULT_SUFFIX);
+        store.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
+        store.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
+        store.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
+        store.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
+        store.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
+        store.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
+        store.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
+    }
+
+    protected IPreferenceStore getWorkbenchStore()
+    {
+        return MoreUnitPlugin.getDefault().getPreferenceStore();
     }
 
     public boolean hasProjectSpecificSettings(IJavaProject javaProject)
@@ -120,7 +127,7 @@ public class Preferences
 
     private IPackageFragmentRoot findDefaultTestSourceFolder(List<IPackageFragmentRoot> sourceFolders)
     {
-        String defaultTestSourceFolderPath = workbenchStore.getString(PreferenceConstants.PREF_JUNIT_PATH);
+        String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
 
         for (IPackageFragmentRoot sourceFolder : sourceFolders)
         {
@@ -139,7 +146,7 @@ public class Preferences
     {
         List<IPackageFragmentRoot> possibleMainSrcFolders = new ArrayList<IPackageFragmentRoot>();
 
-        String defaultTestSourceFolderPath = workbenchStore.getString(PreferenceConstants.PREF_JUNIT_PATH);
+        String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
 
         for (IPackageFragmentRoot sourceFolder : javaSourceFolders)
         {
@@ -157,11 +164,6 @@ public class Preferences
     private static boolean isMavenLikeTestFolder(String srcFolderPath)
     {
         return MAVEN_TEST_FOLDER.matcher(srcFolderPath).matches();
-    }
-
-    protected Preferences()
-    {
-        super();
     }
 
     public String getJunitDirectoryFromPreferences(IJavaProject javaProject)
@@ -205,7 +207,7 @@ public class Preferences
         String preferenceValue = store(javaProject).getString(PreferenceConstants.PREFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
     }
-    
+
     public String[] getPrefixesOrderedByDescLength(IJavaProject javaProject)
     {
         String[] prefixes = getPrefixes(javaProject);
@@ -261,7 +263,7 @@ public class Preferences
         {
             return store(javaProject).getString(PreferenceConstants.TEST_TYPE);
         }
-        return store(javaProject).getDefaultString(PreferenceConstants.DEFAULT_TEST_TYPE);
+        return PreferenceConstants.DEFAULT_TEST_TYPE;
     }
 
     public void setTestType(IJavaProject javaProject, String testType)
@@ -337,13 +339,13 @@ public class Preferences
         if(resultStore.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS))
             return resultStore;
 
-        return workbenchStore;
+        return getWorkbenchStore();
     }
 
     public IPreferenceStore getProjectStore(IJavaProject javaProject)
     {
         if(javaProject == null)
-            return workbenchStore;
+            return getWorkbenchStore();
 
         IPreferenceStore resultStore = null;
 
@@ -363,7 +365,7 @@ public class Preferences
         return resultStore;
     }
 
-    public static void clearProjectCach()
+    public void clearProjectCache()
     {
         synchronized (preferenceMap)
         {
@@ -404,7 +406,7 @@ public class Preferences
         // falls back to given source folder
         return mainSrcFolder;
     }
-    
+
     public IPackageFragmentRoot getMainSourceFolder(IJavaProject mainProject, IPackageFragmentRoot testSrcFolder)
     {
         List<SourceFolderMapping> mappings = getSourceMappingList(mainProject);
@@ -457,7 +459,7 @@ public class Preferences
     {
         return preferenceMap.values();
     }
-    
+
     public boolean shouldUseTestMethodExtendedSearch(IJavaProject javaProject)
     {
         if(store(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))

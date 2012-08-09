@@ -15,7 +15,7 @@ import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
 
-@Context(mainCls="testing:Hello", testCls="testing:HelloTest")
+@Context(mainCls = "testing:Hello", testCls = "testing:HelloTest")
 public class MethodTestCallerFinderTest extends ContextTestCase
 {
     private TypeHandler cutType;

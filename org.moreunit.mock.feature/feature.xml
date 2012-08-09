@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit.mock"
       label="MoreUnit For Java: Mock Support"
-      version="2.4.4.qualifier"
+      version="2.4.6.qualifier"
       provider-name="moreunit.sourceforge.net">
 
    <description url="http://moreunit.sourceforge.net">
@@ -103,11 +103,6 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <includes
-         id="org.moreunit.mock.source"
-         version="0.0.0"
-         name="MoreUnit Mock Support (Sources)"/>
-
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -115,7 +110,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.jdt.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.moreunit" version="2.3.0" match="greaterOrEqual"/>
+      <import plugin="org.moreunit.plugin"/>
    </requires>
 
    <plugin
@@ -133,7 +128,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
          unpack="false"/>
 
    <plugin
-         id="org.moreunit.mock"
+         id="org.moreunit.mock.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
