@@ -11,6 +11,7 @@
     <module>../org.moreunit.plugin</module>
     <module>../org.moreunit.test.dependencies</module>
     <module>../org.moreunit.core.test</module>
+    <module>../org.moreunit.light.feature</module>
     <module>../org.moreunit.test</module>
     <module>../org.moreunit.feature</module>
     <module>../org.moreunit.dependencies.guice</module>
@@ -232,6 +233,12 @@
   		<id>latestandgreatest</id>
   		<properties>
   			<rsync.dir>latestandgreatest</rsync.dir>
+  		</properties>
+  	</profile>
+  	<profile>
+  		<id>mu3</id>
+  		<properties>
+  			<rsync.dir>moreunit-3-alpha</rsync.dir>
   		</properties>
   	</profile>
   	

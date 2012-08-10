@@ -6,5 +6,8 @@
    <feature url="features/org.moreunit.mock_2.4.6.qualifier.jar" id="org.moreunit.mock" version="2.4.6.qualifier">
       <category name="org.moreunit"/>
    </feature>
+   <feature url="features/org.moreunit.light_2.4.6.qualifier.jar" id="org.moreunit.light" version="2.4.6.qualifier">
+      <category name="org.moreunit"/>
+   </feature>
    <category-def name="org.moreunit" label="MoreUnit"/>
 </site>
