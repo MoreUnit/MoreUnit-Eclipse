@@ -4,6 +4,7 @@ import org.eclipse.core.resources.IFile;
 
 public class MatchingFile
 {
+    private final boolean searchCancelled;
     private final IFile file;
     private final SourceFolderPath srcFolderToCreate;
     private final String fileToCreate;
@@ -18,8 +19,14 @@ public class MatchingFile
         return new MatchingFile(srcFolderToCreate, fileToCreate);
     }
 
+    public static MatchingFile searchCancelled()
+    {
+        return new MatchingFile(true);
+    }
+
     private MatchingFile(IFile file)
     {
+        this.searchCancelled = false;
         this.file = file;
         this.srcFolderToCreate = null;
         this.fileToCreate = null;
@@ -27,9 +34,23 @@ public class MatchingFile
 
     private MatchingFile(SourceFolderPath srcFolderToCreate, String fileToCreate)
     {
+        this.searchCancelled = false;
         this.file = null;
         this.srcFolderToCreate = srcFolderToCreate;
         this.fileToCreate = fileToCreate;
+    }
+
+    private MatchingFile(boolean searchCancelled)
+    {
+        this.searchCancelled = searchCancelled;
+        this.file = null;
+        this.srcFolderToCreate = null;
+        this.fileToCreate = null;
+    }
+
+    public boolean isSearchCancelled()
+    {
+        return searchCancelled;
     }
 
     public boolean isFound()

@@ -21,6 +21,7 @@ import org.moreunit.core.extension.jump.IJumper;
 import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.matching.FileMatchSelector;
+import org.moreunit.core.matching.MatchSelection;
 import org.moreunit.core.preferences.LanguagePreferencesWriter;
 import org.moreunit.core.preferences.Preferences;
 import org.moreunit.core.ui.DrivableWizardDialog;
@@ -280,6 +281,27 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     }
 
     @Test
+    public void should_gracefully_handle_cancellation_when_file_selector_is_used() throws Exception
+    {
+        // given
+        preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
+
+        IFile sourceFile = createFile("SomeConcept.lg");
+        createFile("SomeConceptFirstTest.lg");
+        createFile("SomeConceptSecondTest.lg");
+
+        capturingSelector.fileToReturn = null; // == cancellation
+
+        openEditor(sourceFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+
+        // then no exception, and:
+        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+    }
+
+    @Test
     public void should_create_test_file_when_it_does_not_exist() throws Exception
     {
         // given
@@ -372,7 +394,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         private IFile fileToReturn;
         private Collection<IFile> files;
 
-        public IFile select(Collection<IFile> files, IFile preferredFile)
+        public MatchSelection select(Collection<IFile> files, IFile preferredFile)
         {
             this.files = files;
 
@@ -380,10 +402,10 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
             {
                 if(f.equals(fileToReturn))
                 {
-                    return f;
+                    return MatchSelection.file(f);
                 }
             }
-            return null;
+            return MatchSelection.none();
         }
     }
 

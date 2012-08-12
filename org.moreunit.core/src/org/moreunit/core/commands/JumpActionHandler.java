@@ -72,6 +72,11 @@ public class JumpActionHandler extends AbstractHandler
         {
             MatchingFile match = fileMatcher.match(selectedFile);
 
+            if(match.isSearchCancelled())
+            {
+                return null;
+            }
+
             if(! match.isFound())
             {
                 try

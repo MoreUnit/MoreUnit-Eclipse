@@ -6,5 +6,5 @@ import org.eclipse.core.resources.IFile;
 
 public interface FileMatchSelector
 {
-    IFile select(Collection<IFile> files, IFile preferredFile);
+    MatchSelection select(Collection<IFile> files, IFile preferredFile);
 }

@@ -68,7 +68,14 @@ public class FileMatcher
         {
             return MatchingFile.found(rc.results.iterator().next());
         }
-        return MatchingFile.found(getMatchSelector().select(rc.results, null));
+
+        MatchSelection selection = getMatchSelector().select(rc.results, null);
+        if(selection.exists())
+        {
+            return MatchingFile.found(selection.get());
+        }
+
+        return MatchingFile.searchCancelled();
     }
 
     private FileMatchSelector getMatchSelector()
@@ -171,11 +178,12 @@ public class FileMatcher
             this.logger = logger;
         }
 
-        public IFile select(Collection<IFile> files, IFile preferredFile)
+        public MatchSelection select(Collection<IFile> files, IFile preferredFile)
         {
             FileContentProvider contentProvider = new FileContentProvider(files, preferredFile);
             FileMatchSelectionDialog<IFile> dialog = new FileMatchSelectionDialog<IFile>("Jump to...", contentProvider, logger);
-            return dialog.getChoice();
+            IFile choice = dialog.getChoice();
+            return choice == null ? MatchSelection.none() : MatchSelection.file(choice);
         }
     }
 
