@@ -129,7 +129,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     @Test
     public void getOneCorrespondingMember_should_return_testcase_when_no_testmethod_given() throws Exception
     {
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
@@ -146,7 +146,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
         IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public void testGetNumberOne()").get();
 
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
@@ -164,7 +164,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
         IMethod giveMe1TestMethod = testCaseHandler().addMethod("public void testGiveMe1()", "new SomeClass().getNumberOne();").get();
 
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
@@ -183,7 +183,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
         IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public void testGetNumberOne()", "new SomeClass().getNumberOne();").get();
 
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
@@ -209,7 +209,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         TypeHandler subTypeTestHandler = context.getProjectHandler().getTestSrcFolderHandler().createClass("org.SomeSubClassTest");
         MethodHandler overridingMethodTestHandler = subTypeTestHandler.addMethod("public void testDoIt()", "new SomeSubClass().doIt();");
 
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(subTypeHandler.getCompilationUnit());
+        TypeFacade classTypeFacade = new ClassTypeFacade(subTypeHandler.getCompilationUnit());
         
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //

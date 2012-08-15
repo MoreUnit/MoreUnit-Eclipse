@@ -12,10 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
+import org.moreunit.test.context.Preferences;
+import org.moreunit.test.context.configs.SimpleJUnit3Preferences;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
 
-@Context(mainCls = "testing:Hello", testCls = "testing:HelloTest")
+@Context(mainCls = "testing:Hello", testCls = "testing:HelloTest", preferences = @Preferences(SimpleJUnit3Preferences.class))
 public class MethodTestCallerFinderTest extends ContextTestCase
 {
     private TypeHandler cutType;

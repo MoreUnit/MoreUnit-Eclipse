@@ -205,7 +205,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
     @Preferences(testClassSuffixes="Test", flexibleNaming=true, testSrcFolder="test")
     @Test
-    public void getCorrespondingClassesUnderTest_should_return_more_than_one_test_when_flexible_testcase_naming_is_set() throws Exception
+    public void getCorrespondingClasses_should_return_more_than_one_test_when_flexible_testcase_naming_is_set() throws Exception
     {
         TypeHandler class1 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.One");
         TypeHandler class2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.OneTwo");
@@ -213,7 +213,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
 
-        Collection<IType> classes = testCaseTypeFacade.getCorrespondingClassesUnderTest(false);
+        Collection<IType> classes = testCaseTypeFacade.getCorrespondingClasses(false);
         assertThat(classes).hasSize(2).onProperty("elementName").contains("OneTwo", "One");
 
         class1.getCompilationUnit().delete(true, null);
@@ -223,7 +223,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     
     @Preferences(testClassSuffixes="Test", flexibleNaming=false, testSrcFolder="test")
     @Test
-    public void getCorrespondingClassesUnderTest_should_return_only_one_test_when_flexible_testcase_naming_is_not_set() throws Exception
+    public void getCorrespondingClasses_should_return_only_one_test_when_flexible_testcase_naming_is_not_set() throws Exception
     {
         TypeHandler class1 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.One");
         TypeHandler class2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.OneTwo");
@@ -231,7 +231,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
 
-        Collection<IType> classes = testCaseTypeFacade.getCorrespondingClassesUnderTest(false);
+        Collection<IType> classes = testCaseTypeFacade.getCorrespondingClasses(false);
         assertThat(classes).hasSize(1);
         assertThat(classes.iterator().next().getElementName()).isEqualTo("OneTwo");
 

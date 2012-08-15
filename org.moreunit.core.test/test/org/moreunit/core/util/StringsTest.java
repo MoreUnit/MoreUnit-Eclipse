@@ -63,6 +63,20 @@ public class StringsTest
     }
 
     @Test
+    public void should_return_null_when_blank() throws Exception
+    {
+        assertThat(Strings.nullIfBlank(null)).isEqualTo(null);
+        assertThat(Strings.nullIfBlank("")).isEqualTo(null);
+        assertThat(Strings.nullIfBlank("   ")).isEqualTo(null);
+    }
+
+    @Test
+    public void should_return_given_string_when_not_blank() throws Exception
+    {
+        assertThat(Strings.nullIfBlank("blah")).isEqualTo("blah");
+    }
+
+    @Test
     public void should_count_occurrences() throws Exception
     {
         assertThat(Strings.countOccurrences("blah", "*")).isEqualTo(0);
@@ -100,5 +114,19 @@ public class StringsTest
     {
         assertThat(Strings.ucFirst(null)).isEqualTo(null);
         assertThat(Strings.ucFirst("")).isEqualTo("");
+    }
+
+    @Test
+    public void join_should_return_empty_string_for_empty_array() throws Exception
+    {
+        assertThat(Strings.join(",")).isEqualTo("");
+        assertThat(Strings.join(",", new String[0])).isEqualTo("");
+    }
+
+    @Test
+    public void join_should_join_given_strings_whith_given_separator() throws Exception
+    {
+        assertThat(Strings.join(",", "1", "2", "3")).isEqualTo("1,2,3");
+        assertThat(Strings.join(" -> ", "aBc", "2", "DEf")).isEqualTo("aBc -> 2 -> DEf");
     }
 }

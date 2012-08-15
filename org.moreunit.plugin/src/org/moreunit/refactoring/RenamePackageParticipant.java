@@ -23,6 +23,7 @@ import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.util.PluginTools;
 
 /**
@@ -78,18 +79,20 @@ public class RenamePackageParticipant extends RenameParticipant
             return null;
         }
 
+        String cutPackageName = packageFragment.getElementName();
+        ProjectPreferences prefs = Preferences.forProject(packageFragment.getJavaProject());
+
         List<Change> changes = new ArrayList<Change>();
 
         for (IPackageFragmentRoot packageRoot : correspondingPackages)
         {
-            String cutPackageName = packageFragment.getElementName();
-            IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, Preferences.getInstance(), packageFragment.getJavaProject()));
+            IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, prefs));
             if(packageToRename != null && packageToRename.exists())
             {
                 RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
                 RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
                 renameJavaElementDescriptor.setJavaElement(packageToRename);
-                renameJavaElementDescriptor.setNewName(PluginTools.getTestPackageName(getArguments().getNewName(), Preferences.getInstance(), packageFragment.getJavaProject()));
+                renameJavaElementDescriptor.setNewName(PluginTools.getTestPackageName(getArguments().getNewName(), prefs));
 
                 RefactoringStatus refactoringStatus = new RefactoringStatus();
                 Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);

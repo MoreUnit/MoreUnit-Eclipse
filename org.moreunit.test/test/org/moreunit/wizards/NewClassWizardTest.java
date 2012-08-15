@@ -1,9 +1,5 @@
 package org.moreunit.wizards;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.moreunit.wizards.NewClassWizard.removePrefix;
-import static org.moreunit.wizards.NewClassWizard.removeSuffix;
-
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
 import org.moreunit.test.context.Preferences;
@@ -21,52 +17,6 @@ public class NewClassWizardTest extends NewClassyWizardTestCase
         return NewClassWizard.class;
     }
 
-    @Test
-    public void should_not_remove_possible_suffixes_from_middle_of_name() throws Exception
-    {
-        String[] possibleSuffixes = { "Test", "Spec" };
-
-        for (String startName : new String[] { "NotATestReally", "SpecTestFoo", "FooSpecBar" })
-        {
-            String nameWithoutSuffix = removeSuffix(startName, possibleSuffixes);
-            assertThat(nameWithoutSuffix).isEqualTo(startName);
-        }
-    }
-
-    @Test
-    public void should_remove_first_possible_suffix_only() throws Exception
-    {
-        String[] possibleSuffixes = { "Test", "Spec" };
-
-        assertThat(removeSuffix("Class1Test", possibleSuffixes)).isEqualTo("Class1");
-        assertThat(removeSuffix("Class2Spec", possibleSuffixes)).isEqualTo("Class2");
-        assertThat(removeSuffix("Class3TestSpec", possibleSuffixes)).isEqualTo("Class3Test");
-        assertThat(removeSuffix("Class4SpecTest", possibleSuffixes)).isEqualTo("Class4Spec");
-    }
-
-    @Test
-    public void should_not_remove_possible_prefixes_from_middle_of_name() throws Exception
-    {
-        String[] possiblePrefixes = { "Test", "Spec" };
-
-        for (String startName : new String[] { "NotATestReally", "FooSpecTest", "FooSpecBar" })
-        {
-            String nameWithoutPrefix = removePrefix(startName, possiblePrefixes);
-            assertThat(nameWithoutPrefix).isEqualTo(startName);
-        }
-    }
-
-    @Test
-    public void should_remove_first_possible_prefix_only() throws Exception
-    {
-        String[] possiblePrefixes = { "Test", "Spec" };
-
-        assertThat(removePrefix("TestClass1", possiblePrefixes)).isEqualTo("Class1");
-        assertThat(removePrefix("SpecClass2", possiblePrefixes)).isEqualTo("Class2");
-        assertThat(removePrefix("SpecTestClass3", possiblePrefixes)).isEqualTo("TestClass3");
-        assertThat(removePrefix("TestSpecClass4", possiblePrefixes)).isEqualTo("SpecClass4");
-    }
-    
     @Test
     @Project(
         mainSrcFolder = "main-src",

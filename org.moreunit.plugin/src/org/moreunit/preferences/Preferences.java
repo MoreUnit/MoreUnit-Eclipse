@@ -1,8 +1,5 @@
 package org.moreunit.preferences;
 
-import static java.util.Arrays.sort;
-import static java.util.Collections.reverseOrder;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,8 +14,9 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
-import org.moreunit.core.util.StringLengthComparator;
+import org.moreunit.core.util.Strings;
 import org.moreunit.elements.SourceFolderMapping;
+import org.moreunit.matching.TestClassNamePattern;
 import org.moreunit.util.PluginTools;
 
 public class Preferences
@@ -202,17 +200,15 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, methodContent);
     }
 
+    /**
+     * @Deprecated use {@link ProjectPreferences#getTestClassNamePattern()}
+     *             instead.
+     */
+    @Deprecated
     public String[] getPrefixes(IJavaProject javaProject)
     {
         String preferenceValue = store(javaProject).getString(PreferenceConstants.PREFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
-    }
-
-    public String[] getPrefixesOrderedByDescLength(IJavaProject javaProject)
-    {
-        String[] prefixes = getPrefixes(javaProject);
-        sort(prefixes, reverseOrder(new StringLengthComparator()));
-        return prefixes;
     }
 
     public void setPrefixes(IJavaProject javaProject, String[] prefixes)
@@ -220,17 +216,15 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
     }
 
+    /**
+     * @Deprecated use {@link ProjectPreferences#getTestClassNamePattern()}
+     *             instead.
+     */
+    @Deprecated
     public String[] getSuffixes(IJavaProject javaProject)
     {
         String preferenceValue = store(javaProject).getString(PreferenceConstants.SUFFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
-    }
-
-    public String[] getSuffixesOrderedByDescLength(IJavaProject javaProject)
-    {
-        String[] suffixes = getSuffixes(javaProject);
-        sort(suffixes, reverseOrder(new StringLengthComparator()));
-        return suffixes;
     }
 
     public void setSuffixes(IJavaProject javaProject, String[] suffixes)
@@ -271,33 +265,11 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_TYPE, testType);
     }
 
-    public boolean shouldUseJunit4Type(IJavaProject javaProject)
-    {
-        if(store(javaProject).contains(PreferenceConstants.TEST_TYPE))
-        {
-            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(store(javaProject).getString(PreferenceConstants.TEST_TYPE));
-        }
-        return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
-    }
-
-    public boolean shouldUseJunit3Type(IJavaProject javaProject)
-    {
-        if(store(javaProject).contains(PreferenceConstants.TEST_TYPE))
-        {
-            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(store(javaProject).getString(PreferenceConstants.TEST_TYPE));
-        }
-        return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
-    }
-
-    public boolean shouldUseTestNgType(IJavaProject javaProject)
-    {
-        if(store(javaProject).contains(PreferenceConstants.TEST_TYPE))
-        {
-            return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(store(javaProject).getString(PreferenceConstants.TEST_TYPE));
-        }
-        return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(PreferenceConstants.DEFAULT_TEST_TYPE);
-    }
-
+    /**
+     * @Deprecated use {@link ProjectPreferences#getTestClassNamePattern()}
+     *             instead.
+     */
+    @Deprecated
     public boolean shouldUseFlexibleTestCaseNaming(IJavaProject javaProject)
     {
         if(store(javaProject).contains(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING))
@@ -486,6 +458,7 @@ public class Preferences
 
     public static class ProjectPreferences
     {
+        private final TestClassNameTemplateBuilder templateBuilder = new TestClassNameTemplateBuilder();
         private final Preferences prefs;
         private final IJavaProject project;
 
@@ -495,24 +468,14 @@ public class Preferences
             this.project = project;
         }
 
-        public String[] getClassPrefixes()
+        private String[] getClassPrefixes()
         {
             return prefs.getPrefixes(project);
         }
 
-        public String[] getClassPrefixesOrderedByDescLength()
-        {
-            return prefs.getPrefixesOrderedByDescLength(project);
-        }
-
-        public String[] getClassSuffixes()
+        private String[] getClassSuffixes()
         {
             return prefs.getSuffixes(project);
-        }
-
-        public String[] getClassSuffixesOrderedByDescLength()
-        {
-            return prefs.getSuffixesOrderedByDescLength(project);
         }
 
         public IPackageFragmentRoot getMainSourceFolder(IPackageFragmentRoot testSrcFolder)
@@ -522,12 +485,12 @@ public class Preferences
 
         public String getPackagePrefix()
         {
-            return prefs.getTestPackagePrefix(project);
+            return Strings.nullIfBlank(prefs.getTestPackagePrefix(project));
         }
 
         public String getPackageSuffix()
         {
-            return prefs.getTestPackageSuffix(project);
+            return Strings.nullIfBlank(prefs.getTestPackageSuffix(project));
         }
 
         public List<SourceFolderMapping> getSourceFolderMappings()
@@ -560,12 +523,27 @@ public class Preferences
             return prefs.getTestType(project);
         }
 
+        public boolean shouldUseJunit4Type()
+        {
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(getTestType());
+        }
+
+        public boolean shouldUseJunit3Type()
+        {
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(getTestType());
+        }
+
+        public boolean shouldUseTestNgType()
+        {
+            return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(getTestType());
+        }
+
         public boolean hasSpecificSettings()
         {
             return prefs.hasProjectSpecificSettings(project);
         }
 
-        public boolean shouldUseFlexibleTestCaseNaming()
+        private boolean shouldUseFlexibleTestCaseNaming()
         {
             return prefs.shouldUseFlexibleTestCaseNaming(project);
         }
@@ -573,6 +551,12 @@ public class Preferences
         public boolean shouldUseTestMethodExtendedSearch()
         {
             return prefs.shouldUseTestMethodExtendedSearch(project);
+        }
+
+        public TestClassNamePattern getTestClassNamePattern()
+        {
+            String template = templateBuilder.buildFromSettings(getClassPrefixes(), getClassSuffixes(), shouldUseFlexibleTestCaseNaming());
+            return new TestClassNamePattern(template, getPackagePrefix(), getPackageSuffix());
         }
     }
 }

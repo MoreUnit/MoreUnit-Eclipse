@@ -24,7 +24,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 public class PluginTools
 {
@@ -195,22 +195,22 @@ public class PluginTools
      * @param javaProject
      * @return
      */
-    public static String getTestPackageName(String cutPackageName, Preferences preferences, IJavaProject javaProject)
+    public static String getTestPackageName(String cutPackageName, ProjectPreferences preferences)
     {
-        String testPackagePrefix = preferences.getTestPackagePrefix(javaProject);
-        String testPackageSuffix = preferences.getTestPackageSuffix(javaProject);
+        String testPackagePrefix = preferences.getPackagePrefix();
+        String testPackageSuffix = preferences.getPackageSuffix();
         String testPackageName = cutPackageName;
-        
-        if(!BaseTools.isStringTrimmedEmpty(testPackagePrefix))
+
+        if(testPackagePrefix != null)
         {
             testPackageName = String.format("%s.%s", testPackagePrefix, testPackageName);
         }
-        
-        if(!BaseTools.isStringTrimmedEmpty(testPackageSuffix))
+
+        if(testPackageSuffix != null)
         {
             testPackageName = String.format("%s.%s", testPackageName, testPackageSuffix);
         }
-        
+
         return testPackageName;
     }
 }

@@ -3,6 +3,7 @@ package org.moreunit.ui;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.moreunit.test.model.Types.type;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -15,7 +16,6 @@ import org.junit.Test;
 
 public class MemberContentProviderTest
 {
-
     private Set<IType> types;
     private Set<IMethod> methods;
 
@@ -36,9 +36,9 @@ public class MemberContentProviderTest
     @Test
     public void getElements_should_return_types_when_called_with_types()
     {
-        types.add(mockType("type2"));
-        types.add(mockType("type3"));
-        types.add(mockType("type1"));
+        types.add(type("type2"));
+        types.add(type("type3"));
+        types.add(type("type1"));
 
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
@@ -49,10 +49,10 @@ public class MemberContentProviderTest
     @Test
     public void should_build_elements_with_children_when_called_with_types_and_methods()
     {
-        IType type2 = mockType("type2");
+        IType type2 = type("type2");
         types.add(type2);
 
-        IType type1 = mockType("type1");
+        IType type1 = type("type1");
         types.add(type1);
 
         methods.add(mockMethod(type1, "method1B"));
@@ -74,10 +74,10 @@ public class MemberContentProviderTest
     @Test
     public void should_detect_types_when_only_method_is_given()
     {
-        IType type1 = mockType("type1");
+        IType type1 = type("type1");
         types.add(type1);
 
-        IType type2 = mockType("type2"); // not added to type set
+        IType type2 = type("type2"); // not added to type set
         methods.add(mockMethod(type2, "method2A"));
 
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
@@ -92,14 +92,14 @@ public class MemberContentProviderTest
     @Test
     public void should_build_with_types_with_and_without_methods()
     {
-        IType type3 = mockType("type3");
-        IType type1 = mockType("type1");
+        IType type3 = type("type3");
+        IType type1 = type("type1");
 
         methods.add(mockMethod(type1, "method1B"));
         methods.add(mockMethod(type3, "method3A"));
         methods.add(mockMethod(type1, "method1A"));
 
-        IType type2 = mockType("type2");
+        IType type2 = type("type2");
         types.add(type2);
 
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
@@ -112,13 +112,6 @@ public class MemberContentProviderTest
 
         Object[] children3 = contentProvider.getChildren(elements[2]);
         assertThat(children3).onProperty("elementName").containsOnly("method3A");
-    }
-
-    private IType mockType(String typeName)
-    {
-        IType mock = mock(IType.class);
-        when(mock.getElementName()).thenReturn(typeName);
-        return mock;
     }
 
     private IMethod mockMethod(IType declaringType, String methodName)

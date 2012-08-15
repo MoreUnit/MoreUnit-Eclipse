@@ -3,6 +3,9 @@ package org.moreunit.core.matching;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Splits a CamelCase name into tokens.
+ */
 public class CamelCaseNameTokenizer extends NameTokenizer
 {
     private String nextWord(WordScanner scanner)
@@ -28,13 +31,13 @@ public class CamelCaseNameTokenizer extends NameTokenizer
     public List<String> getWords(String name)
     {
         List<String> words = new ArrayList<String>();
-    
+
         WordScanner scanner = new WordScanner(name);
         while (hasNextWord(scanner))
         {
             words.add(nextWord(scanner));
         }
-        
+
         return words;
     }
 }

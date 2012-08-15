@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * Splits a name into tokens.
+ */
 public abstract class NameTokenizer
 {
     private static final String DEFAULT_SEPARATOR = "";

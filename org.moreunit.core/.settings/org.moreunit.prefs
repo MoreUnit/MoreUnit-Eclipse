@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
 org.moreunit.extendedTestMethodSearch=true
-org.moreunit.suffixes=Test
+org.moreunit.prefixes=
 org.moreunit.test_methodType=testMethodTypeNoPrefix
 org.moreunit.test_type=junit4
 org.moreunit.unitsourcefolder=org.moreunit.core\:src\:org.moreunit.core.test\:test

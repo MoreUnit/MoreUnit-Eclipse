@@ -16,9 +16,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.moreunit.preferences.Preferences;
 import org.moreunit.util.MethodComparator;
-import org.moreunit.util.TestNamingPatternAwareTypeComparator;
+import org.moreunit.util.TypeComparator;
 
 /**
  * A provider of members to display in a tree.
@@ -52,31 +51,6 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         List<IType> sortedTypes = sortTypes(types);
         Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
         allTypes.addAll(sortTypes(methodsByType.keySet()));
-        this.elements = allTypes.toArray();
-
-        defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
-    }
-
-    /**
-     * Constructs a provider that will propose the given types, ordered as
-     * follows:
-     * <ol>
-     * <li>the main types, ordered by name,</li>
-     * <li>the secondary types, ordered by name.</li>
-     * </ol>
-     * Additionally this provider will propose the given type for selection.
-     * 
-     * @param mainTypes types to display first
-     * @param secondaryTypes types to display after the main ones
-     * @param memberProposedForSelection the default selection
-     */
-    public MemberContentProvider(Collection<IType> mainTypes, Collection<IType> secondaryTypes, IType memberProposedForSelection)
-    {
-        methodsByType = new HashMap<IType, List<IMethod>>();
-
-        List<IType> sortedTypes = sortTypes(mainTypes);
-        Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
-        allTypes.addAll(sortTypes(secondaryTypes));
         this.elements = allTypes.toArray();
 
         defaultSelection = getDefaultSelection(memberProposedForSelection, sortedTypes);
@@ -125,7 +99,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     private List<IType> sortTypes(Collection<IType> types)
     {
         List<IType> list = new ArrayList<IType>(types);
-        Collections.sort(list, new TestNamingPatternAwareTypeComparator(Preferences.getInstance()));
+        Collections.sort(list, new TypeComparator());
         return list;
     }
 
@@ -186,14 +160,14 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     {
         List<Object> elements = new ArrayList<Object>();
         Collections.addAll(elements, this.elements);
-        
+
         if(! elements.isEmpty() && ! (elements.get(elements.size() - 1) instanceof SeparatorElement))
         {
             elements.add(new SeparatorElement());
         }
-        
+
         elements.add(action);
-        
+
         this.elements = elements.toArray();
         return this;
     }

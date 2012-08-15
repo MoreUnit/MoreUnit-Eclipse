@@ -4,6 +4,9 @@ import static java.util.Arrays.asList;
 
 import java.util.List;
 
+/**
+ * Splits a name into tokens, using a given separator.
+ */
 public class SeparatorNameTokenizer extends NameTokenizer
 {
     public SeparatorNameTokenizer(String separator)

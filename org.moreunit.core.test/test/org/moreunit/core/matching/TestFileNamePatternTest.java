@@ -31,9 +31,9 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_test_file_with_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_suffix", camelCaseTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Suffix", camelCaseTokenizer);
 
-        FileNameEvaluation evaluation = pattern.evaluate("SomeFile_suffix");
+        FileNameEvaluation evaluation = pattern.evaluate("SomeFileSuffix");
 
         assertTrue(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("SomeFile");
@@ -43,12 +43,12 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_test_file_with_prefix_and_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("prefix_${srcFile}Suf", camelCaseTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Prefix${srcFile}Suf", camelCaseTokenizer);
 
-        FileNameEvaluation evaluation = pattern.evaluate("prefix_aFileSuf");
+        FileNameEvaluation evaluation = pattern.evaluate("PrefixAFileSuf");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("aFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("AFile");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -153,7 +153,7 @@ public class TestFileNamePatternTest
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MySource");
 
         Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
-        assertTrue(names.isEmpty());
+        assertThat(names).isEmpty();
     }
 
     @Test
@@ -171,7 +171,7 @@ public class TestFileNamePatternTest
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MySource");
 
         Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
-        assertTrue(names.isEmpty());
+        assertThat(names).isEmpty();
     }
 
     @Test
@@ -265,19 +265,19 @@ public class TestFileNamePatternTest
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
 
-        pattern.evaluate("MyFileSuf1");
+        evaluation = pattern.evaluate("MyFileSuf1");
 
         assertTrue(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
 
-        pattern.evaluate("Pre2MyFile");
+        evaluation = pattern.evaluate("Pre2MyFile");
 
         assertTrue(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
 
-        pattern.evaluate("Pre1MyFileSuf2");
+        evaluation = pattern.evaluate("Pre1MyFileSuf2");
 
         assertTrue(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
@@ -288,6 +288,19 @@ public class TestFileNamePatternTest
         assertTrue(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("FooMyFile");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("MyFile", "File");
+    }
+
+    @Test
+    public void should_not_try_to_build_exhaustive_list_of_src_file_patterns_for_complex_template() throws Exception
+    {
+        TestFileNamePattern pattern = new TestFileNamePattern("(Pre1|Pre2)*${srcFile}(Suf1|Suf2)*", camelCaseTokenizer);
+
+        FileNameEvaluation evaluation = pattern.evaluate("Pre1FooMyFileBarSuf2");
+
+        assertTrue(evaluation.isTestFile());
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("FooMyFileBar");
+
+        assertFalse(evaluation.getOtherCorrespondingFilePatterns().contains("MyFile"));
     }
 
     @Test
@@ -305,25 +318,25 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_src_file_with_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_suf", camelCaseTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Suf", camelCaseTokenizer);
 
         FileNameEvaluation evaluation = pattern.evaluate("SomeFile");
 
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("SomeFile_suf");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("SomeFileSuf");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
     @Test
     public void should_evaluate_src_file_with_prefix_and_suffix() throws Exception
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("pre_${srcFile}Suffix", camelCaseTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Pre${srcFile}Suffix", camelCaseTokenizer);
 
-        FileNameEvaluation evaluation = pattern.evaluate("aFile");
+        FileNameEvaluation evaluation = pattern.evaluate("AFile");
 
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("pre_aFileSuffix");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("PreAFileSuffix");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(2).contains("PreAFile", "AFileSuffix");
     }
 
     @Test
@@ -338,7 +351,7 @@ public class TestFileNamePatternTest
         // then
         assertFalse(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains(".*Pre.*Source.*Suf.*");
-        assertTrue(evaluation.getOtherCorrespondingFilePatterns().isEmpty());
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(2).contains(".*Pre.*Source.*", ".*Source.*Suf.*");
     }
 
     @Test
@@ -353,7 +366,7 @@ public class TestFileNamePatternTest
         // then
         assertFalse(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(2).contains("Pre1Source", "Pre2Source");
-        assertTrue(evaluation.getOtherCorrespondingFilePatterns().isEmpty());
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
     @Test
@@ -368,7 +381,24 @@ public class TestFileNamePatternTest
         // then
         assertFalse(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(2).contains("SourceSuf1", "SourceSuf2");
-        assertTrue(evaluation.getOtherCorrespondingFilePatterns().isEmpty());
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
+    }
+
+    @Test
+    public void should_evaluate_src_file_with_several_possible_prefixes_and_suffixes() throws Exception
+    {
+        // given
+        TestFileNamePattern pattern = new TestFileNamePattern("(Pre1|Pre2)${srcFile}(Suf1|Suf2)", camelCaseTokenizer);
+
+        // when
+        FileNameEvaluation evaluation = pattern.evaluate("Source");
+
+        // then
+        assertFalse(evaluation.isTestFile());
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(4) //
+        .contains("Pre1SourceSuf1", "Pre1SourceSuf2", "Pre2SourceSuf1", "Pre2SourceSuf2");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(4) //
+        .contains("Pre1Source", "Pre2Source", "SourceSuf1", "SourceSuf2");
     }
 
     @Test
@@ -385,7 +415,7 @@ public class TestFileNamePatternTest
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(4) //
         .contains(".*Pre1.*Source.*Suf1.*", ".*Pre1.*Source.*Suf2.*", ".*Pre2.*Source.*Suf1.*", ".*Pre2.*Source.*Suf2.*");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(4) //
-        .contains(".*Pre1.*Source.*", ".*Pre1.*Source.*", ".*Source.*Suf1.*", ".*Source.*Suf2.*");
+        .contains(".*Pre1.*Source.*", ".*Pre2.*Source.*", ".*Source.*Suf1.*", ".*Source.*Suf2.*");
     }
 
     @Test
@@ -431,5 +461,70 @@ public class TestFileNamePatternTest
         {
             assertFalse(isValid(template, "_"));
         }
+    }
+
+    @Test
+    public void should_allow_for_forcing_file_type_to_source() throws Exception
+    {
+        // given a pattern built with file type forced to "source"
+        TestFileNamePattern pattern = TestFileNamePattern.forceEvaluationAsSourceFile("${srcFile}Test", "");
+
+        // when evaluating the pattern:
+        // (if only trusting the name template, this file should be a test file)
+        FileNameEvaluation evaluation = pattern.evaluate("MyFileTest");
+
+        // then: file is considered as source file
+        assertFalse(evaluation.isTestFile());
+        // and: test file patterns are proposed
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFileTestTest");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
+    }
+
+    @Test
+    public void should_allow_for_forcing_file_type_to_test() throws Exception
+    {
+        // given a pattern built with file type forced to "test"
+        TestFileNamePattern pattern = TestFileNamePattern.forceEvaluationAsTestFile("${srcFile}Test", "");
+
+        // when evaluating the pattern:
+        // (if only trusting the name template, this file should be a source
+        // file)
+        FileNameEvaluation evaluation = pattern.evaluate("MyFile");
+
+        // then: file is considered as source file
+        assertTrue(evaluation.isTestFile());
+        // and: test file patterns are proposed
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
+    }
+
+    @Test
+    public void should_treat_longest_prefix_first_when_one_prefix_is_contained_in_another_one_s_start() throws Exception
+    {
+        // given
+        TestFileNamePattern pattern = new TestFileNamePattern("*(Test|Tests)${srcFile}", camelCaseTokenizer);
+
+        // when
+        FileNameEvaluation evaluation = pattern.evaluate("TestsConcept");
+
+        // then
+        assertTrue(evaluation.isTestFile());
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).containsOnly("Concept");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
+    }
+
+    @Test
+    public void should_treat_longest_suffix_first_when_one_suffix_is_contained_in_another_one_s_start() throws Exception
+    {
+        // given
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}(Test|Tests)", camelCaseTokenizer);
+
+        // when
+        FileNameEvaluation evaluation = pattern.evaluate("ConceptTests");
+
+        // then
+        assertTrue(evaluation.isTestFile());
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).containsOnly("Concept");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 }

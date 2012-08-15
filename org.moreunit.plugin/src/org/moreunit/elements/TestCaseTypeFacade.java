@@ -2,29 +2,15 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.Preferences;
-import org.moreunit.preferences.Preferences.ProjectPreferences;
-import org.moreunit.util.BaseTools;
 import org.moreunit.util.MethodCallFinder;
-import org.moreunit.util.PluginTools;
-import org.moreunit.util.SearchScopeSingelton;
-import org.moreunit.util.SearchTools;
 import org.moreunit.util.TestMethodCalleeFinder;
-import org.moreunit.util.TestMethodDiviner;
-import org.moreunit.util.TestMethodDivinerFactory;
 import org.moreunit.wizards.NewClassWizard;
 import org.moreunit.wizards.NewClassyWizard;
 
@@ -36,92 +22,20 @@ import org.moreunit.wizards.NewClassyWizard;
  */
 public class TestCaseTypeFacade extends TypeFacade
 {
-    TestMethodDivinerFactory testMethodDivinerFactory;
-    TestMethodDiviner testMethodDiviner;
-
     public TestCaseTypeFacade(ICompilationUnit compilationUnit)
     {
         super(compilationUnit);
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
-    }
-
-    public TestCaseTypeFacade(IEditorPart editorPart)
-    {
-        super(editorPart);
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
-    }
-
-    public TestCaseTypeFacade(IFile file)
-    {
-        super(file);
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
     }
 
     public IType getCorrespondingClassUnderTest()
     {
-        Collection<IType> correspondingCuts = getCorrespondingClassesUnderTest(false);
+        Collection<IType> correspondingCuts = getCorrespondingClasses(false);
         if(correspondingCuts.isEmpty())
         {
             return null;
         }
 
         return correspondingCuts.iterator().next();
-    }
-
-    public Collection<IType> getCorrespondingClassesUnderTest(boolean alsoIncludeLikelyMatches)
-    {
-        Collection<IType> matches = new LinkedHashSet<IType>();
-
-        ProjectPreferences prefs = Preferences.forProject(getJavaProject());
-        List<String> testedClasses = BaseTools.getTestedClass(getType().getFullyQualifiedName(), prefs.getClassPrefixes(), prefs.getClassSuffixes(), prefs.getPackagePrefix(), prefs.getPackageSuffix());
-        if(testedClasses.isEmpty())
-        {
-            return matches;
-        }
-
-        List<String> typeNames = testedClasses;
-        if(prefs.shouldUseFlexibleTestCaseNaming())
-        {
-            typeNames = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
-        }
-
-        try
-        {
-            if(alsoIncludeLikelyMatches)
-            {
-                for (String typeName : typeNames)
-                {
-                    String typeNameOnly = typeName.substring(typeName.lastIndexOf(".") + 1);
-                    matches.addAll(SearchTools.searchFor(typeNameOnly, getSearchScope(compilationUnit)));
-                }
-            }
-            else
-            {
-                for (String typeName : typeNames)
-                {
-                    matches.addAll(SearchTools.searchFor(typeName, getSearchScope(compilationUnit)));
-                }
-            }
-        }
-        catch (CoreException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-
-        return matches;
-    }
-
-    private static IJavaSearchScope getSearchScope(ICompilationUnit compilationUnit)
-    {
-        return SearchScopeSingelton.getInstance().getSearchScope(getSourceFolder(compilationUnit));
-    }
-
-    private static IPackageFragmentRoot getSourceFolder(ICompilationUnit compilationUnit)
-    {
-        return PluginTools.getSourceFolder(compilationUnit);
     }
 
     public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Collection<IType> classesUnderTest)
@@ -169,12 +83,6 @@ public class TestCaseTypeFacade extends TypeFacade
         }
 
         return testedMethods;
-    }
-
-    @Override
-    protected Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches)
-    {
-        return getCorrespondingClassesUnderTest(alsoIncludeLikelyMatches);
     }
 
     @Override

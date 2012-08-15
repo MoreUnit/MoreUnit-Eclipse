@@ -2,26 +2,26 @@ package org.moreunit.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
-import org.moreunit.core.util.StringConstants;
+import org.moreunit.core.util.Strings;
 import org.moreunit.elements.LanguageType;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.util.BaseTools;
-import org.moreunit.util.PluginTools;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
+import org.moreunit.util.JavaType;
 
 public class NewTestCaseWizard extends NewClassyWizard
 {
-    private final IJavaProject project;
-    private final Preferences preferences;
+    private final ProjectPreferences preferences;
     private final NewTestCaseWizardParticipatorManager participatorManager;
+    private final IPackageFragmentRoot testSrcFolder;
+    private final JavaType testCaseName;
+    private final IPackageFragment testPackageFragment;
 
     private MoreUnitWizardPageOne pageOne;
     private NewTestCaseWizardPageTwo pageTwo;
@@ -32,23 +32,24 @@ public class NewTestCaseWizard extends NewClassyWizard
     {
         super(element);
 
-        this.project = element.getJavaProject();
-        this.preferences = Preferences.getInstance();
+        this.preferences = Preferences.forProject(element.getJavaProject());
         this.participatorManager = new NewTestCaseWizardParticipatorManager();
+
+        testSrcFolder = preferences.getTestSourceFolder((IPackageFragmentRoot) element.getPackageFragment().getParent());
+        testCaseName = preferences.getTestClassNamePattern().nameTestCaseFor(getType());
+        testPackageFragment = testSrcFolder.getPackageFragment(testCaseName.getQualifier());
     }
 
     @Override
     public void addPages()
     {
         this.pageTwo = new NewTestCaseWizardPageTwo();
-        this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, project, LanguageType.forPath(getType().getPath()));
+        this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, LanguageType.forPath(getType().getPath()));
         this.pageOne.setWizard(this);
         this.pageTwo.setWizard(this);
         this.pageOne.init(new StructuredSelection(getType()));
 
-        IPackageFragment fragment = initialisePackageFragment();
-
-        this.context = new NewTestCaseWizardContext(getType(), fragment);
+        this.context = new NewTestCaseWizardContext(getType(), testPackageFragment);
         this.wizardComposer = participatorManager.createWizardComposer(context);
         this.wizardComposer.registerBasePage(INewTestCaseWizardPage.TEST_CASE_PAGE, this.pageOne);
         this.wizardComposer.registerBasePage(INewTestCaseWizardPage.TEST_METHODS_PAGE, this.pageTwo);
@@ -59,10 +60,16 @@ public class NewTestCaseWizard extends NewClassyWizard
     public void createPageControls(Composite pageContainer)
     {
         super.createPageControls(pageContainer);
+
+        configurePageOne();
+    }
+
+    private void configurePageOne()
+    {
         // Eclipse 3.1.x does not support junit 4
         try
         {
-            this.pageOne.setJUnit4(this.preferences.shouldUseJunit4Type(project), true);
+            this.pageOne.setJUnit4(this.preferences.shouldUseJunit4Type(), true);
         }
         catch (NoSuchMethodError error)
         {
@@ -70,68 +77,25 @@ public class NewTestCaseWizard extends NewClassyWizard
 
         String testSuperClass = getTestSuperClass();
         if(testSuperClass != null)
+        {
             this.pageOne.setSuperClass(testSuperClass, true);
-
-        this.pageOne.setTypeName(getTestCaseClassName(), true);
-        this.pageOne.setPackageFragmentRoot(getSourceFolderForUnitTest(), true);
-    }
-
-    private String getTestCaseClassName()
-    {
-        String classUnderTest = pageOne.getClassUnderTestText();
-
-        if(classUnderTest.length() == 0)
-            return StringConstants.EMPTY_STRING;
-
-        return getFirstPrefix() + Signature.getSimpleName(classUnderTest) + getFirstSuffix();
-    }
-
-    private String getFirstSuffix()
-    {
-        String[] suffixes = preferences.getSuffixes(project);
-        String suffix = StringConstants.EMPTY_STRING;
-        if(suffixes.length > 0)
-        {
-            suffix = suffixes[0];
         }
-        return suffix;
-    }
 
-    private String getFirstPrefix()
-    {
-        String[] prefixes = preferences.getPrefixes(project);
-        String prefix = StringConstants.EMPTY_STRING;
-        if(prefixes.length > 0)
-        {
-            prefix = prefixes[0];
-        }
-        return prefix;
+        this.pageOne.setPackageFragmentRoot(testSrcFolder, true);
+        this.pageOne.setTypeName(testCaseName.getSimpleName(), true);
+        this.pageOne.setPackageFragment(testPackageFragment, true);
     }
 
     private String getTestSuperClass()
     {
-        String result = this.preferences.getTestSuperClass(project);
+        String result = this.preferences.getTestSuperClass();
 
-        if(BaseTools.isStringTrimmedEmpty(result) && preferences.shouldUseJunit3Type(project))
+        if(Strings.isBlank(result) && preferences.shouldUseJunit3Type())
+        {
             return null;
+        }
 
         return result;
-    }
-
-    private IPackageFragmentRoot getSourceFolderForUnitTest()
-    {
-        return preferences.getTestSourceFolder(project, getPackageFragmentRoot());
-    }
-
-    private IPackageFragment initialisePackageFragment()
-    {
-        IPackageFragment mainPackageFragment = this.pageOne.getPackageFragment();
-        String fragmentName = PluginTools.getTestPackageName(mainPackageFragment.getElementName(), preferences, project);
-        IPackageFragmentRoot root = Preferences.getInstance().getTestSourceFolder(project, (IPackageFragmentRoot) mainPackageFragment.getParent());
-
-        IPackageFragment testPackageFragment = root.getPackageFragment(fragmentName);
-        this.pageOne.setPackageFragment(testPackageFragment, true);
-        return testPackageFragment;
     }
 
     @Override

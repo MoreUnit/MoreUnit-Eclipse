@@ -114,6 +114,8 @@ public class JumpActionHandler extends AbstractHandler
             }
         }
 
+        // TODO Nicolas: find how to actualize file name registered in editor
+        // when renamed
         IFile file = toFile(getActiveEditorInput(event));
         if(file != null)
         {

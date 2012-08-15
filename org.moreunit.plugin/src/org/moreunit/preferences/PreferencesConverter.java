@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.moreunit.core.util.StringConstants;
+import org.moreunit.core.util.Strings;
 import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.util.BaseTools;
 import org.moreunit.util.PluginTools;
 
 /**
@@ -71,7 +71,7 @@ public class PreferencesConverter
     {
         List<SourceFolderMapping> resultList = new ArrayList<SourceFolderMapping>();
 
-        if(BaseTools.isStringTrimmedEmpty(sourceMappingString))
+        if(Strings.isBlank(sourceMappingString))
             return resultList;
 
         String[] mappingSplits = sourceMappingString.split(PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
@@ -95,7 +95,7 @@ public class PreferencesConverter
 
     public static String[] convertStringToArray(String listString)
     {
-        if(BaseTools.isStringTrimmedEmpty(listString))
+        if(Strings.isBlank(listString))
             return new String[] {};
 
         return listString.split(DELIMITER_LIST_VALUES);

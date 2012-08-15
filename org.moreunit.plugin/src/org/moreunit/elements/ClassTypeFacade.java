@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMember;
@@ -16,53 +15,31 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.Preferences;
 import org.moreunit.ui.ChooseDialog;
 import org.moreunit.ui.CreateNewClassAction;
 import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MethodCallFinder;
 import org.moreunit.util.MethodTestCallerFinder;
-import org.moreunit.util.TestCaseDiviner;
-import org.moreunit.util.TestMethodDiviner;
-import org.moreunit.util.TestMethodDivinerFactory;
 import org.moreunit.wizards.NewClassyWizard;
 import org.moreunit.wizards.NewTestCaseWizard;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
  * file represented by this instance is not a testcase.
- * <p>
- * 30.09.2010 Gro Added Method {@link #isNewTestClassCreated()}
  * 
  * @author vera 23.05.2006 20:28:52
  * @version 30.09.2010
  */
 public class ClassTypeFacade extends TypeFacade
 {
-
-    private TestCaseDiviner testCaseDiviner;
-    TestMethodDivinerFactory testMethodDivinerFactory;
-    TestMethodDiviner testMethodDiviner;
-
     public ClassTypeFacade(ICompilationUnit compilationUnit)
     {
         super(compilationUnit);
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
     }
 
     public ClassTypeFacade(IEditorPart editorPart)
     {
         super(editorPart);
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
-    }
-
-    public ClassTypeFacade(IFile file)
-    {
-        super(file);
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
     }
 
     /**
@@ -104,30 +81,8 @@ public class ClassTypeFacade extends TypeFacade
 
     public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType)
     {
-        String nameOfCorrespondingTestMethod = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
-
-        if(testCaseType == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
-            for (IMethod testmethod : methodsOfType)
-            {
-                if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
-                {
-                    return testmethod;
-                }
-            }
-        }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-
-        return null;
+        List<IMethod> testMethods = getTestMethodsForTestCase(method, testCaseType);
+        return testMethods.isEmpty() ? null : testMethods.get(0);
     }
 
     public List<IMethod> getCorrespondingTestMethods(IMethod method)
@@ -196,25 +151,6 @@ public class ClassTypeFacade extends TypeFacade
         return ! correspondingTestMethods.isEmpty();
     }
 
-    /**
-     * Getter uses lazy caching.
-     */
-    private TestCaseDiviner getTestCaseDiviner()
-    {
-        if(this.testCaseDiviner == null)
-        {
-            this.testCaseDiviner = new TestCaseDiviner(this.compilationUnit, Preferences.getInstance());
-        }
-
-        return this.testCaseDiviner;
-    }
-
-    @Override
-    protected Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches)
-    {
-        return getTestCaseDiviner().getMatches(alsoIncludeLikelyMatches);
-    }
-
     @Override
     protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes)
     {
@@ -255,10 +191,10 @@ public class ClassTypeFacade extends TypeFacade
 
         return testMethods.isEmpty() ? testCases : testMethods;
     }
-    
+
     public boolean hasTestCase()
     {
-        return !getCorrespondingTestCases().isEmpty();
+        return ! getCorrespondingTestCases().isEmpty();
     }
 
     private static class CreateNewTestCaseAction extends CreateNewClassAction

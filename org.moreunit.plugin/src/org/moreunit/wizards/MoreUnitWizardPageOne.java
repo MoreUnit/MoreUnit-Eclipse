@@ -68,7 +68,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.moreunit.elements.LanguageType;
-import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.util.MoreUnitContants;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
@@ -134,15 +134,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private Button unit4Toggle;
     private Button testNgToggle;
 
-    private final Preferences preferences;
-    private final IJavaProject javaProject;
+    private final ProjectPreferences preferences;
     private final LanguageType langType;
 
-    public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, Preferences preferences, IJavaProject javaProject, LanguageType langType)
+    public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, ProjectPreferences preferences, LanguageType langType)
     {
         super(true, PAGE_NAME);
         this.preferences = preferences;
-        this.javaProject = javaProject;
 
         fPage2 = page2;
         this.langType = langType;
@@ -533,19 +531,19 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         junti3Toggle = new Button(inner, SWT.RADIO);
         junti3Toggle.setText("JUnit 3");
         junti3Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
-        junti3Toggle.setSelection(preferences.shouldUseJunit3Type(javaProject));
+        junti3Toggle.setSelection(preferences.shouldUseJunit3Type());
         junti3Toggle.setEnabled(true);
 
         unit4Toggle = new Button(inner, SWT.RADIO);
         unit4Toggle.setText("JUnit 4");
-        unit4Toggle.setSelection(preferences.shouldUseJunit4Type(javaProject));
+        unit4Toggle.setSelection(preferences.shouldUseJunit4Type());
         unit4Toggle.setEnabled(true);
         unit4Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
         unit4Toggle.addSelectionListener(listener);
 
         testNgToggle = new Button(inner, SWT.RADIO);
         testNgToggle.setText("TestNG");
-        testNgToggle.setSelection(preferences.shouldUseTestNgType(javaProject));
+        testNgToggle.setSelection(preferences.shouldUseTestNgType());
         testNgToggle.setEnabled(true);
         testNgToggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
         testNgToggle.addSelectionListener(listener);
@@ -560,12 +558,12 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(unit4Toggle.getSelection())
         {
             setJUnit4(true, true);
-            setSuperClass(preferences.getTestSuperClass(javaProject), true);
+            setSuperClass(preferences.getTestSuperClass(), true);
         }
         else if(testNgToggle.getSelection())
         {
             setJUnit4(false, false);
-            setSuperClass(preferences.getTestSuperClass(javaProject), true);
+            setSuperClass(preferences.getTestSuperClass(), true);
             handleFieldChanged(JUNIT4TOGGLE);
         }
     }

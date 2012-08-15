@@ -3,27 +3,27 @@ package org.moreunit.elements;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
-import org.moreunit.log.LogHandler;
+import org.moreunit.matching.CorrespondingTypeSearcher;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.ui.ChooseDialog;
 import org.moreunit.ui.CreateNewClassAction;
 import org.moreunit.ui.MemberContentProvider;
 import org.moreunit.util.MemberJumpHistory;
 import org.moreunit.util.MethodCallFinder;
+import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 import org.moreunit.wizards.NewClassyWizard;
 
 /**
@@ -31,13 +31,11 @@ import org.moreunit.wizards.NewClassyWizard;
  */
 public abstract class TypeFacade
 {
-
-    public static enum MethodSearchMode
-    {
-        BY_CALL, BY_NAME
-    }
-
     protected final ICompilationUnit compilationUnit;
+    protected final TestMethodDivinerFactory testMethodDivinerFactory;
+    protected final TestMethodDiviner testMethodDiviner;
+
+    private CorrespondingTypeSearcher correspondingTypeSearcher;
 
     public static TypeFacade createFacade(ICompilationUnit compilationUnit)
     {
@@ -65,43 +63,25 @@ public abstract class TypeFacade
             return false;
         }
 
-        String classname = primaryType.getElementName();
-        Preferences preferences = Preferences.getInstance();
-        String[] suffixes = preferences.getSuffixes(compilationUnit.getJavaProject());
-        for (String suffix : suffixes)
-        {
-            if((suffix.length() > 0) && classname.endsWith(suffix))
-            {
-                return true;
-            }
-        }
-
-        String[] prefixes = preferences.getPrefixes(compilationUnit.getJavaProject());
-        for (String prefix : prefixes)
-        {
-            if((prefix.length() > 0) && classname.startsWith(prefix))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        ProjectPreferences prefs = Preferences.forProject(primaryType.getJavaProject());
+        return prefs.getTestClassNamePattern().evaluate(primaryType).isTestCase();
     }
 
-    public TypeFacade(ICompilationUnit compilationUnit)
+    protected TypeFacade(ICompilationUnit compilationUnit)
     {
         this.compilationUnit = compilationUnit;
+        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
+        testMethodDiviner = testMethodDivinerFactory.create();
     }
 
-    public TypeFacade(IFile file)
+    private TypeFacade(IFile file)
     {
-        this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
+        this(JavaCore.createCompilationUnitFrom(file));
     }
 
-    public TypeFacade(IEditorPart editorPart)
+    protected TypeFacade(IEditorPart editorPart)
     {
-        IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-        this.compilationUnit = JavaCore.createCompilationUnitFrom(file);
+        this((IFile) editorPart.getEditorInput().getAdapter(IFile.class));
     }
 
     public IType getType()
@@ -112,32 +92,6 @@ public abstract class TypeFacade
     public ICompilationUnit getCompilationUnit()
     {
         return this.compilationUnit;
-    }
-
-    protected boolean doesMethodExist(String testMethodName)
-    {
-        try
-        {
-            IMethod[] vorhandeneTests = this.compilationUnit.findPrimaryType().getMethods();
-            for (IMethod method : vorhandeneTests)
-            {
-                if(testMethodName.equals(method.getElementName()))
-                {
-                    return true;
-                }
-            }
-        }
-        catch (JavaModelException exc)
-        {
-            LogHandler.getInstance().handleExceptionLog(exc);
-        }
-
-        return false;
-    }
-
-    public IJavaProject getJavaProject()
-    {
-        return compilationUnit.getJavaProject();
     }
 
     /**
@@ -245,7 +199,10 @@ public abstract class TypeFacade
 
     abstract protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes);
 
-    abstract protected Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches);
+    public final Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches)
+    {
+        return getCorrespondingTypeSearcher().getMatches(alsoIncludeLikelyMatches);
+    }
 
     abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope);
 
@@ -294,12 +251,30 @@ public abstract class TypeFacade
         }
     }
 
+    /**
+     * Getter uses lazy caching.
+     */
+    private CorrespondingTypeSearcher getCorrespondingTypeSearcher()
+    {
+        if(this.correspondingTypeSearcher == null)
+        {
+            this.correspondingTypeSearcher = new CorrespondingTypeSearcher(this.compilationUnit, Preferences.getInstance());
+        }
+
+        return this.correspondingTypeSearcher;
+    }
+
+    public static enum MethodSearchMode
+    {
+        BY_CALL, BY_NAME
+    }
+
     private static interface OneCorrespondingMemberAction
     {
         IMember getCorrespondingMember();
     }
 
-    public static class ReturnMember implements OneCorrespondingMemberAction
+    private static class ReturnMember implements OneCorrespondingMemberAction
     {
         private final IMember member;
 
@@ -314,7 +289,7 @@ public abstract class TypeFacade
         }
     }
 
-    public class OpenChoiceDialog implements OneCorrespondingMemberAction
+    private class OpenChoiceDialog implements OneCorrespondingMemberAction
     {
         private final CorrespondingMemberRequest request;
         private final Collection<IType> proposedClasses;
@@ -340,7 +315,7 @@ public abstract class TypeFacade
         }
     }
 
-    public class OpenNewClassWizard implements OneCorrespondingMemberAction
+    private class OpenNewClassWizard implements OneCorrespondingMemberAction
     {
         public IMember getCorrespondingMember()
         {

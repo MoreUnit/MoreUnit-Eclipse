@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.preferences.PreferencesConverter;
 
 /**
@@ -46,11 +47,13 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private Preferences preferences;
     private IJavaProject javaProject;
+    private final ProjectPreferences projectPreferences;
 
     public OtherMoreunitPropertiesBlock(IJavaProject javaProject)
     {
         this.javaProject = javaProject;
         preferences = Preferences.getInstance();
+        projectPreferences = Preferences.forProject(javaProject);
 
         layoutForOneLineControls = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         layoutForOneLineControls.horizontalSpan = 2;
@@ -104,21 +107,21 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         junit3Button = new Button(group, SWT.RADIO);
         junit3Button.setText(PreferenceConstants.TEXT_JUNIT_3_8);
         junit3Button.setLayoutData(buttonGridData);
-        junit3Button.setSelection(preferences.shouldUseJunit3Type(javaProject));
+        junit3Button.setSelection(projectPreferences.shouldUseJunit3Type());
         junit3Button.addSelectionListener(this);
 
         // Junit 4 choice
         junit4Button = new Button(group, SWT.RADIO);
         junit4Button.setText(PreferenceConstants.TEXT_JUNIT_4);
         junit4Button.setLayoutData(buttonGridData);
-        junit4Button.setSelection(preferences.shouldUseJunit4Type(javaProject));
+        junit4Button.setSelection(projectPreferences.shouldUseJunit4Type());
         junit4Button.addSelectionListener(this);
 
         // TestNg choice
         testNgButton = new Button(group, SWT.RADIO);
         testNgButton.setText(PreferenceConstants.TEXT_TEST_NG);
         testNgButton.setLayoutData(buttonGridData);
-        testNgButton.setSelection(preferences.shouldUseTestNgType(javaProject));
+        testNgButton.setSelection(projectPreferences.shouldUseTestNgType());
         testNgButton.addSelectionListener(this);
 
         GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);

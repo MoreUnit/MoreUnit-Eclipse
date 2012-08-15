@@ -4,6 +4,9 @@
  */
 package org.moreunit.util;
 
+import static java.util.Collections.reverseOrder;
+import static java.util.Collections.sort;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,24 +36,29 @@ public class BaseTools
 
         JavaType testType = new JavaType(testCaseClass);
 
-        String packagePath = testType.packagePath;
-        if(packagePath != null && packagePrefix != null && packagePrefix.length() > 0)
+        String packagePath = testType.getQualifierWithFinalDot();
+        if(packagePath.length() != 0)
         {
-            packagePath = packagePath.replaceFirst("^" + packagePrefix + "\\.", "");
+            if(packagePrefix != null && packagePrefix.length() > 0)
+            {
+                packagePath = packagePath.replaceFirst("^" + packagePrefix + "\\.", "");
+            }
+            if(packageSuffix != null && packageSuffix.length() > 0)
+            {
+                packagePath = packagePath.replaceFirst("\\b" + packageSuffix + "\\.$", "");
+            }
         }
-        if(packagePath != null && packageSuffix != null && packageSuffix.length() > 0)
-        {
-            packagePath = packagePath.replaceFirst("\\b" + packageSuffix + "\\.$", "");
-        }
+
+        String typeName = testType.getSimpleName();
 
         List<String> results = new ArrayList<String>();
         if(suffixes != null)
         {
             for (String suffix : suffixes)
             {
-                if(testType.typeName.endsWith(suffix))
+                if(typeName.endsWith(suffix))
                 {
-                    results.add(packagePath + testType.typeName.substring(0, testType.typeName.length() - suffix.length()));
+                    results.add(packagePath + typeName.substring(0, typeName.length() - suffix.length()));
                 }
             }
         }
@@ -59,9 +67,9 @@ public class BaseTools
         {
             for (String prefix : prefixes)
             {
-                if(testType.typeName.startsWith(prefix))
+                if(typeName.startsWith(prefix))
                 {
-                    results.add(packagePath + testType.typeName.replaceFirst(prefix, ""));
+                    results.add(packagePath + typeName.replaceFirst(prefix, ""));
                 }
             }
         }
@@ -117,12 +125,12 @@ public class BaseTools
 
         JavaType testedType = new JavaType(testedClassString);
 
-        WordTokenizer wordTokenizer = new WordTokenizer(testedType.typeName);
+        WordTokenizer wordTokenizer = new WordTokenizer(testedType.getSimpleName());
         while (wordTokenizer.hasMoreElements())
         {
             String newTypeName = getNewWord(typeNames, wordTokenizer.nextElement());
             typeNames.add(newTypeName);
-            results.add(testedType.packagePath + newTypeName);
+            results.add(testedType.getQualifierWithFinalDot() + newTypeName);
         }
 
         return results;
@@ -135,8 +143,7 @@ public class BaseTools
         {
             result.addAll(getListOfUnqualifiedTypeNames(clazz));
         }
-        Collections.sort(result, new StringLengthComparator());
-        Collections.reverse(result);
+        sort(result, reverseOrder(new StringLengthComparator()));
         return result;
     }
 
@@ -155,31 +162,5 @@ public class BaseTools
             stringBuilder.append(wordList.get(wordList.size() - 1));
         stringBuilder.append(word);
         return stringBuilder.toString();
-    }
-
-    public static boolean isStringTrimmedEmpty(String aString)
-    {
-        return aString == null || aString.trim().length() == 0;
-    }
-
-    private static class JavaType
-    {
-        final String typeName;
-        final String packagePath;
-
-        JavaType(String possiblyFullyQualifiedTypeName)
-        {
-            int lastDotIdx = possiblyFullyQualifiedTypeName.lastIndexOf(".");
-            if(lastDotIdx == - 1)
-            {
-                typeName = possiblyFullyQualifiedTypeName;
-                packagePath = "";
-            }
-            else
-            {
-                typeName = possiblyFullyQualifiedTypeName.substring(lastDotIdx + 1);
-                packagePath = possiblyFullyQualifiedTypeName.substring(0, lastDotIdx + 1);
-            }
-        }
     }
 }

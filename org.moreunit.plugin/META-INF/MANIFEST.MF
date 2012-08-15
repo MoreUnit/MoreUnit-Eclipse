@@ -44,6 +44,7 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreunit.mock",
    org.eclipse.ui",
  org.moreunit.images;x-friends:="org.moreunit";uses:="org.eclipse.jface.resource",
  org.moreunit.log;x-friends:="org.moreunit.test,org.moreunit.extension",
+ org.moreunit.matching;x-friends:="org.moreunit.test",
  org.moreunit.preferences;
   x-friends:="org.moreunit.test,
    org.moreunit.extension,
