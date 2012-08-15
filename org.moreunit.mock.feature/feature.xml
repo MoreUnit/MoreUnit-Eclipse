@@ -219,7 +219,7 @@ litigation.
       <import plugin="org.eclipse.jdt.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.moreunit.plugin"/>
+      <import feature="org.moreunit" version="2.4.6" match="greaterOrEqual"/>
    </requires>
 
    <plugin
