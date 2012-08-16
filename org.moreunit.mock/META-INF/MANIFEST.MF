@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Mocking Support
-Bundle-SymbolicName: org.moreunit.mock.plugin;singleton:=true
+Bundle-SymbolicName: org.moreunit.mock;singleton:=true
 Bundle-Version: 2.4.6.qualifier
 Bundle-Activator: org.moreunit.mock.MoreUnitMockPlugin
 Require-Bundle: org.eclipse.core.filesystem,
@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.eclipse.ui,
  org.moreunit.dependencies.guice,
  org.moreunit.dependencies.jaxb,
- org.moreunit.plugin
+ org.moreunit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: moreunit.sourceforge.net

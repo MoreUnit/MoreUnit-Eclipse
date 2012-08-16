@@ -9,6 +9,7 @@
     <version>2.4.6-SNAPSHOT</version>
   </parent>
 
+  <groupId>org.moreunit.plugins</groupId>
   <artifactId>org.moreunit.mock.it</artifactId>
   <packaging>eclipse-test-plugin</packaging>
   

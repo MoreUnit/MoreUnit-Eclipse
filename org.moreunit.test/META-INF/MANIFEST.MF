@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.core.manipulation,
- org.moreunit.plugin,
+ org.moreunit,
  org.junit4;bundle-version="4.8.0",
  org.moreunit.test.dependencies,
  org.testng.eclipse;bundle-version="5.14.2.10"

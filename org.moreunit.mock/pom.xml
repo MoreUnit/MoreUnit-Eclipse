@@ -9,7 +9,8 @@
     <version>2.4.6-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.moreunit.mock.plugin</artifactId>
+  <groupId>org.moreunit.plugins</groupId>
+  <artifactId>org.moreunit.mock</artifactId>
   <packaging>eclipse-plugin</packaging>
 
   <name>${project.artifactId}</name>

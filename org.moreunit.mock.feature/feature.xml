@@ -237,13 +237,13 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.moreunit.mock.plugin"
+         id="org.moreunit.mock"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
    <plugin
-         id="org.moreunit.mock.plugin.source"
+         id="org.moreunit.mock.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
