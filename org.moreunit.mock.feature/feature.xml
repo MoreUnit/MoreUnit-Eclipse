@@ -110,7 +110,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.jdt.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import feature="org.moreunit" version="0.0.0" match="greaterOrEqual"/>
+      <import feature="org.moreunit" version="2.4.6" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -128,7 +128,14 @@ This Agreement is governed by the laws of the State of New York and the intellec
          unpack="false"/>
 
    <plugin
-         id="org.moreunit.mock.plugin"
+         id="org.moreunit.mock"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.moreunit.mock.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
