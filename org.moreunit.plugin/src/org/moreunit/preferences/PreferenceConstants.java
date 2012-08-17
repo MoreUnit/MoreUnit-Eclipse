@@ -9,7 +9,7 @@ public interface PreferenceConstants
 
     String USE_PROJECT_SPECIFIC_SETTINGS = "org.moreunit.useprojectsettings";
     String PREF_JUNIT_PATH = "org.moreunit.junit_path";
-    String PREF_JUNIT_PATH_DEFAULT = "junit";
+    String PREF_JUNIT_PATH_DEFAULT = "test";
     String SHOW_REFACTORING_DIALOG = "org.moreunit.show_refactoring_dialog";
 
     String PREFIXES = "org.moreunit.prefixes";
@@ -28,15 +28,13 @@ public interface PreferenceConstants
     String TEST_TYPE_VALUE_TESTNG = "testng";
     String TEST_SUPERCLASS = "org.moreunit.test_superclass";
 
-    boolean DEFAULT_CREATE_TESTNG = false;
-    String DEFAULT_QUALIFIERS = "Test";
     boolean DEFAULT_USE_WIZARDS = true;
     boolean DEFAULT_SWITCH_TO_MATCHING_METHOD = true;
     String DEFAULT_TEST_PACKAGE_PREFIX = "";
     String DEFAULT_TEST_PACKAGE_SUFFIX = "";
     boolean DEFAULT_FLEXIBLE_TESTCASE_NAMING = false;
-    String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
-    String DEFAULT_PRAEFIX = "Test";
+    String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+    String DEFAULT_PRAEFIX = "";
     String DEFAULT_SUFFIX = "Test";
     String DEFAULT_TEST_SUPERCLASS = "";
     boolean DEFAULT_EXTENDED_TEST_METHOD_SEARCH = false;
