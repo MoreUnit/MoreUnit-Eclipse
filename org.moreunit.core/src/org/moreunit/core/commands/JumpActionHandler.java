@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.search.core.text.TextSearchEngine;
@@ -127,13 +127,13 @@ public class JumpActionHandler extends AbstractHandler
 
     private Object getUniqueSelectedElement(ExecutionEvent event)
     {
-        if(! (event.getApplicationContext() instanceof EvaluationContext))
+        if(! (event.getApplicationContext() instanceof IEvaluationContext))
         {
             logger.warn("Unsupported context: " + event.getApplicationContext()); //$NON-NLS-1$
             return null;
         }
 
-        EvaluationContext context = (EvaluationContext) event.getApplicationContext();
+        IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
         Collection< ? > selectedElements = (Collection< ? >) context.getDefaultVariable();
         if(selectedElements == null || selectedElements.size() != 1)
