@@ -45,7 +45,14 @@ public class JumperExtensionManager
                 }
             });
 
-            if(result != null && result.isDone())
+            // Maybe an exception occurred, or the extension failed to return a
+            // result. In both cases, we do not want to handle the jumping twice
+            if(result == null)
+            {
+                return JumpResult.done();
+            }
+
+            if(result.isDone())
             {
                 return result;
             }
