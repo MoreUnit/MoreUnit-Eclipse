@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
+import org.moreunit.core.ui.Labels;
 
 public class GenericPreferencePage extends PreferencePageBase
 {
@@ -25,8 +26,7 @@ public class GenericPreferencePage extends PreferencePageBase
     protected void doCreateContent(Composite parent)
     {
         createFields(parent);
-        placeHolder(parent, 2);
-        createBaseContents(parent);
+        createBaseContents();
     }
 
     private void createFields(Composite parent)
@@ -43,7 +43,5 @@ public class GenericPreferencePage extends PreferencePageBase
                 }
             }
         });
-
-        placeHolder(parent, 1);
     }
 }

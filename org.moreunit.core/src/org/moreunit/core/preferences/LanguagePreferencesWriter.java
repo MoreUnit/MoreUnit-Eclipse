@@ -1,6 +1,6 @@
 package org.moreunit.core.preferences;
 
-public class LanguagePreferencesWriter extends LanguagePreferences
+public class LanguagePreferencesWriter extends LanguagePreferences implements TestFileNamePatternPreferencesWriter
 {
     public LanguagePreferencesWriter(String languageId, WriteablePreferences parentPreferences)
     {

@@ -45,14 +45,9 @@ abstract class PreferencePageBase extends PreferencePage implements IWorkbenchPr
 
     protected abstract void doCreateContent(Composite contentComposite);
 
-    protected void createBaseContents(Composite parent)
+    protected void createBaseContents()
     {
         delegate.createContents();
-    }
-
-    protected final void placeHolder(Composite parent, int numColumns)
-    {
-        delegate.placeHolder(parent, numColumns);
     }
 
     @Override

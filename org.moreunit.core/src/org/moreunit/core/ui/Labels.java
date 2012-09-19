@@ -21,4 +21,13 @@ public class Labels
     {
         return new Label(parent, SWT.NONE);
     }
+
+    public static Label placeHolder(Composite parent, int numColumns)
+    {
+        Label l = new Label(parent, SWT.NONE);
+        GridData gridData = new GridData();
+        gridData.horizontalSpan = numColumns;
+        l.setLayoutData(gridData);
+        return l;
+    }
 }

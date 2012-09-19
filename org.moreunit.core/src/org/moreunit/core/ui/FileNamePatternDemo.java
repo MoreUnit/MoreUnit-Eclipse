@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.matching.FileNameEvaluation;
 import org.moreunit.core.matching.TestFileNamePattern;
-import org.moreunit.core.preferences.LayoutData;
 import org.moreunit.core.util.StringConstants;
 
 public abstract class FileNamePatternDemo
@@ -39,7 +38,7 @@ public abstract class FileNamePatternDemo
         label.setText(" your pattern with the following file:");
 
         inputField = new Text(composite, SWT.SINGLE | SWT.BORDER);
-        inputField.setLayoutData(LayoutData.LABEL_AND_FIELD);
+        inputField.setLayoutData(LayoutData.labelledField());
 
         final Label fileTypeLbl = new Label(composite, SWT.NONE);
         GridData data = new GridData(GridData.FILL, GridData.FILL, false, true);

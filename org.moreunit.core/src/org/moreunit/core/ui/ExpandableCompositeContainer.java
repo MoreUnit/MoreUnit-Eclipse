@@ -14,112 +14,100 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
-public class ExpandableCompositeContainer
+public class ExpandableCompositeContainer extends Composite
 {
-    private final ScrolledPageContent scrolledPageContent;
-    private final int numColumns;
+    private final ScrolledComposite scrolledComposite;
 
-    public ExpandableCompositeContainer(Composite parent, int numColumns)
+    public ExpandableCompositeContainer(Composite parent, int heightHintInChars)
     {
-        this.numColumns = numColumns;
-        PixelConverter pixelConverter = new PixelConverter(parent);
+        super(new ScrolledComposite(parent, heightHintInChars), SWT.NO_BACKGROUND);
 
+        setFont(parent.getFont());
+        applyStretchedGridLayout(this);
+
+        ((GridLayout) getLayout()).marginRight = 10;
+
+        scrolledComposite = (ScrolledComposite) getParent();
+        scrolledComposite.setContent(this);
+    }
+
+    private static Composite applyStretchedGridLayout(Composite c)
+    {
         GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
-        parent.setLayout(layout);
+        c.setLayout(layout);
 
-        parent.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+        c.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        scrolledPageContent = new ScrolledPageContent(parent);
-        scrolledPageContent.addControlListener(new ControlAdapter()
-        {
-            @Override
-            public void controlResized(final ControlEvent e)
-            {
-                scrolledPageContent.getVerticalBar().setVisible(true);
-            }
-        });
-
-        getBody().setFont(parent.getFont());
-
-        layout = new GridLayout(numColumns, false);
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        getBody().setLayout(layout);
-
-        getBody().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-        getBody().setLayout(layout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-        gridData.heightHint = pixelConverter.convertHeightInCharsToPixels(10);
-        scrolledPageContent.setLayoutData(gridData);
+        return c;
     }
 
-    public ExpandableComposite addExpandableComposite(final String label, boolean expanded, CompositeBody body)
+    /**
+     * Important: {@code parent} must be a child of this container
+     */
+    public ExpandableComposite newExpandableComposite(Composite parent, String label, boolean expanded, ExpandableContent content)
     {
-        ExpandableComposite exComp = addExpandableComposite(label, expanded);
-        exComp.setClient(body.createBody(exComp));
-        return exComp;
-    }
-
-    private ExpandableComposite addExpandableComposite(final String label, boolean expanded)
-    {
-        ExpandableComposite exComp = new ExpandableComposite(getBody(), SWT.NONE, ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
+        ExpandableComposite exComp = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
         exComp.setText(label);
         exComp.setExpanded(expanded);
         exComp.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 
-        GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, false);
-        gridData.horizontalSpan = numColumns;
-        exComp.setLayoutData(gridData);
+        exComp.setLayoutData(content.getLayoutData());
 
         exComp.addExpansionListener(new ExpansionAdapter()
         {
             @Override
             public void expansionStateChanged(final ExpansionEvent e)
             {
-                scrolledPageContent.reflow(true);
+                reflow();
             }
         });
+
+        exComp.setClient(content.createBody(exComp));
+
         return exComp;
-    }
-
-    public Composite getBody()
-    {
-        return (Composite) scrolledPageContent.getContent();
-    }
-
-    public GridLayout getBodyLayout()
-    {
-        return (GridLayout) ((Composite) scrolledPageContent.getContent()).getLayout();
     }
 
     public void reflow()
     {
-        scrolledPageContent.reflow(true);
+        scrolledComposite.reflow();
     }
 
-    private static class ScrolledPageContent extends SharedScrolledComposite
+    private static class ScrolledComposite extends SharedScrolledComposite
     {
-        public ScrolledPageContent(final Composite parent)
+        public ScrolledComposite(Composite parent, int heightHintInChars)
         {
-            super(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+            super(applyStretchedGridLayout(parent), SWT.V_SCROLL | SWT.H_SCROLL);
 
             setFont(parent.getFont());
 
             setExpandHorizontal(true);
             setExpandVertical(true);
 
-            Composite body = new Composite(this, SWT.NONE);
-            body.setFont(parent.getFont());
-            setContent(body);
+            addControlListener(new ControlAdapter()
+            {
+                @Override
+                public void controlResized(final ControlEvent e)
+                {
+                    getVerticalBar().setVisible(true);
+                }
+            });
+
+            GridData gridData = LayoutData.fillGrid();
+            gridData.heightHint = new PixelConverter(parent).convertHeightInCharsToPixels(heightHintInChars);
+            setLayoutData(gridData);
+        }
+
+        public void reflow()
+        {
+            reflow(true);
         }
     }
-
-    public static interface CompositeBody
+    public static interface ExpandableContent
     {
         Control createBody(ExpandableComposite expandableComposite);
+
+        Object getLayoutData();
     }
 }

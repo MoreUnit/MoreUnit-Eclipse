@@ -11,6 +11,9 @@ import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
+import org.moreunit.core.ui.Composites;
+import org.moreunit.core.ui.Labels;
+import org.moreunit.core.ui.LayoutData;
 
 public class OtherLanguagesPreferencePage extends PreferencePageBase
 {
@@ -28,35 +31,33 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
     protected void doCreateContent(Composite parent)
     {
         Label explainationLabel = new Label(parent, SWT.NONE);
-        explainationLabel.setLayoutData(LayoutData.ROW);
+        explainationLabel.setLayoutData(LayoutData.row(1));
         explainationLabel.setText("The following configuration will be applied to all languages as a default:");
 
-        createBaseContents(parent);
+        createBaseContents();
 
-        placeHolder(parent, 2);
+        Labels.placeHolder(parent);
 
         createFields(parent);
     }
 
     private void createFields(Composite parent)
     {
-        Label explainationLabel = new Label(parent, SWT.NONE);
-        explainationLabel.setLayoutData(LayoutData.ROW);
-        explainationLabel.setText("Per-language configurations may also be created:");
+        Composite group = Composites.gridGroup(parent, "Per-language configurations may also be created:", 2);
 
-        Label nameLabel = new Label(parent, SWT.NONE);
+        Label nameLabel = new Label(group, SWT.NONE);
         nameLabel.setText("Language name:");
 
-        nameField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        nameField.setLayoutData(LayoutData.LABEL_AND_FIELD);
+        nameField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        nameField.setLayoutData(LayoutData.labelledField());
 
-        Label extensionLabel = new Label(parent, SWT.NONE);
+        Label extensionLabel = new Label(group, SWT.NONE);
         extensionLabel.setText("Extension:");
 
-        extensionField = new ExtensionField(parent, SWT.SINGLE | SWT.BORDER);
-        extensionField.setLayoutData(LayoutData.LABEL_AND_FIELD);
+        extensionField = new ExtensionField(group, SWT.SINGLE | SWT.BORDER);
+        extensionField.setLayoutData(LayoutData.labelledField());
 
-        Button creationButton = new Button(parent, SWT.NONE);
+        Button creationButton = new Button(group, SWT.NONE);
         creationButton.setText("Create Configuration");
         creationButton.addSelectionListener(new SelectionAdapter()
         {
@@ -79,6 +80,6 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
             }
         });
 
-        placeHolder(parent, 1);
+        Labels.placeHolder(group);
     }
 }

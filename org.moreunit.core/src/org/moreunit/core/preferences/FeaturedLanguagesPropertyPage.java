@@ -1,6 +1,6 @@
 package org.moreunit.core.preferences;
 
-import static org.moreunit.core.ui.Labels.placeHolder;
+import static org.moreunit.core.ui.Composites.placeHolder;
 import static org.moreunit.core.ui.Labels.wrappingLabel;
 
 import org.eclipse.jface.dialogs.Dialog;
