@@ -29,7 +29,7 @@ public class Preferences
 
     protected Preferences()
     {
-        initStore(getWorkbenchStore());
+        migratePrefsIfRequired(initStore(getWorkbenchStore()));
     }
 
     public static Preferences getInstance()
@@ -45,20 +45,25 @@ public class Preferences
         instance = preferences;
     }
 
-    protected static final void initStore(IPreferenceStore store)
+    protected static IPreferenceStore migratePrefsIfRequired(IPreferenceStore store)
+    {
+        new PreferencesMigrator(store).migrate();
+        return store;
+    }
+
+    protected static final IPreferenceStore initStore(IPreferenceStore store)
     {
         store.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
         store.setDefault(PreferenceConstants.TEST_TYPE, PreferenceConstants.DEFAULT_TEST_TYPE);
         store.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
-        store.setDefault(PreferenceConstants.PREFIXES, PreferenceConstants.DEFAULT_PRAEFIX);
-        store.setDefault(PreferenceConstants.SUFFIXES, PreferenceConstants.DEFAULT_SUFFIX);
         store.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
         store.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
         store.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
-        store.setDefault(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, PreferenceConstants.DEFAULT_FLEXIBLE_TESTCASE_NAMING);
         store.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
         store.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
         store.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
+        store.setDefault(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
+        return store;
     }
 
     protected IPreferenceStore getWorkbenchStore()
@@ -71,7 +76,7 @@ public class Preferences
         if(javaProject == null)
             return false;
 
-        return store(javaProject).getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS);
+        return storeToRead(javaProject).getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS);
     }
 
     public void setHasProjectSpecificSettings(IJavaProject javaProject, boolean hasProjectSpecificSettings)
@@ -98,7 +103,7 @@ public class Preferences
 
     private List<SourceFolderMapping> getProjectSpecificSourceMappingList(IJavaProject javaProject)
     {
-        String mappingString = store(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+        String mappingString = storeToRead(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
         return PreferencesConverter.convertStringToSourceMappingList(mappingString);
     }
 
@@ -166,7 +171,7 @@ public class Preferences
 
     public String getJunitDirectoryFromPreferences(IJavaProject javaProject)
     {
-        return store(javaProject).getString(PreferenceConstants.PREF_JUNIT_PATH);
+        return storeToRead(javaProject).getString(PreferenceConstants.PREF_JUNIT_PATH);
     }
 
     public void setJunitDirectory(String directory)
@@ -176,7 +181,7 @@ public class Preferences
 
     public String getTestMethodType(IJavaProject javaProject)
     {
-        return store(javaProject).getString(PreferenceConstants.TEST_METHOD_TYPE);
+        return storeToRead(javaProject).getString(PreferenceConstants.TEST_METHOD_TYPE);
     }
 
     public void setTestMethodTypeShouldUsePrefix(IJavaProject javaProject, boolean shouldUsePrefix)
@@ -192,7 +197,7 @@ public class Preferences
 
     public String getTestMethodDefaultContent(IJavaProject javaProject)
     {
-        return store(javaProject).getString(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT);
+        return storeToRead(javaProject).getString(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT);
     }
 
     public void setTestMethodDefaultContent(IJavaProject javaProject, String methodContent)
@@ -207,7 +212,7 @@ public class Preferences
     @Deprecated
     public String[] getPrefixes(IJavaProject javaProject)
     {
-        String preferenceValue = store(javaProject).getString(PreferenceConstants.PREFIXES);
+        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.PREFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
     }
 
@@ -223,7 +228,7 @@ public class Preferences
     @Deprecated
     public String[] getSuffixes(IJavaProject javaProject)
     {
-        String preferenceValue = store(javaProject).getString(PreferenceConstants.SUFFIXES);
+        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.SUFFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
     }
 
@@ -244,18 +249,27 @@ public class Preferences
 
     private String getStringValue(final String key, IJavaProject javaProject)
     {
-        if(store(javaProject).contains(key))
+        if(storeToRead(javaProject).contains(key))
         {
-            return store(javaProject).getString(key);
+            return storeToRead(javaProject).getString(key);
         }
-        return store(javaProject).getDefaultString(key);
+        return storeToRead(javaProject).getDefaultString(key);
+    }
+
+    private boolean getBooleanValue(final String key, IJavaProject javaProject)
+    {
+        if(storeToRead(javaProject).contains(key))
+        {
+            return storeToRead(javaProject).getBoolean(key);
+        }
+        return storeToRead(javaProject).getDefaultBoolean(key);
     }
 
     public String getTestType(IJavaProject javaProject)
     {
-        if(store(javaProject).contains(PreferenceConstants.TEST_TYPE))
+        if(storeToRead(javaProject).contains(PreferenceConstants.TEST_TYPE))
         {
-            return store(javaProject).getString(PreferenceConstants.TEST_TYPE);
+            return storeToRead(javaProject).getString(PreferenceConstants.TEST_TYPE);
         }
         return PreferenceConstants.DEFAULT_TEST_TYPE;
     }
@@ -272,11 +286,7 @@ public class Preferences
     @Deprecated
     public boolean shouldUseFlexibleTestCaseNaming(IJavaProject javaProject)
     {
-        if(store(javaProject).contains(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING))
-        {
-            return store(javaProject).getBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
-        }
-        return store(javaProject).getDefaultBoolean(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING);
+        return getBooleanValue(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, javaProject);
     }
 
     public void setShouldUseFlexibleTestCaseNaming(IJavaProject javaProject, boolean shouldUseFlexibleNaming)
@@ -304,7 +314,7 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, packageSuffix);
     }
 
-    private IPreferenceStore store(IJavaProject javaProject)
+    private IPreferenceStore storeToRead(IJavaProject javaProject)
     {
         IPreferenceStore resultStore = getProjectStore(javaProject);
 
@@ -331,7 +341,7 @@ public class Preferences
             ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
             preferenceStore.setSearchContexts(new IScopeContext[] { projectScopeContext });
             preferenceMap.put(javaProject, preferenceStore);
-            resultStore = preferenceStore;
+            resultStore = initStore(migratePrefsIfRequired(preferenceStore));
         }
 
         return resultStore;
@@ -434,11 +444,11 @@ public class Preferences
 
     public boolean shouldUseTestMethodExtendedSearch(IJavaProject javaProject)
     {
-        if(store(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
+        if(storeToRead(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
         {
-            return store(javaProject).getBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
+            return storeToRead(javaProject).getBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
         }
-        return store(javaProject).getDefaultBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
+        return storeToRead(javaProject).getDefaultBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
     }
 
     public void setShouldUseTestMethodExtendedSearch(IJavaProject javaProject, boolean shouldUseExtendedSearch)
@@ -458,7 +468,6 @@ public class Preferences
 
     public static class ProjectPreferences
     {
-        private final TestClassNameTemplateBuilder templateBuilder = new TestClassNameTemplateBuilder();
         private final Preferences prefs;
         private final IJavaProject project;
 
@@ -466,16 +475,6 @@ public class Preferences
         {
             this.prefs = prefs;
             this.project = project;
-        }
-
-        private String[] getClassPrefixes()
-        {
-            return prefs.getPrefixes(project);
-        }
-
-        private String[] getClassSuffixes()
-        {
-            return prefs.getSuffixes(project);
         }
 
         public IPackageFragmentRoot getMainSourceFolder(IPackageFragmentRoot testSrcFolder)
@@ -543,11 +542,6 @@ public class Preferences
             return prefs.hasProjectSpecificSettings(project);
         }
 
-        private boolean shouldUseFlexibleTestCaseNaming()
-        {
-            return prefs.shouldUseFlexibleTestCaseNaming(project);
-        }
-
         public boolean shouldUseTestMethodExtendedSearch()
         {
             return prefs.shouldUseTestMethodExtendedSearch(project);
@@ -555,8 +549,17 @@ public class Preferences
 
         public TestClassNamePattern getTestClassNamePattern()
         {
-            String template = templateBuilder.buildFromSettings(getClassPrefixes(), getClassSuffixes(), shouldUseFlexibleTestCaseNaming());
-            return new TestClassNamePattern(template, getPackagePrefix(), getPackageSuffix());
+            return new TestClassNamePattern(getTestClassNameTemplate(), getPackagePrefix(), getPackageSuffix());
+        }
+
+        public void setTestClassNameTemplate(String template)
+        {
+            prefs.getProjectStore(project).setValue(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, template);
+        }
+
+        public String getTestClassNameTemplate()
+        {
+            return prefs.getStringValue(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, project);
         }
     }
 }

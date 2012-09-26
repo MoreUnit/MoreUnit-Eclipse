@@ -2,6 +2,7 @@ package org.moreunit.test;
 
 import static java.util.Arrays.asList;
 
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
@@ -44,4 +45,11 @@ public final class DummyPreferencesForTesting extends Preferences
     // {
     // return workbenchStore;
     // }
+
+    public void forcePreferencesMigration(IJavaProject project)
+    {
+        IPreferenceStore store = getProjectStore(project);
+        store.setValue(PreferenceConstants.PREFERENCES_VERSION, 1);
+        migratePrefsIfRequired(store);
+    }
 }

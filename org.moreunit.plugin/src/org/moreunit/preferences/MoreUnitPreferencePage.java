@@ -1,9 +1,12 @@
 package org.moreunit.preferences;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -14,6 +17,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.SourceFolderContext;
+import org.moreunit.core.ui.LayoutData;
 import org.moreunit.properties.OtherMoreunitPropertiesBlock;
 import org.moreunit.util.SearchScopeSingelton;
 
@@ -22,7 +26,6 @@ import org.moreunit.util.SearchScopeSingelton;
  */
 public class MoreUnitPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
-
     private Text testSourceFolderField;
     private OtherMoreunitPropertiesBlock otherMoreunitPropertiesBlock;
 
@@ -36,32 +39,71 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
     {
         initializeDialogUnits(parent);
 
-        Composite contentComposite = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
+        layout.marginHeight = 0;
         layout.marginWidth = 0;
-        layout.marginRight = 10;
-        layout.numColumns = 2;
-        contentComposite.setLayout(layout);
-        contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        parent.setLayout(layout);
 
-        otherMoreunitPropertiesBlock = new OtherMoreunitPropertiesBlock(null);
+        parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        createTestSourceFolderField(contentComposite);
-        otherMoreunitPropertiesBlock.createCompositeWith2ColsParent(contentComposite);
+        otherMoreunitPropertiesBlock = new OtherMoreunitPropertiesBlock(null)
+        {
+            @Override
+            protected void beforeContent(Composite parentWith2Cols)
+            {
+                createTestSourceFolderField(parentWith2Cols);
+            }
+        };
+        otherMoreunitPropertiesBlock.getControl(parent, false);
 
-        Dialog.applyDialogFont(contentComposite);
+        otherMoreunitPropertiesBlock.addModifyListener(new ModifyListener()
+        {
+            public void modifyText(ModifyEvent e)
+            {
+                validate();
+            }
+        });
+
+        Dialog.applyDialogFont(parent);
 
         return parent;
     }
 
-    private void createTestSourceFolderField(Composite parent)
+    private void validate()
     {
-        Label label = new Label(parent, SWT.NONE);
+        String errorMsg = otherMoreunitPropertiesBlock.getError();
+        if(errorMsg == null)
+        {
+            setValid();
+
+            String warningMsg = otherMoreunitPropertiesBlock.getWarning();
+            if(warningMsg != null)
+            {
+                setMessage(warningMsg, IMessageProvider.WARNING);
+            }
+        }
+        else
+        {
+            otherMoreunitPropertiesBlock.forceFocus();
+            setMessage(errorMsg, IMessageProvider.ERROR);
+            setValid(false);
+        }
+    }
+
+    private void setValid()
+    {
+        setMessage(null);
+        setValid(true);
+    }
+
+    private void createTestSourceFolderField(Composite parentWith2Cols)
+    {
+        Label label = new Label(parentWith2Cols, SWT.NONE);
         label.setText(PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
         label.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
 
-        testSourceFolderField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        testSourceFolderField.setLayoutData(otherMoreunitPropertiesBlock.getLayoutForTextFields());
+        testSourceFolderField = new Text(parentWith2Cols, SWT.SINGLE | SWT.BORDER);
+        testSourceFolderField.setLayoutData(LayoutData.labelledField());
         testSourceFolderField.setText(Preferences.getInstance().getJunitDirectoryFromPreferences(null));
         testSourceFolderField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
     }

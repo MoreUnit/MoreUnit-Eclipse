@@ -2,6 +2,7 @@ package org.moreunit.properties;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -11,43 +12,39 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.moreunit.core.preferences.TestFileNamePatternGroup;
+import org.moreunit.core.preferences.TestFileNamePatternPreferencesWriter;
+import org.moreunit.core.ui.Composites;
+import org.moreunit.core.ui.ExpandableCompositeContainer;
+import org.moreunit.core.ui.LayoutData;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
-import org.moreunit.preferences.PreferencesConverter;
 
 /**
  * @author vera 14.03.2008 23:09:24
  */
 public class OtherMoreunitPropertiesBlock implements SelectionListener
 {
-
     private Button junit3Button;
     private Button junit4Button;
     private Button testNgButton;
 
     private Button methodPrefixButton;
-
+    private TestFileNamePatternGroup testCaseNamePatternArea;
     private Text methodContentTextField;
-
-    private Text prefixTextField;
-    private Text suffixTextField;
-
     private Text packagePrefixTextField;
     private Text packageSuffixTextField;
-
     private Text superClassTextField;
-
-    private Button flexibleNamingCheckbox;
     private Button extendedSearchCheckbox;
 
-    private GridData layoutForTextFields;
     private GridData layoutForOneLineControls;
 
-    private Preferences preferences;
-    private IJavaProject javaProject;
+    private final Preferences preferences;
+    private final IJavaProject javaProject;
     private final ProjectPreferences projectPreferences;
+    private ExpandableCompositeContainer container;
 
     public OtherMoreunitPropertiesBlock(IJavaProject javaProject)
     {
@@ -57,35 +54,47 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
         layoutForOneLineControls = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         layoutForOneLineControls.horizontalSpan = 2;
-
-        layoutForTextFields = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        layoutForTextFields.horizontalIndent = 30;
     }
 
-    public Composite getControl(Composite parent)
+    public Composite getControl(Composite parent, boolean createIntermediateComposite)
     {
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite newParent = createIntermediateComposite ? new Composite(parent, SWT.NONE) : parent;
+
         GridLayout layout = new GridLayout();
+        layout.marginHeight = 0;
         layout.marginWidth = 0;
-        layout.numColumns = 2;
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        newParent.setLayout(layout);
 
-        createCompositeWith2ColsParent(composite);
+        newParent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        return composite;
+        container = new ExpandableCompositeContainer(newParent, createIntermediateComposite ? 25 : 0);
+
+        Composite grid = Composites.grid(container, 2);
+
+        beforeContent(grid);
+
+        createCompositeWith2ColsParent(grid);
+
+        return newParent;
     }
 
-    public void createCompositeWith2ColsParent(Composite parentWith2Cols)
+    /**
+     * To be overridden when needed.
+     */
+    protected void beforeContent(Composite parentWith2Cols)
+    {
+    }
+
+    private void createCompositeWith2ColsParent(final Composite parentWith2Cols)
     {
         createTestTypeChoice(parentWith2Cols);
 
+        createTestNamePatternArea(parentWith2Cols);
+
         createTestMethodComposite(parentWith2Cols);
         createMethodContentTextField(parentWith2Cols);
-        createPrefixSuffixTextFields(parentWith2Cols);
         createPackagePrefixSuffixTextFields(parentWith2Cols);
         createSuperClassTextField(parentWith2Cols);
-        createFlexibleNamingCheckbox(parentWith2Cols);
         createExtendedSearchCheckbox(parentWith2Cols);
 
         checkStateOfMethodPrefixButton();
@@ -128,6 +137,29 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         testNgButton.setLayoutData(gd);
     }
 
+    private void createTestNamePatternArea(Composite parentWith2Cols)
+    {
+        Composite parent = Composites.fillBothNoMargin(parentWith2Cols, 2);
+
+        testCaseNamePatternArea = TestFileNamePatternGroup.forCamelCasePattern(parent, container, new TestFileNamePatternPreferencesWriter()
+        {
+            public void setTestFileNameTemplate(String template, String separator)
+            {
+                projectPreferences.setTestClassNameTemplate(template);
+            }
+
+            public String getTestFileNameTemplate()
+            {
+                return projectPreferences.getTestClassNameTemplate();
+            }
+
+            public String getFileWordSeparator()
+            {
+                return "";
+            }
+        });
+    }
+
     private void createTestMethodComposite(Composite parent)
     {
         methodPrefixButton = new Button(parent, SWT.CHECK);
@@ -143,7 +175,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         methodContentLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_METHOD_CONTENT);
 
         methodContentTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        methodContentTextField.setLayoutData(layoutForTextFields);
+        methodContentTextField.setLayoutData(LayoutData.labelledField());
         methodContentTextField.setText(preferences.getTestMethodDefaultContent(javaProject));
         methodContentTextField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_METHOD_CONTENT);
     }
@@ -151,28 +183,6 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private boolean shouldUseNoTestMethodPrefix()
     {
         return PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX.equals(preferences.getTestMethodType(javaProject));
-    }
-
-    private void createPrefixSuffixTextFields(Composite parent)
-    {
-        Label prefixLabel = new Label(parent, SWT.NONE);
-        prefixLabel.setText(PreferenceConstants.TEXT_TEST_PREFIXES);
-        prefixLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_PREFIXES);
-        prefixTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-
-        Label suffixLabel = new Label(parent, SWT.NONE);
-        suffixLabel.setText(PreferenceConstants.TEXT_TEST_SUFFIXES);
-        suffixLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SUFFIXES);
-        suffixTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-
-        prefixTextField.setLayoutData(layoutForTextFields);
-        suffixTextField.setLayoutData(layoutForTextFields);
-
-        prefixTextField.setText(PreferencesConverter.convertArrayToString(preferences.getPrefixes(javaProject)));
-        prefixTextField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_PREFIXES);
-
-        suffixTextField.setText(PreferencesConverter.convertArrayToString(preferences.getSuffixes(javaProject)));
-        suffixTextField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SUFFIXES);
     }
 
     private void createPackagePrefixSuffixTextFields(Composite parent)
@@ -187,8 +197,8 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         packageSuffixLabel.setToolTipText(PreferenceConstants.TOOLTIP_PACKAGE_SUFFIX);
         packageSuffixTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
 
-        packagePrefixTextField.setLayoutData(layoutForTextFields);
-        packageSuffixTextField.setLayoutData(layoutForTextFields);
+        packagePrefixTextField.setLayoutData(LayoutData.labelledField());
+        packageSuffixTextField.setLayoutData(LayoutData.labelledField());
 
         packagePrefixTextField.setText(preferences.getTestPackagePrefix(javaProject));
         packageSuffixTextField.setText(preferences.getTestPackageSuffix(javaProject));
@@ -204,18 +214,9 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         superClassLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SUPERCLASS);
 
         superClassTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-        superClassTextField.setLayoutData(layoutForTextFields);
+        superClassTextField.setLayoutData(LayoutData.labelledField());
         superClassTextField.setText(preferences.getTestSuperClass(javaProject));
         superClassTextField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SUPERCLASS);
-    }
-
-    private void createFlexibleNamingCheckbox(Composite parent)
-    {
-        flexibleNamingCheckbox = new Button(parent, SWT.CHECK);
-        flexibleNamingCheckbox.setText(PreferenceConstants.TEXT_FLEXIBLE_NAMING);
-        flexibleNamingCheckbox.setToolTipText(PreferenceConstants.TOOLTIP_FLEXIBLE_NAMING);
-        flexibleNamingCheckbox.setLayoutData(layoutForOneLineControls);
-        flexibleNamingCheckbox.setSelection(preferences.shouldUseFlexibleTestCaseNaming(javaProject));
     }
 
     private void createExtendedSearchCheckbox(Composite parent)
@@ -240,17 +241,15 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
             preferences.setTestMethodTypeShouldUsePrefix(javaProject, methodPrefixButton.getSelection());
         }
 
-        preferences.setTestMethodDefaultContent(javaProject, methodContentTextField.getText());
+        testCaseNamePatternArea.saveProperties();
 
-        preferences.setPrefixes(javaProject, PreferencesConverter.convertStringToArray(prefixTextField.getText()));
-        preferences.setSuffixes(javaProject, PreferencesConverter.convertStringToArray(suffixTextField.getText()));
+        preferences.setTestMethodDefaultContent(javaProject, methodContentTextField.getText());
 
         preferences.setTestPackagePrefix(javaProject, packagePrefixTextField.getText());
         preferences.setTestPackageSuffix(javaProject, packageSuffixTextField.getText());
 
         preferences.setTestSuperClass(javaProject, superClassTextField.getText());
 
-        preferences.setShouldUseFlexibleTestCaseNaming(javaProject, flexibleNamingCheckbox.getSelection());
         preferences.setShouldUseTestMethodExtendedSearch(javaProject, extendedSearchCheckbox.getSelection());
     }
 
@@ -269,11 +268,6 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
             return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
         return StringConstants.EMPTY_STRING;
-    }
-
-    public GridData getLayoutForTextFields()
-    {
-        return layoutForTextFields;
     }
 
     /*
@@ -296,5 +290,25 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private void checkStateOfMethodPrefixButton()
     {
         methodPrefixButton.setEnabled(isJunit4OrTestNgTestTypeSelected());
+    }
+
+    public String getError()
+    {
+        return testCaseNamePatternArea.getError();
+    }
+
+    public String getWarning()
+    {
+        return testCaseNamePatternArea.getWarning();
+    }
+
+    public void addModifyListener(ModifyListener listener)
+    {
+        testCaseNamePatternArea.addModifyListener(listener);
+    }
+
+    public void forceFocus()
+    {
+        testCaseNamePatternArea.forceFocus();
     }
 }

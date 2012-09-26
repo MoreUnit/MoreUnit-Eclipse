@@ -7,6 +7,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -26,7 +28,6 @@ import org.moreunit.preferences.Preferences;
  */
 public class MoreUnitPropertyPage extends PropertyPage
 {
-
     private Button projectSpecificSettingsCheckbox;
     private TabFolder tabFolder;
 
@@ -81,12 +82,20 @@ public class MoreUnitPropertyPage extends PropertyPage
         TabItem sourceFolderItem = new TabItem(tabFolder, SWT.NONE);
         sourceFolderItem.setText("Test source folder");
         firstTabUnitSourceFolder = new UnitSourceFolderBlock(getJavaProject(), this);
-        sourceFolderItem.setControl(applyTabMargins(firstTabUnitSourceFolder.getControl(tabFolder)));
+        sourceFolderItem.setControl(fixesFirstTabStyle(firstTabUnitSourceFolder.getControl(tabFolder)));
 
         TabItem otherFolderItem = new TabItem(tabFolder, SWT.NONE);
         otherFolderItem.setText("Other");
         secondTabOtherProperties = new OtherMoreunitPropertiesBlock(getJavaProject());
-        otherFolderItem.setControl(applyTabMargins(secondTabOtherProperties.getControl(tabFolder)));
+        otherFolderItem.setControl(fixesSecondTabStyle(secondTabOtherProperties.getControl(tabFolder, true)));
+
+        secondTabOtherProperties.addModifyListener(new ModifyListener()
+        {
+            public void modifyText(ModifyEvent e)
+            {
+                updateValidState();
+            }
+        });
 
         GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
@@ -99,12 +108,19 @@ public class MoreUnitPropertyPage extends PropertyPage
         tabFolder.setEnabled(shouldUseProjectspecificSettings());
     }
 
-    private Composite applyTabMargins(Composite tabControl)
+    private Composite fixesFirstTabStyle(Composite tab)
     {
-        GridLayout firstTabLayout = ((GridLayout) tabControl.getLayout());
-        firstTabLayout.marginRight = 15;
-        firstTabLayout.marginLeft = 15;
-        return tabControl;
+        GridLayout l = ((GridLayout) tab.getLayout());
+        l.marginRight = 10;
+        l.marginLeft = 10;
+        return tab;
+    }
+
+    private Composite fixesSecondTabStyle(Composite tab)
+    {
+        GridLayout l = ((GridLayout) tab.getLayout());
+        l.marginLeft = 10;
+        return tab;
     }
 
     private IJavaProject getJavaProject()
@@ -167,15 +183,29 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     protected void updateValidState()
     {
-        String message = null;
+        String errorMsg = null;
+        String warningMsg = null;
         if(shouldUseProjectspecificSettings())
         {
-            boolean isInvalid = firstTabUnitSourceFolder.getListOfUnitSourceFolder().isEmpty();
-            setValid(! isInvalid);
+            errorMsg = firstTabUnitSourceFolder.getError();
 
-            if(isInvalid)
-                message = "Choose at least one test folder!";
+            if(errorMsg == null)
+            {
+                errorMsg = secondTabOtherProperties.getError();
+            }
+
+            if(errorMsg == null)
+            {
+                warningMsg = secondTabOtherProperties.getWarning();
+            }
+            else
+            {
+                secondTabOtherProperties.forceFocus();
+            }
+
         }
-        setErrorMessage(message);
+        setValid(errorMsg == null);
+        setErrorMessage(errorMsg);
+        setMessage(warningMsg, WARNING);
     }
 }

@@ -131,13 +131,13 @@ class WorkspaceConfiguration
 
     protected void applyPreferences(WorkspaceHandler wsHandler)
     {
-        Preferences prefs = new DummyPreferencesForTesting();
+        DummyPreferencesForTesting prefs = new DummyPreferencesForTesting();
         applyWorkspacePreferences(prefs);
         applyProjectProperties(wsHandler, prefs);
         applyClasspathUpdate(wsHandler);
     }
 
-    private void applyWorkspacePreferences(Preferences prefs)
+    private void applyWorkspacePreferences(DummyPreferencesForTesting prefs)
     {
         if(preferencesConfig != null && prefs != null)
         {
@@ -146,7 +146,7 @@ class WorkspaceConfiguration
         }
     }
 
-    private void applyBasePreferences(Preferences prefs, IJavaProject project, PreferencesBaseConfiguration prefBaseConfig)
+    private void applyBasePreferences(DummyPreferencesForTesting prefs, IJavaProject project, PreferencesBaseConfiguration prefBaseConfig)
     {
         prefs.setShouldUseFlexibleTestCaseNaming(project, prefBaseConfig.isFlexibleNaming());
         prefs.setShouldUseTestMethodExtendedSearch(project, prefBaseConfig.isExtendedMethodSearch());
@@ -160,9 +160,14 @@ class WorkspaceConfiguration
         {
             prefs.setTestType(project, TEST_TYPE_TO_PREF_VALUE.get(prefBaseConfig.getTestType()));
         }
+
+        // necessary until tests are migrated to preferences v2 (that said, it
+        // allows for testing the automatic migration of user preferences, which
+        // is good)
+        prefs.forcePreferencesMigration(project);
     }
 
-    private void applyProjectProperties(WorkspaceHandler workspaceHandler, Preferences prefs)
+    private void applyProjectProperties(WorkspaceHandler workspaceHandler, DummyPreferencesForTesting prefs)
     {
         for (ProjectConfiguration projectConfig : projectConfigs.values())
         {

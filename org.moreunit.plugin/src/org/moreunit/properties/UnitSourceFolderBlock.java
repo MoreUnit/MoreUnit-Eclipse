@@ -228,4 +228,13 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
         propertyPage.updateValidState();
     }
+
+    public String getError()
+    {
+        if(getListOfUnitSourceFolder().isEmpty())
+        {
+            return "Choose at least one test folder!";
+        }
+        return null;
+    }
 }
