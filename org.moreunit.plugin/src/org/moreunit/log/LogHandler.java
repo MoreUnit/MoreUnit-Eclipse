@@ -1,42 +1,44 @@
 package org.moreunit.log;
 
+import org.moreunit.MoreUnitPlugin;
+import org.moreunit.core.log.Logger;
+
 public class LogHandler
 {
-
-    private static LogHandler instance;
+    private static class InstanceHolder
+    {
+        static LogHandler instance = new LogHandler(MoreUnitPlugin.getDefault().getLogger());
+    }
 
     public static LogHandler getInstance()
     {
-        if(instance == null)
-            instance = new LogHandler();
-
-        return instance;
+        return InstanceHolder.instance;
     }
 
-    private LogHandler()
+    private Logger logger;
+
+    private LogHandler(Logger logger)
     {
+        this.logger = logger;
     }
 
     public void handleExceptionLog(String message, Throwable throwable)
     {
-        System.out.println("moreunit: (EXC) " + message);
-        System.out.println("moreunit: (EXC) " + throwable.getMessage());
-        throwable.printStackTrace();
+        logger.error(message, throwable);
     }
 
     public void handleExceptionLog(Throwable throwable)
     {
-        System.out.println("moreunit: (EXC) " + throwable.getMessage());
-        throwable.printStackTrace();
+        logger.error(throwable);
     }
 
     public void handleInfoLog(String infoMessage)
     {
-        System.out.println("moreunit: (INFO) " + infoMessage);
+        logger.info(infoMessage);
     }
 
     public void handleWarnLog(String warning)
     {
-        System.out.println("moreunit (WARN) :" + warning);
+        logger.warn(warning);
     }
 }

@@ -12,6 +12,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.annotation.AnnotationUpdateListener;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
+import org.moreunit.core.log.DefaultLogger;
+import org.moreunit.core.log.Logger;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.FeatureDetector;
 import org.moreunit.util.MoreUnitContants;
@@ -29,6 +31,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 
     public static final String PLUGIN_ID = "org.moreunit";
 
+    private Logger logger;
     private AnnotationUpdateListener annotationUpdateListener;
 
     /**
@@ -38,8 +41,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     {
         setInstance(this);
     }
-    
-    private static void setInstance(MoreUnitPlugin instance) {
+
+    private static void setInstance(MoreUnitPlugin instance)
+    {
         plugin = instance;
     }
 
@@ -49,13 +53,16 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
+
+        logger = new DefaultLogger(getLog(), "org.moreunit.log.level");
+
         FeatureDetector.setBundleContext(context);
         annotationUpdateListener = new AnnotationUpdateListener();
-        
+
         IPartService partService = getPartService();
         if(partService != null)
             partService.addPartListener(annotationUpdateListener);
-        
+
         MoreUnitAnnotationModel.attachForAllOpenEditor();
         removeMarkerFromOlderMoreUnitVersions();
     }
@@ -65,7 +72,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
         IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
         if(workbenchWindows.length > 0)
             return workbenchWindows[0].getPartService();
-        
+
         return null;
     }
 
@@ -97,11 +104,11 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     {
         super.stop(context);
         annotationUpdateListener.dispose();
-        
+
         IPartService partService = getPartService();
         if(partService != null)
             partService.removePartListener(annotationUpdateListener);
-        
+
         plugin = null;
     }
 
@@ -126,5 +133,10 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     public static ImageDescriptor getImageDescriptor(String path)
     {
         return AbstractUIPlugin.imageDescriptorFromPlugin("org.moreunit", path);
+    }
+
+    public Logger getLogger()
+    {
+        return logger;
     }
 }
