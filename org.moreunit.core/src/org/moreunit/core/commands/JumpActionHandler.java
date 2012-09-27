@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -114,8 +115,6 @@ public class JumpActionHandler extends AbstractHandler
             }
         }
 
-        // TODO Nicolas: find how to actualize file name registered in editor
-        // when renamed
         IFile file = toFile(getActiveEditorInput(event));
         if(file != null)
         {
@@ -176,10 +175,10 @@ public class JumpActionHandler extends AbstractHandler
     // implemented in HandlerUtil only since 3.7
     private static IEditorInput getActiveEditorInput(ExecutionEvent event)
     {
-        Object o = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_INPUT_NAME);
-        if(o instanceof IEditorInput)
+        Object editor = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_NAME);
+        if(editor instanceof IEditorPart)
         {
-            return (IEditorInput) o;
+            return ((IEditorPart) editor).getEditorInput();
         }
         return null;
     }
