@@ -7,7 +7,7 @@ Bundle-ClassPath: activation.jar,
  jaxb-api.jar,
  jaxb-impl.jar,
  jsr173_1.0_api.jar
-Bundle-Vendor: moreunit.sourceforge.net
+Bundle-Vendor: MoreUnit.org
 Export-Package: com.sun.activation.registries,
  com.sun.activation.viewers,
  com.sun.istack,

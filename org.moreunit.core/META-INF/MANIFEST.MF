@@ -4,7 +4,7 @@ Bundle-Name: MoreUnit Plug-in Core
 Bundle-SymbolicName: org.moreunit.core;singleton:=true
 Bundle-Version: 2.4.6.qualifier
 Bundle-Activator: org.moreunit.core.MoreUnitCore
-Bundle-Vendor: moreunit.sourceforge.net
+Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,

@@ -9,5 +9,5 @@ Require-Bundle: org.eclipse.jdt.launching,
  org.moreunit.test.dependencies,
  org.testng.eclipse;bundle-version="5.14.2.10"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: moreunit.sourceforge.net
+Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .

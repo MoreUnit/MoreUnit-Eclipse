@@ -20,7 +20,7 @@ Require-Bundle: org.eclipse.core.runtime,
 xxEclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Bundle-Vendor: moreunit.sourceforge.net
+Bundle-Vendor: MoreUnit.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreunit.mock",
  org.moreunit.actions;x-friends:="org.moreunit.test",

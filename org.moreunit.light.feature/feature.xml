@@ -3,13 +3,16 @@
       id="org.moreunit.light"
       label="MoreUnit Light"
       version="2.4.6.qualifier"
-      provider-name="moreunit.sourceforge.net">
+      provider-name="MoreUnit.org"
+      plugin="org.moreunit.core">
 
-   <description url="http://moreunit.sourceforge.net">
-      MoreUnit is an Eclipse plug-in that assists you in writing more unit tests. This feature provides basic tools available for all languages.
+   <description url="http://moreunit.org">
+      MoreUnit is an Eclipse plug-in that assists you in writing more
+unit tests. This feature provides basic tools available for all
+languages.
    </description>
 
-   <copyright url="http://moreunit.sourceforge.net/#about">
+   <copyright url="http://moreunit.org/#about">
       MoreUnit-Team (Henneberger Vera, Walton Channing, Nicolas Demengel)
    </copyright>
 

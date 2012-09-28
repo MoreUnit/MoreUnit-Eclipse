@@ -23,4 +23,4 @@ Require-Bundle: org.eclipse.ui,
  org.moreunit.test.dependencies,
  org.testng.eclipse;bundle-version="5.14.2.10"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: moreunit.sourceforge.net
+Bundle-Vendor: MoreUnit.org

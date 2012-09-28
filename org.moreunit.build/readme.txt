@@ -18,5 +18,4 @@ Define property in default profile in ~/.m2/settings.xml:
 Build and deploy latestandgreatest update site
 ----------------------------------------------
 
-mvn clean
-mvn install -P latestandgreatest
+mvn clean deploy -P latestandgreatest

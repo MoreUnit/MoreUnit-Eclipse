@@ -8,7 +8,7 @@ Bundle-ClassPath: .,
  fest-util-1.1.4.jar,
  guava-r08.jar,
  mockito-all-1.9.0.jar
-Bundle-Vendor: moreunit.sourceforge.net
+Bundle-Vendor: MoreUnit.org
 Export-Package: com.google.common.annotations,
  com.google.common.base,
  com.google.common.base.internal,
