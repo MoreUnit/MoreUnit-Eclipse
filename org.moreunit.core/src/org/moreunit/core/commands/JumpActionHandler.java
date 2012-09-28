@@ -128,7 +128,7 @@ public class JumpActionHandler extends AbstractHandler
     {
         if(! (event.getApplicationContext() instanceof IEvaluationContext))
         {
-            logger.warn("Unsupported context: " + event.getApplicationContext()); //$NON-NLS-1$
+            logger.trace("Unsupported context: " + event.getApplicationContext()); //$NON-NLS-1$
             return null;
         }
 
