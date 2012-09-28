@@ -6,18 +6,32 @@ import java.io.PrintStream;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.util.IOUtils;
 
 public class DefaultLogger implements Logger
 {
     private final ILog logger;
+    private final String pluginId;
     private final Level logLevel;
 
-    public DefaultLogger(ILog log, String logLevelProperty)
+    public DefaultLogger(ILog log, String pluginId, String logLevelProperty)
     {
         this.logger = log;
+        this.pluginId = pluginId;
         logLevel = Level.valueOf(System.getProperty(logLevelProperty, Level.INFO.name()).toUpperCase());
+    }
+
+    public boolean traceEnabled()
+    {
+        return levelEnabled(Level.TRACE);
+    }
+
+    public void trace(Object message)
+    {
+        if(traceEnabled())
+        {
+            log(IStatus.INFO, "[TRACE] " + message);
+        }
     }
 
     public boolean debugEnabled()
@@ -120,11 +134,11 @@ public class DefaultLogger implements Logger
 
     private void log(int severity, Object message)
     {
-        logger.log(new Status(severity, MoreUnitCore.PLUGIN_ID, String.valueOf(message)));
+        logger.log(new Status(severity, pluginId, String.valueOf(message)));
     }
 
     private void log(int severity, Object message, Throwable throwable)
     {
-        logger.log(new Status(severity, MoreUnitCore.PLUGIN_ID, String.valueOf(message), throwable));
+        logger.log(new Status(severity, pluginId, String.valueOf(message), throwable));
     }
 }

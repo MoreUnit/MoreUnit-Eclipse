@@ -2,6 +2,10 @@ package org.moreunit.core.log;
 
 public interface Logger
 {
+    boolean traceEnabled();
+
+    void trace(Object message);
+
     boolean debugEnabled();
 
     void debug(Object message);

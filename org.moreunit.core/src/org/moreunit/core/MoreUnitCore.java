@@ -21,6 +21,8 @@ public class MoreUnitCore extends AbstractUIPlugin
 {
     public static final String PLUGIN_ID = "org.moreunit.core"; //$NON-NLS-1$
 
+    private static final String LOG_LEVEL_PROPERTY = "org.moreunit.core.log.level";
+
     private static MoreUnitCore instance;
 
     private List<Service> services = new ArrayList<Service>();
@@ -40,7 +42,7 @@ public class MoreUnitCore extends AbstractUIPlugin
         super.start(context);
         instance = this;
 
-        logger = new DefaultLogger(getLog(), "org.moreunit.core.log.level");
+        logger = new DefaultLogger(getLog(), PLUGIN_ID, LOG_LEVEL_PROPERTY);
         preferences = new Preferences(getPreferenceStore(), logger);
 
         languageExtensionManager = new LanguageExtensionManager(context, logger);

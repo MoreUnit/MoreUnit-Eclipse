@@ -25,11 +25,12 @@ import org.osgi.framework.BundleContext;
  */
 public class MoreUnitPlugin extends AbstractUIPlugin
 {
-
     // The shared instance.
     private static MoreUnitPlugin plugin;
 
     public static final String PLUGIN_ID = "org.moreunit";
+
+    private static final String LOG_LEVEL_PROPERTY = "org.moreunit.log.level";
 
     private Logger logger;
     private AnnotationUpdateListener annotationUpdateListener;
@@ -54,7 +55,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     {
         super.start(context);
 
-        logger = new DefaultLogger(getLog(), "org.moreunit.log.level");
+        logger = new DefaultLogger(getLog(), PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
         FeatureDetector.setBundleContext(context);
         annotationUpdateListener = new AnnotationUpdateListener();
