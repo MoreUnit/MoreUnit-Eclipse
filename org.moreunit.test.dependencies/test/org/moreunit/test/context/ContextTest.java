@@ -1,25 +1,23 @@
 package org.moreunit.test.context;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Test;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
-
-@Preferences(testClassPrefixes="Test")
+@Preferences(testPackagePrefix="Test")
 public class ContextTest extends ContextTestCase
 {
-    @Project(mainCls="SomeClass", properties = @Properties(testClassPrefixes="tseT"))
+    @Project(mainCls="SomeClass", properties = @Properties(testPackagePrefix="tseT"))
     @Test
     public void should_use_properties_when_annotated_with_properties()
     {
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         assertThat(prefs.hasProjectSpecificSettings(context.getProjectHandler().get())).isTrue();
         
-        String[] prefixes = prefs.getPrefixes(context.getProjectHandler().get());
-        assertThat(prefixes[0]).isEqualTo("tseT");
+        String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
+        assertThat(prefix).isEqualTo("tseT");
     }
     
     @Project(mainCls="SomeClass")
@@ -29,8 +27,8 @@ public class ContextTest extends ContextTestCase
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         assertThat(prefs.hasProjectSpecificSettings(context.getProjectHandler().get())).isFalse();
         
-        String[] prefixes = prefs.getPrefixes(context.getProjectHandler().get());
-        assertThat(prefixes[0]).isEqualTo("Test");
+        String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
+        assertThat(prefix).isEqualTo("Test");
     }
     
     @Project(mainCls="SomeClass")
@@ -50,10 +48,8 @@ public class ContextTest extends ContextTestCase
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         IJavaProject javaProject = context.getProjectHandler().get();
         assertThat(prefs.shouldUseTestMethodExtendedSearch(javaProject)).isTrue();
-        assertThat(prefs.getPrefixes(javaProject)).containsOnly("Pre");
         assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.shouldUseFlexibleTestCaseNaming(javaProject)).isTrue();
-        assertThat(prefs.getSuffixes(javaProject)).containsOnly("Post");
+        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("Pre*${srcFile}*Post");
         assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
         assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
         assertThat(prefs.getJunitDirectoryFromPreferences(javaProject)).isEqualTo("testsrc");
@@ -77,10 +73,8 @@ public class ContextTest extends ContextTestCase
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         IJavaProject javaProject = context.getProjectHandler().get();
         assertThat(prefs.shouldUseTestMethodExtendedSearch(javaProject)).isTrue();
-        assertThat(prefs.getPrefixes(javaProject)).containsOnly("Pre");
         assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.shouldUseFlexibleTestCaseNaming(javaProject)).isTrue();
-        assertThat(prefs.getSuffixes(javaProject)).containsOnly("Post");
+        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("Pre*${srcFile}*Post");
         assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
         assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
         assertThat(prefs.getTestSuperClass(javaProject)).isEqualTo("my.SuperClass");

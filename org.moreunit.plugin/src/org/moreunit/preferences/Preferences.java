@@ -1,5 +1,6 @@
 package org.moreunit.preferences;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.MoreUnitPlugin;
+import org.moreunit.core.log.Logger;
 import org.moreunit.core.util.Strings;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.matching.TestClassNamePattern;
@@ -25,7 +27,8 @@ public class Preferences
 
     private static Preferences instance = new Preferences();
 
-    private Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
+    private final Logger logger = MoreUnitPlugin.getDefault().getLogger();
+    private final Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
 
     protected Preferences()
     {
@@ -56,7 +59,6 @@ public class Preferences
         store.setDefault(PreferenceConstants.PREF_JUNIT_PATH, PreferenceConstants.PREF_JUNIT_PATH_DEFAULT);
         store.setDefault(PreferenceConstants.TEST_TYPE, PreferenceConstants.DEFAULT_TEST_TYPE);
         store.setDefault(PreferenceConstants.SHOW_REFACTORING_DIALOG, true);
-        store.setDefault(PreferenceConstants.USE_WIZARDS, PreferenceConstants.DEFAULT_USE_WIZARDS);
         store.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
         store.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
         store.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
@@ -212,13 +214,19 @@ public class Preferences
     @Deprecated
     public String[] getPrefixes(IJavaProject javaProject)
     {
-        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.PREFIXES);
+        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.Deprecated.PREFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
     }
 
+    /**
+     * @Deprecated use
+     *             {@link ProjectPreferences#setTestClassNameTemplate(String)}
+     *             instead.
+     */
+    @Deprecated
     public void setPrefixes(IJavaProject javaProject, String[] prefixes)
     {
-        getProjectStore(javaProject).setValue(PreferenceConstants.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
+        getProjectStore(javaProject).setValue(PreferenceConstants.Deprecated.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
     }
 
     /**
@@ -228,13 +236,19 @@ public class Preferences
     @Deprecated
     public String[] getSuffixes(IJavaProject javaProject)
     {
-        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.SUFFIXES);
+        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.Deprecated.SUFFIXES);
         return PreferencesConverter.convertStringToArray(preferenceValue);
     }
 
+    /**
+     * @Deprecated use
+     *             {@link ProjectPreferences#setTestClassNameTemplate(String)}
+     *             instead.
+     */
+    @Deprecated
     public void setSuffixes(IJavaProject javaProject, String[] suffixes)
     {
-        getProjectStore(javaProject).setValue(PreferenceConstants.SUFFIXES, PreferencesConverter.convertArrayToString(suffixes));
+        getProjectStore(javaProject).setValue(PreferenceConstants.Deprecated.SUFFIXES, PreferencesConverter.convertArrayToString(suffixes));
     }
 
     public String getTestSuperClass(IJavaProject javaProject)
@@ -286,12 +300,18 @@ public class Preferences
     @Deprecated
     public boolean shouldUseFlexibleTestCaseNaming(IJavaProject javaProject)
     {
-        return getBooleanValue(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, javaProject);
+        return getBooleanValue(PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING, javaProject);
     }
 
+    /**
+     * @Deprecated use
+     *             {@link ProjectPreferences#setTestClassNameTemplate(String)}
+     *             instead.
+     */
+    @Deprecated
     public void setShouldUseFlexibleTestCaseNaming(IJavaProject javaProject, boolean shouldUseFlexibleNaming)
     {
-        getProjectStore(javaProject).setValue(PreferenceConstants.FLEXIBEL_TESTCASE_NAMING, shouldUseFlexibleNaming);
+        getProjectStore(javaProject).setValue(PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING, shouldUseFlexibleNaming);
     }
 
     public String getTestPackagePrefix(IJavaProject javaProject)
@@ -327,10 +347,23 @@ public class Preferences
     public IPreferenceStore getProjectStore(IJavaProject javaProject)
     {
         if(javaProject == null)
+        {
             return getWorkbenchStore();
+        }
 
+        if(preferenceMap.containsKey(javaProject))
+        {
+            return preferenceMap.get(javaProject);
+        }
+
+        return getOrCreateProjectStore(javaProject);
+    }
+
+    private synchronized IPreferenceStore getOrCreateProjectStore(IJavaProject javaProject)
+    {
         IPreferenceStore resultStore = null;
 
+        // second check, synchronized
         if(preferenceMap.containsKey(javaProject))
         {
             resultStore = preferenceMap.get(javaProject);
@@ -342,9 +375,30 @@ public class Preferences
             preferenceStore.setSearchContexts(new IScopeContext[] { projectScopeContext });
             preferenceMap.put(javaProject, preferenceStore);
             resultStore = initStore(migratePrefsIfRequired(preferenceStore));
+            saveMigrationResultIfRequired(preferenceStore, javaProject);
         }
 
         return resultStore;
+    }
+
+    private void saveMigrationResultIfRequired(ScopedPreferenceStore store, IJavaProject javaProject)
+    {
+        if(store.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS) && store.needsSaving())
+        {
+            if(logger.debugEnabled())
+            {
+                logger.debug("Saving preferences for " + javaProject + " (template: " + store.getString(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE) + ")");
+            }
+
+            try
+            {
+                store.save();
+            }
+            catch (IOException e)
+            {
+                logger.error("Could not save preferences for project " + javaProject, e);
+            }
+        }
     }
 
     public void clearProjectCache()

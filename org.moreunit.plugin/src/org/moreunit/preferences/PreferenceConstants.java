@@ -17,13 +17,9 @@ public interface PreferenceConstants
     String PREF_JUNIT_PATH_DEFAULT = "test";
     String SHOW_REFACTORING_DIALOG = "org.moreunit.show_refactoring_dialog";
 
-    String PREFIXES = "org.moreunit.prefixes";
-    String SUFFIXES = "org.moreunit.suffixes";
-    String USE_WIZARDS = "org.moreunit.use_wizards";
     String SWITCH_TO_MATCHING_METHOD = "org.moreunit.switch_to_matching_method";
     String TEST_PACKAGE_PREFIX = "org.moreunit.package_prefix";
     String TEST_PACKAGE_SUFFIX = "org.moreunit.package_suffix";
-    String FLEXIBEL_TESTCASE_NAMING = "org.moreunit.flexiblenaming";
     String UNIT_SOURCE_FOLDER = "org.moreunit.unitsourcefolder";
     String EXTENDED_TEST_METHOD_SEARCH = "org.moreunit.extendedTestMethodSearch";
     String TEST_CLASS_NAME_TEMPLATE = "org.moreunit.testClassNameTemplate";
@@ -34,7 +30,6 @@ public interface PreferenceConstants
     String TEST_TYPE_VALUE_TESTNG = "testng";
     String TEST_SUPERCLASS = "org.moreunit.test_superclass";
 
-    boolean DEFAULT_USE_WIZARDS = true;
     boolean DEFAULT_SWITCH_TO_MATCHING_METHOD = true;
     String DEFAULT_TEST_PACKAGE_PREFIX = "";
     String DEFAULT_TEST_PACKAGE_SUFFIX = "";
@@ -67,4 +62,11 @@ public interface PreferenceConstants
     String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";
     String TEST_METHOD_TYPE_NO_PREFIX = "testMethodTypeNoPrefix";
     String TEST_METHOD_DEFAULT_CONTENT = "org.moreunit.test.test_methodDefaultContent";
+
+    interface Deprecated
+    {
+        String PREFIXES = "org.moreunit.prefixes";
+        String SUFFIXES = "org.moreunit.suffixes";
+        String FLEXIBEL_TESTCASE_NAMING = "org.moreunit.flexiblenaming";
+    }
 }
