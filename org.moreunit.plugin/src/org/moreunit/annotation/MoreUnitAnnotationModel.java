@@ -35,6 +35,7 @@ import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences;
 
 /**
  * @author vera 01.02.2009 14:27:06
@@ -157,14 +158,15 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     private void updateAnnotations()
     {
         final MoreUnitAnnotationModel modelInstance = this;
-        Job updateJob = new Job("Update MoreUnit Annotations") {
+        Job updateJob = new Job("Update MoreUnit Annotations")
+        {
 
             @Override
             protected IStatus run(IProgressMonitor monitor)
             {
                 AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
                 clear(event);
-                
+
                 try
                 {
                     EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
@@ -172,44 +174,43 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                     {
                         return Status.OK_STATUS;
                     }
-                    
+
                     ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
                     if(TypeFacade.isTestCase(compilationUnit))
                     {
                         return Status.OK_STATUS;
                     }
-                    
+
                     ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
                     IType type = classTypeFacade.getType();
                     if(type == null)
                     {
-                        return Status.OK_STATUS; // this could happen if the resource is out of sync with the file system
+                        return Status.OK_STATUS; // this could happen if the
+                                                 // resource is out of sync with
+                                                 // the file system
                     }
-                    
+
                     annotateTestedMethods(type, classTypeFacade, event);
                 }
                 catch (Exception exc)
                 {
                     LogHandler.getInstance().handleExceptionLog(exc);
                 }
-                
+
                 fireModelChanged(event);
-                
+
                 return Status.OK_STATUS;
             }
         };
-        
+
         updateJob.setPriority(Job.DECORATE);
         updateJob.schedule();
     }
 
     private synchronized void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
-        // TODO Nicolas: only uncomment the following for testing, since performances are far too bad for production.
-        // I let it here for now, just for it to be checked in once into CVS, and I will remove it then unless I can improve it.
-        // boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
-        // MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
-        MethodSearchMode searchMode = MethodSearchMode.BY_NAME;
+        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
+        MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
 
         for (IMethod method : type.getMethods())
         {
