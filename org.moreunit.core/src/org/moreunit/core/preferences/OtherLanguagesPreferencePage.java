@@ -4,6 +4,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -31,11 +32,13 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
     protected void doCreateContent(Composite parent)
     {
         Label explainationLabel = new Label(parent, SWT.NONE);
-        explainationLabel.setLayoutData(LayoutData.row(1));
+        explainationLabel.setLayoutData(LayoutData.colSpan(1));
         explainationLabel.setText("The following configuration will be applied to all languages as a default:");
 
         createBaseContents();
 
+        Labels.placeHolder(parent);
+        separator(parent);
         Labels.placeHolder(parent);
 
         createFields(parent);
@@ -43,7 +46,7 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
 
     private void createFields(Composite parent)
     {
-        Composite group = Composites.gridGroup(parent, "Per-language configurations may also be created:", 2);
+        Composite group = Composites.gridGroup(parent, "Per-language configurations may also be created:", 2, 10);
 
         Label nameLabel = new Label(group, SWT.NONE);
         nameLabel.setText("Language name:");
@@ -81,5 +84,14 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
         });
 
         Labels.placeHolder(group);
+    }
+
+    private void separator(Composite parent)
+    {
+        Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        separator.setLayoutData(gridData);
     }
 }

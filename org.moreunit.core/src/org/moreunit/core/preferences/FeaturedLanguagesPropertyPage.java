@@ -1,40 +1,34 @@
 package org.moreunit.core.preferences;
 
-import static org.moreunit.core.ui.Composites.placeHolder;
+import static java.util.Collections.emptyMap;
 import static org.moreunit.core.ui.Labels.wrappingLabel;
+import static org.moreunit.core.util.ArrayUtils.array;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.dialogs.PropertyPage;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.moreunit.core.ui.Composites;
 
-public class FeaturedLanguagesPropertyPage extends PropertyPage implements IWorkbenchPreferencePage
+public class FeaturedLanguagesPropertyPage extends FeaturedLanguagesPreferencePage
 {
-    private static final int WIDTH_HINT = 350;
-
-    public FeaturedLanguagesPropertyPage()
-    {
-        noDefaultAndApplyButton();
-    }
-
     @Override
-    protected Control createContents(Composite parent)
+    protected void createLastPart(Composite composite)
     {
-        Composite composite = Composites.fillBothNoMargin(parent);
-
-        wrappingLabel("This section regroups settings for languages for which MoreUnit provides specific support.", WIDTH_HINT, composite);
-        placeHolder(composite);
-        wrappingLabel("Such support is obtained by installing ad-hoc plug-ins. For instance, MoreUnit's repository proposes a plug-in to support Java projects.", WIDTH_HINT, composite);
-
-        Dialog.applyDialogFont(composite);
-
-        return composite;
+        wrappingLabel("The main page of the section allows you to target all possible languages at once. You may also create \"per-language\" settings, using the form at the bottom of the corresponding workspace preference page:", WIDTH_HINT, composite);
+        createLink(composite, "Open workspace preferences");
     }
 
-    public void init(IWorkbench wb)
+    private Link createLink(Composite parent, String text)
     {
+        return Composites.link(parent, text, new SelectionAdapter()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+                final String id = PreferencePages.OTHER_LANGUAGES;
+                PreferencesUtil.createPreferenceDialogOn(getShell(), id, array(id), emptyMap()).open();
+            }
+        });
     }
 }

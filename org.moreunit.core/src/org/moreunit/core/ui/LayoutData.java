@@ -4,6 +4,8 @@ import org.eclipse.swt.layout.GridData;
 
 public class LayoutData
 {
+    private static final int SPAN_ALL_COLS = Integer.MAX_VALUE;
+
     public static GridData labelledField()
     {
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -11,7 +13,7 @@ public class LayoutData
         return gd;
     }
 
-    public static GridData row(int numColumns)
+    public static GridData colSpan(int numColumns)
     {
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = numColumns;
@@ -21,5 +23,14 @@ public class LayoutData
     public static GridData fillGrid()
     {
         return new GridData(GridData.FILL, GridData.FILL, true, true);
+    }
+
+    public static GridData fillRow()
+    {
+        GridData gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = SPAN_ALL_COLS;
+        return gd;
     }
 }

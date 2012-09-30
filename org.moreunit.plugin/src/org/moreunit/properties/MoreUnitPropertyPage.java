@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -102,10 +103,10 @@ public class MoreUnitPropertyPage extends PropertyPage
         tabFolder.setLayout(layout);
 
         GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.heightHint = 350;
+        gridData.heightHint = new PixelConverter(parent).convertHeightInCharsToPixels(29);
         tabFolder.setLayoutData(gridData);
 
-        tabFolder.setEnabled(shouldUseProjectspecificSettings());
+        setEnabled(shouldUseProjectspecificSettings());
     }
 
     private Composite fixesFirstTabStyle(Composite tab)
@@ -134,12 +135,14 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     private void handleCheckboxSelectionChanged()
     {
-        if(shouldUseProjectspecificSettings())
-            tabFolder.setEnabled(true);
-        else
-            tabFolder.setEnabled(false);
-
+        setEnabled(shouldUseProjectspecificSettings());
         updateValidState();
+    }
+
+    private void setEnabled(boolean enabled)
+    {
+        secondTabOtherProperties.setEnabled(enabled);
+        tabFolder.setEnabled(enabled);
     }
 
     @Override

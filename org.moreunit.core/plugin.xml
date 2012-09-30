@@ -77,37 +77,22 @@
    </extension>
    
    <extension point="org.eclipse.ui.preferencePages">
-      <page id="org.moreunit.core.preferences.mainPage"
-         name="MoreUnit"
-         class="org.moreunit.core.preferences.MainPropertyPage">
-         <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
-      </page>
       <page id="org.moreunit.core.preferences.featuredLanguagesPage"
-         name="Featured Languages"
-         category="org.moreunit.core.preferences.mainPage"
-         class="org.moreunit.core.preferences.FeaturedLanguagesPropertyPage">
+         name="MoreUnit"
+         class="org.moreunit.core.preferences.FeaturedLanguagesPreferencePage">
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
       </page>
       <page id="org.moreunit.core.preferences.otherLanguagesPage"
-         name="Other Languages"
-         category="org.moreunit.core.preferences.mainPage"
+         name="User Languages"
+         category="org.moreunit.core.preferences.featuredLanguagesPage"
          class="org.moreunit.core.preferences.OtherLanguagesPreferencePage">
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
       </page>
    </extension>
    
    <extension point="org.eclipse.ui.propertyPages">
-      <page id="org.moreunit.core.properties.mainPage"
-         name="MoreUnit"
-         class="org.moreunit.core.preferences.MainPropertyPage">
-         <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
-         <enabledWhen>
-            <adapt type="org.eclipse.core.resources.IProject"/>
-         </enabledWhen>
-      </page>
       <page id="org.moreunit.core.properties.featuredLanguagesPage"
-         name="Featured Languages"
-         category="org.moreunit.core.properties.mainPage"
+         name="MoreUnit"
          class="org.moreunit.core.preferences.FeaturedLanguagesPropertyPage">
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
          <enabledWhen>
@@ -115,8 +100,8 @@
          </enabledWhen>
       </page>
       <page id="org.moreunit.core.properties.otherLanguagesPage"
-         name="Other Languages"
-         category="org.moreunit.core.properties.mainPage"
+         name="User Languages"
+         category="org.moreunit.core.properties.featuredLanguagesPage"
          class="org.moreunit.core.preferences.PropertyPageFactory:anyLanguage:The following generic settings apply to languages that do not have specific configuration.">
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
          <enabledWhen>

@@ -28,8 +28,8 @@ import org.moreunit.core.log.Logger;
 
 public class LanguagePageManager implements Service, LanguageConfigurationListener
 {
-    private static final String MAIN_PAGE = "org.moreunit.core.preferences.mainPage";
-    private static final String OTHER_LANGUAGES_PAGE = "org.moreunit.core.preferences.otherLanguagesPage";
+    private static final String MAIN_PAGE = PreferencePages.FEATURED_LANGUAGES;
+    private static final String OTHER_LANGUAGES_PAGE = PreferencePages.OTHER_LANGUAGES;
     private static final String PREFERENCE_PAGE_ID_BASE = "org.moreunit.core.preferences.page.";
     private static final String PROPERTY_PAGE_EXTENSION_ID_BASE = "org.moreunit.core.properties.page.extension.";
     private static final String PROPERTY_PAGE_ID_BASE = "org.moreunit.core.properties.page.";

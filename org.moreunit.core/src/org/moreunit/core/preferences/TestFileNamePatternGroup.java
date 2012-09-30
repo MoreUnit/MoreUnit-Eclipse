@@ -5,7 +5,6 @@ import static org.moreunit.core.util.Strings.countOccurrences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -22,6 +21,8 @@ import org.moreunit.core.ui.LayoutData;
 
 public class TestFileNamePatternGroup
 {
+    private static final int EXPLANATION_WIDTH_HINT = 350;
+
     private final ExpandableCompositeContainer container;
     private final TestFileNamePatternPreferencesWriter prefWriter;
     private final Text testFileTemplateField;
@@ -42,7 +43,7 @@ public class TestFileNamePatternGroup
         this.container = container;
         this.prefWriter = prefsWriter;
 
-        Composite fileTplGroup = Composites.gridGroup(parent, "Rule for naming test files:", 2);
+        Composite fileTplGroup = Composites.gridGroup(parent, "Rule for naming test files:", 2, 10);
 
         testFileTemplateField = createFileTemplateField(fileTplGroup);
         wordSeparatorField = createWordSeparatorField(fileTplGroup, forceCamelCase);
@@ -105,13 +106,6 @@ public class TestFileNamePatternGroup
 
         container.newExpandableComposite(parent, "More explanations...", false, new ExpandableContent()
         {
-            public Object getLayoutData()
-            {
-                GridData data = LayoutData.fillGrid();
-                data.horizontalSpan = 2;
-                return data;
-            }
-
             public Control createBody(ExpandableComposite expandableComposite)
             {
                 Composite inner = new Composite(expandableComposite, SWT.NONE);
@@ -125,7 +119,7 @@ public class TestFileNamePatternGroup
 
                 for (String e : explanations)
                 {
-                    Label lbl = new Label(inner, SWT.NONE);
+                    Label lbl = Labels.wrappingLabel(e, EXPLANATION_WIDTH_HINT, inner);
                     lbl.setText(e);
                 }
 
@@ -161,13 +155,6 @@ public class TestFileNamePatternGroup
 
         container.newExpandableComposite(parent, "Demonstration", false, new ExpandableContent()
         {
-            public Object getLayoutData()
-            {
-                GridData data = LayoutData.fillGrid();
-                data.horizontalSpan = 2;
-                return data;
-            }
-
             public Control createBody(ExpandableComposite expandableComposite)
             {
                 Composite inner = new Composite(expandableComposite, SWT.NONE);
@@ -240,6 +227,7 @@ public class TestFileNamePatternGroup
     {
         wordSeparatorField.setEnabled(enabled);
         testFileTemplateField.setEnabled(enabled);
+        container.setExpandable(enabled);
     }
 
     public void restoreDefaults()

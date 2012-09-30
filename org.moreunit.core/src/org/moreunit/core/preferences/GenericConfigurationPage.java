@@ -5,7 +5,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -21,6 +20,8 @@ import org.moreunit.core.ui.LayoutData;
 
 class GenericConfigurationPage
 {
+    private static final int EXPLANATION_WIDTH_HINT = 350;
+
     private final PreferencePage page;
     private final LanguagePreferencesWriter prefWriter;
     private ExpandableCompositeContainer container;
@@ -48,7 +49,7 @@ class GenericConfigurationPage
     {
         Composite parent = container;
 
-        Composite folderTplGroup = Composites.gridGroup(parent, "Rule for locating test files:", 2);
+        Composite folderTplGroup = Composites.gridGroup(parent, "Rule for locating test files:", 2, 10);
 
         createFolderTemplateFields(folderTplGroup);
         createFolderTplExplanations(folderTplGroup);
@@ -111,13 +112,6 @@ class GenericConfigurationPage
 
         container.newExpandableComposite(parent, "More explanations...", false, new ExpandableContent()
         {
-            public Object getLayoutData()
-            {
-                GridData data = LayoutData.fillGrid();
-                data.horizontalSpan = 2;
-                return data;
-            }
-
             public Control createBody(ExpandableComposite expandableComposite)
             {
                 Composite inner = new Composite(expandableComposite, SWT.NONE);
@@ -126,16 +120,17 @@ class GenericConfigurationPage
 
                 String[] explanations = { //
                 "Use the variable " + TestFolderPathPattern.SRC_PROJECT_VARIABLE + " to represent the production source project.", //
-                "You may use stars '*' to represent variable parts within segments, and double stars '**' for a variable set of segments.", //
+                "You may use stars '*' to represent variable parts within path segments, and double stars '**' for a variable set of path segments.", //
                 "You may capture variable parts using parentheses and then reference them using backslashes '\\'.", //
                 "When matching files, the part of the file path that lies after then end of your pattern is automatically used.", //
-                "Examples: the definition '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/(*)-src' => '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/\\1-test'", //
-                "\tallows for finding the file 'my-project/js-test/some/path/to/MyClassTest.js'", //
-                "\tfrom 'my-project/js-src/some/path/to/MyClass.js'" };
+                "", //
+                "Example: the definition '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/(*)-src' => '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/\\1-test'" //
+                        + " allows for finding the file 'my-project/js-test/some/path/to/MyClassTest.js'" //
+                        + " from 'my-project/js-src/some/path/to/MyClass.js'" };
 
                 for (String e : explanations)
                 {
-                    Label lbl = new Label(inner, SWT.NONE);
+                    Label lbl = Labels.wrappingLabel(e, EXPLANATION_WIDTH_HINT, inner);
                     lbl.setText(e);
                 }
 
@@ -226,6 +221,9 @@ class GenericConfigurationPage
 
     public void setEnabled(boolean enabled)
     {
+        srcFolderTemplateField.setEnabled(enabled);
+        testFolderTemplateField.setEnabled(enabled);
+        container.setExpandable(enabled);
         testFileNamePattern.setEnabled(enabled);
         if(! enabled)
         {

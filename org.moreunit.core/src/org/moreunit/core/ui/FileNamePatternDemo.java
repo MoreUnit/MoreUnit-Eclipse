@@ -9,11 +9,11 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.moreunit.core.matching.FileNameEvaluation;
 import org.moreunit.core.matching.TestFileNamePattern;
@@ -29,31 +29,25 @@ public abstract class FileNamePatternDemo
     {
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new GridLayout(3, false));
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        composite.setLayoutData(LayoutData.fillRow());
 
-        Button creationButton = new Button(composite, SWT.NONE);
-        creationButton.setText("Test ");
+        Link testLink = Composites.link(composite, "Test");
 
         Label label = new Label(composite, SWT.NONE);
-        label.setText(" your pattern with the following file:");
+        label.setText("your pattern with the following file:");
 
         inputField = new Text(composite, SWT.SINGLE | SWT.BORDER);
         inputField.setLayoutData(LayoutData.labelledField());
 
-        final Label fileTypeLbl = new Label(composite, SWT.NONE);
-        GridData data = new GridData(GridData.FILL, GridData.FILL, false, true);
-        data.horizontalSpan = 3;
-        fileTypeLbl.setLayoutData(data);
+        final Text fileTypeLbl = outputArea(composite);
 
         label = new Label(composite, SWT.NONE);
         label.setText("MoreUnit will make it correspond to any file named as follows:");
-        label.setLayoutData(data);
+        label.setLayoutData(LayoutData.fillRow());
 
-        final Text outputArea = new Text(composite, SWT.NONE);
-        outputArea.setEditable(false);
-        outputArea.setLayoutData(data);
+        final Text outputArea = outputArea(composite);
 
-        creationButton.addSelectionListener(new SelectionAdapter()
+        testLink.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
@@ -75,7 +69,16 @@ public abstract class FileNamePatternDemo
         });
     }
 
-    protected String createOutput(FileNameEvaluation evaluation)
+    private Text outputArea(Composite parent)
+    {
+        final Text t = new Text(parent, SWT.BORDER);
+        t.setEditable(false);
+        t.setLayoutData(LayoutData.fillRow());
+        t.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+        return t;
+    }
+
+    private String createOutput(FileNameEvaluation evaluation)
     {
         StringBuilder sb = new StringBuilder();
         for (String p : evaluation.getPreferredCorrespondingFilePatterns())

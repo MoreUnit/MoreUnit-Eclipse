@@ -104,42 +104,47 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     {
         // Group with label
         Group group = new Group(parent, SWT.NONE);
-        group.setLayout(new GridLayout());
+        group.setLayout(new GridLayout(3, false));
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.horizontalSpan = 2;
         group.setLayoutData(gridData);
         group.setText(PreferenceConstants.TEXT_TEST_TYPE);
 
-        GridData buttonGridData = new GridData();
-
         // Junit3 choice
         junit3Button = new Button(group, SWT.RADIO);
         junit3Button.setText(PreferenceConstants.TEXT_JUNIT_3_8);
-        junit3Button.setLayoutData(buttonGridData);
+        junit3Button.setLayoutData(testTypeButtonLayoutData(false));
         junit3Button.setSelection(projectPreferences.shouldUseJunit3Type());
         junit3Button.addSelectionListener(this);
 
         // Junit 4 choice
         junit4Button = new Button(group, SWT.RADIO);
         junit4Button.setText(PreferenceConstants.TEXT_JUNIT_4);
-        junit4Button.setLayoutData(buttonGridData);
+        junit4Button.setLayoutData(testTypeButtonLayoutData(true));
         junit4Button.setSelection(projectPreferences.shouldUseJunit4Type());
         junit4Button.addSelectionListener(this);
 
         // TestNg choice
         testNgButton = new Button(group, SWT.RADIO);
         testNgButton.setText(PreferenceConstants.TEXT_TEST_NG);
-        testNgButton.setLayoutData(buttonGridData);
+        testNgButton.setLayoutData(testTypeButtonLayoutData(true));
         testNgButton.setSelection(projectPreferences.shouldUseTestNgType());
         testNgButton.addSelectionListener(this);
+    }
 
-        GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        testNgButton.setLayoutData(gd);
+    private GridData testTypeButtonLayoutData(boolean indent)
+    {
+        GridData data = new GridData();
+        if(indent)
+        {
+            data.horizontalIndent = 20;
+        }
+        return data;
     }
 
     private void createTestNamePatternArea(Composite parentWith2Cols)
     {
-        Composite parent = Composites.fillBothNoMargin(parentWith2Cols, 2);
+        Composite parent = Composites.fillWidth(parentWith2Cols);
 
         testCaseNamePatternArea = TestFileNamePatternGroup.forCamelCasePattern(parent, container, new TestFileNamePatternPreferencesWriter()
         {
@@ -310,5 +315,20 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     public void forceFocus()
     {
         testCaseNamePatternArea.forceFocus();
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        junit3Button.setEnabled(enabled);
+        junit4Button.setEnabled(enabled);
+        testNgButton.setEnabled(enabled);
+        methodPrefixButton.setEnabled(enabled);
+        testCaseNamePatternArea.setEnabled(enabled);
+        methodContentTextField.setEnabled(enabled);
+        packagePrefixTextField.setEnabled(enabled);
+        packageSuffixTextField.setEnabled(enabled);
+        superClassTextField.setEnabled(enabled);
+        extendedSearchCheckbox.setEnabled(enabled);
+        testCaseNamePatternArea.setEnabled(enabled);
     }
 }

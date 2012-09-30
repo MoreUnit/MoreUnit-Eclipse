@@ -1,5 +1,8 @@
 package org.moreunit.core.ui;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -17,6 +20,7 @@ import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 public class ExpandableCompositeContainer extends Composite
 {
     private final ScrolledComposite scrolledComposite;
+    private final Set<ExpandableComposite> expandableComposites = new HashSet<ExpandableComposite>();
 
     public ExpandableCompositeContainer(Composite parent, int heightHintInChars)
     {
@@ -38,7 +42,7 @@ public class ExpandableCompositeContainer extends Composite
         layout.marginWidth = 0;
         c.setLayout(layout);
 
-        c.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        c.setLayoutData(LayoutData.fillRow());
 
         return c;
     }
@@ -53,7 +57,7 @@ public class ExpandableCompositeContainer extends Composite
         exComp.setExpanded(expanded);
         exComp.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 
-        exComp.setLayoutData(content.getLayoutData());
+        exComp.setLayoutData(LayoutData.fillRow());
 
         exComp.addExpansionListener(new ExpansionAdapter()
         {
@@ -66,12 +70,36 @@ public class ExpandableCompositeContainer extends Composite
 
         exComp.setClient(content.createBody(exComp));
 
+        expandableComposites.add(exComp);
+
         return exComp;
     }
 
     public void reflow()
     {
         scrolledComposite.reflow();
+    }
+
+    public void setExpandable(boolean expandable)
+    {
+        for (ExpandableComposite ec : expandableComposites)
+        {
+            ec.setEnabled(expandable);
+        }
+
+        if(! expandable)
+        {
+            setExpanded(false);
+        }
+    }
+
+    public void setExpanded(boolean expanded)
+    {
+        for (ExpandableComposite ec : expandableComposites)
+        {
+            ec.setExpanded(expanded);
+        }
+        reflow();
     }
 
     private static class ScrolledComposite extends SharedScrolledComposite
@@ -104,10 +132,9 @@ public class ExpandableCompositeContainer extends Composite
             reflow(true);
         }
     }
+
     public static interface ExpandableContent
     {
         Control createBody(ExpandableComposite expandableComposite);
-
-        Object getLayoutData();
     }
 }
