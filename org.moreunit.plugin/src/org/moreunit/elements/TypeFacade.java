@@ -235,7 +235,7 @@ public abstract class TypeFacade
     private IMember getDefaultSelection(Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, IMember startMember)
     {
         IMember selection = MemberJumpHistory.getInstance().getLastCorrespondingJumpMember(startMember);
-        if(proposedClasses.contains(selection) || proposedMethods.contains(selection))
+        if(selection != null && (proposedClasses.contains(selection) || proposedMethods.contains(selection)))
         {
             return selection;
         }
