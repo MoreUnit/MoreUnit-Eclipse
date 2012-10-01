@@ -44,11 +44,13 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             logMessage = new StringBuilder("UnitDecorator.decorate(").append(element).append(") -> ");
         }
 
-        ICompilationUnit javaTypeOfResource = tryToGetCompilationUnitFromElement(element, logMessage);
-        if(javaTypeOfResource == null)
+        ICompilationUnit cu = getCompilationUnitIfIsTypeUnderTest(element, logMessage);
+        if(cu == null)
+        {
             return;
+        }
 
-        ClassTypeFacade javaFileFacade = new ClassTypeFacade(javaTypeOfResource);
+        ClassTypeFacade javaFileFacade = new ClassTypeFacade(cu);
         if(javaFileFacade.hasTestCase())
         {
             if(logger.traceEnabled())
@@ -72,17 +74,12 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
         decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
     }
 
-    public ICompilationUnit tryToGetCompilationUnitFromElement(Object element)
-    {
-        return tryToGetCompilationUnitFromElement(element, null);
-    }
-
     /**
      * This method checks the type of the <code>element</code> and tries to get
-     * the compilation unit The method returns null if <code>element</code> is
+     * the compilation unit. The method returns null if <code>element</code> is
      * the wrong type or if it is a test case.
      */
-    public ICompilationUnit tryToGetCompilationUnitFromElement(Object element, StringBuilder logMessage)
+    public ICompilationUnit getCompilationUnitIfIsTypeUnderTest(Object element, StringBuilder logMessage)
     {
         IResource objectResource = (IResource) element;
         if(objectResource.getType() != IResource.FILE)
@@ -113,7 +110,19 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             return null;
         }
 
-        if(TypeFacade.isTestCase(((ICompilationUnit) javaElement).findPrimaryType()))
+        ICompilationUnit compilationUnit = (ICompilationUnit) javaElement;
+        // primary type may be null in case of empty .java file or
+        // package-info.java, etc...
+        if(compilationUnit.findPrimaryType() == null)
+        {
+            if(logger.traceEnabled())
+            {
+                logger.trace(logMessage.append("is a compilation unit without type").toString());
+            }
+            return null;
+        }
+
+        if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
         {
             if(logger.traceEnabled())
             {
@@ -127,7 +136,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             logger.trace(logMessage.append("is not a test case, ").toString());
         }
 
-        return (ICompilationUnit) javaElement;
+        return compilationUnit;
     }
 
     public static UnitDecorator getUnitDecorator()

@@ -91,6 +91,21 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         return createType(JavaTypeKind.ENUM, fullyQualifiedTypeName);
     }
 
+    public CompilationUnitHandler createCompilationUnit(String fullyQualifiedTypeName, String contents)
+    {
+        try
+        {
+            TypeName cuName = new TypeName(fullyQualifiedTypeName);
+            IPackageFragment pf = WorkspaceHelper.createNewPackageInSourceFolder(get(), cuName.packageName);
+            ICompilationUnit cu = pf.createCompilationUnit(String.format("%s.java", cuName.typeName), contents, false, null);
+            return new CompilationUnitHandler(this, cu);
+        }
+        catch (JavaModelException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     private TypeHandler createType(JavaTypeKind typeKind, String fullyQualifiedTypeName)
     {
         TypeName name = new TypeName(fullyQualifiedTypeName);
