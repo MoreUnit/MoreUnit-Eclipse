@@ -34,7 +34,6 @@ public class PreferencesConverterTest extends ContextTestCase
     @Before
     public void setUp() throws Exception
     {
-        // TODO Perhaps this is not the best idea
         unit1SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT1);
         unit2SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT2);
         unit3SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT3);

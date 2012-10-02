@@ -104,7 +104,6 @@ public class LanguageExtensionManager
 
     public Iterable<IJumper> getJumpersFor(String extension)
     {
-        // TODO Nicolas: see with Vera to activate the option
         // "Never join already wrapped lines"
         return new JumperIterable( //
         /**/new JumperIterator( //

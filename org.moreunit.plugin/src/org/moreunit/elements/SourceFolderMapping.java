@@ -40,7 +40,7 @@ public class SourceFolderMapping
 
         // if there are more than one sourcefolder in the project the user has
         // to choose manually
-        return packageFragmentRoots.get(0); // TODO hack
+        return packageFragmentRoots.get(0);
     }
 
     private boolean hasProjectsNoSourceFolders(List<IPackageFragmentRoot> packageFragmentRoots)

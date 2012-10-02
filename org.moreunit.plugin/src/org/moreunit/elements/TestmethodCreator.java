@@ -15,8 +15,8 @@ import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
  * @author vera 27.06.2007 20:59:15<br>
- *         This class is responsible for creating the testmethod-stubs. There are
- *         3 different types of stubs:<br>
+ *         This class is responsible for creating the testmethod-stubs. There
+ *         are 3 different types of stubs:<br>
  *         <ul>
  *         <li>JUnit 3 tests</li>
  *         <li>JUnit 4 tests</li>
@@ -32,9 +32,10 @@ public class TestmethodCreator
     private String defaultTestMethodContent = "";
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
-    
+
     /**
-     * @param compilationUnit Could be CUT or a test. createTestMethod will distinguish
+     * @param compilationUnit Could be CUT or a test. createTestMethod will
+     *            distinguish
      */
     public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent)
     {
@@ -44,7 +45,7 @@ public class TestmethodCreator
         testMethodDiviner = testMethodDivinerFactory.create();
         this.defaultTestMethodContent = defaultTestMethodContent;
     }
-    
+
     public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, String testType, String defaultTestMethodContent)
     {
         this.compilationUnit = compilationUnit;
@@ -62,7 +63,8 @@ public class TestmethodCreator
 
         if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
         {
-            // testcase code is created based on the testCaseCompilationUnit instance
+            // testcase code is created based on the testCaseCompilationUnit
+            // instance
             // if TestMethodCreator got created with testcase only, the
             // testCaseCompilationUnit must be set here
             testCaseCompilationUnit = compilationUnit;
@@ -72,9 +74,10 @@ public class TestmethodCreator
     }
 
     /**
-     * Create the first test method, e.g. create the new test class. This method calls the JUnit
-     * Wizard to create the new test class and tries to find the expected test method corresponding to
-     * the source method under test.
+     * Create the first test method, e.g. create the new test class. This method
+     * calls the JUnit Wizard to create the new test class and tries to find the
+     * expected test method corresponding to the source method under test.
+     * 
      * @param method Method under test.
      * @return Test method, or <code>null</code> if it is not found.
      */
@@ -95,12 +98,11 @@ public class TestmethodCreator
 
         // compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
-        
+
         // If test method exists, ready
         if(doesMethodExist(testMethodName))
             return null;
 
-        // TODO move this into the testMethodDiviner
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
             return createJUnit4Testmethod(testMethodName, null);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
@@ -119,7 +121,7 @@ public class TestmethodCreator
         if(testedMethod != null)
         {
             String testMethodName = testMethod.getElementName();
-            
+
             if(doesMethodExist(testMethodName))
                 testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 
@@ -137,11 +139,12 @@ public class TestmethodCreator
     private IMethod getCorrespondingTestedMethod(IMethod testMethod)
     {
         IType classUnderTest = new TestCaseTypeFacade(testCaseCompilationUnit).getCorrespondingClassUnderTest();
-        if (classUnderTest == null) {
+        if(classUnderTest == null)
+        {
             LogHandler.getInstance().handleWarnLog("Could not retrieve class under test");
             return null;
         }
-        
+
         try
         {
             String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
@@ -153,13 +156,14 @@ public class TestmethodCreator
             return null;
         }
     }
-    
+
     /**
-     * If a additional test method should be created it would be nice if this method
-     * is placed directly below the test method.
-     * As the {@link IType} createTestMethod placed the method above the sibling
-     * the method after the testmethod must be the sibling parameter for this method.
-     * This method returns null if the testmethod is the last method in the type
+     * If a additional test method should be created it would be nice if this
+     * method is placed directly below the test method. As the {@link IType}
+     * createTestMethod placed the method above the sibling the method after the
+     * testmethod must be the sibling parameter for this method. This method
+     * returns null if the testmethod is the last method in the type
+     * 
      * @return
      */
     private IMethod getSiblingForInsert(IMethod testMethod)
@@ -167,12 +171,12 @@ public class TestmethodCreator
         try
         {
             IMethod[] methods = testCaseCompilationUnit.findPrimaryType().getMethods();
-            for(int i=0;i<methods.length;i++)
+            for (int i = 0; i < methods.length; i++)
             {
-                boolean isNotLastMethodInClass = i<methods.length-1;
+                boolean isNotLastMethodInClass = i < methods.length - 1;
                 if(testMethod == methods[i] && isNotLastMethodInClass)
                 {
-                    return methods[i+1];
+                    return methods[i + 1];
                 }
             }
         }
@@ -180,7 +184,7 @@ public class TestmethodCreator
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
-        
+
         return null;
     }
 
@@ -224,7 +228,7 @@ public class TestmethodCreator
 
         return methodContent.toString();
     }
-    
+
     private String getTestMethodString(String testmethodName)
     {
         String recommendedLineSeparator = StringConstants.NEWLINE;
@@ -256,7 +260,9 @@ public class TestmethodCreator
     }
 
     /**
-     * Does test method exists? In case of any error, <code>false</code> is returned.
+     * Does test method exists? In case of any error, <code>false</code> is
+     * returned.
+     * 
      * @param testMethodName Name of test method.
      * @return Test method exists?
      */
@@ -264,11 +270,12 @@ public class TestmethodCreator
     {
         return findTestMethod(testMethodName) != null;
     }
-    
+
     /**
      * Try to find the test method. The first match is returned.
      * <p>
      * In case of any error, <code>null</code> is returned.
+     * 
      * @param testMethodName Name of test method.
      * @return testmethod, or <code>null</code> if not found.
      */
