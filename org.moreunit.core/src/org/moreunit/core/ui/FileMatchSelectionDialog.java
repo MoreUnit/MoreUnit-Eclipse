@@ -1,5 +1,6 @@
 package org.moreunit.core.ui;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.moreunit.core.log.Logger;
 
@@ -238,12 +240,18 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
 
     private static class FileLabelProvider extends LabelProvider
     {
+        private final Image fileIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+
         @Override
         public Image getImage(Object element)
         {
             if(element instanceof TreeActionElement)
             {
                 return ((TreeActionElement< ? >) element).getImage();
+            }
+            else if(element instanceof IFile)
+            {
+                return fileIcon;
             }
             return super.getImage(element);
         }
@@ -254,6 +262,11 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
             if(element instanceof TreeActionElement)
             {
                 return ((TreeActionElement< ? >) element).getText();
+            }
+            else if(element instanceof IFile)
+            {
+                IFile file = (IFile) element;
+                return String.format("%s - %s", file.getName(), file.getFullPath().removeLastSegments(1));
             }
             return super.getText(element);
         }
