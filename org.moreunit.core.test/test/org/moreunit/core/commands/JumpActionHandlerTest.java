@@ -3,6 +3,7 @@ package org.moreunit.core.commands;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.moreunit.core.config.Module.$;
 
 import java.util.Collection;
 
@@ -13,8 +14,7 @@ import org.eclipse.jface.window.Window;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.core.MoreUnitCore;
-import org.moreunit.core.config.Config;
+import org.moreunit.core.TestModule;
 import org.moreunit.core.extension.ExtensionPoints;
 import org.moreunit.core.extension.jump.IJumpContext;
 import org.moreunit.core.extension.jump.IJumper;
@@ -33,14 +33,27 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
     private CapturingSelector capturingSelector = new CapturingSelector();
 
-    private Preferences preferences = MoreUnitCore.get().getPreferences();
+    private TestModule config = new TestModule()
+    {
+        @Override
+        public boolean shouldUseMessageDialogs()
+        {
+            return false;
+        }
+
+        @Override
+        public FileMatchSelector getFileMatchSelector()
+        {
+            return capturingSelector;
+        }
+    };
+
+    private Preferences preferences;
 
     @Before
     public void setUp() throws Exception
     {
-        Config.messageDialogsActivated = false;
-        Config.fileMatchSelector = capturingSelector;
-
+        preferences = $().getPreferences();
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}Test", "");
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}", "${srcProject}");
     }
@@ -118,7 +131,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
-        Config.wizardDriver = new AutoCancelWizard();
+        config.wizardDriver.overrideWith(new AutoCancelWizard());
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -149,7 +162,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(testFile);
 
-        Config.wizardDriver = new AutoCancelWizard();
+        config.wizardDriver.overrideWith(new AutoCancelWizard());
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -264,9 +277,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
 
-        IFile sourceFile = createFile("SomeConcept.lg");
-        IFile testFile1 = createFile("SomeConceptFirstTest.lg");
-        IFile testFile2 = createFile("SomeConceptSecondTest.lg");
+        IFile sourceFile = createFile("SomeConcept.jui");
+        IFile testFile1 = createFile("SomeConceptFirstTest.jui");
+        IFile testFile2 = createFile("SomeConceptSecondTest.jui");
 
         capturingSelector.fileToReturn = testFile2;
 
@@ -312,7 +325,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
-        Config.wizardDriver = new AutoPerformWizard();
+        config.wizardDriver.overrideWith(new AutoPerformWizard());
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -333,7 +346,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(testFile);
 
-        Config.wizardDriver = new AutoPerformWizard();
+        config.wizardDriver.overrideWith(new AutoPerformWizard());
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -355,14 +368,14 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
-        Config.wizardDriver = new WizardDriver()
+        config.wizardDriver.overrideWith(new WizardDriver()
         {
             public int open(DrivableWizardDialog dialog)
             {
                 assertTrue(getFolder("test/folder/having/many/parts").exists());
                 return Window.CANCEL;
             }
-        };
+        });
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -391,8 +404,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
     private static class CapturingSelector implements FileMatchSelector
     {
-        private IFile fileToReturn;
-        private Collection<IFile> files;
+        IFile fileToReturn;
+        Collection<IFile> files;
 
         public MatchSelection select(Collection<IFile> files, IFile preferredFile)
         {

@@ -13,12 +13,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
-import org.moreunit.core.config.Config;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.preferences.LanguagePreferencesReader;
 import org.moreunit.core.preferences.Preferences;
-import org.moreunit.core.ui.FileContentProvider;
-import org.moreunit.core.ui.FileMatchSelectionDialog;
 
 public class FileMatcher
 {
@@ -28,11 +25,6 @@ public class FileMatcher
     private final Preferences preferences;
     private final Logger logger;
     private final FileMatchSelector matchSelector;
-
-    public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, final Logger logger)
-    {
-        this(searchEngine, preferences, new DefaultFileMatchSelector(logger), logger);
-    }
 
     public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, FileMatchSelector matchSelector, final Logger logger)
     {
@@ -69,18 +61,13 @@ public class FileMatcher
             return MatchingFile.found(rc.results.iterator().next());
         }
 
-        MatchSelection selection = getMatchSelector().select(rc.results, null);
+        MatchSelection selection = matchSelector.select(rc.results, null);
         if(selection.exists())
         {
             return MatchingFile.found(selection.get());
         }
 
         return MatchingFile.searchCancelled();
-    }
-
-    private FileMatchSelector getMatchSelector()
-    {
-        return Config.fileMatchSelector == null ? matchSelector : Config.fileMatchSelector;
     }
 
     private SourceFolderPath findSrcFolder(IFile file, FileNameEvaluation evaluation) throws DoesNotMatchConfigurationException
@@ -166,24 +153,6 @@ public class FileMatcher
         catch (Exception e)
         {
             logger.error("Search failed", e);
-        }
-    }
-
-    private static class DefaultFileMatchSelector implements FileMatchSelector
-    {
-        private final Logger logger;
-
-        private DefaultFileMatchSelector(Logger logger)
-        {
-            this.logger = logger;
-        }
-
-        public MatchSelection select(Collection<IFile> files, IFile preferredFile)
-        {
-            FileContentProvider contentProvider = new FileContentProvider(files, preferredFile);
-            FileMatchSelectionDialog<IFile> dialog = new FileMatchSelectionDialog<IFile>("Jump to...", contentProvider, logger);
-            IFile choice = dialog.getChoice();
-            return choice == null ? MatchSelection.none() : MatchSelection.file(choice);
         }
     }
 

@@ -1,8 +1,9 @@
 package org.moreunit.core.ui;
 
+import static org.moreunit.core.config.Module.$;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.moreunit.core.config.Config;
 
 public class MessageDialogs
 {
@@ -10,7 +11,7 @@ public class MessageDialogs
 
     public static void openInformation(Shell shell, String message)
     {
-        if(Config.messageDialogsActivated)
+        if($().shouldUseMessageDialogs())
         {
             MessageDialog.openInformation(shell, TITLE, message);
         }
@@ -18,7 +19,7 @@ public class MessageDialogs
 
     public static void openError(Shell shell, String message)
     {
-        if(Config.messageDialogsActivated)
+        if($().shouldUseMessageDialogs())
         {
             MessageDialog.openError(shell, TITLE, message);
         }

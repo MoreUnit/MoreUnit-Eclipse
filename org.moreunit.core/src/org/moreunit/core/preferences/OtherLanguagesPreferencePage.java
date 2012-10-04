@@ -1,5 +1,7 @@
 package org.moreunit.core.preferences;
 
+import static org.moreunit.core.config.Module.$;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -9,7 +11,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
 import org.moreunit.core.ui.Composites;
@@ -24,8 +25,8 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
 
     public OtherLanguagesPreferencePage()
     {
-        super(MoreUnitCore.get().getPreferences().writerForAnyLanguage());
-        languageRepository = MoreUnitCore.get().getLanguageRepository();
+        super($().getPreferences().writerForAnyLanguage());
+        languageRepository = $().getLanguageRepository();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.moreunit.core.preferences;
 
+import static org.moreunit.core.config.Module.$;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -10,7 +12,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.moreunit.core.MoreUnitCore;
 
 public class GenericPropertyPage extends PropertyPage
 {
@@ -23,7 +24,7 @@ public class GenericPropertyPage extends PropertyPage
     public GenericPropertyPage(String languageId, String description)
     {
         this.languageId = languageId;
-        wsPreferences = MoreUnitCore.get().getPreferences();
+        wsPreferences = $().getPreferences();
         if(description != null)
         {
             setDescription(description);

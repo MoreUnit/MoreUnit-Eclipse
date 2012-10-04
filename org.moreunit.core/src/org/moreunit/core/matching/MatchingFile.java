@@ -72,4 +72,14 @@ public class MatchingFile
     {
         return fileToCreate;
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("%s(%s)", getClass().getSimpleName(), (isSearchCancelled() ? //
+        "search cancelled" : //
+        (isFound() ? //
+        "found: " + file : //
+        "to create: " + srcFolderToCreate + "/" + fileToCreate)));
+    }
 }

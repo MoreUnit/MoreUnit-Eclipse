@@ -1,6 +1,5 @@
 package org.moreunit.core.extension;
 
-import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.extension.jump.IJumpContext;
 import org.moreunit.core.extension.jump.IJumper;
 import org.moreunit.core.extension.jump.JumpResult;
@@ -13,11 +12,6 @@ public class JumperExtensionManager
     private final ExtendedSafeRunner safeRunner = new ExtendedSafeRunner();
     private final LanguageExtensionManager languageExtensionMgr;
     private final Logger logger;
-
-    public JumperExtensionManager()
-    {
-        this(MoreUnitCore.get().getLanguageExtensionManager(), MoreUnitCore.get().getLogger());
-    }
 
     public JumperExtensionManager(LanguageExtensionManager languageExtensionMgr, Logger logger)
     {

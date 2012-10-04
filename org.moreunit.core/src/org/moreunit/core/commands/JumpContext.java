@@ -6,18 +6,18 @@ import org.moreunit.core.extension.jump.IJumpContext;
 
 public class JumpContext implements IJumpContext
 {
-    private final ExecutionEvent event;
+    private final ExecutionContext context;
     private final IFile selectedFile;
 
-    public JumpContext(ExecutionEvent event, IFile selectedFile)
+    public JumpContext(ExecutionContext context, IFile selectedFile)
     {
-        this.event = event;
+        this.context = context;
         this.selectedFile = selectedFile;
     }
 
     public ExecutionEvent getExecutionEvent()
     {
-        return event;
+        return context.getEvent();
     }
 
     public IFile getSelectedFile()
