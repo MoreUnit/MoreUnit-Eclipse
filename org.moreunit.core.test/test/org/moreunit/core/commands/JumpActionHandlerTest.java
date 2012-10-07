@@ -25,30 +25,24 @@ import org.moreunit.core.matching.MatchSelection;
 import org.moreunit.core.preferences.LanguagePreferencesWriter;
 import org.moreunit.core.preferences.Preferences;
 import org.moreunit.core.ui.DrivableWizardDialog;
+import org.moreunit.core.ui.NonBlockingDialogFactory;
 import org.moreunit.core.ui.WizardDriver;
 
 public class JumpActionHandlerTest extends TmpProjectTestCase
 {
-    private static final String JUMP_COMMAND = "org.moreunit.core.commands.jumpCommand";
+    static final String JUMP_COMMAND = "org.moreunit.core.commands.jumpCommand";
 
-    private CapturingSelector capturingSelector = new CapturingSelector();
+    CapturingSelector capturingSelector = new CapturingSelector();
 
-    private TestModule config = new TestModule()
+    TestModule config = new TestModule()
     {
-        @Override
-        public boolean shouldUseMessageDialogs()
         {
-            return false;
-        }
-
-        @Override
-        public FileMatchSelector getFileMatchSelector()
-        {
-            return capturingSelector;
+            dialogFactory.overrideWith(new NonBlockingDialogFactory());
+            fileMatchSelector.overrideWith(capturingSelector);
         }
     };
 
-    private Preferences preferences;
+    Preferences preferences;
 
     @Before
     public void setUp() throws Exception
@@ -131,7 +125,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
-        config.wizardDriver.overrideWith(new AutoCancelWizard());
+        config.wizardDriver = new AutoCancelWizard();
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -162,7 +156,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(testFile);
 
-        config.wizardDriver.overrideWith(new AutoCancelWizard());
+        config.wizardDriver = new AutoCancelWizard();
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -325,7 +319,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
-        config.wizardDriver.overrideWith(new AutoPerformWizard());
+        config.wizardDriver = new AutoPerformWizard();
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -346,7 +340,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(testFile);
 
-        config.wizardDriver.overrideWith(new AutoPerformWizard());
+        config.wizardDriver = new AutoPerformWizard();
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -368,14 +362,14 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
-        config.wizardDriver.overrideWith(new WizardDriver()
+        config.wizardDriver = new WizardDriver()
         {
             public int open(DrivableWizardDialog dialog)
             {
                 assertTrue(getFolder("test/folder/having/many/parts").exists());
                 return Window.CANCEL;
             }
-        });
+        };
 
         // when
         executeCommand(JUMP_COMMAND);

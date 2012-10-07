@@ -6,6 +6,9 @@ import java.util.ListIterator;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.search.core.text.TextSearchEngine;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.Service;
 import org.moreunit.core.commands.ExecutionContext;
@@ -19,9 +22,12 @@ import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DefaultFileMatchSelector;
 import org.moreunit.core.matching.FileMatchSelector;
 import org.moreunit.core.matching.FileMatcher;
+import org.moreunit.core.matching.SearchEngine;
 import org.moreunit.core.preferences.LanguagePageManager;
 import org.moreunit.core.preferences.Preferences;
-import org.moreunit.core.ui.WizardDriver;
+import org.moreunit.core.ui.DialogFactory;
+import org.moreunit.core.ui.UserInterface;
+import org.moreunit.core.ui.WizardFactory;
 import org.osgi.framework.BundleContext;
 
 public class Module
@@ -133,14 +139,19 @@ public class Module
         }
     }
 
-    public ExecutionContext createExecutionContext(ExecutionEvent event)
+    public DialogFactory getDialogFactory(Shell activeShell)
     {
-        return new ExecutionContext(event, getLogger());
+        return new DialogFactory(activeShell);
+    }
+
+    public ExecutionContext getExecutionContext(ExecutionEvent event)
+    {
+        return new ExecutionContext(event, this, getLogger());
     }
 
     public FileMatcher getFileMatcher()
     {
-        return new FileMatcher(TextSearchEngine.create(), getPreferences(), getFileMatchSelector(), getLogger());
+        return new FileMatcher(getSearchEngine(), getPreferences(), getFileMatchSelector());
     }
 
     public FileMatchSelector getFileMatchSelector()
@@ -173,14 +184,9 @@ public class Module
         return preferences;
     }
 
-    public WizardDriver getWizardDriver()
+    public SearchEngine getSearchEngine()
     {
-        return null; // on purpose
-    }
-
-    public boolean shouldUseMessageDialogs()
-    {
-        return true;
+        return new SearchEngine(TextSearchEngine.create(), getLogger());
     }
 
     public LanguageRepository getLanguageRepository()
@@ -190,6 +196,16 @@ public class Module
 
     public JumpActionExecutor getJumpActionExecutor()
     {
-        return new JumpActionExecutor(getJumperExtensionManager(), getFileMatcher(), getLogger());
+        return new JumpActionExecutor(getJumperExtensionManager(), getFileMatcher());
+    }
+
+    public UserInterface getUserInterface(IWorkbench workbench, IWorkbenchPage activePage, Shell activeShell)
+    {
+        return new UserInterface(workbench, activePage, getDialogFactory(activeShell), getWizardFactory(workbench, activeShell), getLogger());
+    }
+
+    public WizardFactory getWizardFactory(IWorkbench workbench, Shell activeShell)
+    {
+        return new WizardFactory(workbench, activeShell, getLogger());
     }
 }

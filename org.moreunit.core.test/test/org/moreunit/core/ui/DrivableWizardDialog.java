@@ -17,11 +17,6 @@ public class DrivableWizardDialog extends WizardDialog
     @Override
     public int open()
     {
-        if(driver == null)
-        {
-            return super.open();
-        }
-
         setBlockOnOpen(false);
         super.open();
         int result = driver.open(this);
@@ -29,6 +24,7 @@ public class DrivableWizardDialog extends WizardDialog
         return result;
     }
 
+    // increases getWizard()'s visibility
     @Override
     public IWizard getWizard()
     {

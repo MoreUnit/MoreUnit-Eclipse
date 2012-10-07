@@ -7,12 +7,12 @@ import org.eclipse.core.runtime.IPath;
 
 public class Resources
 {
-    public static CreatedFolder createFolder(IFolder folder) throws FolderCreationException
+    public static CreatedFolder createFolder(IFolder folder)
     {
         return createFolder(folder.getProject(), folder.getFullPath().removeFirstSegments(1));
     }
 
-    public static CreatedFolder createFolder(IProject project, IPath folderPath) throws FolderCreationException
+    public static CreatedFolder createFolder(IProject project, IPath folderPath)
     {
         IFolder srcFolder = project.getFolder(folderPath);
         if(srcFolder.exists())

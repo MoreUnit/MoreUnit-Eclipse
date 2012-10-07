@@ -13,7 +13,7 @@ public class JumpActionHandler extends AbstractHandler
         // For easier testing: wraps execution event and delegates to
         // JumpActionExecutor (give us back the decision to recreate the handler
         // for each call or not)
-        $().getJumpActionExecutor().execute($().createExecutionContext(event));
+        $().getJumpActionExecutor().execute($().getExecutionContext(event));
         return null;
     }
 }

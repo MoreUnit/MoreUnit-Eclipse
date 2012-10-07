@@ -11,7 +11,6 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.SourceFolderPath;
 import org.moreunit.core.resources.CreatedPart;
-import org.moreunit.core.resources.FolderCreationException;
 
 public class NewFileWizard extends BasicNewFileResourceWizard
 {
@@ -20,7 +19,7 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     private final Logger logger;
     private IFile createdFile;
 
-    public NewFileWizard(IWorkbench workbench, SourceFolderPath selectedFolder, String fileName, Logger logger) throws FolderCreationException
+    public NewFileWizard(IWorkbench workbench, SourceFolderPath selectedFolder, String fileName, Logger logger)
     {
         this.fileNameInitialValue = fileName;
         this.logger = logger;

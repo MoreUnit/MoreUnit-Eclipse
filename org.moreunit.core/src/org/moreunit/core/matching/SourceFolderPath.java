@@ -7,7 +7,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.moreunit.core.resources.CreatedPart;
-import org.moreunit.core.resources.FolderCreationException;
 import org.moreunit.core.resources.Resources;
 
 public class SourceFolderPath
@@ -73,7 +72,7 @@ public class SourceFolderPath
         return folder.matches(path.toString());
     }
 
-    public CreatedPart createResolvedPartIfItDoesNotExist() throws FolderCreationException
+    public CreatedPart createResolvedPartIfItDoesNotExist()
     {
         IResource resolvedPart = getResolvedPartAsResource();
         if(resolvedPart instanceof IFolder && ! resolvedPart.exists())

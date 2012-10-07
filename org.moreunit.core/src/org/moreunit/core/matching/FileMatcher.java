@@ -9,28 +9,20 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchRequestor;
-import org.eclipse.search.core.text.TextSearchScope;
-import org.moreunit.core.log.Logger;
 import org.moreunit.core.preferences.LanguagePreferencesReader;
 import org.moreunit.core.preferences.Preferences;
 
 public class FileMatcher
 {
-    private static final Pattern ANY_CONTENT = Pattern.compile("");
-
-    private final TextSearchEngine searchEngine;
+    private final SearchEngine searchEngine;
     private final Preferences preferences;
-    private final Logger logger;
     private final FileMatchSelector matchSelector;
 
-    public FileMatcher(TextSearchEngine searchEngine, Preferences preferences, FileMatchSelector matchSelector, final Logger logger)
+    public FileMatcher(SearchEngine searchEngine, Preferences preferences, FileMatchSelector matchSelector)
     {
         this.searchEngine = searchEngine;
         this.preferences = preferences;
-        this.logger = logger;
         this.matchSelector = matchSelector;
     }
 
@@ -43,13 +35,13 @@ public class FileMatcher
 
         IResource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
-        TextSearchScope scope = createSearchScope(file, evaluation.getPreferredCorrespondingFilePatterns(), searchFolder);
-        search(scope, rc);
+        Pattern fileNamePattern = createFileNamePattern(file, evaluation.getPreferredCorrespondingFilePatterns());
+        searchEngine.searchFiles(searchFolder, fileNamePattern, rc);
 
         if(! evaluation.getOtherCorrespondingFilePatterns().isEmpty())
         {
-            scope = createSearchScope(file, evaluation.getOtherCorrespondingFilePatterns(), searchFolder);
-            search(scope, rc);
+            fileNamePattern = createFileNamePattern(file, evaluation.getOtherCorrespondingFilePatterns());
+            searchEngine.searchFiles(searchFolder, fileNamePattern, rc);
         }
 
         if(rc.results.isEmpty())
@@ -83,12 +75,6 @@ public class FileMatcher
         {
             return folderPathPattern.getTestPathFor(folderPath);
         }
-    }
-
-    private TextSearchScope createSearchScope(IFile file, Collection<String> correspondingFileNames, IResource rootResource) throws DoesNotMatchConfigurationException
-    {
-        Pattern fileNamePattern = createFileNamePattern(file, correspondingFileNames);
-        return TextSearchScope.newSearchScope(new IResource[] { rootResource }, fileNamePattern, false);
     }
 
     private Pattern createFileNamePattern(IFile file, Collection<String> correspondingFileNames)
@@ -137,23 +123,6 @@ public class FileMatcher
     private LanguagePreferencesReader getPreferencesFor(IFile file)
     {
         return preferences.get(file.getProject()).readerForLanguage(file.getFileExtension().toLowerCase());
-    }
-
-    private void search(TextSearchScope scope, TextSearchRequestor requestor)
-    {
-        try
-        {
-            IStatus searchStatus = searchEngine.search(scope, requestor, ANY_CONTENT, null);
-
-            if(searchStatus.getCode() != IStatus.OK)
-            {
-                logger.warn("Search failed with status: " + searchStatus);
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error("Search failed", e);
-        }
     }
 
     private static class ResultCollector extends TextSearchRequestor

@@ -4,30 +4,31 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.moreunit.core.extension.JumperExtensionManager;
 import org.moreunit.core.extension.jump.JumpResult;
-import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.matching.FileMatcher;
 import org.moreunit.core.matching.MatchingFile;
 import org.moreunit.core.resources.FolderCreationException;
-import org.moreunit.core.ui.MessageDialogs;
-import org.moreunit.core.ui.NewFileWizard;
+import org.moreunit.core.ui.UserInterface;
 
 public class JumpActionExecutor
 {
     private final JumperExtensionManager extensionManager;
     private final FileMatcher fileMatcher;
-    private final Logger logger;
 
-    public JumpActionExecutor(JumperExtensionManager extensionManager, FileMatcher fileMatcher, Logger logger)
+    public JumpActionExecutor(JumperExtensionManager extensionManager, FileMatcher fileMatcher)
     {
         this.extensionManager = extensionManager;
         this.fileMatcher = fileMatcher;
-        this.logger = logger;
     }
 
     public void execute(ExecutionContext context) throws ExecutionException
     {
-        IFile selectedFile = context.getSelection().getUniqueFile();
+        execute(context.getSelection(), context.getUserInterface(), context);
+    }
+
+    private void execute(Selection selection, UserInterface ui, ExecutionContext context)
+    {
+        IFile selectedFile = selection.getUniqueFile();
         if(selectedFile == null || selectedFile.getFileExtension() == null)
         {
             return;
@@ -51,22 +52,21 @@ public class JumpActionExecutor
             {
                 try
                 {
-                    NewFileWizard wizard = new NewFileWizard(context.getWorkbench(), match.getSrcFolderToCreate(), match.getFileToCreate(), logger);
-                    context.openDialog(wizard);
+                    ui.createNewFileWizard(match.getSrcFolderToCreate(), match.getFileToCreate()).open();
                 }
                 catch (FolderCreationException e)
                 {
-                    MessageDialogs.openError(context.getActiveShell(), "An error occurred while attempting to create folder " + e.getFolder());
+                    ui.showError("An error occurred while attempting to create folder " + e.getFolder());
                 }
             }
             else
             {
-                context.openEditor(match.get());
+                ui.openEditor(match.get());
             }
         }
         catch (DoesNotMatchConfigurationException e)
         {
-            MessageDialogs.openInformation(context.getActiveShell(), e.getPath() + " does not match your source folder preferences");
+            ui.showInfo(e.getPath() + " does not match your source folder preferences");
         }
     }
 }
