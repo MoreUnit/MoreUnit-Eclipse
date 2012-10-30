@@ -183,7 +183,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
 
     static String orDefault(String value, String defaultValue)
     {
-        return value != null && ! value.isEmpty() ? value : defaultValue;
+        return value != null && value.length() != 0 ? value : defaultValue;
     }
 
     public static class Defaults extends LanguagePreferencesReader
