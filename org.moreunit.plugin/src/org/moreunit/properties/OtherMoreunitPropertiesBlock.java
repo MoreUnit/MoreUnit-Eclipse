@@ -67,7 +67,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
         newParent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        container = new ExpandableCompositeContainer(newParent, createIntermediateComposite ? 25 : 0);
+        container = new ExpandableCompositeContainer(newParent);
 
         Composite grid = Composites.grid(container, 2);
 

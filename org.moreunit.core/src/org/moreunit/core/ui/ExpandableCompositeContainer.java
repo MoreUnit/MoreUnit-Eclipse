@@ -3,12 +3,8 @@ package org.moreunit.core.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -22,11 +18,12 @@ public class ExpandableCompositeContainer extends Composite
     private final ScrolledComposite scrolledComposite;
     private final Set<ExpandableComposite> expandableComposites = new HashSet<ExpandableComposite>();
 
-    public ExpandableCompositeContainer(Composite parent, int heightHintInChars)
+    public ExpandableCompositeContainer(Composite parent)
     {
-        super(new ScrolledComposite(parent, heightHintInChars), SWT.NO_BACKGROUND);
+        super(new ScrolledComposite(parent), SWT.NONE);
 
         setFont(parent.getFont());
+        setBackground(parent.getBackground());
         applyStretchedGridLayout(this);
 
         ((GridLayout) getLayout()).marginRight = 10;
@@ -104,7 +101,7 @@ public class ExpandableCompositeContainer extends Composite
 
     private static class ScrolledComposite extends SharedScrolledComposite
     {
-        public ScrolledComposite(Composite parent, int heightHintInChars)
+        public ScrolledComposite(Composite parent)
         {
             super(applyStretchedGridLayout(parent), SWT.V_SCROLL | SWT.H_SCROLL);
 
@@ -113,18 +110,7 @@ public class ExpandableCompositeContainer extends Composite
             setExpandHorizontal(true);
             setExpandVertical(true);
 
-            addControlListener(new ControlAdapter()
-            {
-                @Override
-                public void controlResized(final ControlEvent e)
-                {
-                    getVerticalBar().setVisible(true);
-                }
-            });
-
-            GridData gridData = LayoutData.fillGrid();
-            gridData.heightHint = new PixelConverter(parent).convertHeightInCharsToPixels(heightHintInChars);
-            setLayoutData(gridData);
+            setLayoutData(LayoutData.fillGrid());
         }
 
         public void reflow()

@@ -37,7 +37,7 @@ class GenericConfigurationPage
 
     public void createContainer(final Composite parent)
     {
-        container = new ExpandableCompositeContainer(parent, 0);
+        container = new ExpandableCompositeContainer(parent);
     }
 
     public ExpandableCompositeContainer getContainer()

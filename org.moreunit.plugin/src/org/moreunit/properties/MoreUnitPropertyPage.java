@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -103,7 +102,7 @@ public class MoreUnitPropertyPage extends PropertyPage
         tabFolder.setLayout(layout);
 
         GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.heightHint = new PixelConverter(parent).convertHeightInCharsToPixels(29);
+        gridData.heightHint = otherFolderItem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
         tabFolder.setLayoutData(gridData);
 
         setEnabled(shouldUseProjectspecificSettings());
