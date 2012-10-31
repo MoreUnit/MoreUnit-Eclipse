@@ -71,7 +71,7 @@ public abstract class FileNamePatternDemo
 
     private Text outputArea(Composite parent)
     {
-        final Text t = new Text(parent, SWT.BORDER);
+        final Text t = new Text(parent, SWT.BORDER | SWT.MULTI);
         t.setEditable(false);
         t.setLayoutData(LayoutData.fillRow());
         t.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
