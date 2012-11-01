@@ -8,9 +8,10 @@ import static org.moreunit.core.config.Module.$;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.moreunit.core.matching.MatchSelection;
 import org.moreunit.core.preferences.LanguagePreferencesWriter;
 import org.moreunit.core.preferences.Preferences;
 import org.moreunit.core.ui.DrivableWizardDialog;
+import org.moreunit.core.ui.NewFileWizard;
 import org.moreunit.core.ui.NonBlockingDialogFactory;
 import org.moreunit.core.ui.WizardDriver;
 
@@ -336,7 +338,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile testFile = getFile("test/SomeConceptTest.thing");
+        IFile testFile = getFile("test/SomeConcept2Test.thing");
 
         openEditor(testFile);
 
@@ -346,7 +348,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        IFile sourceFile = createFile("src/SomeConcept.thing");
+        IFile sourceFile = getFile("src/SomeConcept2.thing");
         assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
     }
 
@@ -356,18 +358,20 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src/folder/with/several/parts", "${srcProject}/test/folder/having/many/parts");
 
-        IFile sourceFile = createFile("src/folder/with/several/parts/SomeConcept.thing");
+        IFile sourceFile = createFile("src/folder/with/several/parts/SomeConcept3.thing");
 
+        // path to preferred test folder partially exists
         createFolder("test/folder/having");
 
         openEditor(sourceFile);
 
         config.wizardDriver = new WizardDriver()
         {
-            public int open(DrivableWizardDialog dialog)
+            @Override
+            protected int onOpen(DrivableWizardDialog dialog)
             {
-                assertTrue(getFolder("test/folder/having/many/parts").exists());
-                return Window.CANCEL;
+                assertTrue("preferred test folder should exist", getFolder("test/folder/having/many/parts").exists());
+                return userCancelsCreation(dialog);
             }
         };
 
@@ -375,24 +379,67 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertTrue(getFolder("test/folder/having").exists());
-        assertFalse(getFolder("test/folder/having/many/parts").exists());
+        assertTrue("partial path to preferred test folder should still exist", getFolder("test/folder/having").exists());
+        assertFalse("unneeded segments of path to preferred test folder should no longer exist (1)", getFolder("test/folder/having/many/parts").exists());
+        assertFalse("unneeded segments of path to preferred test folder should no longer exist (2)", getFolder("test/folder/having/many").exists());
     }
 
-    private static class AutoCancelWizard implements WizardDriver
+    @Test
+    public void should_undo_folder_creation_when_file_is_created_in_another_folder() throws Exception
     {
-        public int open(DrivableWizardDialog dialog)
+        // given
+        preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
+
+        IFile sourceFile = createFile("src/some/path/to/file/SomeConcept4.thing");
+
+        // path to preferred test folder partially exists
+        createFolder("test/some");
+
+        openEditor(sourceFile);
+
+        config.wizardDriver = new AutoPerformWizard()
         {
-            return Window.CANCEL;
+            @Override
+            protected void configure(DrivableWizardDialog dialog)
+            {
+                userSelectsTestFolder(dialog, getFolder("test/some/path"));
+                // instead of default: test/some/path/to/file
+            }
+        };
+
+        // when
+        executeCommand(JUMP_COMMAND);
+
+        // then
+        assertTrue("partial path to preferred test folder should still exist", getFolder("test/some").exists());
+        assertTrue("chosen folder should exist", getFolder("test/some/path").exists());
+        assertFalse("unneeded segments of path to preferred test folder should no longer exist (1)", getFolder("test/some/path/to/file").exists());
+        assertFalse("unneeded segments of path to preferred test folder should no longer exist (2)", getFolder("test/some/path/to").exists());
+
+        assertThat(getFileInActiveEditor()).isEqualTo(getFile("test/some/path/SomeConcept4Test.thing"));
+    }
+
+    private void userSelectsTestFolder(DrivableWizardDialog dialog, IFolder folder)
+    {
+        NewFileWizard wizard = (NewFileWizard) dialog.getWizard();
+        wizard.init(wizard.getWorkbench(), new StructuredSelection(folder));
+    }
+
+    private static class AutoCancelWizard extends WizardDriver
+    {
+        @Override
+        protected final int onOpen(DrivableWizardDialog dialog)
+        {
+            return userCancelsCreation(dialog);
         }
     }
 
-    private static class AutoPerformWizard implements WizardDriver
+    private static class AutoPerformWizard extends WizardDriver
     {
-        public int open(DrivableWizardDialog dialog)
+        @Override
+        protected final int onOpen(DrivableWizardDialog dialog)
         {
-            dialog.getWizard().performFinish();
-            return Window.OK;
+            return userValidatesCreation(dialog);
         }
     }
 

@@ -10,12 +10,12 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.SourceFolderPath;
-import org.moreunit.core.resources.CreatedPart;
+import org.moreunit.core.resources.CreatedFolderPath;
 
 public class NewFileWizard extends BasicNewFileResourceWizard
 {
     private final String fileNameInitialValue;
-    private final CreatedPart createdPart;
+    private final CreatedFolderPath createdFolderPath;
     private final Logger logger;
     private IFile createdFile;
 
@@ -23,7 +23,7 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     {
         this.fileNameInitialValue = fileName;
         this.logger = logger;
-        createdPart = selectedFolder.createResolvedPartIfItDoesNotExist();
+        createdFolderPath = selectedFolder.createResolvedPartIfItDoesNotExist();
         init(workbench, new StructuredSelection(selectedFolder.getResolvedPartAsResource()));
     }
 
@@ -40,7 +40,17 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     @Override
     protected void selectAndReveal(IResource newResource)
     {
-        this.createdFile = (IFile) newResource.getAdapter(IFile.class);
+        createdFile = (IFile) newResource.getAdapter(IFile.class);
+
+        try
+        {
+            createdFolderPath.deleteFoldersThatAreNotParentOf(createdFile);
+        }
+        catch (CoreException e)
+        {
+            logger.error("Could not delete " + createdFolderPath, e);
+        }
+
         super.selectAndReveal(newResource);
     }
 
@@ -54,11 +64,11 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     {
         try
         {
-            createdPart.delete();
+            createdFolderPath.delete();
         }
         catch (CoreException e)
         {
-            logger.error("Could not delete " + createdPart, e);
+            logger.error("Could not delete " + createdFolderPath, e);
         }
         return super.performCancel();
     }

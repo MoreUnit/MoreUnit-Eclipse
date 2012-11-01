@@ -6,7 +6,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.moreunit.core.resources.CreatedPart;
+import org.moreunit.core.resources.CreatedFolderPath;
 import org.moreunit.core.resources.Resources;
 
 public class SourceFolderPath
@@ -72,14 +72,14 @@ public class SourceFolderPath
         return folder.matches(path.toString());
     }
 
-    public CreatedPart createResolvedPartIfItDoesNotExist()
+    public CreatedFolderPath createResolvedPartIfItDoesNotExist()
     {
         IResource resolvedPart = getResolvedPartAsResource();
         if(resolvedPart instanceof IFolder && ! resolvedPart.exists())
         {
-            return Resources.createFolder((IFolder) resolvedPart).getCreatedPart();
+            return Resources.createFolder((IFolder) resolvedPart).getCreatedFolderPath();
         }
 
-        return new CreatedPart(null);
+        return new CreatedFolderPath(null);
     }
 }

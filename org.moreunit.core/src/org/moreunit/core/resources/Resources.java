@@ -21,7 +21,7 @@ public class Resources
         }
 
         IFolder folder = null;
-        CreatedPart createdPart = null;
+        CreatedFolderPath createdFolderPath = null;
 
         for (String segment : folderPath.segments())
         {
@@ -45,37 +45,27 @@ public class Resources
                     throw new FolderCreationException(e, folder);
                 }
 
-                if(createdPart == null)
-                {
-                    createdPart = new CreatedPart(folder);
-                }
+                createdFolderPath = new CreatedFolderPath(createdFolderPath, folder);
             }
         }
 
-        return new CreatedFolder(folder, createdPart);
+        return new CreatedFolder(folder, createdFolderPath);
     }
 
     public static class CreatedFolder
     {
         private final IFolder folder;
-        private final CreatedPart createdPart;
+        private final CreatedFolderPath path;
 
-        private CreatedFolder(IFolder folder, CreatedPart createdPart)
+        private CreatedFolder(IFolder folder, CreatedFolderPath path)
         {
             this.folder = folder;
-            if(createdPart != null)
-            {
-                this.createdPart = createdPart;
-            }
-            else
-            {
-                this.createdPart = new CreatedPart(null);
-            }
+            this.path = path;
         }
 
         private CreatedFolder(IFolder folder)
         {
-            this(folder, null);
+            this(folder, new CreatedFolderPath(null));
         }
 
         public IFolder get()
@@ -83,9 +73,9 @@ public class Resources
             return folder;
         }
 
-        public CreatedPart getCreatedPart()
+        public CreatedFolderPath getCreatedFolderPath()
         {
-            return createdPart;
+            return path;
         }
     }
 }
