@@ -1,5 +1,6 @@
 package org.moreunit.ui;
 
+import org.eclipse.jdt.core.IType;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -117,7 +118,8 @@ public class MissingTestmethodViewPart extends PageBookView
         {
             // only if a different java file is activated, do something
             EditorPartFacade editorPartFacade = new EditorPartFacade((IEditorPart) part);
-            if(!editorPartFacade.getCompilationUnit().findPrimaryType().equals(activePage.getInputType()))
+            IType primaryType = editorPartFacade.getCompilationUnit().findPrimaryType();
+            if(primaryType != null && !primaryType.equals(activePage.getInputType()))
             {
                 activePage.setNewEditorPartFacade(editorPartFacade);
                 initPage(activePage);
