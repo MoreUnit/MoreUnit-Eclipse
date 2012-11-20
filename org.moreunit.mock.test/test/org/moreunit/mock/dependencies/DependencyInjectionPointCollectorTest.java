@@ -16,37 +16,26 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class DependencyInjectionPointCollectorTest
 {
-    @Mock
+    private static final String TEST_PACKAGE_NAME = "org.example";
     private IType classUnderTest;
-    @Mock
+    private IPackageFragment testCasePackage;
     private IMember aMember;
-    @Mock
     private IField aField;
 
     private DependencyInjectionPointCollector collector;
 
-    private boolean testCaseCanAccessPackageOfClassUnderTest;
-
     @Before
-    public void createDependenciesDetector() throws Exception
+    public void init() throws Exception
     {
-        collector = new DependencyInjectionPointCollector(classUnderTest, null)
-        {
-            // This trick is necessary because Mockito can not mock equals().
-            // The following would not be possible:
-            // when(mockPackageFragment1.equals(packageFragment2)).thenXxx(...)
-            protected boolean canAccessPackage(IType type, IPackageFragment packageFragment)
-            {
-                return testCaseCanAccessPackageOfClassUnderTest;
-            }
-        };
+        classUnderTest = mockType();
+        testCasePackage = mockPackageFragmentWithPackageName(TEST_PACKAGE_NAME);
+        aMember = mock(IMember.class);
+        aField = mock(IField.class);
+
+        collector = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
     }
 
     @Test
@@ -64,7 +53,6 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         when(aMember.getFlags()).thenReturn(Flags.AccDefault);
-        testCaseCanAccessPackageOfClassUnderTest = false;
 
         // then
         assertThat(collector.isVisibleToTestCase(aMember)).isFalse();
@@ -75,7 +63,6 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         when(aMember.getFlags()).thenReturn(Flags.AccProtected);
-        testCaseCanAccessPackageOfClassUnderTest = false;
 
         // then
         assertThat(collector.isVisibleToTestCase(aMember)).isFalse();
@@ -107,7 +94,7 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         when(aMember.getFlags()).thenReturn(Flags.AccDefault);
-        testCaseCanAccessPackageOfClassUnderTest = true;
+        when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         // then
         assertThat(collector.isVisibleToTestCase(aMember)).isTrue();
@@ -118,7 +105,7 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         when(aMember.getFlags()).thenReturn(Flags.AccProtected);
-        testCaseCanAccessPackageOfClassUnderTest = true;
+        when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         // then
         assertThat(collector.isVisibleToTestCase(aMember)).isTrue();
@@ -181,7 +168,6 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         IMethod packagePrivateConstructor = method("ClassUnderTestConstructor", 1, Flags.AccDefault, true);
-        testCaseCanAccessPackageOfClassUnderTest = false;
 
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { packagePrivateConstructor });
 
@@ -196,7 +182,7 @@ public class DependencyInjectionPointCollectorTest
         IMethod publicConstructor = method("ClassUnderTestConstructor", 1, Flags.AccPublic, true);
 
         IMethod packagePrivateConstructor = method("ClassUnderTestConstructor", 1, Flags.AccDefault, true);
-        testCaseCanAccessPackageOfClassUnderTest = true;
+        when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { publicConstructor, packagePrivateConstructor });
 
@@ -263,7 +249,6 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         IMethod packagePrivateSetter = method("setProperty", 1, Flags.AccDefault, false);
-        testCaseCanAccessPackageOfClassUnderTest = false;
 
         classUnderTestHierarchyHasMethods(packagePrivateSetter);
 
@@ -278,7 +263,7 @@ public class DependencyInjectionPointCollectorTest
         IMethod publicSetter = method("setProperty", 1, Flags.AccPublic, false);
 
         IMethod packagePrivateSetter = method("setOtherProperty", 1, Flags.AccDefault, true);
-        testCaseCanAccessPackageOfClassUnderTest = true;
+        when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         classUnderTestHierarchyHasMethods(publicSetter, packagePrivateSetter);
 
@@ -291,7 +276,6 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         IField packagePrivateField = field("aField", Flags.AccDefault);
-        testCaseCanAccessPackageOfClassUnderTest = false;
 
         classUnderTestHierarchyHasFields(packagePrivateField);
 
@@ -324,11 +308,26 @@ public class DependencyInjectionPointCollectorTest
         IField publicField = field("aField", Flags.AccDefault);
 
         IField packagePrivateField = field("anotherField", Flags.AccDefault);
-        testCaseCanAccessPackageOfClassUnderTest = true;
+        when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         classUnderTestHierarchyHasFields(publicField, packagePrivateField);
 
         // then
         assertThat(collector.getFields()).hasSize(2);
+    }
+
+    private IType mockType()
+    {
+        IType type = mock(IType.class);
+        IPackageFragment typePackageFragment = mock(IPackageFragment.class);
+        when(type.getPackageFragment()).thenReturn(typePackageFragment);
+        return type;
+    }
+
+    private IPackageFragment mockPackageFragmentWithPackageName(String packageName)
+    {
+        IPackageFragment fragment = mock(IPackageFragment.class);
+        when(fragment.getElementName()).thenReturn(packageName);
+        return fragment;
     }
 }

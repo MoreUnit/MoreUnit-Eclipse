@@ -54,7 +54,7 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
 
     protected boolean canAccessPackage(IType type, IPackageFragment packageFragment)
     {
-        return packageFragment.equals(type.getPackageFragment());
+        return packageFragment.getElementName().equals(type.getPackageFragment().getElementName());
     }
 
     public Collection<IMethod> getSetters() throws JavaModelException
