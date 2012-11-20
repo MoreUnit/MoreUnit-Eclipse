@@ -24,7 +24,7 @@
   </modules>
 
   <properties>
-    <tycho-version>0.15.0</tycho-version>
+    <tycho-version>0.16.0</tycho-version>
     
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -89,6 +89,11 @@
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-p2-director-plugin</artifactId>
+          <version>${tycho-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-versions-plugin</artifactId>
           <version>${tycho-version}</version>
         </plugin>
         <plugin>
@@ -200,24 +205,6 @@
           <useUIHarness>${tests.use.ui}</useUIHarness>
           <useUIThread>${tests.use.ui}</useUIThread>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-p2-director-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>materialize-products</id>
-            <goals>
-              <goal>materialize-products</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>archive-products</id>
-            <goals>
-              <goal>archive-products</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
