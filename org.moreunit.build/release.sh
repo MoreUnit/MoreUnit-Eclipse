@@ -78,28 +78,29 @@ function update_local_repository {
   restore_work_in_progress
 }
 
+# $1 = version, $2 (optional) = -SNAPSHOT, $3 (optional) = .qualifier
 function set_version {
   CATEGORY_FILE=../org.moreunit.updatesite/category.xml
   MOCK_FEATURE_FILE=../org.moreunit.mock.feature/feature.xml
 
-  mvn org.eclipse.tycho:tycho-versions-plugin:set-version $mvnopts -DnewVersion=$1
+  mvn org.eclipse.tycho:tycho-versions-plugin:set-version $mvnopts -DnewVersion=$1$2
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1. Release aborted."
+    failure "Unable to set version to $1$2. Release aborted."
   fi
 
-  sed -i .bak "s/_[0-9\\.]\{1,\}\(.qualifier\)\{0,1\}.jar/_${1}.jar/g" "$CATEGORY_FILE"
+  sed -i .bak "s/_[0-9\\.]\{1,\}\(.qualifier\)\{0,1\}.jar/_${1}${3}.jar/g" "$CATEGORY_FILE"
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1. Release aborted."
+    failure "Unable to set version to $1$3. Release aborted."
   fi
 
-  sed -i .bak "s/\" version=\"[^\"]\{1,\}\"/\" version=\"${1}\"/g" "$CATEGORY_FILE"
+  sed -i .bak "s/\" version=\"[^\"]\{1,\}\"/\" version=\"${1}${3}\"/g" "$CATEGORY_FILE"
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1. Release aborted."
+    failure "Unable to set version to $1$3. Release aborted."
   fi
 
-  sed -i .bak "s/import feature=\"org.moreunit\" version=\"[^\"]\{1,\}\"/import feature=\"org.moreunit\" version=\"${1}\"/g" "$MOCK_FEATURE_FILE"
+  sed -i .bak "s/import feature=\"org.moreunit\" version=\"[^\"]\{1,\}\"/import feature=\"org.moreunit\" version=\"${1}${3}\"/g" "$MOCK_FEATURE_FILE"
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1. Release aborted."
+    failure "Unable to set version to $1$3. Release aborted."
   fi
 
   rm -f "$CATEGORY_FILE.bak"
@@ -150,13 +151,13 @@ if [ $? -ne 0 ]; then
   failure "Build failed. Release aborted."
 fi
 
-set_version "$nextVersion-SNAPSHOT"
+set_version $nextVersion '-SNAPSHOT' '.qualifier'
 
 cd "$RELEASE_REPO_DIR"
 
 git ci -a -m "Prepares development on version $nextVersion"
 
-git --tags push $ORIGIN $BRANCH
+git push --tags $ORIGIN $BRANCH
 if [ $? -ne 0 ]; then
   failure "Unable to push. Release aborted."
 fi
