@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.moreunit_2.4.6.qualifier.jar" id="org.moreunit" version="2.4.6.qualifier">
+   <feature url="features/org.moreunit_3.0.0.01.jar" id="org.moreunit" version="3.0.0.01">
       <category name="org.moreunit"/>
    </feature>
-   <feature url="features/org.moreunit.mock_2.4.6.qualifier.jar" id="org.moreunit.mock" version="2.4.6.qualifier">
+   <feature url="features/org.moreunit.mock_3.0.0.01.jar" id="org.moreunit.mock" version="3.0.0.01">
       <category name="org.moreunit"/>
    </feature>
-   <feature url="features/org.moreunit.light_2.4.6.qualifier.jar" id="org.moreunit.light" version="2.4.6.qualifier">
+   <feature url="features/org.moreunit.light_3.0.0.01.jar" id="org.moreunit.light" version="3.0.0.01">
       <category name="org.moreunit"/>
    </feature>
    <category-def name="org.moreunit" label="MoreUnit"/>
