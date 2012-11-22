@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Dependencies: JAXB
 Bundle-SymbolicName: org.moreunit.dependencies.jaxb
-Bundle-Version: 3.0.0.01
+Bundle-Version: 3.0.0.qualifier
 Bundle-ClassPath: activation.jar,
  jaxb-api.jar,
  jaxb-impl.jar,
