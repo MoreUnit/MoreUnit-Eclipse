@@ -12,6 +12,18 @@
 		<article class="content" id="releasenotes">
 			<header>Release Notes</header>
 			<section>
+				<h2>2012-11-24: Version 3.0.0<em>.01</em> released</h2>
+				<ul>
+					<li>Adds basic support for all programming languages: jump to source/test file, opening of a pre-filled wizard when file does not exist</li>
+					<li>Adds a more powerful way to define test file naming patterns, and a demo area to test those patterns</li>
+					<li>Methods are now marked as tested when they are called in the corresponding test class(es), not only when the test method names correspond</li>
+					<li>MoreUnit is now present in Eclipse's "About" dialog ;-)</li>
+					<li>Our old Ant-based build script has been replaced with a more standard approach using Tycho</li>
+					<li>Fix: (bug 3588502) package-private and protected members are now available for mocking</li>
+					<li>Fix: (bugs 3586482 &amp; 3586395) various problems due to package-info.java files that were considered as regular compilation units</li>
+					<li>Various minor fixes</li>
+				</ul>
+
 				<h2>2012-06-27: Version 2.4.6 released</h2>
 				<ul>
 					<li>Some bugfixes</li>
@@ -28,7 +40,7 @@
 				</ul>
 				<h2>2012-02-22: Version 2.4.3 released</h2>
 				<ul>
-					<li>Fix: do not consider potential test cases with packages that do not match the package of the class under test anymore, except as a proposal when jumping (bugs 3482684 & 3386098)</li>
+					<li>Fix: do not consider potential test cases with packages that do not match the package of the class under test anymore, except as a proposal when jumping (bugs 3482684 &amp; 3386098)</li>
 					<li>Adds a "New Class" entry in the "Jump To..." pop-up menu</li>
 					<li>Fix: the "New Class" wizard is back when "jumping" from a test class that does not have an associated tested class yet</li>
 					<li>The support for mocking frameworks now also works for Eclipse platforms that use Java 5 but do not provide JAXB</li>
