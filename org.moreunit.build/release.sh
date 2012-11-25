@@ -19,13 +19,14 @@ WIP_COMMENT="Work in progress"
 
 BRANCH=$(git branch --no-color | awk '$1=="*" {print $2}')
 ORIGIN=$(git remote -v | awk '$1=="origin" && $3=="(push)" {print $2}')
-MVN_PROFIL=mu3
+MVN_PROFIL=release
 
 function notify_user {
-	echo "$1"
-	if [ ! -z `which growlnotify` ]; then
-		growlnotify `basename $0` -m "$1"
-	fi
+  echo
+  echo "$1"
+  if [ ! -z `which growlnotify` ]; then
+    growlnotify `basename $0` -m "$1"
+  fi
 }
  
 function failure {
@@ -107,6 +108,17 @@ function set_version {
   rm -f "$MOCK_FEATURE_FILE.bak"
 }
 
+function zip_file_reminder {
+  echo
+  echo "** REMINDER *****************************************************"
+  echo "* Don't forget to upload                                        *"
+  echo "*     org.moreunit.updatesite/target/org.moreunit-VERSION.zip   *"
+  echo "* on                                                            *"
+  echo "*     https://sourceforge.net/projects/moreunit/files/moreunit/ *"
+  echo "*****************************************************************"
+  echo
+}
+
 version=$1
 nextVersion=$2
 
@@ -151,18 +163,35 @@ if [ $? -ne 0 ]; then
   failure "Build failed. Release aborted."
 fi
 
+# from this point, the release cannot be aborted anymore: the artifacts are on the update site! 
+
+# first push, to ensure a consistent state between the remote repo and the update site
+git push --tags $ORIGIN $BRANCH
+if [ $? -ne 0 ]; then
+  failure "Unable to push. Release aborted. THE NEWLY CREATED ARTIFACTS ARE ALREADY UPLOADED!"
+fi
+
+# first notification, in case of failure during the next steps
+notify_user "Release successful!"
+zip_file_reminder
+
+notify_user "Preparing code for development on version $nextVersion..."
 set_version $nextVersion '-SNAPSHOT' '.qualifier'
 
 cd "$RELEASE_REPO_DIR"
 
 git ci -a -m "Prepares development on version $nextVersion"
 
-git push --tags $ORIGIN $BRANCH
+git push $ORIGIN $BRANCH
 if [ $? -ne 0 ]; then
   failure "Unable to push. Release aborted."
 fi
 
+notify_user "Code ready for development on version $nextVersion"
+
 cd "$REPO_DIR" && git fetch
 cd "$CALL_DIR"
+# second notification, to be sure we don't forget about the zip file
+zip_file_reminder
 success "Version $version successfully released!"
 
