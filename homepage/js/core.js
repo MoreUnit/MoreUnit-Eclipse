@@ -1,5 +1,5 @@
 MU = {
-	version: 17, // to be incremented when delivering new content
+	version: 18, // to be incremented when delivering new content
 	
 	currentContent: null,
 	
