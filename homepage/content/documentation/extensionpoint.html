@@ -10,8 +10,9 @@
 		<header id="site-header"><em>MoreUnit</em> makes it easy to write more unit tests!</header>
 		
 		<section class="content">
-			<h1>Extension point</h1>
+			<h1>Extension points</h1>
 			
+			<h2>addTestmethodParticipator</h2>
 			<p>You can add an extension point to be called after test method creation in MoreUnit. The extension point gets the test method context, that can
 			be used to replace or modify the created test method.</p>
 			
@@ -27,15 +28,15 @@
 	public class MyAddTestMethodParticipator implements IAddTestMethodParticipator
 	
 		@Override
-		public void addTestMethod(IAddTestMethodContext context)
-		{
+		public void addTestMethod(IAddTestMethodContext context) {
 			// Get test method from context
 			IMethod testMethod = context.getTestMethod();
 			try {
 				// Delete old test method
 				testMethod.delete(true, null);
 				// Create a new one
-				IMethod createMethod = context.getTestClass().findPrimaryType().createMethod("void hello() {}", null, true, null);
+				IMethod createMethod = context.getTestClass().findPrimaryType()
+						.createMethod("void hello() {}", null, true, null);
 				// Update context
 				context.setTestMethod(createMethod);
 			} catch (JavaModelException e) {
@@ -47,6 +48,12 @@
 			
 			<p>More information you may find in the extension point schema and the source code of the interfaces used in the extension point.</p>
 			<p>Please check out the org.moreunit.extension-plugin from GIT to get an example plugin.</p>
+
+			<h2>newTestCaseWizardParticipator</h2>
+			<p><em>Documentation still to be written...</em> This extension point presents some problems and will be modified in the near future.</p>
+
+			<h2>testLaunchSupportAddition</h2>
+			<p><em>Documentation still to be written...</em></p>
 		</section>
 	</body>
 </html>

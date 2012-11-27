@@ -167,9 +167,18 @@ p {
 	text-align: justify; 
 }
 
-ol li {
+article nav ul>li {
+	margin: 1em 0;
+	font-weight: bold;
+}
+
+article nav ol {
+	margin: .5em 0 0 3em;
+}
+
+article nav ol>li {
 	list-style: decimal-leading-zero;
-	margin-left: 3px;
+	font-weight: normal;
 }
 
 a img {
