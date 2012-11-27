@@ -4,7 +4,7 @@ Bundle-Name: MoreUnit Mocking Support Tests
 Bundle-SymbolicName: org.moreunit.mock.test
 Bundle-Version: 3.0.0.qualifier
 Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.moreunit.test.dependencies,
  org.junit4;bundle-version="4.8.0"

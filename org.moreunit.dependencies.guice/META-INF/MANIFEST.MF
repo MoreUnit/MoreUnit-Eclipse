@@ -33,5 +33,5 @@ Export-Package: com.google.inject,
  org.ops4j.peaberry.util,
  org.ops4j.peaberry.util.decorators,
  org.ops4j.peaberry.util.ldap
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0"
