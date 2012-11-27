@@ -94,5 +94,5 @@ Require-Bundle: org.eclipse.core.resources,
  org.moreunit,
  org.junit4;bundle-version="4.8.0",
  org.testng.eclipse;bundle-version="5.14.2.10"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.jdt.junit

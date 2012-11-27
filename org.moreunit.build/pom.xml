@@ -15,7 +15,6 @@
     <module>../org.moreunit.test</module>
     <module>../org.moreunit.feature</module>
     <module>../org.moreunit.dependencies.guice</module>
-    <module>../org.moreunit.dependencies.jaxb</module>
     <module>../org.moreunit.mock</module>
     <module>../org.moreunit.mock.test</module>
     <module>../org.moreunit.mock.it</module>
@@ -160,8 +159,8 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <plugin>
