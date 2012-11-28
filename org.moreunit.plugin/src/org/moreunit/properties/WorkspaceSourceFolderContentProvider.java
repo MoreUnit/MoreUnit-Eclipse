@@ -84,7 +84,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
         {
             try
             {
-                if(aProject.hasNature(JavaCore.NATURE_ID))
+                if(aProject.isAccessible() && aProject.hasNature(JavaCore.NATURE_ID))
                 {
                     IJavaProject javaProject = JavaCore.create(aProject);
                     if(hasChildren(javaProject))
