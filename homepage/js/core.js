@@ -1,116 +1,73 @@
-MU = {
-	version: 18, // to be incremented when delivering new content
-	
-	currentContent: null,
-	
-	loadContent: function(contentId) {
-		var content = contentId != '' ? contentId : 'home';
-		
-		var contentParts = content.split('/');
-		if (contentParts[1] == '') {
-			contentParts.length = 1;
-		}
-		
+;(function() {
+	'use strict';
+
+	var DEFAULT_CONTENT_ID = 'overview';
+	var currentContentId;
+
+	function markLinksAsSelected(content) {
 		$('a').removeClass('selected');
-		
-		// page already displayed
-		if (MU.currentContent && MU.currentContent.article == contentParts[0] && (!contentParts[1] || MU.currentContent.section == contentParts[1])) {
+		$('a[href="' + content.article + '"]').addClass('selected');
+		if (content.section) {
+			$('a[href="' + content.section + '"]').addClass('selected');
+		}
+	}
+
+	function showSectionOrSections(content) {
+		if (content.section) {
+			// requested section
+			$(content.section).show();
+		}
+		else {
+			// sections of the requested article
+			$(content.article + ' > section').show();
+		}
+	}
+
+	function loadContent(requestedContentId) {
+		var contentId = requestedContentId || DEFAULT_CONTENT_ID;
+		if (contentId == 'doc') {
+			contentId = 'doc-gettingstarted';
+		}
+
+		// article/section already displayed
+		if (currentContentId == contentId) {
 			return;
 		}
-		
-		var loadArticle, loadSection;
-		if (contentParts.length == 1) {
-			loadArticle = true;
-		}
-		else if (!MU.currentContent || MU.currentContent.article != contentParts[0]) {
-			loadArticle = true;
-			loadSection = true;
-		}
-		else {
-			loadSection = true;
-		}
-		
-		var sectionLoadingConfig = {};
-		if (loadSection) {
-			sectionLoadingConfig = {
-				contentPath: content,
-				destination: '#section-container',
-				newContent: {
-					article: contentParts[0],
-					section: contentParts[1]
-				}
-			};
-		}
-		
-		var loadingConfig;
-		if (loadArticle) {
-			loadingConfig = {
-				contentPath: contentParts[0],
-				destination: '#article-container',
-				newContent: {
-					article: contentParts[0]
-				}
-			}
-		}
-		else {
-			loadingConfig = sectionLoadingConfig;
-			loadSection = false;
-		}
-		
-		MU.doLoadContent(loadingConfig, function(success) {
-			if (success && loadSection) {
-				MU.doLoadContent(sectionLoadingConfig);
-			}
-		});
-	},
-	
-	doLoadContent: function(cfg, callback) {
-		$('#site-footer').fadeOut('fast'); // prevents "jumping" effect
-		
-		$(cfg.destination).fadeOut('fast', function() {
-			var url = 'content/' + cfg.contentPath + '.html?v=' + MU.version;
-			var elementToRetrieve = ' .content';
-			
-			var onLoad = function(response, status, xhr) {
-				if (status == 'error') {
-					$(cfg.destination).html("Sorry, the requested content could not be loaded...");
-				}
-				else {
-					$(cfg.destination + elementToRetrieve).removeClass('content'); // prevents non-JS-mode style to apply
-					MU.adaptLinks(cfg.destination);
-					$('a[href="#' + cfg.newContent.article + '"]').addClass('selected');
-					$('a[href="#' + cfg.contentPath + '"]').addClass('selected');
-				}
-				
-				MU.currentContent = cfg.newContent;
-				
-				$(cfg.destination).fadeIn();
-				$('#site-footer').fadeIn();
-				
-				if (typeof callback == 'function') {
-					callback.call(cfg, status != 'error');
-				}
-			}
-			
-			if (cfg.contentPath == 'home') { // "home" is embedded into index.html
-				// shivved for IE
-				var shivved = $(innerShiv($('#home-content').html(), false));
-				$(cfg.destination).empty().append(shivved);
-				onLoad($(cfg.destination).html(), 'success');
-			}
-			else {
-				$(cfg.destination).loadShiv(url + elementToRetrieve, onLoad);
-			}
-		});
-	},
 
-	adaptLinks: function(selector) {
-		$(selector + ' a').each(function() {
-			$(this).attr('href', $(this).attr('href')
-					.replace(/^(\.*\/)?index.html$/, '#home') // index.html => #home
-					.replace(/^(?:\.*\/)*(?:content\/)?(.*)\.html$/, '#$1')); // ../*.html, content/**/*.html => #**/*
+		var newContent = (function() {
+			var contentParts = contentId.split('-');
+			return {
+				article: '#' + contentParts[0],
+				section: contentParts.length == 2 ? '#' + contentId : undefined
+			};
+		})();
+
+		markLinksAsSelected(newContent);
+
+		// first display: hides everything and shows requested article/section without effects
+		if (!currentContentId) {
+			currentContentId = contentId;
+			$('#site-content > article, #site-content > article > section').hide();
+			showSectionOrSections(newContent); // surrounding article is still hidden
+			$(newContent.article).show(function() {
+				$(document).scrollTop(0);
+			});
+			return;
+		}
+
+		// #site-footer is temporarily hidden to avoid a "jump" effect
+		// all articles and sections are hidden
+		var fadingOut = $('#site-footer, #site-content > article, #site-content > article > section').fadeOut('fast');
+		$.when(fadingOut).done(function() {
+			currentContentId = contentId;
+			showSectionOrSections(newContent); // surrounding article is still hidden
+			// the requested article (or the article surrounding the requested section)
+			$(newContent.article + ', #site-footer').fadeIn();
 		});
-		$(selector + ' a').click(function(e) {
+	}
+
+	function adaptLinks() {
+		$('a').click(function(e) {
 			var href = $(this).attr('href');
 			if (href.charAt(0) != '#') {
 				return true;
@@ -118,14 +75,10 @@ MU = {
 			$.history.load(href.substr(1));
 			return false;
 		});
-		$(selector + ' img').each(function() {
-			$(this).attr('src', $(this).attr('src')
-					.replace(/^(?:\.*\/)*img\/(.*)$/, 'img/$1')); // ../img/**/* => img/**/*
-		});
 	}
-};
 
-$(document).ready(function() {
-	$.history.init(MU.loadContent, {unescape: '/'});
-	MU.adaptLinks('nav');
-});
+	$(document).ready(function() {
+		$.history.init(loadContent, {unescape: '/'});
+		adaptLinks();
+	});
+})();

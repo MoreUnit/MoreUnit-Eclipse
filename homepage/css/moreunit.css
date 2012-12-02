@@ -87,7 +87,7 @@ body {
 #site-header {
 	background: url('../img/logo.png') no-repeat left top;
 	height: 75px;
-	width: 312px;
+	width: 960px;
 	display: block;
 	text-indent: -9999px;
 	white-space: nowrap;
@@ -95,41 +95,87 @@ body {
 }
 
 #site-nav {
-	position: absolute;
-	top: 110px;
+	display: block;
 	width: 880px;
 	margin: 0 60px;
 }
 
 #site-content { /* acts as body */
-	position: absolute;
-	top: 130px;
 	width: 960px;
 	margin: 0 20px;
 }
 
-#wrapper {
+#site-content>article {
 	margin: 0 40px;
-}
-
-.content {
-	margin: 0 60px;
+	background-color: white;
 }
 
 #site-footer {
-	display: block;
-	margin-top: 50px;
+	width: 880px;
+	margin: 3em auto 1em auto;
 }
+
+#site-footer a {
+	margin-right: 3em;
+}
+
 /* end of Global layout */
 
-#site-nav li {
+#site-nav>ul>li {
 	display: inline;
 	padding-right: 10px;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	z-index: 1;
+}
+
+#site-nav li>ul {
+	position: absolute;
+	opacity: 0;
+	-moz-transition: opacity .2s ease-in-out;
+	-ms-transition: opacity .2s ease-in-out;
+	-o-transition: opacity .2s ease-in-out;
+	-webkit-transition: opacity .2s ease-in-out;
+	transition: opacity .2s ease-in-out;
+	z-index: -1;
+}
+
+#site-nav li:hover>ul {
+	padding: 0 2em 1em 2em;
+	background-color: white;
+	opacity: 1;
+	border-bottom: 1px solid grey;
+	border-left: 1px solid grey;
+	border-right: 1px solid grey;
+	z-index: 2;
+}
+
+/* Trick to add a top margin to the internal ul element. Simply putting a margin-top on the ul element doesn't work:
+it prevents the user from moving the mouse from the li element to the internal ul element */
+#site-nav li:hover>ul:before {
+	content: '';
+	display: block;
+	margin: 0 -3em;
+	height: 1em;
+	background-color: white;
 }
 
 nav li a.selected {
 	color: black;
 	text-decoration: none;
+}
+
+#site-nav li>ul>li {
+	margin: 1em 0;
+	font-weight: bold;
+}
+
+#site-nav ol {
+	margin: .5em 0 0 1em;
+}
+
+#site-nav ol>li {
+	font-weight: normal;
 }
 
 article header {
@@ -165,20 +211,6 @@ em {
 p {
 	margin: 10px 0 5px 0;
 	text-align: justify; 
-}
-
-article nav ul>li {
-	margin: 1em 0;
-	font-weight: bold;
-}
-
-article nav ol {
-	margin: .5em 0 0 3em;
-}
-
-article nav ol>li {
-	list-style: decimal-leading-zero;
-	font-weight: normal;
 }
 
 a img {
