@@ -44,7 +44,8 @@ public class MoveClassParticipant extends MoveParticipant
     {
         compilationUnit = (ICompilationUnit) element;
         javaFileFacade = new ClassTypeFacade(compilationUnit);
-        return true;
+        
+        return !ClassTypeFacade.isTestCase(compilationUnit);
     }
 
     @Override
