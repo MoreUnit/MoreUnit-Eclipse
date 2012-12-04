@@ -3,11 +3,16 @@ package org.moreunit.mock.templates;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
 import java.util.ArrayList;
 
@@ -15,9 +20,13 @@ import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.templates.TemplateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.moreunit.mock.dependencies.Dependencies;
@@ -37,7 +46,7 @@ import org.moreunit.preferences.Preferences.ProjectPreferences;
 @RunWith(MockitoJUnitRunner.class)
 public class MockingContextTest
 {
-    private static final String TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+    private static final String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
 
     @Mock
     private IType classUnderTest;
@@ -55,15 +64,13 @@ public class MockingContextTest
     private MockingContext mockingContext;
 
     @Before
-    public void createMockingContext() throws Exception
+    public void prepareMockingContextConfiguration() throws Exception
     {
         when(testCaseCompilationUnit.findPrimaryType()).thenReturn(testCase);
 
-        when(projectPreferences.getTestType()).thenReturn(TEST_TYPE);
-
         dependencies = new Dependencies(null, null, null);
         patternResolvers = new ArrayList<PatternResolver>();
-        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        createMockingContextWithTestType(DEFAULT_TEST_TYPE);
     }
 
     @Test
@@ -73,7 +80,7 @@ public class MockingContextTest
         dependencies.injectableByConstructor().add(new Dependency("pack.age.Type", "aType"));
 
         // when
-        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        mockingContext = createMockingContext();
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
@@ -88,7 +95,7 @@ public class MockingContextTest
         dependencies.injectableBySetter().add(new SetterDependency("pack.age.Type", "setIt"));
 
         // when
-        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        mockingContext = createMockingContext();
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isFalse();
@@ -103,7 +110,7 @@ public class MockingContextTest
         dependencies.injectableByField().add(new FieldDependency("pack.age.Type", "aType", "aType"));
 
         // when
-        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        mockingContext = createMockingContext();
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isFalse();
@@ -119,7 +126,7 @@ public class MockingContextTest
         dependencies.injectableBySetter().add(new SetterDependency("pack.age2.OtherType", "setIt"));
 
         // when
-        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        mockingContext = createMockingContext();
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
@@ -136,7 +143,7 @@ public class MockingContextTest
         dependencies.injectableByField().add(new FieldDependency("some.where.Thing", "attribute", "attribute"));
 
         // when
-        mockingContext = new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        mockingContext = createMockingContext();
 
         // then
         assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
@@ -145,12 +152,33 @@ public class MockingContextTest
     }
 
     @Test
-    public void should_find_before_method_if_it_exists_when_preparing_context() throws Exception
+    public void should_find_before_method_if_it_exists_when_preparing_context__junit3() throws Exception
     {
         // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_JUNIT_3);
+
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt", false), method("foobar", true), method("createSomething", true) };
+        IMethod[] methods = new IMethod[] { method("doIt"), method("foobar"), method("setUp") };
+        when(testCase.getMethods()).thenReturn(methods);
+
+        // when
+        mockingContext.prepareContext(templateRequiringBeforeMethod(), null);
+
+        // then
+        verifyZeroInteractions(templateProcessor);
+        assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("setUp");
+    }
+
+    @Test
+    public void should_find_before_method_if_it_exists_when_preparing_context__junit4() throws Exception
+    {
+        // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_JUNIT_4);
+
+        when(classUnderTest.getElementName()).thenReturn("Something");
+
+        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before"), methodWithAnnotation("createSomething", "Before") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -161,40 +189,79 @@ public class MockingContextTest
         assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("createSomething");
     }
 
-    private IMethod method(String name, boolean hasBeforeAnnotation)
+    @Test
+    public void should_find_before_method_if_it_exists_when_preparing_context__testng() throws Exception
     {
-        IMethod method = mock(IMethod.class);
-        when(method.getElementName()).thenReturn(name);
+        // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_TESTNG);
 
-        IAnnotation annotation = mock(IAnnotation.class);
-        when(annotation.exists()).thenReturn(hasBeforeAnnotation);
+        when(classUnderTest.getElementName()).thenReturn("Something");
 
-        when(method.getAnnotation("Before")).thenReturn(annotation);
+        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "BeforeMethod"), methodWithAnnotation("createSomething", "BeforeMethod") };
+        when(testCase.getMethods()).thenReturn(methods);
 
-        return method;
-    }
+        // when
+        mockingContext.prepareContext(templateRequiringBeforeMethod(), null);
 
-    private MockingTemplate templateRequiringBeforeMethod(InclusionCondition... conditions)
-    {
-        CodeTemplate templateRequiringBeforeMethod = new CodeTemplate("", Part.BEFORE_INSTANCE_METHOD, "", newHashSet(conditions));
-        return new MockingTemplate("", "", "", asList(templateRequiringBeforeMethod));
+        // then
+        verifyZeroInteractions(templateProcessor);
+        assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("createSomething");
     }
 
     @Test
-    public void should_create_before_method_if_it_does_not_exist_when_preparing_context() throws Exception
+    public void should_create_before_method_if_it_does_not_exist_when_preparing_context__junit3() throws Exception
     {
         // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_JUNIT_3);
+
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt", false), method("foobar", true) };
+        IMethod[] methods = new IMethod[] { method("doIt"), method("foobar") };
+        when(testCase.getMethods()).thenReturn(methods);
+
+        // when
+        mockingContext.prepareContext(templateRequiringBeforeMethod(), templateProcessor);
+
+        verifyThatBeforeInstanceMethodHasBeenCreated();
+
+        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("setUp");
+    }
+
+    @Test
+    public void should_create_before_method_if_it_does_not_exist_when_preparing_context__junit4() throws Exception
+    {
+        // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_JUNIT_4);
+
+        when(classUnderTest.getElementName()).thenReturn("Something");
+
+        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
         mockingContext.prepareContext(templateRequiringBeforeMethod(), templateProcessor);
 
         // then
-        CodeTemplate codeTemplate = new CodeTemplate(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, null, null);
-        verify(templateProcessor).applyTemplate(codeTemplate, mockingContext);
+        verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.junit.Before");
+
+        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
+    }
+
+    @Test
+    public void should_create_before_method_if_it_does_not_exist_when_preparing_context__testNg() throws Exception
+    {
+        // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_TESTNG);
+
+        when(classUnderTest.getElementName()).thenReturn("Something");
+
+        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "BeforeMethod") };
+        when(testCase.getMethods()).thenReturn(methods);
+
+        // when
+        mockingContext.prepareContext(templateRequiringBeforeMethod(), templateProcessor);
+
+        verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.testng.annotations.BeforeMethod");
 
         assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
     }
@@ -205,15 +272,13 @@ public class MockingContextTest
         // given
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt", false), method("foobar", true), method("createSomething", false) };
+        IMethod[] methods = new IMethod[] { method("doIt"), method("foobar"), method("createSomething") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
         mockingContext.prepareContext(templateRequiringBeforeMethod(), templateProcessor);
 
-        // then
-        CodeTemplate codeTemplate = new CodeTemplate(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, null, null);
-        verify(templateProcessor).applyTemplate(codeTemplate, mockingContext);
+        verifyThatBeforeInstanceMethodHasBeenCreated();
 
         assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething2");
     }
@@ -222,13 +287,17 @@ public class MockingContextTest
     public void should_not_create_before_method_when_template_is_excluded() throws Exception
     {
         // given
+        String testType = TEST_TYPE_VALUE_JUNIT_4;
+
+        createMockingContextWithTestType(testType);
+
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt", false) };
+        IMethod[] methods = new IMethod[] { method("doIt") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
-        mockingContext.prepareContext(templateRequiringBeforeMethod(new ExcludeIf(ConditionType.TEST_TYPE, TEST_TYPE)), templateProcessor);
+        mockingContext.prepareContext(templateRequiringBeforeMethod(new ExcludeIf(ConditionType.TEST_TYPE, testType)), templateProcessor);
 
         // then
         CodeTemplate codeTemplate = new CodeTemplate(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, null, null);
@@ -255,6 +324,60 @@ public class MockingContextTest
         {
             assertThat(((TestResolver) resolver).called).isTrue();
         }
+    }
+
+    private void createMockingContextWithTestType(String testType) throws MockingTemplateException
+    {
+        when(projectPreferences.getTestType()).thenReturn(testType);
+        mockingContext = createMockingContext();
+    }
+
+    private MockingContext createMockingContext() throws MockingTemplateException
+    {
+        return new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+    }
+
+    private IMethod method(String name)
+    {
+        return methodWithAnnotation(name, null);
+    }
+
+    private IMethod methodWithAnnotation(String name, String methodAnnotation)
+    {
+        IMethod method = mock(IMethod.class);
+        when(method.getElementName()).thenReturn(name);
+
+        IAnnotation unexistingAnnotation = mock(IAnnotation.class);
+        when(method.getAnnotation(anyString())).thenReturn(unexistingAnnotation);
+
+        IAnnotation possiblyExistingAnnotation = mock(IAnnotation.class);
+        when(possiblyExistingAnnotation.exists()).thenReturn(methodAnnotation != null);
+
+        when(method.getAnnotation(methodAnnotation)).thenReturn(possiblyExistingAnnotation);
+
+        return method;
+    }
+
+    private MockingTemplate templateRequiringBeforeMethod(InclusionCondition... conditions)
+    {
+        CodeTemplate templateRequiringBeforeMethod = new CodeTemplate("", Part.BEFORE_INSTANCE_METHOD, "", newHashSet(conditions));
+        return new MockingTemplate("", "", "", asList(templateRequiringBeforeMethod));
+    }
+
+    private void verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining(String expectedPatternContent) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
+    {
+        ArgumentCaptor<CodeTemplate> codeTemplate = verifyThatBeforeInstanceMethodHasBeenCreated();
+        assertThat(codeTemplate.getValue().pattern()).contains(expectedPatternContent);
+    }
+
+    private ArgumentCaptor<CodeTemplate> verifyThatBeforeInstanceMethodHasBeenCreated() throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
+    {
+        ArgumentCaptor<CodeTemplate> codeTemplate = ArgumentCaptor.forClass(CodeTemplate.class);
+        verify(templateProcessor).applyTemplate(codeTemplate.capture(), eq(mockingContext));
+
+        assertThat(codeTemplate.getValue().id()).isEqualTo(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID);
+        assertThat(codeTemplate.getValue().part()).isEqualTo(Part.BEFORE_INSTANCE_METHOD_DEFINITION);
+        return codeTemplate;
     }
 
     private static class TestResolver implements PatternResolver

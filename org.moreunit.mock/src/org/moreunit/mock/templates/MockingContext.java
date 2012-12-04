@@ -20,10 +20,11 @@ import org.moreunit.mock.templates.resolvers.DependencyPatternsResolver;
 import org.moreunit.mock.templates.resolvers.FieldInjectionPatternResolver;
 import org.moreunit.mock.templates.resolvers.ObjectUnderTestPatternsResolver;
 import org.moreunit.mock.templates.resolvers.SetterInjectionPatternResolver;
-import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 import static java.util.Arrays.asList;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
 /**
  * Holds information about the current mocking operation.
@@ -36,7 +37,7 @@ public class MockingContext
     public final ICompilationUnit testCaseCompilationUnit;
     private final List<PatternResolver> patternResolvers;
     private final Dependencies dependencies;
-    private final ProjectPreferences preferences;
+    private final String projectTestType;
     private final Set<InjectionType> injectionTypesUsed = new HashSet<InjectionType>();
 
     private IMethod beforeInstanceMethod;
@@ -57,7 +58,7 @@ public class MockingContext
         this.classUnderTest = classUnderTest;
         this.testCaseCompilationUnit = testCase;
         this.dependencies = dependencies;
-        this.preferences = preferences;
+        this.projectTestType = preferences.getTestType();
         this.patternResolvers = createPatternResolversIfNull(patternResolvers);
 
         initialize();
@@ -110,14 +111,7 @@ public class MockingContext
     {
         if(beforeInstanceMethodIsRequired(mockingTemplate))
         {
-            if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(preferences.getTestType()))
-            {
-                beforeInstanceMethodName = "setUp";
-            }
-            else
-            {
-                beforeInstanceMethodName = "create" + classUnderTest.getElementName();
-            }
+            beforeInstanceMethodName = generateBeforeInstanceName();
 
             beforeInstanceMethod = findBeforeMethod(beforeInstanceMethodName);
 
@@ -125,6 +119,18 @@ public class MockingContext
             {
                 beforeInstanceMethodName = createBeforeInstanceMethod(templateProcessor, beforeInstanceMethodName);
             }
+        }
+    }
+
+    private String generateBeforeInstanceName()
+    {
+        if(TEST_TYPE_VALUE_JUNIT_3.equals(projectTestType))
+        {
+            return "setUp";
+        }
+        else
+        {
+            return "create" + classUnderTest.getElementName();
         }
     }
 
@@ -144,7 +150,7 @@ public class MockingContext
     {
         for (IMethod method : testCaseCompilationUnit.findPrimaryType().getMethods())
         {
-            if(beforeMethodName.equals(method.getElementName()) && method.getNumberOfParameters() == 0 && method.getAnnotation("Before").exists())
+            if(isNoArgMethodWithName(method, beforeMethodName) && hasBeforeAnnotationIfRequired(method))
             {
                 return method;
             }
@@ -152,18 +158,34 @@ public class MockingContext
         return null;
     }
 
+    private boolean hasBeforeAnnotationIfRequired(IMethod method)
+    {
+        if(TEST_TYPE_VALUE_JUNIT_3.equals(projectTestType))
+        {
+            return true;
+        }
+
+        String requiredAnnotation = TEST_TYPE_VALUE_TESTNG.equals(projectTestType) ? "BeforeMethod" : "Before";
+        return method.getAnnotation(requiredAnnotation).exists();
+    }
+
+    private boolean isNoArgMethodWithName(IMethod method, String expectedName)
+    {
+        return expectedName.equals(method.getElementName()) && method.getNumberOfParameters() == 0;
+    }
+
     private String createBeforeInstanceMethod(TemplateProcessor templateProcessor, String methodBaseName) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
     {
         String methodName = incrementMethodNameIfRequired(methodBaseName);
 
         String beforeMethodSource;
-        if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(preferences.getTestType()))
+        if(TEST_TYPE_VALUE_JUNIT_3.equals(projectTestType))
         {
             beforeMethodSource = "";
         }
         else
         {
-            String annotationClass = PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(preferences.getTestType()) ? "org.testng.Before" : "org.junit.Before";
+            String annotationClass = TEST_TYPE_VALUE_TESTNG.equals(projectTestType) ? "org.testng.annotations.BeforeMethod" : "org.junit.Before";
             beforeMethodSource = "@${beforeAnnotation:newType(" + annotationClass + ")} ";
         }
 
@@ -228,6 +250,6 @@ public class MockingContext
 
     public boolean isTestType(String testType)
     {
-        return preferences.getTestType().equals(testType);
+        return projectTestType.equals(testType);
     }
 }
