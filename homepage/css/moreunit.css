@@ -278,3 +278,11 @@ div.figure-group:after {
 #releasenotes h2 {
 	margin-bottom: 5px;
 }
+
+li.done {
+	color: green;
+}
+
+li.partially-done {
+	color: orange;
+}

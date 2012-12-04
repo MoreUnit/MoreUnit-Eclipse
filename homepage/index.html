@@ -93,16 +93,16 @@
 
 			<section id="new">
 				<h1>MoreUnit 3 is out! (Well, sort of...)</h1>
-				<p>We just released MoreUnit 3.0.0.<strong>01</strong>. Yep, that's a lot of numbers!</p>
-				<p>The <strong>01</strong> part informs you that this version is a milestone on the road to the actual version 3.0.0 that we wanted to release. Unfortunately, we're quite busy right now and we do not progress as fast as we would like. Therefore we decided to deliver this <em>major</em> version incrementally.<br />
+				<p>We just released MoreUnit 3.0.0.<strong>02</strong>. Yep, that's a lot of numbers!</p>
+				<p>The <strong>02</strong> part informs you that this version is a milestone on the road to the actual version 3.0.0 that we wanted to release. Unfortunately, we're quite busy right now and we do not progress as fast as we would like. Therefore we decided to deliver this <em>major</em> version incrementally.<br />
 				That said, no worry: this version isn't less stable than any other one!</p>
 				<p>Now, what makes this version a major one? Mainly: we added <strong>basic support for all programming languages</strong>, as well as a more powerful way to define your test naming patterns. Also, we moved a lots of things internally. For a more complete list of changes, see the <a href="#releasenotes">release notes</a>.</p>
 				<p>And here is what will come before MoreUnit 3 is deemed &quot;complete&quot;:</p>
 				<ul>
 					<li>Addition of markers for all test files.</li>
 					<li>New templates to generate boiler-plate code for JMockit and Powermock, as requested by some users. (Don't hesitate to ask us for integrating other ones!)</li>
-					<li>Migration to Java 6.</li>
-					<li>Slimming cure: MoreUnit's download size will lose almost 2 MB.</li>
+					<li class="done">[Done] Migration to Java 6.</li>
+					<li class="partially-done">[In Progress] Slimming cure: MoreUnit's download size will lose almost 2MB (1MB already lost).</li>
 				</ul>
 			</section>
 		</article>
@@ -411,6 +411,14 @@
 		<article id="releasenotes">
 			<header>Release Notes</header>
 			<section>
+				<h2>2012-12-04: Version 3.0.0<em>.02</em> released</h2>
+				<ul>
+					<li>Migration to Java 6</li>
+					<li>Fix: (bug 3592074) error when using "Move" refactoring</li>
+					<li>Fix: (bug 3592379) uses TestNG's org.testng.annotations.BeforeMethod annotation</li>
+					<li>Fix: mocking code generation for test classes with parent or comments</li>
+				</ul>
+
 				<h2>2012-11-24: Version 3.0.0<em>.01</em> released</h2>
 				<ul>
 					<li>Adds basic support for all programming languages: jump to source/test file, opening of a pre-filled wizard when file does not exist</li>
@@ -432,11 +440,13 @@
 					<li>Support for JMock (thanks Joe!)</li>
 					<li>Support for loading custom templates to support other libs (thanks again to Joe)</li>
 				</ul>
+
 				<h2>2012-04-18: Version 2.4.4 released</h2>
 				<ul>
 					<li>Improved performance</li>
 					<li>Improvements in the Missing test method view and Missing tests view</li>
 				</ul>
+
 				<h2>2012-02-22: Version 2.4.3 released</h2>
 				<ul>
 					<li>Fix: do not consider potential test cases with packages that do not match the package of the class under test anymore, except as a proposal when jumping (bugs 3482684 &amp; 3386098)</li>
