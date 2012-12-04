@@ -19,7 +19,13 @@ public enum Part
         @Override
         public int getInsertionOffset(MockingContext context) throws JavaModelException
         {
-            return type(context).getSourceRange().getOffset();
+            IType type = type(context);
+            ISourceRange javadocRange = type.getJavadocRange();
+            if(javadocRange != null)
+            {
+                return javadocRange.getOffset() + javadocRange.getLength() + 1;
+            }
+            return type.getSourceRange().getOffset();
         }
     },
 
@@ -31,7 +37,7 @@ public enum Part
         {
             IType type = type(context);
             Integer offset = afterLastField(type);
-            return offset != null ? offset : firstMember(type);
+            return offset != null ? offset : beforeFirstMember(type);
         }
     },
 
@@ -53,7 +59,7 @@ public enum Part
         {
             IType type = type(context);
             Integer offset = beforeFirstMethod(type);
-            return offset != null ? offset : firstMember(type);
+            return offset != null ? offset : beforeFirstMember(type);
         }
     };
 
@@ -85,8 +91,8 @@ public enum Part
         return null;
     }
 
-    private static int firstMember(IType type) throws JavaModelException
+    private static int beforeFirstMember(IType type) throws JavaModelException
     {
-        return type.getNameRange().getOffset() + type.getNameRange().getLength() + 3;
+        return type.getSourceRange().getOffset() + type.getSource().indexOf('{') + 1;
     }
 }

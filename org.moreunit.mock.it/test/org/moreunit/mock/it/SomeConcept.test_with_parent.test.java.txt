@@ -1,0 +1,3 @@
+package te.st;
+
+public class SomeConceptTestWithParent extends SomeBase { }

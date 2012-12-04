@@ -1,0 +1,6 @@
+package te.st;
+
+/**
+ * Type annotations should be placed after this comment.
+ */
+public class SomeConceptTestWithComment { }
