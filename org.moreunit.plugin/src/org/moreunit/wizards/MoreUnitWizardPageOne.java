@@ -43,7 +43,6 @@ import org.eclipse.jdt.internal.ui.refactoring.contentassist.JavaTypeCompletionP
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
-import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
@@ -68,8 +67,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.moreunit.elements.LanguageType;
+import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
-import org.moreunit.util.MoreUnitContants;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
 {
@@ -93,11 +92,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private static final String KEY_NO_LINK = "PropertyAndPreferencePage.nolink"; //$NON-NLS-1$
 
-    private final static String QUESTION_MARK_TAG = "Q"; //$NON-NLS-1$
-    private final static String OF_TAG = "Of"; //$NON-NLS-1$
-
     private final static String TEST_SUFFIX = "Test"; //$NON-NLS-1$
-    private final static String PREFIX = "test"; //$NON-NLS-1$
 
     private final static String STORE_SETUP = PAGE_NAME + ".USE_SETUP"; //$NON-NLS-1$
     private final static String STORE_TEARDOWN = PAGE_NAME + ".USE_TEARDOWN"; //$NON-NLS-1$
@@ -1048,80 +1043,15 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         IMethod[] allMethodsArray = fPage2.getAllMethods();
         List<IMethod> allMethods = new ArrayList<IMethod>();
         allMethods.addAll(Arrays.asList(allMethodsArray));
-        List<IMethod> overloadedMethods = getOverloadedMethods(allMethods);
+        getOverloadedMethods(allMethods);
 
-        /*
-         * used when for example both sum and Sum methods are present. Then sum
-         * -> testSum Sum -> testSum1
-         */
-        List<String> names = new ArrayList<String>();
+        new ArrayList<String>();
+        TestmethodCreator testmethodCreator = new TestmethodCreator(type.getCompilationUnit(), preferences.getTestType(), preferences.getTestMethodDefaultContent(), fPage2.getCreateFinalMethodStubsButtonSelection(), fPage2.isCreateTasks());
         for (int i = 0; i < methods.length; i++)
         {
             IMethod method = methods[i];
-            String elementName = method.getElementName();
-            StringBuffer name = new StringBuffer(PREFIX).append(Character.toUpperCase(elementName.charAt(0))).append(elementName.substring(1));
-            StringBuffer buffer = new StringBuffer();
-
-            final boolean contains = overloadedMethods.contains(method);
-            if(contains)
-                appendParameterNamesToMethodName(name, method.getParameterTypes());
-
-            replaceIllegalCharacters(name);
-            /*
-             * void foo(java.lang.StringBuffer sb) {} void
-             * foo(mypackage1.StringBuffer sb) {} void
-             * foo(mypackage2.StringBuffer sb) {} -> testFooStringBuffer()
-             * testFooStringBuffer1() testFooStringBuffer2()
-             */
-            String testName = name.toString();
-            if(names.contains(testName))
-            {
-                int suffix = 1;
-                while (names.contains(testName + Integer.toString(suffix)))
-                    suffix++;
-                name.append(Integer.toString(suffix));
-            }
-            testName = name.toString();
-            names.add(testName);
-
-            if(isAddComments())
-            {
-                appendMethodComment(buffer, method);
-            }
-            if(isJUnit4())
-            {
-                buffer.append('@').append(imports.addImport(JUnitCorePlugin.JUNIT4_ANNOTATION_NAME)).append(getLineDelimiter());
-            }
-            else if(isTestNgSelected())
-            {
-                buffer.append('@').append(MoreUnitContants.TESTNG_ANNOTATION_NAME).append(getLineDelimiter());
-            }
-
-            buffer.append("public ");//$NON-NLS-1$ 
-            if(fPage2.getCreateFinalMethodStubsButtonSelection())
-                buffer.append("final "); //$NON-NLS-1$
-            buffer.append("void ");//$NON-NLS-1$ 
-            buffer.append(testName);
-            buffer.append("()");//$NON-NLS-1$ 
-            appendTestMethodBody(buffer, type.getCompilationUnit());
-            type.createMethod(buffer.toString(), null, false, null);
-        }
-    }
-
-    private void replaceIllegalCharacters(StringBuffer buffer)
-    {
-        char character = 0;
-        for (int index = buffer.length() - 1; index >= 0; index--)
-        {
-            character = buffer.charAt(index);
-            if(Character.isWhitespace(character))
-                buffer.deleteCharAt(index);
-            else if(character == '<')
-                buffer.replace(index, index + 1, OF_TAG);
-            else if(character == '?')
-                buffer.replace(index, index + 1, QUESTION_MARK_TAG);
-            else if(! Character.isJavaIdentifierPart(character))
-                buffer.deleteCharAt(index);
+            testmethodCreator.createTestMethod(method);
+            
         }
     }
 
@@ -1133,71 +1063,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return classToTest.getCompilationUnit().findRecommendedLineSeparator();
 
         return getPackageFragment().findRecommendedLineSeparator();
-    }
-
-    private void appendTestMethodBody(StringBuffer buffer, ICompilationUnit targetCu) throws CoreException
-    {
-        final String delimiter = getLineDelimiter();
-        buffer.append('{').append(delimiter);
-        String todoTask = ""; //$NON-NLS-1$
-        if(fPage2.isCreateTasks())
-        {
-            String todoTaskTag = JUnitStubUtility.getTodoTaskTag(targetCu.getJavaProject());
-            if(todoTaskTag != null)
-            {
-                todoTask = " // " + todoTaskTag; //$NON-NLS-1$
-            }
-        }
-        String message = WizardMessages.NewTestCaseWizardPageOne_not_yet_implemented_string;
-        buffer.append(Messages.format("fail(\"{0}\");", message)).append(todoTask).append(delimiter); //$NON-NLS-1$
-
-        buffer.append('}').append(delimiter);
-    }
-
-    private void appendParameterNamesToMethodName(StringBuffer buffer, String[] parameters)
-    {
-        for (int i = 0; i < parameters.length; i++)
-        {
-            final StringBuffer buf = new StringBuffer(Signature.getSimpleName(Signature.toString(Signature.getElementType(parameters[i]))));
-            final char character = buf.charAt(0);
-            if(buf.length() > 0 && ! Character.isUpperCase(character))
-                buf.setCharAt(0, Character.toUpperCase(character));
-            buffer.append(buf.toString());
-            for (int j = 0, arrayCount = Signature.getArrayCount(parameters[i]); j < arrayCount; j++)
-            {
-                buffer.append("Array"); //$NON-NLS-1$
-            }
-        }
-    }
-
-    private void appendMethodComment(StringBuffer buffer, IMethod method) throws JavaModelException
-    {
-        final String delimiter = getLineDelimiter();
-        final StringBuffer buf = new StringBuffer("{@link "); //$NON-NLS-1$	
-        JavaElementLabels.getTypeLabel(method.getDeclaringType(), JavaElementLabels.T_FULLY_QUALIFIED, buf);
-        buf.append('#');
-        buf.append(method.getElementName());
-        buf.append('(');
-        String[] paramTypes = JUnitStubUtility.getParameterTypeNamesForSeeTag(method);
-        for (int i = 0; i < paramTypes.length; i++)
-        {
-            if(i != 0)
-            {
-                buf.append(", "); //$NON-NLS-1$
-            }
-            buf.append(paramTypes[i]);
-
-        }
-        buf.append(')');
-        buf.append('}');
-
-        buffer.append("/**");//$NON-NLS-1$
-        buffer.append(delimiter);
-        buffer.append(" * ");//$NON-NLS-1$
-        buffer.append(Messages.format(WizardMessages.NewTestCaseWizardPageOne_comment_class_to_test, buf.toString()));
-        buffer.append(delimiter);
-        buffer.append(" */");//$NON-NLS-1$
-        buffer.append(delimiter);
     }
 
     private List<IMethod> getOverloadedMethods(List<IMethod> allMethods)

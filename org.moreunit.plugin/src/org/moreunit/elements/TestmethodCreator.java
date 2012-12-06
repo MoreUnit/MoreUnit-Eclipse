@@ -4,6 +4,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.log.LogHandler;
@@ -32,6 +33,9 @@ public class TestmethodCreator
     private String defaultTestMethodContent = "";
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
+    
+    private boolean shouldCreateFinalMethod;
+    private boolean shouldCreateTasks;
 
     /**
      * @param compilationUnit Could be CUT or a test. createTestMethod will
@@ -45,6 +49,15 @@ public class TestmethodCreator
         testMethodDiviner = testMethodDivinerFactory.create();
         this.defaultTestMethodContent = defaultTestMethodContent;
     }
+    
+    public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent, boolean shouldCreateFinalMethod, boolean shouldCreateTasks)
+    {
+        this(compilationUnit, testType, defaultTestMethodContent);
+        
+        this.shouldCreateFinalMethod = shouldCreateFinalMethod;
+        this.shouldCreateTasks = shouldCreateTasks;
+    }
+    
 
     public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, String testType, String defaultTestMethodContent)
     {
@@ -231,6 +244,10 @@ public class TestmethodCreator
 
     private String getTestMethodString(String testmethodName)
     {
+        String finalPlaceholder = " ";
+        if (shouldCreateFinalMethod)
+            finalPlaceholder = "final ";
+        
         String recommendedLineSeparator = StringConstants.NEWLINE;
         try
         {
@@ -240,7 +257,17 @@ public class TestmethodCreator
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
-        return String.format("public void %s()%s throws Exception {%s%s%s}", testmethodName, recommendedLineSeparator, StringConstants.NEWLINE, defaultTestMethodContent, StringConstants.NEWLINE);
+        
+        String methodBody = defaultTestMethodContent;
+        if (shouldCreateTasks)
+        {
+            String todoTaskTag = JUnitStubUtility.getTodoTaskTag(compilationUnit.getJavaProject());
+            if (todoTaskTag != null)
+            {
+                methodBody = "// " + todoTaskTag + recommendedLineSeparator + defaultTestMethodContent;
+            }
+        }
+        return String.format("public %svoid %s() throws Exception {%s%s%s}", finalPlaceholder, testmethodName, recommendedLineSeparator, methodBody, recommendedLineSeparator);
     }
 
     private IMethod createMethod(String methodName, String methodString, IMethod sibling)

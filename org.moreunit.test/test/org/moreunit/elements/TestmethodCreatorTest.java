@@ -87,5 +87,17 @@ public class TestmethodCreatorTest extends ContextTestCase
         IMethod[] methods = testcaseType.get().getMethods();
         assertThat(methods).hasSize(2);
     }
+    
+    @Test
+    public void createTestMethod_should_create_final_method_when_selected() throws Exception
+    {
+        TypeHandler cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
+        MethodHandler addedMethod = cutType.addMethod("public int getNumberOne()", "return 1");
+        
+        TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo", true, false);
+        IMethod createTestMethod = testmethodCreator.createTestMethod(addedMethod.get());
+        assertThat(createTestMethod.getSource()).contains("public final void");
+        
+    }
 
 }
