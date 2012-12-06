@@ -1,0 +1,42 @@
+package te.st;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockObjectFactory;
+import org.testng.IObjectFactory;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.ObjectFactory;
+import te.st.SomeConcept.Comparator;
+import te.st.SomeConcept.List;
+import te.st.SomeConcept.Thing;
+
+@PrepareForTest(/* TODO specify classes to prepare for test */)
+public class SomeConceptTest {
+
+	@Mock
+	private Callable<Integer> integerProvider;
+	
+	@Mock
+	private Runnable runnable;
+	
+	@Mock
+	private List<Thing> someListOfThings;
+	
+	@Mock
+	private Comparator<String> stringComparator;
+	
+	@InjectMocks
+	private SomeConcept someConcept;
+	
+	@ObjectFactory
+	public IObjectFactory getObjectFactory() {
+		return new PowerMockObjectFactory();
+	}
+
+	@BeforeMethod
+	public void createSomeConcept() throws Exception {
+		MockitoAnnotations.init(this);
+	}
+}

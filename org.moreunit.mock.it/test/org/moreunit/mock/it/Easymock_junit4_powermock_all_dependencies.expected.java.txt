@@ -1,0 +1,37 @@
+package te.st;
+
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.MockNice;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import te.st.SomeConcept.Comparator;
+import te.st.SomeConcept.List;
+import te.st.SomeConcept.Thing;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(/* TODO specify classes to prepare for test */)
+public class SomeConceptTest {
+
+	@MockNice
+	private Callable<Integer> integerProvider;
+	
+	@MockNice	
+	private Runnable runnable;
+	
+	@MockNice
+	private List<Thing> someListOfThings;
+	
+	@MockNice
+	private Comparator<String> stringComparator;
+	
+	private SomeConcept someConcept;
+	
+	@Before
+	public void createSomeConcept() throws Exception {
+		someConcept = new SomeConcept(integerProvider);
+		someConcept.setSomeListOfThings(someListOfThings);
+		someConcept.runnable = runnable;
+		someConcept.stringComparator = stringComparator;
+	}
+}

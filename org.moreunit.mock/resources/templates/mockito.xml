@@ -38,7 +38,7 @@
     <mocking-template
         id="org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner"
         category="org.moreunit.mock.mockito"
-        name="With annotations (Mockito &lt; 1.9)">
+        name="With annotations (Mockito &lt; 1.9, deprecated)">
         <code-template id="mockitoRunnerDeclaration" part="test-class-annotation">
         	<include-if condition="test-type" value="junit4"/>
             <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)]]></pattern>
@@ -79,7 +79,7 @@
     <mocking-template
         id="org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9"
         category="org.moreunit.mock.mockito"
-        name="With annotations (Mockito &gt;= 1.9)">
+        name="With annotations">
         <code-template id="mockitoRunnerDeclaration" part="test-class-annotation">
         	<include-if condition="test-type" value="junit4"/>
             <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)]]></pattern>
@@ -94,6 +94,45 @@
             <pattern><![CDATA[
             
                 @${injectMocksAnnotation:newType(org.mockito.InjectMocks)} private ${objectUnderTestType} ${objectUnderTest};
+            ]]></pattern>
+        </code-template>
+        <code-template id="mockInitialization" part="before-instance-method">
+        	<exclude-if condition="test-type" value="junit4"/>
+            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.init(this);]]></pattern>
+        </code-template>
+    </mocking-template>
+    <mocking-template
+        id="org.moreunit.mock.mockitoWithPowermockAndAnnotations"
+        category="org.moreunit.mock.mockito"
+        name="With PowerMock">
+        <code-template id="preparationOfClassesToMock" part="test-class-annotation">
+            <pattern><![CDATA[@${prepareForTest:newType(org.powermock.core.classloader.annotations.PrepareForTest)}(/* TODO specify classes to prepare for test */)]]></pattern>
+        </code-template>
+        <code-template id="powermockRunnerDeclaration" part="test-class-annotation">
+            <include-if condition="test-type" value="junit4"/>
+            <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.powermock.modules.junit4.PowerMockRunner)}.class)
+]]></pattern>
+        </code-template>
+        <code-template id="dependencyDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                @${mockAnnotation:newType(org.mockito.Mock)} private ${dependencyType} ${dependency};
+            ]]></pattern>
+        </code-template>
+        <code-template id="objectUnderTestDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                @${injectMocksAnnotation:newType(org.mockito.InjectMocks)} private ${objectUnderTestType} ${objectUnderTest};
+            ]]></pattern>
+        </code-template>
+        <code-template id="objectFactoyDeclaration" part="test-class-fields">
+            <include-if condition="test-type" value="testng"/>
+            <pattern><![CDATA[
+            
+                @${objectFactory:newType(org.testng.annotations.ObjectFactory)}
+public ${iObjectFactory:newType(org.testng.IObjectFactory)} getObjectFactory() {
+    return new ${powerMockObjectFactory:newType(org.powermock.modules.testng.PowerMockObjectFactory)}();
+}
             ]]></pattern>
         </code-template>
         <code-template id="mockInitialization" part="before-instance-method">
