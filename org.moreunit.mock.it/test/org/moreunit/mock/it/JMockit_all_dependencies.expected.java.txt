@@ -1,0 +1,25 @@
+package te.st;
+
+import mockit.Injectable;
+import mockit.Tested;
+import te.st.SomeConcept.Comparator;
+import te.st.SomeConcept.List;
+import te.st.SomeConcept.Thing;
+
+public class SomeConceptTest {
+
+	@Injectable
+	private Callable<Integer> integerProvider;
+	
+	@Injectable
+	private Runnable runnable;
+	
+	@Injectable
+	private List<Thing> someListOfThings;
+	
+	@Injectable
+	private Comparator<String> stringComparator;
+	
+	@Tested
+	private SomeConcept someConcept;
+}

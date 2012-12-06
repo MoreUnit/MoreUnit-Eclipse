@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mocking-templates version="1.0">
+    <category id="org.moreunit.mock.jmockit" name="JMockit"/>
+    <mocking-template
+        id="org.moreunit.mock.jmockitDefault"
+        category="org.moreunit.mock.jmockit"
+        name="Default">
+        <code-template id="dependencyDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                @${injectableAnnotation:newType(mockit.Injectable)} private ${dependencyType} ${dependency};
+            ]]></pattern>
+        </code-template>
+        <code-template id="objectUnderTestDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                @${mockAnnotation:newType(mockit.Tested)} private ${objectUnderTestType} ${objectUnderTest};
+            ]]></pattern>
+        </code-template>
+    </mocking-template>
+</mocking-templates>
