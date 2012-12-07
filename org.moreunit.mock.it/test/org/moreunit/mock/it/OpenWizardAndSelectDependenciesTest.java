@@ -8,8 +8,6 @@ import org.moreunit.test.context.Context;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.TestType;
 
-import com.google.inject.Inject;
-
 @Context(mainSrc = "SomeConcept.cut.java.txt",
         testSrc = "SomeConcept.test.java.txt",
         preferences = @Preferences(testType = TestType.JUNIT4,
@@ -19,8 +17,7 @@ public class OpenWizardAndSelectDependenciesTest extends UiTestCase
     private final String expectationQualifier = "Mockito_post_1.9";
     private final String templateId = "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9";
 
-    @Inject
-    private MockDependenciesAction mockDependenciesAction;
+    private MockDependenciesAction mockDependenciesAction = new MockDependenciesAction();
 
     @Test
     public void should_mock_all_dependencies_from_class_under_test() throws Exception

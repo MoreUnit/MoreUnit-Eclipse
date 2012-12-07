@@ -10,14 +10,11 @@ import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.MockingTemplate;
 
-import com.google.inject.Inject;
-
 public class TemplateProcessor
 {
     private final ContextFactory contextFactory;
     private final SourceFormatter sourceFormatter;
 
-    @Inject
     public TemplateProcessor(ContextFactory contextFactory, SourceFormatter sourceFormatter)
     {
         this.contextFactory = contextFactory;

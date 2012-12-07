@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.moreunit.mock.log.Logger;
+import org.moreunit.core.log.Logger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MainPropertyPageTest

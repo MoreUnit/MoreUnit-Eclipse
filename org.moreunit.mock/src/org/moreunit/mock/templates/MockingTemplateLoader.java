@@ -3,15 +3,12 @@ package org.moreunit.mock.templates;
 import java.net.URL;
 import java.util.Collection;
 
+import org.moreunit.core.Service;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.PluginResourceLoader;
-import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.model.MockingTemplates;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
-public class MockingTemplateLoader
+public class MockingTemplateLoader implements Service
 {
     static final String TEMPLATE_DIRECTORY = "/templates/";
 
@@ -20,7 +17,6 @@ public class MockingTemplateLoader
     private final MockingTemplateStore templateStore;
     private final Logger logger;
 
-    @Inject
     public MockingTemplateLoader(PluginResourceLoader resourceLoader, XmlTemplateDefinitionReader templateReader, MockingTemplateStore templateStore, Logger logger)
     {
         this.resourceLoader = resourceLoader;
@@ -87,5 +83,17 @@ public class MockingTemplateLoader
         }
 
         return location + TEMPLATE_DIRECTORY;
+    }
+
+    @Override
+    public void start()
+    {
+        loadTemplates();
+    }
+
+    @Override
+    public void stop()
+    {
+        // nothing to do
     }
 }

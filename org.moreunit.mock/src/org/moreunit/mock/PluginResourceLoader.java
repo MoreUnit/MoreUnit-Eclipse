@@ -10,13 +10,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
-import org.moreunit.mock.log.Logger;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.utils.WildcardFileFilter;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class PluginResourceLoader
 {
     private static final String RESOURCE_FOLDER = "/resources/";
@@ -24,7 +20,6 @@ public class PluginResourceLoader
     private final MoreUnitMockPlugin plugin;
     private final Logger logger;
 
-    @Inject
     public PluginResourceLoader(MoreUnitMockPlugin plugin, Logger logger)
     {
         this.plugin = plugin;

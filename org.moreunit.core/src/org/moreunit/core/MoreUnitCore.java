@@ -1,6 +1,6 @@
 package org.moreunit.core;
 
-import static org.moreunit.core.config.Module.$;
+import static org.moreunit.core.config.CoreModule.$;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

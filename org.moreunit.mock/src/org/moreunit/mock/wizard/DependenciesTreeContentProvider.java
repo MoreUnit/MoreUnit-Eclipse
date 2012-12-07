@@ -15,8 +15,8 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
-import org.moreunit.mock.log.Logger;
 
 public class DependenciesTreeContentProvider implements ITreeContentProvider
 {
@@ -76,7 +76,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
             {
                 IMember alreadyCollectedMember = memberIt.next();
                 if(alreadyCollectedMember instanceof IMethod && alreadyCollectedMember.getElementName().equals(method.getElementName())
-                            && ((IMethod) alreadyCollectedMember).getSignature().equals(method.getSignature()))
+                   && ((IMethod) alreadyCollectedMember).getSignature().equals(method.getSignature()))
                 {
                     memberIt.set(method);
                     continue for_methods;

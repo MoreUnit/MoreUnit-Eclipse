@@ -3,7 +3,7 @@ package org.moreunit.core.commands;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.moreunit.core.config.Module.$;
+import static org.moreunit.core.config.CoreModule.$;
 
 import java.util.Collection;
 
@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.moreunit.core.TestModule;
+import org.moreunit.core.CoreTestModule;
 import org.moreunit.core.extension.ExtensionPoints;
 import org.moreunit.core.extension.jump.IJumpContext;
 import org.moreunit.core.extension.jump.IJumper;
@@ -36,7 +36,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
     CapturingSelector capturingSelector = new CapturingSelector();
 
-    TestModule config = new TestModule()
+    CoreTestModule config = new CoreTestModule()
     {
         {
             dialogFactory.overrideWith(new NonBlockingDialogFactory());

@@ -3,13 +3,11 @@ package org.moreunit.mock.wizard;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
-import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
-
-import com.google.inject.Inject;
 
 public class WizardFactory
 {
@@ -17,7 +15,6 @@ public class WizardFactory
     private TemplateStyleSelector templateStyleSelector;
     private Logger logger;
 
-    @Inject
     public WizardFactory(Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
     {
         this.preferences = preferences;

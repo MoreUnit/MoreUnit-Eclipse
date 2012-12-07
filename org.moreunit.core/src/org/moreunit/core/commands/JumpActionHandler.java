@@ -1,6 +1,6 @@
 package org.moreunit.core.commands;
 
-import static org.moreunit.core.config.Module.$;
+import static org.moreunit.core.config.CoreModule.$;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

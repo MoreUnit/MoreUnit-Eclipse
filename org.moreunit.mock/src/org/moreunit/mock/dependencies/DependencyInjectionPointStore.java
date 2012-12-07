@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.moreunit.mock.log.Logger;
+import org.moreunit.core.log.Logger;
 
 public class DependencyInjectionPointStore implements DependencyInjectionPointProvider
 {

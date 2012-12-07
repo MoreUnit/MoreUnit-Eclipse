@@ -8,17 +8,12 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.moreunit.mock.log.Logger;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
 import org.moreunit.mock.wizard.MockDependenciesWizard;
 import org.moreunit.mock.wizard.MockDependenciesWizardPage;
 import org.moreunit.mock.wizard.WizardFactory;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.Provider;
 
 /**
  * A driver that allows for simulating user actions when a
@@ -27,22 +22,6 @@ import com.google.inject.Provider;
 public final class WizardDriver
 {
     private MockDependenciesPageIsOpenAction action;
-
-    /**
-     * Creates a Guice module configured to use this driver.
-     */
-    public Module createModule()
-    {
-        return new AbstractModule()
-        {
-            @Override
-            protected void configure()
-            {
-                bind(WizardDriver.class).toInstance(WizardDriver.this);
-                bind(WizardFactory.class).toProvider(WizardFactoryProvider.class);
-            }
-        };
-    }
 
     public MockDependenciesPageActions whenMockDependenciesPageIsOpen()
     {
@@ -62,24 +41,7 @@ public final class WizardDriver
         }
     }
 
-    private static class WizardFactoryProvider implements Provider<WizardFactory>
-    {
-        @Inject
-        private WizardDriver wizardDriver;
-        @Inject
-        private Preferences preferences;
-        @Inject
-        private TemplateStyleSelector templateStyleSelector;
-        @Inject
-        private Logger logger;
-
-        public WizardFactory get()
-        {
-            return new ConfigurableWizardFactory(wizardDriver, preferences, templateStyleSelector, logger);
-        }
-    }
-
-    private static class ConfigurableWizardFactory extends WizardFactory
+    public static class ConfigurableWizardFactory extends WizardFactory
     {
         private final WizardDriver driver;
         private MockDependenciesWizardPage page;

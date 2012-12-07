@@ -15,14 +15,18 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.templates.MockingTemplateLoader;
 
-import com.google.inject.Inject;
+import static org.moreunit.mock.config.MockModule.$;
 
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
     private final TemplateStyleSelector templateStyleSelector;
     private final MockingTemplateLoader templateLoader;
 
-    @Inject
+    public MainPreferencePage()
+    {
+        this($().getTemplateStyleSelector(), $().getTemplateLoader());
+    }
+
     public MainPreferencePage(TemplateStyleSelector templateStyleSelector, MockingTemplateLoader templateLoader)
     {
         this.templateStyleSelector = templateStyleSelector;

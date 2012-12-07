@@ -19,13 +19,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.moreunit.core.log.Logger;
 import org.moreunit.core.util.Strings;
-import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.templates.MockingTemplateStore;
-
-import com.google.inject.Inject;
 
 public class TemplateStyleSelector implements SelectionListener
 {
@@ -45,7 +43,6 @@ public class TemplateStyleSelector implements SelectionListener
     private Category selectedCategory;
     private MockingTemplate selectedTemplate;
 
-    @Inject
     public TemplateStyleSelector(Preferences preferences, MockingTemplateStore templateStore, Logger logger)
     {
         this.preferences = preferences;

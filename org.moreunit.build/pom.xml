@@ -14,7 +14,6 @@
     <module>../org.moreunit.light.feature</module>
     <module>../org.moreunit.test</module>
     <module>../org.moreunit.feature</module>
-    <module>../org.moreunit.dependencies.guice</module>
     <module>../org.moreunit.mock</module>
     <module>../org.moreunit.mock.test</module>
     <module>../org.moreunit.mock.it</module>

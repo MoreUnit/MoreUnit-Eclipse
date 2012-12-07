@@ -111,22 +111,8 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.jdt.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import feature="org.moreunit" version="3.0.0.qualifier" match="greaterOrEqual"/>
+      <import feature="org.moreunit" version="3.0.0.02" match="greaterOrEqual"/>
    </requires>
-
-   <plugin
-         id="org.moreunit.dependencies.guice"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.moreunit.dependencies.jaxb"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.moreunit.mock"

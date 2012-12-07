@@ -1,4 +1,4 @@
-package org.moreunit.core;
+package org.moreunit.test.config;
 
 public class ConfigItem<T>
 {

@@ -2,18 +2,14 @@ package org.moreunit.mock;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.Dependencies;
-import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.templates.MockingTemplateException;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class DependencyMocker
 {
     private final Preferences preferences;
@@ -21,7 +17,6 @@ public class DependencyMocker
     private final TemplateProcessor templateProcessor;
     private final Logger logger;
 
-    @Inject
     public DependencyMocker(Preferences preferences, MockingTemplateStore mockingTemplateStore, TemplateProcessor templateApplicator, Logger logger)
     {
         this.preferences = preferences;

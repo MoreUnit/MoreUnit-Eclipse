@@ -6,17 +6,17 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.moreunit.core.config.Module;
+import org.moreunit.core.config.CoreModule;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.ui.UserInterface;
 
 public class ExecutionContext
 {
     private final ExecutionEvent event;
-    private final Module module;
+    private final CoreModule module;
     private final Logger logger;
 
-    public ExecutionContext(ExecutionEvent event, Module module, Logger logger)
+    public ExecutionContext(ExecutionEvent event, CoreModule module, Logger logger)
     {
         this.event = event;
         this.module = module;

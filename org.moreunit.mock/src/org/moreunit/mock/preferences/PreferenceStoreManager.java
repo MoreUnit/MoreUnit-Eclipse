@@ -9,13 +9,9 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.MoreUnitMockPlugin;
-import org.moreunit.mock.log.Logger;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class PreferenceStoreManager
 {
     private static final Preference<Boolean> SPECIFIC_SETTINGS = new BooleanPreference("has_specific_settings", false);
@@ -24,7 +20,6 @@ public class PreferenceStoreManager
     private final Logger logger;
     private final Map<IJavaProject, IPreferenceStore> projectStores = new HashMap<IJavaProject, IPreferenceStore>();
 
-    @Inject
     public PreferenceStoreManager(IPreferenceStore workspacePreferenceStore, Logger logger)
     {
         this.workspaceStore = workspacePreferenceStore;

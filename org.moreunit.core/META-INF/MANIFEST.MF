@@ -14,9 +14,9 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.ui.forms
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test",
+Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test,org.moreunit.mock",
  org.moreunit.core.commands;x-friends:="org.moreunit.core.test",
- org.moreunit.core.config;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.config;x-friends:="org.moreunit.core.test,org.moreunit.mock",
  org.moreunit.core.expressions;x-friends:="org.moreunit",
  org.moreunit.core.extension;x-friends:="org.moreunit.core.test",
  org.moreunit.core.extension.jump,

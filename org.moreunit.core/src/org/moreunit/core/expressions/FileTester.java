@@ -1,6 +1,6 @@
 package org.moreunit.core.expressions;
 
-import static org.moreunit.core.config.Module.$;
+import static org.moreunit.core.config.CoreModule.$;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;

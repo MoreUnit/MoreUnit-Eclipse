@@ -6,14 +6,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.moreunit.core.Service;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.MockingTemplates;
 
-import com.google.inject.Singleton;
-
-@Singleton
-public class MockingTemplateStore
+public class MockingTemplateStore implements Service
 {
     private final Map<String, Category> categories = new HashMap<String, Category>();
     private final Map<String, MockingTemplate> templates = new HashMap<String, MockingTemplate>();
@@ -87,5 +85,17 @@ public class MockingTemplateStore
         {
             super(templateId);
         }
+    }
+
+    @Override
+    public void start()
+    {
+        // nothing to do
+    }
+
+    @Override
+    public void stop()
+    {
+        clear();
     }
 }

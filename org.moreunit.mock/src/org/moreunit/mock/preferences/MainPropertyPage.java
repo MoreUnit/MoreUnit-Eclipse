@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.moreunit.mock.log.Logger;
+import org.moreunit.core.log.Logger;
 
-import com.google.inject.Inject;
+import static org.moreunit.mock.config.MockModule.$;
 
 public class MainPropertyPage extends PropertyPage
 {
@@ -24,7 +24,11 @@ public class MainPropertyPage extends PropertyPage
 
     private Button specificSettingsCheckbox;
 
-    @Inject
+    public MainPropertyPage()
+    {
+        this($().getPreferences(), $().getTemplateStyleSelector(), $().getLogger());
+    }
+
     public MainPropertyPage(Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
     {
         this.preferences = preferences;

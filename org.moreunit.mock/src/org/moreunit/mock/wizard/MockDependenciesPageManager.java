@@ -3,6 +3,7 @@ package org.moreunit.mock.wizard;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.DependencyMocker;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.dependencies.DependencyInjectionPointCollector;
@@ -10,9 +11,6 @@ import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProviderWrapper;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
 import org.moreunit.mock.elements.NamingRules;
-import org.moreunit.mock.log.Logger;
-
-import com.google.inject.Inject;
 
 public class MockDependenciesPageManager
 {
@@ -20,7 +18,6 @@ public class MockDependenciesPageManager
     private final DependencyMocker mocker;
     private final Logger logger;
 
-    @Inject
     public MockDependenciesPageManager(WizardFactory wizardFactory, DependencyMocker mocker, Logger logger)
     {
         this.wizardFactory = wizardFactory;

@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
+import org.moreunit.core.log.Logger;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.extensionpoints.NewTestCaseWizardPagePosition;
 import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
-import org.moreunit.mock.log.Logger;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
 

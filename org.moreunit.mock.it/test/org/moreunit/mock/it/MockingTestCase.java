@@ -5,15 +5,12 @@ import org.junit.Test;
 import org.moreunit.mock.UiTestCase;
 import org.moreunit.mock.actions.MockDependenciesAction;
 
-import com.google.inject.Inject;
-
 public abstract class MockingTestCase extends UiTestCase
 {
     private final String expectationQualifier;
     private final String templateId;
 
-    @Inject
-    private MockDependenciesAction mockDependenciesAction;
+    private MockDependenciesAction mockDependenciesAction = new MockDependenciesAction();
 
     protected MockingTestCase(String expectationQualifier, String templateId)
     {

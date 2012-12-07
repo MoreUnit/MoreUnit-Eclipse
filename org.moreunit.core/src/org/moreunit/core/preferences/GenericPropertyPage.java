@@ -1,6 +1,6 @@
 package org.moreunit.core.preferences;
 
-import static org.moreunit.core.config.Module.$;
+import static org.moreunit.core.config.CoreModule.$;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;

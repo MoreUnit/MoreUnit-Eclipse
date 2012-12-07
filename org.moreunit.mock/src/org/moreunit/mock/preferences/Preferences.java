@@ -6,10 +6,6 @@ import java.util.Set;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-@Singleton
 public class Preferences
 {
     private static final Set<Preference< ? >> ALL_PREFERENCES = new HashSet<Preference< ? >>();
@@ -24,7 +20,6 @@ public class Preferences
 
     private final PreferenceStoreManager storeManager;
 
-    @Inject
     public Preferences(PreferenceStoreManager storeManager)
     {
         this.storeManager = storeManager;

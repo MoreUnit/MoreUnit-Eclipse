@@ -11,11 +11,23 @@ import javax.xml.bind.Unmarshaller;
 import org.moreunit.core.util.IOUtils;
 import org.moreunit.mock.model.MockingTemplates;
 
-import com.google.inject.Singleton;
-
-@Singleton
 public class XmlTemplateDefinitionReader
 {
+    private Unmarshaller unmarshaller;
+
+    public XmlTemplateDefinitionReader()
+    {
+        try
+        {
+            JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
+            unmarshaller = jc.createUnmarshaller();
+        }
+        catch (JAXBException e)
+        {
+            throw new RuntimeException("Could not create unmarshaller", e);
+        }
+    }
+
     public MockingTemplates read(URL url) throws MockingTemplateException
     {
         InputStream is = null;
@@ -38,8 +50,6 @@ public class XmlTemplateDefinitionReader
     {
         try
         {
-            JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
-            Unmarshaller unmarshaller = jc.createUnmarshaller();
             return (MockingTemplates) unmarshaller.unmarshal(is);
         }
         catch (JAXBException e)

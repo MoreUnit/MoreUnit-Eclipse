@@ -7,9 +7,8 @@ import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.extensionpoints.INewTestCaseWizardParticipator;
 import org.moreunit.mock.MoreUnitMockPlugin;
 
-import com.google.inject.Inject;
-
 import static java.util.Arrays.asList;
+import static org.moreunit.mock.config.MockModule.$;
 
 public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticipator
 {
@@ -17,7 +16,11 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
 
     private final MockDependenciesPageManager pageManager;
 
-    @Inject
+    public NewTestCaseWizardParticipator()
+    {
+        this($().getMockDependenciesPageManager());
+    }
+
     public NewTestCaseWizardParticipator(MockDependenciesPageManager pageManager)
     {
         this.pageManager = pageManager;

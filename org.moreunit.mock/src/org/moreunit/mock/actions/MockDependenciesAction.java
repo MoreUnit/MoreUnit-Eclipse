@@ -20,9 +20,8 @@ import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 import org.moreunit.util.PluginTools;
 
-import com.google.inject.Inject;
-
 import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
+import static org.moreunit.mock.config.MockModule.$;
 
 public class MockDependenciesAction extends AbstractHandler implements IEditorActionDelegate
 {
@@ -31,7 +30,11 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
     private final TypeFacadeFactory facadeFactory;
     private ICompilationUnit compilationUnit;
 
-    @Inject
+    public MockDependenciesAction()
+    {
+        this($().getMockDependenciesPageManager(), $().getConversionUtils(), $().getTypeFacadeFactory());
+    }
+
     public MockDependenciesAction(MockDependenciesPageManager pageManager, ConversionUtils conversionUtils, TypeFacadeFactory facadeFactory)
     {
         this.pageManager = pageManager;
@@ -101,9 +104,9 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         if(compilationUnitIsTestCase)
         {
             CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
-                    .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
-                    .createClassIfNoResult("Class under test...") //
-                    .build();
+            .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+            .createClassIfNoResult("Class under test...") //
+            .build();
 
             return (IType) facadeFactory.createTestCaseFacade(editedCompilationUnit).getOneCorrespondingMember(request);
         }
