@@ -557,7 +557,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else if(testNgToggle.getSelection())
         {
-            setJUnit4(false, false);
+            setJUnit4(false, true);
             setSuperClass(preferences.getTestSuperClass(), true);
             handleFieldChanged(JUNIT4TOGGLE);
         }
