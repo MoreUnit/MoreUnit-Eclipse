@@ -598,4 +598,21 @@ public class AnnotationConfigExtractorTest
             return getClass().getSimpleName();
         }
     }
+    
+    @Test 
+    public void should_load_test_class_template_from_preferences()
+    {
+        // given
+        @Preferences(testClassNameTemplate = "{srcFile}Mest")
+        class AnnotationHolder {}
+        
+        @Project(mainSrcFolder = "sources")
+        class DefaultAnnotationHolder {}
+
+        // when
+        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
+
+        // then
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("{srcFile}Mest");
+    }
 }

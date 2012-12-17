@@ -16,6 +16,7 @@ class PreferencesBaseConfiguration
     private boolean extendedMethodSearch;
     private boolean flexibleNaming;
     private boolean testMethodPrefix;
+    private String testClassNameTemplate;
 
     public List<String> getTestClassSuffixes()
     {
@@ -121,5 +122,20 @@ class PreferencesBaseConfiguration
     public void setMethodPrefix(boolean testMethodPrefix)
     {
         this.testMethodPrefix = testMethodPrefix;
+    }
+
+    public void setTestMethodPrefix(boolean testMethodPrefix)
+    {
+        this.testMethodPrefix = testMethodPrefix;
+    }
+    
+    public String getTestClassNameTemplate()
+    {
+        return testClassNameTemplate;
+    }
+    
+    public void setTestClassNameTemplate(String testClassNameTemplate)
+    {
+        this.testClassNameTemplate = testClassNameTemplate;
     }
 }

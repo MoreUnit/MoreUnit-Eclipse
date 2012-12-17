@@ -28,4 +28,6 @@ public @interface Properties
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
+    
+    String testClassNameTemplate() default "";
 }
