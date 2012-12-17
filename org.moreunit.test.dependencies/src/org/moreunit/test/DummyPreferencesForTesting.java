@@ -35,18 +35,13 @@ public final class DummyPreferencesForTesting extends Preferences
         // workbenchStore = new PreferenceStore();
         // Preferences.initStore(workbenchStore);
     }
-
-    // @Override
-    // protected IPreferenceStore getWorkbenchStore()
-    // {
-    // return workbenchStore;
-    // }
-
+    
     public void forcePreferencesMigration(IJavaProject project)
     {
         IPreferenceStore store = getProjectStore(project);
+        
         store.setValue(PreferenceConstants.PREFERENCES_VERSION, 1);
         store.setValue(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, "");
-        migratePrefsIfRequired(store);
+        migratePrefsIfRequired(store);    
     }
 }

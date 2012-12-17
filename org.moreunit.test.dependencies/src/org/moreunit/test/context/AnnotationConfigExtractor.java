@@ -315,6 +315,7 @@ class AnnotationConfigExtractor
         propertiesConfig.setTestPackageSuffix(properties.testPackageSuffix());
         propertiesConfig.setTestSuperClass(properties.testSuperClass());
         propertiesConfig.setTestType(properties.testType());
+        propertiesConfig.setTestClassNameTemplate(properties.testClassNameTemplate());
         projectConfig.setPropertiesConfig(propertiesConfig);
     }
 
@@ -361,6 +362,7 @@ class AnnotationConfigExtractor
         preferencesConfig.setTestSourceFolder(preferences.testSrcFolder());
         preferencesConfig.setTestSuperClass(preferences.testSuperClass());
         preferencesConfig.setTestType(preferences.testType());
+        preferencesConfig.setTestClassNameTemplate(preferences.testClassNameTemplate());
         config.setPreferencesConfig(preferencesConfig);
     }
 
