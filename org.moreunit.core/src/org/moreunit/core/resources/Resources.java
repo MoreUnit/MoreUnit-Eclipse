@@ -2,11 +2,18 @@ package org.moreunit.core.resources;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 public class Resources
 {
+    public static CreatedFolder createFolder(String folderPath)
+    {
+        return createFolder(ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(folderPath)));
+    }
+
     public static CreatedFolder createFolder(IFolder folder)
     {
         return createFolder(folder.getProject(), folder.getFullPath().removeFirstSegments(1));
