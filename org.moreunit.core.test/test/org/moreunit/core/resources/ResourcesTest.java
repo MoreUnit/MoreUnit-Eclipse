@@ -345,6 +345,47 @@ public abstract class ResourcesTest
     }
 
     @Test
+    public void absolute_pathes_should_return_themselves_up_to_a_given_segment() throws Exception
+    {
+        Path absolutePath = workspace.path("/some/path/with/lots/of/segments");
+
+        assertThat(absolutePath.uptoSegment(0).toString()).isEqualTo("/");
+        assertThat(absolutePath.uptoSegment(1).toString()).isEqualTo("/some");
+        assertThat(absolutePath.uptoSegment(4).toString()).isEqualTo("/some/path/with/lots");
+
+        try
+        {
+            absolutePath.uptoSegment(99);
+            fail("expected IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException e)
+        {
+            // success
+        }
+
+    }
+
+    @Test
+    public void relative_pathes_should_return_themselves_up_to_a_given_segment() throws Exception
+    {
+        Path relativePath = workspace.path("some/path/with/lots/of/segments");
+
+        assertThat(relativePath.uptoSegment(0).toString()).isEqualTo("");
+        assertThat(relativePath.uptoSegment(1).toString()).isEqualTo("some");
+        assertThat(relativePath.uptoSegment(4).toString()).isEqualTo("some/path/with/lots");
+
+        try
+        {
+            relativePath.uptoSegment(99);
+            fail("expected IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException e)
+        {
+            // success
+        }
+    }
+
+    @Test
     public void resource_containers_should_know_when_they_are_parent_of_other_resources() throws Exception
     {
         File childFile = workspace.getFile("/some/path/with/lots/of/segments");

@@ -19,12 +19,12 @@ public class EclipseFolder extends EclipseResourceContainer implements Folder
     @Override
     public Project getProject()
     {
-        return new EclipseProject(getUnderlyingResource().getProject());
+        return new EclipseProject(getUnderlyingPlatformResource().getProject());
     }
 
     @Override
     public ProjectPreferences getProjectPreferences()
     {
-        return EclipseWorkspace.get().getPreferences().get(getUnderlyingResource().getProject());
+        return EclipseWorkspace.get().getPreferences().get(getUnderlyingPlatformResource().getProject());
     }
 }

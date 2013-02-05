@@ -1,83 +1,53 @@
 package org.moreunit.core.matching;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.search.core.text.TextSearchRequestor;
-import org.moreunit.core.preferences.LanguagePreferencesReader;
-import org.moreunit.core.preferences.Preferences;
+import org.moreunit.core.resources.Resource;
+import org.moreunit.core.resources.SrcFile;
 
 public class FileMatcher
 {
+    private final SrcFile file;
     private final SearchEngine searchEngine;
-    private final Preferences preferences;
     private final FileMatchSelector matchSelector;
 
-    public FileMatcher(SearchEngine searchEngine, Preferences preferences, FileMatchSelector matchSelector)
+    public FileMatcher(SrcFile file, SearchEngine searchEngine, FileMatchSelector matchSelector)
     {
+        this.file = file;
         this.searchEngine = searchEngine;
-        this.preferences = preferences;
         this.matchSelector = matchSelector;
     }
 
-    public MatchingFile match(IFile file) throws DoesNotMatchConfigurationException
+    public MatchResult match() throws DoesNotMatchConfigurationException
     {
-        FileNameEvaluation evaluation = evaluateFileName(file);
-        SourceFolderPath correspondingSrcFolder = findSrcFolder(file, evaluation);
+        FileNameEvaluation nameEvaluation = file.evaluateName();
+        SourceFolderPath correspondingSrcFolder = file.findCorrespondingSrcFolder();
 
-        ResultCollector rc = new ResultCollector(correspondingSrcFolder);
+        MatchResult matchCollector = new MatchResult(createPreferredFileName(nameEvaluation), correspondingSrcFolder, matchSelector);
+        Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
-        IResource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
+        searchFor(nameEvaluation.getPreferredCorrespondingFilePatterns(), searchFolder, matchCollector);
+        searchFor(nameEvaluation.getOtherCorrespondingFilePatterns(), searchFolder, matchCollector);
 
-        Pattern fileNamePattern = createFileNamePattern(file, evaluation.getPreferredCorrespondingFilePatterns());
-        searchEngine.searchFiles(searchFolder, fileNamePattern, rc);
-
-        if(! evaluation.getOtherCorrespondingFilePatterns().isEmpty())
-        {
-            fileNamePattern = createFileNamePattern(file, evaluation.getOtherCorrespondingFilePatterns());
-            searchEngine.searchFiles(searchFolder, fileNamePattern, rc);
-        }
-
-        if(rc.results.isEmpty())
-        {
-            return MatchingFile.notFound(correspondingSrcFolder, evaluation.getPreferredCorrespondingFileName() + "." + file.getFileExtension());
-        }
-        if(rc.results.size() == 1)
-        {
-            return MatchingFile.found(rc.results.iterator().next());
-        }
-
-        MatchSelection selection = matchSelector.select(rc.results, null);
-        if(selection.exists())
-        {
-            return MatchingFile.found(selection.get());
-        }
-
-        return MatchingFile.searchCancelled();
+        return matchCollector;
     }
 
-    private SourceFolderPath findSrcFolder(IFile file, FileNameEvaluation evaluation) throws DoesNotMatchConfigurationException
+    private void searchFor(Collection<String> filePatterns, Resource searchFolder, MatchResult matchCollector)
     {
-        TestFolderPathPattern folderPathPattern = getPreferencesFor(file).getTestFolderPathPattern();
-        IPath folderPath = file.getFullPath().removeLastSegments(1);
+        if(filePatterns.isEmpty())
+            return;
 
-        if(evaluation.isTestFile())
-        {
-            return folderPathPattern.getSrcPathFor(folderPath);
-        }
-        else
-        {
-            return folderPathPattern.getTestPathFor(folderPath);
-        }
+        Pattern fileNamePattern2 = createFileNamePattern(file, filePatterns);
+        searchEngine.searchFiles(searchFolder, fileNamePattern2, matchCollector);
     }
 
-    private Pattern createFileNamePattern(IFile file, Collection<String> correspondingFileNames)
+    private String createPreferredFileName(FileNameEvaluation evaluation)
+    {
+        return evaluation.getPreferredCorrespondingFileName() + "." + file.getExtension();
+    }
+
+    private Pattern createFileNamePattern(SrcFile file, Collection<String> correspondingFileNames)
     {
         StringBuilder sb = null;
         // creates an OR pattern with file names
@@ -96,7 +66,7 @@ public class FileMatcher
 
         sb.append(")");
 
-        String extension = file.getFileExtension();
+        String extension = file.getExtension();
 
         // creates an OR pattern with the file extension: same case OR lower
         // case OR upper case (so a file having an extension with a mixed case
@@ -109,42 +79,5 @@ public class FileMatcher
         .append(")");
 
         return Pattern.compile(sb.toString());
-    }
-
-    private FileNameEvaluation evaluateFileName(IFile file)
-    {
-        TestFileNamePattern testFilePattern = getPreferencesFor(file).getTestFileNamePattern();
-
-        String basename = file.getFullPath().removeFileExtension().lastSegment();
-
-        return testFilePattern.evaluate(basename);
-    }
-
-    private LanguagePreferencesReader getPreferencesFor(IFile file)
-    {
-        return preferences.get(file.getProject()).readerForLanguage(file.getFileExtension().toLowerCase());
-    }
-
-    private static class ResultCollector extends TextSearchRequestor
-    {
-        private final Set<IFile> results = new LinkedHashSet<IFile>();
-        private final SourceFolderPath correspondingSrcFolder;
-        private final boolean checkFolder;
-
-        public ResultCollector(SourceFolderPath correspondingSrcFolder)
-        {
-            this.correspondingSrcFolder = correspondingSrcFolder;
-            checkFolder = ! correspondingSrcFolder.isResolved();
-        }
-
-        @Override
-        public boolean acceptFile(IFile file) throws CoreException
-        {
-            if(! checkFolder || correspondingSrcFolder.matches(file))
-            {
-                results.add(file);
-            }
-            return false;
-        }
     }
 }

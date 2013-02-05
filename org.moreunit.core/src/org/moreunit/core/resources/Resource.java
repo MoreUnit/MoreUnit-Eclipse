@@ -1,5 +1,7 @@
 package org.moreunit.core.resources;
 
+import org.eclipse.core.resources.IResource;
+
 public interface Resource
 {
     void create();
@@ -13,4 +15,6 @@ public interface Resource
     Path getPath();
 
     ResourceContainer getParent();
+
+    IResource getUnderlyingPlatformResource();
 }

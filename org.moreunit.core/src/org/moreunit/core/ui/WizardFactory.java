@@ -1,27 +1,26 @@
 package org.moreunit.core.ui;
 
+import static org.moreunit.core.config.CoreModule.$;
+
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
-import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.SourceFolderPath;
 
 public class WizardFactory
 {
     private final IWorkbench workbench;
     private final Shell activeShell;
-    private final Logger logger;
 
-    public WizardFactory(IWorkbench workbench, Shell activeShell, Logger logger)
+    public WizardFactory(IWorkbench workbench, Shell activeShell)
     {
         this.workbench = workbench;
         this.activeShell = activeShell;
-        this.logger = logger;
     }
 
     public WizardDialog<NewFileWizard> createNewFileWizard(SourceFolderPath selectedFolder, String fileName)
     {
-        NewFileWizard wizard = new NewFileWizard(workbench, selectedFolder, fileName, logger);
+        NewFileWizard wizard = new NewFileWizard(workbench, $().getWorkspace(), selectedFolder, fileName);
         return new WizardDialog<NewFileWizard>(createWizardDialog(wizard), wizard);
     }
 

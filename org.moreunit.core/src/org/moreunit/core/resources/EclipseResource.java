@@ -78,7 +78,8 @@ abstract class EclipseResource implements Resource
         return path;
     }
 
-    protected final IResource getUnderlyingResource()
+    @Override
+    public final IResource getUnderlyingPlatformResource()
     {
         return resource;
     }

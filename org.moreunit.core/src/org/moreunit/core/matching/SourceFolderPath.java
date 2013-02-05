@@ -1,24 +1,31 @@
 package org.moreunit.core.matching;
 
+import static org.moreunit.core.config.CoreModule.$;
+
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.moreunit.core.resources.CreatedFolderPath;
-import org.moreunit.core.resources.Resources;
+import org.moreunit.core.resources.ContainerCreationRecord;
+import org.moreunit.core.resources.Folder;
+import org.moreunit.core.resources.Path;
+import org.moreunit.core.resources.Resource;
+import org.moreunit.core.resources.Workspace;
 
 public class SourceFolderPath
 {
-    private final IPath path;
+    private final Path path;
+    private final Workspace workspace;
 
     public SourceFolderPath(String path)
     {
-        this.path = new Path(path).removeTrailingSeparator();
+        this(path, $().getWorkspace());
     }
 
-    public IPath asPath()
+    public SourceFolderPath(String path, Workspace workspace)
+    {
+        this.path = workspace.path(path);
+        this.workspace = workspace;
+    }
+
+    public Path asPath()
     {
         return path;
     }
@@ -34,14 +41,14 @@ public class SourceFolderPath
         return path.toString();
     }
 
-    public IPath getResolvedPart()
+    public Path getResolvedPart()
     {
         if(isResolved())
         {
             return path;
         }
         int i = 0;
-        for (String s : path.segments())
+        for (String s : path)
         {
             if(s.endsWith("[^") || s.contains("*"))
             {
@@ -52,14 +59,14 @@ public class SourceFolderPath
         return path.uptoSegment(i);
     }
 
-    public IResource getResolvedPartAsResource()
+    public Resource getResolvedPartAsResource()
     {
-        IPath part = getResolvedPart();
-        if(part.segmentCount() == 1)
+        Path part = getResolvedPart();
+        if(part.getSegmentCount() == 1)
         {
-            return ResourcesPlugin.getWorkspace().getRoot().getProject(part.segment(0));
+            return workspace.getProject(part.getProjectName());
         }
-        return ResourcesPlugin.getWorkspace().getRoot().getFolder(part);
+        return workspace.getFolder(part);
     }
 
     public boolean matches(IFile file)
@@ -72,14 +79,13 @@ public class SourceFolderPath
         return folder.matches(path.toString());
     }
 
-    public CreatedFolderPath createResolvedPartIfItDoesNotExist()
+    public ContainerCreationRecord createResolvedPartIfItDoesNotExist()
     {
-        IResource resolvedPart = getResolvedPartAsResource();
-        if(resolvedPart instanceof IFolder && ! resolvedPart.exists())
+        Resource resolvedPart = getResolvedPartAsResource();
+        if(resolvedPart instanceof Folder && ! resolvedPart.exists())
         {
-            return Resources.createFolder((IFolder) resolvedPart).getCreatedFolderPath();
+            return ((Folder) resolvedPart).createWithRecord();
         }
-
-        return new CreatedFolderPath(null);
+        return new ContainerCreationRecord();
     }
 }

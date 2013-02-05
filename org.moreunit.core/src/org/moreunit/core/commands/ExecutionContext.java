@@ -1,26 +1,22 @@
 package org.moreunit.core.commands;
 
+import static org.moreunit.core.config.CoreModule.$;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.moreunit.core.config.CoreModule;
-import org.moreunit.core.log.Logger;
 import org.moreunit.core.ui.UserInterface;
 
 public class ExecutionContext
 {
     private final ExecutionEvent event;
-    private final CoreModule module;
-    private final Logger logger;
 
-    public ExecutionContext(ExecutionEvent event, CoreModule module, Logger logger)
+    public ExecutionContext(ExecutionEvent event)
     {
         this.event = event;
-        this.module = module;
-        this.logger = logger;
     }
 
     private IWorkbenchPage getActivePage()
@@ -41,12 +37,12 @@ public class ExecutionContext
 
     public Selection getSelection()
     {
-        return new Selection(event, logger);
+        return new Selection(event);
     }
 
     public UserInterface getUserInterface()
     {
-        return module.getUserInterface(getWorkbench(), getActivePage(), getActiveShell());
+        return $().getUserInterface(getWorkbench(), getActivePage(), getActiveShell());
     }
 
     private IWorkbench getWorkbench()

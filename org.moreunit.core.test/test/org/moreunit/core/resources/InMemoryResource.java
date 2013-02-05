@@ -1,5 +1,7 @@
 package org.moreunit.core.resources;
 
+import org.eclipse.core.resources.IResource;
+
 abstract class InMemoryResource implements Resource
 {
     private final InMemoryPath path;
@@ -53,6 +55,12 @@ abstract class InMemoryResource implements Resource
     public InMemoryResourceContainer getParent()
     {
         return parent;
+    }
+
+    @Override
+    public IResource getUnderlyingPlatformResource()
+    {
+        return null;
     }
 
     @Override

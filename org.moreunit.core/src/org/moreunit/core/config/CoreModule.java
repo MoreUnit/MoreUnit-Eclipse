@@ -20,6 +20,9 @@ import org.moreunit.core.matching.FileMatcher;
 import org.moreunit.core.matching.SearchEngine;
 import org.moreunit.core.preferences.LanguagePageManager;
 import org.moreunit.core.preferences.Preferences;
+import org.moreunit.core.resources.EclipseWorkspace;
+import org.moreunit.core.resources.SrcFile;
+import org.moreunit.core.resources.Workspace;
 import org.moreunit.core.ui.DialogFactory;
 import org.moreunit.core.ui.UserInterface;
 import org.moreunit.core.ui.WizardFactory;
@@ -91,12 +94,12 @@ public class CoreModule extends Module<CoreModule>
 
     public ExecutionContext getExecutionContext(ExecutionEvent event)
     {
-        return new ExecutionContext(event, this, getLogger());
+        return new ExecutionContext(event);
     }
 
-    public FileMatcher getFileMatcher()
+    public FileMatcher createFileMatcherFor(SrcFile srcFile)
     {
-        return new FileMatcher(getSearchEngine(), getPreferences(), getFileMatchSelector());
+        return new FileMatcher(srcFile, getSearchEngine(), getFileMatchSelector());
     }
 
     public FileMatchSelector getFileMatchSelector()
@@ -141,7 +144,7 @@ public class CoreModule extends Module<CoreModule>
 
     public JumpActionExecutor getJumpActionExecutor()
     {
-        return new JumpActionExecutor(getJumperExtensionManager(), getFileMatcher());
+        return new JumpActionExecutor(getJumperExtensionManager());
     }
 
     public UserInterface getUserInterface(IWorkbench workbench, IWorkbenchPage activePage, Shell activeShell)
@@ -151,6 +154,11 @@ public class CoreModule extends Module<CoreModule>
 
     public WizardFactory getWizardFactory(IWorkbench workbench, Shell activeShell)
     {
-        return new WizardFactory(workbench, activeShell, getLogger());
+        return new WizardFactory(workbench, activeShell);
+    }
+
+    public Workspace getWorkspace()
+    {
+        return EclipseWorkspace.get();
     }
 }

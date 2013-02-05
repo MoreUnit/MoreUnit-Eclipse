@@ -1,24 +1,21 @@
 package org.moreunit.core.commands;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.moreunit.core.extension.JumperExtensionManager;
 import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
-import org.moreunit.core.matching.FileMatcher;
 import org.moreunit.core.matching.MatchingFile;
 import org.moreunit.core.resources.FolderCreationException;
+import org.moreunit.core.resources.SrcFile;
 import org.moreunit.core.ui.UserInterface;
 
 public class JumpActionExecutor
 {
     private final JumperExtensionManager extensionManager;
-    private final FileMatcher fileMatcher;
 
-    public JumpActionExecutor(JumperExtensionManager extensionManager, FileMatcher fileMatcher)
+    public JumpActionExecutor(JumperExtensionManager extensionManager)
     {
         this.extensionManager = extensionManager;
-        this.fileMatcher = fileMatcher;
     }
 
     public void execute(ExecutionContext context) throws ExecutionException
@@ -28,13 +25,13 @@ public class JumpActionExecutor
 
     private void execute(Selection selection, UserInterface ui, ExecutionContext context)
     {
-        IFile selectedFile = selection.getUniqueFile();
-        if(selectedFile == null || selectedFile.getFileExtension() == null)
+        SrcFile selectedFile = selection.getUniqueSrcFile();
+        if(selectedFile == null || ! selectedFile.isSupported())
         {
             return;
         }
 
-        JumpResult jumpResult = extensionManager.jump(new JumpContext(context, selectedFile));
+        JumpResult jumpResult = extensionManager.jump(new JumpContext(context, selectedFile.getUnderlyingPlatformFile()));
         if(jumpResult.isDone())
         {
             return;
@@ -42,7 +39,8 @@ public class JumpActionExecutor
 
         try
         {
-            MatchingFile match = fileMatcher.match(selectedFile);
+            // TODO NDE listeners?
+            MatchingFile match = selectedFile.findUniqueMatch();
             if(match.isSearchCancelled())
             {
                 return;

@@ -12,7 +12,7 @@ public class EclipsePath implements Path
 
     EclipsePath(IPath path)
     {
-        this.path = path;
+        this.path = path.removeTrailingSeparator();
     }
 
     @Override
@@ -112,6 +112,16 @@ public class EclipsePath implements Path
     public String toString()
     {
         return path.toString();
+    }
+
+    @Override
+    public Path uptoSegment(int segmentIndex)
+    {
+        if(segmentIndex > getSegmentCount())
+        {
+            throw new IndexOutOfBoundsException("No segment at index: " + segmentIndex);
+        }
+        return new EclipsePath(path.uptoSegment(segmentIndex));
     }
 
     @Override

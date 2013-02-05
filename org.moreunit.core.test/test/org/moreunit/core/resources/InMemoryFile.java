@@ -1,5 +1,6 @@
 package org.moreunit.core.resources;
 
+import org.eclipse.core.resources.IFile;
 import org.moreunit.core.preferences.ProjectPreferences;
 
 public class InMemoryFile extends InMemoryResource implements File
@@ -40,6 +41,12 @@ public class InMemoryFile extends InMemoryResource implements File
 
     @Override
     public ProjectPreferences getProjectPreferences()
+    {
+        return null;
+    }
+
+    @Override
+    public IFile getUnderlyingPlatformFile()
     {
         return null;
     }

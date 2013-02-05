@@ -4,15 +4,14 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
-import org.moreunit.core.log.Logger;
 
 public class DrivableWizardFactory extends WizardFactory
 {
     private final WizardDriver wizardDriver;
 
-    public DrivableWizardFactory(IWorkbench workbench, Shell activeShell, Logger logger, WizardDriver wizardDriver)
+    public DrivableWizardFactory(IWorkbench workbench, Shell activeShell, WizardDriver wizardDriver)
     {
-        super(workbench, activeShell, logger);
+        super(workbench, activeShell);
         this.wizardDriver = wizardDriver;
     }
 

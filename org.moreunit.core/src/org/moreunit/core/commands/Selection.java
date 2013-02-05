@@ -1,5 +1,7 @@
 package org.moreunit.core.commands;
 
+import static org.moreunit.core.config.CoreModule.$;
+
 import java.util.Collection;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -11,19 +13,35 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.moreunit.core.log.Logger;
+import org.moreunit.core.resources.ConcreteSrcFile;
+import org.moreunit.core.resources.File;
+import org.moreunit.core.resources.SrcFile;
+import org.moreunit.core.resources.Workspace;
 
 public class Selection
 {
     private final ExecutionEvent event;
+    private final Workspace workspace;
     private final Logger logger;
 
-    public Selection(ExecutionEvent event, Logger logger)
+    public Selection(ExecutionEvent event)
     {
         this.event = event;
-        this.logger = logger;
+        this.workspace = $().getWorkspace();
+        this.logger = $().getLogger();
     }
 
-    public IFile getUniqueFile()
+    public SrcFile getUniqueSrcFile()
+    {
+        IFile platformFile = uniqueFile();
+        if(platformFile == null)
+            return null;
+
+        File ourFile = workspace.getFile(platformFile.getFullPath().toString());
+        return new ConcreteSrcFile(ourFile);
+    }
+
+    private IFile uniqueFile()
     {
         Object firstElement = getUniqueSelectedElement(event);
         if(firstElement instanceof IAdaptable)

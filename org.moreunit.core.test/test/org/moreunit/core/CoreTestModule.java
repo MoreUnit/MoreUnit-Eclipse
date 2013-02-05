@@ -44,6 +44,6 @@ public class CoreTestModule extends CoreModule
     @Override
     public WizardFactory getWizardFactory(IWorkbench workbench, Shell activeShell)
     {
-        return new DrivableWizardFactory(workbench, activeShell, getLogger(), wizardDriver);
+        return new DrivableWizardFactory(workbench, activeShell, wizardDriver);
     }
 }

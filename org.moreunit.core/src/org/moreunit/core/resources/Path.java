@@ -24,6 +24,8 @@ public interface Path extends Iterable<String>
 
     Path relativeToProject();
 
+    Path uptoSegment(int segmentIndex);
+
     Path withoutLastSegment();
 
     Path withRelativePath(Path relativePath);

@@ -8,6 +8,7 @@ import org.eclipse.search.core.text.TextSearchEngine;
 import org.eclipse.search.core.text.TextSearchRequestor;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.moreunit.core.log.Logger;
+import org.moreunit.core.resources.Resource;
 
 public class SearchEngine
 {
@@ -22,11 +23,11 @@ public class SearchEngine
         this.logger = logger;
     }
 
-    public void searchFiles(IResource rootResource, Pattern fileNamePattern, TextSearchRequestor requestor)
+    public void searchFiles(Resource rootResource, Pattern fileNamePattern, TextSearchRequestor requestor)
     {
         try
         {
-            TextSearchScope scope = createScope(rootResource, fileNamePattern);
+            TextSearchScope scope = createScope(rootResource.getUnderlyingPlatformResource(), fileNamePattern);
             IStatus searchStatus = searchEngine.search(scope, requestor, ANY_CONTENT, null);
 
             if(searchStatus.getCode() != IStatus.OK)

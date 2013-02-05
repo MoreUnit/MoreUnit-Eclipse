@@ -6,8 +6,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.moreunit.core.matching.TestFolderPathPattern.isValid;
 
-import org.eclipse.core.runtime.Path;
 import org.junit.Test;
+import org.moreunit.core.resources.InMemoryPath;
+import org.moreunit.core.resources.Path;
 
 public class TestFolderPathPatternTest
 {
@@ -185,7 +186,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
-        assertThat(p.getTestPathFor(new Path("js-project/src/")).toString()).isEqualTo("js-project/test");
+        assertThat(p.getTestPathFor(path("js-project/src/")).toString()).isEqualTo("js-project/test");
     }
 
     @Test
@@ -193,7 +194,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
 
-        assertThat(p.getTestPathFor(new Path("js-project")).toString()).isEqualTo("js-project");
+        assertThat(p.getTestPathFor(path("js-project")).toString()).isEqualTo("js-project");
     }
 
     @Test
@@ -201,7 +202,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
 
-        assertThat(p.getTestPathFor(new Path("js-project/src/")).toString()).isEqualTo("js-project/test");
+        assertThat(p.getTestPathFor(path("js-project/src/")).toString()).isEqualTo("js-project/test");
     }
 
     @Test
@@ -209,7 +210,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
 
-        assertThat(p.getTestPathFor(new Path("/js-project/src/")).toString()).isEqualTo("js-project/test");
+        assertThat(p.getTestPathFor(path("/js-project/src/")).toString()).isEqualTo("js-project/test");
     }
 
     @Test
@@ -217,7 +218,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
-        assertThat(p.getTestPathFor(new Path("js-project/src/some/path/to/the/code")).toString()).isEqualTo("js-project/test/some/path/to/the/code");
+        assertThat(p.getTestPathFor(path("js-project/src/some/path/to/the/code")).toString()).isEqualTo("js-project/test/some/path/to/the/code");
     }
 
     @Test
@@ -225,7 +226,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/*/some/path*/", "${srcProject}/test/");
 
-        assertThat(p.getTestPathFor(new Path("js-project/src/rb/some/path-to-the-code")).toString()).isEqualTo("js-project/test");
+        assertThat(p.getTestPathFor(path("js-project/src/rb/some/path-to-the-code")).toString()).isEqualTo("js-project/test");
     }
 
     @Test
@@ -233,7 +234,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "pre-${srcProject}-suf/test/");
 
-        assertThat(p.getTestPathFor(new Path("lisp-project/src/")).toString()).isEqualTo("pre-lisp-project-suf/test");
+        assertThat(p.getTestPathFor(path("lisp-project/src/")).toString()).isEqualTo("pre-lisp-project-suf/test");
     }
 
     @Test
@@ -241,7 +242,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**/java/", "${srcProject}/test/java");
 
-        assertThat(p.getTestPathFor(new Path("myproject/src/some/path/java")).toString()).isEqualTo("myproject/test/java");
+        assertThat(p.getTestPathFor(path("myproject/src/some/path/java")).toString()).isEqualTo("myproject/test/java");
     }
 
     @Test
@@ -249,7 +250,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**", "${srcProject}/test");
 
-        assertThat(p.getTestPathFor(new Path("myproject/src/java/code")).toString()).isEqualTo("myproject/test");
+        assertThat(p.getTestPathFor(path("myproject/src/java/code")).toString()).isEqualTo("myproject/test");
     }
 
     @Test
@@ -257,7 +258,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}/test-\\1/code");
 
-        assertThat(p.getTestPathFor(new Path("myproject/src-java/code")).toString()).isEqualTo("myproject/test-java/code");
+        assertThat(p.getTestPathFor(path("myproject/src-java/code")).toString()).isEqualTo("myproject/test-java/code");
     }
 
     @Test
@@ -265,7 +266,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code-(*)", "${srcProject}/test-\\1/code-\\2");
 
-        assertThat(p.getTestPathFor(new Path("myproject/src-A/code-B")).toString()).isEqualTo("myproject/test-A/code-B");
+        assertThat(p.getTestPathFor(path("myproject/src-A/code-B")).toString()).isEqualTo("myproject/test-A/code-B");
     }
 
     @Test
@@ -273,7 +274,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/(**)/main", "${srcProject}/\\1/test");
 
-        assertThat(p.getTestPathFor(new Path("myproject/src/java/main/code")).toString()).isEqualTo("myproject/src/java/test/code");
+        assertThat(p.getTestPathFor(path("myproject/src/java/main/code")).toString()).isEqualTo("myproject/src/java/test/code");
     }
 
     @Test
@@ -281,7 +282,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/(**)", "${srcProject}/test/\\1");
 
-        assertThat(p.getTestPathFor(new Path("myproject/src/java/code")).toString()).isEqualTo("myproject/test/java/code");
+        assertThat(p.getTestPathFor(path("myproject/src/java/code")).toString()).isEqualTo("myproject/test/java/code");
     }
 
     @Test
@@ -289,7 +290,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
 
-        assertThat(p.getTestPathFor(new Path("myproject/a1/some/path/b2")).toString()).isEqualTo("myproject/x2/y1/some/path");
+        assertThat(p.getTestPathFor(path("myproject/a1/some/path/b2")).toString()).isEqualTo("myproject/x2/y1/some/path");
     }
 
     @Test
@@ -297,7 +298,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
-        assertThat(p.getSrcPathFor(new Path("js-project/test/")).toString()).isEqualTo("js-project/src");
+        assertThat(p.getSrcPathFor(path("js-project/test/")).toString()).isEqualTo("js-project/src");
     }
 
     @Test
@@ -305,7 +306,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
 
-        assertThat(p.getSrcPathFor(new Path("js-project")).toString()).isEqualTo("js-project");
+        assertThat(p.getSrcPathFor(path("js-project")).toString()).isEqualTo("js-project");
     }
 
     @Test
@@ -313,7 +314,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
 
-        assertThat(p.getSrcPathFor(new Path("js-project/test/")).toString()).isEqualTo("js-project/src");
+        assertThat(p.getSrcPathFor(path("js-project/test/")).toString()).isEqualTo("js-project/src");
     }
 
     @Test
@@ -321,7 +322,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
 
-        assertThat(p.getSrcPathFor(new Path("/js-project/test/")).toString()).isEqualTo("js-project/src");
+        assertThat(p.getSrcPathFor(path("/js-project/test/")).toString()).isEqualTo("js-project/src");
     }
 
     @Test
@@ -329,7 +330,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
-        assertThat(p.getSrcPathFor(new Path("js-project/test/some/path/to/the/code")).toString()).isEqualTo("js-project/src/some/path/to/the/code");
+        assertThat(p.getSrcPathFor(path("js-project/test/some/path/to/the/code")).toString()).isEqualTo("js-project/src/some/path/to/the/code");
     }
 
     @Test
@@ -337,7 +338,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/*/some/path*/", "${srcProject}/test/");
 
-        assertThat(p.getSrcPathFor(new Path("js-project/test/")).toString()).isEqualTo("js-project/src/[^/]*/some/path[^/]*");
+        assertThat(p.getSrcPathFor(path("js-project/test/")).toString()).isEqualTo("js-project/src/[^/]*/some/path[^/]*");
     }
 
     @Test
@@ -345,7 +346,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "pre-${srcProject}-suf/test/");
 
-        assertThat(p.getSrcPathFor(new Path("pre-rb-project-suf/test/")).toString()).isEqualTo("rb-project/src");
+        assertThat(p.getSrcPathFor(path("pre-rb-project-suf/test/")).toString()).isEqualTo("rb-project/src");
     }
 
     @Test
@@ -353,7 +354,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**/java/", "${srcProject}/test/java");
 
-        assertThat(p.getSrcPathFor(new Path("myproject/test/java")).toString()).isEqualTo("myproject/src/.*/java");
+        assertThat(p.getSrcPathFor(path("myproject/test/java")).toString()).isEqualTo("myproject/src/.*/java");
     }
 
     @Test
@@ -361,7 +362,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}-test/test-\\1/code");
 
-        assertThat(p.getSrcPathFor(new Path("myproject-test/test-java/code")).toString()).isEqualTo("myproject/src-java/code");
+        assertThat(p.getSrcPathFor(path("myproject-test/test-java/code")).toString()).isEqualTo("myproject/src-java/code");
     }
 
     @Test
@@ -371,7 +372,7 @@ public class TestFolderPathPatternTest
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}-test/test-\\1/code");
 
         // does not start with myproject-test
-        Path tstPath = new Path("myproject/test-java/code");
+        Path tstPath = path("myproject/test-java/code");
 
         try
         {
@@ -382,7 +383,7 @@ public class TestFolderPathPatternTest
         catch (DoesNotMatchConfigurationException e)
         {
             // then
-            assertThat(e.getPath()).isEqualTo(tstPath);
+            assertThat((Object) e.getPath()).isEqualTo(tstPath);
         }
     }
 
@@ -391,7 +392,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/X-(*)/Y-(*)/Z-(*)", "${srcProject}/U-\\1/V-\\2/W-\\3");
 
-        assertThat(p.getSrcPathFor(new Path("myproject/U-A/V-B/W-C")).toString()).isEqualTo("myproject/X-A/Y-B/Z-C");
+        assertThat(p.getSrcPathFor(path("myproject/U-A/V-B/W-C")).toString()).isEqualTo("myproject/X-A/Y-B/Z-C");
     }
 
     @Test
@@ -399,7 +400,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/X-(*)/Y-(*)/Z-(*)", "${srcProject}/U-\\3/V-\\1/W-\\2");
 
-        assertThat(p.getSrcPathFor(new Path("myproject/U-A/V-B/W-C")).toString()).isEqualTo("myproject/X-B/Y-C/Z-A");
+        assertThat(p.getSrcPathFor(path("myproject/U-A/V-B/W-C")).toString()).isEqualTo("myproject/X-B/Y-C/Z-A");
     }
 
     @Test
@@ -407,7 +408,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/(**)/main", "${srcProject}/\\1/test");
 
-        assertThat(p.getSrcPathFor(new Path("myproject/src/java/test/code")).toString()).isEqualTo("myproject/src/java/main/code");
+        assertThat(p.getSrcPathFor(path("myproject/src/java/test/code")).toString()).isEqualTo("myproject/src/java/main/code");
     }
 
     @Test
@@ -415,7 +416,7 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/(**)", "${srcProject}/test/\\1");
 
-        assertThat(p.getSrcPathFor(new Path("myproject/test/java/code")).toString()).isEqualTo("myproject/src/java/code");
+        assertThat(p.getSrcPathFor(path("myproject/test/java/code")).toString()).isEqualTo("myproject/src/java/code");
     }
 
     @Test
@@ -423,6 +424,11 @@ public class TestFolderPathPatternTest
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
 
-        assertThat(p.getSrcPathFor(new Path("myproject/x2/y1/some/path")).toString()).isEqualTo("myproject/a1/some/path/b2");
+        assertThat(p.getSrcPathFor(path("myproject/x2/y1/some/path")).toString()).isEqualTo("myproject/a1/some/path/b2");
+    }
+
+    private Path path(String pathStr)
+    {
+        return new InMemoryPath(pathStr);
     }
 }

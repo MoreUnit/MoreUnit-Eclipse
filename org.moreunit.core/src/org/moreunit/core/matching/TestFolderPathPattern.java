@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.moreunit.core.resources.Path;
 import org.moreunit.core.util.Strings;
 
 public class TestFolderPathPattern
@@ -179,22 +178,22 @@ public class TestFolderPathPattern
         return true;
     }
 
-    public SourceFolderPath getTestPathFor(IPath srcPath) throws DoesNotMatchConfigurationException
+    public SourceFolderPath getTestPathFor(Path srcPath) throws DoesNotMatchConfigurationException
     {
-        String p = removeSurroundingSlashes(srcPath.toString());
-        String projectName = getProjectName(p);
+        String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
+        String projectName = getProjectName(cleanSrcPath);
 
         String srcPathTpl = getSrcPathTemplateForSrcProject(projectName);
-        String codePathWithinSrcFolder = p.replaceFirst(srcPathTpl, "");
+        String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
         srcPathTpl += codePathWithinSrcFolder;
-        tstPathTpl = resolveGroups(p, srcPathTpl, tstPathTpl, srcPath);
+        tstPathTpl = resolveGroups(cleanSrcPath, srcPathTpl, tstPathTpl, srcPath);
 
         return new SourceFolderPath(tstPathTpl);
     }
 
-    private String resolveGroups(String path, String tplWithGroups, String tplWithRefs, IPath analizedPath) throws DoesNotMatchConfigurationException
+    private String resolveGroups(String path, String tplWithGroups, String tplWithRefs, Path analizedPath) throws DoesNotMatchConfigurationException
     {
         String result = tplWithRefs;
 
@@ -224,15 +223,11 @@ public class TestFolderPathPattern
         return result;
     }
 
-    public SourceFolderPath getSrcPathFor(IPath tstPath) throws DoesNotMatchConfigurationException
+    public SourceFolderPath getSrcPathFor(Path testPath) throws DoesNotMatchConfigurationException
     {
-        String tstProjectName = tstPath.segment(0);
-
-        String srcProjectName = getSrcProjectName(tstProjectName, tstPath);
-
-        IPath srcPath = new Path(tstProjectName + "/" + tstPath.removeFirstSegments(1));
-
-        String p = removeSurroundingSlashes(srcPath.toString());
+        String tstProjectName = testPath.getProjectName();
+        String srcProjectName = getSrcProjectName(tstProjectName, testPath);
+        String cleanTestPath = removeSurroundingSlashes(testPath.toString());
 
         String tstPathTpl = getTestPathTemplateForSrcProject(srcProjectName);
         List<GroupRef> groupRefs = getGroupRefs(tstPathTpl);
@@ -241,14 +236,14 @@ public class TestFolderPathPattern
         String srcPathTpl = getSrcPathTemplateForSrcProject(srcProjectName);
         srcPathTpl = replaceGroupsWithRefs(srcPathTpl, groupRefs);
 
-        String codePathWithinSrcFolder = p.replaceFirst(tstPathTpl, "");
+        String codePathWithinSrcFolder = cleanTestPath.replaceFirst(tstPathTpl, "");
         if(codePathWithinSrcFolder.length() != 0 && ! codePathWithinSrcFolder.startsWith(tstProjectName))
         {
             srcPathTpl += codePathWithinSrcFolder;
             tstPathTpl += codePathWithinSrcFolder;
         }
 
-        srcPathTpl = resolveGroups(p, tstPathTpl, srcPathTpl, tstPath);
+        srcPathTpl = resolveGroups(cleanTestPath, tstPathTpl, srcPathTpl, testPath);
 
         return new SourceFolderPath(srcPathTpl);
     }
@@ -271,7 +266,7 @@ public class TestFolderPathPattern
         return result;
     }
 
-    private String getSrcProjectName(String tstProjectName, IPath tstPath) throws DoesNotMatchConfigurationException
+    private String getSrcProjectName(String tstProjectName, Path tstPath) throws DoesNotMatchConfigurationException
     {
         Matcher m = testProjectPattern.matcher(tstProjectName);
         if(! m.matches())

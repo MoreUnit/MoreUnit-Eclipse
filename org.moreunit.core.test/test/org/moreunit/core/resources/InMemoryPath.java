@@ -139,6 +139,25 @@ public class InMemoryPath implements Path
     }
 
     @Override
+    public Path uptoSegment(int segmentIndex)
+    {
+        if(segmentIndex > getSegmentCount())
+        {
+            throw new IndexOutOfBoundsException("No segment at index: " + segmentIndex);
+        }
+
+        StringBuilder result = new StringBuilder(isAbsolute() ? "/" : "");
+        for (int i = 1; i <= segmentIndex; i++)
+        {
+            if(i != 1)
+                result.append("/");
+
+            result.append(segments.get(i - 1));
+        }
+        return new InMemoryPath(result.toString());
+    }
+
+    @Override
     public InMemoryPath withoutLastSegment()
     {
         int lastSlashIdx = path.lastIndexOf("/");
