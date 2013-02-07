@@ -3,7 +3,7 @@ package org.moreunit.core.languages;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.moreunit.core.Service;
+import org.moreunit.core.config.Service;
 import org.moreunit.core.extension.LanguageExtensionManager;
 
 public class MainLanguageRepository implements LanguageRepository, Service

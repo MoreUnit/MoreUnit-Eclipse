@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.moreunit.core.Service;
 import org.moreunit.core.log.Logger;
 import org.osgi.framework.BundleContext;
 
+/**
+ * A module contributes configuration information, such as instances to use when
+ * a dependency of some type is required, or system properties. Simply extend
+ * this class to create a module.
+ * <p>
+ * A module also takes care of starting and stopping any {@link Service} that is
+ * {@link #registerService(Service) registered} into it.
+ */
 public abstract class Module<M extends Module<M>>
 {
     private final List<Service> services = new ArrayList<Service>();
@@ -51,14 +58,25 @@ public abstract class Module<M extends Module<M>>
         return context;
     }
 
-    public void start(BundleContext context)
+    /**
+     * Starts this module:
+     * <ul>
+     * <li>{@link #prepare() prepares} it
+     * <li>then starts services {@link #registerService(Service) registered}
+     * into it
+     * </ul>
+     */
+    public final void start(BundleContext context)
     {
         this.context = context;
-        doStart();
+        prepare();
         startServices();
     }
 
-    protected abstract void doStart();
+    /**
+     * Prepares this module when it is {@link #start(BundleContext) started}.
+     */
+    protected abstract void prepare();
 
     private void startServices()
     {
@@ -75,14 +93,24 @@ public abstract class Module<M extends Module<M>>
         }
     }
 
-    public void stop()
+    /**
+     * Stops this module:
+     * <ul>
+     * <li>stops services {@link #registerService(Service) registered} into it
+     * <li>then {@link #clean() cleans} it
+     * </ul>
+     */
+    public final void stop()
     {
         stopServices();
-        doStop();
+        clean();
         context = null;
     }
 
-    protected abstract void doStop();
+    /**
+     * Cleans this module when it is {@link #stop() stopped}.
+     */
+    protected abstract void clean();
 
     private void stopServices()
     {
@@ -101,6 +129,10 @@ public abstract class Module<M extends Module<M>>
         }
     }
 
+    /**
+     * Registers a service into this module, allowing it for being started and
+     * stopped together with the module.
+     */
     protected final void registerService(Service s)
     {
         services.add(s);

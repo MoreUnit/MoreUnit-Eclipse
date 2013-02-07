@@ -3,7 +3,7 @@ package org.moreunit.mock.templates;
 import java.net.URL;
 import java.util.Collection;
 
-import org.moreunit.core.Service;
+import org.moreunit.core.config.Service;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.PluginResourceLoader;
 import org.moreunit.mock.model.MockingTemplates;

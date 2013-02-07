@@ -27,6 +27,10 @@ import org.moreunit.core.ui.DialogFactory;
 import org.moreunit.core.ui.UserInterface;
 import org.moreunit.core.ui.WizardFactory;
 
+/**
+ * A {@link Module} defining the configuration of the plugin
+ * {@code org.moreunit.core}. This class is a singleton.
+ */
 public class CoreModule extends Module<CoreModule>
 {
     private static CoreModule instance = new CoreModule(false);
@@ -44,6 +48,11 @@ public class CoreModule extends Module<CoreModule>
         super(override);
     }
 
+    /**
+     * Returns the current instance of CoreModule. The name of this method is
+     * not very descriptive, but it avoids cluttering the code with statements
+     * such as: {@code CoreModule.getInstance()}.
+     */
     public static CoreModule $()
     {
         return instance;
@@ -62,7 +71,7 @@ public class CoreModule extends Module<CoreModule>
     }
 
     @Override
-    protected void doStart()
+    protected void prepare()
     {
         logger = new DefaultLogger(getPlugin().getLog(), MoreUnitCore.PLUGIN_ID, LOG_LEVEL_PROPERTY);
         preferences = new Preferences(getPlugin().getPreferenceStore(), logger);
@@ -78,7 +87,7 @@ public class CoreModule extends Module<CoreModule>
     }
 
     @Override
-    protected void doStop()
+    protected void clean()
     {
         pageManager = null;
         languageRepository = null;

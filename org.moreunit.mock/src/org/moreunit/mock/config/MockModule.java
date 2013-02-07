@@ -20,6 +20,10 @@ import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 import org.moreunit.mock.wizard.WizardFactory;
 
+/**
+ * A {@link Module} defining the configuration of the plugin
+ * {@code org.moreunit.mock}. This class is a singleton.
+ */
 public class MockModule extends Module<MockModule>
 {
     private static MockModule instance = new MockModule(false);
@@ -37,6 +41,11 @@ public class MockModule extends Module<MockModule>
         super(override);
     }
 
+    /**
+     * Returns the current instance of MockModule. The name of this method is
+     * not very descriptive, but it avoids cluttering the code with statements
+     * such as: {@code MockModule.getInstance()}.
+     */
     public static MockModule $()
     {
         return instance;
@@ -55,7 +64,7 @@ public class MockModule extends Module<MockModule>
     }
 
     @Override
-    protected void doStart()
+    protected void prepare()
     {
         logger = new DefaultLogger(getPlugin().getLog(), MoreUnitMockPlugin.PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
@@ -70,7 +79,7 @@ public class MockModule extends Module<MockModule>
     }
 
     @Override
-    protected void doStop()
+    protected void clean()
     {
         templateLoader = null;
         mockingTemplateStore = null;

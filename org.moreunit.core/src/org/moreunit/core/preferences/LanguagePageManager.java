@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.moreunit.core.MoreUnitCore;
-import org.moreunit.core.Service;
+import org.moreunit.core.config.Service;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageConfigurationListener;
 import org.moreunit.core.languages.LanguageRepository;
