@@ -7,6 +7,7 @@ import static org.eclipse.jdt.core.search.SearchPattern.R_PATTERN_MATCH;
 import static org.eclipse.jdt.core.search.SearchPattern.createOrPattern;
 import static org.eclipse.jdt.core.search.SearchPattern.createPattern;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -42,7 +43,14 @@ public class SearchTools
 
         new SearchEngine().search(pattern, participants, scope, collector, null);
 
-        return collector.matches;
+        return getMatchesPreservingOrder(collector);
+    }
+
+    private static Set<IType> getMatchesPreservingOrder(MatchCollector collector)
+    {
+        // copy preserving order (we don't pass the TreeSet, since it does not
+        // allow for calling contains() with an object that is not an IType)
+        return new LinkedHashSet<IType>(collector.matches);
     }
 
     private static SearchPattern createSearchPattern(List<String> typeNamePatterns, int searchFor, int limitTo, int matchRule)
