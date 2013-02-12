@@ -6,7 +6,6 @@ import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.matching.MatchingFile;
 import org.moreunit.core.resources.FolderCreationException;
-import org.moreunit.core.resources.SrcFile;
 import org.moreunit.core.ui.UserInterface;
 
 public class JumpActionExecutor
@@ -20,18 +19,18 @@ public class JumpActionExecutor
 
     public void execute(ExecutionContext context) throws ExecutionException
     {
-        execute(context.getSelection(), context.getUserInterface(), context);
+        execute(context.getSelection(), context.getUserInterface());
     }
 
-    private void execute(Selection selection, UserInterface ui, ExecutionContext context)
+    private void execute(Selection selection, UserInterface ui)
     {
-        SrcFile selectedFile = selection.getUniqueSrcFile();
-        if(selectedFile == null || ! selectedFile.isSupported())
+        SelectedSrcFile selectedFile = selection.getUniqueSrcFile();
+        if(! selectedFile.isSupported())
         {
             return;
         }
 
-        JumpResult jumpResult = extensionManager.jump(new JumpContext(context, selectedFile.getUnderlyingPlatformFile()));
+        JumpResult jumpResult = extensionManager.jump(selectedFile.createJumpContext());
         if(jumpResult.isDone())
         {
             return;
@@ -39,8 +38,8 @@ public class JumpActionExecutor
 
         try
         {
-            // TODO NDE listeners?
-            MatchingFile match = selectedFile.findUniqueMatch();
+            // TODO Nicolas refactor this part (listeners?)
+            MatchingFile match = selectedFile.getSrcFile().findUniqueMatch();
             if(match.isSearchCancelled())
             {
                 return;

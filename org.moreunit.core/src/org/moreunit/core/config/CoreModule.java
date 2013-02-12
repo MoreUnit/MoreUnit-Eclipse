@@ -103,7 +103,7 @@ public class CoreModule extends Module<CoreModule>
 
     public ExecutionContext getExecutionContext(ExecutionEvent event)
     {
-        return new ExecutionContext(event);
+        return new ExecutionContext(event, getLogger());
     }
 
     public FileMatcher createFileMatcherFor(SrcFile srcFile)
