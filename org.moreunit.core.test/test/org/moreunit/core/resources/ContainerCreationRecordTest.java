@@ -34,6 +34,19 @@ public class ContainerCreationRecordTest
     }
 
     @Test
+    public void should_ignore_cancellation_when_there_is_nothing_to_cancel() throws Exception
+    {
+        // given
+        ContainerCreationRecord emptyRecord = new ContainerCreationRecord();
+
+        // when
+        emptyRecord.cancelCreation();
+        emptyRecord.cancelCreationOfFoldersThatAreNotAncestorsOf(workspace.getFile("/segment1/segment2/someFile"));
+
+        // then no exception
+    }
+
+    @Test
     public void should_delete_greatest_parent_folder_that_has_been_added_when_cancelling_whole_folder_creation() throws Exception
     {
         // when

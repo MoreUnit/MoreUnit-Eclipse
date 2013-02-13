@@ -14,7 +14,8 @@ public class ContainerCreationRecord
 
     public void cancelCreation()
     {
-        createdContainers.getLast().delete();
+        if(! createdContainers.isEmpty())
+            createdContainers.getLast().delete();
     }
 
     public void cancelCreationOfFoldersThatAreNotAncestorsOf(Resource resource)
