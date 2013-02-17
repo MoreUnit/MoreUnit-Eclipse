@@ -19,21 +19,21 @@ public class FileMatcher
         this.matchSelector = matchSelector;
     }
 
-    public MatchResult match() throws DoesNotMatchConfigurationException
+    public MatchResult match(MatchStrategy strategy) throws DoesNotMatchConfigurationException
     {
         FileNameEvaluation nameEvaluation = file.evaluateName();
         SourceFolderPath correspondingSrcFolder = file.findCorrespondingSrcFolder();
 
-        MatchResult matchCollector = new MatchResult(createPreferredFileName(nameEvaluation), correspondingSrcFolder, matchSelector);
+        FileMatchCollector matchCollector = strategy.createMatchCollector(correspondingSrcFolder);
         Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
         searchFor(nameEvaluation.getPreferredCorrespondingFilePatterns(), searchFolder, matchCollector);
         searchFor(nameEvaluation.getOtherCorrespondingFilePatterns(), searchFolder, matchCollector);
 
-        return matchCollector;
+        return new MatchResult(matchCollector, createPreferredFileName(nameEvaluation), correspondingSrcFolder, matchSelector);
     }
 
-    private void searchFor(Collection<String> filePatterns, Resource searchFolder, MatchResult matchCollector)
+    private void searchFor(Collection<String> filePatterns, Resource searchFolder, FileMatchCollector matchCollector)
     {
         if(filePatterns.isEmpty())
             return;

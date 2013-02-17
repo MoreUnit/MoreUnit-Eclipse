@@ -2,6 +2,7 @@ package org.moreunit.core.resources;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.moreunit.core.preferences.Preferences;
 
 public interface Workspace extends ResourceContainer
@@ -13,4 +14,8 @@ public interface Workspace extends ResourceContainer
     List<Project> listProjects();
 
     Path path(String path);
+
+    File toFile(IFile platformFile);
+
+    SrcFile toSrcFile(IFile platformFile);
 }

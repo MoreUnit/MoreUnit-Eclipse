@@ -109,4 +109,19 @@
          </enabledWhen>
       </page>
    </extension>
+   
+   <extension point="org.eclipse.ui.decorators">
+      <decorator id="org.moreunit.core.decorators.testedFileDecorator"
+         label="Tested File Indicator (MoreUnit)"
+         state="true"
+         class="org.moreunit.core.decorators.TestedFileDecorator"
+         adaptable="true"
+         lightweight="true">
+            <enablement>
+               <objectClass name="org.eclipse.core.resources.IFile"/>
+            </enablement>
+            <description>Decorates source files which have a corresponding test file.</description>
+      </decorator>
+   </extension>
+
 </plugin>

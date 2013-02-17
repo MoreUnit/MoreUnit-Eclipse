@@ -18,7 +18,12 @@ public interface SrcFile extends File
 
     IFile getUnderlyingPlatformFile();
 
+    boolean hasCorrespondingFiles() throws DoesNotMatchConfigurationException;
+
+    boolean hasDefaultSupport();
+
     boolean isSupported();
 
     boolean isTestFile();
+
 }

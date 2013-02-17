@@ -8,8 +8,6 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.IEditorPart;
-import org.moreunit.core.resources.ConcreteSrcFile;
-import org.moreunit.core.resources.File;
 import org.moreunit.core.resources.SrcFile;
 import org.moreunit.core.resources.Workspace;
 
@@ -47,8 +45,7 @@ public class Selection
 
     private SrcFile toSrcFile(IFile platformFile)
     {
-        File ourFile = workspace.getFile(platformFile.getFullPath().toString());
-        return new ConcreteSrcFile(ourFile);
+        return workspace.toSrcFile(platformFile);
     }
 
     private Object getUniqueSelectedElement()

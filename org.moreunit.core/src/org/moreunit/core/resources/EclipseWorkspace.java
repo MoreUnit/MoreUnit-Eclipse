@@ -6,6 +6,7 @@ import static org.moreunit.core.util.Preconditions.checkArgument;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -94,5 +95,17 @@ public class EclipseWorkspace extends EclipseResourceContainer implements Worksp
     public Path path(String path)
     {
         return new EclipsePath(new org.eclipse.core.runtime.Path(path));
+    }
+
+    @Override
+    public File toFile(IFile platformFile)
+    {
+        return new EclipseFile(platformFile);
+    }
+
+    @Override
+    public SrcFile toSrcFile(IFile platformFile)
+    {
+        return new ConcreteSrcFile(toFile(platformFile));
     }
 }

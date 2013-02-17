@@ -1,30 +1,27 @@
 package org.moreunit.core.matching;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.search.core.text.TextSearchRequestor;
 
-public class MatchResult extends TextSearchRequestor
+public class MatchResult
 {
-    private final Set<IFile> results = new LinkedHashSet<IFile>();
+    private final FileMatchCollector matchCollector;
     private final String preferredFileName;
     private final SourceFolderPath correspondingSrcFolder;
     private final FileMatchSelector matchSelector;
-    private final boolean checkFolder;
 
-    public MatchResult(String preferredFileName, SourceFolderPath correspondingSrcFolder, FileMatchSelector matchSelector)
+    public MatchResult(FileMatchCollector matchCollector, String preferredFileName, SourceFolderPath correspondingSrcFolder, FileMatchSelector matchSelector)
     {
+        this.matchCollector = matchCollector;
         this.preferredFileName = preferredFileName;
         this.correspondingSrcFolder = correspondingSrcFolder;
         this.matchSelector = matchSelector;
-        checkFolder = ! correspondingSrcFolder.isResolved();
     }
 
     public MatchingFile getUniqueMatchingFile()
     {
+        Set<IFile> results = matchCollector.getResults();
         if(results.isEmpty())
         {
             return MatchingFile.notFound(correspondingSrcFolder, preferredFileName);
@@ -43,13 +40,8 @@ public class MatchResult extends TextSearchRequestor
         return MatchingFile.searchCancelled();
     }
 
-    @Override
-    public boolean acceptFile(IFile file) throws CoreException
+    public boolean matchFound()
     {
-        if(! checkFolder || correspondingSrcFolder.matches(file))
-        {
-            results.add(file);
-        }
-        return false;
+        return ! matchCollector.getResults().isEmpty();
     }
 }

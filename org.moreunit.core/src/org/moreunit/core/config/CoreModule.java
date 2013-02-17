@@ -24,6 +24,7 @@ import org.moreunit.core.resources.EclipseWorkspace;
 import org.moreunit.core.resources.SrcFile;
 import org.moreunit.core.resources.Workspace;
 import org.moreunit.core.ui.DialogFactory;
+import org.moreunit.core.ui.ImageRegistry;
 import org.moreunit.core.ui.UserInterface;
 import org.moreunit.core.ui.WizardFactory;
 
@@ -42,6 +43,7 @@ public class CoreModule extends Module<CoreModule>
     private LanguageExtensionManager languageExtensionManager;
     private MainLanguageRepository languageRepository;
     private Preferences preferences;
+    private ImageRegistry imageRegistry;
 
     protected CoreModule(boolean override)
     {
@@ -75,6 +77,7 @@ public class CoreModule extends Module<CoreModule>
     {
         logger = new DefaultLogger(getPlugin().getLog(), MoreUnitCore.PLUGIN_ID, LOG_LEVEL_PROPERTY);
         preferences = new Preferences(getPlugin().getPreferenceStore(), logger);
+        imageRegistry = new ImageRegistry();
 
         languageExtensionManager = new LanguageExtensionManager(getContext(), logger);
 
@@ -92,6 +95,7 @@ public class CoreModule extends Module<CoreModule>
         pageManager = null;
         languageRepository = null;
         languageExtensionManager = null;
+        imageRegistry = null;
         preferences = null;
         logger = null;
     }
@@ -116,6 +120,16 @@ public class CoreModule extends Module<CoreModule>
         return new DefaultFileMatchSelector(getLogger());
     }
 
+    public ImageRegistry getImageRegistry()
+    {
+        return imageRegistry;
+    }
+
+    public JumpActionExecutor getJumpActionExecutor()
+    {
+        return new JumpActionExecutor(getJumperExtensionManager());
+    }
+
     public JumperExtensionManager getJumperExtensionManager()
     {
         return new JumperExtensionManager(getLanguageExtensionManager(), getLogger());
@@ -124,6 +138,11 @@ public class CoreModule extends Module<CoreModule>
     public LanguageExtensionManager getLanguageExtensionManager()
     {
         return languageExtensionManager;
+    }
+
+    public LanguageRepository getLanguageRepository()
+    {
+        return languageRepository;
     }
 
     public Logger getLogger()
@@ -144,16 +163,6 @@ public class CoreModule extends Module<CoreModule>
     public SearchEngine getSearchEngine()
     {
         return new SearchEngine(TextSearchEngine.create(), getLogger());
-    }
-
-    public LanguageRepository getLanguageRepository()
-    {
-        return languageRepository;
-    }
-
-    public JumpActionExecutor getJumpActionExecutor()
-    {
-        return new JumpActionExecutor(getJumperExtensionManager());
     }
 
     public UserInterface getUserInterface(IWorkbench workbench, IWorkbenchPage activePage, Shell activeShell)

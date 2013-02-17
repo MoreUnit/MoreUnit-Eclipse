@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.eclipse.core.resources.IFile;
 import org.moreunit.core.preferences.Preferences;
 
 public final class InMemoryWorkspace extends InMemoryResourceContainer implements Workspace
@@ -98,5 +99,17 @@ public final class InMemoryWorkspace extends InMemoryResourceContainer implement
     public Path path(String path)
     {
         return new InMemoryPath(path);
+    }
+
+    @Override
+    public File toFile(IFile platformFile)
+    {
+        return getFile(platformFile.getFullPath().toString());
+    }
+
+    @Override
+    public SrcFile toSrcFile(IFile platformFile)
+    {
+        return new ConcreteSrcFile(toFile(platformFile));
     }
 }
