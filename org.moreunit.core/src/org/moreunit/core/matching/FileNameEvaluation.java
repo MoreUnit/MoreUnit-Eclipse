@@ -1,5 +1,6 @@
 package org.moreunit.core.matching;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -39,6 +40,13 @@ public final class FileNameEvaluation
     public boolean isTestFile()
     {
         return testFile;
+    }
+
+    public Collection<String> getAllCorrespondingFilePatterns()
+    {
+        Collection<String> result = new ArrayList<String>(preferredCorrespondingFilePatterns);
+        result.addAll(otherCorrespondingFilePatterns);
+        return result;
     }
 
     /**

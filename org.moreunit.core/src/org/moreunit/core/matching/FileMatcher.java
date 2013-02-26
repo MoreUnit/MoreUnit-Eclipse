@@ -27,8 +27,7 @@ public class FileMatcher
         FileMatchCollector matchCollector = strategy.createMatchCollector(correspondingSrcFolder);
         Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
-        searchFor(nameEvaluation.getPreferredCorrespondingFilePatterns(), searchFolder, matchCollector);
-        searchFor(nameEvaluation.getOtherCorrespondingFilePatterns(), searchFolder, matchCollector);
+        searchFor(nameEvaluation.getAllCorrespondingFilePatterns(), searchFolder, matchCollector);
 
         return new MatchResult(matchCollector, createPreferredFileName(nameEvaluation), correspondingSrcFolder, matchSelector);
     }
