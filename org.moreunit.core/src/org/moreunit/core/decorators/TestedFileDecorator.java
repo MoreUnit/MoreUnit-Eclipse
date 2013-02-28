@@ -6,6 +6,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.resources.SrcFile;
@@ -46,5 +48,20 @@ public class TestedFileDecorator extends LabelProvider implements ILightweightLa
             if(logger.debugEnabled())
                 logger.debug(e.getPath() + " does not match source folder preferences");
         }
+    }
+
+    /**
+     * Returns the decorator if already instantiated by Eclipse. We can silently
+     * ignore the case when it has not yet been created by Eclipse:
+     * TestedFileDecorator.decorate() will be called soon or later
+     */
+    public static TestedFileDecorator getInstanceIfExisting()
+    {
+        return (TestedFileDecorator) MoreUnitCore.get().getWorkbench().getDecoratorManager().getBaseLabelProvider("org.moreunit.core.decorators.testedFileDecorator");
+    }
+
+    public void refreshIndicatorFor(Object... elements)
+    {
+        fireLabelProviderChanged(new LabelProviderChangedEvent(this, elements));
     }
 }
