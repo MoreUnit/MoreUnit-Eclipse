@@ -57,8 +57,8 @@
 		<article id="overview">
 			<header>Overview</header>
 			<section>
-				<p>MoreUnit is an Eclipse plugin that should assist you in writing more unit tests. This is a short overview of the features it provides, for
-				further information take a look at the <a href="#doc">documentation</a> section:</p>
+				<p>MoreUnit is an Eclipse plugin that should assist you in writing more unit tests, mainly targeted at the Java language. This is a short
+				overview of the features it provides, for further information take a look at the <a href="#doc">documentation</a> section:</p>
 				<ul>
 					<li>MoreUnit decorates classes which have a test case.</li>
 					<li>It marks methods in the editor which are under test.</li>
@@ -92,18 +92,22 @@
 			</section>
 
 			<section id="new">
-				<h1>MoreUnit 3 is out! (Well, sort of...)</h1>
-				<p>We just released MoreUnit 3.0.0.<strong>02</strong>. Yep, that's a lot of numbers!</p>
-				<p>The <strong>02</strong> part informs you that this version is a milestone on the road to the actual version 3.0.0 that we wanted to release. Unfortunately, we're quite busy right now and we do not progress as fast as we would like. Therefore we decided to deliver this <em>major</em> version incrementally.<br />
-				That said, no worry: this version isn't less stable than any other one!</p>
-				<p>Now, what makes this version a major one? Mainly: we added <strong>basic support for all programming languages</strong>, as well as a more powerful way to define your test naming patterns. Also, we moved a lots of things internally. For a more complete list of changes, see the <a href="#releasenotes">release notes</a>.</p>
-				<p>And here is what will come before MoreUnit 3 is deemed &quot;complete&quot;:</p>
-				<ul>
-					<li>Addition of markers for all test files.</li>
-					<li>New templates to generate boiler-plate code for JMockit and Powermock, as requested by some users. (Don't hesitate to ask us for integrating other ones!)</li>
-					<li class="done">[Done] Migration to Java 6.</li>
-					<li class="partially-done">[In Progress] Slimming cure: MoreUnit's download size will lose almost 2MB (1MB already lost).</li>
-				</ul>
+				<h1>MoreUnit 3.0.1 is out!</h1>
+				<p>We released MoreUnit 3.0.<strong>1</strong>. Finally.<br />
+				As we've already written some months ago, we were &mdash; and we still are &mdash; quite busy in our personal lives, therefore it took us some
+				time to release this version.</p>
+				<p>What makes version 3.0 a major one? Mainly: we added <strong>basic support for all programming languages</strong>, as well as a more powerful way
+				to define your test naming patterns. Also, we conducted a spring cleaning internally. For a more complete list of changes, please refer to the
+				<a href="#releasenotes">release notes</a>.</p>
+				<p>We do think we will have more time to work on MoreUnit soon, and here is our todo-list:</p>
+				<ol>
+					<li>Fix various bugs related to MoreUnit's support for TestNG. TestNG has been supported from the very beginning of MoreUnit but it did not
+					received as much testing effort as JUnit &mdash; that's an euphemism &mdash; and we are now facing various inconsistencies and regressions.
+					(Dear TestNG users, thanks for your recent reports ;-)</li>
+					<li>Consider various feature requests.</li>
+					<li>Properly separate Groovy support from the Java one.</li>
+					<li>Study the possibilities of bringing MoreUnit's Java features to Scala.</li>
+				</ol>
 			</section>
 		</article>
 		<article id="doc">
@@ -411,9 +415,19 @@
 		<article id="releasenotes">
 			<header>Release Notes</header>
 			<section>
+				<h2>2013-01-06: Version 3.0.1 released</h2>
+				<ul>
+					<li>Adds a marker on (non-java) files that are tested</li>
+					<li>Adds support for JMockit and PowerMock in test code generation</li>
+					<li>Fix: restores direct jump to test(ed) method (Java)</li>
+					<li>Fix: (bug 3594659) Selection of TestNG type in NewTestCaseWizard disabled JUnit 4 test type</li>
+					<li>Fix: (bug 3592788) Wrong creation of test method stubs when using test case creation wizard</li>
+					<li>Removes dependencies in order to reduce MoreUnit's download size</li>
+				</ul>
+
 				<h2>2012-12-04: Version 3.0.0<em>.02</em> released</h2>
 				<ul>
-					<li>Migration to Java 6</li>
+					<li>Migration to Java 6 (reduces MoreUnit's download size)</li>
 					<li>Fix: (bug 3592074) error when using "Move" refactoring</li>
 					<li>Fix: (bug 3592379) uses TestNG's org.testng.annotations.BeforeMethod annotation</li>
 					<li>Fix: mocking code generation for test classes with parent or comments</li>
