@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit.light"
       label="MoreUnit Light"
-      version="3.0.0.01"
+      version="3.0.1.qualifier"
       provider-name="MoreUnit.org"
       plugin="org.moreunit.core">
 

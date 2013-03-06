@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit"
       label="MoreUnit For Java"
-      version="3.0.0.01"
+      version="3.0.1.qualifier"
       provider-name="MoreUnit.org"
       plugin="org.moreunit">
 

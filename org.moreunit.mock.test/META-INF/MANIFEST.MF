@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Mocking Support Tests
 Bundle-SymbolicName: org.moreunit.mock.test
-Bundle-Version: 3.0.0.01
+Bundle-Version: 3.0.1.qualifier
 Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: MoreUnit.org
