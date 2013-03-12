@@ -5,7 +5,7 @@ import org.moreunit.test.context.TestType;
 
 @Preferences(
         testType = TestType.JUNIT3,
-        testClassSuffixes = "Test",
+        testClassNameTemplate = "${srcFile}Test",
         testMethodPrefix = true)
 public class SimpleJUnit3Preferences
 {

@@ -13,10 +13,10 @@ import org.moreunit.test.context.Project;
 /**
  * @author giana 13.05.2006 13:49:29
  */
-@Preferences(testClassSuffixes = "Test", testSrcFolder = "test")
+@Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test")
 public class CorrespondingTypeSearcherTest extends ContextTestCase
 {
-    @Preferences(testClassSuffixes = "Test", testSrcFolder = "test")
+    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test")
     @Project(mainCls = "Foo", testCls = "FooTest; FooTestNG")
     @Test
     public void getMatches_should_return_class_which_matches_suffix() throws Exception
@@ -28,7 +28,7 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         assertThat(matches.iterator().next().getElementName()).isEqualTo("FooTest");
     }
 
-    @Preferences(testClassSuffixes = "Test,TestNG", testSrcFolder = "test")
+    @Preferences(testClassNameTemplate = "${srcFile}(Test|TestNG)", testSrcFolder = "test")
     @Project(mainCls = "Foo", testCls = "FooTest; FooTestNG")
     @Test
     public void getMatches_should_find_all_tests_which_match_all_suffixes() throws Exception
@@ -39,7 +39,7 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         assertThat(matches).hasSize(2).onProperty("elementName").contains("FooTest", "FooTestNG");
     }
 
-    @Preferences(testClassPrefixes = "Test", testSrcFolder = "test")
+    @Preferences(testClassNameTemplate = "Test${srcFile}", testSrcFolder = "test")
     @Project(mainCls = "Foo", testCls = "TestFoo; BFooTest")
     @Test
     public void getMatches_should_return_class_which_matches_prefix() throws Exception

@@ -5,7 +5,7 @@ import org.moreunit.test.context.TestType;
 
 @Properties(
         testType = TestType.JUNIT4,
-        testClassSuffixes = "Test")
+        testClassNameTemplate = "${srcFile}Test")
 public class SimpleJUnit4Properties
 {
 }

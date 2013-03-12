@@ -307,10 +307,7 @@ class AnnotationConfigExtractor
 
         PropertiesConfiguration propertiesConfig = new PropertiesConfiguration();
         propertiesConfig.setExtendedMethodSearch(properties.extendedMethodSearch());
-        propertiesConfig.setFlexibleNaming(properties.flexibleNaming());
         propertiesConfig.setMethodPrefix(properties.testMethodPrefix());
-        propertiesConfig.setTestClassPrefixes(properties.testClassPrefixes());
-        propertiesConfig.setTestClassSuffixes(properties.testClassSuffixes());
         propertiesConfig.setTestPackagePrefix(properties.testPackagePrefix());
         propertiesConfig.setTestPackageSuffix(properties.testPackageSuffix());
         propertiesConfig.setTestSuperClass(properties.testSuperClass());
@@ -353,10 +350,7 @@ class AnnotationConfigExtractor
 
         PreferencesConfiguration preferencesConfig = new PreferencesConfiguration();
         preferencesConfig.setExtendedMethodSearch(preferences.extendedMethodSearch());
-        preferencesConfig.setFlexibleNaming(preferences.flexibleNaming());
         preferencesConfig.setMethodPrefix(preferences.testMethodPrefix());
-        preferencesConfig.setTestClassPrefixes(preferences.testClassPrefixes());
-        preferencesConfig.setTestClassSuffixes(preferences.testClassSuffixes());
         preferencesConfig.setTestPackagePrefix(preferences.testPackagePrefix());
         preferencesConfig.setTestPackageSuffix(preferences.testPackageSuffix());
         preferencesConfig.setTestSourceFolder(preferences.testSrcFolder());

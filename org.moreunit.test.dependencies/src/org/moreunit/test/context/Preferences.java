@@ -16,17 +16,11 @@ public @interface Preferences
 
     boolean extendedMethodSearch() default false;
 
-    boolean flexibleNaming() default false;
-
     boolean testMethodPrefix() default false;
 
     String testSrcFolder() default "";
 
     TestType testType() default TestType.UNDEFINED;
-
-    String[] testClassPrefixes() default "";
-
-    String[] testClassSuffixes() default "";
 
     String testPackagePrefix() default "";
 

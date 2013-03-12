@@ -15,7 +15,7 @@ import org.moreunit.test.workspace.TypeHandler;
 /**
  * @author vera 02.08.2007 07:37:24
  */
-@Preferences(testClassSuffixes="Test", testSrcFolder="test", testMethodPrefix=true)
+@Preferences(testClassNameTemplate="${srcFile}Test", testSrcFolder="test", testMethodPrefix=true)
 @Project(mainCls="testing:Hello", testCls="testing:HelloTest", mainSrcFolder="src", testSrcFolder="test")
 public class TestmethodCreatorTest extends ContextTestCase
 {

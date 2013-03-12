@@ -22,7 +22,7 @@ public class NewClassWizardTest extends NewClassyWizardTestCase
         mainSrcFolder = "main-src",
         testSrcFolder = "test-src",
         testCls = "pack: ClassTest",
-        properties = @Properties(testClassSuffixes = "Test"))
+        properties = @Properties(testClassNameTemplate = "${srcFile}Test"))
     public void should_create_cut_in_right_package_when_no_package_suffix_nor_prefix() throws Exception
     {
         // given

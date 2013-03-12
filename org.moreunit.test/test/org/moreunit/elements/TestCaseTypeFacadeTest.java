@@ -31,7 +31,7 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
 
-@Preferences(testClassSuffixes="Test", testMethodPrefix=true)
+@Preferences(testClassNameTemplate="${srcFile}Test", testMethodPrefix=true)
 @Project(mainCls = "org:Hello", testCls = "org:HelloTest", mainSrcFolder="src", testSrcFolder="test")
 public class TestCaseTypeFacadeTest extends ContextTestCase
 {
@@ -203,9 +203,9 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
     }
 
-    @Preferences(testClassSuffixes="Test", flexibleNaming=true, testSrcFolder="test")
+    @Preferences(testClassNameTemplate="${srcFile}*Test", testSrcFolder="test")
     @Test
-    public void getCorrespondingClasses_should_return_more_than_one_test_when_flexible_testcase_naming_is_set() throws Exception
+    public void getCorrespondingClasses_should_return_more_than_one_test_when_flexible_testcase_naming_is_used() throws Exception
     {
         TypeHandler class1 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.One");
         TypeHandler class2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.OneTwo");
@@ -221,9 +221,9 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         testClass.getCompilationUnit().delete(true, null);
     }
     
-    @Preferences(testClassSuffixes="Test", flexibleNaming=false, testSrcFolder="test")
+    @Preferences(testClassNameTemplate="${srcFile}Test", testSrcFolder="test")
     @Test
-    public void getCorrespondingClasses_should_return_only_one_test_when_flexible_testcase_naming_is_not_set() throws Exception
+    public void getCorrespondingClasses_should_return_only_one_test_when_flexible_testcase_naming_is_not_used() throws Exception
     {
         TypeHandler class1 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.One");
         TypeHandler class2 = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.OneTwo");

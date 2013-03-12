@@ -1,12 +1,14 @@
 package org.moreunit.test.context;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.test.DummyPreferencesForTesting;
 
 
@@ -35,12 +37,11 @@ public class ContextTest extends ContextTestCase
         assertThat(prefix).isEqualTo("Test");
     }
     
+    // FIXME migration should be tested
+    @Ignore
     @Project(mainCls="SomeClass")
     @Preferences(extendedMethodSearch=true,
                  testMethodPrefix=true,
-                 flexibleNaming=true,
-                 testClassPrefixes="Bre",
-                 testClassSuffixes="Bost",
                  testPackagePrefix="pre",
                  testPackageSuffix="post",
                  testSrcFolder="testsrc",
@@ -52,8 +53,9 @@ public class ContextTest extends ContextTestCase
         IJavaProject javaProject = context.getProjectHandler().get();
         
         DummyPreferencesForTesting prefs = (DummyPreferencesForTesting) org.moreunit.preferences.Preferences.getInstance();
-        prefs.setPrefixes(javaProject, new String[] {"Pre"});
-        prefs.setSuffixes(javaProject, new String[] {"Post"});
+        prefs.getProjectStore(context.getProjectHandler().get()).setValue(PreferenceConstants.Deprecated.PREFIXES, "Pre");
+        prefs.getProjectStore(context.getProjectHandler().get()).setValue(PreferenceConstants.Deprecated.SUFFIXES, "Post");
+
         prefs.forcePreferencesMigration(javaProject);
         
         assertThat(prefs.shouldUseTestMethodExtendedSearch(javaProject)).isTrue();
@@ -69,7 +71,6 @@ public class ContextTest extends ContextTestCase
     @Project(mainCls="SomeClass")
     @Preferences(extendedMethodSearch=true,
                  testMethodPrefix=true,
-                 flexibleNaming=true,
                  testPackagePrefix="pre",
                  testPackageSuffix="post",
                  testSrcFolder="testsrc",
@@ -94,7 +95,6 @@ public class ContextTest extends ContextTestCase
     @Project(mainCls="SomeClass", 
              properties=@Properties(extendedMethodSearch=true,
                                     testMethodPrefix=true,
-                                    flexibleNaming=true,
                                     testPackagePrefix="pre",
                                     testPackageSuffix="post",
                                     testSuperClass="my.SuperClass",

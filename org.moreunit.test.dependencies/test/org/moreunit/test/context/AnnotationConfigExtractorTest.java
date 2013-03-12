@@ -135,7 +135,7 @@ public class AnnotationConfigExtractorTest
     public void should_load_config_from_preferences_and_project() throws Exception
     {
         // given
-        @Preferences(testClassSuffixes = "Suf")
+        @Preferences(testClassNameTemplate = "${srcFile}Suf")
         @Project(mainSrc = "SampleType")
         class AnnotationHolder {}
 
@@ -144,7 +144,7 @@ public class AnnotationConfigExtractorTest
 
         // then
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SampleType");
-        assertThat(config.getPreferencesConfig().getTestClassSuffixes()).containsOnly("Suf");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suf");
     }
 
     @Test
@@ -154,7 +154,7 @@ public class AnnotationConfigExtractorTest
         @Project(mainSrc = "SampleType")
         class AnnotationHolder {}
         
-        @Preferences(testClassSuffixes = "Suffix")
+        @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         class DefaultAnnotationHolder {}
 
         // when
@@ -162,14 +162,14 @@ public class AnnotationConfigExtractorTest
 
         // then
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SampleType");
-        assertThat(config.getPreferencesConfig().getTestClassSuffixes()).containsOnly("Suffix");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
     }
 
     @Test
     public void should_load_config_from_preferences_and_default_project() throws Exception
     {
         // given
-        @Preferences(testClassSuffixes = "Suf")
+        @Preferences(testClassNameTemplate = "${srcFile}Suf")
         class AnnotationHolder {}
         
         @Project(mainSrcFolder = "sources")
@@ -180,21 +180,21 @@ public class AnnotationConfigExtractorTest
 
         // then
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSourceFolder()).isEqualTo("sources");
-        assertThat(config.getPreferencesConfig().getTestClassSuffixes()).containsOnly("Suf");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suf");
     }
 
     @Test
     public void should_load_preferences_from_context_annotation() throws Exception
     {
         // given
-        @Context(preferences = @Preferences(testClassPrefixes = "Pre"))
+        @Context(preferences = @Preferences(testClassNameTemplate = "${srcFile}Pre"))
         class AnnotationHolder {}
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassPrefixes()).containsOnly("Pre");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Pre");
     }
     
     @Test
@@ -229,7 +229,7 @@ public class AnnotationConfigExtractorTest
     public void should_load_preferences_from_annotation_value() throws Exception
     {
         // given
-        @Preferences(testClassSuffixes = "Suffix")
+        @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         class PreferencesDefinition {}
         
         @Preferences(PreferencesDefinition.class)
@@ -240,21 +240,21 @@ public class AnnotationConfigExtractorTest
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassSuffixes()).containsOnly("Suffix");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
     }
 
     @Test
     public void should_load_properties_from_project_annotation() throws Exception
     {
         // given
-        @Project(properties = @Properties(testClassPrefixes = "Prefix"))
+        @Project(properties = @Properties(testClassNameTemplate = "${srcFile}Prefix"))
         class AnnotationHolder {}
         
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestClassPrefixes()).containsOnly("Prefix");
+        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Prefix");
     }
 
     @Test
@@ -336,7 +336,7 @@ public class AnnotationConfigExtractorTest
     public void should_recursively_load_preferences_from_annotation_value() throws Exception
     {
         // given
-        @Preferences(testClassPrefixes = "Pfx")
+        @Preferences(testClassNameTemplate = "Pfx${srcFile}")
         class PreferencesDefinition1 {}
         
         @Preferences(PreferencesDefinition1.class)
@@ -350,7 +350,7 @@ public class AnnotationConfigExtractorTest
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassPrefixes()).containsOnly("Pfx");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("Pfx${srcFile}");
     }
 
     @Test
@@ -359,7 +359,7 @@ public class AnnotationConfigExtractorTest
         // given
         configExtractor.setMaximimDefinitionDepth(2);
 
-        @Preferences(testClassPrefixes = "Pfx")
+        @Preferences(testClassNameTemplate = "Pfx${srcFile}")
         class PreferencesDefinition1 {}
         
         @Preferences(PreferencesDefinition1.class)
@@ -489,7 +489,7 @@ public class AnnotationConfigExtractorTest
     public void should_recursively_load_project_and_preferences_from_context_value() throws Exception
     {
         // given
-        @Preferences(testClassSuffixes = "Suffix")
+        @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         class PreferencesDefinition {}
         @Project(mainSrc = "SomeConcept")
         class ProjectDefinition {}
@@ -508,7 +508,7 @@ public class AnnotationConfigExtractorTest
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassSuffixes()).containsOnly("Suffix");
+        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SomeConcept");
     }
     
@@ -518,7 +518,7 @@ public class AnnotationConfigExtractorTest
         // given
         configExtractor.setMaximimDefinitionDepth(1);
         
-        @Preferences(testClassSuffixes = "Suffix")
+        @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         @Project(mainSrc = "SomeConcept")
         class ContextDefinition1 {}
         
