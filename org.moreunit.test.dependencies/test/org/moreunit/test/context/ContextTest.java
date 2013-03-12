@@ -1,11 +1,6 @@
 package org.moreunit.test.context;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.fail;
-
-import java.util.Arrays;
-
-import java.util.Arrays;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Ignore;
@@ -37,37 +32,6 @@ public class ContextTest extends ContextTestCase
         
         String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
         assertThat(prefix).isEqualTo("Test");
-    }
-    
-    // FIXME migration should be tested
-    @Ignore
-    @Project(mainCls="SomeClass")
-    @Preferences(extendedMethodSearch=true,
-                 testMethodPrefix=true,
-                 testPackagePrefix="pre",
-                 testPackageSuffix="post",
-                 testSrcFolder="testsrc",
-                 testSuperClass="my.SuperClass",
-                 testType=TestType.TESTNG)
-    @Test
-    public void should_migrate_old_preferences_to_v2()
-    {
-        IJavaProject javaProject = context.getProjectHandler().get();
-        
-        DummyPreferencesForTesting prefs = (DummyPreferencesForTesting) org.moreunit.preferences.Preferences.getInstance();
-        prefs.getProjectStore(context.getProjectHandler().get()).setValue(PreferenceConstants.Deprecated.PREFIXES, "Pre");
-        prefs.getProjectStore(context.getProjectHandler().get()).setValue(PreferenceConstants.Deprecated.SUFFIXES, "Post");
-
-        prefs.forcePreferencesMigration(javaProject);
-        
-        assertThat(prefs.shouldUseTestMethodExtendedSearch(javaProject)).isTrue();
-        assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("Pre*${srcFile}*Post");
-        assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
-        assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
-        assertThat(prefs.getJunitDirectoryFromPreferences(javaProject)).isEqualTo("testsrc");
-        assertThat(prefs.getTestSuperClass(javaProject)).isEqualTo("my.SuperClass");
-        assertThat(prefs.getTestType(javaProject)).isEqualToIgnoringCase(TestType.TESTNG.toString());
     }
     
     @Project(mainCls="SomeClass")
