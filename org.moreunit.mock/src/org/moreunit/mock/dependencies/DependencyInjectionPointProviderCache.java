@@ -11,31 +11,50 @@ import org.eclipse.jdt.core.JavaModelException;
  * Wraps a {@link DependencyInjectionPointProvider} so that it is queried only
  * once.
  */
-public class DependencyInjectionPointProviderWrapper implements DependencyInjectionPointProvider
+public class DependencyInjectionPointProviderCache implements DependencyInjectionPointProvider
 {
     private final Collection<IMethod> constructors = new HashSet<IMethod>();
     private final Collection<IMethod> setters = new HashSet<IMethod>();
     private final Collection<IField> fields = new HashSet<IField>();
+    private JavaModelException exception;
 
-    public DependencyInjectionPointProviderWrapper(DependencyInjectionPointProvider provider) throws JavaModelException
+    public DependencyInjectionPointProviderCache(DependencyInjectionPointProvider provider)
     {
-        constructors.addAll(provider.getConstructors());
-        setters.addAll(provider.getSetters());
-        fields.addAll(provider.getFields());
+        try
+        {
+            constructors.addAll(provider.getConstructors());
+            setters.addAll(provider.getSetters());
+            fields.addAll(provider.getFields());
+        }
+        catch (JavaModelException e)
+        {
+            exception = e;
+        }
     }
 
     public Collection<IMethod> getConstructors() throws JavaModelException
     {
+        rethrowExcpetionIfAny();
         return constructors;
+    }
+
+    private void rethrowExcpetionIfAny() throws JavaModelException
+    {
+        if(exception != null)
+        {
+            throw exception;
+        }
     }
 
     public Collection<IMethod> getSetters() throws JavaModelException
     {
+        rethrowExcpetionIfAny();
         return setters;
     }
 
     public Collection<IField> getFields() throws JavaModelException
     {
+        rethrowExcpetionIfAny();
         return fields;
     }
 }

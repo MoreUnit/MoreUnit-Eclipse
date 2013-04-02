@@ -47,7 +47,7 @@ public enum TestType {
 	/**
 	 * Internal value from MoreUnit preferences.
 	 */
-	final String preferenceValue;
+	private final String preferenceValue;
 
 	/**
 	 * Returns the MoreUnit test method type for a compilation unit.

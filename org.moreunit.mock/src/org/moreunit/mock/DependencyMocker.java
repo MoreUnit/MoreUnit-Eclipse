@@ -25,7 +25,7 @@ public class DependencyMocker
         this.logger = logger;
     }
 
-    public void mockDependencies(Dependencies dependencies, IType classUnderTest, IType testCase)
+    public void mockDependencies(Dependencies dependencies, IType classUnderTest, IType testCase, String testType)
     {
         if(dependencies.isEmpty())
         {
@@ -41,7 +41,7 @@ public class DependencyMocker
 
         try
         {
-            templateProcessor.applyTemplate(template, dependencies, classUnderTest, testCase);
+            templateProcessor.applyTemplate(template, dependencies, classUnderTest, testCase, testType);
         }
         catch (MockingTemplateException e)
         {

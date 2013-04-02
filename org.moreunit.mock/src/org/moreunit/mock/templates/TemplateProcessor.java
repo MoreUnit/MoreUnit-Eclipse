@@ -21,14 +21,14 @@ public class TemplateProcessor
         this.sourceFormatter = sourceFormatter;
     }
 
-    public void applyTemplate(MockingTemplate mockingTemplate, Dependencies dependencies, IType classUnderTest, IType testCase) throws MockingTemplateException
+    public void applyTemplate(MockingTemplate mockingTemplate, Dependencies dependencies, IType classUnderTest, IType testCase, String testType) throws MockingTemplateException
     {
         ICompilationUnit testCaseCu = testCase.getCompilationUnit();
         try
         {
             ICompilationUnit workingCopy = createWorkingCopy(testCaseCu);
 
-            MockingContext context = contextFactory.createMockingContext(dependencies, classUnderTest, workingCopy);
+            MockingContext context = contextFactory.createMockingContext(dependencies, classUnderTest, testType, workingCopy);
             if(! context.hasDependenciesToMock())
             {
                 throw new NoDependenciesToMockException(classUnderTest);

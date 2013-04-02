@@ -41,7 +41,6 @@ import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MockingContextTest
@@ -56,8 +55,6 @@ public class MockingContextTest
     private ICompilationUnit testCaseCompilationUnit;
     @Mock
     private TemplateProcessor templateProcessor;
-    @Mock
-    private ProjectPreferences projectPreferences;
 
     private Dependencies dependencies;
     private ArrayList<PatternResolver> patternResolvers;
@@ -328,13 +325,17 @@ public class MockingContextTest
 
     private void createMockingContextWithTestType(String testType) throws MockingTemplateException
     {
-        when(projectPreferences.getTestType()).thenReturn(testType);
-        mockingContext = createMockingContext();
+        mockingContext = createMockingContext(testType);
     }
 
     private MockingContext createMockingContext() throws MockingTemplateException
     {
-        return new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, projectPreferences, patternResolvers);
+        return createMockingContext(null);
+    }
+
+    private MockingContext createMockingContext(String testType) throws MockingTemplateException
+    {
+        return new MockingContext(dependencies, classUnderTest, testCaseCompilationUnit, testType, patternResolvers);
     }
 
     private IMethod method(String name)

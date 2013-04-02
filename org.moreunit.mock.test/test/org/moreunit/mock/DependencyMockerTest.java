@@ -20,10 +20,13 @@ import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
+import org.moreunit.preferences.PreferenceConstants;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DependencyMockerTest
 {
+    private static final String SOME_TEST_TYPE = PreferenceConstants.DEFAULT_TEST_TYPE;
+
     @Mock
     private Logger logger;
     @Mock
@@ -59,7 +62,7 @@ public class DependencyMockerTest
         when(dependencies.isEmpty()).thenReturn(true);
 
         // when
-        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase);
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
 
         // then
         verifyZeroInteractions(templateApplicator);
@@ -78,7 +81,7 @@ public class DependencyMockerTest
         when(templateStore.get(anyString())).thenReturn(null);
 
         // when
-        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase);
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
 
         // then
         verify(logger).error(any());
@@ -94,7 +97,7 @@ public class DependencyMockerTest
         when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
 
         // when
-        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase);
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
 
         // then
         verify(templateStore).get("test-template-id");

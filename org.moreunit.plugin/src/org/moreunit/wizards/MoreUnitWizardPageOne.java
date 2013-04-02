@@ -68,6 +68,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.moreunit.elements.LanguageType;
 import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.extensionpoints.TestType;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
@@ -131,6 +132,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private final ProjectPreferences preferences;
     private final LanguageType langType;
+    
+    private TmpMemento tmpMemento;
 
     public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, ProjectPreferences preferences, LanguageType langType)
     {
@@ -1257,6 +1260,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             fMethodStubsButtons.setSelection(IDX_TEARDOWN_CLASS, false); // setUpAfterClass
             fMethodStubsButtons.setSelection(IDX_CONSTRUCTOR, false); // constructor
         }
+
+        tmpMemento = null;
     }
 
     /**
@@ -1274,6 +1279,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             settings.put(STORE_TEARDOWN_CLASS, fMethodStubsButtons.isSelected(IDX_TEARDOWN_CLASS));
             settings.put(STORE_CONSTRUCTOR, fMethodStubsButtons.isSelected(IDX_CONSTRUCTOR));
         }
+
+        tmpMemento = new TmpMemento(determineTestType(), getPackageFragment());
     }
 
     @Override
@@ -1300,5 +1307,36 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
 
         return modifiers;
+    }
+
+    public IPackageFragment getTestCasePackage()
+    {
+        return tmpMemento != null ? tmpMemento.testCasePackage : super.getPackageFragment();
+    }
+
+    public TestType getTestType()
+    {
+        return tmpMemento != null ? tmpMemento.testType : determineTestType();
+    }
+
+    private TestType determineTestType()
+    {
+        if(junti3Toggle.getSelection())
+            return TestType.JUNIT_3;
+        else if(unit4Toggle.getSelection())
+            return TestType.JUNIT_4;
+        return TestType.TESTNG;
+    }
+
+    private static class TmpMemento
+    {
+        private final TestType testType;
+        private final IPackageFragment testCasePackage;
+
+        public TmpMemento(TestType testType, IPackageFragment testCasePackage)
+        {
+            this.testType = testType;
+            this.testCasePackage = testCasePackage;
+        }
     }
 }

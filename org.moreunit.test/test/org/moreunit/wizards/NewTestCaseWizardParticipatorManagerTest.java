@@ -21,6 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.moreunit.extensionpoints.INewTestCaseWizardContext;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.extensionpoints.INewTestCaseWizardParticipator;
+import org.moreunit.extensionpoints.TestType;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.TestSafeRunner;
 
@@ -196,6 +197,12 @@ public class NewTestCaseWizardParticipatorManagerTest
         }
 
         public IPackageFragment getTestCasePackage()
+        {
+            throw new UnsupportedOperationException("Just a fake object...");
+        }
+
+        @Override
+        public TestType getTestType()
         {
             throw new UnsupportedOperationException("Just a fake object...");
         }

@@ -32,6 +32,11 @@ public interface INewTestCaseWizardContext
     IPackageFragment getTestCasePackage();
 
     /**
+     * The test library used in the new test class.
+     */
+    TestType getTestType();
+
+    /**
      * Stores <tt>value</tt> into this context under the given <tt>key</tt>.
      */
     void put(String key, Object value);

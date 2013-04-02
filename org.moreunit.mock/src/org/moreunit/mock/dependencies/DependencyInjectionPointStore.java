@@ -15,12 +15,10 @@ public class DependencyInjectionPointStore implements DependencyInjectionPointPr
     private final Collection<IMethod> setters = new HashSet<IMethod>();
     private final Collection<IField> fields = new HashSet<IField>();
 
-    private final DependencyInjectionPointProvider authorizedPointProvider;
     private final Logger logger;
 
-    public DependencyInjectionPointStore(DependencyInjectionPointProvider authorizedPointProvider, Logger logger)
+    public DependencyInjectionPointStore(Logger logger)
     {
-        this.authorizedPointProvider = authorizedPointProvider;
         this.logger = logger;
     }
 
@@ -34,18 +32,18 @@ public class DependencyInjectionPointStore implements DependencyInjectionPointPr
         {
             for (IMember member : members)
             {
-                if(member instanceof IField && authorizedPointProvider.getFields().contains(member))
+                if(member instanceof IField)
                 {
                     fields.add((IField) member);
                 }
                 else if(member instanceof IMethod)
                 {
                     IMethod method = (IMethod) member;
-                    if(authorizedPointProvider.getConstructors().contains(method))
+                    if(method.isConstructor())
                     {
                         constructors.add(method);
                     }
-                    else if(authorizedPointProvider.getSetters().contains(method))
+                    else
                     {
                         setters.add(method);
                     }
