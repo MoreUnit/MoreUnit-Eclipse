@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.core.util.Strings;
 import org.moreunit.elements.LanguageType;
@@ -49,7 +50,7 @@ public class NewTestCaseWizard extends NewClassyWizard
         this.pageTwo.setWizard(this);
         this.pageOne.init(new StructuredSelection(getType()));
 
-        this.context = new NewTestCaseWizardContext(getType(), testPackageFragment);
+        this.context = new NewTestCaseWizardContext(getType(), pageOne);
         this.wizardComposer = participatorManager.createWizardComposer(context);
         this.wizardComposer.registerBasePage(INewTestCaseWizardPage.TEST_CASE_PAGE, this.pageOne);
         this.wizardComposer.registerBasePage(INewTestCaseWizardPage.TEST_METHODS_PAGE, this.pageTwo);

@@ -20,7 +20,6 @@ import org.moreunit.mock.templates.resolvers.DependencyPatternsResolver;
 import org.moreunit.mock.templates.resolvers.FieldInjectionPatternResolver;
 import org.moreunit.mock.templates.resolvers.ObjectUnderTestPatternsResolver;
 import org.moreunit.mock.templates.resolvers.SetterInjectionPatternResolver;
-import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 import static java.util.Arrays.asList;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
@@ -37,15 +36,15 @@ public class MockingContext
     public final ICompilationUnit testCaseCompilationUnit;
     private final List<PatternResolver> patternResolvers;
     private final Dependencies dependencies;
-    private final String projectTestType;
+    private final String testType;
     private final Set<InjectionType> injectionTypesUsed = new HashSet<InjectionType>();
 
     private IMethod beforeInstanceMethod;
     private String beforeInstanceMethodName;
 
-    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, ProjectPreferences preferences) throws MockingTemplateException
+    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, String testType) throws MockingTemplateException
     {
-        this(dependencies, classUnderTest, testCase, preferences, null);
+        this(dependencies, classUnderTest, testCase, testType, null);
     }
 
     /**
@@ -53,12 +52,12 @@ public class MockingContext
      *
      * @param preferences
      */
-    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, ProjectPreferences preferences, List<PatternResolver> patternResolvers) throws MockingTemplateException
+    public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, String testType, List<PatternResolver> patternResolvers) throws MockingTemplateException
     {
         this.classUnderTest = classUnderTest;
         this.testCaseCompilationUnit = testCase;
         this.dependencies = dependencies;
-        this.projectTestType = preferences.getTestType();
+        this.testType = testType;
         this.patternResolvers = createPatternResolversIfNull(patternResolvers);
 
         initialize();
@@ -124,7 +123,7 @@ public class MockingContext
 
     private String generateBeforeInstanceName()
     {
-        if(TEST_TYPE_VALUE_JUNIT_3.equals(projectTestType))
+        if(TEST_TYPE_VALUE_JUNIT_3.equals(testType))
         {
             return "setUp";
         }
@@ -160,12 +159,12 @@ public class MockingContext
 
     private boolean hasBeforeAnnotationIfRequired(IMethod method)
     {
-        if(TEST_TYPE_VALUE_JUNIT_3.equals(projectTestType))
+        if(TEST_TYPE_VALUE_JUNIT_3.equals(testType))
         {
             return true;
         }
 
-        String requiredAnnotation = TEST_TYPE_VALUE_TESTNG.equals(projectTestType) ? "BeforeMethod" : "Before";
+        String requiredAnnotation = TEST_TYPE_VALUE_TESTNG.equals(testType) ? "BeforeMethod" : "Before";
         return method.getAnnotation(requiredAnnotation).exists();
     }
 
@@ -179,13 +178,13 @@ public class MockingContext
         String methodName = incrementMethodNameIfRequired(methodBaseName);
 
         String beforeMethodSource;
-        if(TEST_TYPE_VALUE_JUNIT_3.equals(projectTestType))
+        if(TEST_TYPE_VALUE_JUNIT_3.equals(testType))
         {
             beforeMethodSource = "";
         }
         else
         {
-            String annotationClass = TEST_TYPE_VALUE_TESTNG.equals(projectTestType) ? "org.testng.annotations.BeforeMethod" : "org.junit.Before";
+            String annotationClass = TEST_TYPE_VALUE_TESTNG.equals(testType) ? "org.testng.annotations.BeforeMethod" : "org.junit.Before";
             beforeMethodSource = "@${beforeAnnotation:newType(" + annotationClass + ")} ";
         }
 
@@ -250,6 +249,6 @@ public class MockingContext
 
     public boolean isTestType(String testType)
     {
-        return projectTestType.equals(testType);
+        return this.testType.equals(testType);
     }
 }

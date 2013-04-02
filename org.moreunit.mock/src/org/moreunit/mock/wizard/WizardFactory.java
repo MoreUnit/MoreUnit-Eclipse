@@ -1,10 +1,8 @@
 package org.moreunit.mock.wizard;
 
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.moreunit.core.log.Logger;
-import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
@@ -22,9 +20,9 @@ public class WizardFactory
         this.logger = logger;
     }
 
-    public MockDependenciesWizardPage createMockDependenciesWizardPage(IType classUnderTest, DependencyInjectionPointProvider provider, DependencyInjectionPointStore store)
+    public MockDependenciesWizardPage createMockDependenciesWizardPage(MockDependenciesWizardValues wizardValues, DependencyInjectionPointStore store)
     {
-        return new MockDependenciesWizardPage(classUnderTest, provider, store, preferences, templateStyleSelector, logger);
+        return new MockDependenciesWizardPage(wizardValues, store, preferences, templateStyleSelector, logger);
     }
 
     public MockDependenciesWizard createMockDependenciesWizard(MockDependenciesWizardPage page)

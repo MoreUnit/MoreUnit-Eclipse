@@ -58,8 +58,12 @@ public class TemplateStyleSelector implements SelectionListener
 
     public void createContents(Composite parent, IJavaProject project)
     {
-        this.project = project;
+        createContents(parent);
+        initValues(project);
+    }
 
+    public void createContents(Composite parent)
+    {
         Composite labelAndFieldComposite = new Composite(parent, SWT.NONE);
         labelAndFieldComposite.setLayout(new GridLayout(3, false));
 
@@ -103,8 +107,6 @@ public class TemplateStyleSelector implements SelectionListener
             }
         });
 
-        initValues();
-
         contentCreated = true;
 
         initStyle();
@@ -138,7 +140,7 @@ public class TemplateStyleSelector implements SelectionListener
 
         if(! categories.isEmpty())
         {
-            initValues();
+            initValues(project);
         }
     }
 
@@ -164,8 +166,10 @@ public class TemplateStyleSelector implements SelectionListener
         return templateNames;
     }
 
-    private void initValues()
+    public void initValues(IJavaProject project)
     {
+        this.project = project;
+
         String mockingTemplateId = preferences.getMockingTemplate(project);
         if(Strings.isBlank(mockingTemplateId) || templateStore.get(mockingTemplateId) == null)
         {

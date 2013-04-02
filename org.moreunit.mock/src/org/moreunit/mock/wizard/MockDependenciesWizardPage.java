@@ -34,7 +34,6 @@ import org.moreunit.core.log.Logger;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.extensionpoints.NewTestCaseWizardPagePosition;
 import org.moreunit.mock.MoreUnitMockPlugin;
-import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
@@ -50,8 +49,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     private static final String CONSTRUCTOR_WARNING = "No constructor has been selected, and the class under test has no default one."
                                                       + " This will cause a compiler error in the generated test case.";
 
-    private final IType classUnderTest;
-    private final DependencyInjectionPointProvider injectionPointProvider;
+    private final MockDependenciesWizardValues wizardValues;
     private final DependencyInjectionPointStore injectionPointStore;
     private final Preferences preferences;
     private final TemplateStyleSelector templateStyleSelector;
@@ -59,11 +57,10 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     private ContainerCheckedTreeViewer dependenciesTree;
     private Label selectedMembersLabel;
 
-    public MockDependenciesWizardPage(IType classUnderTest, DependencyInjectionPointProvider injectionPointProvider, DependencyInjectionPointStore injectionPointStore, Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
+    public MockDependenciesWizardPage(MockDependenciesWizardValues wizardValues, DependencyInjectionPointStore injectionPointStore, Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
     {
         super(PAGE_ID);
-        this.classUnderTest = classUnderTest;
-        this.injectionPointProvider = injectionPointProvider;
+        this.wizardValues = wizardValues;
         this.injectionPointStore = injectionPointStore;
         this.preferences = preferences;
         this.templateStyleSelector = templateStyleSelector;
@@ -111,13 +108,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private void createTemplateSelector(Composite parent)
     {
-        // uses project or workspace preferences, depending on user choice
-        IJavaProject project = classUnderTest.getJavaProject();
-        if(! preferences.hasSpecificSettings(project))
-        {
-            project = null;
-        }
-        templateStyleSelector.createContents(parent, project);
+        templateStyleSelector.createContents(parent);
     }
 
     private void createDependenciesTreeControls(Composite container)
@@ -209,7 +200,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
             selectedConstructors = Collections.<IMethod> emptyList();
         }
 
-        if(! selectedMembers.isEmpty() && selectedConstructors.isEmpty() && ! hasDefaultConstructor(classUnderTest))
+        if(! selectedMembers.isEmpty() && selectedConstructors.isEmpty() && ! hasDefaultConstructor(wizardValues.getClassUnderTest()))
         {
             setMessage(CONSTRUCTOR_WARNING, IMessageProvider.WARNING);
         }
@@ -316,19 +307,35 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
             return;
         }
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, injectionPointProvider, logger);
-        dependenciesTree.setContentProvider(contentProvider);
-        dependenciesTree.setInput(contentProvider.getTypes());
-        dependenciesTree.setSelection(new StructuredSelection(classUnderTest), true);
+        initValues();
 
         doCheckedStateChanged();
 
         dependenciesTree.getControl().setFocus();
     }
 
+    private void initValues()
+    {
+        IType classUnderTest = wizardValues.getClassUnderTest();
+
+        // uses project or workspace preferences, depending on user choice
+        IJavaProject project = classUnderTest.getJavaProject();
+        if(! preferences.hasSpecificSettings(project))
+        {
+            project = null;
+        }
+
+        templateStyleSelector.initValues(project);
+
+        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, wizardValues.getInjectionPointProvider(), logger);
+        dependenciesTree.setContentProvider(contentProvider);
+        dependenciesTree.setInput(contentProvider.getTypes());
+        dependenciesTree.setSelection(new StructuredSelection(classUnderTest), true);
+    }
+
     public IType getClassUnderTest()
     {
-        return classUnderTest;
+        return wizardValues.getClassUnderTest();
     }
 
     public DependencyInjectionPointStore getInjectionPointStore()

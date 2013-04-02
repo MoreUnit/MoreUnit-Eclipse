@@ -4,13 +4,15 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.core.log.Logger;
+import org.moreunit.extensionpoints.INewTestCaseWizardContext;
 import org.moreunit.mock.DependencyMocker;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.dependencies.DependencyInjectionPointCollector;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
-import org.moreunit.mock.dependencies.DependencyInjectionPointProviderWrapper;
+import org.moreunit.mock.dependencies.DependencyInjectionPointProviderCache;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
 import org.moreunit.mock.elements.NamingRules;
+import org.moreunit.preferences.Preferences;
 
 public class MockDependenciesPageManager
 {
@@ -25,27 +27,48 @@ public class MockDependenciesPageManager
         this.logger = logger;
     }
 
-    public MockDependenciesWizardPage createPage(IType classUnderTest, IPackageFragment testCasePackage)
+    public MockDependenciesWizardPage createPage(final INewTestCaseWizardContext context)
     {
-        DependencyInjectionPointProvider provider = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
-
-        try
+        DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(logger);
+        return wizardFactory.createMockDependenciesWizardPage(new MockDependenciesWizardValues()
         {
-            provider = new DependencyInjectionPointProviderWrapper(provider);
+            @Override
+            public IType getClassUnderTest()
+            {
+                return context.getClassUnderTest();
+            }
 
-            DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(provider, logger);
-
-            return wizardFactory.createMockDependenciesWizardPage(classUnderTest, provider, injectionPointStore);
-        }
-        catch (JavaModelException e)
-        {
-            logger.error("Could not determine dependencies to mock for " + classUnderTest.getElementName(), e);
-        }
-
-        return null;
+            @Override
+            public DependencyInjectionPointProvider getInjectionPointProvider()
+            {
+                DependencyInjectionPointProvider provider = new DependencyInjectionPointCollector(context.getClassUnderTest(), context.getTestCasePackage());
+                return new DependencyInjectionPointProviderCache(provider);
+            }
+        }, injectionPointStore);
     }
 
-    public void pageValidated(MockDependenciesWizardPage page, IType testCase)
+    private MockDependenciesWizardPage createPage(final IType classUnderTest, final IPackageFragment testCasePackage)
+    {
+        DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(logger);
+
+        return wizardFactory.createMockDependenciesWizardPage(new MockDependenciesWizardValues()
+        {
+            @Override
+            public IType getClassUnderTest()
+            {
+                return classUnderTest;
+            }
+
+            @Override
+            public DependencyInjectionPointProvider getInjectionPointProvider()
+            {
+                DependencyInjectionPointCollector provider = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
+                return new DependencyInjectionPointProviderCache(provider);
+            }
+        }, injectionPointStore);
+    }
+
+    public void pageValidated(MockDependenciesWizardPage page, IType testCase, String testType)
     {
         page.validated();
 
@@ -65,7 +88,7 @@ public class MockDependenciesPageManager
             return;
         }
 
-        mocker.mockDependencies(dependencies, classUnderTest, testCase);
+        mocker.mockDependencies(dependencies, classUnderTest, testCase, testType);
     }
 
     public void openWizard(IType classUnderTest, IType testCase)
@@ -83,7 +106,8 @@ public class MockDependenciesPageManager
             {
                 logger.debug("User confirmed mocking of dependencies");
             }
-            pageValidated(page, testCase);
+            String testType = Preferences.forProject(classUnderTest.getJavaProject()).getTestType();
+            pageValidated(page, testCase, testType);
         }
     }
 

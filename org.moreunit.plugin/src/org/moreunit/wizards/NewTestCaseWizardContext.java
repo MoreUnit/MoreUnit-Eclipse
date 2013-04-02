@@ -6,18 +6,19 @@ import java.util.Map;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.moreunit.extensionpoints.INewTestCaseWizardContext;
+import org.moreunit.extensionpoints.TestType;
 
 public class NewTestCaseWizardContext implements INewTestCaseWizardContext
 {
     private final IType classUnderTest;
-    private final IPackageFragment testCasePackage;
+    private final MoreUnitWizardPageOne pageOne;
     private final Map<String, Object> clientValues;
     private IType createdTestCase;
 
-    public NewTestCaseWizardContext(IType classUnderTest, IPackageFragment testCasePackage)
+    public NewTestCaseWizardContext(IType classUnderTest, MoreUnitWizardPageOne pageOne)
     {
         this.classUnderTest = classUnderTest;
-        this.testCasePackage = testCasePackage;
+        this.pageOne = pageOne;
         this.clientValues = new HashMap<String, Object>();
     }
 
@@ -33,7 +34,13 @@ public class NewTestCaseWizardContext implements INewTestCaseWizardContext
 
     public IPackageFragment getTestCasePackage()
     {
-        return testCasePackage;
+        return pageOne.getTestCasePackage();
+    }
+
+    @Override
+    public TestType getTestType()
+    {
+        return pageOne.getTestType();
     }
 
     void setCreatedTestCase(IType createdTestCase)
