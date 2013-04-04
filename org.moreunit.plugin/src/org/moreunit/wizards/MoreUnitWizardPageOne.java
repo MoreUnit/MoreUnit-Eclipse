@@ -333,9 +333,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(fieldName.equals(JUNIT4TOGGLE))
         {
             updateBuildPathMessage();
-            fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, isJUnit4());
-            fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, isJUnit4());
-            fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, ! isJUnit4());
+            boolean junit3 = ! (isJUnit4() || isTestNgSelected());
+            fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, ! junit3);
+            fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, ! junit3);
+            fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, junit3);
         }
         updateStatus(getStatusList());
     }
@@ -839,25 +840,27 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     protected void createTypeMembers(IType type, ImportsManager imports, IProgressMonitor monitor) throws CoreException
     {
-        if(fMethodStubsButtons.isSelected(IDX_CONSTRUCTOR))
+        if(fMethodStubsButtons.isEnabled(IDX_CONSTRUCTOR) && fMethodStubsButtons.isSelected(IDX_CONSTRUCTOR))
+        {
             createConstructor(type, imports);
+        }
 
-        if(fMethodStubsButtons.isSelected(IDX_SETUP_CLASS))
+        if(fMethodStubsButtons.isEnabled(IDX_SETUP_CLASS) && fMethodStubsButtons.isSelected(IDX_SETUP_CLASS))
         {
             createSetUpClass(type, imports);
         }
 
-        if(fMethodStubsButtons.isSelected(IDX_TEARDOWN_CLASS))
+        if(fMethodStubsButtons.isEnabled(IDX_TEARDOWN_CLASS) && fMethodStubsButtons.isSelected(IDX_TEARDOWN_CLASS))
         {
             createTearDownClass(type, imports);
         }
 
-        if(fMethodStubsButtons.isSelected(IDX_SETUP))
+        if(fMethodStubsButtons.isEnabled(IDX_SETUP) && fMethodStubsButtons.isSelected(IDX_SETUP))
         {
             createSetUp(type, imports);
         }
 
-        if(fMethodStubsButtons.isSelected(IDX_TEARDOWN))
+        if(fMethodStubsButtons.isEnabled(IDX_TEARDOWN) && fMethodStubsButtons.isSelected(IDX_TEARDOWN))
         {
             createTearDown(type, imports);
         }
@@ -873,11 +876,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else if(isTestNgSelected())
         {
-            imports.addImport("org.testng.Assert");
+            imports.addStaticImport("org.testng.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
             imports.addImport("org.testng.annotations.Test");
         }
     }
-
+    
     private void createConstructor(IType type, ImportsManager imports) throws CoreException
     {
         ITypeHierarchy typeHierarchy = null;
@@ -962,7 +965,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         String content = null;
         IMethod methodTemplate = findInHierarchy(type, methodName);
         String annotation = null;
-        if(isJUnit4())
+        if(isJUnit4() || isTestNgSelected())
         {
             annotation = '@' + imports.addImport(annotationType);
         }
@@ -994,7 +997,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 buffer.append(annotation).append(delimiter);
             }
 
-            if(isJUnit4())
+            if(isJUnit4() || isTestNgSelected())
             {
                 buffer.append("public "); //$NON-NLS-1$
             }
@@ -1019,22 +1022,26 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void createSetUp(IType type, ImportsManager imports) throws CoreException
     {
-        createSetupStubs(type, "setUp", false, "org.junit.Before", imports); //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = isTestNgSelected() ? "org.testng.annotations.BeforeMethod" : "org.junit.Before"; //$NON-NLS-1$ //$NON-NLS-2$
+        createSetupStubs(type, "setUp", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDown(IType type, ImportsManager imports) throws CoreException
     {
-        createSetupStubs(type, "tearDown", false, "org.junit.After", imports); //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = isTestNgSelected() ? "org.testng.annotations.AfterMethod" : "org.junit.After"; //$NON-NLS-1$ //$NON-NLS-2$
+        createSetupStubs(type, "tearDown", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createSetUpClass(IType type, ImportsManager imports) throws CoreException
     {
-        createSetupStubs(type, "setUpBeforeClass", true, "org.junit.BeforeClass", imports); //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = isTestNgSelected() ? "org.testng.annotations.BeforeClass" : "org.junit.BeforeClass"; //$NON-NLS-1$ //$NON-NLS-2$
+        createSetupStubs(type, "setUpBeforeClass", true, annotation, imports); //$NON-NLS-1$ 
     }
 
     private void createTearDownClass(IType type, ImportsManager imports) throws CoreException
     {
-        createSetupStubs(type, "tearDownAfterClass", true, "org.junit.AfterClass", imports); //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = isTestNgSelected() ? "org.testng.annotations.AfterClass" : "org.junit.AfterClass"; //$NON-NLS-1$ //$NON-NLS-2$
+        createSetupStubs(type, "tearDownAfterClass", true, annotation, imports); //$NON-NLS-1$ 
     }
 
     private void createTestMethodStubs(IType type, ImportsManager imports) throws CoreException
