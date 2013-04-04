@@ -25,6 +25,6 @@ public class SomeConceptTest {
 	private SomeConcept someConcept;
 	
 	public void setUp() throws Exception {
-		MockitoAnnotations.init(this);
+		MockitoAnnotations.initMocks(this);
 	}
 }

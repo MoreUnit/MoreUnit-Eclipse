@@ -27,6 +27,6 @@ public class SomeConceptTest {
 	
 	@BeforeMethod
 	public void createSomeConcept() throws Exception {
-		MockitoAnnotations.init(this);
+		MockitoAnnotations.initMocks(this);
 	}
 }
