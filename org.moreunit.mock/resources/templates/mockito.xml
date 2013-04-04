@@ -57,7 +57,7 @@
         </code-template>
         <code-template id="mockInitialization" part="before-instance-method">
         	<exclude-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.init(this);]]></pattern>
+            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.initMocks(this);]]></pattern>
         </code-template>
         <code-template id="objectUnderTestCreation" part="before-instance-method">
             <exclude-if condition="injection-type" value="constructor"/>
@@ -98,7 +98,7 @@
         </code-template>
         <code-template id="mockInitialization" part="before-instance-method">
         	<exclude-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.init(this);]]></pattern>
+            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.initMocks(this);]]></pattern>
         </code-template>
     </mocking-template>
     <mocking-template
@@ -137,7 +137,7 @@ public ${iObjectFactory:newType(org.testng.IObjectFactory)} getObjectFactory() {
         </code-template>
         <code-template id="mockInitialization" part="before-instance-method">
         	<exclude-if condition="test-type" value="junit4"/>
-            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.init(this);]]></pattern>
+            <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.initMocks(this);]]></pattern>
         </code-template>
     </mocking-template>
 </mocking-templates>
