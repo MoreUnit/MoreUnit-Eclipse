@@ -1,9 +1,16 @@
 package org.moreunit.elements;
 
+import static java.util.Collections.addAll;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
@@ -33,7 +40,7 @@ public class TestmethodCreator
     private String defaultTestMethodContent = "";
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
-    
+
     private boolean shouldCreateFinalMethod;
     private boolean shouldCreateTasks;
 
@@ -49,15 +56,14 @@ public class TestmethodCreator
         testMethodDiviner = testMethodDivinerFactory.create();
         this.defaultTestMethodContent = defaultTestMethodContent;
     }
-    
+
     public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent, boolean shouldCreateFinalMethod, boolean shouldCreateTasks)
     {
         this(compilationUnit, testType, defaultTestMethodContent);
-        
+
         this.shouldCreateFinalMethod = shouldCreateFinalMethod;
         this.shouldCreateTasks = shouldCreateTasks;
     }
-    
 
     public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, String testType, String defaultTestMethodContent)
     {
@@ -67,6 +73,55 @@ public class TestmethodCreator
         testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
         testMethodDiviner = testMethodDivinerFactory.create();
         this.defaultTestMethodContent = defaultTestMethodContent;
+    }
+
+    public void createTestMethods(List<IMethod> methodsUnderTest)
+    {
+        List<IMethod> overloadedMethods = getOverloadedMethods();
+
+        for (IMethod methodUnderTest : methodsUnderTest)
+        {
+            createFirstTestMethod(methodUnderTest, overloadedMethods);
+        }
+    }
+
+    // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
+    private List<IMethod> getOverloadedMethods()
+    {
+        List<IMethod> allMethods = new ArrayList<IMethod>();
+        try
+        {
+            addAll(allMethods, compilationUnit.findPrimaryType().getMethods());
+        }
+        catch (JavaModelException e)
+        {
+            // we can live without them
+            return allMethods;
+        }
+
+        List<IMethod> overloadedMethods = new ArrayList<IMethod>();
+        for (int i = 0; i < allMethods.size(); i++)
+        {
+            IMethod current = allMethods.get(i);
+            String currentName = current.getElementName();
+            boolean currentAdded = false;
+            for (ListIterator<IMethod> iter = allMethods.listIterator(i + 1); iter.hasNext();)
+            {
+                IMethod iterMethod = iter.next();
+                if(iterMethod.getElementName().equals(currentName))
+                {
+                    // method is overloaded
+                    if(! currentAdded)
+                    {
+                        overloadedMethods.add(current);
+                        currentAdded = true;
+                    }
+                    overloadedMethods.add(iterMethod);
+                    iter.remove();
+                }
+            }
+        }
+        return overloadedMethods;
     }
 
     public IMethod createTestMethod(IMethod method)
@@ -83,7 +138,9 @@ public class TestmethodCreator
             testCaseCompilationUnit = compilationUnit;
             return createAnotherTestMethod(method);
         }
-        return createFirstTestMethod(method);
+
+        List<IMethod> overloadedMethods = getOverloadedMethods();
+        return createFirstTestMethod(method, overloadedMethods);
     }
 
     /**
@@ -91,10 +148,10 @@ public class TestmethodCreator
      * calls the JUnit Wizard to create the new test class and tries to find the
      * expected test method corresponding to the source method under test.
      * 
-     * @param method Method under test.
+     * @param methodUnderTest Method under test.
      * @return Test method, or <code>null</code> if it is not found.
      */
-    private IMethod createFirstTestMethod(IMethod method)
+    private IMethod createFirstTestMethod(IMethod methodUnderTest, List<IMethod> overloadedMethods)
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
         if(testCaseCompilationUnit == null)
@@ -110,7 +167,12 @@ public class TestmethodCreator
         }
 
         // compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
-        String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
+        String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(methodUnderTest.getElementName());
+
+        if(overloadedMethods.contains(methodUnderTest))
+        {
+            testMethodName = appendParameterNamesToMethodName(testMethodName, methodUnderTest.getParameterTypes());
+        }
 
         // If test method exists, ready
         if(doesMethodExist(testMethodName))
@@ -125,6 +187,25 @@ public class TestmethodCreator
 
         // This should never be called;
         return null;
+    }
+
+    // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
+    private String appendParameterNamesToMethodName(String name, String[] parameters)
+    {
+        StringBuilder buffer = new StringBuilder(name);
+        for (int i = 0; i < parameters.length; i++)
+        {
+            final StringBuilder buf = new StringBuilder(Signature.getSimpleName(Signature.toString(Signature.getElementType(parameters[i]))));
+            final char character = buf.charAt(0);
+            if(buf.length() > 0 && ! Character.isUpperCase(character))
+                buf.setCharAt(0, Character.toUpperCase(character));
+            buffer.append(buf);
+            for (int j = 0, arrayCount = Signature.getArrayCount(parameters[i]); j < arrayCount; j++)
+            {
+                buffer.append("Array"); //$NON-NLS-1$
+            }
+        }
+        return buffer.toString();
     }
 
     private IMethod createAnotherTestMethod(IMethod testMethod)
@@ -245,9 +326,9 @@ public class TestmethodCreator
     private String getTestMethodString(String testmethodName)
     {
         String finalPlaceholder = " ";
-        if (shouldCreateFinalMethod)
+        if(shouldCreateFinalMethod)
             finalPlaceholder = "final ";
-        
+
         String recommendedLineSeparator = StringConstants.NEWLINE;
         try
         {
@@ -257,12 +338,12 @@ public class TestmethodCreator
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
-        
+
         String methodBody = defaultTestMethodContent;
-        if (shouldCreateTasks)
+        if(shouldCreateTasks)
         {
             String todoTaskTag = JUnitStubUtility.getTodoTaskTag(compilationUnit.getJavaProject());
-            if (todoTaskTag != null)
+            if(todoTaskTag != null)
             {
                 methodBody = "// " + todoTaskTag + recommendedLineSeparator + defaultTestMethodContent;
             }
