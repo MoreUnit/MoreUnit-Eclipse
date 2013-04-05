@@ -1,10 +1,8 @@
 package org.moreunit.wizards;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import static java.util.Arrays.asList;
+
 import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -69,6 +67,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import org.moreunit.elements.LanguageType;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.extensionpoints.TestType;
+import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
@@ -873,6 +872,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         if(isJUnit4())
         {
             imports.addStaticImport("org.junit.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
+            imports.addImport("org.junit.Test");
         }
         else if(isTestNgSelected())
         {
@@ -1049,20 +1049,9 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         IMethod[] methods = fPage2.getCheckedMethods();
         if(methods.length == 0)
             return;
-        /* find overloaded methods */
-        IMethod[] allMethodsArray = fPage2.getAllMethods();
-        List<IMethod> allMethods = new ArrayList<IMethod>();
-        allMethods.addAll(Arrays.asList(allMethodsArray));
-        getOverloadedMethods(allMethods);
 
-        new ArrayList<String>();
-        TestmethodCreator testmethodCreator = new TestmethodCreator(type.getCompilationUnit(), preferences.getTestType(), preferences.getTestMethodDefaultContent(), fPage2.getCreateFinalMethodStubsButtonSelection(), fPage2.isCreateTasks());
-        for (int i = 0; i < methods.length; i++)
-        {
-            IMethod method = methods[i];
-            testmethodCreator.createTestMethod(method);
-            
-        }
+        TestmethodCreator testmethodCreator = new TestmethodCreator(fClassUnderTest.getCompilationUnit(), getTestTypePrefValue(), preferences.getTestMethodDefaultContent(), fPage2.getCreateFinalMethodStubsButtonSelection(), fPage2.isCreateTasks());
+        testmethodCreator.createTestMethods(asList(methods));
     }
 
     private String getLineDelimiter() throws JavaModelException
@@ -1073,33 +1062,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return classToTest.getCompilationUnit().findRecommendedLineSeparator();
 
         return getPackageFragment().findRecommendedLineSeparator();
-    }
-
-    private List<IMethod> getOverloadedMethods(List<IMethod> allMethods)
-    {
-        List<IMethod> overloadedMethods = new ArrayList<IMethod>();
-        for (int i = 0; i < allMethods.size(); i++)
-        {
-            IMethod current = allMethods.get(i);
-            String currentName = current.getElementName();
-            boolean currentAdded = false;
-            for (ListIterator<IMethod> iter = allMethods.listIterator(i + 1); iter.hasNext();)
-            {
-                IMethod iterMethod = iter.next();
-                if(iterMethod.getElementName().equals(currentName))
-                {
-                    // method is overloaded
-                    if(! currentAdded)
-                    {
-                        overloadedMethods.add(current);
-                        currentAdded = true;
-                    }
-                    overloadedMethods.add(iterMethod);
-                    iter.remove();
-                }
-            }
-        }
-        return overloadedMethods;
     }
 
     /*
@@ -1333,6 +1295,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(unit4Toggle.getSelection())
             return TestType.JUNIT_4;
         return TestType.TESTNG;
+    }
+    
+    private String getTestTypePrefValue() {
+        if(junti3Toggle.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
+        else if(unit4Toggle.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
     }
 
     private static class TmpMemento
