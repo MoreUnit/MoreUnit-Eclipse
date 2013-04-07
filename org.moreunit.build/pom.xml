@@ -22,7 +22,7 @@
   </modules>
 
   <properties>
-    <tycho-version>0.16.0</tycho-version>
+    <tycho-version>0.17.0</tycho-version>
     
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -113,30 +113,6 @@
     </pluginManagement>
 
     <plugins>
-
-      <!-- Not tested yet: creating a toolchains.xml file to use the following (see http://maven.apache.org/guides/mini/guide-using-toolchains.html) -->
-      <!--  <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>1.0</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>1.5</version>
-              <vendor>sun</vendor>
-            </jdk>
-          </toolchains>
-        </configuration>
-      </plugin> -->
-
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
