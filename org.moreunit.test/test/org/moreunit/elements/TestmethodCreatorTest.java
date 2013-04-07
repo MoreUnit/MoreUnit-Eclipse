@@ -17,7 +17,7 @@ import org.moreunit.test.workspace.TypeHandler;
 /**
  * @author vera 02.08.2007 07:37:24
  */
-@Preferences(testClassSuffixes = "Test", testSrcFolder = "test", testMethodPrefix = true)
+@Preferences(testClassSuffixes = "Test", testSrcFolder = "test", testMethodPrefix = false)
 @Project(mainCls = "testing:Hello", testCls = "testing:HelloTest", mainSrcFolder = "src", testSrcFolder = "test")
 public class TestmethodCreatorTest extends ContextTestCase
 {
@@ -52,6 +52,21 @@ public class TestmethodCreatorTest extends ContextTestCase
         TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get());
 
+        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
+        assertThat(createTestMethod.getSource()).startsWith("@Test");
+        assertThat(createTestMethod.getSource()).contains("foo");
+
+        IMethod[] methods = testcaseType.get().getMethods();
+        assertThat(methods).containsOnly(createTestMethod);
+    }
+
+    @Test
+    @Preferences(testClassSuffixes = "Test", testSrcFolder = "test", testMethodPrefix = true)
+    public void createTestMethod_should_create_junit4_testmethod_with_prefix() throws CoreException
+    {
+        TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
+        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get());
+
         assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
         assertThat(createTestMethod.getSource()).startsWith("@Test");
         assertThat(createTestMethod.getSource()).contains("foo");
@@ -62,6 +77,21 @@ public class TestmethodCreatorTest extends ContextTestCase
 
     @Test
     public void createTestMethod_should_create_testng_testmethod() throws CoreException
+    {
+        TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "foo");
+        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get());
+
+        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
+        assertThat(createTestMethod.getSource()).startsWith("@Test");
+        assertThat(createTestMethod.getSource()).contains("foo");
+
+        IMethod[] methods = testcaseType.get().getMethods();
+        assertThat(methods).containsOnly(createTestMethod);
+    }
+
+    @Test
+    @Preferences(testClassSuffixes = "Test", testSrcFolder = "test", testMethodPrefix = true)
+    public void createTestMethod_should_create_testng_testmethod_with_prefix() throws CoreException
     {
         TestmethodCreator testmethodCreator = new TestmethodCreator(cutType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get());
@@ -91,11 +121,11 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_create_another_junit4_testmethod_when_called_with_testmethod() throws CoreException
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
+        MethodHandler existingTestMethod = testcaseType.addMethod("public void getNumberOne()");
 
         TestmethodCreator testmethodCreator = new TestmethodCreator(testcaseType.getCompilationUnit(), PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "foo");
         IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get());
-        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOneSuffix");
+        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOneSuffix");
         assertThat(createTestMethod.getSource()).startsWith("@Test").contains("foo");
 
         IMethod[] methods = testcaseType.get().getMethods();
@@ -130,13 +160,13 @@ public class TestmethodCreatorTest extends ContextTestCase
         // then
         assertThat(testcaseType.get().getMethods()).hasSize(4).onProperty("elementName")
             // overloaded method: no parameter
-            .contains("testDoSomething")
+            .contains("doSomething")
             // overloaded method: parameter types are used
-            .contains("testDoSomethingString", "testDoSomethingIntegerDouble")
+            .contains("doSomethingString", "doSomethingIntegerDouble")
             // not overloaded: parameter types are not used
-            .contains("testDoSomethingElse");
+            .contains("doSomethingElse");
     }
-    
+
     @Test
     public void createTestMethods_should_use_parameter_types_in_method_name_when_method_under_test_is_overloaded() throws Exception
     {
@@ -152,8 +182,8 @@ public class TestmethodCreatorTest extends ContextTestCase
         // then
         assertThat(testcaseType.get().getMethods()).hasSize(2).onProperty("elementName")
             // overloaded method: no parameter
-            .contains("testDoSomething")
+            .contains("doSomething")
             // overloaded method: parameter types are used
-            .contains("testDoSomethingStringArray");
+            .contains("doSomethingStringArray");
     }
 }

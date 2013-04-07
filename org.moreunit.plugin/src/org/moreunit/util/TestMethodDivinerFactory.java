@@ -1,13 +1,11 @@
 package org.moreunit.util;
 
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 
 public class TestMethodDivinerFactory
 {
-
     private ICompilationUnit compilationUnit;
     private Preferences preferences;
 
@@ -27,5 +25,10 @@ public class TestMethodDivinerFactory
             return new TestMethodDivinerNoPraefix();
         }
         return new TestMethodDivinerJunit3Praefix();
+    }
+
+    public TestMethodDiviner create(String testType)
+    {
+        return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType) ? new TestMethodDivinerJunit3Praefix() : create();
     }
 }
