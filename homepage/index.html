@@ -60,14 +60,14 @@
 				<p>MoreUnit is an Eclipse plugin that should assist you in writing more unit tests, mainly targeted at the Java language. This is a short
 				overview of the features it provides, for further information take a look at the <a href="#doc">documentation</a> section:</p>
 				<ul>
-					<li>MoreUnit decorates classes which have a test case.</li>
-					<li>It marks methods in the editor which are under test.</li>
-					<li>You can jump to a test case/test method in the editor via the menu or a shortcut (<em>Ctrl-J</em> by default).</li>
-					<li>You can run a test case/test method from the class under test via the menu or a shortcut (<em>Ctrl-R</em> by default).</li>
-					<li>Rename classes/methods and MoreUnit will rename the corresponding test code too.</li>
-					<li>Move classes and MoreUnit will move the corresponding test cases.</li>
-					<li>You can generate a test method stub for the method under the cursor in the editor via the menu or a shortcut.</li>
-					<li>With the Mock plugin: select the dependencies of a class that you want to see mocked into a corresponding test case.</li>
+					<li>MoreUnit decorates classes which have a test case.<em class="lang all"></em></li>
+					<li>It marks methods in the editor which are under test.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>You can jump to a test case/test method in the editor via the menu or a shortcut (<em>Ctrl-J</em> by default).<em class="lang all"></em></li>
+					<li>You can run a test case/test method from the class under test via the menu or a shortcut (<em>Ctrl-R</em> by default).<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>Rename classes/methods and MoreUnit will rename the corresponding test code too.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>Move classes and MoreUnit will move the corresponding test cases.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>You can generate a test method stub for the method under the cursor in the editor via the menu or a shortcut.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>With the Mock plugin: select the dependencies of a class that you want to see mocked into a corresponding test case.<em class="lang java"></em></li>
 				</ul>
 				<aside>
 					<figure>
@@ -89,25 +89,6 @@
 						<figcaption>Pix 3: Menu</figcaption>
 					</figure>
 				</aside>
-			</section>
-
-			<section id="new">
-				<h1>MoreUnit 3.0.1 is out!</h1>
-				<p>We released MoreUnit 3.0.<strong>1</strong>. Finally.<br />
-				As we've already written some months ago, we were &mdash; and we still are &mdash; quite busy in our personal lives, therefore it took us some
-				time to release this version.</p>
-				<p>What makes version 3.0 a major one? Mainly: we added <strong>basic support for all programming languages</strong>, as well as a more powerful way
-				to define your test naming patterns. Also, we conducted a spring cleaning internally. For a more complete list of changes, please refer to the
-				<a href="#releasenotes">release notes</a>.</p>
-				<p>We do think we will have more time to work on MoreUnit soon, and here is our todo-list:</p>
-				<ol>
-					<li>Fix various bugs related to MoreUnit's support for TestNG. TestNG has been supported from the very beginning of MoreUnit but it did not
-					received as much testing effort as JUnit &mdash; that's an euphemism &mdash; and we are now facing various inconsistencies and regressions.
-					(Dear TestNG users, thanks for your recent reports ;-)</li>
-					<li>Consider various feature requests.</li>
-					<li>Properly separate Groovy support from the Java one.</li>
-					<li>Study the possibilities of bringing MoreUnit's Java features to Scala.</li>
-				</ol>
 			</section>
 		</article>
 		<article id="doc">
@@ -415,7 +396,15 @@
 		<article id="releasenotes">
 			<header>Release Notes</header>
 			<section>
-				<h2>2013-01-06: Version 3.0.1 released</h2>
+				<h2>2013-04-XX: Version 3.0.2</h2>
+				<ul>
+					<li>Fix: (bugs 3609347 &amp; 3608154) restores generation of test method stubs</li>
+					<li>Fix: (bugs 3594912, 3594914 &amp; 3594689) "New Test Case" wizard's options now fully works with TestNG</li>
+					<li>Fix: (bug 3594899) erroneous MockitoAnnotations.init() has been replaced with MockitoAnnotations.initMocks()</li>
+					<li>Fix: (bug 3594955) "Mock Dependencies" wizard page now uses values from "New Test Case" page</li>
+				</ul>
+
+				<h2>2013-01-06: Version 3.0.1</h2>
 				<ul>
 					<li>Adds a marker on (non-java) files that are tested</li>
 					<li>Adds support for JMockit and PowerMock in test code generation</li>
@@ -425,7 +414,7 @@
 					<li>Removes dependencies in order to reduce MoreUnit's download size</li>
 				</ul>
 
-				<h2>2012-12-04: Version 3.0.0<em>.02</em> released</h2>
+				<h2>2012-12-04: Version 3.0.0<em>.02</em></h2>
 				<ul>
 					<li>Migration to Java 6 (reduces MoreUnit's download size)</li>
 					<li>Fix: (bug 3592074) error when using "Move" refactoring</li>
@@ -433,7 +422,7 @@
 					<li>Fix: mocking code generation for test classes with parent or comments</li>
 				</ul>
 
-				<h2>2012-11-24: Version 3.0.0<em>.01</em> released</h2>
+				<h2>2012-11-24: Version 3.0.0<em>.01</em></h2>
 				<ul>
 					<li>Adds basic support for all programming languages: jump to source/test file, opening of a pre-filled wizard when file does not exist</li>
 					<li>Adds a more powerful way to define test file naming patterns, and a demo area to test those patterns</li>
@@ -445,7 +434,7 @@
 					<li>Various minor fixes</li>
 				</ul>
 
-				<h2>2012-06-27: Version 2.4.6 released</h2>
+				<h2>2012-06-27: Version 2.4.6</h2>
 				<ul>
 					<li>Some bugfixes</li>
 					<li>Groovy support (uses Java settings for now)</li>
@@ -455,13 +444,13 @@
 					<li>Support for loading custom templates to support other libs (thanks again to Joe)</li>
 				</ul>
 
-				<h2>2012-04-18: Version 2.4.4 released</h2>
+				<h2>2012-04-18: Version 2.4.4</h2>
 				<ul>
 					<li>Improved performance</li>
 					<li>Improvements in the Missing test method view and Missing tests view</li>
 				</ul>
 
-				<h2>2012-02-22: Version 2.4.3 released</h2>
+				<h2>2012-02-22: Version 2.4.3</h2>
 				<ul>
 					<li>Fix: do not consider potential test cases with packages that do not match the package of the class under test anymore, except as a proposal when jumping (bugs 3482684 &amp; 3386098)</li>
 					<li>Adds a "New Class" entry in the "Jump To..." pop-up menu</li>
@@ -475,18 +464,18 @@
 					<li>Much work has been done (and is still done) to improve testing of MoreUnit :-)</li>
 				</ul>
 				
-				<h2>2011-05-18: Version 2.4.2 released</h2>
+				<h2>2011-05-18: Version 2.4.2</h2>
 				<ul>
 					<li>Adds a wizard to select which dependencies are to be mocked in a test case</li>
 				</ul>
 
-				<h2>2011-03-23: Version 2.4.1 released</h2>
+				<h2>2011-03-23: Version 2.4.1</h2>
 				<ul>
 					<li>Fix: stale import statements in test case when changing package of class under test</li>
 					<li>Introduces support for <a href="#doc-mocksupport">mocking frameworks</a></li>
 				</ul>
 
-				<h2>2011-02-20: Version 2.3.0 released</h2>
+				<h2>2011-02-20: Version 2.3.0</h2>
 				<ul>
 					<li>Package is now shown when user is prompted for selecting a class (Jump and Run actions)</li>
 					<li>Fix: exception when moving class to non-source folder</li>
@@ -494,7 +483,7 @@
 					<li>Minor fixes</li>
 				</ul>
 				
-				<h2>2010-10-26: Version 2.2.1 released</h2>
+				<h2>2010-10-26: Version 2.2.1</h2>
 				<ul>
 					<li>Extension point enhancements</li>
 					<li>Extended method search has been improved (better performance and accuracy)</li>
@@ -502,17 +491,17 @@
 					<li>Better support for TestNG (now runs several test cases at once)</li>
 				</ul>
 				
-				<h2>2010-08-12: Version 2.1.3 released</h2>
+				<h2>2010-08-12: Version 2.1.3</h2>
 				<ul>
 					<li>Fix: Java 5 compatibility</li>
 				</ul>
 				
-				<h2>2010-08-01: Version 2.1.2 released</h2>
+				<h2>2010-08-01: Version 2.1.2</h2>
 				<ul>
 					<li>Fix: Added extension point schema to release</li>
 				</ul>
 				
-				<h2>2010-07-31: Version 2.1.1 released</h2>
+				<h2>2010-07-31: Version 2.1.1</h2>
 				<ul>
 					<li>History for switching if there are multiple tests</li>
 					<li>Extended method search</li>
@@ -520,7 +509,7 @@
 					<li>Bugfixing</li>
 				</ul>
 				
-				<h2>2010-06-14: Version 2.0.1 released</h2>				
+				<h2>2010-06-14: Version 2.0.1</h2>				
 				<ul>
 					<li>Please uninstall older versions of MoreUnit before switching to the new release.</li>
 					<li>New Update site (was necessary because of a new feature id moreUnit -&gt; org.moreUnit)</li>
@@ -529,70 +518,70 @@
 					<li>Started to add extension points for MoreUnit (thanks to Thomas Heilbronner for his patch)</li>
 				</ul>
 				
-				<h2>2009-03-25: Version 1.3.3 released</h2>
+				<h2>2009-03-25: Version 1.3.3</h2>
 				<ul>					
 					<li>Bugfix (Exception when opening class-files)</li>					
 				</ul>
 				
-				<h2>2009-03-23: Version 1.3.2 released</h2>
+				<h2>2009-03-23: Version 1.3.2</h2>
 				<ul>					
 					<li>Important Bugfix (Exception when opening non-java-files)</li>					
 				</ul>
 				
-				<h2>2009-03-22: Version 1.3.1 released</h2>
+				<h2>2009-03-22: Version 1.3.1</h2>
 				<ul>					
 					<li>Prefix for test method names is now configurable.</li>
 					<li>Marker in the editor can be configured via preferences</li>
 					<li>Minor Bugfixes</li>
 				</ul>
 				
-				<h2>2008-12-23: Version 1.2.0 released</h2>
+				<h2>2008-12-23: Version 1.2.0</h2>
 				<ul>
 					<li>TestNG support for test case creation wizard</li>
 					<li>Package renaming: tests get moved to new package name</li>
 					<li>Bugfixing</li>
 				</ul>
 				
-				<h2>2008-09-13: Version 1.1.4 released</h2>
+				<h2>2008-09-13: Version 1.1.4</h2>
 				<ul>
 					<li>Redesign project specific settings (mapping between test and source folder)</li>
 					<li>Project specific settings are stored in the .settings folder within the project folder</li>
 					<li>Improved performance</li>
 				</ul>
 				
-				<h2>2008-02-16: Version 1.0.2 released</h2>
+				<h2>2008-02-16: Version 1.0.2</h2>
 				<ul>
 					<li>Project specific settings are now possible.</li>
 					<li>Move refactoring support</li>
 					<li>TestNG support</li>
 				</ul>
 				
-				<h2>2007-02-25: Version 0.8.1 released</h2>
+				<h2>2007-02-25: Version 0.8.1</h2>
 				<ul>
 					<li>MoreUnit now offers a view to show the missing test methods of the open java file.</li>
 					<li>New configuration on the preference page for flexible test case naming (if you enable this feature and for example use "Test" as suffix
 					for test cases MoreUnit will detect FooFlexibleTest.java as test case too).</li>
 				</ul>
 				
-				<h2>2006-12-01: Version 0.7.0 released</h2>
+				<h2>2006-12-01: Version 0.7.0</h2>
 				<ul>
 					<li>Several Bugfixes. Take a look at Bugzilla for details: [1580067, 1579660, 1579476, 1579278]</li>
 					<li>Using the "Generate test" on a test method creates a second test method.</li>
 				</ul>
 				
-				<h2>2006-10-22: Version 0.6.1 released</h2>
+				<h2>2006-10-22: Version 0.6.1</h2>
 				<ul>
 					<li>Bugfixing (solved problems with closed projects and <em>Rename</em> refactorings)</li>
 				</ul>
 				
-				<h2>2006-10-15: Version 0.6.0 released</h2>
+				<h2>2006-10-15: Version 0.6.0</h2>
 				<ul>
 					<li>MoreUnit supports project specific settings to configure a project containing the tests for each project</li>
 					<li>Extended preferences (packages suffixes are now supported for the tests)</li>
 					<li>Bugfixing</li>
 				</ul>
 				
-				<h2>2006-06-15: Version 0.5.2 released</h2>
+				<h2>2006-06-15: Version 0.5.2</h2>
 				<ul>
 					<li>MoreUnit is published under the Eclipse Public License from now on.</li>
 					<li>The two projects MoreUnit and SwitchUnit are merged.</li>
@@ -601,7 +590,7 @@
 					<li>Minor Bugfixes and smaller enhancements.</li>
 				</ul>
 				
-				<h2>2006-05-01: Version 0.4.3 released</h2>
+				<h2>2006-05-01: Version 0.4.3</h2>
 				<ul>
 					<li>MoreUnit offers refactoring support now. Renaming a class or a method leads to a dialog to rename corresponding test cases or methods
 					either.</li>
@@ -613,7 +602,7 @@
 					<li>Switched MoreUnit java 1.5</li>
 				</ul>
 				
-				<h2>2006-03-23: Version 0.3.2 released</h2>
+				<h2>2006-03-23: Version 0.3.2</h2>
 				<ul>
 					<li>New marker icon (if you had already installed a version of MoreUnit you have to start Eclipse once without MoreUnit and afterwards you
 					can install the newest version, don't know what the problem is, but if you don't go this way, no new marker icon will appear) for tested
@@ -625,7 +614,7 @@
 					<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=132746">https://bugs.eclipse.org/bugs/show_bug.cgi?id=132746</a></li>
 				</ul>
 				
-				<h2>2006-01-23: Version 0.3.1 released</h2>
+				<h2>2006-01-23: Version 0.3.1</h2>
 				<ul>
 					<li>"Jump to test" jumps to the corresponding test method, if possible.</li>
 					<li>Marker position always beside method signature (they where positioned beside a comment if there was one above the signature in earlier
@@ -634,7 +623,7 @@
 					fixed now.</li>
 				</ul>
 				
-				<h2>2006-01-08: Version 0.3.0 released</h2>
+				<h2>2006-01-08: Version 0.3.0</h2>
 				<ul>
 					<li>The plugin works now with Eclipse 3.1.1 (and draws the markers for tested methods)</li>
 					<li>Folder for the tests can now be configured via the preferences panel</li>
