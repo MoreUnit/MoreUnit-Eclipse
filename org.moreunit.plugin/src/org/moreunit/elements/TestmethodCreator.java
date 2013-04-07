@@ -33,13 +33,11 @@ import org.moreunit.util.TestMethodDivinerFactory;
  */
 public class TestmethodCreator
 {
-
     private ICompilationUnit compilationUnit;
     private ICompilationUnit testCaseCompilationUnit;
     private String testType;
     private String defaultTestMethodContent = "";
-    TestMethodDivinerFactory testMethodDivinerFactory;
-    TestMethodDiviner testMethodDiviner;
+    private TestMethodDiviner testMethodDiviner;
 
     private boolean shouldCreateFinalMethod;
     private boolean shouldCreateTasks;
@@ -52,8 +50,7 @@ public class TestmethodCreator
     {
         this.compilationUnit = compilationUnit;
         this.testType = testType;
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
+        testMethodDiviner = new TestMethodDivinerFactory(compilationUnit).create(testType);
         this.defaultTestMethodContent = defaultTestMethodContent;
     }
 
@@ -67,12 +64,9 @@ public class TestmethodCreator
 
     public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, String testType, String defaultTestMethodContent)
     {
-        this.compilationUnit = compilationUnit;
+        this(compilationUnit, testType, defaultTestMethodContent);
+
         this.testCaseCompilationUnit = testCaseCompilationUnit;
-        this.testType = testType;
-        testMethodDivinerFactory = new TestMethodDivinerFactory(compilationUnit);
-        testMethodDiviner = testMethodDivinerFactory.create();
-        this.defaultTestMethodContent = defaultTestMethodContent;
     }
 
     public void createTestMethods(List<IMethod> methodsUnderTest)
