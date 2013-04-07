@@ -286,3 +286,31 @@ li.done {
 li.partially-done {
 	color: orange;
 }
+
+.lang:after {
+	margin-left: .8em;
+	padding: .5px .4em;
+	color: white;
+	font-size: .8em;
+	font-style: normal;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+	-ms-border-radius: 3px;
+	border-radius: 3px;
+}
+.lang+.lang:after {
+	margin-left: .3em;
+}
+.lang.all:after {
+	content: 'All';
+	background-color: #5d7;
+}
+.lang.groovy:after {
+	content: 'Groovy';
+	background-color: #3483A1;
+}
+.lang.java:after {
+	content: 'Java';
+	background-color: #f77;
+}
