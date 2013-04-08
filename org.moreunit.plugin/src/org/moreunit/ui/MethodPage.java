@@ -24,6 +24,7 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
+import org.moreunit.elements.MethodCreationResult;
 import org.moreunit.elements.MethodTreeContentProvider;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
@@ -156,11 +157,14 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
 
             ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
             TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit(), prefs.getTestType(), prefs.getTestMethodDefaultContent());
-            IMethod createdMethod = testmethodCreator.createTestMethod(methodUnderTest);
 
-            // Call extensions on extension point, allowing to modify the
-            // created testmethod
-            AddTestMethodParticipatorHandler.getInstance().callExtension(createdMethod, methodUnderTest);
+            MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest);
+            if(result.methodCreated())
+            {
+                // Call extensions on extension point, allowing to modify the
+                // created testmethod
+                AddTestMethodParticipatorHandler.getInstance().callExtension(result.getMethod(), methodUnderTest);
+            }
         }
 
         updateUI();

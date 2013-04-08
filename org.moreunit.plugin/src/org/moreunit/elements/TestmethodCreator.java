@@ -16,7 +16,6 @@ import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.util.BaseTools;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
@@ -118,10 +117,10 @@ public class TestmethodCreator
         return overloadedMethods;
     }
 
-    public IMethod createTestMethod(IMethod method)
+    public MethodCreationResult createTestMethod(IMethod method)
     {
         if(method == null)
-            return null;
+            return MethodCreationResult.noMethodCreated();
 
         if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
         {
@@ -130,7 +129,7 @@ public class TestmethodCreator
             // if TestMethodCreator got created with testcase only, the
             // testCaseCompilationUnit must be set here
             testCaseCompilationUnit = compilationUnit;
-            return createAnotherTestMethod(method);
+            return MethodCreationResult.from(createAnotherTestMethod(method));
         }
 
         List<IMethod> overloadedMethods = getOverloadedMethods();
@@ -145,7 +144,7 @@ public class TestmethodCreator
      * @param methodUnderTest Method under test.
      * @return Test method, or <code>null</code> if it is not found.
      */
-    private IMethod createFirstTestMethod(IMethod methodUnderTest, List<IMethod> overloadedMethods)
+    private MethodCreationResult createFirstTestMethod(IMethod methodUnderTest, List<IMethod> overloadedMethods)
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
         if(testCaseCompilationUnit == null)
@@ -155,7 +154,7 @@ public class TestmethodCreator
             // This happens if the user chooses cancel from the wizard
             if(! oneCorrespondingTestCase.found())
             {
-                return null;
+                return MethodCreationResult.noMethodCreated();
             }
             testCaseCompilationUnit = oneCorrespondingTestCase.get().getCompilationUnit();
         }
@@ -169,18 +168,19 @@ public class TestmethodCreator
         }
 
         // If test method exists, ready
-        if(doesMethodExist(testMethodName))
-            return null;
+        IMethod existingMethod = findTestMethod(testMethodName);
+        if(existingMethod != null)
+            return MethodCreationResult.methodAlreadyExists(existingMethod);
 
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            return createJUnit4Testmethod(testMethodName, null);
+            return MethodCreationResult.from(createJUnit4Testmethod(testMethodName, null));
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-            return createJUnit3Testmethod(testMethodName, null);
+            return MethodCreationResult.from(createJUnit3Testmethod(testMethodName, null));
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            return createTestNgTestMethod(testMethodName, null);
+            return MethodCreationResult.from(createTestNgTestMethod(testMethodName, null));
 
         // This should never be called;
-        return null;
+        return MethodCreationResult.noMethodCreated();
     }
 
     // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
@@ -204,45 +204,19 @@ public class TestmethodCreator
 
     private IMethod createAnotherTestMethod(IMethod testMethod)
     {
-        IMethod testedMethod = getCorrespondingTestedMethod(testMethod);
+        String testMethodName = testMethod.getElementName();
 
-        if(testedMethod != null)
-        {
-            String testMethodName = testMethod.getElementName();
+        if(doesMethodExist(testMethodName))
+            testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 
-            if(doesMethodExist(testMethodName))
-                testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
-
-            if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-                return createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod));
-            else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-                return createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod));
-            else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-                return createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod));
-        }
+        if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
+            return createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod));
+        else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
+            return createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod));
+        else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
+            return createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod));
 
         return null;
-    }
-
-    private IMethod getCorrespondingTestedMethod(IMethod testMethod)
-    {
-        IType classUnderTest = new TestCaseTypeFacade(testCaseCompilationUnit).getCorrespondingClassUnderTest();
-        if(classUnderTest == null)
-        {
-            LogHandler.getInstance().handleWarnLog("Could not retrieve class under test");
-            return null;
-        }
-
-        try
-        {
-            String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
-            return BaseTools.getFirstMethodWithSameNamePrefix(classUnderTest.getMethods(), testedMethodName);
-        }
-        catch (JavaModelException e)
-        {
-            LogHandler.getInstance().handleExceptionLog(e);
-            return null;
-        }
     }
 
     /**

@@ -37,6 +37,7 @@ public interface PreferenceConstants
     String DEFAULT_TEST_SUPERCLASS = "";
     boolean DEFAULT_EXTENDED_TEST_METHOD_SEARCH = false;
     String DEFAULT_TEST_CLASS_NAME_TEMPLATE = TestFileNamePattern.SRC_FILE_VARIABLE + "Test";
+    String DEFAULT_TEST_METHOD_DEFAULT_CONTENT = "throw new RuntimeException(\"not yet implemented\");";
 
     String TEXT_GENERAL_SETTINGS = "General settings for your unit tests (they can then be refined for each project):";
     String TEXT_TEST_SUPERCLASS = "Test superclass:";
