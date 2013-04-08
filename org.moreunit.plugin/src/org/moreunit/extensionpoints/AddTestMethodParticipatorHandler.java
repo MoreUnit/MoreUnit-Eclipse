@@ -11,6 +11,9 @@
  */
 package org.moreunit.extensionpoints;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -18,8 +21,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.handler.AddTestMethodContext;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -36,8 +41,9 @@ import org.moreunit.preferences.Preferences;
  * <dd>23.09.2010 Gro Adapted to modified interface
  * {@link IAddTestMethodContext}, {@link IAddTestMethodContext#getPreferences()}
  * </dd>
- * <dd>30.09.2010 Gro The value of {@link IAddTestMethodContext#isNewTestClassCreated()} is now
- * correctly taken from class {@link ClassTypeFacade}</dd>
+ * <dd>30.09.2010 Gro The value of
+ * {@link IAddTestMethodContext#isNewTestClassCreated()} is now correctly taken
+ * from class {@link ClassTypeFacade}</dd>
  * 
  * @author andreas
  * @version 30.09.2010
@@ -88,6 +94,29 @@ public final class AddTestMethodParticipatorHandler
         // Avoid instancing from external classes
     }
 
+    public IAddTestMethodContext maybeCallExtension(IMethod testMethod)
+    {
+        // TODO Nicolas 9/4/2013 integrate this mess properly into
+        // TypeFacade#getOneCorrespondingMember()
+
+        // class and method under test are pure guesses in the following case,
+        // and they might be wrong from time to time
+        TestCaseTypeFacade testCase = new TestCaseTypeFacade(testMethod.getCompilationUnit());
+        Collection<IType> correspondingClasses = testCase.getCorrespondingClasses(false);
+        if(correspondingClasses.size() != 1)
+        {
+            return null;
+        }
+
+        List<IMethod> methodsUnderTest = testCase.getCorrespondingTestedMethods(testMethod, correspondingClasses);
+        if(methodsUnderTest.size() != 1)
+        {
+            return null;
+        }
+
+        return callExtension(new AddTestMethodContext(testMethod, methodsUnderTest.get(0)));
+    }
+
     /**
      * Try to find extensions to the extension point and, if any, run them.
      * 
@@ -98,6 +127,18 @@ public final class AddTestMethodParticipatorHandler
     {
 
         return callExtension(new AddTestMethodContext(testMethod, methodUnderTest));
+    }
+
+    /**
+     * Try to find extensions to the extension point and, if any, run them.
+     * 
+     * @param testMethod Test method.
+     * @param methodUnderTest Method under test.
+     */
+    public IAddTestMethodContext callExtension(final IMethod testMethod, IMethod methodUnderTest, boolean newTestClassCreated)
+    {
+
+        return callExtension(new AddTestMethodContext(testMethod, methodUnderTest, newTestClassCreated));
     }
 
     /**
@@ -188,4 +229,5 @@ public final class AddTestMethodParticipatorHandler
             SafeRunner.run(runnable);
         }
     }
+
 }

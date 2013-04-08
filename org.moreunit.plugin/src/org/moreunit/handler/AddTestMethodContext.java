@@ -66,6 +66,18 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * Constructor for AddTestMethodContext.
      * 
+     * @param newTestMethod Test method.
+     * @param methodUnderTest Method under test.
+     * @param newTestClass New test class created?
+     */
+    public AddTestMethodContext(IMethod testMethod, IMethod methodUnderTest, boolean newTestClassCreated)
+    {
+        this(testMethod.getCompilationUnit(), testMethod, methodUnderTest.getCompilationUnit(), methodUnderTest, newTestClassCreated);
+    }
+
+    /**
+     * Constructor for AddTestMethodContext.
+     * 
      * @param testClassCompilationUnit Test class.
      * @param newTestMethod Test method.
      * @param classUnderTestCompilationUnit Class under test.

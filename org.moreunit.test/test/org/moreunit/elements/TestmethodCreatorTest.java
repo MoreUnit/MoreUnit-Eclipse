@@ -32,6 +32,7 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Before
     public void setUp() throws Exception
     {
+        TestmethodCreator.discardExtensions = true;
         cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
         methodUnderTest = cutType.addMethod("public int getNumberOne()", "return 1");
 

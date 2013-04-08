@@ -1,7 +1,5 @@
 package org.moreunit.ui;
 
-import java.util.Iterator;
-
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
@@ -24,10 +22,8 @@ import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
-import org.moreunit.elements.MethodCreationResult;
 import org.moreunit.elements.MethodTreeContentProvider;
 import org.moreunit.elements.TestmethodCreator;
-import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
 
@@ -135,6 +131,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         updateUI();
     }
 
+    @SuppressWarnings("unchecked")
     private void addItem()
     {
         ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
@@ -151,21 +148,10 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
             return;
         }
 
-        for (Iterator< ? > allSelected = selection.iterator(); allSelected.hasNext();)
-        {
-            IMethod methodUnderTest = (IMethod) allSelected.next();
+        ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
+        TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit(), testCase.hasJustBeenCreated(), prefs.getTestType(), prefs.getTestMethodDefaultContent());
 
-            ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
-            TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit(), prefs.getTestType(), prefs.getTestMethodDefaultContent());
-
-            MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest);
-            if(result.methodCreated())
-            {
-                // Call extensions on extension point, allowing to modify the
-                // created testmethod
-                AddTestMethodParticipatorHandler.getInstance().callExtension(result.getMethod(), methodUnderTest);
-            }
-        }
+        testmethodCreator.createTestMethods(selection.toList());
 
         updateUI();
     }
@@ -227,7 +213,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
     public void doubleClick(DoubleClickEvent event)
     {
         ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
-        
+
         IMethod method = (IMethod) selection.getFirstElement();
         new EditorUI().open(method);
     }
