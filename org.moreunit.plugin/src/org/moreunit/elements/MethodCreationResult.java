@@ -14,7 +14,9 @@ public class MethodCreationResult
 
     public static MethodCreationResult from(IMethod maybeCreatedMethod)
     {
-        return new MethodCreationResult(maybeCreatedMethod, maybeCreatedMethod == null ? MethodType.NOT_APPLICABLE : MethodType.JUST_CREATED);
+        if(maybeCreatedMethod == null)
+            return noMethodCreated();
+        return new MethodCreationResult(maybeCreatedMethod, MethodType.JUST_CREATED);
     }
 
     public static MethodCreationResult methodAlreadyExists(IMethod existingMethod)

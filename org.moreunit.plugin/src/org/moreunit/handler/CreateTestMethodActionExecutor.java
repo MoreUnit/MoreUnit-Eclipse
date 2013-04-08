@@ -11,13 +11,9 @@
  */
 package org.moreunit.handler;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -31,13 +27,12 @@ import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodCreationResult;
-import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.ui.EditorUI;
 import org.moreunit.util.MoreUnitContants;
 
@@ -93,13 +88,13 @@ public class CreateTestMethodActionExecutor
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
         ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
         IMethod originalMethod = editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition();
-        
+
         // Creates an intermediate object to clarify code that follows
         CreationContext context = createContext(compilationUnit, originalMethod);
 
         // Creates test method template
-        IJavaProject project = editorPartFacade.getJavaProject();
-        TestmethodCreator creator = new TestmethodCreator(compilationUnit, context.testCaseUnit, preferences.getTestType(project), preferences.getTestMethodDefaultContent(project));
+        ProjectPreferences prefs = preferences.getProjectView(editorPartFacade.getJavaProject());
+        TestmethodCreator creator = new TestmethodCreator(compilationUnit, context.testCaseUnit, context.newTestClassCreated, prefs.getTestType(), prefs.getTestMethodDefaultContent());
         MethodCreationResult creationResult = creator.createTestMethod(originalMethod);
 
         if(creationResult.methodAlreadyExists())
@@ -109,18 +104,6 @@ public class CreateTestMethodActionExecutor
         else if(creationResult.methodCreated())
         {
             IMethod createdMethod = creationResult.getMethod();
-
-            // Calls extensions on extension point, allowing to modify the
-            // created test method
-            IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(//
-            context.testCaseUnit, createdMethod, context.unitUnderTest, context.methodUnderTest, context.newTestClassCreated);
-
-            // If created test method has been modified, uses it
-            IMethod modifiedTestMethod = testMethodContext.getTestMethod();
-            if(modifiedTestMethod != null)
-            {
-                createdMethod = modifiedTestMethod;
-            }
 
             editorUI.open(createdMethod);
 
@@ -138,24 +121,9 @@ public class CreateTestMethodActionExecutor
 
     private CreationContext createContext(ICompilationUnit currentlyEditedUnit, IMethod currentlyEditedMethod)
     {
-        // TODO class and method under test are pure guesses in the following case, and they may be wrong most of the time
-        // (that said, TestmethodCreator does not perform better at this time, so it is perfectly consistent :D)
         if(TypeFacade.isTestCase(currentlyEditedUnit.findPrimaryType()))
         {
-            TestCaseTypeFacade testCase = new TestCaseTypeFacade(currentlyEditedUnit);
-            IType potentialClassUnderTest = testCase.getCorrespondingClassUnderTest(); // might be the wrong class (but it is unlikely)
-
-            if(potentialClassUnderTest == null)
-            {
-                return new CreationContext(null, currentlyEditedUnit, null, false);
-            }
-            else
-            {
-                // may not find the right method or any method at all (only searched by name)
-                List<IMethod> potentialMethodsUnderTest = testCase.getCorrespondingTestedMethods(currentlyEditedMethod, potentialClassUnderTest);
-                IMethod potentialMethodUnderTest = potentialMethodsUnderTest.isEmpty() ? null : potentialMethodsUnderTest.get(0);
-                return new CreationContext(potentialClassUnderTest.getCompilationUnit(), currentlyEditedUnit, potentialMethodUnderTest, false);
-            }
+            return new CreationContext(currentlyEditedUnit, false);
         }
         else
         {
@@ -167,7 +135,7 @@ public class CreateTestMethodActionExecutor
             {
                 return null;
             }
-            return new CreationContext(currentlyEditedUnit, testCase.get().getCompilationUnit(), currentlyEditedMethod, testCase.hasJustBeenCreated());
+            return new CreationContext(testCase.get().getCompilationUnit(), testCase.hasJustBeenCreated());
         }
     }
 
@@ -195,16 +163,12 @@ public class CreateTestMethodActionExecutor
 
     private static class CreationContext
     {
-        final ICompilationUnit unitUnderTest;
         final ICompilationUnit testCaseUnit;
-        final IMethod methodUnderTest;
         final boolean newTestClassCreated;
 
-        CreationContext(ICompilationUnit unitUnderTest, ICompilationUnit testCaseUnit, IMethod methodUnderTest, boolean newTestClassCreated)
+        CreationContext(ICompilationUnit testCaseUnit, boolean newTestClassCreated)
         {
-            this.unitUnderTest = unitUnderTest;
             this.testCaseUnit = testCaseUnit;
-            this.methodUnderTest = methodUnderTest;
             this.newTestClassCreated = newTestClassCreated;
         }
     }

@@ -22,6 +22,8 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
+import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
+import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.util.MoreUnitContants;
@@ -40,6 +42,9 @@ import org.moreunit.util.TestMethodDivinerFactory;
  */
 public class TestmethodCreator
 {
+    // to be used for testing only
+    public static boolean discardExtensions;
+
     private ICompilationUnit compilationUnit;
     private ICompilationUnit testCaseCompilationUnit;
     private String testType;
@@ -49,6 +54,7 @@ public class TestmethodCreator
     private boolean shouldCreateFinalMethod;
     private boolean shouldCreateTasks;
     private CodeFormatter testFormatter;
+    private boolean testCaseJustCreated;
 
     /**
      * @param compilationUnit Could be CUT or a test. createTestMethod will
@@ -70,26 +76,35 @@ public class TestmethodCreator
         this.shouldCreateTasks = shouldCreateTasks;
     }
 
-    public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, String testType, String defaultTestMethodContent)
+    public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, boolean testCaseJustCreated, String testType, String defaultTestMethodContent)
     {
         this(compilationUnit, testType, defaultTestMethodContent);
 
-        setTestCaseCompilationUnit(testCaseCompilationUnit);
+        setTestCaseCompilationUnit(testCaseCompilationUnit, testCaseJustCreated);
     }
 
-    public void createTestMethods(List<IMethod> methodsUnderTest)
-    private void setTestCaseCompilationUnit(ICompilationUnit cu)
+    private void setTestCaseCompilationUnit(ICompilationUnit cu, boolean testCaseJustCreated)
     {
         testCaseCompilationUnit = cu;
+        this.testCaseJustCreated = testCaseJustCreated;
         testFormatter = ToolFactory.createCodeFormatter(cu.getJavaProject().getOptions(true));
     }
 
+    public List<IMethod> createTestMethods(List<IMethod> methodsUnderTest)
+    {
+        List<IMethod> createdMethods = new ArrayList<IMethod>(methodsUnderTest.size());
         List<IMethod> overloadedMethods = getOverloadedMethods();
 
         for (IMethod methodUnderTest : methodsUnderTest)
         {
-            createFirstTestMethod(methodUnderTest, overloadedMethods);
+            MethodCreationResult creationResult = createFirstTestMethod(methodUnderTest, overloadedMethods);
+            if(creationResult.methodCreated())
+            {
+                createdMethods.add(creationResult.getMethod());
+            }
         }
+
+        return createdMethods;
     }
 
     // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
@@ -142,7 +157,7 @@ public class TestmethodCreator
             // instance
             // if TestMethodCreator got created with testcase only, the
             // testCaseCompilationUnit must be set here
-            setTestCaseCompilationUnit(compilationUnit);
+            setTestCaseCompilationUnit(compilationUnit, false);
             return MethodCreationResult.from(createAnotherTestMethod(method));
         }
 
@@ -163,14 +178,14 @@ public class TestmethodCreator
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
         if(testCaseCompilationUnit == null)
         {
-            CorrespondingTestCase oneCorrespondingTestCase = classTypeFacade.getOneCorrespondingTestCase(true);
+            CorrespondingTestCase testCase = classTypeFacade.getOneCorrespondingTestCase(true);
 
             // This happens if the user chooses cancel from the wizard
-            if(! oneCorrespondingTestCase.found())
+            if(! testCase.found())
             {
                 return MethodCreationResult.noMethodCreated();
             }
-            setTestCaseCompilationUnit(oneCorrespondingTestCase.get().getCompilationUnit());
+            setTestCaseCompilationUnit(testCase.get().getCompilationUnit(), testCase.hasJustBeenCreated());
         }
 
         // compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
@@ -186,15 +201,22 @@ public class TestmethodCreator
         if(existingMethod != null)
             return MethodCreationResult.methodAlreadyExists(existingMethod);
 
+        IMethod testMethod = null;
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            return MethodCreationResult.from(createJUnit4Testmethod(testMethodName, null));
+            testMethod = createJUnit4Testmethod(testMethodName, null);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-            return MethodCreationResult.from(createJUnit3Testmethod(testMethodName, null));
+            testMethod = createJUnit3Testmethod(testMethodName, null);
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            return MethodCreationResult.from(createTestNgTestMethod(testMethodName, null));
+            testMethod = createTestNgTestMethod(testMethodName, null);
 
-        // This should never be called;
-        return MethodCreationResult.noMethodCreated();
+        if(! discardExtensions && testMethod != null)
+        {
+            IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(testMethod, methodUnderTest, testCaseJustCreated);
+            if(testMethodContext.getTestMethod() != null)
+                testMethod = testMethodContext.getTestMethod();
+        }
+
+        return MethodCreationResult.from(testMethod);
     }
 
     // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
@@ -223,14 +245,22 @@ public class TestmethodCreator
         if(doesMethodExist(testMethodName))
             testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 
+        IMethod newTestMethod = null;
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            return createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod));
+            newTestMethod = createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod));
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-            return createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod));
+            newTestMethod = createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod));
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            return createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod));
+            newTestMethod = createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod));
 
-        return null;
+        if(! discardExtensions && newTestMethod != null)
+        {
+            IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().maybeCallExtension(newTestMethod);
+            if(testMethodContext != null && testMethodContext.getTestMethod() != null)
+                return testMethodContext.getTestMethod();
+        }
+
+        return newTestMethod;
     }
 
     /**
