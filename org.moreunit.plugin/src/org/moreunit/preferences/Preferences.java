@@ -65,6 +65,7 @@ public class Preferences
         store.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
         store.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
         store.setDefault(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
+        store.setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, PreferenceConstants.DEFAULT_TEST_METHOD_DEFAULT_CONTENT);
         return store;
     }
 

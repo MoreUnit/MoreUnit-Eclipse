@@ -30,6 +30,7 @@ import org.moreunit.annotation.MoreUnitAnnotationModel;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
+import org.moreunit.elements.MethodCreationResult;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TypeFacade;
@@ -99,28 +100,39 @@ public class CreateTestMethodActionExecutor
         // Creates test method template
         IJavaProject project = editorPartFacade.getJavaProject();
         TestmethodCreator creator = new TestmethodCreator(compilationUnit, context.testCaseUnit, preferences.getTestType(project), preferences.getTestMethodDefaultContent(project));
-        IMethod createdMethod = creator.createTestMethod(originalMethod);
+        MethodCreationResult creationResult = creator.createTestMethod(originalMethod);
 
-        // Calls extensions on extension point, allowing to modify the created test method
-        IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(//
-                context.testCaseUnit, createdMethod, context.unitUnderTest, context.methodUnderTest, context.newTestClassCreated);
-
-        // If created test method has been modified, uses it
-        IMethod modifiedTestMethod = testMethodContext.getTestMethod();
-        if(modifiedTestMethod != null)
+        if(creationResult.methodAlreadyExists())
         {
-            createdMethod = modifiedTestMethod;
+            editorUI.open(creationResult.getMethod());
         }
-
-        if((createdMethod != null) && createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
+        else if(creationResult.methodCreated())
         {
-            markMethodSuffix(editorPartFacade, createdMethod);
+            IMethod createdMethod = creationResult.getMethod();
 
-        }
+            // Calls extensions on extension point, allowing to modify the
+            // created test method
+            IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(//
+            context.testCaseUnit, createdMethod, context.unitUnderTest, context.methodUnderTest, context.newTestClassCreated);
 
-        if(editorPart instanceof ITextEditor)
-        {
-            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
+            // If created test method has been modified, uses it
+            IMethod modifiedTestMethod = testMethodContext.getTestMethod();
+            if(modifiedTestMethod != null)
+            {
+                createdMethod = modifiedTestMethod;
+            }
+
+            editorUI.open(createdMethod);
+
+            if(createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
+            {
+                markMethodSuffix(editorPartFacade, createdMethod);
+            }
+
+            if(editorPart instanceof ITextEditor)
+            {
+                MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
+            }
         }
     }
 
@@ -180,7 +192,7 @@ public class CreateTestMethodActionExecutor
         editorUI.reveal(testCaseTypeFacade.getEditorPart(), newMethod);
         selectionProvider.setSelection(exactSelection);
     }
-    
+
     private static class CreationContext
     {
         final ICompilationUnit unitUnderTest;
