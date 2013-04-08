@@ -11,7 +11,15 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.core.ToolFactory;
+import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.text.edits.MalformedTreeException;
+import org.eclipse.text.edits.TextEdit;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.log.LogHandler;
@@ -40,6 +48,7 @@ public class TestmethodCreator
 
     private boolean shouldCreateFinalMethod;
     private boolean shouldCreateTasks;
+    private CodeFormatter testFormatter;
 
     /**
      * @param compilationUnit Could be CUT or a test. createTestMethod will
@@ -65,11 +74,16 @@ public class TestmethodCreator
     {
         this(compilationUnit, testType, defaultTestMethodContent);
 
-        this.testCaseCompilationUnit = testCaseCompilationUnit;
+        setTestCaseCompilationUnit(testCaseCompilationUnit);
     }
 
     public void createTestMethods(List<IMethod> methodsUnderTest)
+    private void setTestCaseCompilationUnit(ICompilationUnit cu)
     {
+        testCaseCompilationUnit = cu;
+        testFormatter = ToolFactory.createCodeFormatter(cu.getJavaProject().getOptions(true));
+    }
+
         List<IMethod> overloadedMethods = getOverloadedMethods();
 
         for (IMethod methodUnderTest : methodsUnderTest)
@@ -128,7 +142,7 @@ public class TestmethodCreator
             // instance
             // if TestMethodCreator got created with testcase only, the
             // testCaseCompilationUnit must be set here
-            testCaseCompilationUnit = compilationUnit;
+            setTestCaseCompilationUnit(compilationUnit);
             return MethodCreationResult.from(createAnotherTestMethod(method));
         }
 
@@ -156,7 +170,7 @@ public class TestmethodCreator
             {
                 return MethodCreationResult.noMethodCreated();
             }
-            testCaseCompilationUnit = oneCorrespondingTestCase.get().getCompilationUnit();
+            setTestCaseCompilationUnit(oneCorrespondingTestCase.get().getCompilationUnit());
         }
 
         // compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
@@ -326,13 +340,35 @@ public class TestmethodCreator
 
         try
         {
-            return testCaseCompilationUnit.findPrimaryType().createMethod(methodString, sibling, true, null);
+            return testCaseCompilationUnit.findPrimaryType().createMethod(format(methodString), sibling, true, null);
         }
-        catch (JavaModelException exc)
+        catch (JavaModelException e)
         {
-            LogHandler.getInstance().handleExceptionLog(exc);
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+        catch (MalformedTreeException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+        catch (BadLocationException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
         }
         return null;
+    }
+
+    private String format(String methodString) throws MalformedTreeException, BadLocationException
+    {
+        IDocument document = new Document(methodString);
+        String lineDelimiter = TextUtilities.getDefaultLineDelimiter(document);
+        TextEdit edit = testFormatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, document.get(), 0, document.getLength(), 0, lineDelimiter);
+
+        if(edit != null)
+        {
+            edit.apply(document);
+        }
+
+        return document.get();
     }
 
     /**
