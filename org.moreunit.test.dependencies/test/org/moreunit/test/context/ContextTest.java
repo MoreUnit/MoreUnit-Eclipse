@@ -3,10 +3,7 @@ package org.moreunit.test.context;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IJavaProject;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.test.DummyPreferencesForTesting;
 
 
 @Preferences(testPackagePrefix="Test")

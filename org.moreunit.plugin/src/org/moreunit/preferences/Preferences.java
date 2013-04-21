@@ -69,7 +69,7 @@ public class Preferences
         return store;
     }
 
-    protected IPreferenceStore getWorkbenchStore()
+    public IPreferenceStore getWorkbenchStore()
     {
         return MoreUnitPlugin.getDefault().getPreferenceStore();
     }
@@ -208,8 +208,6 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, methodContent);
     }
 
- 
-
     public String getTestSuperClass(IJavaProject javaProject)
     {
         return getStringValue(PreferenceConstants.TEST_SUPERCLASS, javaProject);
@@ -227,15 +225,6 @@ public class Preferences
             return storeToRead(javaProject).getString(key);
         }
         return storeToRead(javaProject).getDefaultString(key);
-    }
-
-    private boolean getBooleanValue(final String key, IJavaProject javaProject)
-    {
-        if(storeToRead(javaProject).contains(key))
-        {
-            return storeToRead(javaProject).getBoolean(key);
-        }
-        return storeToRead(javaProject).getDefaultBoolean(key);
     }
 
     public String getTestType(IJavaProject javaProject)
@@ -456,6 +445,11 @@ public class Preferences
     public ProjectPreferences getProjectView(IJavaProject project)
     {
         return new ProjectPreferences(this, project);
+    }
+
+    public ProjectPreferences getWorkspaceView()
+    {
+        return new ProjectPreferences(this, null);
     }
 
     public static class ProjectPreferences
