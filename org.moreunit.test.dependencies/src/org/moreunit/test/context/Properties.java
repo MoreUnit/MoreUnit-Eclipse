@@ -13,19 +13,15 @@ public @interface Properties
 
     boolean extendedMethodSearch() default false;
 
-    boolean flexibleNaming() default false;
-
     boolean testMethodPrefix() default false;
 
     TestType testType() default TestType.UNDEFINED;
-
-    String[] testClassPrefixes() default "";
-
-    String[] testClassSuffixes() default "";
 
     String testPackagePrefix() default "";
 
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
+    
+    String testClassNameTemplate() default "";
 }

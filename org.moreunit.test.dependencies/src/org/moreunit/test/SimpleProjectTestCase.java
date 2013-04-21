@@ -79,9 +79,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
         List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
         mappingList.add(new SourceFolderMapping(workspaceTestProject, sourcesFolder, testFolder));
         preferences.setMappingList(workspaceTestProject, mappingList);
-
-        preferences.setSuffixes(workspaceTestProject, new String[] { "Test" });
-        preferences.setPrefixes(workspaceTestProject, new String[] {});
+        preferences.getProjectView(workspaceTestProject).setTestClassNameTemplate("${srcFile}Test");
     }
 
     protected IType createJavaClass(String javaClassName, boolean deleteCompilationUnitAfterTest) throws JavaModelException

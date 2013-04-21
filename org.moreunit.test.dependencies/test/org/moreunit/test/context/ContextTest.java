@@ -33,15 +33,13 @@ public class ContextTest extends ContextTestCase
     
     @Project(mainCls="SomeClass")
     @Preferences(extendedMethodSearch=true,
-                 testClassPrefixes="Pre",
                  testMethodPrefix=true,
-                 flexibleNaming=true,
-                 testClassSuffixes="Post",
                  testPackagePrefix="pre",
                  testPackageSuffix="post",
                  testSrcFolder="testsrc",
                  testSuperClass="my.SuperClass",
-                 testType=TestType.TESTNG)
+                 testType=TestType.TESTNG,
+                 testClassNameTemplate="${srcFile}Mest")
     @Test
     public void should_read_preferences_from_annotation()
     {
@@ -49,7 +47,7 @@ public class ContextTest extends ContextTestCase
         IJavaProject javaProject = context.getProjectHandler().get();
         assertThat(prefs.shouldUseTestMethodExtendedSearch(javaProject)).isTrue();
         assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("Pre*${srcFile}*Post");
+        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("${srcFile}Mest");
         assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
         assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
         assertThat(prefs.getJunitDirectoryFromPreferences(javaProject)).isEqualTo("testsrc");
@@ -59,14 +57,12 @@ public class ContextTest extends ContextTestCase
     
     @Project(mainCls="SomeClass", 
              properties=@Properties(extendedMethodSearch=true,
-                                    testClassPrefixes="Pre",
                                     testMethodPrefix=true,
-                                    flexibleNaming=true,
-                                    testClassSuffixes="Post",
                                     testPackagePrefix="pre",
                                     testPackageSuffix="post",
                                     testSuperClass="my.SuperClass",
-                                    testType=TestType.TESTNG))
+                                    testType=TestType.TESTNG,
+                                    testClassNameTemplate="${srcFile}Dest"))
     @Test
     public void should_read_properties_from_annotation()
     {
@@ -74,7 +70,7 @@ public class ContextTest extends ContextTestCase
         IJavaProject javaProject = context.getProjectHandler().get();
         assertThat(prefs.shouldUseTestMethodExtendedSearch(javaProject)).isTrue();
         assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("Pre*${srcFile}*Post");
+        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("${srcFile}Dest");
         assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
         assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
         assertThat(prefs.getTestSuperClass(javaProject)).isEqualTo("my.SuperClass");

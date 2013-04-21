@@ -7,8 +7,6 @@ import java.util.List;
 
 class PreferencesBaseConfiguration
 {
-    private final List<String> testClassPrefixes = newArrayList();
-    private final List<String> testClassSuffixes = newArrayList();
     private String testPackagePrefix;
     private String testPackageSuffix;
     private String testSuperClass;
@@ -16,42 +14,7 @@ class PreferencesBaseConfiguration
     private boolean extendedMethodSearch;
     private boolean flexibleNaming;
     private boolean testMethodPrefix;
-
-    public List<String> getTestClassSuffixes()
-    {
-        return testClassSuffixes;
-    }
-
-    public String[] getTestClassSuffixArray()
-    {
-        return testClassSuffixes.toArray(new String[testClassSuffixes.size()]);
-    }
-
-    public void setTestClassSuffixes(String[] suffixes)
-    {
-        if(suffixes != null)
-        {
-            Collections.addAll(testClassSuffixes, suffixes);
-        }
-    }
-
-    public List<String> getTestClassPrefixes()
-    {
-        return testClassPrefixes;
-    }
-
-    public String[] getTestClassPrefixArray()
-    {
-        return testClassPrefixes.toArray(new String[testClassPrefixes.size()]);
-    }
-
-    public void setTestClassPrefixes(String[] prefixes)
-    {
-        if(prefixes != null)
-        {
-            Collections.addAll(testClassPrefixes, prefixes);
-        }
-    }
+    private String testClassNameTemplate;
 
     public String getTestPackagePrefix()
     {
@@ -121,5 +84,20 @@ class PreferencesBaseConfiguration
     public void setMethodPrefix(boolean testMethodPrefix)
     {
         this.testMethodPrefix = testMethodPrefix;
+    }
+
+    public void setTestMethodPrefix(boolean testMethodPrefix)
+    {
+        this.testMethodPrefix = testMethodPrefix;
+    }
+    
+    public String getTestClassNameTemplate()
+    {
+        return testClassNameTemplate;
+    }
+    
+    public void setTestClassNameTemplate(String testClassNameTemplate)
+    {
+        this.testClassNameTemplate = testClassNameTemplate;
     }
 }

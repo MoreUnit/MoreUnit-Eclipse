@@ -11,7 +11,7 @@ import org.moreunit.test.context.TestType;
 @Context(mainSrc = "SomeConcept.cut.java.txt",
         testSrc = "SomeConcept.test.java.txt",
         preferences = @Preferences(testType = TestType.JUNIT4,
-                testClassSuffixes = { "Test", "TestWithParent" }))
+                testClassNameTemplate = "${srcFile}(Test|TestWithParent)" ))
 public class OpenWizardAndSelectDependenciesTest extends UiTestCase
 {
     private final String expectationQualifier = "Mockito_post_1.9";
@@ -74,7 +74,7 @@ public class OpenWizardAndSelectDependenciesTest extends UiTestCase
     @Context(mainSrc = "SomeConcept.cut.java.txt",
             testSrc = "SomeConcept.test_with_parent.test.java.txt",
             preferences = @Preferences(testType = TestType.JUNIT4,
-                    testClassSuffixes = "TestWithParent"))
+                    testClassNameTemplate = "${srcFile}TestWithParent"))
     public void should_place_type_annotation_at_the_right_place_when_test_case_has_parent_class() throws Exception
     {
         // given
@@ -95,7 +95,7 @@ public class OpenWizardAndSelectDependenciesTest extends UiTestCase
     @Context(mainSrc = "SomeConcept.cut.java.txt",
             testSrc = "SomeConcept.test_with_comment.test.java.txt",
             preferences = @Preferences(testType = TestType.JUNIT4,
-                    testClassSuffixes = "TestWithComment"))
+                    testClassNameTemplate = "${srcFile}TestWithComment"))
     public void should_place_type_annotation_at_the_right_place_when_test_case_has_comment() throws Exception
     {
         // given

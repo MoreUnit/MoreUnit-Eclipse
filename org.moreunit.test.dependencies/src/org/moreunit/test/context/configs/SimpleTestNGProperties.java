@@ -4,7 +4,7 @@ import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
 
 @Properties(testType = TestType.TESTNG,
-            testClassSuffixes = "Test",
+            testClassNameTemplate = "${srcFile}Test",
             testMethodPrefix = false)
 public class SimpleTestNGProperties
 {

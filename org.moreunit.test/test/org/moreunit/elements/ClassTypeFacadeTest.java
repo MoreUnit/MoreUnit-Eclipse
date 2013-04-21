@@ -49,7 +49,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    @Project(mainCls = "com: enum SomeEnum", properties = @Properties(testType = TestType.JUNIT3, testClassSuffixes = "Test"))
+    @Project(mainCls = "com: enum SomeEnum", properties = @Properties(testType = TestType.JUNIT3, testClassNameTemplate = "${srcFile}Test"))
     public void getOneCorrespondingTestCase_should_return_test_for_enum() throws Exception
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(context.getCompilationUnit("com.SomeEnum"));

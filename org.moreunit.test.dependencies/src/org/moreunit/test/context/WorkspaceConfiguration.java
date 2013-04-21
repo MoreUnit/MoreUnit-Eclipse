@@ -148,23 +148,16 @@ class WorkspaceConfiguration
 
     private void applyBasePreferences(DummyPreferencesForTesting prefs, IJavaProject project, PreferencesBaseConfiguration prefBaseConfig)
     {
-        prefs.setShouldUseFlexibleTestCaseNaming(project, prefBaseConfig.isFlexibleNaming());
         prefs.setShouldUseTestMethodExtendedSearch(project, prefBaseConfig.isExtendedMethodSearch());
         prefs.setTestMethodTypeShouldUsePrefix(project, prefBaseConfig.isTestMethodPrefix());
-        prefs.setPrefixes(project, prefBaseConfig.getTestClassPrefixArray());
-        prefs.setSuffixes(project, prefBaseConfig.getTestClassSuffixArray());
         prefs.setTestSuperClass(project, prefBaseConfig.getTestSuperClass());
         prefs.setTestPackagePrefix(project, prefBaseConfig.getTestPackagePrefix());
         prefs.setTestPackageSuffix(project, prefBaseConfig.getTestPackageSuffix());
+        prefs.getProjectView(project).setTestClassNameTemplate(prefBaseConfig.getTestClassNameTemplate());
         if(prefBaseConfig.getTestType() != TestType.UNDEFINED)
         {
             prefs.setTestType(project, TEST_TYPE_TO_PREF_VALUE.get(prefBaseConfig.getTestType()));
         }
-
-        // necessary until tests are migrated to preferences v2 (that said, it
-        // allows for testing the automatic migration of user preferences, which
-        // is good)
-        prefs.forcePreferencesMigration(project);
     }
 
     private void applyProjectProperties(WorkspaceHandler workspaceHandler, DummyPreferencesForTesting prefs)

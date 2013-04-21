@@ -72,16 +72,14 @@ public abstract class NewClassyWizardTestCase extends ContextTestCase
     }
 
     @Properties(testType = TestType.JUNIT3,
-        testClassPrefixes = "Som,Some",
-        testClassSuffixes = "Tes,Test",
+        testClassNameTemplate = "(Som|Some)${srcFile}(Tes|Test)",
         testPackagePrefix = "pre",
         testPackageSuffix = "suf",
         testMethodPrefix = true)
     protected static class JUnit3WithVariousPrefixesAndSuffixes {}
     
     @org.moreunit.test.context.Preferences(testType = TestType.JUNIT3,
-        testClassPrefixes = "Som,Some",
-        testClassSuffixes = "Tes,Test",
+        testClassNameTemplate = "(Som|Some)${srcFile}(Tes|Test)",
         testPackagePrefix = "pre",
         testPackageSuffix = "suf",
         testMethodPrefix = true,

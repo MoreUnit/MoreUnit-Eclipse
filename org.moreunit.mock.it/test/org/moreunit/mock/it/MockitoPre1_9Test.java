@@ -7,7 +7,7 @@ import org.moreunit.test.context.TestType;
 @Context(mainSrc = "SomeConcept.cut.java.txt",
         testSrc = "SomeConcept.test.java.txt",
         preferences = @Preferences(testType = TestType.JUNIT4,
-                testClassSuffixes = "Test"))
+                testClassNameTemplate = "${srcFile}Test"))
 public class MockitoPre1_9Test extends MockingTestCase
 {
     public MockitoPre1_9Test()

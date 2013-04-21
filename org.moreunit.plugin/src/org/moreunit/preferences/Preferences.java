@@ -69,7 +69,7 @@ public class Preferences
         return store;
     }
 
-    protected IPreferenceStore getWorkbenchStore()
+    public IPreferenceStore getWorkbenchStore()
     {
         return MoreUnitPlugin.getDefault().getPreferenceStore();
     }
@@ -208,50 +208,6 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, methodContent);
     }
 
-    /**
-     * @Deprecated use {@link ProjectPreferences#getTestClassNamePattern()}
-     *             instead.
-     */
-    @Deprecated
-    public String[] getPrefixes(IJavaProject javaProject)
-    {
-        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.Deprecated.PREFIXES);
-        return PreferencesConverter.convertStringToArray(preferenceValue);
-    }
-
-    /**
-     * @Deprecated use
-     *             {@link ProjectPreferences#setTestClassNameTemplate(String)}
-     *             instead.
-     */
-    @Deprecated
-    public void setPrefixes(IJavaProject javaProject, String[] prefixes)
-    {
-        getProjectStore(javaProject).setValue(PreferenceConstants.Deprecated.PREFIXES, PreferencesConverter.convertArrayToString(prefixes));
-    }
-
-    /**
-     * @Deprecated use {@link ProjectPreferences#getTestClassNamePattern()}
-     *             instead.
-     */
-    @Deprecated
-    public String[] getSuffixes(IJavaProject javaProject)
-    {
-        String preferenceValue = storeToRead(javaProject).getString(PreferenceConstants.Deprecated.SUFFIXES);
-        return PreferencesConverter.convertStringToArray(preferenceValue);
-    }
-
-    /**
-     * @Deprecated use
-     *             {@link ProjectPreferences#setTestClassNameTemplate(String)}
-     *             instead.
-     */
-    @Deprecated
-    public void setSuffixes(IJavaProject javaProject, String[] suffixes)
-    {
-        getProjectStore(javaProject).setValue(PreferenceConstants.Deprecated.SUFFIXES, PreferencesConverter.convertArrayToString(suffixes));
-    }
-
     public String getTestSuperClass(IJavaProject javaProject)
     {
         return getStringValue(PreferenceConstants.TEST_SUPERCLASS, javaProject);
@@ -271,15 +227,6 @@ public class Preferences
         return storeToRead(javaProject).getDefaultString(key);
     }
 
-    private boolean getBooleanValue(final String key, IJavaProject javaProject)
-    {
-        if(storeToRead(javaProject).contains(key))
-        {
-            return storeToRead(javaProject).getBoolean(key);
-        }
-        return storeToRead(javaProject).getDefaultBoolean(key);
-    }
-
     public String getTestType(IJavaProject javaProject)
     {
         if(storeToRead(javaProject).contains(PreferenceConstants.TEST_TYPE))
@@ -292,27 +239,6 @@ public class Preferences
     public void setTestType(IJavaProject javaProject, String testType)
     {
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_TYPE, testType);
-    }
-
-    /**
-     * @Deprecated use {@link ProjectPreferences#getTestClassNamePattern()}
-     *             instead.
-     */
-    @Deprecated
-    public boolean shouldUseFlexibleTestCaseNaming(IJavaProject javaProject)
-    {
-        return getBooleanValue(PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING, javaProject);
-    }
-
-    /**
-     * @Deprecated use
-     *             {@link ProjectPreferences#setTestClassNameTemplate(String)}
-     *             instead.
-     */
-    @Deprecated
-    public void setShouldUseFlexibleTestCaseNaming(IJavaProject javaProject, boolean shouldUseFlexibleNaming)
-    {
-        getProjectStore(javaProject).setValue(PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING, shouldUseFlexibleNaming);
     }
 
     public String getTestPackagePrefix(IJavaProject javaProject)
@@ -519,6 +445,11 @@ public class Preferences
     public ProjectPreferences getProjectView(IJavaProject project)
     {
         return new ProjectPreferences(this, project);
+    }
+
+    public ProjectPreferences getWorkspaceView()
+    {
+        return new ProjectPreferences(this, null);
     }
 
     public static class ProjectPreferences
