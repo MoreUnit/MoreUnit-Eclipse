@@ -21,7 +21,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 			 testSrcFolder = "junit",
 			 properties = @Properties(
 				        testType = TestType.JUNIT4,
-				        testClassSuffixes = "Test",
+				        testClassNameTemplate = "${srcFile}Test",
 				        testMethodPrefix = true))
 	@Test
 	public void should_create_testmethod_when_shortcut_is_pressed_in_method() throws JavaModelException
@@ -47,7 +47,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 	   		 testSrcFolder = "junit",
 	   		 properties = @Properties(
 	    			        testType = TestType.JUNIT4,
-	    			        testClassSuffixes = "Test",
+	    			        testClassNameTemplate = "${srcFile}Test",
 	    			        testMethodPrefix = true))
 	@Test
 	public void should_create_second_testmethod_when_shortcut_is_pressed_in_testmethod() throws JavaModelException

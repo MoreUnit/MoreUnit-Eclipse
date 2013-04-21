@@ -13,9 +13,9 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-@Preferences(testClassSuffixes="Test", 
-             testSrcFolder="test", 
-             testType=TestType.JUNIT4)
+@Preferences(testClassNameTemplate = "${srcFile}Test", 
+             testSrcFolder = "test", 
+             testType = TestType.JUNIT4)
 public class MoveClassTest extends JavaProjectSWTBotTestHelper 
 {
 	@Project(

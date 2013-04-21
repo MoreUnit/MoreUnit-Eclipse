@@ -47,7 +47,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
             mainCls = "org:SomeClass",
             testCls = "org:SomeClassTest;org:SomeClassTests",
             properties = @Properties(testType = TestType.JUNIT4,
-                                     testClassSuffixes = "Test,Tests"))
+                                     testClassNameTemplate = "${srcFile}(Test|Tests)"))
     @Test
     public void should_show_dialog_with_when_jump_shortcut_pressed_in_cut_and_multiple_tests_exists()
     {
@@ -63,7 +63,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     		 testSrc = "BasicJump_test_with_testmethod.txt",
     		 properties = @Properties(
     			        testType = TestType.JUNIT4,
-    			        testClassSuffixes = "Test",
+    			        testClassNameTemplate = "${srcFile}Test",
     			        testMethodPrefix = true))
     @Test
     public void should_jump_from_method_to_test_method()

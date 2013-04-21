@@ -58,7 +58,7 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 			 mainSrcFolder="src", 
 			 testSrc="test",
 			 testCls="some:SecondTest")
-	@Preferences(testClassSuffixes="Test", 
+	@Preferences(testClassNameTemplate="${srcFile}Test", 
 	             testType=TestType.JUNIT4)
 	public void should_rename_testpackage_when_renaming_package()
 	{

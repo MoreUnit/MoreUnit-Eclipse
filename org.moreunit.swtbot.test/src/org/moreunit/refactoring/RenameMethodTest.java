@@ -13,7 +13,7 @@ import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 
-@Preferences(testClassSuffixes = "Test", 
+@Preferences(testClassNameTemplate = "${srcFile}Test", 
              testSrcFolder = "test", 
              testType = TestType.JUNIT4,
              testMethodPrefix = true)
