@@ -11,6 +11,9 @@ import org.fest.assertions.Condition;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 public abstract class ResourcesTest
 {
     protected abstract Workspace getWorkspaceToTest() throws Exception;
@@ -51,7 +54,7 @@ public abstract class ResourcesTest
     public void wokspace_should_be_traversable_from_top_to_bottom_ignoring_resources_that_do_not_exist() throws Exception
     {
         List<Project> projects = workspace.listProjects();
-        assertThat(projects).onProperty("name").containsExactly("project1", "project2");
+        assertThat(namesOf(projects)).containsExactly("project1", "project2");
 
         assertContainsFolders(projects.get(0), "folderA", "folderB", "folderC", "folderD");
         assertContainsFiles(projects.get(0), none());
@@ -416,12 +419,12 @@ public abstract class ResourcesTest
 
     private void assertContainsFiles(ResourceContainer container, String... fileNames)
     {
-        assertThat(container.listFiles()).onProperty("name").containsExactly((Object[]) fileNames);
+        assertThat(namesOf(container.listFiles())).containsExactly((Object[]) fileNames);
     }
 
     private void assertContainsFolders(ResourceContainer container, String... folderNames)
     {
-        assertThat(container.listFolders()).onProperty("name").containsExactly((Object[]) folderNames);
+        assertThat(namesOf(container.listFolders())).containsExactly((Object[]) folderNames);
     }
 
     private void assertIllegalFileAccess(ResourceContainer container, String filePath)
@@ -494,6 +497,17 @@ public abstract class ResourcesTest
                 return r instanceof Resource && ((Resource) r).getName().equals(expectedName);
             }
         };
+    }
+
+    private List<String> namesOf(List< ? extends Resource> resources)
+    {
+        return Lists.transform(resources, new Function<Resource, String>()
+        {
+            public String apply(Resource r)
+            {
+                return r.getName();
+            }
+        });
     }
 
     private String[] none()
