@@ -14,7 +14,6 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.log.LogHandler;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
 
@@ -31,7 +30,6 @@ public class RenameMethodParticipant extends RenameParticipant
 
     protected boolean initialize(Object element)
     {
-        LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.initialize");
         setMethod(element);
         if(TypeFacade.isTestCase(renamedMethod.getCompilationUnit().findPrimaryType()))
             return false;
@@ -49,20 +47,16 @@ public class RenameMethodParticipant extends RenameParticipant
 
     public String getName()
     {
-        LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.getName");
         return "MoreUnit Rename Method";
     }
 
     public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
     {
-        LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.checkConditions");
         return new RefactoringStatus();
     }
 
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
-        LogHandler.getInstance().handleInfoLog("RenameMethodParticipant.createChange");
-
         if(! getArguments().getUpdateReferences())
         {
             return null;

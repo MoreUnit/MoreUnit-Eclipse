@@ -21,7 +21,6 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
 import org.moreunit.util.PluginTools;
@@ -39,7 +38,6 @@ public class RenamePackageParticipant extends RenameParticipant
     @Override
     protected boolean initialize(Object element)
     {
-        LogHandler.getInstance().handleInfoLog("RenamePackageParticipant.initialize");
         packageFragment = (IPackageFragment) element;
 
         IJavaElement fragment = packageFragment;
@@ -114,7 +112,6 @@ public class RenamePackageParticipant extends RenameParticipant
     @Override
     public String getName()
     {
-        LogHandler.getInstance().handleInfoLog("RenamePackageParticipant.getName");
         return "MoreUnit Rename Package";
     }
 }

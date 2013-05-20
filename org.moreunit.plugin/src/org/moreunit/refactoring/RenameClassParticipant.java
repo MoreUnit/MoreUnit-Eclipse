@@ -34,7 +34,6 @@ public class RenameClassParticipant extends RenameParticipant
 
     protected boolean initialize(Object element)
     {
-        LogHandler.getInstance().handleInfoLog("RenameClassParticipant.initialize");
         compilationUnit = (ICompilationUnit) element;
         if(TypeFacade.isTestCase(compilationUnit.findPrimaryType()))
             return false;
@@ -45,7 +44,6 @@ public class RenameClassParticipant extends RenameParticipant
 
     public String getName()
     {
-        LogHandler.getInstance().handleInfoLog("RenameClassParticipant.getName");
         return "MoreUnit Rename Class";
     }
 

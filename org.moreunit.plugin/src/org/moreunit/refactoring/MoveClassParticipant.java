@@ -146,7 +146,6 @@ public class MoveClassParticipant extends MoveParticipant
         IPackageFragmentRoot unitSourceFolder = Preferences.getInstance().getTestSourceFolder(moveClassDestinationPackage.getJavaProject(), (IPackageFragmentRoot) moveClassDestinationPackage.getParent());
         if(unitSourceFolder == null || ! unitSourceFolder.exists())
         {
-            System.out.println("Kein Source folder");
             return null;
         }
 

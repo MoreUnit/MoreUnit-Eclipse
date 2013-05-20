@@ -18,7 +18,6 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.log.LogHandler;
 import org.moreunit.util.TestMethodDivinerFactory;
 
 /**
@@ -36,7 +35,6 @@ public class MoveMethodParticipant extends MoveParticipant
 
     protected boolean initialize(Object element)
     {
-        LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.initialize");
         movedMethod = (IMethod) element;
         if(TypeFacade.isTestCase(movedMethod.getCompilationUnit().findPrimaryType()))
             return false;
@@ -50,20 +48,16 @@ public class MoveMethodParticipant extends MoveParticipant
 
     public String getName()
     {
-        LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.getName");
         return "MoreUnit Move Method";
     }
 
     public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
     {
-        LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.checkConditions");
         return new RefactoringStatus();
     }
 
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
-        LogHandler.getInstance().handleInfoLog("MoveMethodParticipant.createChange");
-
         SourceType destination = (SourceType) getArguments().getDestination();
         ICompilationUnit destinationCompilationUnit = (ICompilationUnit) destination.getParent();
         ClassTypeFacade destinationFacade = new ClassTypeFacade(destinationCompilationUnit);
