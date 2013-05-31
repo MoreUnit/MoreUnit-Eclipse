@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mocking-templates version="1.0">
+    <category id="some.category" name="Some Category"/>
+    <!-- no mocking template -->
+</mocking-templates>

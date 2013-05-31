@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import static java.util.Collections.emptyList;
+
 @XmlRootElement(name = "mocking-templates")
 public class MockingTemplates implements Iterable<MockingTemplate>
 {
@@ -31,17 +33,21 @@ public class MockingTemplates implements Iterable<MockingTemplate>
 
     public Collection<Category> categories()
     {
+        if(categories == null)
+        {
+            return emptyList();
+        }
         return categories;
     }
 
     public Iterator<MockingTemplate> iterator()
     {
-        return mockingTemplates.iterator();
+        return templates().iterator();
     }
 
     public MockingTemplate findTemplate(String templateId)
     {
-        for (MockingTemplate template : mockingTemplates)
+        for (MockingTemplate template : templates())
         {
             if(templateId.equals(template.id()))
             {
@@ -49,5 +55,14 @@ public class MockingTemplates implements Iterable<MockingTemplate>
             }
         }
         return null;
+    }
+
+    private List<MockingTemplate> templates()
+    {
+        if(mockingTemplates == null)
+        {
+            return emptyList();
+        }
+        return mockingTemplates;
     }
 }

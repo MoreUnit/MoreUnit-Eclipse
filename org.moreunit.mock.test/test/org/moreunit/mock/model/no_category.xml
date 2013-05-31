@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mocking-templates version="1.0">
+    <!-- no category -->
+    <mocking-template
+        id="some.mocking.template"
+        category="org.moreunit.mock.mockito"
+        name="Some Mocking Template">
+        <code-template id="some.code.template" part="test-class-fields">
+            <pattern>private int someField = 0;</pattern>
+        </code-template>
+    </mocking-template>
+</mocking-templates>
