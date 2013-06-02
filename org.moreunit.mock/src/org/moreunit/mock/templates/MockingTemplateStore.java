@@ -17,7 +17,7 @@ public class MockingTemplateStore implements Service
     private final Map<String, MockingTemplate> templates = new HashMap<String, MockingTemplate>();
     private final Map<String, Set<MockingTemplate>> templatesByCategory = new HashMap<String, Set<MockingTemplate>>();
 
-    public void store(MockingTemplates mockingTemplates)
+    public void store(MockingTemplates mockingTemplates) throws TemplateAlreadyDefinedException
     {
         for (Category category : mockingTemplates.categories())
         {
@@ -33,7 +33,7 @@ public class MockingTemplateStore implements Service
         }
     }
 
-    private void store(MockingTemplate template)
+    private void store(MockingTemplate template) throws TemplateAlreadyDefinedException
     {
         if(templates.containsKey(template.id()))
         {
@@ -75,16 +75,6 @@ public class MockingTemplateStore implements Service
     public Category getCategory(String categoryId)
     {
         return categories.get(categoryId);
-    }
-
-    public static class TemplateAlreadyDefinedException extends RuntimeException
-    {
-        private static final long serialVersionUID = - 6594805348873016229L;
-
-        public TemplateAlreadyDefinedException(String templateId)
-        {
-            super(templateId);
-        }
     }
 
     @Override

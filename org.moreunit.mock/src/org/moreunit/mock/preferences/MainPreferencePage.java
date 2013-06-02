@@ -1,5 +1,8 @@
 package org.moreunit.mock.preferences;
 
+import java.net.URL;
+import java.util.Map.Entry;
+
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -12,9 +15,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.moreunit.core.ui.DialogFactory;
 import org.moreunit.mock.MoreUnitMockPlugin;
+import org.moreunit.mock.templates.LoadingResult;
 import org.moreunit.mock.templates.MockingTemplateLoader;
 
+import static org.moreunit.core.util.StringConstants.NEWLINE;
 import static org.moreunit.mock.config.MockModule.$;
 
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
@@ -53,7 +59,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
         lbl.setText("You may add custom templates by placing them in the following folder:");
 
         lbl = new Label(contentComposite, SWT.NONE);
-        lbl.setText(templateLoader.getTemplatesLocation());
+        lbl.setText(templateLoader.getWorkspaceTemplatesLocation());
         GridData data = new GridData();
         data.horizontalIndent = 15;
         lbl.setLayoutData(data);
@@ -71,8 +77,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
         {
             public void widgetSelected(SelectionEvent e)
             {
-                templateLoader.loadTemplates();
+                LoadingResult templateLoadingResult = templateLoader.loadTemplates();
                 templateStyleSelector.reloadTemplates();
+                informUserAboutInvalidTemplates(templateLoadingResult);
             }
         });
 
@@ -82,6 +89,27 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
     private void placeHolder(Composite parent)
     {
         new Label(parent, SWT.NONE);
+    }
+
+    private void informUserAboutInvalidTemplates(LoadingResult templateLoadingResult)
+    {
+        if(! templateLoadingResult.invalidTemplatesFound())
+        {
+            return;
+        }
+
+        StringBuilder errBuilder = new StringBuilder("The following templates could not be loaded:");
+
+        for (Entry<URL, String> urlAndReason : templateLoadingResult.invalidTemplates().entrySet())
+        {
+            errBuilder.append(NEWLINE)
+                    .append(NEWLINE).append("Template: ")
+                    .append(NEWLINE).append(urlAndReason.getKey())
+                    .append(NEWLINE).append("Reason: ")
+                    .append(NEWLINE).append(urlAndReason.getValue());
+        }
+
+        new DialogFactory(getShell()).createErrorDialog(errBuilder.toString()).open();
     }
 
     @Override

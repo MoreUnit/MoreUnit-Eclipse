@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.MockingTemplates;
-import org.moreunit.mock.templates.MockingTemplateStore.TemplateAlreadyDefinedException;
 
 public class MockingTemplateStoreTest
 {
@@ -142,7 +141,7 @@ public class MockingTemplateStoreTest
         catch (TemplateAlreadyDefinedException e)
         {
             // then
-            assertThat(e).hasMessage(template1bis.id());
+            assertThat(e.getTemplateId()).isEqualTo(template1bis.id());
         }
     }
 }

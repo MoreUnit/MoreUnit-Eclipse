@@ -25,7 +25,7 @@ public class MockingTemplateLoader implements Service
         this.logger = logger;
     }
 
-    public void loadTemplates()
+    public LoadingResult loadTemplates()
     {
         resourceLoader.ensureStateExists(TEMPLATE_DIRECTORY);
 
@@ -33,17 +33,19 @@ public class MockingTemplateLoader implements Service
 
         templateStore.clear();
 
+        LoadingResult result = new LoadingResult();
+
         Collection<URL> templates = resourceLoader.findBundleResources(TEMPLATE_DIRECTORY, "*.xml");
         for (URL template : templates)
         {
-            loadTemplate(template, false);
+            loadTemplate(template, result);
         }
         logger.debug(String.format("%d default templates loaded", templates.size()));
 
         templates = resourceLoader.findWorkspaceStateResources(TEMPLATE_DIRECTORY, "*.xml");
         for (URL template : templates)
         {
-            loadTemplate(template, true);
+            loadTemplate(template, result);
         }
         logger.debug(String.format("%d user templates loaded", templates.size()));
 
@@ -51,9 +53,11 @@ public class MockingTemplateLoader implements Service
         {
             logger.error("Failed to find valid templates.");
         }
+
+        return result;
     }
 
-    private void loadTemplate(final URL template, boolean isUserTemplate)
+    private void loadTemplate(final URL template, LoadingResult result)
     {
         try
         {
@@ -61,28 +65,22 @@ public class MockingTemplateLoader implements Service
             logger.info("Loaded " + template + ": " + templates.categories());
             templateStore.store(templates);
         }
+        // message displayed differs depending on the exception type
+        catch (TemplateAlreadyDefinedException e)
+        {
+            result.addInvalidTemplate(template, e);
+            logger.error("Could not load template " + template, e);
+        }
         catch (Exception e)
         {
+            result.addInvalidTemplate(template, e);
             logger.error("Could not load template " + template, e);
         }
     }
 
-    public String getTemplatesLocation()
+    public String getWorkspaceTemplatesLocation()
     {
-        String location = resourceLoader.getResourcesLocation();
-
-        if(location.charAt(location.length() - 1) == '/')
-        {
-            location = location.substring(0, location.length() - 1);
-        }
-
-        int lastColumnIdx = location.lastIndexOf(":");
-        if(lastColumnIdx != - 1)
-        {
-            location = location.substring(lastColumnIdx + 1);
-        }
-
-        return location + TEMPLATE_DIRECTORY;
+        return resourceLoader.getWorkspaceResourceLocation(TEMPLATE_DIRECTORY);
     }
 
     @Override

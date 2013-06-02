@@ -384,16 +384,22 @@
 				<figure><img src="img/mock-usage-example-result-easymock.png" width="658" height="274" alt="Dependencies mocked with EasyMock" />
 				</figure>
 				
-				<p>You can choose your preferred mocking framework and result style in the preferences or your workspace or project:</p>
+				<p>JMock and JMockit are also supported, as well as PowerMock in combination with Mockito and EasyMock. You can choose your preferred mocking
+				framework and result style in the preferences or your workspace or project:</p>
 				<figure><img src="img/mock-usage-example-preferences.png" width="664" height="447" alt="Mocking preferences" />
 				</figure>
 				
-				<p>There is more to come! We aim to provide the following features soon:</p>
+				<p>We also aim to provide the following features:</p>
 				<ul>
-					<li>support for TestNG</li>
 					<li>default values for types that are not mockable: primitive types, their corresponding wrappers, etc...</li>
 					<li>support for other mocking frameworks or output styles if you ask for it (see <a href="#about">our contact page</a>)</li>
 				</ul>
+
+				<p>Finally, you can create your own templates to support your custom configurations.</p>
+				<p>All you have to do is to place them in your workspace, under <em>.metadata/.plugins/org.moreunit.mock/templates</em>,
+				and then to load them via the "Reload templates" button in MoreUnit preferences (<em>Preferences &gt; MoreUnit &gt; Java &gt; Mock Generation</em>).
+				Your templates will also be taken into account at restart.
+				<p>A documentation is to come, in the meanwhile, you can learn from the <a href="http://sourceforge.net/p/moreunit/code/ci/master/tree/org.moreunit.mock/resources/templates/">existing templates</a>.</p>
 			</section>
 		</article>
 		<article id="faq">

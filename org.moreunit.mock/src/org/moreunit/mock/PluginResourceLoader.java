@@ -72,8 +72,8 @@ public class PluginResourceLoader
         return true;
     }
 
-    public String getResourcesLocation()
+    public String getWorkspaceResourceLocation(String resource)
     {
-        return plugin.getBundle().getLocation();
+        return plugin.getStateLocation().append(resource).toOSString();
     }
 }
