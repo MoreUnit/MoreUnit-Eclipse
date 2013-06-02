@@ -18,7 +18,7 @@
 		<nav id="site-nav"><ul>
 			<li><a href="#overview">Home</a></li>
 			<li><a href="#doc">Documentation</a>
-				<ul>
+				<ul id="doc-summary">
 					<li>MoreUnit Light
 						<ol>
 							<li><em>Documentation still to be written...</em></li>
@@ -58,16 +58,20 @@
 			<header>Overview</header>
 			<section>
 				<p>MoreUnit is an Eclipse plugin that should assist you in writing more unit tests, mainly targeted at the Java language. This is a short
-				overview of the features it provides, for further information take a look at the <a href="#doc">documentation</a> section:</p>
+				overview of the features it provides, for further information take a look at the documentation section.</p>
+				<p>MoreUnit offers menus and shortcuts to:</p>
 				<ul>
-					<li>MoreUnit decorates classes which have a test case.<em class="lang all"></em></li>
-					<li>It marks methods in the editor which are under test.<em class="lang java"></em><em class="lang groovy"></em></li>
-					<li>You can jump to a test case/test method in the editor via the menu or a shortcut (<em>Ctrl-J</em> by default).<em class="lang all"></em></li>
-					<li>You can run a test case/test method from the class under test via the menu or a shortcut (<em>Ctrl-R</em> by default).<em class="lang java"></em><em class="lang groovy"></em></li>
-					<li>Rename classes/methods and MoreUnit will rename the corresponding test code too.<em class="lang java"></em><em class="lang groovy"></em></li>
-					<li>Move classes and MoreUnit will move the corresponding test cases.<em class="lang java"></em><em class="lang groovy"></em></li>
-					<li>You can generate a test method stub for the method under the cursor in the editor via the menu or a shortcut.<em class="lang java"></em><em class="lang groovy"></em></li>
-					<li>With the Mock plugin: select the dependencies of a class that you want to see mocked into a corresponding test case.<em class="lang java"></em></li>
+					<li><span class="featured">jump to test</span>(ed) files/methods corresponding to the element your are editing (<em>Ctrl-J</em> by default). If none exists, it proposes you to create it.<em class="lang all"></em></li>
+					<li><span class="featured">run test</span> classes/methods from the class under test (<em>Ctrl-R</em> by default).<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li><span class="featured">generate</span> a test method stub for the method under your cursor.<em class="lang java"></em><em class="lang groovy"></em></li>
+				</ul>
+				<p>Moreover:</p>
+				<ul>
+					<li>MoreUnit <span class="featured">decorates files</span> which have a test case.<em class="lang all"></em></li>
+					<li>In the editor, it <span class="featured">marks methods</span>  which are under test.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>Rename classes/methods and MoreUnit will <span class="featured">rename</span> the corresponding test code too.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>Move classes and MoreUnit will <span class="featured">move</span> the corresponding test cases.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>With the Mock plugin: select the dependencies of a class that you want to <span class="featured">mock with your favorite library</span>, and MoreUnit will generate the boiler-plate code in your test class.<em class="lang java"></em></li>
 				</ul>
 				<aside>
 					<figure>
@@ -95,10 +99,18 @@
 			<header>Documentation</header>
 			<section id="doc-gettingstarted">
 				<h1>Getting started</h1>
-				<h2>Step 1: Download and Install</h2>
-				<p>Follow the instructions on the <a href="#download">download section</a>. If you have chosen not to use the update site, download the
-				ZIP-File. Unzip the file. Copy the files from the &quot;plugins&quot; folder into the &quot;dropins&quot; folder of your Eclipse installation.
-				</p> 
+				<h2>Step 1: Install MoreUnit</h2>
+				<h3>Option A: Use Eclipse Marketplace</h3>
+				<p>If you have Eclipse Marketplace installed, open it from Eclipse's Help menu. Then search for MoreUnit, and click on the &quot;Install&quot;
+				button displayed on the result. It will add MoreUnit update site to your settings and install the plugin altogether.</p>
+				<h3>Option B: Add MoreUnit's update site manually</h3>
+				<p>Go to <em>Help &gt; Install New Software...</em>. Click on <em>Add...</em>, then enter the following URL and validate:</p>
+				<pre>http://moreunit.sourceforge.net/update-site/</pre>
+				<p>You can now select the plugin(s) you want to install from MoreUnit update site and proceed.</p>
+				<h3>Option C: Download the archive</h3>
+				<p>Download the <a href="http://sourceforge.net/projects/moreunit/files/latest/download" target="blank">latest archive</a>, then unzip	it and
+				place the resulting &quot;features&quot; and &quot;plugins&quot; folders into the &quot;dropins&quot; directory of your Eclipse installation.</p>
+				<p>(If this link doesn't work, please go to <a href="http://sourceforge.net/projects/moreunit">http://sourceforge.net/projects/moreunit</a>.)</p>
 	
 				<h2>Step 2: Activate Decoration of classes</h2>
 				<p>Choose <em>Eclipse|Window &gt; Preferences... &gt; General &gt; Appearance &gt; Label Decorations</em> and activate <em>Decorate Classes with
@@ -107,21 +119,24 @@
 				<h2>Step 3: Enter your preferences</h2>
 				<h3>a) General preferences</h3>
 				<p>Before you can start you have to configure some preferences.</p>
-				<p>If the source folder for your preferences is not named &quot;junit&quot; you have to enter the name of your test source folder.</p>
+				<p>If the source folder for your preferences is not named &quot;<em>test</em>&quot; you have to enter the name of your test source folder (for instance:
+				<em>src/test/java</em>).</p>
 				<p>By default MoreUnit expects your test cases to be named with the suffix &quot;Test&quot;. For example if a class is named
-				<em>HelloWorld</em> then the test case should be named <em>HelloWorldTest</em>. If your suffix differs from this default you have to enter your
-				choice here. Note that you can enter several suffixes. You can define prefixes for your test cases as well.</p>
+				<em>HelloWorld</em> then the test case should be named <em>HelloWorldTest</em>. If your naming convention differs from this default you have to
+				enter your naming rule here. Note that you can enter several prefixes and suffixes, via a simple regex-like expression.</p>
 				<p>In some projects package prefixes/suffixes are used (e.g. tests of classes in package <em>com.foo.*</em> are saved at <em>test.com.foo.* /
 				com.foo.test.*</em>), which can be configured as well.</p> 
 	
 				<h3>b) Project specific	preferences (optional)</h3>
 				<p>If you have sourced out tests to another project you will have to define project specific settings. Select the project and open <em>Properties
-				&gt; MoreUnit</em>. Then choose the project which contains the tests for the underlying project.</p>
-				<p>If you have other settings that differ depending on the projects in your workspace you can define them under <em>Properties &gt; MoreUnit
-				&gt; Other</em>.</p>
+				&gt; MoreUnit &gt; Java</em>. Then choose the project which contains the tests for the underlying project.</p>
+				<p>If you have other settings that differ depending on the projects in your workspace you can define them under the tab <em>Other</em>.</p>
 	
 				<h2>Step 4: Start coding</h2>
-				<p>Configuration is finished. Start coding :) Switch between class/test case or method/test method with the shortcut <em>Ctrl-J</em>.</p>
+				<p>Configuration is over, you may now start coding :-) Switch between your production code and your tests with the shortcut <em>Ctrl-J</em>, and run your
+				tests from both place with <em>Ctrl-R</em>.</p>
+				
+				<div class="js-additional-doc-nav hidden"><p>You can also read the <a href="#">other documention pages</a>.</p></div>
 			</section>
 			<section id="doc-labeldecoration">
 				<h1>Label decoration</h1>
@@ -641,7 +656,7 @@
 				Nicolas Demengel joined the project.</p>
 				<p>If you want to contact us please mail to moreunit.feedback [AT] gmail [DOT] com</p>
 				<p>The MoreUnit blog (development diary) can be reached at <a href="http://moreunit.blogspot.com">moreunit.blogspot.com</a></p>		
-        <p>Also, you can report bugs or request new features via <a href="http://sourceforge.net/p/moreunit/_list/tickets?source=navbar">our tracker on Sourceforge</a>.
+				<p>Also, you can report bugs or request new features via <a href="http://sourceforge.net/p/moreunit/_list/tickets">our tracker on Sourceforge</a>.
 
 				<h1>MoreUnit contributors</h1>
 				<p>A lot of people have helped with their feedback to improve this plugin. Thanks a lot!</p>
@@ -670,10 +685,12 @@
 				error messages if older versions are still installed when switching to version 2.x.x.</p>
 
 				<h1>From Sourceforge</h1>
-				<p>Download the plugin from: <a href="http://sourceforge.net/projects/moreunit">http://sourceforge.net/projects/moreunit</a>.</p>
+				<p>Download the plugin from: <a href="http://sourceforge.net/projects/moreunit">http://sourceforge.net/projects/moreunit</a>. You can also use
+				this <a href="http://sourceforge.net/projects/moreunit/files/latest/download" target="blank">direct link</a> to the latest relase.</p>
 				
 				<h1>Like this plugin?</h1>
-				<p><img src="img/star.png" border="0"/><a href="http://marketplace.eclipse.org/content/moreunit">Star MoreUnit as a favorite on Marketplace!</a></p>
+				<p><a href="http://marketplace.eclipse.org/content/moreunit"><img src="img/star.png" border="0"/></a>
+				<a href="http://marketplace.eclipse.org/content/moreunit">Star MoreUnit as a favorite on Eclipse Marketplace!</a></p>
 			</section>
 		</article>
 		

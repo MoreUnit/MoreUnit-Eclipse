@@ -69,7 +69,7 @@
 	function adaptLinks() {
 		$('a').click(function(e) {
 			var href = $(this).attr('href');
-			if (href.charAt(0) != '#') {
+			if (href === '#' || href.charAt(0) != '#') {
 				return true;
 			}
 			$.history.load(href.substr(1));
@@ -77,8 +77,22 @@
 		});
 	}
 
+	function addDocMenu() {
+		var additionalDocNav = $('.js-additional-doc-nav').removeClass('hidden');
+		var additionalDocLink = additionalDocNav.find('a');
+
+		var additionalDocSummary = additionalDocNav.append('<ul>' + $('#doc-summary').html() + '</ul>').find('ul');
+		additionalDocSummary.hide();
+
+		additionalDocLink.click(function(e) {
+			e.preventDefault();
+			additionalDocSummary.toggle('fast');
+		});
+	}
+
 	$(document).ready(function() {
 		$.history.init(loadContent, {unescape: '/'});
 		adaptLinks();
+		addDocMenu();
 	});
 })();

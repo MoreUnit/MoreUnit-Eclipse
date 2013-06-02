@@ -314,3 +314,11 @@ li.partially-done {
 	content: 'Java';
 	background-color: #f77;
 }
+
+.featured {
+	font-weight: bold;
+}
+
+.hidden {
+	display: none;
+}
