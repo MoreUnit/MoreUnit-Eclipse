@@ -2,11 +2,8 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMember;
@@ -131,24 +128,6 @@ public class ClassTypeFacade extends TypeFacade
         }
 
         return result;
-    }
-
-    public boolean hasTestMethod(IMethod method, MethodSearchMode searchMethod)
-    {
-        final Set<IMethod> correspondingTestMethods = new HashSet<IMethod>();
-        if(searchMethod == MethodSearchMode.BY_CALL)
-        {
-            Collection<IType> correspondingClasses = getCorrespondingTestCases();
-            if(! correspondingClasses.isEmpty())
-            {
-                correspondingTestMethods.addAll(getCallRelationshipFinder(method, correspondingClasses).getMatches(new NullProgressMonitor()));
-            }
-        }
-        else
-        {
-            correspondingTestMethods.addAll(getCorrespondingTestMethods(method));
-        }
-        return ! correspondingTestMethods.isEmpty();
     }
 
     @Override

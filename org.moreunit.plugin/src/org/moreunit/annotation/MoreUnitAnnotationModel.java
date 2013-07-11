@@ -1,15 +1,17 @@
 package org.moreunit.annotation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
@@ -33,7 +35,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
@@ -42,6 +43,8 @@ import org.moreunit.preferences.Preferences;
  */
 public class MoreUnitAnnotationModel implements IAnnotationModel
 {
+
+    private static final String IGNORE_ANNOTATION_NAME = "Ignore";
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
 
@@ -150,6 +153,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         while (iterator.hasNext())
         {
             MoreUnitAnnotation annotation = iterator.next();
+            annotation.markDeleted(true);
             event.annotationRemoved(annotation, annotation.getPosition());
         }
         annotations.clear();
@@ -210,14 +214,32 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     private synchronized void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
         boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
-        MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
-
         for (IMethod method : type.getMethods())
         {
-            if(classTypeFacade.hasTestMethod(method, searchMode))
+            Collection<? extends IMember> testMethods = classTypeFacade.getCorrespondingTestMembers(method, extendedSearch);
+            boolean hasIgnoredTest = false;
+            for (IMember testMethod : testMethods)
+            {
+                // Using getAnnotation(IGNORE_ANNOTATION_NAME).exists() seems to give
+                // back true "for a while" after removing an annotation,
+                // that is why I am using this loop
+                IAnnotation[] allAnnotations = ((IMethod)testMethod).getAnnotations();
+                for(IAnnotation annotation : allAnnotations)
+                {
+                    if(IGNORE_ANNOTATION_NAME.equals(annotation.getElementName()))
+                        hasIgnoredTest = true;
+                }
+            }
+            
+            if(!testMethods.isEmpty())
             {
                 ISourceRange range = method.getNameRange();
-                MoreUnitAnnotation annotation = new MoreUnitAnnotation(range.getOffset(), range.getLength());
+                MoreUnitAnnotation annotation = null;
+                if (hasIgnoredTest)
+                    annotation = MoreUnitAnnotation.createAnnotationForIgnoredTesMethod(range);
+                else
+                    annotation = MoreUnitAnnotation.createAnnotationForTestedMethod(range);
+                
                 annotations.add(annotation);
                 event.annotationAdded(annotation);
             }

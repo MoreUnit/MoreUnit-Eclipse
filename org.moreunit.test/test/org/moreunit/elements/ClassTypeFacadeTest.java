@@ -68,50 +68,12 @@ public class ClassTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    public void hasTestMethod_should_return_true_methods_with_testnaming_convention() throws Exception
-    {
-        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
-        testCaseHandler().addMethod("public void testGetNumberOne()");
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.hasTestMethod(getNumberOneMethod, MethodSearchMode.BY_NAME)).isTrue();
-    }
-
-    @Test
     public void getCorrespondingTestMethod_should_return_null_when_testmethod_is_missing() throws Exception
     {
         IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         assertThat(classTypeFacade.getCorrespondingTestMethod(methodWithoutCorrespondingTestMethod, testCaseHandler().get())).isNull();
-    }
-
-    @Test
-    public void hasTestMethod_should_return_false_when_testmethod_is_missing() throws Exception
-    {
-        IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_NAME)).isFalse();
-    }
-
-    @Test
-    public void hasTestMethod_should_return_true_when_testmethod_calls_method() throws Exception
-    {
-        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
-        testCaseHandler().addMethod("public void testWhichNameDoesNotMatchTestedMethodName()", "new SomeClass().getNumberOne();");
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.hasTestMethod(getNumberOneMethod, MethodSearchMode.BY_CALL)).isTrue();
-    }
-
-    @Test
-    public void hasTestMethod_should_return_false_when_no_test_calls_method() throws Exception
-    {
-        IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.hasTestMethod(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_CALL)).isFalse();
     }
 
     @Test
