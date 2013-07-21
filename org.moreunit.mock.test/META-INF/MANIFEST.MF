@@ -7,4 +7,4 @@ Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.moreunit.test.dependencies,
- org.junit4;bundle-version="4.8.0"
+ org.junit;bundle-version="4.11.0"
