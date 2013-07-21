@@ -72,7 +72,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 			public String getFailureMessage() {
 				return "Testcase was not manipulated";
 			}
-		}, 10000);
+		}, 20000);
 		testcaseEditor.save();
 		
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();

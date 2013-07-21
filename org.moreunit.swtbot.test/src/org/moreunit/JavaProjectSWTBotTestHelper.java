@@ -23,9 +23,11 @@ import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.ChildrenControlFinder;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.keyboard.KeyboardLayout;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetOfType;
 import org.eclipse.swtbot.swt.finder.results.Result;
+import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
@@ -62,7 +64,19 @@ public class JavaProjectSWTBotTestHelper
         if(! isWorkspacePrepared)
         {
             // SWTBotPreferences.PLAYBACK_DELAY = 10;
-            // SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+            
+            // not all keyboard layouts are supported by SWTBot
+            // e.g. MAC_DE is missing (see http://wiki.eclipse.org/SWTBot/Keyboard_Layouts)
+            // therefore we do check if SWTBot can find the default layout
+            // and if not we do set it to a default value which is supported
+            try
+            {
+                KeyboardLayout.getDefaultKeyboardLayout();
+            }
+            catch(IllegalArgumentException exc)
+            {
+                SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+            }
             switchToJavaPerspective();
             isWorkspacePrepared = true;
         }
