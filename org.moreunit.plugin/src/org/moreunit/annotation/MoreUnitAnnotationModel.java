@@ -220,14 +220,17 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             boolean hasIgnoredTest = false;
             for (IMember testMethod : testMethods)
             {
-                // Using getAnnotation(IGNORE_ANNOTATION_NAME).exists() seems to give
-                // back true "for a while" after removing an annotation,
-                // that is why I am using this loop
-                IAnnotation[] allAnnotations = ((IMethod)testMethod).getAnnotations();
-                for(IAnnotation annotation : allAnnotations)
+                if (testMethod instanceof IMethod)
                 {
-                    if(IGNORE_ANNOTATION_NAME.equals(annotation.getElementName()))
-                        hasIgnoredTest = true;
+                    // Using getAnnotation(IGNORE_ANNOTATION_NAME).exists() seems to give
+                    // back true "for a while" after removing an annotation,
+                    // that is why I am using this loop
+                    IAnnotation[] allAnnotations = ((IMethod)testMethod).getAnnotations();
+                    for(IAnnotation annotation : allAnnotations)
+                    {
+                        if(IGNORE_ANNOTATION_NAME.equals(annotation.getElementName()))
+                            hasIgnoredTest = true;
+                    }
                 }
             }
             
