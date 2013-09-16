@@ -162,10 +162,6 @@ class GenericConfigurationPage
         else
         {
             errorMsg = validateTestFolderTemplate();
-            if(errorMsg != null)
-            {
-                srcFolderTemplateField.forceFocus();
-            }
         }
 
         if(errorMsg == null)
