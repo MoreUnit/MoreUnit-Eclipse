@@ -1304,6 +1304,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
     }
+    
+    @Override
+    public void dispose()
+    {
+        saveWidgetValues();
+        super.dispose();
+    }
 
     private static class TmpMemento
     {
