@@ -66,6 +66,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.moreunit.elements.LanguageType;
 import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.extensionpoints.TestType;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
@@ -80,7 +81,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Field ID of the Junit4 toggle
-     * 
+     *
      * @since 3.2
      */
     public static final String JUNIT4TOGGLE = PAGE_NAME + ".junit4toggle"; //$NON-NLS-1$
@@ -131,7 +132,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private final ProjectPreferences preferences;
     private final LanguageType langType;
-    
+
     private TmpMemento tmpMemento;
 
     public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, ProjectPreferences preferences, LanguageType langType)
@@ -151,7 +152,9 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         /* IDX_SETUP */WizardMessages.NewTestCaseWizardPageOne_methodStub_setUp,
         /* IDX_TEARDOWN */WizardMessages.NewTestCaseWizardPageOne_methodStub_tearDown,
         /* IDX_CONSTRUCTOR */WizardMessages.NewTestCaseWizardPageOne_methodStub_constructor };
+
         enableCommentControl(true);
+        setAddComments(preferences.shouldGenerateCommentsForTestMethod(), true);
 
         fMethodStubsButtons = new MethodStubsSelectionButtonGroup(SWT.CHECK, buttonNames, 2);
         fMethodStubsButtons.setLabelText(WizardMessages.NewTestCaseWizardPageOne_method_Stub_label);
@@ -168,7 +171,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Initialized the page with the current selection
-     * 
+     *
      * @param selection The selection
      */
     public void init(IStructuredSelection selection)
@@ -256,7 +259,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Specifies if the test should be created as JUnit 4 test.
-     * 
+     *
      * @param isJUnit4 If set, a Junit 4 test will be created
      * @param isEnabled if <code>true</code> the modifier fields are editable;
      *            otherwise they are read-only
@@ -280,7 +283,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Returns <code>true</code> if the test should be created as Junit 4 test
-     * 
+     *
      * @return returns <code>true</code> if the test should be created as Junit
      *         4 test
      * @since 3.2
@@ -343,7 +346,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     /**
      * Returns all status to be consider for the validation. Clients can
      * override.
-     * 
+     *
      * @return The list of status to consider for the validation.
      */
     protected IStatus[] getStatusList()
@@ -411,7 +414,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     /**
      * Creates the controls for the method stub selection buttons. Expects a
      * <code>GridLayout</code> with at least 3 columns.
-     * 
+     *
      * @param composite the parent composite
      * @param nColumns number of columns to span
      */
@@ -425,7 +428,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     /**
      * Creates the controls for the 'class under test' field. Expects a
      * <code>GridLayout</code> with at least 3 columns.
-     * 
+     *
      * @param composite the parent composite
      * @param nColumns number of columns to span
      */
@@ -481,7 +484,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     /**
      * Creates the controls for the JUnit 4 toggle control. Expects a
      * <code>GridLayout</code> with at least 3 columns.
-     * 
+     *
      * @param composite the parent composite
      * @param nColumns number of columns to span
      * @since 3.2
@@ -569,7 +572,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     /**
      * Creates the controls for the JUnit 4 toggle control. Expects a
      * <code>GridLayout</code> with at least 3 columns.
-     * 
+     *
      * @param composite the parent composite
      * @param nColumns number of columns to span
      * @since 3.2
@@ -731,7 +734,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * <p>
      * Subclasses may extend this method to perform their own validation.
      * </p>
-     * 
+     *
      * @return the status of the validation
      */
     protected IStatus classUnderTestChanged()
@@ -789,7 +792,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Returns the content of the class to test text field.
-     * 
+     *
      * @return the name of the class to test
      */
     public String getClassUnderTestText()
@@ -799,7 +802,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Returns the class to be tested.
-     * 
+     *
      * @return the class under test or <code>null</code> if the entered values
      *         are not valid
      */
@@ -810,7 +813,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     /**
      * Sets the name of the class under test.
-     * 
+     *
      * @param name The name to set
      */
     public void setClassUnderTest(String name)
@@ -880,7 +883,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             imports.addImport("org.testng.annotations.Test");
         }
     }
-    
+
     private void createConstructor(IType type, ImportsManager imports) throws CoreException
     {
         ITypeHierarchy typeHierarchy = null;
@@ -1035,13 +1038,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private void createSetUpClass(IType type, ImportsManager imports) throws CoreException
     {
         String annotation = isTestNgSelected() ? "org.testng.annotations.BeforeClass" : "org.junit.BeforeClass"; //$NON-NLS-1$ //$NON-NLS-2$
-        createSetupStubs(type, "setUpBeforeClass", true, annotation, imports); //$NON-NLS-1$ 
+        createSetupStubs(type, "setUpBeforeClass", true, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDownClass(IType type, ImportsManager imports) throws CoreException
     {
         String annotation = isTestNgSelected() ? "org.testng.annotations.AfterClass" : "org.junit.AfterClass"; //$NON-NLS-1$ //$NON-NLS-2$
-        createSetupStubs(type, "tearDownAfterClass", true, annotation, imports); //$NON-NLS-1$ 
+        createSetupStubs(type, "tearDownAfterClass", true, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTestMethodStubs(IType type, ImportsManager imports) throws CoreException
@@ -1050,7 +1053,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         if(methods.length == 0)
             return;
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(fClassUnderTest.getCompilationUnit(), getTestTypePrefValue(), preferences.getTestMethodDefaultContent(), fPage2.getCreateFinalMethodStubsButtonSelection(), fPage2.isCreateTasks());
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
+                .compilationUnit(fClassUnderTest.getCompilationUnit())
+                .testType(getTestTypePrefValue())
+                .defaultTestMethodContent(preferences.getTestMethodDefaultContent())
+                .generateComments(isAddComments())
+                .createFinalMethod(fPage2.getCreateFinalMethodStubsButtonSelection())
+                .createTasks(fPage2.isCreateTasks()));
+
         testmethodCreator.createTestMethods(asList(methods));
     }
 
@@ -1083,7 +1093,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * The method is called when the container has changed to validate if the
      * project is suited for the JUnit test class. Clients can override to
      * modify or remove that validation.
-     * 
+     *
      * @return the status of the validation
      */
     protected IStatus validateIfJUnitProject()
@@ -1296,7 +1306,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return TestType.JUNIT_4;
         return TestType.TESTNG;
     }
-    
+
     private String getTestTypePrefValue() {
         if(junti3Toggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
@@ -1304,7 +1314,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
     }
-    
+
     @Override
     public void dispose()
     {

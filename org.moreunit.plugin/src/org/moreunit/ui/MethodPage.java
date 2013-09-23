@@ -24,6 +24,7 @@ import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodTreeContentProvider;
 import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
 
@@ -149,7 +150,13 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         }
 
         ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
-        TestmethodCreator testmethodCreator = new TestmethodCreator(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit(), testCase.hasJustBeenCreated(), prefs.getTestType(), prefs.getTestMethodDefaultContent());
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
+                .compilationUnit(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit())
+                .testCaseJustCreated(testCase.hasJustBeenCreated())
+                .testType(prefs.getTestType())
+                .generateComments(prefs.shouldGenerateCommentsForTestMethod())
+                .defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
 
         testmethodCreator.createTestMethods(selection.toList());
 

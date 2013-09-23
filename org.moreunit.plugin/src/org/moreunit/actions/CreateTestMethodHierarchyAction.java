@@ -12,6 +12,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.moreunit.elements.MethodCreationResult;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
@@ -62,7 +63,12 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
         if(prefs == null)
             return;
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(cu, prefs.getTestType(), prefs.getTestMethodDefaultContent());
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
+                .compilationUnit(cu)
+                .testType(prefs.getTestType())
+                .generateComments(prefs.shouldGenerateCommentsForTestMethod())
+                .defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
+
         MethodCreationResult result = testmethodCreator.createTestMethod(method);
 
         if(result.methodCreated())

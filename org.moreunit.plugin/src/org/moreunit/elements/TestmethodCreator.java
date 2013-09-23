@@ -8,12 +8,16 @@ import java.util.ListIterator;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
+import org.eclipse.jdt.internal.junit.Messages;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
+import org.eclipse.jdt.internal.junit.wizards.WizardMessages;
+import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -51,36 +55,27 @@ public class TestmethodCreator
     private String defaultTestMethodContent = "";
     private TestMethodDiviner testMethodDiviner;
 
+    private boolean generateComments;
     private boolean shouldCreateFinalMethod;
     private boolean shouldCreateTasks;
     private CodeFormatter testFormatter;
     private boolean testCaseJustCreated;
 
-    /**
-     * @param compilationUnit Could be CUT or a test. createTestMethod will
-     *            distinguish
-     */
-    public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent)
+
+    public TestmethodCreator(TestMethodCreationSettings settings)
     {
-        this.compilationUnit = compilationUnit;
-        this.testType = testType;
+        compilationUnit = settings.compilationUnit;
+        testType = settings.testType;
+        generateComments = settings.generateComments;
+        defaultTestMethodContent = settings.defaultTestMethodContent;
+        shouldCreateFinalMethod = settings.shouldCreateFinalMethod;
+        shouldCreateTasks = settings.shouldCreateTasks;
+
         testMethodDiviner = new TestMethodDivinerFactory(compilationUnit).create(testType);
-        this.defaultTestMethodContent = defaultTestMethodContent;
-    }
 
-    public TestmethodCreator(ICompilationUnit compilationUnit, String testType, String defaultTestMethodContent, boolean shouldCreateFinalMethod, boolean shouldCreateTasks)
-    {
-        this(compilationUnit, testType, defaultTestMethodContent);
-
-        this.shouldCreateFinalMethod = shouldCreateFinalMethod;
-        this.shouldCreateTasks = shouldCreateTasks;
-    }
-
-    public TestmethodCreator(ICompilationUnit compilationUnit, ICompilationUnit testCaseCompilationUnit, boolean testCaseJustCreated, String testType, String defaultTestMethodContent)
-    {
-        this(compilationUnit, testType, defaultTestMethodContent);
-
-        setTestCaseCompilationUnit(testCaseCompilationUnit, testCaseJustCreated);
+        if (settings.maybeTestCaseCompilationUnit != null) {
+            setTestCaseCompilationUnit(settings.maybeTestCaseCompilationUnit, settings.testCaseJustCreated);
+        }
     }
 
     private void setTestCaseCompilationUnit(ICompilationUnit cu, boolean testCaseJustCreated)
@@ -169,7 +164,7 @@ public class TestmethodCreator
      * Create the first test method, e.g. create the new test class. This method
      * calls the JUnit Wizard to create the new test class and tries to find the
      * expected test method corresponding to the source method under test.
-     * 
+     *
      * @param methodUnderTest Method under test.
      * @return Test method, or <code>null</code> if it is not found.
      */
@@ -188,7 +183,6 @@ public class TestmethodCreator
             setTestCaseCompilationUnit(testCase.get().getCompilationUnit(), testCase.hasJustBeenCreated());
         }
 
-        // compilationUnit = oneCorrespondingTestCase.getCompilationUnit();
         String testMethodName = testMethodDiviner.getTestMethodNameFromMethodName(methodUnderTest.getElementName());
 
         if(overloadedMethods.contains(methodUnderTest))
@@ -201,13 +195,15 @@ public class TestmethodCreator
         if(existingMethod != null)
             return MethodCreationResult.methodAlreadyExists(existingMethod);
 
+        String comment = generateTestMethodComment(methodUnderTest);
+
         IMethod testMethod = null;
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            testMethod = createJUnit4Testmethod(testMethodName, null);
+            testMethod = createJUnit4Testmethod(testMethodName, null, comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-            testMethod = createJUnit3Testmethod(testMethodName, null);
+            testMethod = createJUnit3Testmethod(testMethodName, null, comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            testMethod = createTestNgTestMethod(testMethodName, null);
+            testMethod = createTestNgTestMethod(testMethodName, null, comment);
 
         if(! discardExtensions && testMethod != null)
         {
@@ -245,13 +241,15 @@ public class TestmethodCreator
         if(doesMethodExist(testMethodName))
             testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 
+        String comment = getComments(testMethod);
+
         IMethod newTestMethod = null;
         if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            newTestMethod = createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod));
+            newTestMethod = createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod), comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
-            newTestMethod = createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod));
+            newTestMethod = createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod), comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            newTestMethod = createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod));
+            newTestMethod = createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod), comment);
 
         if(! discardExtensions && newTestMethod != null)
         {
@@ -263,13 +261,36 @@ public class TestmethodCreator
         return newTestMethod;
     }
 
+    private String getComments(IMethod testMethod)
+    {
+        if(! generateComments)
+            return "";
+
+        try
+        {
+            String comment = "";
+            ISourceRange javadocRange = testMethod.getJavadocRange();
+            if(javadocRange != null)
+            {
+                String source = testMethod.getCompilationUnit().getSource();
+                comment = source.substring(javadocRange.getOffset(), javadocRange.getOffset() + javadocRange.getLength());
+                comment += "\n";
+            }
+            return comment;
+        }
+        catch (JavaModelException e)
+        {
+            return "";
+        }
+    }
+
     /**
      * If a additional test method should be created it would be nice if this
      * method is placed directly below the test method. As the {@link IType}
      * createTestMethod placed the method above the sibling the method after the
      * testmethod must be the sibling parameter for this method. This method
      * returns null if the testmethod is the last method in the type
-     * 
+     *
      * @return
      */
     private IMethod getSiblingForInsert(IMethod testMethod)
@@ -294,45 +315,88 @@ public class TestmethodCreator
         return null;
     }
 
-    protected IMethod createJUnit3Testmethod(String testMethodName, IMethod sibling)
+    protected IMethod createJUnit3Testmethod(String testMethodName, IMethod sibling, String comment)
     {
-        return createMethod(testMethodName, getJUnit3MethodStub(testMethodName), sibling);
+        return createMethod(testMethodName, getJUnit3MethodStub(testMethodName, comment), sibling);
     }
 
-    private IMethod createTestNgTestMethod(String testMethodName, IMethod sibling)
+    private IMethod createTestNgTestMethod(String testMethodName, IMethod sibling, String comment)
     {
-        return createMethod(testMethodName, getTestNgMethodStub(testMethodName), sibling);
+        return createMethod(testMethodName, getTestNgMethodStub(testMethodName, comment), sibling);
     }
 
-    private String getTestNgMethodStub(String testmethodName)
+    private String getTestNgMethodStub(String testmethodName, String comment)
     {
-        StringBuffer methodContent = new StringBuffer();
+        StringBuilder methodContent = new StringBuilder();
+        methodContent.append(comment);
         methodContent.append("@Test").append(StringConstants.NEWLINE);
         methodContent.append(getTestMethodString(testmethodName));
 
         return methodContent.toString();
     }
 
-    private String getJUnit3MethodStub(String testmethodName)
+    private String getJUnit3MethodStub(String testmethodName, String comment)
     {
-        StringBuffer methodContent = new StringBuffer();
+        StringBuilder methodContent = new StringBuilder();
+        methodContent.append(comment);
         methodContent.append(getTestMethodString(testmethodName));
 
         return methodContent.toString();
     }
 
-    protected IMethod createJUnit4Testmethod(String testMethodName, IMethod sibling)
+    protected IMethod createJUnit4Testmethod(String testMethodName, IMethod sibling, String comment)
     {
-        return createMethod(testMethodName, getJUnit4MethodStub(testMethodName), sibling);
+        return createMethod(testMethodName, getJUnit4MethodStub(testMethodName, comment), sibling);
     }
 
-    private String getJUnit4MethodStub(String testmethodName)
+    private String getJUnit4MethodStub(String testmethodName, String comment)
     {
-        StringBuffer methodContent = new StringBuffer();
+        StringBuilder methodContent = new StringBuilder();
+        methodContent.append(comment);
         methodContent.append("@Test").append(StringConstants.NEWLINE);
         methodContent.append(getTestMethodString(testmethodName));
 
         return methodContent.toString();
+    }
+
+    // copied from
+    // org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne.appendMethodComment(StringBuffer,
+    // IMethod)
+    private String generateTestMethodComment(IMethod testedMethod)
+    {
+        if(! generateComments)
+            return "";
+
+        String recommendedLineSeparator = findRecommendedLineSeparator();
+
+        final StringBuffer buf = new StringBuffer("{@link "); //$NON-NLS-1$
+        JavaElementLabels.getTypeLabel(testedMethod.getDeclaringType(), JavaElementLabels.T_FULLY_QUALIFIED, buf);
+        buf.append('#');
+        buf.append(testedMethod.getElementName());
+        buf.append('(');
+        String[] paramTypes = JUnitStubUtility.getParameterTypeNamesForSeeTag(testedMethod);
+        for (int i = 0; i < paramTypes.length; i++)
+        {
+            if(i != 0)
+            {
+                buf.append(", "); //$NON-NLS-1$
+            }
+            buf.append(paramTypes[i]);
+
+        }
+        buf.append(')');
+        buf.append('}');
+
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("/**");//$NON-NLS-1$
+        buffer.append(recommendedLineSeparator);
+        buffer.append(" * ");//$NON-NLS-1$
+        buffer.append(Messages.format(WizardMessages.NewTestCaseWizardPageOne_comment_class_to_test, buf.toString()));
+        buffer.append(recommendedLineSeparator);
+        buffer.append(" */");//$NON-NLS-1$
+        buffer.append(recommendedLineSeparator);
+
+        return buffer.toString();
     }
 
     private String getTestMethodString(String testmethodName)
@@ -341,15 +405,7 @@ public class TestmethodCreator
         if(shouldCreateFinalMethod)
             finalPlaceholder = "final ";
 
-        String recommendedLineSeparator = StringConstants.NEWLINE;
-        try
-        {
-            recommendedLineSeparator = testCaseCompilationUnit.findRecommendedLineSeparator();
-        }
-        catch (JavaModelException e)
-        {
-            LogHandler.getInstance().handleExceptionLog(e);
-        }
+        String recommendedLineSeparator = findRecommendedLineSeparator();
 
         String methodBody = defaultTestMethodContent;
         if(shouldCreateTasks)
@@ -360,7 +416,21 @@ public class TestmethodCreator
                 methodBody = "// " + todoTaskTag + recommendedLineSeparator + defaultTestMethodContent;
             }
         }
-        return String.format("public %svoid %s() throws Exception {%s%s%s}", finalPlaceholder, testmethodName, recommendedLineSeparator, methodBody, recommendedLineSeparator);
+        return String.format("public %svoid %s() throws Exception {%s%s%s}",  finalPlaceholder, testmethodName, recommendedLineSeparator, methodBody, recommendedLineSeparator);
+    }
+
+    private String findRecommendedLineSeparator()
+    {
+        String recommendedLineSeparator = StringConstants.NEWLINE;
+        try
+        {
+            recommendedLineSeparator = testCaseCompilationUnit.findRecommendedLineSeparator();
+        }
+        catch (JavaModelException e)
+        {
+            LogHandler.getInstance().handleExceptionLog(e);
+        }
+        return recommendedLineSeparator;
     }
 
     private IMethod createMethod(String methodName, String methodString, IMethod sibling)
@@ -404,7 +474,7 @@ public class TestmethodCreator
     /**
      * Does test method exists? In case of any error, <code>false</code> is
      * returned.
-     * 
+     *
      * @param testMethodName Name of test method.
      * @return Test method exists?
      */
@@ -417,7 +487,7 @@ public class TestmethodCreator
      * Try to find the test method. The first match is returned.
      * <p>
      * In case of any error, <code>null</code> is returned.
-     * 
+     *
      * @param testMethodName Name of test method.
      * @return testmethod, or <code>null</code> if not found.
      */
@@ -439,5 +509,70 @@ public class TestmethodCreator
         }
 
         return null;
+    }
+
+    public static class TestMethodCreationSettings
+    {
+        private boolean generateComments;
+        private ICompilationUnit compilationUnit;
+        private String defaultTestMethodContent;
+        private boolean shouldCreateFinalMethod;
+        private boolean shouldCreateTasks;
+        private ICompilationUnit maybeTestCaseCompilationUnit;
+        private boolean testCaseJustCreated;
+        private String testType;
+
+        public TestMethodCreationSettings generateComments(boolean generateComments)
+        {
+            this.generateComments = generateComments;
+            return this;
+        }
+
+        /**
+         * @param compilationUnit Could be CUT or a test. createTestMethod will
+         *            distinguish
+         */
+        public TestMethodCreationSettings compilationUnit(ICompilationUnit compilationUnit)
+        {
+            this.compilationUnit = compilationUnit;
+            return this;
+        }
+
+        public TestMethodCreationSettings compilationUnit(ICompilationUnit compilationUnitOfClassUnderTest, ICompilationUnit testCaseCompilationUnit)
+        {
+            this.compilationUnit = compilationUnitOfClassUnderTest;
+            this.maybeTestCaseCompilationUnit = testCaseCompilationUnit;
+            return this;
+        }
+
+        public TestMethodCreationSettings createFinalMethod(boolean createFinalMethod)
+        {
+            shouldCreateFinalMethod = createFinalMethod;
+            return this;
+        }
+
+        public TestMethodCreationSettings createTasks(boolean createTasks)
+        {
+            shouldCreateTasks = createTasks;
+            return this;
+        }
+
+        public TestMethodCreationSettings defaultTestMethodContent(String content)
+        {
+            this.defaultTestMethodContent = content;
+            return this;
+        }
+
+        public TestMethodCreationSettings testCaseJustCreated(boolean testCaseJustCreated)
+        {
+            this.testCaseJustCreated = testCaseJustCreated;
+            return this;
+        }
+
+        public TestMethodCreationSettings testType(String testType)
+        {
+            this.testType = testType;
+            return this;
+        }
     }
 }

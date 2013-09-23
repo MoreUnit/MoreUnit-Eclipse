@@ -23,6 +23,7 @@ public interface PreferenceConstants
     String UNIT_SOURCE_FOLDER = "org.moreunit.unitsourcefolder";
     String EXTENDED_TEST_METHOD_SEARCH = "org.moreunit.extendedTestMethodSearch";
     String TEST_CLASS_NAME_TEMPLATE = "org.moreunit.testClassNameTemplate";
+    String GENERATE_COMMENTS_FOR_TEST_METHOD = "org.moreunit.generateCommentsForTestMethod";
 
     String TEST_TYPE = "org.moreunit.test_type";
     String TEST_TYPE_VALUE_JUNIT_3 = "junit3";
@@ -30,6 +31,7 @@ public interface PreferenceConstants
     String TEST_TYPE_VALUE_TESTNG = "testng";
     String TEST_SUPERCLASS = "org.moreunit.test_superclass";
 
+    boolean DEFAULT_GENERATE_COMMENTS_FOR_TEST_METHOD = false;
     boolean DEFAULT_SWITCH_TO_MATCHING_METHOD = true;
     String DEFAULT_TEST_PACKAGE_PREFIX = "";
     String DEFAULT_TEST_PACKAGE_SUFFIX = "";
@@ -51,6 +53,7 @@ public interface PreferenceConstants
     String TEXT_TEST_METHOD_TYPE = "Use test-prefix for test-methods (e.g. testFoo())";
     String TEXT_TEST_SOURCE_FOLDER = "Test source folder:";
     String TEXT_EXTENDED_TEST_METHOD_SEARCH = "Enable extended search for test methods";
+    String TEXT_GENERATE_COMMENTS_FOR_TEST_METHOD = "Generate comments for test methods";
 
     String TOOLTIP_TEST_SOURCE_FOLDER = "Enter the name of the source folder that usually contains your test sources (examples: junit, test, src/test/java). It may be the same as your production code.";
     String TOOLTIP_TEST_METHOD_CONTENT = "Write here any content that you would like to be inserted in your test methods when created by MoreUnit.";

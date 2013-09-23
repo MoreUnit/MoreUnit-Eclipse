@@ -423,6 +423,20 @@ public class Preferences
         return preferenceMap.values();
     }
 
+    public boolean shouldGenerateCommentsForTestMethod(IJavaProject javaProject)
+    {
+        if(storeToRead(javaProject).contains(PreferenceConstants.GENERATE_COMMENTS_FOR_TEST_METHOD))
+        {
+            return storeToRead(javaProject).getBoolean(PreferenceConstants.GENERATE_COMMENTS_FOR_TEST_METHOD);
+        }
+        return storeToRead(javaProject).getDefaultBoolean(PreferenceConstants.GENERATE_COMMENTS_FOR_TEST_METHOD);
+    }
+
+    public void setGenerateCommentsForTestMethod(IJavaProject javaProject, boolean addComments)
+    {
+        getProjectStore(javaProject).setValue(PreferenceConstants.GENERATE_COMMENTS_FOR_TEST_METHOD, addComments);
+    }
+
     public boolean shouldUseTestMethodExtendedSearch(IJavaProject javaProject)
     {
         if(storeToRead(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
@@ -506,6 +520,11 @@ public class Preferences
         public String getTestType()
         {
             return prefs.getTestType(project);
+        }
+
+        public boolean shouldGenerateCommentsForTestMethod()
+        {
+            return prefs.shouldGenerateCommentsForTestMethod(project);
         }
 
         public boolean shouldUseJunit4Type()

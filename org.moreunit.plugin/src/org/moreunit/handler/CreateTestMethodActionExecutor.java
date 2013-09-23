@@ -28,6 +28,7 @@ import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodCreationResult;
 import org.moreunit.elements.TestmethodCreator;
+import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.log.LogHandler;
@@ -51,7 +52,7 @@ import org.moreunit.util.MoreUnitContants;
  * {@link IAddTestMethodContext#isNewTestClassCreated()} is now correctly taken
  * from {@link ClassTypeFacade#isNewTestClassCreated()} instead of
  * {@link TestmethodCreator}
- * 
+ *
  * @author vera 25.10.2005
  * @version 30.09.2010
  */
@@ -94,7 +95,12 @@ public class CreateTestMethodActionExecutor
 
         // Creates test method template
         ProjectPreferences prefs = preferences.getProjectView(editorPartFacade.getJavaProject());
-        TestmethodCreator creator = new TestmethodCreator(compilationUnit, context.testCaseUnit, context.newTestClassCreated, prefs.getTestType(), prefs.getTestMethodDefaultContent());
+        TestmethodCreator creator = new TestmethodCreator(new TestMethodCreationSettings()
+                .compilationUnit(compilationUnit, context.testCaseUnit)
+                .testCaseJustCreated(context.newTestClassCreated)
+                .testType(prefs.getTestType())
+                .generateComments(prefs.shouldGenerateCommentsForTestMethod())
+                .defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
         MethodCreationResult creationResult = creator.createTestMethod(originalMethod);
 
         if(creationResult.methodAlreadyExists())

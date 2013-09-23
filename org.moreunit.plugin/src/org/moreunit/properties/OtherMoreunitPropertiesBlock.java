@@ -37,6 +37,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Text packagePrefixTextField;
     private Text packageSuffixTextField;
     private Text superClassTextField;
+    private Button addCommentsToTestMethodCheckbox;
     private Button extendedSearchCheckbox;
 
     private GridData layoutForOneLineControls;
@@ -96,6 +97,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         createPackagePrefixSuffixTextFields(parentWith2Cols);
         createSuperClassTextField(parentWith2Cols);
         createExtendedSearchCheckbox(parentWith2Cols);
+        createAddCommentsToTestMethodsCheckbox(parentWith2Cols);
 
         checkStateOfMethodPrefixButton();
     }
@@ -233,6 +235,14 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         extendedSearchCheckbox.setSelection(preferences.shouldUseTestMethodExtendedSearch(javaProject));
     }
 
+    private void createAddCommentsToTestMethodsCheckbox(Composite parent)
+    {
+        addCommentsToTestMethodCheckbox = new Button(parent, SWT.CHECK);
+        addCommentsToTestMethodCheckbox.setText(PreferenceConstants.TEXT_GENERATE_COMMENTS_FOR_TEST_METHOD);
+        addCommentsToTestMethodCheckbox.setLayoutData(layoutForOneLineControls);
+        addCommentsToTestMethodCheckbox.setSelection(preferences.shouldGenerateCommentsForTestMethod(javaProject));
+    }
+
     public void saveProperties()
     {
         preferences.setTestType(javaProject, getSelectedTestType());
@@ -256,6 +266,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         preferences.setTestSuperClass(javaProject, superClassTextField.getText());
 
         preferences.setShouldUseTestMethodExtendedSearch(javaProject, extendedSearchCheckbox.getSelection());
+        preferences.setGenerateCommentsForTestMethod(javaProject, addCommentsToTestMethodCheckbox.getSelection());
     }
 
     private boolean isJunit4OrTestNgTestTypeSelected()
@@ -329,6 +340,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         packageSuffixTextField.setEnabled(enabled);
         superClassTextField.setEnabled(enabled);
         extendedSearchCheckbox.setEnabled(enabled);
+        addCommentsToTestMethodCheckbox.setEnabled(enabled);
         testCaseNamePatternArea.setEnabled(enabled);
     }
 }
