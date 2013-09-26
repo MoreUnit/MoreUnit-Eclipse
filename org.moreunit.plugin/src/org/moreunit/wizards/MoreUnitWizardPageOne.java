@@ -154,7 +154,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         /* IDX_CONSTRUCTOR */WizardMessages.NewTestCaseWizardPageOne_methodStub_constructor };
 
         enableCommentControl(true);
-        setAddComments(preferences.shouldGenerateCommentsForTestMethod(), true);
 
         fMethodStubsButtons = new MethodStubsSelectionButtonGroup(SWT.CHECK, buttonNames, 2);
         fMethodStubsButtons.setLabelText(WizardMessages.NewTestCaseWizardPageOne_method_Stub_label);
@@ -180,6 +179,9 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         initContainerPage(element);
         initTypePage(element);
+        // overrides decision taken during previous call to initTypePage
+        setAddComments(preferences.shouldGenerateCommentsForTestMethod(), true);
+
         // put default class to test
         if(element != null)
         {
