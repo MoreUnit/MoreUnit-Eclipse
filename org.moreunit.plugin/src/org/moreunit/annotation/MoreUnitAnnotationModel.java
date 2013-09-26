@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,6 +36,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
@@ -214,35 +216,38 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     private synchronized void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
         boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
+        MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
+
         for (IMethod method : type.getMethods())
         {
-            Collection<? extends IMember> testMethods = classTypeFacade.getCorrespondingTestMembers(method, extendedSearch);
+            Collection<IMethod> testMethods = classTypeFacade.getCorrespondingTestMethods(method, searchMode);
+
             boolean hasIgnoredTest = false;
             for (IMember testMethod : testMethods)
             {
-                if (testMethod instanceof IMethod)
+                // Using getAnnotation(IGNORE_ANNOTATION_NAME).exists() seems to
+                // give back true "for a while" after removing an annotation,
+                // that is why I am using this loop
+                IAnnotation[] allAnnotations = ((IMethod) testMethod).getAnnotations();
+                for (IAnnotation annotation : allAnnotations)
                 {
-                    // Using getAnnotation(IGNORE_ANNOTATION_NAME).exists() seems to give
-                    // back true "for a while" after removing an annotation,
-                    // that is why I am using this loop
-                    IAnnotation[] allAnnotations = ((IMethod)testMethod).getAnnotations();
-                    for(IAnnotation annotation : allAnnotations)
+                    if(IGNORE_ANNOTATION_NAME.equals(annotation.getElementName()))
                     {
-                        if(IGNORE_ANNOTATION_NAME.equals(annotation.getElementName()))
-                            hasIgnoredTest = true;
+                        hasIgnoredTest = true;
+                        break;
                     }
                 }
             }
-            
-            if(!testMethods.isEmpty())
+
+            if(! testMethods.isEmpty())
             {
                 ISourceRange range = method.getNameRange();
                 MoreUnitAnnotation annotation = null;
-                if (hasIgnoredTest)
+                if(hasIgnoredTest)
                     annotation = MoreUnitAnnotation.createAnnotationForIgnoredTesMethod(range);
                 else
                     annotation = MoreUnitAnnotation.createAnnotationForTestedMethod(range);
-                
+
                 annotations.add(annotation);
                 event.annotationAdded(annotation);
             }

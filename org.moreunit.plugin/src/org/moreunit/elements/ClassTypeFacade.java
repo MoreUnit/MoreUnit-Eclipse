@@ -2,8 +2,11 @@ package org.moreunit.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMember;
@@ -23,7 +26,7 @@ import org.moreunit.wizards.NewTestCaseWizard;
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
  * file represented by this instance is not a testcase.
- * 
+ *
  * @author vera 23.05.2006 20:28:52
  * @version 30.09.2010
  */
@@ -43,7 +46,7 @@ public class ClassTypeFacade extends TypeFacade
      * Returns the corresponding testcase of the javaFileFacade. If there are
      * more than one testcases the user has to make a choice via a dialog. If no
      * test is found <code>null</code> is returned.
-     * 
+     *
      * @return one of the corresponding testcases
      */
     public CorrespondingTestCase getOneCorrespondingTestCase(boolean createIfNecessary, String promptText)
@@ -128,6 +131,24 @@ public class ClassTypeFacade extends TypeFacade
         }
 
         return result;
+    }
+
+    public Set<IMethod> getCorrespondingTestMethods(IMethod method, MethodSearchMode searchMethod)
+    {
+        final Set<IMethod> correspondingTestMethods = new HashSet<IMethod>();
+        if(searchMethod == MethodSearchMode.BY_CALL)
+        {
+            Collection<IType> correspondingClasses = getCorrespondingTestCases();
+            if(! correspondingClasses.isEmpty())
+            {
+                correspondingTestMethods.addAll(getCallRelationshipFinder(method, correspondingClasses).getMatches(new NullProgressMonitor()));
+            }
+        }
+        else
+        {
+            correspondingTestMethods.addAll(getCorrespondingTestMethods(method));
+        }
+        return correspondingTestMethods;
     }
 
     @Override
