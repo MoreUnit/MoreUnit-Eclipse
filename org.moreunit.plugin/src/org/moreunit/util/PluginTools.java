@@ -1,7 +1,10 @@
 package org.moreunit.util;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
@@ -29,15 +32,16 @@ import org.moreunit.preferences.Preferences.ProjectPreferences;
 public class PluginTools
 {
     private static final Pattern MAVEN_RESOURCE_FOLDER = Pattern.compile("src/[^/]+/resources");
+    private static final Pattern MAVEN_TEST_FOLDER = Pattern.compile("src/test/([^/]+)");
 
     public static IEditorPart getOpenEditorPart()
     {
         IWorkbench wb = PlatformUI.getWorkbench();
         IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
-        
+
         if(window == null)
             return null;
-        
+
         IWorkbenchPage page = window.getActivePage();
 
         if(page != null)
@@ -131,7 +135,7 @@ public class PluginTools
 
         return resultList;
     }
-    
+
     public static List<IPackageFragmentRoot> findJavaSourceFoldersFor(IJavaProject project)
     {
         List<IPackageFragmentRoot> javaSrcFolders = new ArrayList<IPackageFragmentRoot>();
@@ -172,7 +176,7 @@ public class PluginTools
 
         return false;
     }
-    
+
     private static boolean isMavenLikeResourceFolder(String srcFolderPath)
     {
         return MAVEN_RESOURCE_FOLDER.matcher(srcFolderPath).matches();
@@ -185,11 +189,12 @@ public class PluginTools
 
         return sourceFolder.getPath().removeFirstSegments(1).toString();
     }
-    
+
     /**
      * Returns the name of the test-package, which depends on the preferences.
-     * If the user configured a test package prefix or suffix it must be added to the test package name.
-     * 
+     * If the user configured a test package prefix or suffix it must be added
+     * to the test package name.
+     *
      * @param cutPackageName
      * @param preferences
      * @param javaProject
@@ -212,5 +217,93 @@ public class PluginTools
         }
 
         return testPackageName;
+    }
+
+    public static IPackageFragmentRoot guessSourceFolderCorrespondingToTestFolder(IJavaProject project, IPackageFragmentRoot testFolder)
+    {
+        List<IPackageFragmentRoot> allSourceFolders = getAllSourceFolderFromProject(project);
+        if(allSourceFolders.isEmpty())
+            return null;
+
+        if(allSourceFolders.size() == 1)
+            return allSourceFolders.get(0);
+
+        if(allSourceFolders.size() == 2)
+            return firstSourceFolderNotEqualTo(allSourceFolders, testFolder);
+
+        IPackageFragmentRoot likelySourceFolder = findLikelySourceFolder(allSourceFolders, testFolder);
+        if(likelySourceFolder != null)
+            return likelySourceFolder;
+
+        // last chance, user better has to properly configure MoreUnit...
+        return firstSourceFolderNotEqualTo(allSourceFolders, testFolder);
+    }
+
+    private static IPackageFragmentRoot findLikelySourceFolder(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot testFolder)
+    {
+        String testFolderPath = getPathStringWithoutProjectName(testFolder);
+
+        IPackageFragmentRoot srcFolder = findMavenLikeSrcFolderFor(allSourceFolders, testFolderPath);
+        if(srcFolder != null)
+            return srcFolder;
+
+        return findSourceFolderNotContainingTestKeyword(allSourceFolders, testFolderPath);
+    }
+
+    private static IPackageFragmentRoot findSourceFolderNotContainingTestKeyword(List<IPackageFragmentRoot> allSourceFolders, String testFolderPath)
+    {
+        String testKeyword = findTestKeyword(testFolderPath);
+        if(testKeyword == null)
+            return null;
+
+        for (IPackageFragmentRoot folder : allSourceFolders)
+            if(! getPathStringWithoutProjectName(folder).matches(".*\\b" + testKeyword + "\\b.*"))
+                return folder;
+
+        return null;
+    }
+
+    private static IPackageFragmentRoot firstSourceFolderNotEqualTo(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot testFolder)
+    {
+        for (IPackageFragmentRoot folder : allSourceFolders)
+            if(! folder.equals(testFolder))
+                return folder;
+
+        // if that guess is wrong, then user will have to choose manually
+        return allSourceFolders.get(0);
+    }
+
+    private static IPackageFragmentRoot findMavenLikeSrcFolderFor(List<IPackageFragmentRoot> allSourceFolders, String testFolderPath)
+    {
+        Matcher matcher = MAVEN_TEST_FOLDER.matcher(testFolderPath);
+        if(! matcher.matches())
+            return null;
+
+        String languagePart = matcher.group(1);
+        String mainSourceFolderForLanguage = "src/main/" + languagePart;
+
+        for (IPackageFragmentRoot folder : allSourceFolders)
+            if(getPathStringWithoutProjectName(folder).equals(mainSourceFolderForLanguage))
+                return folder;
+
+        // maybe production code and test code are not written using the same
+        // language
+        for (IPackageFragmentRoot folder : allSourceFolders)
+        {
+            String folderName = getPathStringWithoutProjectName(folder);
+            if(folderName.startsWith("src/main/") && ! folderName.equals("src/main/resources"))
+                return folder;
+        }
+
+        return null;
+    }
+
+    private static String findTestKeyword(String testFolderPath)
+    {
+        for (String testKeyword : asList("test", "junit", "testng", "spec", "tst"))
+            if(testFolderPath.toLowerCase().matches(".*\\b" + testKeyword + "\\b.*"))
+                return testKeyword;
+
+        return null;
     }
 }

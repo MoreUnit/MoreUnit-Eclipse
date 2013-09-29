@@ -33,7 +33,7 @@ public class RenamePackageParticipant extends RenameParticipant
 
     private IPackageFragment packageFragment;
     private IPackageFragmentRoot packageFragmentRoot;
-    private List<IPackageFragmentRoot> correspondingPackages;
+    private List<IPackageFragmentRoot> correspondingPackageFragmentRoots;
 
     @Override
     protected boolean initialize(Object element)
@@ -46,7 +46,7 @@ public class RenamePackageParticipant extends RenameParticipant
             fragment = fragment.getParent();
         }
         packageFragmentRoot = (IPackageFragmentRoot) fragment;
-        correspondingPackages = getSourceFolderFromContext();
+        correspondingPackageFragmentRoots = getSourceFolderFromContext();
 
         return ! isTestSourceFolder();
     }
@@ -82,7 +82,7 @@ public class RenamePackageParticipant extends RenameParticipant
 
         List<Change> changes = new ArrayList<Change>();
 
-        for (IPackageFragmentRoot packageRoot : correspondingPackages)
+        for (IPackageFragmentRoot packageRoot : correspondingPackageFragmentRoots)
         {
             IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, prefs));
             if(packageToRename != null && packageToRename.exists())
@@ -105,8 +105,17 @@ public class RenamePackageParticipant extends RenameParticipant
 
     private List<IPackageFragmentRoot> getSourceFolderFromContext()
     {
-        SourceFolderContext context = SourceFolderContext.getInstance();
-        return context.getSourceFolderToSearch(packageFragmentRoot);
+        List<IPackageFragmentRoot> result = new ArrayList<IPackageFragmentRoot>();
+        for (IPackageFragmentRoot folder : SourceFolderContext.getInstance().getSourceFolderToSearch(packageFragmentRoot))
+        {
+            // this case may happens if tests are in the same source folder as
+            // production code
+            if(! folder.equals(packageFragmentRoot))
+            {
+                result.add(folder);
+            }
+        }
+        return result;
     }
 
     @Override
