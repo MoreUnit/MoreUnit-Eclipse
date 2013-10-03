@@ -32,10 +32,11 @@ import org.moreunit.actions.RunTestsOfSelectedMemberAction;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.CorrespondingMemberRequest;
+import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
+import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.util.FeatureDetector;
@@ -51,7 +52,7 @@ import org.moreunit.util.FeatureDetector;
  * {@link RunTestFromCompilationUnitAction} and {@link RunTestFromTypeAction}</li>
  * </ul>
  * The handler is a singleton.
- * 
+ *
  * @author vera 25.10.2005
  * @version 30.09.2010
  */
@@ -149,7 +150,7 @@ public class RunTestsActionExecutor
             IJavaProject javaProject = compilationUnit.getJavaProject();
             boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
-            
+
             IMethod methodUnderTest = null;
             if(editorPart != null)
             {
@@ -158,7 +159,9 @@ public class RunTestsActionExecutor
 
             if(featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
             {
-                testElements.addAll(typeFacade.getCorrespondingTestMembers(methodUnderTest, extendedSearch));
+                MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
+
+                testElements.addAll(typeFacade.getCorrespondingTestMethods(methodUnderTest, searchMode));
             }
             else
             {
@@ -168,7 +171,7 @@ public class RunTestsActionExecutor
                         .extendedSearch(extendedSearch) //
                         .createClassIfNoResult("Run test...") //
                         .build();
-                
+
                 testElements.add(typeFacade.getOneCorrespondingMember(request));
             }
         }

@@ -3,13 +3,11 @@ package org.moreunit.elements;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -172,24 +170,6 @@ public class ClassTypeFacade extends TypeFacade
     public CorrespondingTestCase getOneCorrespondingTestCase(boolean createIfNecessary)
     {
         return getOneCorrespondingTestCase(createIfNecessary, "Please choose a test case...");
-    }
-
-    public Collection< ? extends IMember> getCorrespondingTestMembers(IMethod method, boolean extendedSearch)
-    {
-        Collection<IMethod> testMethods = new LinkedHashSet<IMethod>();
-
-        Collection<IType> testCases = getCorrespondingTestCases();
-
-        if(method != null && ! testCases.isEmpty())
-        {
-            testMethods.addAll(getCorrespondingMethodsInClasses(method, testCases));
-            if(extendedSearch)
-            {
-                testMethods.addAll(getCallRelationshipFinder(method, testCases).getMatches(new NullProgressMonitor()));
-            }
-        }
-
-        return testMethods.isEmpty() ? testCases : testMethods;
     }
 
     public boolean hasTestCase()
