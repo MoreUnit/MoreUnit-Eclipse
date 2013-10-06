@@ -183,7 +183,7 @@ public class TestFolderPathPattern
         String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
         String projectName = getProjectName(cleanSrcPath);
 
-        String srcPathTpl = getSrcPathTemplateForSrcProject(projectName);
+        String srcPathTpl = adaptSrcPathTemplateToHandleBracesInProjectName(getSrcPathTemplateForSrcProject(projectName), projectName);
         String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
@@ -191,6 +191,26 @@ public class TestFolderPathPattern
         tstPathTpl = resolveGroups(cleanSrcPath, srcPathTpl, tstPathTpl, srcPath);
 
         return new SourceFolderPath(tstPathTpl);
+    }
+    
+    private String adaptSrcPathTemplateToHandleBracesInProjectName(String srcPathTpl, String projectName)
+    {
+        if (projectName.contains("[")) 
+            srcPathTpl = srcPathTpl.replaceFirst("\\[", "\\\\[");
+        if (projectName.contains("]"))
+            srcPathTpl = srcPathTpl.replaceFirst("\\]", "\\\\]");
+        
+        if (projectName.contains("{")) 
+            srcPathTpl = srcPathTpl.replaceFirst("\\{", "\\\\{");
+        if (projectName.contains("}"))
+            srcPathTpl = srcPathTpl.replaceFirst("\\}", "\\\\}");
+        
+        if (projectName.contains("(")) 
+            srcPathTpl = srcPathTpl.replaceFirst("\\(", "\\\\(");
+        if (projectName.contains(")"))
+            srcPathTpl = srcPathTpl.replaceFirst("\\)", "\\\\)");
+        
+        return srcPathTpl;
     }
 
     private String resolveGroups(String path, String tplWithGroups, String tplWithRefs, Path analizedPath) throws DoesNotMatchConfigurationException

@@ -292,6 +292,16 @@ public class TestFolderPathPatternTest
 
         assertThat(p.getTestPathFor(path("myproject/a1/some/path/b2")).toString()).isEqualTo("myproject/x2/y1/some/path");
     }
+    
+    @Test
+    public void getTestPathFor_should_handle_braces_in_project_name() throws Exception
+    {
+        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+
+        assertThat(p.getTestPathFor(path("/foobar [1]/src/")).toString()).isEqualTo("foobar [1]/test");
+        assertThat(p.getTestPathFor(path("/foobar {1}/src/")).toString()).isEqualTo("foobar {1}/test");
+        assertThat(p.getTestPathFor(path("/foobar (1)/src/")).toString()).isEqualTo("foobar (1)/test");
+    }
 
     @Test
     public void getSrcPathFor_should_find_src_path_when_no_variable_part() throws Exception
@@ -364,7 +374,7 @@ public class TestFolderPathPatternTest
 
         assertThat(p.getSrcPathFor(path("myproject-test/test-java/code")).toString()).isEqualTo("myproject/src-java/code");
     }
-
+    
     @Test
     public void getSrcPathFor_should_throw_exception_when_no_match_found() throws Exception
     {
