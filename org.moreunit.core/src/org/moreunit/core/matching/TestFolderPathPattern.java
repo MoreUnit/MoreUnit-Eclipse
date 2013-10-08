@@ -4,6 +4,7 @@ import static java.util.Collections.reverse;
 import static java.util.Collections.sort;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
+import static java.util.regex.Matcher.quoteReplacement;
 import static org.moreunit.core.util.Preconditions.checkArgument;
 import static org.moreunit.core.util.Strings.countOccurrences;
 
@@ -183,7 +184,7 @@ public class TestFolderPathPattern
         String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
         String projectName = getProjectName(cleanSrcPath);
 
-        String srcPathTpl = adaptSrcPathTemplateToHandleBracesInProjectName(getSrcPathTemplateForSrcProject(projectName), projectName);
+        String srcPathTpl = getSrcPathTemplateForSrcProject(quoteReplacement(quote(projectName)));
         String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
@@ -193,26 +194,6 @@ public class TestFolderPathPattern
         return new SourceFolderPath(tstPathTpl);
     }
     
-    private String adaptSrcPathTemplateToHandleBracesInProjectName(String srcPathTpl, String projectName)
-    {
-        if (projectName.contains("[")) 
-            srcPathTpl = srcPathTpl.replaceFirst("\\[", "\\\\[");
-        if (projectName.contains("]"))
-            srcPathTpl = srcPathTpl.replaceFirst("\\]", "\\\\]");
-        
-        if (projectName.contains("{")) 
-            srcPathTpl = srcPathTpl.replaceFirst("\\{", "\\\\{");
-        if (projectName.contains("}"))
-            srcPathTpl = srcPathTpl.replaceFirst("\\}", "\\\\}");
-        
-        if (projectName.contains("(")) 
-            srcPathTpl = srcPathTpl.replaceFirst("\\(", "\\\\(");
-        if (projectName.contains(")"))
-            srcPathTpl = srcPathTpl.replaceFirst("\\)", "\\\\)");
-        
-        return srcPathTpl;
-    }
-
     private String resolveGroups(String path, String tplWithGroups, String tplWithRefs, Path analizedPath) throws DoesNotMatchConfigurationException
     {
         String result = tplWithRefs;
