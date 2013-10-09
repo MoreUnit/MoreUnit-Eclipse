@@ -181,7 +181,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         methodContentLabel.setText(PreferenceConstants.TEXT_TEST_METHOD_CONTENT);
         methodContentLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_METHOD_CONTENT);
 
-        methodContentTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
+        methodContentTextField = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
         methodContentTextField.setLayoutData(LayoutData.labelledField());
         methodContentTextField.setText(preferences.getTestMethodDefaultContent(javaProject));
         methodContentTextField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_METHOD_CONTENT);
