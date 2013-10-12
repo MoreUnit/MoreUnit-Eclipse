@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.core.log.Logger;
 
-public class DependencyInjectionPointStore implements DependencyInjectionPointProvider
+public class DependencyInjectionPointStore
 {
     private final Collection<IMethod> constructors = new HashSet<IMethod>();
     private final Collection<IMethod> setters = new HashSet<IMethod>();

@@ -17,6 +17,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -37,6 +39,11 @@ import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.dependencies.DependencyInjectionPointStore;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
+import org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields;
+
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.ALL;
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_ONLY;
 
 /**
  * Mostly copied from org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo.
@@ -56,6 +63,10 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     private final Logger logger;
     private ContainerCheckedTreeViewer dependenciesTree;
     private Label selectedMembersLabel;
+    private Button showAllFieldsCheckbox;
+    private Button showInjectableFieldsCheckbox;
+
+    private DependenciesTreeContentProvider dependenciesTreeContentProvider;
 
     public MockDependenciesWizardPage(MockDependenciesWizardValues wizardValues, DependencyInjectionPointStore injectionPointStore, Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
     {
@@ -89,11 +100,44 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         Composite container = createContainer(parent);
 
         createTemplateSelector(container);
-
         createDependenciesTreeControls(container);
+        createFieldCategoriesToggleCheckboxes(container);
 
         setControl(container);
         Dialog.applyDialogFont(container);
+    }
+
+    private void createFieldCategoriesToggleCheckboxes(Composite parent)
+    {
+        GridData layoutForOneLineControls = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        layoutForOneLineControls.horizontalSpan = 2;
+
+        showAllFieldsCheckbox = new Button(parent, SWT.CHECK);
+        showAllFieldsCheckbox.setText("Show all fields");
+        showAllFieldsCheckbox.setToolTipText("Check this box to display all fields, including private, final and static ones.");
+        showAllFieldsCheckbox.setLayoutData(layoutForOneLineControls);
+        showAllFieldsCheckbox.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                showInjectableFieldsCheckbox.setEnabled(! showAllFieldsCheckbox.getSelection());
+                visibleFieldsChanged();
+            }
+        });
+
+        showInjectableFieldsCheckbox = new Button(parent, SWT.CHECK);
+        showInjectableFieldsCheckbox.setText("Show injectable fields");
+        showInjectableFieldsCheckbox.setToolTipText("Check this box to display fields annotated with either @Inject, @Resource or @Autowired.");
+        showInjectableFieldsCheckbox.setLayoutData(layoutForOneLineControls);
+        showInjectableFieldsCheckbox.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                visibleFieldsChanged();
+            }
+        });
     }
 
     private Composite createContainer(Composite parent)
@@ -141,6 +185,14 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         dependenciesTree.addCheckStateListener(new ICheckStateListener()
         {
             public void checkStateChanged(CheckStateChangedEvent event)
+            {
+                doCheckedStateChanged();
+            }
+        });
+        dependenciesTree.addSelectionChangedListener(new ISelectionChangedListener()
+        {
+            @Override
+            public void selectionChanged(SelectionChangedEvent event)
             {
                 doCheckedStateChanged();
             }
@@ -248,7 +300,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             public void widgetSelected(SelectionEvent e)
             {
-                checkElements((Object[]) dependenciesTree.getInput());
+                checkAllElements();
             }
         });
 
@@ -256,7 +308,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             public void widgetSelected(SelectionEvent e)
             {
-                checkElements(new Object[0]);
+                uncheckAllElements();
             }
         });
     }
@@ -327,10 +379,31 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
         templateStyleSelector.initValues(project);
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, wizardValues.getInjectionPointProvider(), logger);
-        dependenciesTree.setContentProvider(contentProvider);
-        dependenciesTree.setInput(contentProvider.getTypes());
-        dependenciesTree.setSelection(new StructuredSelection(classUnderTest), true);
+        dependenciesTreeContentProvider = new DependenciesTreeContentProvider(classUnderTest,
+                                                                              wizardValues.getInjectionPointProvider(),
+                                                                              getVisibleFields(),
+                                                                              logger);
+        dependenciesTree.setContentProvider(dependenciesTreeContentProvider);
+        dependenciesTree.setInput(dependenciesTreeContentProvider.getTypes());
+        initDependenciesSelection();
+    }
+
+    private VisibleFields getVisibleFields()
+    {
+        if(showAllFieldsCheckbox.getSelection())
+        {
+            return ALL;
+        }
+        if(showInjectableFieldsCheckbox.getSelection())
+        {
+            return VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
+        }
+        return VISIBLE_TO_TEST_CASE_ONLY;
+    }
+
+    private void initDependenciesSelection()
+    {
+        dependenciesTree.setSelection(new StructuredSelection(wizardValues.getClassUnderTest()), true);
     }
 
     public IType getClassUnderTest()
@@ -352,5 +425,38 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     public void selectTemplate(String templateId)
     {
         templateStyleSelector.selectTemplate(templateId);
+    }
+
+    public void visibleFieldsChanged()
+    {
+        // dependenciesTreeContentProvider has not been created yet
+        if(dependenciesTreeContentProvider == null)
+        {
+            return;
+        }
+
+        dependenciesTreeContentProvider.showFields(getVisibleFields());
+        dependenciesTree.refresh();
+        initDependenciesSelection();
+    }
+
+    public void checkShowAllField()
+    {
+        showAllFieldsCheckbox.setSelection(true);
+    }
+
+    public void checkShowInjectableField()
+    {
+        showInjectableFieldsCheckbox.setSelection(true);
+    }
+
+    public void checkAllElements()
+    {
+        checkElements((Object[]) dependenciesTree.getInput());
+    }
+
+    public void uncheckAllElements()
+    {
+        checkElements(new Object[0]);
     }
 }

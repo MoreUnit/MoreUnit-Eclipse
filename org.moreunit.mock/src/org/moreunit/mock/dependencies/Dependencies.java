@@ -22,12 +22,12 @@ public class Dependencies extends ArrayList<Dependency>
 
     private final NamingRules namingRules;
     private final IType classUnderTest;
-    private final DependencyInjectionPointProvider injectionPointProvider;
+    private final DependencyInjectionPointStore injectionPointProvider;
     private final List<Dependency> constructorDependencies = new ArrayList<Dependency>();
     private final List<SetterDependency> setterDependencies = new ArrayList<SetterDependency>();
     private final List<FieldDependency> fieldDependencies = new ArrayList<FieldDependency>();
 
-    public Dependencies(IType classUnderTest, DependencyInjectionPointProvider injectionPointProvider, NamingRules namingRules)
+    public Dependencies(IType classUnderTest, DependencyInjectionPointStore injectionPointProvider, NamingRules namingRules)
     {
         this.namingRules = namingRules;
         this.classUnderTest = classUnderTest;

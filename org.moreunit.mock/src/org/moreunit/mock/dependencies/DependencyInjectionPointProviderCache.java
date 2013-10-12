@@ -3,7 +3,6 @@ package org.moreunit.mock.dependencies;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -15,7 +14,7 @@ public class DependencyInjectionPointProviderCache implements DependencyInjectio
 {
     private final Collection<IMethod> constructors = new HashSet<IMethod>();
     private final Collection<IMethod> setters = new HashSet<IMethod>();
-    private final Collection<IField> fields = new HashSet<IField>();
+    private final Collection<Field> fields = new HashSet<Field>();
     private JavaModelException exception;
 
     public DependencyInjectionPointProviderCache(DependencyInjectionPointProvider provider)
@@ -34,11 +33,11 @@ public class DependencyInjectionPointProviderCache implements DependencyInjectio
 
     public Collection<IMethod> getConstructors() throws JavaModelException
     {
-        rethrowExcpetionIfAny();
+        rethrowExceptionIfAny();
         return constructors;
     }
 
-    private void rethrowExcpetionIfAny() throws JavaModelException
+    private void rethrowExceptionIfAny() throws JavaModelException
     {
         if(exception != null)
         {
@@ -48,13 +47,13 @@ public class DependencyInjectionPointProviderCache implements DependencyInjectio
 
     public Collection<IMethod> getSetters() throws JavaModelException
     {
-        rethrowExcpetionIfAny();
+        rethrowExceptionIfAny();
         return setters;
     }
 
-    public Collection<IField> getFields() throws JavaModelException
+    public Collection<Field> getFields() throws JavaModelException
     {
-        rethrowExcpetionIfAny();
+        rethrowExceptionIfAny();
         return fields;
     }
 }

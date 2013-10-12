@@ -30,14 +30,14 @@ public class DependenciesTest
     @Mock
     private IType classUnderTest;
     @Mock
-    private DependencyInjectionPointProvider dependencyInjectionPointProvider;
+    private DependencyInjectionPointStore dependencyInjectionPointStore;
 
     private Dependencies dependencies;
 
     @Before
     public void createDependencies()
     {
-        dependencies = new Dependencies(classUnderTest, dependencyInjectionPointProvider, namingRules);
+        dependencies = new Dependencies(classUnderTest, dependencyInjectionPointStore, namingRules);
     }
 
     @Test
@@ -129,9 +129,9 @@ public class DependenciesTest
 
     private void mockMethodsAndFieldsRetrieval(IType type) throws JavaModelException
     {
-        when(dependencyInjectionPointProvider.getConstructors()).thenReturn(Collections.<IMethod> emptySet());
-        when(dependencyInjectionPointProvider.getFields()).thenReturn(Collections.<IField> emptySet());
-        when(dependencyInjectionPointProvider.getSetters()).thenReturn(Collections.<IMethod> emptySet());
+        when(dependencyInjectionPointStore.getConstructors()).thenReturn(Collections.<IMethod> emptySet());
+        when(dependencyInjectionPointStore.getFields()).thenReturn(Collections.<IField> emptySet());
+        when(dependencyInjectionPointStore.getSetters()).thenReturn(Collections.<IMethod> emptySet());
     }
 
     @Test

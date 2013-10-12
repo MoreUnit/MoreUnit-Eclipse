@@ -64,6 +64,7 @@ public final class WizardDriver
         {
             return new WizardDialog(shell, wizard)
             {
+                @Override
                 public int open()
                 {
                     setBlockOnOpen(false);
@@ -92,7 +93,7 @@ public final class WizardDriver
 
         public void checkAllElements()
         {
-            page.checkElements(page.getTreeContentProvider().getTypes());
+            page.checkAllElements();
         }
 
         public void checkElements(String... elementNames)
@@ -121,6 +122,18 @@ public final class WizardDriver
         {
             page.selectTemplate(templateId);
         }
+
+        public void showAllFields()
+        {
+            page.checkShowAllField();
+            page.visibleFieldsChanged();
+        }
+
+        public void showInjectableFields()
+        {
+            page.checkShowInjectableField();
+            page.visibleFieldsChanged();
+        }
     }
 
     public static class MockDependenciesPageActions
@@ -129,6 +142,8 @@ public final class WizardDriver
         private String templateId;
         private boolean checkAllElements;
         private String[] elementsToCheck;
+        private boolean showAllFields;
+        private boolean showInjectableFields;
 
         public MockDependenciesPageActions(WizardDriver driver)
         {
@@ -153,15 +168,36 @@ public final class WizardDriver
             return this;
         }
 
+        public MockDependenciesPageActions showAllFields()
+        {
+            showAllFields = true;
+            return this;
+        }
+
+        public MockDependenciesPageActions showInjectableFields()
+        {
+            showInjectableFields = true;
+            return this;
+        }
+
         public void done()
         {
             driver.whenMockDependenciesPageIsOpen(new MockDependenciesPageIsOpenAction()
             {
+                @Override
                 public void execute(MockDependenciesWizardDriver driver)
                 {
                     if(templateId != null)
                     {
                         driver.selectTemplate(templateId);
+                    }
+                    if(showInjectableFields)
+                    {
+                        driver.showInjectableFields();
+                    }
+                    if(showAllFields)
+                    {
+                        driver.showAllFields();
                     }
                     if(checkAllElements)
                     {

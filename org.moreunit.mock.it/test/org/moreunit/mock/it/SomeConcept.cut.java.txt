@@ -2,9 +2,18 @@ package te.st;
 
 public class SomeConcept {
 
+	public static final Object constant = null;
+
 	public Runnable runnable;
 	public Comparator<String> stringComparator;
-	private	Set<Double> someHiddenProperty;
+	private	Set<Double> privateField;
+	
+	@Inject
+	private Object injectableField;
+	@Resource
+	private Object resourceField;
+	@Autowired
+	private Object autowiredField;
 
 	public SomeConcept(Callable<Integer> integerProvider) {
 	}

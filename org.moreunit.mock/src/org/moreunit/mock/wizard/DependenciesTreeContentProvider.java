@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -17,22 +16,41 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
+import org.moreunit.mock.dependencies.Field;
+
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.ALL;
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
 
 public class DependenciesTreeContentProvider implements ITreeContentProvider
 {
+    public static enum VisibleFields
+    {
+        ALL, VISIBLE_TO_TEST_CASE_AND_INJECTABLE, VISIBLE_TO_TEST_CASE_ONLY;
+    }
+
     private static final Object[] EMPTY_ARRAY = new Object[0];
 
     private final IType classUnderTest;
     private final DependencyInjectionPointProvider provider;
+    private VisibleFields visibleFields;
     private final Logger logger;
     private final List<IType> types = new ArrayList<IType>();
     private final List<IMember> members = new ArrayList<IMember>();
 
-    public DependenciesTreeContentProvider(IType classUnderTest, DependencyInjectionPointProvider provider, Logger logger)
+    public DependenciesTreeContentProvider(IType classUnderTest, DependencyInjectionPointProvider provider, VisibleFields visibleFields, Logger logger)
     {
         this.classUnderTest = classUnderTest;
         this.provider = provider;
+        this.visibleFields = visibleFields;
         this.logger = logger;
+        initContent();
+    }
+
+    private void initContent()
+    {
+        types.clear();
+        members.clear();
+
         initTypes();
         initMembers();
         removeUnusedTypes();
@@ -86,21 +104,38 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
         }
     }
 
-    private void addFields(Iterable<IField> fields)
+    private void addFields(Iterable<Field> fields) throws JavaModelException
     {
-        for_fields: for (IField field : fields)
+        for_fields: for (Field field : fields)
         {
+            if(! shouldShowField(field))
+            {
+                continue;
+            }
             for (ListIterator<IMember> memberIt = members.listIterator(); memberIt.hasNext();)
             {
                 IMember alreadyCollectedMemeber = memberIt.next();
-                if(alreadyCollectedMemeber instanceof IMethod && alreadyCollectedMemeber.getElementName().equals(field.getElementName()))
+                if(alreadyCollectedMemeber instanceof IMethod && alreadyCollectedMemeber.getElementName().equals(field.get().getElementName()))
                 {
-                    memberIt.set(field);
+                    memberIt.set(field.get());
                     continue for_fields;
                 }
             }
-            members.add(field);
+            members.add(field.get());
         }
+    }
+
+    private boolean shouldShowField(Field field) throws JavaModelException
+    {
+        if(visibleFields == ALL)
+        {
+            return true;
+        }
+        if(field.isVisibleToTestCase() && field.isAssignable())
+        {
+            return true;
+        }
+        return visibleFields == VISIBLE_TO_TEST_CASE_AND_INJECTABLE && field.isInjectable();
     }
 
     private void sortMembers()
@@ -170,5 +205,11 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
         // void implementation
+    }
+
+    public void showFields(VisibleFields fields)
+    {
+        visibleFields = fields;
+        initContent();
     }
 }

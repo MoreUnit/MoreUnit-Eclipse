@@ -8,8 +8,6 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -107,23 +105,29 @@ public class TemplateStyleSelector implements SelectionListener
             }
         });
 
+        templateCombo.addModifyListener(new ModifyListener()
+        {
+            @Override
+            public void modifyText(ModifyEvent e)
+            {
+                MockingTemplate newSelectedTemplate = determineSelectedTemplate();
+                if(! newSelectedTemplate.equals(selectedTemplate))
+                {
+                    selectedTemplate = newSelectedTemplate;
+                }
+            }
+        });
+
         contentCreated = true;
 
         initStyle();
 
-        parent.addDisposeListener(new DisposeListener()
-        {
-            public void widgetDisposed(DisposeEvent e)
-            {
-                // remembers selected template
-                selectedTemplate = getSelectedTemplate();
-            }
-        });
+        selectedTemplate = determineSelectedTemplate();
     }
 
     private Combo createCombo(Composite parent)
     {
-        Combo combo = new Combo(parent, SWT.SINGLE | SWT.BORDER);
+        Combo combo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         combo.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1));
         return combo;
     }
@@ -209,7 +213,7 @@ public class TemplateStyleSelector implements SelectionListener
 
     public void savePreferences()
     {
-        MockingTemplate template = templateCombo.isDisposed() ? selectedTemplate : getSelectedTemplate();
+        MockingTemplate template = getSelectedTemplate();
         if(template == null)
         {
             logger.warn("Could not retrieve selected template");
@@ -224,7 +228,7 @@ public class TemplateStyleSelector implements SelectionListener
         }
     }
 
-    private MockingTemplate getSelectedTemplate()
+    private MockingTemplate determineSelectedTemplate()
     {
         int selectionIndex = templateCombo.getSelectionIndex();
         // it may happens that the first entry was not automatically selected...
@@ -247,5 +251,10 @@ public class TemplateStyleSelector implements SelectionListener
     public void widgetSelected(SelectionEvent event)
     {
         // nothing to do
+    }
+
+    public MockingTemplate getSelectedTemplate()
+    {
+        return selectedTemplate != null ? selectedTemplate : determineSelectedTemplate();
     }
 }

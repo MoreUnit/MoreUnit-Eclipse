@@ -23,7 +23,6 @@ public class DependencyInjectionPointCollectorTest
     private IType classUnderTest;
     private IPackageFragment testCasePackage;
     private IMember aMember;
-    private IField aField;
 
     private DependencyInjectionPointCollector collector;
 
@@ -33,7 +32,6 @@ public class DependencyInjectionPointCollectorTest
         classUnderTest = mockType();
         testCasePackage = mockPackageFragmentWithPackageName(TEST_PACKAGE_NAME);
         aMember = mock(IMember.class);
-        aField = mock(IField.class);
 
         collector = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
     }
@@ -109,26 +107,6 @@ public class DependencyInjectionPointCollectorTest
 
         // then
         assertThat(collector.isVisibleToTestCase(aMember)).isTrue();
-    }
-
-    @Test
-    public void field_should_not_be_assignable_when_final() throws Exception
-    {
-        // given
-        when(aField.getFlags()).thenReturn(Flags.AccFinal);
-
-        // then
-        assertThat(collector.isAssignable(aField)).isFalse();
-    }
-
-    @Test
-    public void field_should_be_assignable_when_not_final() throws Exception
-    {
-        // given
-        when(aField.getFlags()).thenReturn(Flags.AccDefault);
-
-        // then
-        assertThat(collector.isAssignable(aField)).isTrue();
     }
 
     @Test
@@ -272,7 +250,7 @@ public class DependencyInjectionPointCollectorTest
     }
 
     @Test
-    public void should_not_collect_invisible_fields() throws Exception
+    public void should_collect_invisible_fields() throws Exception
     {
         // given
         IField packagePrivateField = field("aField", Flags.AccDefault);
@@ -280,7 +258,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasFields(packagePrivateField);
 
         // then
-        assertThat(collector.getFields()).isEmpty();
+        assertThat(collector.getFields()).hasSize(1);
     }
 
     private IField field(String name, int flags) throws JavaModelException

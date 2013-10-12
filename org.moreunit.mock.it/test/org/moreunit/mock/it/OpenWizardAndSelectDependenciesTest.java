@@ -11,7 +11,7 @@ import org.moreunit.test.context.TestType;
 @Context(mainSrc = "SomeConcept.cut.java.txt",
         testSrc = "SomeConcept.test.java.txt",
         preferences = @Preferences(testType = TestType.JUNIT4,
-                testClassNameTemplate = "${srcFile}(Test|TestWithParent)" ))
+                testClassNameTemplate = "${srcFile}(Test|TestWithParent)"))
 public class OpenWizardAndSelectDependenciesTest extends UiTestCase
 {
     private final String expectationQualifier = "Mockito_post_1.9";
@@ -51,6 +51,42 @@ public class OpenWizardAndSelectDependenciesTest extends UiTestCase
 
         // then
         context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn(expectationQualifier + "_all_dependencies.expected.java.txt");
+    }
+
+    @Test
+    public void should_also_mock_injected_dependencies() throws Exception
+    {
+        // given
+        wizardDriver.whenMockDependenciesPageIsOpen()
+                .selectTemplate(templateId)
+                .showInjectableFields()
+                .checkAllElements()
+                .done();
+
+        // when
+        JavaUI.openInEditor(context.getCompilationUnit("te.st.SomeConceptTest"));
+        mockDependenciesAction.execute(null);
+
+        // then
+        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn(expectationQualifier + "_with_injectable_dependencies.expected.java.txt");
+    }
+
+    @Test
+    public void should_allow_for_mocking_all_fields() throws Exception
+    {
+        // given
+        wizardDriver.whenMockDependenciesPageIsOpen()
+                .selectTemplate(templateId)
+                .showAllFields()
+                .checkAllElements()
+                .done();
+
+        // when
+        JavaUI.openInEditor(context.getCompilationUnit("te.st.SomeConceptTest"));
+        mockDependenciesAction.execute(null);
+
+        // then
+        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn(expectationQualifier + "_with_all_fields.expected.java.txt");
     }
 
     @Test

@@ -73,7 +73,7 @@ public class MockDependenciesPageManager
         page.validated();
 
         IType classUnderTest = page.getClassUnderTest();
-        DependencyInjectionPointProvider injectionPointStore = page.getInjectionPointStore();
+        DependencyInjectionPointStore injectionPointStore = page.getInjectionPointStore();
 
         NamingRules namingRules = new NamingRules(classUnderTest.getJavaProject());
         Dependencies dependencies = new Dependencies(classUnderTest, injectionPointStore, namingRules);

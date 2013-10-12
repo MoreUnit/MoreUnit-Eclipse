@@ -92,16 +92,13 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
         return typeHierarchy;
     }
 
-    public Collection<IField> getFields() throws JavaModelException
+    public Collection<Field> getFields() throws JavaModelException
     {
-        HashSet<IField> fields = new HashSet<IField>();
+        HashSet<Field> fields = new HashSet<Field>();
 
         for (IField field : getAllFields())
         {
-            if(isVisibleToTestCase(field) && isAssignable(field))
-            {
-                fields.add(field);
-            }
+            fields.add(new Field(field, isVisibleToTestCase(field)));
         }
 
         return fields;
@@ -115,10 +112,5 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
             Collections.addAll(fields, type.getFields());
         }
         return fields;
-    }
-
-    public boolean isAssignable(IField field) throws JavaModelException
-    {
-        return ! Flags.isFinal(field.getFlags());
     }
 }
