@@ -60,7 +60,7 @@ public interface PreferenceConstants
     String TOOLTIP_PACKAGE_SUFFIX = "If your test classes use the same package as the classes that are tested except for a suffix part, enter this suffix here." + NL + NL + "Example: by specifying \"test\", a test class for a class located in the package \"org.example\" would be searched in the package \"org.example.test\".";
     String TOOLTIP_PACKAGE_PREFIX = "If your test classes use the same package as the classes that are tested except for a prefix part, enter this prefix here." + NL + NL + "Example: by specifying \"test\", a test class for a class located in the package \"org.example\" would be searched in the package \"test.org.example\".";
     String TOOLTIP_TEST_SUPERCLASS = "If you want your test classes to have a default superclass, enter its fully qualified name here.";
-    String TOOLTIP_EXTENDED_TEST_METHOD_SEARCH = "Enable this option if you want MoreUnit to propose jumping from a given method to any test method that calls it (and vice-versa) instead of juste searching for a test method with the same name.";
+    String TOOLTIP_EXTENDED_TEST_METHOD_SEARCH = "Enable this option if you want MoreUnit to propose jumping from a given method to any test method that calls it (and vice-versa) instead of just searching for a test method with the same name.";
 
     String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
     String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";
