@@ -149,16 +149,18 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         modelExtension.removeAnnotationModel(MODEL_KEY);
     }
 
-    private synchronized void clear(AnnotationModelEvent event)
+    private void clear(AnnotationModelEvent event)
     {
-        Iterator<MoreUnitAnnotation> iterator = getAnnotationIterator();
-        while (iterator.hasNext())
+        synchronized (annotations)
         {
-            MoreUnitAnnotation annotation = iterator.next();
-            annotation.markDeleted(true);
-            event.annotationRemoved(annotation, annotation.getPosition());
+            for (MoreUnitAnnotation annotation : annotations)
+            {
+                annotation.markDeleted(true);
+                event.annotationRemoved(annotation, annotation.getPosition());
+            }
+
+            annotations.clear();
         }
-        annotations.clear();
     }
 
     private void updateAnnotations()
@@ -213,7 +215,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         updateJob.schedule();
     }
 
-    private synchronized void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
+    private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
         boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
         MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
@@ -248,7 +250,10 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                 else
                     annotation = MoreUnitAnnotation.createAnnotationForTestedMethod(range);
 
-                annotations.add(annotation);
+                synchronized (annotations)
+                {
+                    annotations.add(annotation);
+                }
                 event.annotationAdded(annotation);
             }
         }
