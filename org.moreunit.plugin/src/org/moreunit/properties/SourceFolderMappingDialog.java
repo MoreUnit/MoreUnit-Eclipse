@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.moreunit.properties;
 
@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -19,7 +18,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.moreunit.elements.SourceFolderMapping;
-import org.moreunit.log.LogHandler;
 import org.moreunit.util.PluginTools;
 
 /**
@@ -89,8 +87,10 @@ public class SourceFolderMappingDialog extends Dialog implements ICheckStateList
     protected void okPressed()
     {
         Object[] checkedFolder = checkboxTreeViewer.getCheckedElements();
+        List<IPackageFragmentRoot> asList = new ArrayList<IPackageFragmentRoot>();
+        for(Object elem : checkedFolder) asList.add((IPackageFragmentRoot) elem);
         if(checkedFolder != null && checkedFolder.length > 0)
-            unitSourceFolderBlock.handleSourceDialogMappingFinished(sourceFolderMapping, (IPackageFragmentRoot) checkedFolder[0]);
+            unitSourceFolderBlock.handleSourceDialogMappingFinished(sourceFolderMapping, asList);
 
         super.okPressed();
     }

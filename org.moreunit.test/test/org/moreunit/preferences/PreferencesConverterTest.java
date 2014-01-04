@@ -69,6 +69,24 @@ public class PreferencesConverterTest extends ContextTestCase
     
         assertThat(PreferencesConverter.convertSourceMappingsToString(mappingList)).isEqualTo(expected);
     }
+    
+    @Test
+    public void createStringFromSourceMapping_should_convert_multiple_sourcefolder_to_concatenated_mapping_string()
+    {
+        SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, unit3SourceFolder);
+        
+        List<IPackageFragmentRoot> asList = new ArrayList<IPackageFragmentRoot>();
+        asList.add(unit1SourceFolder);
+        asList.add(unit2SourceFolder);
+        mapping.setSourceFolderList(asList);
+        
+        String expected = String.format("%s:%s:%s:%s#%s:%s:%s:%s", unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName()
+                                                                 , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName()
+                                                                 , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
+                                                                 , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
+        
+        assertThat(PreferencesConverter.createStringFromSourceMapping(mapping)).isEqualTo(expected);
+    }
 
     @Test
     public void convertSourceMappingsToString_with_subfolders()
@@ -102,12 +120,12 @@ public class PreferencesConverterTest extends ContextTestCase
 
         SourceFolderMapping firstMapping = mappingList.get(0);
         assertThat(firstMapping.getJavaProject()).isEqualTo(context.getProjectHandler().get());
-        assertThat(firstMapping.getSourceFolder()).isEqualTo(unit1SourceFolder);
+        assertThat(firstMapping.getSourceFolderList().get(0)).isEqualTo(unit1SourceFolder);
         assertThat(firstMapping.getTestFolder()).isEqualTo(unit2SourceFolder);
 
         SourceFolderMapping secondMapping = mappingList.get(1);
         assertThat(secondMapping.getJavaProject()).isEqualTo(context.getProjectHandler().get());
-        assertThat(secondMapping.getSourceFolder()).isEqualTo(unit2SourceFolder);
+        assertThat(secondMapping.getSourceFolderList().get(0)).isEqualTo(unit2SourceFolder);
         assertThat(secondMapping.getTestFolder()).isEqualTo(unit3SourceFolder);
     }
 
@@ -121,14 +139,14 @@ public class PreferencesConverterTest extends ContextTestCase
 
         SourceFolderMapping firstMapping = mappingList.get(0);
         assertThat(firstMapping.getJavaProject()).isEqualTo(context.getProjectHandler().get());
-        assertThat(firstMapping.getSourceFolder()).isEqualTo(unit1SourceFolder);
+        assertThat(firstMapping.getSourceFolderList().get(0)).isEqualTo(unit1SourceFolder);
         assertThat(firstMapping.getTestFolder()).isEqualTo(testUnitSourceFolder);
     }
 
     @Test
-    public void convertArrayToString_array_with_two_elements()
-    {
-        assertThat(PreferencesConverter.convertArrayToString(new String[] { "token1", "token2" })).isEqualTo("token1,token2");
-    }
+        public void convertArrayToStringWithListValueDelimiter_array_with_two_elements()
+        {
+            assertThat(PreferencesConverter.convertArrayToStringWithListValueDelimiter(new String[] { "token1", "token2" })).isEqualTo("token1,token2");
+        }
 
 }

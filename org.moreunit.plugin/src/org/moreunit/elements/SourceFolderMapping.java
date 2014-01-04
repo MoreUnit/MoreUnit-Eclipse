@@ -1,7 +1,12 @@
 package org.moreunit.elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.swtbot.swt.finder.utils.StringUtils;
+import org.moreunit.core.util.StringConstants;
 import org.moreunit.util.PluginTools;
 
 /**
@@ -10,13 +15,13 @@ import org.moreunit.util.PluginTools;
 public class SourceFolderMapping
 {
     private IJavaProject javaProject;
-    private IPackageFragmentRoot sourceFolder;
+    private List<IPackageFragmentRoot> sourceFolderList = new ArrayList<IPackageFragmentRoot>();
     private IPackageFragmentRoot testFolder;
 
     public SourceFolderMapping(IJavaProject javaProject, IPackageFragmentRoot sourceFolder, IPackageFragmentRoot testFolder)
     {
         this.javaProject = javaProject;
-        this.sourceFolder = sourceFolder;
+        this.sourceFolderList.add(sourceFolder);
         this.testFolder = testFolder;
     }
 
@@ -24,12 +29,12 @@ public class SourceFolderMapping
     {
         this.javaProject = javaProject;
         this.testFolder = testFolder;
-        this.sourceFolder = PluginTools.guessSourceFolderCorrespondingToTestFolder(javaProject, testFolder);
+        this.sourceFolderList.add(PluginTools.guessSourceFolderCorrespondingToTestFolder(javaProject, testFolder));
     }
 
-    public void setSourceFolder(IPackageFragmentRoot sourceFolder)
+    public void setSourceFolderList(List<IPackageFragmentRoot> sourceFolderList)
     {
-        this.sourceFolder = sourceFolder;
+        this.sourceFolderList = sourceFolderList;
     }
 
     public IJavaProject getJavaProject()
@@ -37,9 +42,9 @@ public class SourceFolderMapping
         return javaProject;
     }
 
-    public IPackageFragmentRoot getSourceFolder()
+    public List<IPackageFragmentRoot> getSourceFolderList()
     {
-        return sourceFolder;
+        return sourceFolderList;
     }
 
     public IPackageFragmentRoot getTestFolder()
@@ -50,6 +55,12 @@ public class SourceFolderMapping
     @Override
     public String toString()
     {
-        return String.format("%s(%s:%s => %s:%s)", SourceFolderMapping.class.getSimpleName(), sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName());
+        List<String> toStringParts = new ArrayList<String>();
+        toStringParts.add(SourceFolderMapping.class.getSimpleName());
+        for (IPackageFragmentRoot sourceFolder : sourceFolderList)
+        {
+            toStringParts.add(String.format(" (%s:%s => %s:%s)", sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName()));
+        }
+        return StringUtils.join(toStringParts, StringConstants.EMPTY_STRING);
     }
 }

@@ -99,6 +99,7 @@ public class NewTestCaseWizardTest  extends NewClassyWizardTestCase
 
         // then
         project.assertThat().hasSourceFolder("test-src2");
+        System.out.println("SomClassTest Info: "+context.getCompilationUnit("pre.pack.suf.SomClassTes"));
         context.assertCompilationUnit("pre.pack.suf.SomClassTes").isInSourceFolder("test-src2").hasPrimaryType(createdType);
     }
 }

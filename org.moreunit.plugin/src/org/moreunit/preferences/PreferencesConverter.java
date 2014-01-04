@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.moreunit.core.util.StringConstants;
+import org.eclipse.swtbot.swt.finder.utils.StringUtils;
 import org.moreunit.core.util.Strings;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.util.PluginTools;
@@ -30,39 +30,48 @@ public class PreferencesConverter
      */
     public static String convertSourceMappingsToString(List<SourceFolderMapping> mappingList)
     {
-        StringBuffer result = new StringBuffer();
-
+        List<String> mappingStrings = new ArrayList<String>();
         for (SourceFolderMapping mapping : mappingList)
         {
-            result.append(PreferencesConverter.createStringFromSourceMapping(mapping));
-            result.append(PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
+            mappingStrings.add(PreferencesConverter.createStringFromSourceMapping(mapping));
         }
 
-        if(mappingList.size() > 0)
-        {
-            // remove the last delimiter char at the end of the string
-            result.deleteCharAt(result.lastIndexOf(PreferencesConverter.DELIMITER_BETWEEN_MAPPING));
-        }
-
-        return result.toString();
+        return StringUtils.join(mappingStrings, PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
     }
 
     public static String createStringFromSourceMapping(SourceFolderMapping mapping)
     {
-        StringBuffer result = new StringBuffer();
+        List<String> resultList = new ArrayList<String>();
 
-        IPackageFragmentRoot sourceFolder = mapping.getSourceFolder();
+        new StringBuffer();
+
+        for (IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
+        {
+            StringBuilder stringPart = new StringBuilder();
+            stringPart.append(getSourceFolderTokenPart(sourceFolder));
+            stringPart.append(PreferencesConverter.DELIMITER_INTERNAL);
+            stringPart.append(getTestFolderTokenPart(mapping.getTestFolder()));
+            resultList.add(stringPart.toString());
+        }
+
+        return StringUtils.join(resultList, DELIMITER_BETWEEN_MAPPING);
+    }
+
+    private static final String getSourceFolderTokenPart(IPackageFragmentRoot sourceFolder)
+    {
+        StringBuilder result = new StringBuilder();
         result.append(sourceFolder.getJavaProject().getElementName());
         result.append(PreferencesConverter.DELIMITER_INTERNAL);
         result.append(PluginTools.getPathStringWithoutProjectName(sourceFolder));
+        return result.toString();
+    }
 
-        result.append(PreferencesConverter.DELIMITER_INTERNAL);
-
-        IPackageFragmentRoot testFolder = mapping.getTestFolder();
+    private static final String getTestFolderTokenPart(IPackageFragmentRoot testFolder)
+    {
+        StringBuilder result = new StringBuilder();
         result.append(testFolder.getJavaProject().getElementName());
         result.append(PreferencesConverter.DELIMITER_INTERNAL);
         result.append(PluginTools.getPathStringWithoutProjectName(testFolder));
-
         return result.toString();
     }
 
@@ -100,20 +109,9 @@ public class PreferencesConverter
         return listString.split(DELIMITER_LIST_VALUES);
     }
 
-    public static String convertArrayToString(String[] array)
+    public static String convertArrayToStringWithListValueDelimiter(String[] array)
     {
-        if(array == null || array.length == 0)
-            return StringConstants.EMPTY_STRING;
-
-        StringBuilder result = new StringBuilder();
-        for (String token : array)
-        {
-            result.append(token);
-            result.append(DELIMITER_LIST_VALUES);
-        }
-
-        // remove last delimiter
-        return result.substring(0, result.length() - 1);
+        return StringUtils.join(array, DELIMITER_LIST_VALUES);
     }
 
 }

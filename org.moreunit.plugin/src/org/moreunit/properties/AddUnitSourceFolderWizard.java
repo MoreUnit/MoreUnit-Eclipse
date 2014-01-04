@@ -24,13 +24,6 @@ public class AddUnitSourceFolderWizard extends Wizard
 
     private UnitSourceFolderBlock unitSourceFolderBlock;
 
-    // private UnitSourcesPropertiesPage unitSourcesPropertiesPage;
-
-    /*
-     * public AddUnitSourceFolderWizard(UnitSourcesPropertiesPage
-     * unitSourcesPropertiesPage) { this.unitSourcesPropertiesPage =
-     * unitSourcesPropertiesPage; }
-     */
 
     public AddUnitSourceFolderWizard(IJavaProject javaProject, UnitSourceFolderBlock unitSourceFolderBlock)
     {

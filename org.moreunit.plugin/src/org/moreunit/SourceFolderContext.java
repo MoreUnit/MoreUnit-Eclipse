@@ -8,7 +8,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -46,23 +45,34 @@ public class SourceFolderContext
             List<SourceFolderMapping> testSourceFolder = Preferences.getInstance().getSourceMappingList(project);
             for (SourceFolderMapping mapping : testSourceFolder)
             {
-                updateMap(mapping.getSourceFolder(), mapping.getTestFolder());
-                updateMap(mapping.getTestFolder(), mapping.getSourceFolder());
+                updateMap(mapping);
             }
         }
     }
 
-    private void updateMap(IPackageFragmentRoot key, IPackageFragmentRoot value)
+    private void updateMap(SourceFolderMapping mapping)
+    {
+        for (IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
+        {
+            List<IPackageFragmentRoot> list = new ArrayList<IPackageFragmentRoot>();
+            list.add(mapping.getTestFolder());
+            updateMap(sourceFolder, list);
+        }
+
+        updateMap(mapping.getTestFolder(), mapping.getSourceFolderList());
+    }
+
+    private void updateMap(IPackageFragmentRoot key, List<IPackageFragmentRoot> value)
     {
         if(folderToLookupMap.containsKey(key))
         {
             List<IPackageFragmentRoot> list = folderToLookupMap.get(key);
-            list.add(value);
+            list.addAll(value);
         }
         else
         {
             List<IPackageFragmentRoot> list = new ArrayList<IPackageFragmentRoot>();
-            list.add(value);
+            list.addAll(value);
             folderToLookupMap.put(key, list);
         }
     }

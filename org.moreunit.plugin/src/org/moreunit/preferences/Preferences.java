@@ -343,7 +343,7 @@ public class Preferences
 
         for (SourceFolderMapping mapping : mappings)
         {
-            if(mapping.getSourceFolder().equals(mainSrcFolder))
+            if(mapping.getSourceFolderList().contains(mainSrcFolder))
             {
                 return mapping.getTestFolder();
             }
@@ -378,14 +378,14 @@ public class Preferences
         {
             if(mapping.getTestFolder().equals(testSrcFolder))
             {
-                return mapping.getSourceFolder();
+                return mapping.getSourceFolderList().get(0);
             }
         }
 
         if(! mappings.isEmpty())
         {
             // falls back to first main folder defined
-            return mappings.get(0).getSourceFolder();
+            return mappings.get(0).getSourceFolderList().get(0);
         }
 
         // no mapping exists: falls back to un-mapped source folders
