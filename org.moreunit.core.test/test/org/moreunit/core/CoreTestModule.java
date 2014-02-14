@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.moreunit.core.config.CoreModule;
 import org.moreunit.core.matching.FileMatchSelector;
+import org.moreunit.core.resources.Workspace;
 import org.moreunit.core.ui.DialogFactory;
 import org.moreunit.core.ui.DrivableWizardFactory;
 import org.moreunit.core.ui.WizardDriver;
@@ -14,6 +15,7 @@ public class CoreTestModule extends CoreModule
 {
     public ConfigItem<DialogFactory> dialogFactory = ConfigItem.useDefault();
     public ConfigItem<FileMatchSelector> fileMatchSelector = ConfigItem.useDefault();
+    public ConfigItem<Workspace> workspace = ConfigItem.useDefault();
     public WizardDriver wizardDriver;
 
     public CoreTestModule()
@@ -45,5 +47,15 @@ public class CoreTestModule extends CoreModule
     public WizardFactory getWizardFactory(IWorkbench workbench, Shell activeShell)
     {
         return new DrivableWizardFactory(workbench, activeShell, wizardDriver);
+    }
+
+    @Override
+    public Workspace getWorkspace()
+    {
+        if(workspace.isOverridden())
+        {
+            return workspace.get();
+        }
+        return super.getWorkspace();
     }
 }

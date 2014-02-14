@@ -7,13 +7,23 @@ import static org.junit.Assert.fail;
 import static org.moreunit.core.matching.TestFolderPathPattern.isValid;
 
 import org.junit.Test;
+import org.moreunit.core.CoreTestModule;
 import org.moreunit.core.resources.InMemoryPath;
+import org.moreunit.core.resources.InMemoryWorkspace;
 import org.moreunit.core.resources.Path;
+import org.moreunit.core.ui.NonBlockingDialogFactory;
 
 public class TestFolderPathPatternTest
 {
     private static String validSrcPath = "${srcProject}/src";
     private static String validTestPath = "${srcProject}/test";
+
+    CoreTestModule config = new CoreTestModule()
+    {
+        {
+            workspace.overrideWith(new InMemoryWorkspace());
+        }
+    };
 
     @Test
     public void isValid_should_return_false_when_path_is_blank() throws Exception
@@ -292,7 +302,7 @@ public class TestFolderPathPatternTest
 
         assertThat(p.getTestPathFor(path("myproject/a1/some/path/b2")).toString()).isEqualTo("myproject/x2/y1/some/path");
     }
-    
+
     @Test
     public void getTestPathFor_should_handle_braces_in_project_name() throws Exception
     {
@@ -374,7 +384,7 @@ public class TestFolderPathPatternTest
 
         assertThat(p.getSrcPathFor(path("myproject-test/test-java/code")).toString()).isEqualTo("myproject/src-java/code");
     }
-    
+
     @Test
     public void getSrcPathFor_should_throw_exception_when_no_match_found() throws Exception
     {
@@ -435,6 +445,16 @@ public class TestFolderPathPatternTest
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
 
         assertThat(p.getSrcPathFor(path("myproject/x2/y1/some/path")).toString()).isEqualTo("myproject/a1/some/path/b2");
+    }
+
+    @Test
+    public void getSrcPathFor_should_handle_braces_in_project_name() throws Exception
+    {
+        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+
+        assertThat(p.getSrcPathFor(path("/foobar [1]/test/")).toString()).isEqualTo("foobar [1]/src");
+        assertThat(p.getSrcPathFor(path("/foobar {1}/test/")).toString()).isEqualTo("foobar {1}/src");
+        assertThat(p.getSrcPathFor(path("/foobar (1)/test/")).toString()).isEqualTo("foobar (1)/src");
     }
 
     private Path path(String pathStr)
