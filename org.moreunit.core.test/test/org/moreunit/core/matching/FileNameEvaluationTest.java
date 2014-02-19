@@ -23,10 +23,10 @@ public class FileNameEvaluationTest
     }
 
     @Test
-    public void should_remove_variable_parts_from_preferred_file_name() throws Exception
+    public void should_remove_variable_parts_and_quote_delimiters_from_preferred_file_name() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, asList(".*Pre.*Source.*Suf.*"), NO_PATTERNS);
+        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, asList(".*Pre.*\\QSource\\E.*Suf.*"), NO_PATTERNS);
 
         // then
         assertThat(eval.getPreferredCorrespondingFileName()).isEqualTo("PreSourceSuf");

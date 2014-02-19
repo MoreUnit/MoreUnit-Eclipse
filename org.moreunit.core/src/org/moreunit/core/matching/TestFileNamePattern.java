@@ -131,7 +131,6 @@ public final class TestFileNamePattern
 
     /* Various patterns */
     private static final String CONSECUTIVE_WILDCARDS = "(\\.\\*){2,}";
-    private static final String GROUP_PATTERN = "\\([^\\)]*\\)";
 
     private static final String VALIDATOR;
     static
@@ -156,6 +155,7 @@ public final class TestFileNamePattern
 
     private static final Comparator<String> byDescendingLength = new Comparator<String>()
     {
+        @Override
         public int compare(String s1, String s2)
         {
             int result = Integer.valueOf(s2.length()).compareTo(s1.length());
@@ -203,11 +203,7 @@ public final class TestFileNamePattern
         varStart += varOffset;
         varEnd += varOffset;
 
-        // removes separator present after prefix, if any
-        if(pre.endsWith(separator))
-        {
-            pre = pre.substring(0, pre.length() - separator.length());
-        }
+        pre = removeEndSeparatorIfPresent(pre);
 
         pre = orderGroupPartsByDescLength(pre);
 
@@ -230,11 +226,7 @@ public final class TestFileNamePattern
         // update tpl with new suffix
         tpl = tpl.replaceFirst(quote(sufOld) + "$", suf);
 
-        // removes separator present before suffix, if any
-        if(suf.startsWith(separator))
-        {
-            suf = suf.substring(separator.length());
-        }
+        suf = removeStartSeparatorIfPresent(suf);
 
         suf = orderGroupPartsByDescLength(suf);
 
@@ -258,6 +250,24 @@ public final class TestFileNamePattern
         groups = findGroups(finalPatternStr);
 
         patterns = createEvaluationPatterns(finalPatternStr);
+    }
+
+    private String removeStartSeparatorIfPresent(String str)
+    {
+        if(str.startsWith(separator))
+        {
+            return str.substring(separator.length());
+        }
+        return str;
+    }
+
+    private String removeEndSeparatorIfPresent(String str)
+    {
+        if(str.endsWith(separator))
+        {
+            return str.substring(0, str.length() - separator.length());
+        }
+        return str;
     }
 
     /**
@@ -335,7 +345,7 @@ public final class TestFileNamePattern
      * <tt>(Test|Tests)${srcFile}</tt>&quot; will give &quot;<tt>Concept</tt>
      * &quot; as a preferred source file name for test file &quot;
      * <tt>TestsConcept</tt>&quot;, and not &quot;<tt>sConcept</tt>&quot;.
-     * 
+     *
      * @param prefixOrSuffixPattern
      * @return same pattern, with group parts ordered by descending length
      */
@@ -368,7 +378,7 @@ public final class TestFileNamePattern
      * both prefix and suffix groups. The validation forbids any other
      * configuration
      * </p>
-     * 
+     *
      * @param patternStr the string in which to find groups
      * @return the found groups
      */
@@ -376,19 +386,35 @@ public final class TestFileNamePattern
     {
         List<Group> groups = new ArrayList<Group>();
 
-        int firstGroupStart = patternStr.indexOf("(");
+        int firstGroupStart = firstIndexOfNonQuoted("(", patternStr);
         if(firstGroupStart != - 1)
         {
-            groups.add(new Group(patternStr, firstGroupStart, patternStr.indexOf(")")));
+            int firstGroupEnd = patternStr.indexOf(")", firstGroupStart);
+            groups.add(new Group(patternStr, firstGroupStart, firstGroupEnd));
         }
 
-        int secondGroupStart = patternStr.lastIndexOf("(");
+        int secondGroupStart = lastIndexOfNonQuoted("(", patternStr);
         if(secondGroupStart != - 1 && secondGroupStart != firstGroupStart)
         {
-            groups.add(new Group(patternStr, secondGroupStart, patternStr.lastIndexOf(")")));
+            int secondGroupEnd = patternStr.indexOf(")", secondGroupStart);
+            groups.add(new Group(patternStr, secondGroupStart, secondGroupEnd));
         }
 
         return groups;
+    }
+
+    private int lastIndexOfNonQuoted(String query, String str)
+    {
+        int[] maybeQuotedPart = findQuotedPart(str);
+
+        int resultIdx = str.length();
+        do
+        {
+            resultIdx = str.lastIndexOf(query, resultIdx - 1);
+        }
+        while (maybeQuotedPart != null && resultIdx > maybeQuotedPart[0] && resultIdx < maybeQuotedPart[1]);
+
+        return resultIdx;
     }
 
     /**
@@ -406,7 +432,7 @@ public final class TestFileNamePattern
      * patterns are created, making each group optional in turn,</li>
      * <li>for all other cases, the given string is simply compiled.</li>
      * </ul>
-     * 
+     *
      * @param patternStr the string to be compiled as Pattern(s)
      * @return the compiled pattern(s)
      */
@@ -455,7 +481,7 @@ public final class TestFileNamePattern
      * <li>If it's the name of a <em>test</em> file: what <em>source</em> file
      * name(s) could correspond to it?</li>
      * </ul>
-     * 
+     *
      * @param fileBaseName the file name to evaluate
      * @return the {@link FileNameEvaluation result} of the evaluation
      */
@@ -486,7 +512,7 @@ public final class TestFileNamePattern
 
         List<String> otherPatterns = buildOtherCorrespondingSrcFilePatterns(preferredName);
 
-        return new FileNameEvaluation(fileBaseName, true, asList(preferredName), otherPatterns);
+        return new FileNameEvaluation(fileBaseName, true, asList(quote(preferredName)), otherPatterns);
     }
 
     /**
@@ -514,11 +540,17 @@ public final class TestFileNamePattern
         List<String> patterns = new ArrayList<String>();
         if(wildCardBefore)
         {
-            patterns.addAll(result.getCombinationsFromEnd());
+            for (String c : result.getCombinationsFromEnd())
+            {
+                patterns.add(quote(c));
+            }
         }
         if(wildCardAfter)
         {
-            patterns.addAll(result.getCombinationsFromStart());
+            for (String c : result.getCombinationsFromStart())
+            {
+                patterns.add(quote(c));
+            }
         }
 
         // if wildCardBefore && wildCardAfter, doesn't search for "middle" token
@@ -534,7 +566,7 @@ public final class TestFileNamePattern
 
     private FileNameEvaluation buildSrcFileResult(String srcFileName)
     {
-        String testFileNameWithGroups = patternString.replace(SRC_FILE_VARIABLE, srcFileName);
+        String testFileNameWithGroups = patternString.replace(SRC_FILE_VARIABLE, quote(srcFileName));
 
         List<String> preferredPatterns = buildPreferredTestFilePatterns(testFileNameWithGroups);
 
@@ -551,31 +583,58 @@ public final class TestFileNamePattern
         List<String> namesToProcess = new ArrayList<String>();
         namesToProcess.add(testFileNameWithGroups);
 
-        if(! groups.isEmpty())
+        for (Group group : groups)
         {
-            for (Group group : groups)
+            List<String> processedNames = new ArrayList<String>();
+
+            for (String name : namesToProcess)
             {
-                List<String> processedNames = new ArrayList<String>();
+                String[] surroundingParts = partsSurroundingFirstGroup(name);
 
-                for (String name : namesToProcess)
+                for (String part : group.possibleParts)
                 {
-                    String beforeGroup = name.substring(0, name.indexOf("("));
-                    String afterGroup = name.substring(name.indexOf(")") + 1);
-
-                    for (String part : group.possibleParts)
+                    if(part.length() != 0)
                     {
-                        if(part.length() != 0)
-                        {
-                            processedNames.add(beforeGroup + part + afterGroup);
-                        }
+                        processedNames.add(surroundingParts[0] + part + surroundingParts[1]);
                     }
                 }
-
-                namesToProcess = processedNames;
             }
+
+            namesToProcess = processedNames;
         }
 
         return namesToProcess;
+    }
+
+    private String[] partsSurroundingFirstGroup(String name)
+    {
+        int openingBracketIdx = firstIndexOfNonQuoted("(", name);
+
+        int closingBracketIdx = name.indexOf(")", openingBracketIdx);
+
+        String beforeGroup = name.substring(0, openingBracketIdx);
+        String afterGroup = name.substring(closingBracketIdx + 1);
+        return new String[] { beforeGroup, afterGroup };
+    }
+
+    private int firstIndexOfNonQuoted(String query, String str)
+    {
+        int[] maybeQuotedPart = findQuotedPart(str);
+
+        int resultIdx = - 1;
+        do
+        {
+            resultIdx = str.indexOf(query, resultIdx + 1);
+        }
+        while (maybeQuotedPart != null && resultIdx > maybeQuotedPart[0] && resultIdx < maybeQuotedPart[1]);
+
+        return resultIdx;
+    }
+
+    private int[] findQuotedPart(String str)
+    {
+        int start = str.indexOf("\\Q");
+        return start == - 1 ? null : new int[] { start, str.indexOf("\\E", start) };
     }
 
     /**
@@ -593,14 +652,31 @@ public final class TestFileNamePattern
         List<String> otherFileNames = new ArrayList<String>();
 
         List<Group> groupsInFileName = findGroups(testFileNameWithGroups);
-        for (String part : groupsInFileName.get(0).possibleParts)
+        Group firstGroup = groupsInFileName.get(0);
+        Group secondGroup = groupsInFileName.get(1);
+
+        for (String part : firstGroup.possibleParts)
         {
-            otherFileNames.add(testFileNameWithGroups.replaceFirst(GROUP_PATTERN, part).replaceFirst(GROUP_PATTERN, "").replaceAll(CONSECUTIVE_WILDCARDS, ".*"));
+            String name = testFileNameWithGroups.substring(0, firstGroup.start) //
+                          + part //
+                          + testFileNameWithGroups.substring(firstGroup.end + 1, secondGroup.start) //
+                          + testFileNameWithGroups.substring(secondGroup.end + 1);
+
+            name = name.replaceAll(CONSECUTIVE_WILDCARDS, ".*");
+
+            otherFileNames.add(removeEndSeparatorIfPresent(name));
         }
 
-        for (String part : groupsInFileName.get(1).possibleParts)
+        for (String part : secondGroup.possibleParts)
         {
-            otherFileNames.add(testFileNameWithGroups.replaceFirst(GROUP_PATTERN, "").replaceFirst(GROUP_PATTERN, part).replaceAll(CONSECUTIVE_WILDCARDS, ".*"));
+            String name = testFileNameWithGroups.substring(0, firstGroup.start) //
+                          + testFileNameWithGroups.substring(firstGroup.end + 1, secondGroup.start) //
+                          + part //
+                          + testFileNameWithGroups.substring(secondGroup.end + 1);
+
+            name = name.replaceAll(CONSECUTIVE_WILDCARDS, ".*");
+
+            otherFileNames.add(removeStartSeparatorIfPresent(name));
         }
 
         return otherFileNames;

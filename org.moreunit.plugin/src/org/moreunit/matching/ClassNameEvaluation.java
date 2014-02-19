@@ -1,7 +1,6 @@
 package org.moreunit.matching;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.moreunit.core.matching.FileNameEvaluation;
@@ -24,25 +23,12 @@ public class ClassNameEvaluation
 
     public List<String> getAllCorrespondingClassPatterns(boolean withPackage)
     {
-        List<String> patterns = new ArrayList<String>();
-        patterns.addAll(fileNameEvaluation.getPreferredCorrespondingFilePatterns());
-        patterns.addAll(fileNameEvaluation.getOtherCorrespondingFilePatterns());
-        patterns = convertWildcards(patterns);
+        List<String> patterns = fileNameEvaluation.getAllCorrespondingFileEclipsePatterns();
         if(withPackage)
         {
             patterns = addPackageToPatterns(patterns);
         }
         return patterns;
-    }
-
-    private List<String> convertWildcards(Collection<String> patterns)
-    {
-        List<String> result = new ArrayList<String>();
-        for (String p : patterns)
-        {
-            result.add(p.replaceAll("\\.\\*", "*"));
-        }
-        return result;
     }
 
     private List<String> addPackageToPatterns(List<String> patterns)

@@ -3,6 +3,7 @@ package org.moreunit.core.matching;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.moreunit.core.util.StringConstants;
 
@@ -44,9 +45,29 @@ public final class FileNameEvaluation
 
     public Collection<String> getAllCorrespondingFilePatterns()
     {
-        Collection<String> result = new ArrayList<String>(preferredCorrespondingFilePatterns);
+        Collection<String> result = new ArrayList<String>(preferredCorrespondingFilePatterns.size() + otherCorrespondingFilePatterns.size());
+        result.addAll(preferredCorrespondingFilePatterns);
         result.addAll(otherCorrespondingFilePatterns);
         return result;
+    }
+
+    public List<String> getAllCorrespondingFileEclipsePatterns()
+    {
+        List<String> result = new ArrayList<String>(preferredCorrespondingFilePatterns.size() + otherCorrespondingFilePatterns.size());
+        for (String p : preferredCorrespondingFilePatterns)
+        {
+            result.add(convertWildcards(removeQuotes(p)));
+        }
+        for (String p : otherCorrespondingFilePatterns)
+        {
+            result.add(convertWildcards(removeQuotes(p)));
+        }
+        return result;
+    }
+
+    private String convertWildcards(String str)
+    {
+        return str.replaceAll("\\.\\*", "*");
     }
 
     /**
@@ -89,7 +110,17 @@ public final class FileNameEvaluation
         {
             return null;
         }
-        return it.next().replaceAll("\\.\\*", "");
+        return removeQuotes(removeWildcards(it.next()));
+    }
+
+    private String removeQuotes(String str)
+    {
+        return str.replaceAll("(?:\\\\Q|\\\\E)", "");
+    }
+
+    private String removeWildcards(String str)
+    {
+        return str.replaceAll("\\.\\*", "");
     }
 
     @Override

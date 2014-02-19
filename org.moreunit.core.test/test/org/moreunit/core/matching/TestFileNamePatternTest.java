@@ -5,9 +5,11 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.moreunit.core.matching.TestFileNamePattern.isValid;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -24,7 +26,7 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("PreMyFile");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -36,7 +38,7 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("SomeFileSuffix");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("SomeFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QSomeFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -48,7 +50,7 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("PrefixAFileSuf");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("AFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QAFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -64,12 +66,12 @@ public class TestFileNamePatternTest
         // then
         assertTrue(evaluation.isTestFile());
 
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("BarMySource");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QBarMySource\\E");
 
         Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
         assertEquals(2, names.size());
-        assertTrue(names.contains("MySource"));
-        assertTrue(names.contains("Source"));
+        assertTrue(names.contains("\\QMySource\\E"));
+        assertTrue(names.contains("\\QSource\\E"));
     }
 
     @Test
@@ -86,12 +88,12 @@ public class TestFileNamePatternTest
             // then
             assertTrue(evaluation.isTestFile());
 
-            assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("bar__my__source");
+            assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qbar__my__source\\E");
 
             Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
             assertEquals(2, names.size());
-            assertTrue(names.contains("my__source"));
-            assertTrue(names.contains("source"));
+            assertTrue(names.contains("\\Qmy__source\\E"));
+            assertTrue(names.contains("\\Qsource\\E"));
         }
     }
 
@@ -107,12 +109,12 @@ public class TestFileNamePatternTest
         // then
         assertTrue(evaluation.isTestFile());
 
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MySourceBaz");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMySourceBaz\\E");
 
         Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
         assertEquals(2, names.size());
-        assertTrue(names.contains("MySource"));
-        assertTrue(names.contains("My"));
+        assertTrue(names.contains("\\QMySource\\E"));
+        assertTrue(names.contains("\\QMy\\E"));
     }
 
     @Test
@@ -129,12 +131,12 @@ public class TestFileNamePatternTest
             // then
             assertTrue(evaluation.isTestFile());
 
-            assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("my_source_baz");
+            assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qmy_source_baz\\E");
 
             Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
             assertEquals(2, names.size());
-            assertTrue(names.contains("my_source"));
-            assertTrue(names.contains("my"));
+            assertTrue(names.contains("\\Qmy_source\\E"));
+            assertTrue(names.contains("\\Qmy\\E"));
         }
     }
 
@@ -149,11 +151,8 @@ public class TestFileNamePatternTest
 
         // then
         assertTrue(evaluation.isTestFile());
-
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MySource");
-
-        Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
-        assertThat(names).isEmpty();
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMySource\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
     @Test
@@ -167,11 +166,8 @@ public class TestFileNamePatternTest
 
         // then
         assertTrue(evaluation.isTestFile());
-
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MySource");
-
-        Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
-        assertThat(names).isEmpty();
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMySource\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
     @Test
@@ -186,10 +182,11 @@ public class TestFileNamePatternTest
         // then
         assertTrue(evaluation.isTestFile());
 
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("BarMySourceBaz");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QBarMySourceBaz\\E");
 
-        Collection<String> names = evaluation.getOtherCorrespondingFilePatterns();
-        assertEquals(asList("BarMySource", "MySourceBaz", "SourceBaz", "BarMy", "Bar", "Baz"), names);
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()) //
+            .hasSize(6) //
+            .contains("\\QBarMySource\\E", "\\QMySourceBaz\\E", "\\QSourceBaz\\E", "\\QBarMy\\E", "\\QBar\\E", "\\QBaz\\E");
     }
 
     @Test
@@ -200,13 +197,13 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("Pre1MyFile");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
 
         evaluation = pattern.evaluate("Pre2MyFile");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -218,13 +215,13 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("some_file_suf1");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("some_file");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qsome_file\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
 
         evaluation = pattern.evaluate("some_file_suf2");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("some_file");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qsome_file\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -236,19 +233,19 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("some_file_suf1");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("some_file");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qsome_file\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
 
         evaluation = pattern.evaluate("pre2_some_file");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("some_file");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qsome_file\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
 
         evaluation = pattern.evaluate("pre1_some_file_suf2");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("some_file");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\Qsome_file\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
 
         assertFalse(pattern.evaluate("some_file").isTestFile());
@@ -262,32 +259,32 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("Pre1MyFile");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("\\QFile\\E");
 
         evaluation = pattern.evaluate("MyFileSuf1");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("\\QFile\\E");
 
         evaluation = pattern.evaluate("Pre2MyFile");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("\\QFile\\E");
 
         evaluation = pattern.evaluate("Pre1MyFileSuf2");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("File");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("\\QFile\\E");
 
         evaluation = pattern.evaluate("Pre2FooMyFileSuf2Bar");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("FooMyFile");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("MyFile", "File");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QFooMyFile\\E");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).containsOnly("\\QMyFile\\E", "\\QFile\\E");
     }
 
     @Test
@@ -298,9 +295,17 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("Pre1FooMyFileBarSuf2");
 
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("FooMyFileBar");
-
-        assertFalse(evaluation.getOtherCorrespondingFilePatterns().contains("MyFile"));
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QFooMyFileBar\\E");
+        assertFalse(evaluation.getOtherCorrespondingFilePatterns().contains("\\QMyFile\\E"));
+    }
+    
+    @Test
+    public void should_evaluate_test_file_with_regex_symbols() throws Exception
+    {
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_*_test", underscoreTokenizer);
+        
+        assertThat(pattern.evaluate("[some]*_(fi|le)_test").getAllCorrespondingFilePatterns()) //
+            .hasSize(2).contains("\\Q[some]*_(fi|le)\\E", "\\Q[some]*\\E");
     }
 
     @Test
@@ -311,7 +316,7 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("MyFile");
 
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("PrefixMyFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("Prefix\\QMyFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -323,7 +328,7 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("SomeFile");
 
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("SomeFileSuf");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QSomeFile\\ESuf");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -335,8 +340,8 @@ public class TestFileNamePatternTest
         FileNameEvaluation evaluation = pattern.evaluate("AFile");
 
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("PreAFileSuffix");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(2).contains("PreAFile", "AFileSuffix");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("Pre\\QAFile\\ESuffix");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(2).contains("Pre\\QAFile\\E", "\\QAFile\\ESuffix");
     }
 
     @Test
@@ -350,8 +355,8 @@ public class TestFileNamePatternTest
 
         // then
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains(".*Pre.*Source.*Suf.*");
-        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(2).contains(".*Pre.*Source.*", ".*Source.*Suf.*");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains(".*Pre.*\\QSource\\E.*Suf.*");
+        assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(2).contains(".*Pre.*\\QSource\\E.*", ".*\\QSource\\E.*Suf.*");
     }
 
     @Test
@@ -365,7 +370,7 @@ public class TestFileNamePatternTest
 
         // then
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(2).contains("Pre1Source", "Pre2Source");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(2).contains("Pre1\\QSource\\E", "Pre2\\QSource\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -380,7 +385,7 @@ public class TestFileNamePatternTest
 
         // then
         assertFalse(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(2).contains("SourceSuf1", "SourceSuf2");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(2).contains("\\QSource\\ESuf1", "\\QSource\\ESuf2");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -396,9 +401,9 @@ public class TestFileNamePatternTest
         // then
         assertFalse(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(4) //
-        .contains("Pre1SourceSuf1", "Pre1SourceSuf2", "Pre2SourceSuf1", "Pre2SourceSuf2");
+        .contains("Pre1\\QSource\\ESuf1", "Pre1\\QSource\\ESuf2", "Pre2\\QSource\\ESuf1", "Pre2\\QSource\\ESuf2");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(4) //
-        .contains("Pre1Source", "Pre2Source", "SourceSuf1", "SourceSuf2");
+        .contains("Pre1\\QSource\\E", "Pre2\\QSource\\E", "\\QSource\\ESuf1", "\\QSource\\ESuf2");
     }
 
     @Test
@@ -413,9 +418,20 @@ public class TestFileNamePatternTest
         // then
         assertFalse(evaluation.isTestFile());
         assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(4) //
-        .contains(".*Pre1.*Source.*Suf1.*", ".*Pre1.*Source.*Suf2.*", ".*Pre2.*Source.*Suf1.*", ".*Pre2.*Source.*Suf2.*");
+        .contains(".*Pre1.*\\QSource\\E.*Suf1.*", ".*Pre1.*\\QSource\\E.*Suf2.*", ".*Pre2.*\\QSource\\E.*Suf1.*", ".*Pre2.*\\QSource\\E.*Suf2.*");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).hasSize(4) //
-        .contains(".*Pre1.*Source.*", ".*Pre2.*Source.*", ".*Source.*Suf1.*", ".*Source.*Suf2.*");
+        .contains(".*Pre1.*\\QSource\\E.*", ".*Pre2.*\\QSource\\E.*", ".*\\QSource\\E.*Suf1.*", ".*\\QSource\\E.*Suf2.*");
+    }
+    
+    @Test
+    public void should_evaluate_src_file_with_regex_symbols() throws Exception
+    {
+        TestFileNamePattern pattern = new TestFileNamePattern("(a|b)_${srcFile}_(c|d)", underscoreTokenizer);
+        
+        assertThat(pattern.evaluate("[some]*_(fi|le)").getAllCorrespondingFilePatterns()) //
+            .hasSize(8) //
+            .contains("a_\\Q[some]*_(fi|le)\\E_c", "a_\\Q[some]*_(fi|le)\\E_d", "b_\\Q[some]*_(fi|le)\\E_c", "b_\\Q[some]*_(fi|le)\\E_d") //
+            .contains("a_\\Q[some]*_(fi|le)\\E", "b_\\Q[some]*_(fi|le)\\E", "\\Q[some]*_(fi|le)\\E_c", "\\Q[some]*_(fi|le)\\E_d");
     }
 
     @Test
@@ -476,7 +492,7 @@ public class TestFileNamePatternTest
         // then: file is considered as source file
         assertFalse(evaluation.isTestFile());
         // and: test file patterns are proposed
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFileTestTest");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFileTest\\ETest");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -494,7 +510,7 @@ public class TestFileNamePatternTest
         // then: file is considered as source file
         assertTrue(evaluation.isTestFile());
         // and: test file patterns are proposed
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("MyFile");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).hasSize(1).contains("\\QMyFile\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -509,7 +525,7 @@ public class TestFileNamePatternTest
 
         // then
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).containsOnly("Concept");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).containsOnly("\\QConcept\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 
@@ -524,7 +540,7 @@ public class TestFileNamePatternTest
 
         // then
         assertTrue(evaluation.isTestFile());
-        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).containsOnly("Concept");
+        assertThat(evaluation.getPreferredCorrespondingFilePatterns()).containsOnly("\\QConcept\\E");
         assertThat(evaluation.getOtherCorrespondingFilePatterns()).isEmpty();
     }
 }

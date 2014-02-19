@@ -7,8 +7,8 @@ import static org.eclipse.jdt.core.search.SearchPattern.R_PATTERN_MATCH;
 import static org.eclipse.jdt.core.search.SearchPattern.createOrPattern;
 import static org.eclipse.jdt.core.search.SearchPattern.createPattern;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,7 +31,7 @@ public class SearchTools
         return search(createPattern(typeName, TYPE, DECLARATIONS, R_EXACT_MATCH), scope);
     }
 
-    public static Set<IType> searchFor(List<String> typeNamePatterns, IJavaSearchScope scope) throws CoreException
+    public static Set<IType> searchFor(Collection<String> typeNamePatterns, IJavaSearchScope scope) throws CoreException
     {
         return search(createSearchPattern(typeNamePatterns, TYPE, DECLARATIONS, R_PATTERN_MATCH), scope);
     }
@@ -53,7 +53,7 @@ public class SearchTools
         return new LinkedHashSet<IType>(collector.matches);
     }
 
-    private static SearchPattern createSearchPattern(List<String> typeNamePatterns, int searchFor, int limitTo, int matchRule)
+    private static SearchPattern createSearchPattern(Collection<String> typeNamePatterns, int searchFor, int limitTo, int matchRule)
     {
         SearchPattern result = null;
         SearchPattern lastPattern = null;

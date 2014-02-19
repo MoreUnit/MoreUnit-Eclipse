@@ -419,6 +419,32 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         assertThat(getFileInActiveEditor()).isEqualTo(getFile("test/some/path/SomeConcept4Test.thing"));
     }
 
+    @Test
+    public void should_support_regex_symbols_in_file_names() throws Exception
+    {
+        // given
+        preferences.add(new Language("nde", "NDE"));
+
+        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
+        langPrefs.setTestFileNameTemplate("${srcFile} test", " ");
+        langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
+
+        IFile sourceFile = createFile("sources/some concept (2).nde");
+        IFile testFile = createFile("tests/some concept (2) test.nde");
+
+        openEditor(sourceFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+        // then
+        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+        // then
+        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+    }
+
     private void userSelectsTestFolder(DrivableWizardDialog dialog, IFolder folder)
     {
         NewFileWizard wizard = (NewFileWizard) dialog.getWizard();
