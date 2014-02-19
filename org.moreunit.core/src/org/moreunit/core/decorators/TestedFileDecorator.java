@@ -46,7 +46,12 @@ public class TestedFileDecorator extends LabelProvider implements ILightweightLa
         {
             // ignored: we don't want a pop-up to open for every file in error
             if(logger.debugEnabled())
-                logger.debug(e.getPath() + " does not match source folder preferences");
+                logger.info(e.getPath() + " does not match source folder preferences");
+        }
+        catch (Exception e)
+        {
+            // ignored: we don't want a pop-up to open for every file in error
+            logger.error(e);
         }
     }
 

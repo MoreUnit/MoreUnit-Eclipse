@@ -101,4 +101,18 @@ public class TestedFileDecoratorTest
         // then no exception is thrown, no window opens, and:
         verifyZeroInteractions(decoration);
     }
+
+    @Test
+    public void should_ignore_all_exceptions() throws Exception
+    {
+        // given
+        given(fileToDecorate.hasDefaultSupport()).willReturn(true);
+        given(fileToDecorate.hasCorrespondingFiles()).willThrow(new RuntimeException("dummy exception"));
+
+        // when
+        decorator.decorate(fileToDecorate, decoration);
+
+        // then no exception is thrown, no window opens, and:
+        verifyZeroInteractions(decoration);
+    }
 }
