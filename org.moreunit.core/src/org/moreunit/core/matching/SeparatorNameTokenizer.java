@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
 
 import java.util.List;
 
@@ -26,6 +27,6 @@ public class SeparatorNameTokenizer extends NameTokenizer
     @Override
     protected List<String> getWords(String name)
     {
-        return asList(name.split(getSeparator()));
+        return asList(name.split(quote(separator())));
     }
 }

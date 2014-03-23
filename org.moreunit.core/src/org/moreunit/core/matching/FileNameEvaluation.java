@@ -2,8 +2,8 @@ package org.moreunit.core.matching;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.moreunit.core.util.StringConstants;
 
@@ -21,17 +21,33 @@ import org.moreunit.core.util.StringConstants;
  */
 public final class FileNameEvaluation
 {
+    private static final Pattern QUOTE_SEPARATORS = Pattern.compile("(?:\\\\Q|\\\\E)");
+    private static final Pattern SUCCESSIVE_QUOTE_SEPARATORS = Pattern.compile("\\\\E\\\\Q");
+    private static final Pattern WILDCARDS = Pattern.compile("\\.\\*");
+
     private final String evaluatedFileName;
     private final boolean testFile;
     private final Collection<String> otherCorrespondingFilePatterns;
     private final Collection<String> preferredCorrespondingFilePatterns;
+    private final String preferredCorrespondingFileName;
 
-    public FileNameEvaluation(String evaluatedFileName, boolean testFile, Collection<String> preferredCorrespondingFilePatterns, Collection<String> otherCorrespondingFilePatterns)
+    public FileNameEvaluation(String evaluatedFileName, boolean testFile, String preferredCorrespondingFileName, Collection<String> preferredCorrespondingFilePatterns, Collection<String> otherCorrespondingFilePatterns)
     {
         this.evaluatedFileName = evaluatedFileName;
         this.testFile = testFile;
-        this.preferredCorrespondingFilePatterns = preferredCorrespondingFilePatterns;
-        this.otherCorrespondingFilePatterns = otherCorrespondingFilePatterns;
+        this.preferredCorrespondingFileName = preferredCorrespondingFileName;
+        this.preferredCorrespondingFilePatterns = simplify(preferredCorrespondingFilePatterns);
+        this.otherCorrespondingFilePatterns = simplify(otherCorrespondingFilePatterns);
+    }
+
+    private static Collection<String> simplify(Collection<String> patterns)
+    {
+        List<String> result = new ArrayList<String>();
+        for (String pattern : patterns)
+        {
+            result.add(SUCCESSIVE_QUOTE_SEPARATORS.matcher(pattern).replaceAll(""));
+        }
+        return result;
     }
 
     /**
@@ -67,7 +83,7 @@ public final class FileNameEvaluation
 
     private String convertWildcards(String str)
     {
-        return str.replaceAll("\\.\\*", "*");
+        return WILDCARDS.matcher(str).replaceAll("*");
     }
 
     /**
@@ -105,22 +121,12 @@ public final class FileNameEvaluation
      */
     public String getPreferredCorrespondingFileName()
     {
-        Iterator<String> it = preferredCorrespondingFilePatterns.iterator();
-        if(! it.hasNext())
-        {
-            return null;
-        }
-        return removeQuotes(removeWildcards(it.next()));
+        return preferredCorrespondingFileName;
     }
 
     private String removeQuotes(String str)
     {
-        return str.replaceAll("(?:\\\\Q|\\\\E)", "");
-    }
-
-    private String removeWildcards(String str)
-    {
-        return str.replaceAll("\\.\\*", "");
+        return QUOTE_SEPARATORS.matcher(str).replaceAll("");
     }
 
     @Override
@@ -130,6 +136,7 @@ public final class FileNameEvaluation
                              getClass().getSimpleName(), StringConstants.NEWLINE, //
                              evaluatedFileName, StringConstants.NEWLINE, //
                              (testFile ? "test file" : "src file"), StringConstants.NEWLINE, //
+                             preferredCorrespondingFileName, StringConstants.NEWLINE, //
                              preferredCorrespondingFilePatterns, StringConstants.NEWLINE, //
                              otherCorrespondingFilePatterns, StringConstants.NEWLINE);
     }

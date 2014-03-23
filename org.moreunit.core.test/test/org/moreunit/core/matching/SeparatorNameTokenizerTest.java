@@ -67,6 +67,13 @@ public class SeparatorNameTokenizerTest
     }
 
     @Test
+    public void should_handle_regex_symbol_as_separator() throws Exception
+    {
+        assertThat(new SeparatorNameTokenizer("$").tokenize("one$two$three").getTokens()).containsExactly("one","two", "three");
+        assertThat(new SeparatorNameTokenizer("*").tokenize("one*two*three").getTokens()).containsExactly("one","two", "three");
+    }
+
+    @Test
     public void should_return_token_combinations() throws Exception
     {
         // when

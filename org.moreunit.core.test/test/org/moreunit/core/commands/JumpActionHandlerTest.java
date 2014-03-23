@@ -445,6 +445,58 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
     }
 
+    @Test
+    public void should_support_regex_symbols_in_test_file_name_template() throws Exception
+    {
+        // given
+        preferences.add(new Language("nde", "NDE"));
+
+        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
+        langPrefs.setTestFileNameTemplate("${srcFile} \\(test\\)", " ");
+        langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
+
+        IFile sourceFile = createFile("sources/some concept.nde");
+        IFile testFile = createFile("tests/some concept (test).nde");
+
+        openEditor(sourceFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+        // then
+        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+        // then
+        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+    }
+
+    @Test
+    public void should_support_regex_symbols_in_file_name_separator() throws Exception
+    {
+        // given
+        preferences.add(new Language("nde", "NDE"));
+
+        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
+        langPrefs.setTestFileNameTemplate("${srcFile}*\\*test", "*");
+        langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
+
+        IFile sourceFile = createFile("sources/some*concept.nde");
+        IFile testFile = createFile("tests/some*concept*foo*test.nde");
+
+        openEditor(sourceFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+        // then
+        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+
+        // when
+        executeCommand(JUMP_COMMAND);
+        // then
+        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+    }
+
     private void userSelectsTestFolder(DrivableWizardDialog dialog, IFolder folder)
     {
         NewFileWizard wizard = (NewFileWizard) dialog.getWizard();

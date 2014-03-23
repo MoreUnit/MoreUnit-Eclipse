@@ -4,18 +4,18 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.sort;
-import static java.util.Collections.unmodifiableList;
+import static java.util.regex.Matcher.quoteReplacement;
+import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
-import org.moreunit.core.util.Strings;
+import org.moreunit.core.matching.TestFileNamePatternParser.UserDefinedPart;
 
 /**
  * A pattern for naming test files from the name of the source file they test.
@@ -127,31 +127,26 @@ import org.moreunit.core.util.Strings;
  */
 public final class TestFileNamePattern
 {
-    public static final String SRC_FILE_VARIABLE = "${srcFile}";
+    public static final String SRC_FILE_VARIABLE = TestFileNamePatternParser.SRC_FILE_VARIABLE;
+    private static final Pattern SRC_FILE_VARIABLE_PATTERN = compile(quote(SRC_FILE_VARIABLE));
 
     /* Various patterns */
-    private static final String CONSECUTIVE_WILDCARDS = "(\\.\\*){2,}";
 
     private static final String VALIDATOR;
     static
     {
+        // ${sep} must be replaced with the actual separator before use
         String separatorAndOrStar = "(\\*?(${sep})?)?((${sep})?\\*?)";
-        String authorizedChars = "[^\\(\\|\\)\\*]";
-        String prefixOrSuffix = separatorAndOrStar + "(\\(" + authorizedChars + "+(\\|" + authorizedChars + "+)*\\)|" + authorizedChars + "*)" + separatorAndOrStar;
+        // non-brackets/pipe/star or protected ones
+        String authorizedChars = "(?:[^\\(\\|\\)\\*]|" + quote("\\)") + "|" + quote("\\(") + "|" + quote("\\*") + "|" + quote("\\|") + ")";
+        String prefixOrSuffix = separatorAndOrStar + "(\\(" + authorizedChars + "+?(\\|" + authorizedChars + "+?)*?\\)|" + authorizedChars + "*?)" + separatorAndOrStar;
 
         VALIDATOR = "^" + prefixOrSuffix + quote(SRC_FILE_VARIABLE) + prefixOrSuffix + "$";
     }
 
-    private static final Pattern GROUP_CONTENT_FINDER = Pattern.compile("[^\\(]*\\(([^\\)]*)\\)[^\\)]*");
-    private static final Pattern SINGLE_GROUP;
-    static
-    {
-        String specialChars = "[\\.\\*]";
-        String authorizedChars = "[^\\(\\|\\)\\.\\*]";
-        SINGLE_GROUP = Pattern.compile(specialChars + "*(" + authorizedChars + "+)" + specialChars + "*");
-    }
+    private static final Pattern QUOTE_SEPARATORS_AND_WILDCARDS = compile("(?:\\\\Q|\\\\E|\\.\\*)");
 
-    /* \ Various patterns */
+    /* /end Various patterns */
 
     private static final Comparator<String> byDescendingLength = new Comparator<String>()
     {
@@ -166,109 +161,14 @@ public final class TestFileNamePattern
     private final FileType fileType;
     private final String separator;
     private final NameTokenizer tokenizer;
+    private final TestFileNamePatternParser.Success parserResult;
     private final String prefix;
     private final String suffix;
-    private final boolean wildCardBefore;
-    private final boolean wildCardAfter;
+    private final boolean wildCardBeforeVariable;
+    private final boolean wildCardAfterVariable;
     private final String patternString;
     private final List<Group> groups;
     private final Collection<Pattern> patterns;
-
-    private TestFileNamePattern(String template, NameTokenizer tokenizer, FileType fileType)
-    {
-        this.fileType = fileType;
-
-        separator = tokenizer.getSeparator();
-        if(! isValid(template, separator))
-        {
-            throw new IllegalArgumentException("Invalid template: " + template);
-        }
-
-        this.tokenizer = tokenizer;
-
-        // makes it a valid regex
-        String tpl = template.replace("*", ".*");
-
-        int varStart = tpl.indexOf("$");
-        int varEnd = tpl.indexOf("}");
-
-        // extracts part before variable
-        String preOld = tpl.substring(0, varStart);
-
-        String pre = changeWordsIntoGroup(preOld);
-
-        // update tpl with new prefix
-        tpl = tpl.replaceFirst(quote(preOld), pre);
-        int varOffset = pre.length() - preOld.length();
-        varStart += varOffset;
-        varEnd += varOffset;
-
-        pre = removeEndSeparatorIfPresent(pre);
-
-        pre = orderGroupPartsByDescLength(pre);
-
-        // records presence of wildcard before file name and removes it
-        wildCardBefore = pre.endsWith(".*");
-        if(wildCardBefore)
-        {
-            prefix = pre.substring(0, pre.length() - 2);
-        }
-        else
-        {
-            prefix = pre;
-        }
-
-        // extracts part after variable
-        String sufOld = varEnd + 1 == tpl.length() ? "" : tpl.substring(varEnd + 1);
-
-        String suf = changeWordsIntoGroup(sufOld);
-
-        // update tpl with new suffix
-        tpl = tpl.replaceFirst(quote(sufOld) + "$", suf);
-
-        suf = removeStartSeparatorIfPresent(suf);
-
-        suf = orderGroupPartsByDescLength(suf);
-
-        // records presence of wildcard after file name and removes it
-        wildCardAfter = suf.startsWith(".*");
-        if(wildCardAfter)
-        {
-            suffix = suf.substring(2);
-        }
-        else
-        {
-            suffix = suf;
-        }
-
-        patternString = tpl;
-
-        // final step: makes valid regex from our custom template
-        String finalPatternStr = patternString.replace(SRC_FILE_VARIABLE, ".*");
-
-        // extracts prefix and suffix groups
-        groups = findGroups(finalPatternStr);
-
-        patterns = createEvaluationPatterns(finalPatternStr);
-    }
-
-    private String removeStartSeparatorIfPresent(String str)
-    {
-        if(str.startsWith(separator))
-        {
-            return str.substring(separator.length());
-        }
-        return str;
-    }
-
-    private String removeEndSeparatorIfPresent(String str)
-    {
-        if(str.endsWith(separator))
-        {
-            return str.substring(0, str.length() - separator.length());
-        }
-        return str;
-    }
 
     /**
      * Creates a {@link TestFileNamePattern} with the given template and
@@ -324,97 +224,157 @@ public final class TestFileNamePattern
         }
     }
 
+    private TestFileNamePattern(String template, NameTokenizer tokenizer, FileType fileType)
+    {
+        this.fileType = fileType;
+
+        separator = tokenizer.separator();
+        if(! isValid(template, separator))
+        {
+            throw new IllegalArgumentException("Invalid template: " + template);
+        }
+
+        this.tokenizer = tokenizer;
+
+        parserResult = new TestFileNamePatternParser(template, tokenizer).parse().get();
+
+        wildCardBeforeVariable = parserResult.prefix().hasWildcardAfter();
+        prefix = toPrefixPattern(parserResult.prefix());
+
+        wildCardAfterVariable = parserResult.suffix().hasWildcardBefore();
+        suffix = toSuffixPattern(parserResult.suffix());
+
+        patternString = toPattern(parserResult.prefix()) + SRC_FILE_VARIABLE + toPattern(parserResult.suffix());
+
+        // extracts prefix and suffix groups
+        groups = createGroups();
+
+        patterns = createEvaluationPatterns();
+    }
+
     public static boolean isValid(String template, String separator)
     {
-        // TODO Nicolas improve it to return failure reason
-        return template.matches(VALIDATOR.replace("${sep}", separator));
+        // TODO Nicolas use TestFileNamePatternParser to validate template and
+        // return failure reason, get rid of VALIDATOR.
+        return template.matches(VALIDATOR.replace("${sep}", quote(separator)));
     }
 
-    private String changeWordsIntoGroup(String prefixOrSuffix)
+    private static String toPrefixPattern(UserDefinedPart part)
     {
-        Matcher m = SINGLE_GROUP.matcher(prefixOrSuffix);
-        if(! m.matches())
-        {
-            return prefixOrSuffix;
-        }
-        return prefixOrSuffix.substring(0, m.start(1)) + "(" + m.group(1) + ")" + prefixOrSuffix.substring(m.end(1));
+        if(! part.hasAlternatives())
+            return "";
+
+        StringBuilder buffer = new StringBuilder();
+
+        if(part.hasWildcardBefore())
+            buffer.append(".*");
+
+        appendAlternatives(buffer, part);
+
+        return buffer.toString();
     }
 
-    /**
-     * Arranges order of group parts so that, for instance, template &quot;
-     * <tt>(Test|Tests)${srcFile}</tt>&quot; will give &quot;<tt>Concept</tt>
-     * &quot; as a preferred source file name for test file &quot;
-     * <tt>TestsConcept</tt>&quot;, and not &quot;<tt>sConcept</tt>&quot;.
-     *
-     * @param prefixOrSuffixPattern
-     * @return same pattern, with group parts ordered by descending length
-     */
-    private String orderGroupPartsByDescLength(String prefixOrSuffixPattern)
+    private static String toSuffixPattern(UserDefinedPart part)
     {
-        Matcher m = GROUP_CONTENT_FINDER.matcher(prefixOrSuffixPattern);
-        if(! m.matches())
-        {
-            return prefixOrSuffixPattern;
-        }
+        if(! part.hasAlternatives())
+            return "";
 
-        List<String> parts = Strings.splitAsList(m.group(1), "\\|");
-        sort(parts, byDescendingLength);
+        StringBuilder buffer = new StringBuilder();
 
-        StringBuilder sb = new StringBuilder("(");
-        Strings.join(sb, "|", parts);
-        String orderedParts = sb.append(")").toString();
+        appendAlternatives(buffer, part);
 
-        return prefixOrSuffixPattern.substring(0, m.start(1)) + orderedParts + prefixOrSuffixPattern.substring(m.end(1));
+        if(part.hasWildcardAfter())
+            buffer.append(".*");
+
+        return buffer.toString();
     }
 
-    /**
-     * <p>
-     * Find groups of prefixes or suffixes in the given string (example of
-     * group: {@code "(Part1|Part2)"}). A single prefix or suffix is considered
-     * as a group of one part.
-     * </p>
-     * <p>
-     * Possible group combinations are: no group, prefix group, suffix group, or
-     * both prefix and suffix groups. The validation forbids any other
-     * configuration
-     * </p>
-     *
-     * @param patternStr the string in which to find groups
-     * @return the found groups
-     */
-    private List<Group> findGroups(String patternStr)
+    private static void appendAlternatives(StringBuilder buffer, UserDefinedPart part)
     {
-        List<Group> groups = new ArrayList<Group>();
+        if(! part.hasAlternatives())
+            return;
 
-        int firstGroupStart = firstIndexOfNonQuoted("(", patternStr);
-        if(firstGroupStart != - 1)
+        buffer.append('(');
+
+        boolean first = true;
+        for (String s : part.alternatives())
         {
-            int firstGroupEnd = patternStr.indexOf(")", firstGroupStart);
-            groups.add(new Group(patternStr, firstGroupStart, firstGroupEnd));
+            if(first)
+                first = false;
+            else
+                buffer.append('|');
+
+            buffer.append(quote(s));
         }
 
-        int secondGroupStart = lastIndexOfNonQuoted("(", patternStr);
-        if(secondGroupStart != - 1 && secondGroupStart != firstGroupStart)
-        {
-            int secondGroupEnd = patternStr.indexOf(")", secondGroupStart);
-            groups.add(new Group(patternStr, secondGroupStart, secondGroupEnd));
-        }
-
-        return groups;
+        buffer.append(')');
     }
 
-    private int lastIndexOfNonQuoted(String query, String str)
+    private static String toPattern(UserDefinedPart part, String alternative)
     {
-        int[] maybeQuotedPart = findQuotedPart(str);
+        if(! part.hasAlternatives())
+            return "";
 
-        int resultIdx = str.length();
-        do
+        StringBuilder buffer = new StringBuilder();
+
+        String beforeAlt = part.before();
+        if(! beforeAlt.isEmpty())
+            buffer.append(beforeAlt);
+
+        buffer.append(quote(alternative));
+
+        String afterAlt = part.after();
+        if(! afterAlt.isEmpty())
+            buffer.append(afterAlt);
+
+        return buffer.toString();
+    }
+
+    private static String toOptionalPattern(UserDefinedPart part)
+    {
+        if(! part.hasAlternatives())
+            return "";
+
+        StringBuilder buffer = new StringBuilder();
+
+        appendAlternatives(buffer, part);
+        buffer.append('?');
+
+        return buffer.toString();
+    }
+
+    private static String toPattern(UserDefinedPart part)
+    {
+        if(! part.hasAlternatives())
+            return "";
+
+        StringBuilder buffer = new StringBuilder();
+
+        String beforeAlt = part.before();
+        if(! beforeAlt.isEmpty())
+            buffer.append(beforeAlt);
+
+        appendAlternatives(buffer, part);
+
+        String afterAlt = part.after();
+        if(! afterAlt.isEmpty())
+            buffer.append(afterAlt);
+
+        return buffer.toString();
+    }
+
+    private List<Group> createGroups()
+    {
+        List<Group> result = new ArrayList<Group>(2);
+        if(parserResult.prefix().hasAlternatives())
         {
-            resultIdx = str.lastIndexOf(query, resultIdx - 1);
+            result.add(new Group(parserResult.prefix().alternatives()));
         }
-        while (maybeQuotedPart != null && resultIdx > maybeQuotedPart[0] && resultIdx < maybeQuotedPart[1]);
-
-        return resultIdx;
+        if(parserResult.suffix().hasAlternatives())
+        {
+            result.add(new Group(parserResult.suffix().alternatives()));
+        }
+        return result;
     }
 
     /**
@@ -427,16 +387,16 @@ public final class TestFileNamePattern
      * {@link #forceEvaluationAsSourceFile(String, String)} or
      * {@link #forceEvaluationAsTestFile(String, String)}, no evaluation is
      * required so no pattern will be created,</li>
-     * <li>if the given string contains both a prefix group and a suffix group,
-     * those groups should be interpreted as a logical &quot;OR&quot;, so two
-     * patterns are created, making each group optional in turn,</li>
-     * <li>for all other cases, the given string is simply compiled.</li>
+     * <li>if both a prefix group and a suffix group have been specified, those
+     * groups should be interpreted as a logical &quot;OR&quot;, so two patterns
+     * are created, making each group optional in turn,</li>
+     * <li>for all other cases, a unique pattern is created.</li>
      * </ul>
      *
      * @param patternStr the string to be compiled as Pattern(s)
      * @return the compiled pattern(s)
      */
-    private Collection<Pattern> createEvaluationPatterns(String patternStr)
+    private Collection<Pattern> createEvaluationPatterns()
     {
         if(fileType != FileType.UNKNOWN)
         {
@@ -444,26 +404,16 @@ public final class TestFileNamePattern
             return emptySet();
         }
 
-        Collection<Pattern> result = new ArrayList<Pattern>();
+        Collection<Pattern> result = new ArrayList<Pattern>(2);
         if(groups.size() < 2)
         {
-            result.add(Pattern.compile(patternStr));
+            result.add(compile(SRC_FILE_VARIABLE_PATTERN.matcher(patternString).replaceAll(".*")));
         }
         else
         {
             // makes one or the other group optional
-            for (Group g : groups)
-            {
-                // removes separator present before group, if any
-                String beforeGroup = patternStr.substring(0, g.start);
-                beforeGroup = beforeGroup.replaceFirst(quote(separator) + "$", "");
-
-                // removes separator present after group, if any
-                String afterGroup = patternStr.substring(g.end + 1);
-                afterGroup = afterGroup.replaceFirst("^" + quote(separator), "");
-
-                result.add(Pattern.compile(beforeGroup + g.group + "?" + afterGroup));
-            }
+            result.add(compile(toOptionalPattern(parserResult.prefix()) + ".*" + toPattern(parserResult.suffix())));
+            result.add(compile(toPattern(parserResult.prefix()) + ".*" + toOptionalPattern(parserResult.suffix())));
         }
 
         return result;
@@ -512,7 +462,7 @@ public final class TestFileNamePattern
 
         List<String> otherPatterns = buildOtherCorrespondingSrcFilePatterns(preferredName);
 
-        return new FileNameEvaluation(fileBaseName, true, asList(quote(preferredName)), otherPatterns);
+        return new FileNameEvaluation(fileBaseName, true, preferredName, asList(quote(preferredName)), otherPatterns);
     }
 
     /**
@@ -530,7 +480,7 @@ public final class TestFileNamePattern
      */
     private List<String> buildOtherCorrespondingSrcFilePatterns(String preferredName)
     {
-        if(! (wildCardBefore || wildCardAfter))
+        if(! (wildCardBeforeVariable || wildCardAfterVariable))
         {
             return emptyList();
         }
@@ -538,14 +488,14 @@ public final class TestFileNamePattern
         TokenizationResult result = tokenizer.tokenize(preferredName);
 
         List<String> patterns = new ArrayList<String>();
-        if(wildCardBefore)
+        if(wildCardBeforeVariable)
         {
             for (String c : result.getCombinationsFromEnd())
             {
                 patterns.add(quote(c));
             }
         }
-        if(wildCardAfter)
+        if(wildCardAfterVariable)
         {
             for (String c : result.getCombinationsFromStart())
             {
@@ -566,75 +516,88 @@ public final class TestFileNamePattern
 
     private FileNameEvaluation buildSrcFileResult(String srcFileName)
     {
-        String testFileNameWithGroups = patternString.replace(SRC_FILE_VARIABLE, quote(srcFileName));
+        String preferredTestFileName = buildPreferredTestFileName(srcFileName);
+        ;
 
-        List<String> preferredPatterns = buildPreferredTestFilePatterns(testFileNameWithGroups);
+        String quotedSrcFileName = quote(srcFileName);
 
-        List<String> otherPatterns = buildOtherCorrespondingTestFilePatterns(testFileNameWithGroups);
+        List<String> preferredPatterns = buildPreferredTestFilePatterns(quotedSrcFileName);
 
-        return new FileNameEvaluation(srcFileName, false, preferredPatterns, otherPatterns);
+        List<String> otherPatterns = buildOtherCorrespondingTestFilePatterns(quotedSrcFileName);
+
+        return new FileNameEvaluation(srcFileName, false, preferredTestFileName, preferredPatterns, otherPatterns);
+    }
+
+    private String buildPreferredTestFileName(String srcFileName)
+    {
+        final String result;
+        UserDefinedPart prefixPart = parserResult.prefix();
+        UserDefinedPart suffixPart = parserResult.suffix();
+
+        if(! prefixPart.hasAlternatives() && ! suffixPart.hasAlternatives())
+        {
+            result = SRC_FILE_VARIABLE_PATTERN.matcher(patternString).replaceAll(quoteReplacement(srcFileName));
+        }
+        else if(! prefixPart.hasAlternatives())
+        {
+            result = srcFileName + toPattern(suffixPart, suffixPart.firstAlternative());
+        }
+        else if(! suffixPart.hasAlternatives())
+        {
+            result = toPattern(prefixPart, prefixPart.firstAlternative()) + srcFileName;
+        }
+        else
+        {
+            result = toPattern(prefixPart, prefixPart.firstAlternative()) + srcFileName + toPattern(suffixPart, suffixPart.firstAlternative());
+        }
+
+        return removeQuotesAndWildcards(result);
+    }
+
+    private String removeQuotesAndWildcards(String str)
+    {
+        return QUOTE_SEPARATORS_AND_WILDCARDS.matcher(str).replaceAll("");
     }
 
     /**
      * Builds a pattern for each possible prefix/suffix combination.
      */
-    private List<String> buildPreferredTestFilePatterns(String testFileNameWithGroups)
+    private List<String> buildPreferredTestFilePatterns(String quotedSrcFileName)
     {
-        List<String> namesToProcess = new ArrayList<String>();
-        namesToProcess.add(testFileNameWithGroups);
+        List<String> result = new ArrayList<String>();
+        UserDefinedPart prefixPart = parserResult.prefix();
+        UserDefinedPart suffixPart = parserResult.suffix();
 
-        for (Group group : groups)
+        if(! prefixPart.hasAlternatives() && ! suffixPart.hasAlternatives())
         {
-            List<String> processedNames = new ArrayList<String>();
-
-            for (String name : namesToProcess)
+            result.add(SRC_FILE_VARIABLE_PATTERN.matcher(patternString).replaceAll(quoteReplacement(quotedSrcFileName)));
+        }
+        else if(! prefixPart.hasAlternatives())
+        {
+            for (String alternative : suffixPart.alternatives())
             {
-                String[] surroundingParts = partsSurroundingFirstGroup(name);
-
-                for (String part : group.possibleParts)
+                result.add(quotedSrcFileName + toPattern(suffixPart, alternative));
+            }
+        }
+        else
+        {
+            for (String preAlt : prefixPart.alternatives())
+            {
+                if(! suffixPart.hasAlternatives())
                 {
-                    if(part.length() != 0)
+                    result.add(toPattern(prefixPart, preAlt) + quotedSrcFileName);
+                }
+                else
+                {
+                    for (String sufAlt : suffixPart.alternatives())
                     {
-                        processedNames.add(surroundingParts[0] + part + surroundingParts[1]);
+                        result.add(toPattern(prefixPart, preAlt) + quotedSrcFileName + toPattern(suffixPart, sufAlt));
                     }
                 }
             }
-
-            namesToProcess = processedNames;
         }
 
-        return namesToProcess;
-    }
-
-    private String[] partsSurroundingFirstGroup(String name)
-    {
-        int openingBracketIdx = firstIndexOfNonQuoted("(", name);
-
-        int closingBracketIdx = name.indexOf(")", openingBracketIdx);
-
-        String beforeGroup = name.substring(0, openingBracketIdx);
-        String afterGroup = name.substring(closingBracketIdx + 1);
-        return new String[] { beforeGroup, afterGroup };
-    }
-
-    private int firstIndexOfNonQuoted(String query, String str)
-    {
-        int[] maybeQuotedPart = findQuotedPart(str);
-
-        int resultIdx = - 1;
-        do
-        {
-            resultIdx = str.indexOf(query, resultIdx + 1);
-        }
-        while (maybeQuotedPart != null && resultIdx > maybeQuotedPart[0] && resultIdx < maybeQuotedPart[1]);
-
-        return resultIdx;
-    }
-
-    private int[] findQuotedPart(String str)
-    {
-        int start = str.indexOf("\\Q");
-        return start == - 1 ? null : new int[] { start, str.indexOf("\\E", start) };
+        return result;
     }
 
     /**
@@ -642,44 +605,27 @@ public final class TestFileNamePattern
      * possible prefix or suffix, authorizing either prefix without suffix or
      * suffix without prefix.
      */
-    private List<String> buildOtherCorrespondingTestFilePatterns(String testFileNameWithGroups)
+    private List<String> buildOtherCorrespondingTestFilePatterns(String quotedSrcFileName)
     {
-        if(groups.size() != 2)
+        if(! parserResult.prefix().hasAlternatives() || ! parserResult.suffix().hasAlternatives())
         {
             return emptyList();
         }
 
-        List<String> otherFileNames = new ArrayList<String>();
+        String beforeVar = wildCardBeforeVariable ? ".*" : "";
+        String afterVar = wildCardAfterVariable ? ".*" : "";
 
-        List<Group> groupsInFileName = findGroups(testFileNameWithGroups);
-        Group firstGroup = groupsInFileName.get(0);
-        Group secondGroup = groupsInFileName.get(1);
+        List<String> result = new ArrayList<String>();
 
-        for (String part : firstGroup.possibleParts)
+        for (String preAlt : parserResult.prefix().alternatives())
         {
-            String name = testFileNameWithGroups.substring(0, firstGroup.start) //
-                          + part //
-                          + testFileNameWithGroups.substring(firstGroup.end + 1, secondGroup.start) //
-                          + testFileNameWithGroups.substring(secondGroup.end + 1);
-
-            name = name.replaceAll(CONSECUTIVE_WILDCARDS, ".*");
-
-            otherFileNames.add(removeEndSeparatorIfPresent(name));
+            result.add(toPattern(parserResult.prefix(), preAlt) + quotedSrcFileName + afterVar);
         }
-
-        for (String part : secondGroup.possibleParts)
+        for (String sufAlt : parserResult.suffix().alternatives())
         {
-            String name = testFileNameWithGroups.substring(0, firstGroup.start) //
-                          + testFileNameWithGroups.substring(firstGroup.end + 1, secondGroup.start) //
-                          + part //
-                          + testFileNameWithGroups.substring(secondGroup.end + 1);
-
-            name = name.replaceAll(CONSECUTIVE_WILDCARDS, ".*");
-
-            otherFileNames.add(removeStartSeparatorIfPresent(name));
+            result.add(beforeVar + quotedSrcFileName + toPattern(parserResult.suffix(), sufAlt));
         }
-
-        return otherFileNames;
+        return result;
     }
 
     public String getSeparator()
@@ -687,25 +633,19 @@ public final class TestFileNamePattern
         return separator;
     }
 
-    /**
-     * A group of name parts (prefixes or suffixes), regex-style (example:
-     * {@code "(Part1|Part2)"}).
-     */
     private static class Group
     {
-        final int start;
-        final int end;
-        final String group;
-        final List<String> possibleParts;
+        final List<String> alternatives;
 
-        Group(String pattern, int start, int end)
+        public Group(List<String> alternatives)
         {
-            this.start = start;
-            this.end = end;
+            this.alternatives = alternatives;
+        }
 
-            group = pattern.substring(start, end + 1);
-            String groupContent = pattern.substring(start + 1, end);
-            possibleParts = unmodifiableList(asList(groupContent.split("\\|")));
+        @Override
+        public String toString()
+        {
+            return alternatives.toString();
         }
     }
 

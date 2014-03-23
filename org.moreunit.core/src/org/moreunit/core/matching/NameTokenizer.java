@@ -27,7 +27,7 @@ public abstract class NameTokenizer
         this.separator = separator;
     }
 
-    public String getSeparator()
+    public String separator()
     {
         return separator;
     }
