@@ -49,6 +49,7 @@ public abstract class FileNamePatternDemo
 
         testLink.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 TestFileNamePattern pattern = getPattern();
@@ -81,17 +82,13 @@ public abstract class FileNamePatternDemo
     private String createOutput(FileNameEvaluation evaluation)
     {
         StringBuilder sb = new StringBuilder();
-        for (String p : evaluation.getPreferredCorrespondingFilePatterns())
+        for (String p : evaluation.getAllCorrespondingFileEclipsePatterns())
         {
             if(sb.length() != 0)
             {
                 sb.append(StringConstants.NEWLINE);
             }
             sb.append(p);
-        }
-        for (String p : evaluation.getOtherCorrespondingFilePatterns())
-        {
-            sb.append(StringConstants.NEWLINE).append(p);
         }
         return sb.toString();
     }
