@@ -2,7 +2,6 @@ package org.moreunit.core.preferences;
 
 import static org.moreunit.core.preferences.Preferences.orDefault;
 
-import org.moreunit.core.matching.TestFileNamePattern;
 import org.moreunit.core.matching.TestFolderPathPattern;
 
 public class LanguagePreferencesReader extends LanguagePreferences
@@ -25,11 +24,6 @@ public class LanguagePreferencesReader extends LanguagePreferences
     public String getTestFileNameTemplate()
     {
         return orDefault(getString(LanguagePreferences.TEST_FILE_NAME_TEMPLATE), defaults.getTestFileNameTemplate());
-    }
-
-    public TestFileNamePattern getTestFileNamePattern()
-    {
-        return new TestFileNamePattern(getTestFileNameTemplate(), getFileWordSeparator());
     }
 
     @Override

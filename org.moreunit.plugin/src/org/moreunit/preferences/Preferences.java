@@ -25,6 +25,15 @@ public class Preferences
 {
     private static final Pattern MAVEN_TEST_FOLDER = Pattern.compile("src/test/.*");
 
+    /**
+     * Cache for TestClassNamePattern instances.
+     * <p>
+     * It is OK to clear it entirely every time a preference changes ; that way
+     * we can guarantee that entries won't be kept in memory without reason.
+     */
+    private static final Map<String, TestClassNamePattern> CLASS_NAME_PATTERN_CACHE = new HashMap<String, TestClassNamePattern>();
+    private static final Object CACHE_LOCK = new Object();
+
     private static Preferences instance = new Preferences();
 
     private final Logger logger = MoreUnitPlugin.getDefault().getLogger();
@@ -248,7 +257,11 @@ public class Preferences
 
     public void setTestPackagePrefix(IJavaProject javaProject, String packagePrefix)
     {
-        getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_PREFIX, packagePrefix);
+        synchronized (CACHE_LOCK)
+        {
+            CLASS_NAME_PATTERN_CACHE.clear();
+            getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_PREFIX, packagePrefix);
+        }
     }
 
     public String getTestPackageSuffix(IJavaProject javaProject)
@@ -258,7 +271,11 @@ public class Preferences
 
     public void setTestPackageSuffix(IJavaProject javaProject, String packageSuffix)
     {
-        getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, packageSuffix);
+        synchronized (CACHE_LOCK)
+        {
+            CLASS_NAME_PATTERN_CACHE.clear();
+            getProjectStore(javaProject).setValue(PreferenceConstants.TEST_PACKAGE_SUFFIX, packageSuffix);
+        }
     }
 
     private IPreferenceStore storeToRead(IJavaProject javaProject)
@@ -554,12 +571,33 @@ public class Preferences
 
         public TestClassNamePattern getTestClassNamePattern()
         {
-            return new TestClassNamePattern(getTestClassNameTemplate(), getPackagePrefix(), getPackageSuffix());
+            synchronized (CACHE_LOCK)
+            {
+                String template = getTestClassNameTemplate();
+                String prefix = getPackagePrefix();
+                String suffix = getPackageSuffix();
+                String key = (template == null ? "" : template.length() + template) //
+                             + (prefix == null ? "" : prefix.length() + prefix) //
+                             + (suffix == null ? "" : suffix.length() + suffix);
+
+                TestClassNamePattern pattern = CLASS_NAME_PATTERN_CACHE.get(key);
+                if(pattern == null)
+                {
+                    pattern = new TestClassNamePattern(template, prefix, suffix);
+                    CLASS_NAME_PATTERN_CACHE.put(key, pattern);
+                }
+
+                return pattern;
+            }
         }
 
         public void setTestClassNameTemplate(String template)
         {
-            prefs.getProjectStore(project).setValue(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, template);
+            synchronized (CACHE_LOCK)
+            {
+                CLASS_NAME_PATTERN_CACHE.clear();
+                prefs.getProjectStore(project).setValue(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, template);
+            }
         }
 
         public String getTestClassNameTemplate()

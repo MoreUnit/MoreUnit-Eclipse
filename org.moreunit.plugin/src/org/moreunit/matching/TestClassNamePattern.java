@@ -9,15 +9,21 @@ public class TestClassNamePattern
 {
     private static final String CAMEL_CASE_SEPARATOR = "";
 
-    private final String nameTemplate;
     private final String packagePrefix;
     private final String packageSuffix;
 
+    private final TestFileNamePattern regularPattern;
+    private final TestFileNamePattern patternForcingEvaluationAsSourceFile;
+    private final TestFileNamePattern patternForcingEvaluationAsTestFile;
+
     public TestClassNamePattern(String nameTemplate, String packagePrefix, String packageSuffix)
     {
-        this.nameTemplate = nameTemplate;
         this.packagePrefix = packagePrefix;
         this.packageSuffix = packageSuffix;
+
+        this.regularPattern = new TestFileNamePattern(nameTemplate, CAMEL_CASE_SEPARATOR);
+        this.patternForcingEvaluationAsSourceFile = TestFileNamePattern.forceEvaluationAsSourceFile(nameTemplate, CAMEL_CASE_SEPARATOR);
+        this.patternForcingEvaluationAsTestFile = TestFileNamePattern.forceEvaluationAsTestFile(nameTemplate, CAMEL_CASE_SEPARATOR);
     }
 
     public ClassNameEvaluation evaluate(IType type)
@@ -28,13 +34,13 @@ public class TestClassNamePattern
         if(matchesTestPackagePattern(packageName))
         {
             // will evaluate whether file name matches test pattern
-            pattern = new TestFileNamePattern(nameTemplate, CAMEL_CASE_SEPARATOR);
+            pattern = regularPattern;
         }
         else
         {
             // won't evaluate file name (it can't be a test)
             // will only produce names for corresponding files
-            pattern = TestFileNamePattern.forceEvaluationAsSourceFile(nameTemplate, CAMEL_CASE_SEPARATOR);
+            pattern = patternForcingEvaluationAsSourceFile;
         }
 
         return evaluate(pattern, new JavaType(type.getElementName(), packageName));
@@ -48,18 +54,14 @@ public class TestClassNamePattern
 
     public JavaType nameTestCaseFor(IType classUnderTest)
     {
-        TestFileNamePattern pattern = TestFileNamePattern.forceEvaluationAsSourceFile(nameTemplate, CAMEL_CASE_SEPARATOR);
-
-        ClassNameEvaluation evaluation = evaluate(pattern, new JavaType(classUnderTest.getFullyQualifiedName()));
+        ClassNameEvaluation evaluation = evaluate(patternForcingEvaluationAsSourceFile, new JavaType(classUnderTest.getFullyQualifiedName()));
 
         return evaluation.getPreferredCorrespondingClass();
     }
 
     public JavaType nameClassTestedBy(IType testCase)
     {
-        TestFileNamePattern pattern = TestFileNamePattern.forceEvaluationAsTestFile(nameTemplate, CAMEL_CASE_SEPARATOR);
-
-        ClassNameEvaluation evaluation = evaluate(pattern, new JavaType(testCase.getFullyQualifiedName()));
+        ClassNameEvaluation evaluation = evaluate(patternForcingEvaluationAsTestFile, new JavaType(testCase.getFullyQualifiedName()));
 
         return evaluation.getPreferredCorrespondingClass();
     }
