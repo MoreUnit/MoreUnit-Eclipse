@@ -51,7 +51,13 @@ public class DependencyPatternsResolver implements PatternResolver
         {
             TypeParameter p = paramIt.next();
 
-            buffer.append(String.format("\\${%sType:newType(%s)}", p.simpleClassName, p.fullyQualifiedClassName));
+            buffer.append(p.wildcardExpression());
+
+            if(p.hasName())
+            {
+                buffer.append(String.format("\\${%sType:newType(%s)}", p.simpleClassName, p.fullyQualifiedClassName));
+            }
+
             buildTypeParametersDeclaration(p.internalParameters, buffer);
 
             if(paramIt.hasNext())

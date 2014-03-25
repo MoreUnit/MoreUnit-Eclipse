@@ -103,6 +103,55 @@ public class DependencyPatternsResolverTest
     }
 
     @Test
+    public void should_add_wildcard_type_parameter() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter", asList(TypeParameter.wildcard())));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}<?> post");
+    }
+
+    @Test
+    public void should_add_wildcard_type_parameter_with_extends_bound() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter", asList(TypeParameter.extending("java.lang.Float"))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}<? extends ${FloatType:newType(java.lang.Float)}> post");
+    }
+
+    @Test
+    public void should_add_wildcard_type_parameter_with_super_bound() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter", asList(TypeParameter.superOf("java.lang.Float"))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}<? super ${FloatType:newType(java.lang.Float)}> post");
+    }
+
+    @Test
+    public void should_add_wildcard_type_parameters_with_nested_params() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Map", "aMap",
+                                        asList(TypeParameter.extending("java.util.List").withInternalParameters(TypeParameter.superOf("java.lang.Double")),
+                                               TypeParameter.superOf("java.util.Set").withInternalParameters(TypeParameter.wildcard()))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${MapType:newType(java.util.Map)}<"
+                           + "? extends ${ListType:newType(java.util.List)}<? super ${DoubleType:newType(java.lang.Double)}>"
+                           + ",? super ${SetType:newType(java.util.Set)}<?>"
+                           + "> post");
+    }
+
+    @Test
     public void should_add_several_type_parameters() throws Exception
     {
         // given
@@ -117,8 +166,8 @@ public class DependencyPatternsResolverTest
     public void should_add_several_nested_type_parameters() throws Exception
     {
         // given
-        dependencies.add(new Dependency("java.util.Map", "aMap", asList(new TypeParameter("java.util.List", asList(new TypeParameter("java.lang.Double"))),
-                                                                        new TypeParameter("java.util.Set", asList(new TypeParameter("java.lang.String"))))));
+        dependencies.add(new Dependency("java.util.Map", "aMap", asList(new TypeParameter("java.util.List").withInternalParameters(new TypeParameter("java.lang.Double")),
+                                                                        new TypeParameter("java.util.Set").withInternalParameters(new TypeParameter("java.lang.String")))));
 
         // then
         assertThat(resolver.resolve("pre ${dependencyType} post"))

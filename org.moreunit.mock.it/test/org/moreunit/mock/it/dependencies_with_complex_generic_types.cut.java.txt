@@ -1,0 +1,19 @@
+package te.st;
+
+import java.util.concurrent.Callable;
+
+public class SomeConcept {
+
+	public Callable<?> genericTypeWithWildcard;
+
+	public Callable<? extends List> genericTypeWithExtendBound;
+
+	public Callable<? super ArrayList> genericTypeWithSuperBound;
+
+	public Callable<Map<String, ? extends List>> nestedGenericTypes;
+
+	// used in place of java.util classes, that are not resolved when tests are run with Tycho, no idea why for now...
+	public static interface List {}
+	public static interface ArrayList {}
+	public static interface Map<K, V> {}
+}

@@ -3,22 +3,68 @@ package org.moreunit.mock.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.addAll;
+
 public class TypeParameter
 {
+    public static enum Kind
+    {
+        REGULAR, WILDARD_UNBOUNDED, WILDCARD_EXTENDS, WILDCARD_SUPER
+    }
+
     public final String fullyQualifiedClassName;
-    public final List<TypeParameter> internalParameters;
+    public final List<TypeParameter> internalParameters = new ArrayList<TypeParameter>();
     public final String simpleClassName;
+    private String wildcardExpression = "";
+
+    public static TypeParameter extending(String fullyQualifiedClassName)
+    {
+        TypeParameter p = new TypeParameter(fullyQualifiedClassName);
+        p.wildcardExpression = "? extends ";
+        return p;
+    }
+
+    public static TypeParameter superOf(String fullyQualifiedClassName)
+    {
+        TypeParameter p = new TypeParameter(fullyQualifiedClassName);
+        p.wildcardExpression = "? super ";
+        return p;
+    }
+
+    public static TypeParameter wildcard()
+    {
+        TypeParameter p = new TypeParameter("");
+        p.wildcardExpression = "?";
+        return p;
+    }
+
+    public static TypeParameter create(Kind kind, String fullyQualifiedClassName)
+    {
+        if(kind == Kind.WILDCARD_EXTENDS)
+        {
+            return extending(fullyQualifiedClassName);
+        }
+        else if(kind == Kind.WILDCARD_SUPER)
+        {
+            return superOf(fullyQualifiedClassName);
+        }
+        else if(kind == Kind.WILDARD_UNBOUNDED)
+        {
+            return wildcard();
+        }
+        return new TypeParameter(fullyQualifiedClassName);
+    }
 
     public TypeParameter(String fullyQualifiedClassName)
     {
-        this(fullyQualifiedClassName, new ArrayList<TypeParameter>());
+        this.fullyQualifiedClassName = fullyQualifiedClassName;
+        simpleClassName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".") + 1);
     }
 
-    public TypeParameter(String fullyQualifiedClassName, List<TypeParameter> internalParameters)
+    public TypeParameter withInternalParameters(TypeParameter... internalParameters)
     {
-        this.fullyQualifiedClassName = fullyQualifiedClassName;
-        this.internalParameters = internalParameters;
-        simpleClassName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".") + 1);
+        addAll(this.internalParameters, internalParameters);
+        return this;
     }
 
     @Override
@@ -28,6 +74,7 @@ public class TypeParameter
         int result = 1;
         result = prime * result + ((fullyQualifiedClassName == null) ? 0 : fullyQualifiedClassName.hashCode());
         result = prime * result + ((internalParameters == null) ? 0 : internalParameters.hashCode());
+        result = prime * result + ((wildcardExpression == null) ? 0 : wildcardExpression.hashCode());
         return result;
     }
 
@@ -69,12 +116,33 @@ public class TypeParameter
         {
             return false;
         }
+        if(wildcardExpression == null)
+        {
+            if(other.wildcardExpression != null)
+            {
+                return false;
+            }
+        }
+        else if(! wildcardExpression.equals(other.wildcardExpression))
+        {
+            return false;
+        }
         return true;
+    }
+
+    public boolean hasName()
+    {
+        return ! fullyQualifiedClassName.equals("");
+    }
+
+    public String wildcardExpression()
+    {
+        return wildcardExpression;
     }
 
     @Override
     public String toString()
     {
-        return String.format("TypeParameter [className=%s, internalParams=%s]", fullyQualifiedClassName, internalParameters);
+        return String.format("TypeParameter[wildcardExpression=\"%s\", className=%s, internalParams=%s]", wildcardExpression, fullyQualifiedClassName, internalParameters);
     }
 }

@@ -2,8 +2,9 @@ package org.moreunit.mock.dependencies;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;
@@ -15,10 +16,14 @@ import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.model.TypeParameter;
+import org.moreunit.mock.model.TypeParameter.Kind;
 
 public class Dependencies extends ArrayList<Dependency>
 {
     private static final long serialVersionUID = - 8786785084170298943L;
+
+    private static final Pattern WILDCARD_EXTENDS_PATTERN = Pattern.compile("^(\\s+extends\\s+).*");
+    private static final Pattern WILDCARD_SUPER_PATTERN = Pattern.compile("^(\\s+super\\s+).*");
 
     private final NamingRules namingRules;
     private final IType classUnderTest;
@@ -140,51 +145,80 @@ public class Dependencies extends ArrayList<Dependency>
         int indexOfAngleBracket = signature.indexOf('<');
         if(indexOfAngleBracket != - 1)
         {
-            return resolveTypeParameters(signature.toCharArray(), new StringIterator(signature, indexOfAngleBracket + 1));
+            return resolveTypeParameters(signature.toCharArray(), new CharIterator(signature, indexOfAngleBracket + 1));
         }
         return new ArrayList<TypeParameter>();
     }
 
-    private List<TypeParameter> resolveTypeParameters(char[] signatureBuffer, StringIterator iterator) throws JavaModelException
+    private List<TypeParameter> resolveTypeParameters(char[] signatureBuffer, CharIterator iterator) throws JavaModelException
     {
         List<TypeParameter> parameters = new ArrayList<TypeParameter>();
 
+        TypeParameter.Kind parameterKind = Kind.REGULAR;
+
         StringBuilder buffer = new StringBuilder();
-        for (int i = iterator.current; iterator.hasNext(); i = iterator.next())
+        while (iterator.hasNext())
         {
-            char c = signatureBuffer[i];
-            if(c == '<')
+            char c = iterator.next();
+            if(c == '<' || c == ',' || c == '>')
             {
-                if(buffer.length() != 0)
+                if(buffer.length() != 0 || parameterKind == Kind.WILDARD_UNBOUNDED)
                 {
-                    TypeParameter parameter = new TypeParameter(resolveTypeSignature(buffer.toString()));
-                    parameter.internalParameters.addAll(resolveTypeParameters(signatureBuffer, iterator.increment()));
+                    TypeParameter parameter = TypeParameter.create(parameterKind, resolveTypeSignature(buffer.toString()));
                     parameters.add(parameter);
+
+                    // reset
+                    parameterKind = Kind.REGULAR;
                     buffer = new StringBuilder();
+
+                    if(c == '>')
+                    {
+                        break;
+                    }
+                    if(c == '<')
+                    {
+                        parameter.internalParameters.addAll(resolveTypeParameters(signatureBuffer, iterator));
+                    }
                 }
+                continue;
+            }
+            if(c == '?')
+            {
+                parameterKind = findWildcardType(iterator);
                 continue;
             }
             if(c == ' ')
             {
                 continue;
             }
-            if(c == ',' || c == '>')
-            {
-                if(buffer.length() != 0)
-                {
-                    parameters.add(new TypeParameter(resolveTypeSignature(buffer.toString())));
-                    buffer = new StringBuilder();
-                }
-                if(c == '>')
-                {
-                    break;
-                }
-                continue;
-            }
             buffer.append(c);
         }
 
         return parameters;
+    }
+
+    private TypeParameter.Kind findWildcardType(CharIterator iterator)
+    {
+        if(consume(WILDCARD_EXTENDS_PATTERN, iterator))
+        {
+            return Kind.WILDCARD_EXTENDS;
+        }
+        if(consume(WILDCARD_SUPER_PATTERN, iterator))
+        {
+            return Kind.WILDCARD_SUPER;
+        }
+        return Kind.WILDARD_UNBOUNDED;
+    }
+
+    private boolean consume(Pattern pattern, CharIterator iterator)
+    {
+        Matcher matcher = pattern.matcher(iterator.stringFromNextIdx());
+        if(matcher.matches())
+        {
+            iterator.increment(matcher.group(1).length());
+            return true;
+        }
+        return false;
     }
 
     public List<Dependency> injectableByConstructor()
@@ -202,40 +236,45 @@ public class Dependencies extends ArrayList<Dependency>
         return fieldDependencies;
     }
 
-    private static class StringIterator implements Iterator<Integer>
+    private static class CharIterator
     {
+        final char[] chars;
         final int limit;
         int current;
 
-        StringIterator(String string, int startIndex)
+        CharIterator(String string, int startIndex)
         {
+            chars = string.toCharArray();
             limit = string.length();
-            current = startIndex;
+            current = startIndex - 1;
         }
 
-        public StringIterator increment()
+        String stringFromNextIdx()
         {
-            next();
+            return new String(chars, current + 1, limit - current - 1);
+        }
+
+        CharIterator increment(int offset)
+        {
+            while (offset-- > 0)
+            {
+                next();
+            }
             return this;
         }
 
-        public boolean hasNext()
+        boolean hasNext()
         {
-            return current < limit;
+            return current + 1 < limit;
         }
 
-        public Integer next()
+        char next()
         {
             if(! hasNext())
             {
                 throw new IndexOutOfBoundsException();
             }
-            return ++current;
-        }
-
-        public void remove()
-        {
-            throw new UnsupportedOperationException();
+            return chars[++current];
         }
     }
 }

@@ -140,7 +140,7 @@ public class MockModule extends Module<MockModule>
 
     private TemplateProcessor getTemplateProcessor()
     {
-        return new TemplateProcessor(getContextFactory(), getSourceFormatter());
+        return new TemplateProcessor(getContextFactory(), getSourceFormatter(), getLogger());
     }
 
     public TemplateStyleSelector getTemplateStyleSelector()

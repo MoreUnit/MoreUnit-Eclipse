@@ -1,0 +1,30 @@
+package te.st;
+
+import org.junit.runner.RunWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import te.st.SomeConcept.ArrayList;
+import te.st.SomeConcept.List;
+import te.st.SomeConcept.Map;
+
+@RunWith(MockitoJUnitRunner.class)
+public class SomeConceptTest {
+
+	@Mock
+	private Callable<? extends List> genericTypeWithExtendBound;
+	
+	@Mock
+	private Callable<? super ArrayList> genericTypeWithSuperBound;
+	
+	@Mock
+	private Callable<?> genericTypeWithWildcard;
+	
+	@Mock
+	private Callable<Map<String, ? extends List>> nestedGenericTypes;
+	
+	@InjectMocks
+	private SomeConcept someConcept;
+}

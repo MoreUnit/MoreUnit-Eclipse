@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
+import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.MockingTemplate;
@@ -14,11 +15,13 @@ public class TemplateProcessor
 {
     private final ContextFactory contextFactory;
     private final SourceFormatter sourceFormatter;
+    private final Logger logger;
 
-    public TemplateProcessor(ContextFactory contextFactory, SourceFormatter sourceFormatter)
+    public TemplateProcessor(ContextFactory contextFactory, SourceFormatter sourceFormatter, Logger logger)
     {
         this.contextFactory = contextFactory;
         this.sourceFormatter = sourceFormatter;
+        this.logger = logger;
     }
 
     public void applyTemplate(MockingTemplate mockingTemplate, Dependencies dependencies, IType classUnderTest, IType testCase, String testType) throws MockingTemplateException
@@ -59,7 +62,7 @@ public class TemplateProcessor
         return compilationUnit.getWorkingCopy(new NullProgressMonitor());
     }
 
-    private void applyTemplate(MockingTemplate mockingTemplate, MockingContext context) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
+    private void applyTemplate(MockingTemplate mockingTemplate, MockingContext context) throws JavaModelException, BadLocationException, MockingTemplateException
     {
         for (CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
         {
@@ -70,10 +73,17 @@ public class TemplateProcessor
         }
     }
 
-    void applyTemplate(final CodeTemplate codeTemplate, MockingContext globalContext) throws JavaModelException, BadLocationException, org.eclipse.jface.text.templates.TemplateException, MockingTemplateException
+    void applyTemplate(final CodeTemplate codeTemplate, MockingContext globalContext) throws JavaModelException, BadLocationException, MockingTemplateException
     {
         EclipseTemplate eclipseTemplate = globalContext.preEvaluate(codeTemplate);
-        contextFactory.createEclipseTemplateContext(globalContext).evaluate(eclipseTemplate);
+        try
+        {
+            contextFactory.createEclipseTemplateContext(globalContext).evaluate(eclipseTemplate);
+        }
+        catch (TemplateException e)
+        {
+            logger.error(e);
+        }
     }
 
     private void setSource(ICompilationUnit compilationUnit, String source) throws JavaModelException

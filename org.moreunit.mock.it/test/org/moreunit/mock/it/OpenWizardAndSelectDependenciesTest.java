@@ -147,4 +147,25 @@ public class OpenWizardAndSelectDependenciesTest extends UiTestCase
         // then
         context.assertCompilationUnit("te.st.SomeConceptTestWithComment").hasSameSourceAsIn(expectationQualifier + "_test_with_comment.expected.java.txt");
     }
+
+    @Test
+    @Context(mainSrc = "dependencies_with_complex_generic_types.cut.java.txt",
+            testSrc = "dependencies_with_complex_generic_types.test.java.txt",
+            preferences = @Preferences(testType = TestType.JUNIT4,
+                    testClassNameTemplate = "${srcFile}Test"))
+    public void should_also_mock_dependencies_with_complex_generic_types() throws Exception
+    {
+        // given
+        wizardDriver.whenMockDependenciesPageIsOpen()
+                .selectTemplate(templateId)
+                .checkAllElements()
+                .done();
+
+        // when
+        JavaUI.openInEditor(context.getCompilationUnit("te.st.SomeConceptTest"));
+        mockDependenciesAction.execute(null);
+
+        // then
+        context.assertCompilationUnit("te.st.SomeConceptTest").hasSameSourceAsIn("dependencies_with_complex_generic_types.expected.java.txt");
+    }
 }
