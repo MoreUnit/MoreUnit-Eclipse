@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.swtbot.swt.finder.utils.StringUtils;
 import org.moreunit.core.util.StringConstants;
+import org.moreunit.core.util.Strings;
 import org.moreunit.util.PluginTools;
 
 /**
@@ -61,6 +61,6 @@ public class SourceFolderMapping
         {
             toStringParts.add(String.format(" (%s:%s => %s:%s)", sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName()));
         }
-        return StringUtils.join(toStringParts, StringConstants.EMPTY_STRING);
+        return Strings.join(StringConstants.EMPTY_STRING, toStringParts);
     }
 }

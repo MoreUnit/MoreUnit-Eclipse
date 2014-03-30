@@ -102,6 +102,5 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreunit.mock",
    org.eclipse.core.runtime,
    org.eclipse.swt.widgets,
    org.eclipse.ui"
-Import-Package: org.eclipse.swtbot.swt.finder.utils,
- org.moreunit.extensionpoints
+Import-Package: org.moreunit.extensionpoints
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.swtbot.swt.finder.utils.StringUtils;
 import org.moreunit.core.util.Strings;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.util.PluginTools;
@@ -36,7 +35,7 @@ public class PreferencesConverter
             mappingStrings.add(PreferencesConverter.createStringFromSourceMapping(mapping));
         }
 
-        return StringUtils.join(mappingStrings, PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
+        return Strings.join(PreferencesConverter.DELIMITER_BETWEEN_MAPPING, mappingStrings);
     }
 
     public static String createStringFromSourceMapping(SourceFolderMapping mapping)
@@ -54,7 +53,7 @@ public class PreferencesConverter
             resultList.add(stringPart.toString());
         }
 
-        return StringUtils.join(resultList, DELIMITER_BETWEEN_MAPPING);
+        return Strings.join(DELIMITER_BETWEEN_MAPPING, resultList);
     }
 
     private static final String getSourceFolderTokenPart(IPackageFragmentRoot sourceFolder)
@@ -111,7 +110,7 @@ public class PreferencesConverter
 
     public static String convertArrayToStringWithListValueDelimiter(String[] array)
     {
-        return StringUtils.join(array, DELIMITER_LIST_VALUES);
+        return Strings.join(DELIMITER_LIST_VALUES, array);
     }
 
 }
