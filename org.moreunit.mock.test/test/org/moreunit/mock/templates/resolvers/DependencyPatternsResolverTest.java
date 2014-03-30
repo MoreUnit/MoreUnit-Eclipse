@@ -140,8 +140,8 @@ public class DependencyPatternsResolverTest
     {
         // given
         dependencies.add(new Dependency("java.util.Map", "aMap",
-                                        asList(TypeParameter.extending("java.util.List").withInternalParameters(TypeParameter.superOf("java.lang.Double")),
-                                               TypeParameter.superOf("java.util.Set").withInternalParameters(TypeParameter.wildcard()))));
+                                        asList(TypeParameter.extending("java.util.List").withTypeParameters(TypeParameter.superOf("java.lang.Double")),
+                                               TypeParameter.superOf("java.util.Set").withTypeParameters(TypeParameter.wildcard()))));
 
         // then
         assertThat(resolver.resolve("pre ${dependencyType} post"))
@@ -166,8 +166,8 @@ public class DependencyPatternsResolverTest
     public void should_add_several_nested_type_parameters() throws Exception
     {
         // given
-        dependencies.add(new Dependency("java.util.Map", "aMap", asList(new TypeParameter("java.util.List").withInternalParameters(new TypeParameter("java.lang.Double")),
-                                                                        new TypeParameter("java.util.Set").withInternalParameters(new TypeParameter("java.lang.String")))));
+        dependencies.add(new Dependency("java.util.Map", "aMap", asList(new TypeParameter("java.util.List").withTypeParameters(new TypeParameter("java.lang.Double")),
+                                                                        new TypeParameter("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")))));
 
         // then
         assertThat(resolver.resolve("pre ${dependencyType} post"))
@@ -189,5 +189,45 @@ public class DependencyPatternsResolverTest
 
         assertThat(resolver.resolve("pre ${dependencyType}  . class post"))
                 .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}.class post");
+    }
+
+    @Test
+    public void should_add_type_parameter_with_type_annotation() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter",
+                                        asList(new TypeParameter("java.lang.String")
+                                                .withAnnotations("checkers.interning.quals.NonNull"))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}<@${NonNullType:newType(checkers.interning.quals.NonNull)} ${StringType:newType(java.lang.String)}> post");
+    }
+
+    @Test
+    public void should_add_type_parameter_with_type_annotations() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter",
+                                        asList(new TypeParameter("java.lang.String")
+                                                .withAnnotations("checkers.interning.quals.Interned", "checkers.interning.quals.NonNull"))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}<@${InternedType:newType(checkers.interning.quals.Interned)} @${NonNullType:newType(checkers.interning.quals.NonNull)} ${StringType:newType(java.lang.String)}> post");
+    }
+
+    @Test
+    public void should_add_type_parameter_with_wildcard_type_annotations() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("java.util.Iterable", "iter",
+                                        asList(TypeParameter.extending("java.lang.String")
+                                                .withAnnotations("checkers.interning.quals.NonNull")
+                                                .withBaseTypeAnnotations("checkers.interning.quals.ReadOnly"))));
+
+        // then
+        assertThat(resolver.resolve("pre ${dependencyType} post"))
+                .isEqualTo("pre ${IterableType:newType(java.util.Iterable)}<@${NonNullType:newType(checkers.interning.quals.NonNull)} ? extends @${ReadOnlyType:newType(checkers.interning.quals.ReadOnly)} ${StringType:newType(java.lang.String)}> post");
     }
 }

@@ -82,7 +82,7 @@ public class TemplateProcessor
         }
         catch (TemplateException e)
         {
-            logger.error(e);
+            logger.error("Evaluating template: " + eclipseTemplate.template().getPattern(), e);
         }
     }
 

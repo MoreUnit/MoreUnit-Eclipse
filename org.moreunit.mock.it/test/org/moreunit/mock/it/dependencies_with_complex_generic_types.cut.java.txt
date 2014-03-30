@@ -1,8 +1,17 @@
 package te.st;
 
-import java.util.concurrent.Callable;
-
 public class SomeConcept {
+
+	/**
+	 * To be tested with Java 8.
+	 * For now, org.eclipse.jdt.core.IField.getTypeSignature() does not return type use annotations :-(
+
+		public Callable<@NonNull @Interned List> genericTypeWithTypeAnnotations;
+
+	 * Test case is expected to contain:
+
+		private Callable<@NonNull @Interned List> genericTypeWithTypeAnnotations;
+	*/
 
 	public Callable<?> genericTypeWithWildcard;
 

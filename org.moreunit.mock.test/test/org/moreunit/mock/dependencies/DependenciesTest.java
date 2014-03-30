@@ -64,6 +64,17 @@ public class DependenciesTest
         assertThat(dependencies.resolveTypeSignature("Callable<Map<String, List<Integer>>>")).isEqualTo("Callable");
     }
 
+    // rationale: @NonNull etc. should probably not be put on test case fields
+    @Test
+    public void resolveTypeSignature_should_ignore_main_type_annotations() throws Exception
+    {
+        when(classUnderTest.resolveType("Comparator")).thenReturn(new String[][] { { "java.util", "Comparator" } });
+
+        assertThat(dependencies.resolveTypeSignature("@NonNull Comparator<String>")).isEqualTo("java.util.Comparator");
+    }
+
+    // TODO see what to do with array types (should not be mockable...)
+
     @Test
     public void resolveTypeParameters_should_return_an_empty_list_when_there_are_no_type_parameters() throws Exception
     {
@@ -97,7 +108,7 @@ public class DependenciesTest
 
         assertThat(dependencies.resolveTypeParameters("Map<String, List<Integer>>"))
                 .isEqualTo(asList(new TypeParameter("java.lang.String"),
-                                  new TypeParameter("java.util.List").withInternalParameters(new TypeParameter("java.lang.Integer"))));
+                                  new TypeParameter("java.util.List").withTypeParameters(new TypeParameter("java.lang.Integer"))));
     }
 
     @Test
@@ -109,8 +120,8 @@ public class DependenciesTest
         when(classUnderTest.resolveType("Integer")).thenReturn(new String[][] { { "java.lang", "Integer" } });
 
         assertThat(dependencies.resolveTypeParameters("Map<Set<String>, List<Integer>>"))
-                .isEqualTo(asList(new TypeParameter("java.util.Set").withInternalParameters(new TypeParameter("java.lang.String")),
-                                  new TypeParameter("java.util.List").withInternalParameters(new TypeParameter("java.lang.Integer"))));
+                .isEqualTo(asList(new TypeParameter("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")),
+                                  new TypeParameter("java.util.List").withTypeParameters(new TypeParameter("java.lang.Integer"))));
     }
 
     @Test
@@ -120,8 +131,24 @@ public class DependenciesTest
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
 
         assertThat(dependencies.resolveTypeParameters("Callable<?>")).containsOnly(TypeParameter.wildcard());
-        assertThat(dependencies.resolveTypeParameters("Callable<? extends Set<String>")).containsOnly(TypeParameter.extending("java.util.Set").withInternalParameters(new TypeParameter("java.lang.String")));
-        assertThat(dependencies.resolveTypeParameters("Callable<Set<? super String>")).containsOnly(new TypeParameter("java.util.Set").withInternalParameters(TypeParameter.superOf("java.lang.String")));
+        assertThat(dependencies.resolveTypeParameters("Callable<? extends Set<String>")).containsOnly(TypeParameter.extending("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")));
+        assertThat(dependencies.resolveTypeParameters("Callable<Set<? super String>")).containsOnly(new TypeParameter("java.util.Set").withTypeParameters(TypeParameter.superOf("java.lang.String")));
+    }
+
+    @Test
+    public void resolveTypeParameters_should_handle_type_annotations() throws Exception
+    {
+        when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
+        when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
+        when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });
+
+        assertThat(dependencies.resolveTypeParameters("Callable<@Interned Set<@NonNull @ReadOnly ? extends @English java.lang.String>"))
+                .containsOnly(new TypeParameter("java.util.Set")
+                        .withAnnotations("checkers.interning.quals.Interned")
+                        .withTypeParameters(TypeParameter.extending("java.lang.String")
+                                .withBaseTypeAnnotations("English")
+                                .withAnnotations("NonNull", "checkers.interning.quals.ReadOnly")
+                        ));
     }
 
     @Test

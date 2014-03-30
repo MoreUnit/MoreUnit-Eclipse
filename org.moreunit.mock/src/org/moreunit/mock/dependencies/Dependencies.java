@@ -22,6 +22,7 @@ public class Dependencies extends ArrayList<Dependency>
 {
     private static final long serialVersionUID = - 8786785084170298943L;
 
+    private static final Pattern TYPE_ANNOTATION = Pattern.compile("^(\\S+).*");
     private static final Pattern WILDCARD_EXTENDS_PATTERN = Pattern.compile("^(\\s+extends\\s+).*");
     private static final Pattern WILDCARD_SUPER_PATTERN = Pattern.compile("^(\\s+super\\s+).*");
 
@@ -109,6 +110,10 @@ public class Dependencies extends ArrayList<Dependency>
         // removes type parameters
         String cleanSignature = signature.replaceFirst("<.+>$", "");
 
+        // removes type use annotations:
+        // @NonNull etc. should probably not be put on test case fields
+        cleanSignature = cleanSignature.replaceAll("^\\s*(?:\\S+\\s+)*?(\\S+)\\s*$", "$1");
+
         String[][] possibleFieldTypes = classUnderTest.resolveType(cleanSignature);
         if(possibleFieldTypes == null || possibleFieldTypes.length == 0)
         {
@@ -153,6 +158,8 @@ public class Dependencies extends ArrayList<Dependency>
     private List<TypeParameter> resolveTypeParameters(char[] signatureBuffer, CharIterator iterator) throws JavaModelException
     {
         List<TypeParameter> parameters = new ArrayList<TypeParameter>();
+        List<String> annotations = new ArrayList<String>();
+        List<String> wildcardAnnotations = new ArrayList<String>();
 
         TypeParameter.Kind parameterKind = Kind.REGULAR;
 
@@ -164,7 +171,9 @@ public class Dependencies extends ArrayList<Dependency>
             {
                 if(buffer.length() != 0 || parameterKind == Kind.WILDARD_UNBOUNDED)
                 {
-                    TypeParameter parameter = TypeParameter.create(parameterKind, resolveTypeSignature(buffer.toString()));
+                    TypeParameter parameter = TypeParameter.create(parameterKind, resolveTypeSignature(buffer.toString()))
+                            .withAnnotations(annotations)
+                            .withBaseTypeAnnotations(wildcardAnnotations);
                     parameters.add(parameter);
 
                     // reset
@@ -177,8 +186,17 @@ public class Dependencies extends ArrayList<Dependency>
                     }
                     if(c == '<')
                     {
-                        parameter.internalParameters.addAll(resolveTypeParameters(signatureBuffer, iterator));
+                        parameter.typeParameters.addAll(resolveTypeParameters(signatureBuffer, iterator));
                     }
+                }
+                continue;
+            }
+            if(c == '@')
+            {
+                String annotation = consume(TYPE_ANNOTATION, iterator);
+                if(annotation != null)
+                {
+                    (parameterKind == Kind.REGULAR ? annotations : wildcardAnnotations).add(resolveTypeSignature(annotation));
                 }
                 continue;
             }
@@ -187,7 +205,7 @@ public class Dependencies extends ArrayList<Dependency>
                 parameterKind = findWildcardType(iterator);
                 continue;
             }
-            if(c == ' ')
+            if(c == ' ' || c == '\t' || c == '\r' || c == '\n')
             {
                 continue;
             }
@@ -199,26 +217,27 @@ public class Dependencies extends ArrayList<Dependency>
 
     private TypeParameter.Kind findWildcardType(CharIterator iterator)
     {
-        if(consume(WILDCARD_EXTENDS_PATTERN, iterator))
+        if(consume(WILDCARD_EXTENDS_PATTERN, iterator) != null)
         {
             return Kind.WILDCARD_EXTENDS;
         }
-        if(consume(WILDCARD_SUPER_PATTERN, iterator))
+        if(consume(WILDCARD_SUPER_PATTERN, iterator) != null)
         {
             return Kind.WILDCARD_SUPER;
         }
         return Kind.WILDARD_UNBOUNDED;
     }
 
-    private boolean consume(Pattern pattern, CharIterator iterator)
+    private String consume(Pattern pattern, CharIterator iterator)
     {
         Matcher matcher = pattern.matcher(iterator.stringFromNextIdx());
         if(matcher.matches())
         {
-            iterator.increment(matcher.group(1).length());
-            return true;
+            String capture = matcher.group(1);
+            iterator.increment(capture.length());
+            return capture;
         }
-        return false;
+        return null;
     }
 
     public List<Dependency> injectableByConstructor()

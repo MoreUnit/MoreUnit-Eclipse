@@ -1,20 +1,19 @@
 package org.moreunit.mock.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import static java.util.Collections.addAll;
+import static java.util.Arrays.asList;
 
-public class TypeParameter
+public class TypeParameter extends TypeUse<TypeParameter>
 {
     public static enum Kind
     {
         REGULAR, WILDARD_UNBOUNDED, WILDCARD_EXTENDS, WILDCARD_SUPER
     }
 
-    public final String fullyQualifiedClassName;
-    public final List<TypeParameter> internalParameters = new ArrayList<TypeParameter>();
-    public final String simpleClassName;
+    public final List<TypeAnnotation> baseTypeAnnotations = new ArrayList<TypeAnnotation>();
     private String wildcardExpression = "";
 
     public static TypeParameter extending(String fullyQualifiedClassName)
@@ -57,13 +56,20 @@ public class TypeParameter
 
     public TypeParameter(String fullyQualifiedClassName)
     {
-        this.fullyQualifiedClassName = fullyQualifiedClassName;
-        simpleClassName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".") + 1);
+        super(fullyQualifiedClassName);
     }
 
-    public TypeParameter withInternalParameters(TypeParameter... internalParameters)
+    public TypeParameter withBaseTypeAnnotations(String... annotations)
     {
-        addAll(this.internalParameters, internalParameters);
+        return withBaseTypeAnnotations(asList(annotations));
+    }
+
+    public TypeParameter withBaseTypeAnnotations(Collection<String> annotations)
+    {
+        for (String a : annotations)
+        {
+            this.baseTypeAnnotations.add(new TypeAnnotation(a));
+        }
         return this;
     }
 
@@ -72,50 +78,20 @@ public class TypeParameter
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((fullyQualifiedClassName == null) ? 0 : fullyQualifiedClassName.hashCode());
-        result = prime * result + ((internalParameters == null) ? 0 : internalParameters.hashCode());
+        result = prime * result + super.hashCode();
         result = prime * result + ((wildcardExpression == null) ? 0 : wildcardExpression.hashCode());
+        result = prime * result + ((baseTypeAnnotations == null) ? 0 : baseTypeAnnotations.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        if(this == obj)
-        {
-            return true;
-        }
-        if(obj == null)
-        {
-            return false;
-        }
-        if(! (obj instanceof TypeParameter))
+        if(! super.equals(obj))
         {
             return false;
         }
         TypeParameter other = (TypeParameter) obj;
-        if(fullyQualifiedClassName == null)
-        {
-            if(other.fullyQualifiedClassName != null)
-            {
-                return false;
-            }
-        }
-        else if(! fullyQualifiedClassName.equals(other.fullyQualifiedClassName))
-        {
-            return false;
-        }
-        if(internalParameters == null)
-        {
-            if(other.internalParameters != null)
-            {
-                return false;
-            }
-        }
-        else if(! internalParameters.equals(other.internalParameters))
-        {
-            return false;
-        }
         if(wildcardExpression == null)
         {
             if(other.wildcardExpression != null)
@@ -124,6 +100,17 @@ public class TypeParameter
             }
         }
         else if(! wildcardExpression.equals(other.wildcardExpression))
+        {
+            return false;
+        }
+        if(baseTypeAnnotations == null)
+        {
+            if(other.baseTypeAnnotations != null)
+            {
+                return false;
+            }
+        }
+        else if(! baseTypeAnnotations.equals(other.baseTypeAnnotations))
         {
             return false;
         }
@@ -143,6 +130,6 @@ public class TypeParameter
     @Override
     public String toString()
     {
-        return String.format("TypeParameter[wildcardExpression=\"%s\", className=%s, internalParams=%s]", wildcardExpression, fullyQualifiedClassName, internalParameters);
+        return String.format("TypeParameter[\nwildcardExpression=\"%s\", \nclassName=%s, \nannotations=%s, \nbaseTypeAnnotations=%s, \ntypeParams=%s]", wildcardExpression, fullyQualifiedClassName, annotations, baseTypeAnnotations, typeParameters);
     }
 }

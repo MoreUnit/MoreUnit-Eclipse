@@ -1,18 +1,15 @@
 package org.moreunit.mock.model;
 
-import static org.moreunit.core.util.Preconditions.checkArgument;
-import static org.moreunit.core.util.Preconditions.checkNotNull;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dependency implements Comparable<Dependency>
+import static org.moreunit.core.util.Preconditions.checkArgument;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
+
+public class Dependency extends TypeUse<Dependency> implements Comparable<Dependency>
 {
-    public final String fullyQualifiedClassName;
-    public final String simpleClassName;
     public final String name;
-    public final List<TypeParameter> typeParameters;
 
     public Dependency(String fullyQualifiedClassName, String name)
     {
@@ -21,13 +18,11 @@ public class Dependency implements Comparable<Dependency>
 
     public Dependency(String fullyQualifiedClassName, String name, List<TypeParameter> typeParameters)
     {
-        this.fullyQualifiedClassName = checkNotNull(fullyQualifiedClassName);
+        super(fullyQualifiedClassName);
         checkArgument(fullyQualifiedClassName.length() > 0);
         this.name = checkNotNull(name);
         checkArgument(name.length() > 0);
-        this.typeParameters = checkNotNull(typeParameters);
-
-        simpleClassName = fullyQualifiedClassName.substring(fullyQualifiedClassName.lastIndexOf(".") + 1);
+        withTypeParameters(checkNotNull(typeParameters));
     }
 
     @Override
