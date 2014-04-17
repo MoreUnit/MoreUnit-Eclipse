@@ -79,29 +79,40 @@ function update_local_repository {
   restore_work_in_progress
 }
 
-# $1 = version, $2 (optional) = -SNAPSHOT, $3 (optional) = .qualifier
+# $1: NEW_VERSION, $2 (optional, constant): "SNAPSHOT"
 function set_version {
-  CATEGORY_FILE=../org.moreunit.updatesite/category.xml
-  MOCK_FEATURE_FILE=../org.moreunit.mock.feature/feature.xml
-
-  mvn org.eclipse.tycho:tycho-versions-plugin:set-version $mvnopts -DnewVersion=$1$2
-  if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1$2. Release aborted."
+  local NEW_VERSION="$1"
+  local SNAPSHOT=""
+  local QUALIFIER=""
+  if [ "$2" == "SNAPSHOT" ]; then
+    SNAPSHOT="-SNAPSHOT"
+    QUALIFIER=".qualifier"
   fi
 
-  sed -i .bak "s/_[0-9\\.]\{1,\}\(.qualifier\)\{0,1\}.jar/_${1}${3}.jar/g" "$CATEGORY_FILE"
+  local CATEGORY_FILE=../org.moreunit.updatesite/category.xml
+  local MOCK_FEATURE_FILE=../org.moreunit.mock.feature/feature.xml
+
+  mvn org.eclipse.tycho:tycho-versions-plugin:set-version $mvnopts -DnewVersion=${NEW_VERSION}${SNAPSHOT}
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1$3. Release aborted."
+    failure "Unable to set version to ${NEW_VERSION}${SNAPSHOT}. Release aborted."
   fi
 
-  sed -i .bak "s/\" version=\"[^\"]\{1,\}\"/\" version=\"${1}${3}\"/g" "$CATEGORY_FILE"
+  sed -i .bak "s/_[0-9\\.]\{1,\}\(.qualifier\)\{0,1\}.jar/_${NEW_VERSION}${QUALIFIER}.jar/g" "$CATEGORY_FILE"
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1$3. Release aborted."
+    failure "Unable to set version to ${NEW_VERSION}${QUALIFIER}. Release aborted."
   fi
 
-  sed -i .bak "s/import feature=\"org.moreunit\" version=\"[^\"]\{1,\}\"/import feature=\"org.moreunit\" version=\"${1}${3}\"/g" "$MOCK_FEATURE_FILE"
+  sed -i .bak "s/\" version=\"[^\"]\{1,\}\"/\" version=\"${NEW_VERSION}${QUALIFIER}\"/g" "$CATEGORY_FILE"
   if [ $? -ne 0 ]; then
-    failure "Unable to set version to $1$3. Release aborted."
+    failure "Unable to set version to ${NEW_VERSION}${QUALIFIER}. Release aborted."
+  fi
+
+  # .qualifier versions are not supported when importing features, so let's just ignore it
+  if [ -z "$SNAPSHOT" ]; then
+    sed -i .bak "s/import feature=\"org.moreunit\" version=\"[^\"]\{1,\}\"/import feature=\"org.moreunit\" version=\"${NEW_VERSION}\"/g" "$MOCK_FEATURE_FILE"
+    if [ $? -ne 0 ]; then
+      failure "Unable to set version to ${NEW_VERSION}. Release aborted."
+    fi
   fi
 
   rm -f "$CATEGORY_FILE.bak"
@@ -176,7 +187,7 @@ notify_user "Release successful!"
 zip_file_reminder
 
 notify_user "Preparing code for development on version $nextVersion..."
-set_version $nextVersion '-SNAPSHOT' '.qualifier'
+set_version $nextVersion 'SNAPSHOT'
 
 cd "$RELEASE_REPO_DIR"
 
