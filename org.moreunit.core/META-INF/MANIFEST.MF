@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Plug-in Core
 Bundle-SymbolicName: org.moreunit.core;singleton:=true
-Bundle-Version: 3.0.4.qualifier
+Bundle-Version: 3.0.3
 Bundle-Activator: org.moreunit.core.MoreUnitCore
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.eclipse.core.expressions,
@@ -15,26 +15,18 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.ui.editors
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test,org.moreunit.mock",
- org.moreunit.core.commands;x-friends:="org.moreunit.core.test",
- org.moreunit.core.config;x-friends:="org.moreunit.core.test,org.moreunit.mock",
- org.moreunit.core.decorators;x-friends:="org.moreunit.core.test",
- org.moreunit.core.expressions;x-friends:="org.moreunit",
- org.moreunit.core.extension;x-friends:="org.moreunit.core.test",
- org.moreunit.core.extension.jump,
- org.moreunit.core.languages;x-friends:="org.moreunit.core.test",
- org.moreunit.core.log;
-  x-friends:="org.moreunit,
-   org.moreunit.mock,
-   org.moreunit.test,
-   org.moreunit.core.test",
- org.moreunit.core.matching;x-friends:="org.moreunit.core.test",
- org.moreunit.core.preferences;x-friends:="org.moreunit.core.test",
- org.moreunit.core.resources;x-friends:="org.moreunit.core.test",
- org.moreunit.core.ui;x-friends:="org.moreunit.core.test,org.moreunit.mock",
- org.moreunit.core.util;
-  x-friends:="org.moreunit,
-   org.moreunit.core.test,
-   org.moreunit.mock,
-   org.moreunit.extension,
-   org.moreunit.test"
+Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test,o
+ rg.moreunit.mock",org.moreunit.core.commands;x-friends:="org.moreunit
+ .core.test",org.moreunit.core.config;x-friends:="org.moreunit.core.te
+ st,org.moreunit.mock",org.moreunit.core.decorators;x-friends:="org.mo
+ reunit.core.test",org.moreunit.core.expressions;x-friends:="org.moreu
+ nit",org.moreunit.core.extension;x-friends:="org.moreunit.core.test",
+ org.moreunit.core.extension.jump,org.moreunit.core.languages;x-friend
+ s:="org.moreunit.core.test",org.moreunit.core.log; x-friends:="org.mo
+ reunit,  org.moreunit.mock,  org.moreunit.test,  org.moreunit.core.te
+ st",org.moreunit.core.matching;x-friends:="org.moreunit.core.test",or
+ g.moreunit.core.preferences;x-friends:="org.moreunit.core.test",org.m
+ oreunit.core.resources;x-friends:="org.moreunit.core.test",org.moreun
+ it.core.ui;x-friends:="org.moreunit.core.test,org.moreunit.mock",org.
+ moreunit.core.util; x-friends:="org.moreunit,  org.moreunit.core.test
+ ,  org.moreunit.mock,  org.moreunit.extension,  org.moreunit.test"
