@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="description" content="MoreUnit is an Eclipse plug-in that assists you in writing more unit tests" />
-		<meta name="author" content="Vera" />
+		<meta name="author" content="vera" />
 		<meta name="keywords" content="MoreUnit,unit testing,Eclipse,JUnit,TestNG,Mockito,EasyMock" />
 		<meta http-equiv="expires" content="Wed, 23 Mar 2011 12:00:00 GMT" />
 		<title>MoreUnit</title>
@@ -21,7 +21,8 @@
 				<ul id="doc-summary">
 					<li>MoreUnit Light
 						<ol>
-							<li><em>Documentation still to be written...</em></li>
+							<li><a href="#doc-coregeneral">General info</a></li>
+							<li><a href="#doc-coresettings">Preferences/properties for all languages</a></li>
 						</ol>
 					</li>
 					<li>MoreUnit For Java
@@ -97,6 +98,43 @@
 		</article>
 		<article id="doc">
 			<header>Documentation</header>
+			<section id="doc-coregeneral">
+				<h1>General information</h1>
+				<p>With version 3.0.X we have added basic support for all languages. That means you can configure basic settings which
+				get applied to all languages (described in the next section) and you can specifiy settings for any specific language
+				which is applied only to that language. Last but not least these settings can be done global (in the preferences) or
+				on a project base (properties). The UI looks the same for both.</p>
+			</section>
+			<section id="doc-coresettings">
+				<h1>Preferences/properties for all languages</h1>				
+				<p>In the preferences/properties navigate to MoreUnit &gt; User Languages and the following UI will show up:</p>
+				<figure><img src="img/coresettings.png" width="934" height="724" alt="Core Settings" /></figure>
+				<h2>Rule for locating test files</h2>
+				<p>The <em>source path</em> is the place where your project sources are saved. A simple is example is that you save
+				your sources in a folder called <pre>src</pre>within your project then the source path should look like:
+				<pre>${srcProject}/src</pre>The configuration for corresponding test path is similar. E.g. if your save your
+				tests in a folder called <pre>tests</pre> the property should be set to <pre>${srcProject}/tests</pre></p>
+				<h2>Rule for naming test files</h2>
+				<p>In this section you can specify how you name your tests. E.g. if you suffix your tests with <em>Test</em> the pattern 
+				should look like <pre>${srcFile}Test</pre>
+				A more complex example for a common pattern is <pre>${srcFile}*(Test/DbTest)</pre> That means your tests can be suffixed
+				with <em>Test</em> or <em>DbTest</em> and the star is a wildcard (Examples for valid test names for <em>MyFile.java</em> are:
+				<em>MyFileSimpleTest.java</em>, <em>MyFileComplexDbTest.java</em>).</p>
+				<p>If you use a word separator like _ (e.g. foo_bar) this can be configured here as well to help MoreUnit finding your
+				tests. If you use camel case (e.g. FirstSecondThirdWord) nothing needs to be configured here.</p>
+				<p>To get some help with the configuration take a look at the demonstration area where you can test your pattern.
+				If you click on the link <em>Test</em> examples of your pattern will show up in the yellow fields.</p>  
+				<h2>Per language configurations...</h2>
+				<p>If you work with different languages it could be necessary to configure settings for each language.</p>
+				<p>To create a new preference page enter a language name (e.g. Ruby) which will be used to label the new preference page
+				and a extension (e.g. rb). If your click the <em>Create Configuration</em>-Button a new preference page will show up on
+				the left and can be configured now.</p>
+				<p>To delete a language specific configuration you created take a look at the preference page for this language. There
+				is a button labelled <em>Delete Configuration</em> at the beginning of the preference page:</p>
+				<figure><img src="img/deletecoresetting.png" width="561" height="453" alt="Delete core setting" /></figure>
+				<p>To configure settings for Java you should not use the basic version of MoreUnit. We offer a MoreUnit for Java
+				plugin with great features which are far beyond the basic support.</p>
+			</section>
 			<section id="doc-gettingstarted">
 				<h1>Getting started</h1>
 				<h2>Step 1: Install MoreUnit</h2>
