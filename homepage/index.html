@@ -146,8 +146,9 @@
 				<pre>http://moreunit.sourceforge.net/update-site/</pre>
 				<p>You can now select the plugin(s) you want to install from MoreUnit update site and proceed.</p>
 				<h3>Option C: Download the archive</h3>
-				<p>Download the <a href="http://sourceforge.net/projects/moreunit/files/latest/download" target="blank">latest archive</a>, then unzip	it and
-				place the resulting &quot;features&quot; and &quot;plugins&quot; folders into the &quot;dropins&quot; directory of your Eclipse installation.</p>
+				<p>Download the <a href="http://sourceforge.net/projects/moreunit/files/latest/download" target="blank">latest archive</a>. 
+				After that open <em>Help &gt; Install New Software</em>. On the upcoming dialog click on the <em>Add</em>-Button. In the
+				<em>Add repository</em> screen choose your downloaded archive.</p>
 				<p>(If this link doesn't work, please go to <a href="http://sourceforge.net/projects/moreunit">http://sourceforge.net/projects/moreunit</a>.)</p>
 	
 				<h2>Step 2: Activate Decoration of classes</h2>
@@ -196,8 +197,8 @@
 				<img src="img/markerEditor.png" width="348" height="272" alt="Markers in Java editor">
 				
 				<p>If you want MoreUnit markers to appear in the overview ruler or if you want to disable markers in the editor this can be done via the annotation
-				preferences of Eclipse:</p>
-				<img src="img/annotations.png" width="799" height="442" alt="Annotation preferences">
+				preferences of Eclipse (to highlight ignored tests there is a yellow marker which can be configured separately):</p>
+				<img src="img/annotations.png" width="756" height="563" alt="Annotation preferences">
 			</section>
 			<section id="doc-classtestswitching">
 				<h1>Switching between test and class under test</h1>
@@ -205,11 +206,11 @@
 				<p>You can jump from java classes which are open in the editor to the corresponding test cases via the contextual menu of the editor or via the
 				shortcut <em>Ctrl-J</em>. MoreUnit identifies the name of the class under the cursor. To find the corresponding test case the prefixes and suffixes
 				from the preferences are used. If exactly one test case is found the file gets opened. If more than one test case is found a dialog is shown and
-				prompts you to choose which test case you want to work on:</p>
+				prompts you to choose which test case you want to work on (alternatively a new test case can be created from the dialog):</p>
 				<figure><img src="img/dialog.png" width="151" height="103" alt="Test selection wizard" /></figure>
 	
 				<p>If no test case is found the test case wizard is shown, initialized with the settings from the preference page:</p>
-				<figure><img src="img/wizard.png" width="566" height="498" alt="Test creation wizard" /></figure>
+				<figure><img src="img/wizard.png" width="546" height="660" alt="Test creation wizard" /></figure>
 	
 				<p>MoreUnit also tries to identify the test method(s) corresponding to the method under the cursor and directly jumps to it if only one is found.
 				<br />Example: For a method named "addTree" tests named "testAddTree" or "testAddTreeSUFFIX" will be detected as test method.</p>
