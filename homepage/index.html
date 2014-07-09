@@ -19,6 +19,11 @@
 			<li><a href="#overview">Home</a></li>
 			<li><a href="#doc">Documentation</a>
 				<ul id="doc-summary">
+					<li>Getting started
+						<ol>
+							<li><a href="#doc-install">MoreUnit Install</a></li>
+						</ol>
+					</li>
 					<li>MoreUnit Light
 						<ol>
 							<li><a href="#doc-coregeneral">General info</a></li>
@@ -27,7 +32,8 @@
 					</li>
 					<li>MoreUnit For Java
 						<ol>
-							<li><a href="#doc-gettingstarted">Getting started</a></li>
+							<li><a href="#doc-javafirstconf">First configuration</a></li>
+							<li><a href="#doc-groovysupport">Groovy support</a></li>
 							<li><a href="#doc-labeldecoration">Label decoration</a></li>
 							<li><a href="#doc-editormarker">Marker in the editor</a></li>
 							<li><a href="#doc-classtestswitching">Switching between test and class under test</a></li>
@@ -69,7 +75,7 @@
 				<p>Moreover:</p>
 				<ul>
 					<li>MoreUnit <span class="featured">decorates files</span> which have a test case.<em class="lang all"></em></li>
-					<li>In the editor, it <span class="featured">marks methods</span>  which are under test.<em class="lang java"></em><em class="lang groovy"></em></li>
+					<li>In the editor, it <span class="featured">marks methods</span> which are under test.<em class="lang java"></em><em class="lang groovy"></em></li>
 					<li>Rename classes/methods and MoreUnit will <span class="featured">rename</span> the corresponding test code too.<em class="lang java"></em><em class="lang groovy"></em></li>
 					<li>Move classes and MoreUnit will <span class="featured">move</span> the corresponding test cases.<em class="lang java"></em><em class="lang groovy"></em></li>
 					<li>With the Mock plugin: select the dependencies of a class that you want to <span class="featured">mock with your favorite library</span>, and MoreUnit will generate the boiler-plate code in your test class.<em class="lang java"></em></li>
@@ -98,6 +104,24 @@
 		</article>
 		<article id="doc">
 			<header>Documentation</header>
+			<section id="doc-install">
+				<h1>MoreUnit Install</h1>
+				<h2>Which version should I install?</h2>
+				<p>If you code in Java or Groovy, you definitely should install <em>MoreUnit For Java</em>, as it brings many code edition and
+				refactoring features. Otherwise <em>MoreUnit Light</em> will still help you a lot!</p>
+				<h2>Option A: Use Eclipse Marketplace</h2>
+				<p>If you have Eclipse Marketplace installed, open it from Eclipse's Help menu. Then search for MoreUnit, and click on the &quot;Install&quot;
+				button displayed on the result. It will add MoreUnit update site to your settings and install the plugin altogether.</p>
+				<h2>Option B: Add MoreUnit's update site manually</h2>
+				<p>Go to <em>Help &gt; Install New Software...</em>. Click on <em>Add...</em>, then enter the following URL and validate:</p>
+				<pre>http://moreunit.sourceforge.net/update-site/</pre>
+				<p>You can now select the plugin(s) you want to install from MoreUnit update site and proceed.</p>
+				<h2>Option C: Download the archive</h2>
+				<p>Download the <a href="http://sourceforge.net/projects/moreunit/files/latest/download" target="blank">latest archive</a>.
+				After that open <em>Help &gt; Install New Software</em>. On the upcoming dialog click on the <em>Add</em>-Button. In the
+				<em>Add repository</em> screen choose your downloaded archive.</p>
+				<p>(If this link doesn't work, please go to <a href="http://sourceforge.net/projects/moreunit">http://sourceforge.net/projects/moreunit</a>.)</p>
+			</section>
 			<section id="doc-coregeneral">
 				<h1>General information</h1>
 				<p>With version 3.0.X we have added basic support for all languages. That means you can configure basic settings which
@@ -106,55 +130,45 @@
 				on a project base (properties). The UI looks the same for both.</p>
 			</section>
 			<section id="doc-coresettings">
-				<h1>Preferences/properties for all languages</h1>				
+				<h1>Preferences/properties for all languages</h1>
 				<p>In the preferences/properties navigate to MoreUnit &gt; User Languages and the following UI will show up:</p>
-				<figure><img src="img/coresettings.png" width="934" height="724" alt="Core Settings" /></figure>
+				<figure><img src="img/coresettings.png" width="850" height="659" alt="Core Settings" /></figure>
 				<h2>Rule for locating test files</h2>
-				<p>The <em>source path</em> is the place where your project sources are saved. A simple is example is that you save
-				your sources in a folder called <pre>src</pre>within your project then the source path should look like:
-				<pre>${srcProject}/src</pre>The configuration for corresponding test path is similar. E.g. if your save your
-				tests in a folder called <pre>tests</pre> the property should be set to <pre>${srcProject}/tests</pre></p>
+				<p>The <em>source path</em> is the place where your project sources are saved. A simple example is that if you save
+				your sources in a folder called <tt>src</tt> within your project then the source path should look like:
+				<tt>${srcProject}/src</tt>.</p>
+				<p>The configuration for corresponding test path is similar. E.g. if your save your tests in a folder called
+				<tt>tests</tt>, the property should be set to <tt>${srcProject}/tests</tt>.</p>
 				<h2>Rule for naming test files</h2>
-				<p>In this section you can specify how you name your tests. E.g. if you suffix your tests with <em>Test</em> the pattern 
-				should look like <pre>${srcFile}Test</pre>
-				A more complex example for a common pattern is <pre>${srcFile}*(Test/DbTest)</pre> That means your tests can be suffixed
-				with <em>Test</em> or <em>DbTest</em> and the star is a wildcard (Examples for valid test names for <em>MyFile.java</em> are:
-				<em>MyFileSimpleTest.java</em>, <em>MyFileComplexDbTest.java</em>).</p>
+				<p>In this section you can specify how you name your tests. E.g. if you suffix your tests with <em>Test</em>, the pattern
+				should look like <tt>${srcFile}Test</tt>.
+				A more complex example for a common pattern is <tt>${srcFile}*(Test/DbTest)</tt>. That means your tests can be suffixed
+				with <em>Test</em> or <em>DbTest</em>, and the star is a wildcard. (Examples for valid test names for
+				<em>MyFile.java</em> are: <em>MyFileSimpleTest.java</em>, <em>MyFileComplexDbTest.java</em>).</p>
 				<p>If you use a word separator like _ (e.g. foo_bar) this can be configured here as well to help MoreUnit finding your
 				tests. If you use camel case (e.g. FirstSecondThirdWord) nothing needs to be configured here.</p>
 				<p>To get some help with the configuration take a look at the demonstration area where you can test your pattern.
-				If you click on the link <em>Test</em> examples of your pattern will show up in the yellow fields.</p>  
+				If you click on the link <em>Test</em>, examples of your pattern will show up in the yellow fields.</p>
 				<h2>Per language configurations...</h2>
 				<p>If you work with different languages it could be necessary to configure settings for each language.</p>
-				<p>To create a new preference page enter a language name (e.g. Ruby) which will be used to label the new preference page
-				and a extension (e.g. rb). If your click the <em>Create Configuration</em>-Button a new preference page will show up on
-				the left and can be configured now.</p>
-				<p>To delete a language specific configuration you created take a look at the preference page for this language. There
+				<p>To create a new preference page enter a language name (e.g. Ruby) which will be used to label the new preference page,
+				and a file extension (e.g. rb). If you click the <em>Create Configuration</em> button, a new preference page will show up on
+				the left, ready to be configured.</p>
+				<p>To delete a language specific configuration you created, take a look at the preference page for this language. There
 				is a button labelled <em>Delete Configuration</em> at the beginning of the preference page:</p>
 				<figure><img src="img/deletecoresetting.png" width="561" height="453" alt="Delete core setting" /></figure>
-				<p>To configure settings for Java you should not use the basic version of MoreUnit. We offer a MoreUnit for Java
+				<p>To configure settings for Java or Groovy, you should not use the basic version of MoreUnit. We offer a <em>MoreUnit for Java</em>
 				plugin with great features which are far beyond the basic support.</p>
 			</section>
-			<section id="doc-gettingstarted">
-				<h1>Getting started</h1>
+			<section id="doc-javafirstconf">
+				<h1>First configuration</h1>
 				<h2>Step 1: Install MoreUnit</h2>
-				<h3>Option A: Use Eclipse Marketplace</h3>
-				<p>If you have Eclipse Marketplace installed, open it from Eclipse's Help menu. Then search for MoreUnit, and click on the &quot;Install&quot;
-				button displayed on the result. It will add MoreUnit update site to your settings and install the plugin altogether.</p>
-				<h3>Option B: Add MoreUnit's update site manually</h3>
-				<p>Go to <em>Help &gt; Install New Software...</em>. Click on <em>Add...</em>, then enter the following URL and validate:</p>
-				<pre>http://moreunit.sourceforge.net/update-site/</pre>
-				<p>You can now select the plugin(s) you want to install from MoreUnit update site and proceed.</p>
-				<h3>Option C: Download the archive</h3>
-				<p>Download the <a href="http://sourceforge.net/projects/moreunit/files/latest/download" target="blank">latest archive</a>. 
-				After that open <em>Help &gt; Install New Software</em>. On the upcoming dialog click on the <em>Add</em>-Button. In the
-				<em>Add repository</em> screen choose your downloaded archive.</p>
-				<p>(If this link doesn't work, please go to <a href="http://sourceforge.net/projects/moreunit">http://sourceforge.net/projects/moreunit</a>.)</p>
-	
+				<p>Please refer to the <a href="#doc-install">dedicated section</a>.</p>
+
 				<h2>Step 2: Activate Decoration of classes</h2>
 				<p>Choose <em>Eclipse|Window &gt; Preferences... &gt; General &gt; Appearance &gt; Label Decorations</em> and activate <em>Decorate Classes with
 				Test Case</em>.</p> 
-	
+
 				<h2>Step 3: Enter your preferences</h2>
 				<h3>a) General preferences</h3>
 				<p>Before you can start you have to configure some preferences.</p>
@@ -176,6 +190,12 @@
 				tests from both place with <em>Ctrl-R</em>.</p>
 				
 				<div class="js-additional-doc-nav hidden"><p>You can also read the <a href="#">other documention pages</a>.</p></div>
+			</section>
+			<section id="doc-groovysupport">
+				<h1>Groovy support</h1>
+				<p>All features of MoreUnit for Java will work with Groovy too! Even the test case creation wizard will be a groovy one.
+				Unfortunately, we never took the time to extract it as full plugin with its own properties, so be aware that your Java
+				settings will be used!</p>
 			</section>
 			<section id="doc-labeldecoration">
 				<h1>Label decoration</h1>

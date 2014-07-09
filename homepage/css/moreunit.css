@@ -201,11 +201,19 @@ section h2 {
 section h3 {
 	margin: 10px 0 5px 0;
 	font-size: 1.1em;
-	font-style: italic;
+	font-style: oblique;
 }
 
 em {
-	font-style: italic;
+	font-style: oblique;
+}
+
+tt {
+  background-color: #eee;
+  color: black;
+  padding: 1px 2px;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
 p {
