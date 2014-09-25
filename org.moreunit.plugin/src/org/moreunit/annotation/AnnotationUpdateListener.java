@@ -1,5 +1,6 @@
 package org.moreunit.annotation;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -56,7 +57,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
             MoreUnitAnnotationModel.attach((ITextEditor) part);
         }
     }
-    
+
     public void dispose()
     {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
@@ -70,9 +71,17 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
             if(PluginTools.isJavaFile(openEditorPart))
             {
                 EditorPartFacade editorPartFacade = new EditorPartFacade(openEditorPart);
-                IResourceDelta member = event.getDelta().findMember(editorPartFacade.getFile().getFullPath());
-                if(member != null)
-                    MoreUnitAnnotationModel.updateAnnotations((ITextEditor) openEditorPart);
+                IFile file = editorPartFacade.getFile();
+                if(file != null)
+                {
+                    IResourceDelta delta = event.getDelta();
+                    if(delta != null)
+                    {
+                        IResourceDelta member = delta.findMember(file.getFullPath());
+                        if(member != null)
+                            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) openEditorPart);
+                    }
+                }
             }
         }
     }
