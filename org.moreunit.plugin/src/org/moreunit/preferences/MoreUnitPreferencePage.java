@@ -106,6 +106,17 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
         testSourceFolderField.setLayoutData(LayoutData.labelledField());
         testSourceFolderField.setText(Preferences.getInstance().getJunitDirectoryFromPreferences(null));
         testSourceFolderField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
+        testSourceFolderField.addModifyListener(new ModifyListener()
+        {
+            @Override
+            public void modifyText(ModifyEvent e)
+            {
+                if(testSourceFolderField.getText().endsWith("/"))
+                    setErrorMessage("Test source folder should not end with a slash");
+                else
+                    setErrorMessage(null);
+            }
+        });
     }
 
     public void init(IWorkbench workbench)
