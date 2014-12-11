@@ -6,6 +6,27 @@
         id="org.moreunit.mock.jmockitDefault"
         category="org.moreunit.mock.jmockit"
         name="Default">
+        <code-template id="jmockitRunnerDeclaration" part="test-class-annotation">
+            <include-if condition="test-type" value="junit4"/>
+            <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(mockit.integration.junit4.JMockit)}.class)]]></pattern>
+        </code-template>
+        <code-template id="dependencyDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                @${injectableAnnotation:newType(mockit.Injectable)} private ${dependencyType} ${dependency};
+            ]]></pattern>
+        </code-template>
+        <code-template id="objectUnderTestDeclaration" part="test-class-fields">
+            <pattern><![CDATA[
+            
+                @${mockAnnotation:newType(mockit.Tested)} private ${objectUnderTestType} ${objectUnderTest};
+            ]]></pattern>
+        </code-template>
+    </mocking-template>
+    <mocking-template
+        id="org.moreunit.mock.jmockitWithoutJunitRunWith"
+        category="org.moreunit.mock.jmockit"
+        name="Without JUnit's @RunWith">
         <code-template id="dependencyDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             

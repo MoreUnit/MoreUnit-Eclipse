@@ -2,10 +2,13 @@ package te.st;
 
 import mockit.Injectable;
 import mockit.Tested;
+import mockit.integration.junit4.JMockit;
+import org.junit.runner.RunWith;
 import te.st.SomeConcept.Comparator;
 import te.st.SomeConcept.List;
 import te.st.SomeConcept.Thing;
 
+@RunWith(JMockit.class)
 public class SomeConceptTest {
 
 	@Injectable
