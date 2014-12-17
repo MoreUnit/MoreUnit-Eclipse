@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns="http://moreunit.org/mock/mocking-templates"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://moreunit.org/mock/mocking-templates"
+    elementFormDefault="qualified"
+    version="1.0">
+
+    <!-- root element -->
+    <xs:element name="mocking-templates">
+        <xs:annotation>
+            <xs:documentation>
+                A set of named templates, each providing a specific use case of a mock object library.
+
+                Additionally, categories may be defined to organize those templates. Categories and
+                templates need not be in the same file. Templates may be contributed to categories
+                already provided by MoreUnit, but care should be taken to assign those templates an
+                ID that will stay unique in all circumstances.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="category" minOccurs="0" maxOccurs="unbounded" type="Category">
+                    <xs:annotation>
+                        <xs:documentation>
+                            A category to organize templates. Examples: EasyMock, JMock, Mockito.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="mocking-template" maxOccurs="unbounded" type="MockingTemplate">
+                    <xs:annotation>
+                        <xs:documentation>
+                            A template providing a specific use case of a mock object library. This
+                            template may be split into several parts (`codeTemplate`s), for instance
+                            to define code to be placed in the test case body vs a set-up method, or
+                            to conditionally include/exclude code depending on the test framework in
+                            use, etc.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" use="required" type="NonEmptyString">
+                <xs:annotation>
+                    <xs:documentation>
+                        A version number for this file. Not used at the time of writing, but it should
+                        be incremented upon changes nonetheless.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Category">
+        <xs:attribute name="id" use="required" type="NonEmptyString">
+            <xs:annotation>
+                <xs:documentation>
+                    A non-empty string identifying this category. It is advised to use a fully-qualified
+                    reversed domain name as for Java classes.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" use="required" type="NonEmptyString">
+            <xs:annotation>
+                <xs:documentation>
+                    A human-friendly name to display in the user interface for this category.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="MockingTemplate">
+        <xs:sequence>
+            <xs:element name="code-template" minOccurs="1" maxOccurs="unbounded" type="CodeTemplate">
+                <xs:annotation>
+                    <xs:documentation>
+                        A part of the overall mock library use case.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="NonEmptyString">
+            <xs:annotation>
+                <xs:documentation>
+                    A non-empty string identifying this template/use case. It is advised to use a
+                    fully-qualified reversed domain name as for Java classes.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="category" use="required" type="NonEmptyString">
+            <xs:annotation>
+                <xs:documentation>
+                    The "id" of the category to which this template belongs.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" use="required" type="NonEmptyString">
+            <xs:annotation>
+                <xs:documentation>
+                    A human-friendly name to display in the user interface for this template.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="CodeTemplate">
+        <xs:sequence>
+            <xs:element name="exclude-if" minOccurs="0" type="InclusionCondition">
+                <xs:annotation>
+                    <xs:documentation>
+                        A condition preventing this code template from being included in the test class.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="include-if" minOccurs="0" type="InclusionCondition">
+                <xs:annotation>
+                    <xs:documentation>
+                        A condition to be met for this code template to be included in the test class.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="pattern" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        The code template itself, making use of Eclipse's code templating language.
+                        See [Eclipse documentation](
+                        http://help.eclipse.org/luna/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2Fconcepts%2Fconcept-template-variables.htm
+                        ) for more information about code templates.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="NonEmptyString">
+            <xs:annotation>
+                <xs:documentation>
+                    A non-empty string identifying this code template. It is advised to use a
+                    fully-qualified reversed domain name as for Java classes.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="part" use="required" type="Part">
+            <xs:annotation>
+                <xs:documentation>
+                    The part of the test class where this code snippet should be inserted.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="InclusionCondition">
+        <xs:attribute name="condition" use="required" type="ConditionType">
+            <xs:annotation>
+                <xs:documentation>
+                    The contextual property to be compared with the given `value` to determine
+                    whether the condition holds.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="value" use="required" type="ConditionValue">
+            <xs:annotation>
+                <xs:documentation>
+                    The value making `condition` true.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:simpleType name="NonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:pattern value=".*[^\s].*" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ConditionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="injection-type"/>
+            <xs:enumeration value="test-type"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ConditionValue">
+        <xs:restriction base="xs:string">
+            <!-- ConditionType: injection-type -->
+            <xs:enumeration value="constructor"/>
+            <xs:enumeration value="field"/>
+            <xs:enumeration value="setter"/>
+
+            <!-- ConditionType: test-type -->
+            <xs:enumeration value="junit3"/>
+            <xs:enumeration value="junit4"/>
+            <xs:enumeration value="testng"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Part">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="before-instance-method"/>
+            <xs:enumeration value="test-class-annotation"/>
+            <xs:enumeration value="test-class-fields"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -1,5 +1,8 @@
 package org.moreunit.mock.config;
 
+import java.net.URL;
+import java.util.Collection;
+
 import org.moreunit.core.config.Module;
 import org.moreunit.core.log.DefaultLogger;
 import org.moreunit.core.log.Logger;
@@ -74,7 +77,8 @@ public class MockModule extends Module<MockModule>
         mockingTemplateStore = new MockingTemplateStore();
         registerService(mockingTemplateStore);
 
-        templateLoader = new MockingTemplateLoader(getPluginResourceLoader(), getXmlTemplateDefinitionReader(), mockingTemplateStore, getLogger());
+        PluginResourceLoader resourceLoader = getPluginResourceLoader();
+        templateLoader = new MockingTemplateLoader(resourceLoader, getXmlTemplateDefinitionReader(resourceLoader), mockingTemplateStore, getLogger());
         registerService(templateLoader);
     }
 
@@ -158,8 +162,9 @@ public class MockModule extends Module<MockModule>
         return new WizardFactory(getPreferences(), getTemplateStyleSelector(), getLogger());
     }
 
-    private XmlTemplateDefinitionReader getXmlTemplateDefinitionReader()
+    private XmlTemplateDefinitionReader getXmlTemplateDefinitionReader(PluginResourceLoader resourceLoader)
     {
-        return new XmlTemplateDefinitionReader();
+        Collection<URL> xsds = resourceLoader.findBundleResources(MockingTemplateLoader.TEMPLATE_DIRECTORY, "mocking-templates.xsd");
+        return new XmlTemplateDefinitionReader(xsds.iterator().next());
     }
 }

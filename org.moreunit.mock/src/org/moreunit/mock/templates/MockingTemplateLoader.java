@@ -10,7 +10,7 @@ import org.moreunit.mock.model.MockingTemplates;
 
 public class MockingTemplateLoader implements Service
 {
-    static final String TEMPLATE_DIRECTORY = "/templates/";
+    public static final String TEMPLATE_DIRECTORY = "/templates/";
 
     private final PluginResourceLoader resourceLoader;
     private final XmlTemplateDefinitionReader templateReader;

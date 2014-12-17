@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<mocking-templates version="1.0">
+<mocking-templates version="1.0"
+    xmlns="http://moreunit.org/mock/mocking-templates"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://moreunit.org/mock/mocking-templates http://moreunit.sourceforge.net/schemas/mocking-templates.xsd
+    ">
     <category id="org.moreunit.mock.jmock2" name="jMock 2"/>
     <!-- TODO For JUnit 3: support changing test superclass (to use org.jmock.integration.junit3.MockObjectTestCase in our case) -->
     <mocking-template

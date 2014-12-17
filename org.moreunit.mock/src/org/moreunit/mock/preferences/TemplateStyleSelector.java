@@ -111,7 +111,7 @@ public class TemplateStyleSelector implements SelectionListener
             public void modifyText(ModifyEvent e)
             {
                 MockingTemplate newSelectedTemplate = determineSelectedTemplate();
-                if(! newSelectedTemplate.equals(selectedTemplate))
+                if(newSelectedTemplate != null && ! newSelectedTemplate.equals(selectedTemplate))
                 {
                     selectedTemplate = newSelectedTemplate;
                 }
