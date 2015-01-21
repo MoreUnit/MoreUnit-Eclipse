@@ -152,12 +152,14 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).select();
         saveAndCloseProps();
-        assertTrue(Preferences.getInstance().shouldUseTestMethodExtendedSearch(getJavaProjectFromContext()));
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
 
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).deselect();
         saveAndCloseProps();
-        assertFalse(Preferences.getInstance().shouldUseTestMethodExtendedSearch(getJavaProjectFromContext()));
+        assertFalse(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
     }
 
     protected void openPropertiesAndActivateOtherTab()

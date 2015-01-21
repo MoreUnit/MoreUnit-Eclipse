@@ -25,7 +25,8 @@ public final class DummyPreferencesForTesting extends Preferences
                                PreferenceConstants.TEST_PACKAGE_PREFIX, //
                                PreferenceConstants.TEST_SUPERCLASS, //
                                PreferenceConstants.TEST_METHOD_TYPE, //
-                               PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
+                               PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, //
+                               PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME))
         {
             workbenchStore.setToDefault(p);
         }

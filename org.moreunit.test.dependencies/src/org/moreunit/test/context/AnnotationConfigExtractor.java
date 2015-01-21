@@ -105,6 +105,7 @@ class AnnotationConfigExtractor
     {
         return new AnnotatedElement()
         {
+            @Override
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
                 return clazz.getAnnotation(annotationClass);
@@ -308,6 +309,7 @@ class AnnotationConfigExtractor
         PropertiesConfiguration propertiesConfig = new PropertiesConfiguration();
         propertiesConfig.setExtendedMethodSearch(properties.extendedMethodSearch());
         propertiesConfig.setMethodPrefix(properties.testMethodPrefix());
+        propertiesConfig.setMethodSearchByName(properties.methodSearchByName());
         propertiesConfig.setTestPackagePrefix(properties.testPackagePrefix());
         propertiesConfig.setTestPackageSuffix(properties.testPackageSuffix());
         propertiesConfig.setTestSuperClass(properties.testSuperClass());
@@ -351,6 +353,7 @@ class AnnotationConfigExtractor
         PreferencesConfiguration preferencesConfig = new PreferencesConfiguration();
         preferencesConfig.setExtendedMethodSearch(preferences.extendedMethodSearch());
         preferencesConfig.setMethodPrefix(preferences.testMethodPrefix());
+        preferencesConfig.setMethodSearchByName(preferences.methodSearchByName());
         preferencesConfig.setTestPackagePrefix(preferences.testPackagePrefix());
         preferencesConfig.setTestPackageSuffix(preferences.testPackageSuffix());
         preferencesConfig.setTestSourceFolder(preferences.testSrcFolder());

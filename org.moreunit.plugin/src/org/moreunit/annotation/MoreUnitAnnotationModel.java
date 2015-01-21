@@ -35,9 +35,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 
 /**
  * @author vera 01.02.2009 14:27:06
@@ -216,8 +216,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
-        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(type.getJavaProject());
-        MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
+        MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(type.getJavaProject());
 
         for (IMethod method : type.getMethods())
         {

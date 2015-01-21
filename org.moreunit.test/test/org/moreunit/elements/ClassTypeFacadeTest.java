@@ -11,12 +11,13 @@ import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingM
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.junit.Test;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
-import org.moreunit.elements.TypeFacade.MethodSearchMode;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Project;
@@ -132,7 +133,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    public void getOneCorrespondingMember_should_return_testmethod_when_exits() throws Exception
+    public void getOneCorrespondingMember_should_return_testmethod_by_name_when_it_exists() throws Exception
     {
         IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
         IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public void testGetNumberOne()").get();
@@ -142,6 +143,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(getNumberOneMethod) //
+                .methodSearchMode(MethodSearchMode.BY_NAME) //
                 .build();
         
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
@@ -160,7 +162,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(getNumberOneMethod) //
-                .extendedSearch(true) //
+                .methodSearchMode(MethodSearchMode.BY_CALL) //
                 .build();
         
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
@@ -169,7 +171,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    public void getOneCorrespondingMember_should_return_testmethod_when_testmethod_and_caller_exist() throws Exception
+    public void getOneCorrespondingMember_should_return_testmethod_by_call_when_testmethod_is_named_according_to_pattern_and_caller_exist() throws Exception
     {
         IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
         IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public void testGetNumberOne()", "new SomeClass().getNumberOne();").get();
@@ -179,7 +181,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(getNumberOneMethod) //
-                .extendedSearch(true) //
+                .methodSearchMode(MethodSearchMode.BY_CALL) //
                 .build();
         
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
@@ -205,12 +207,50 @@ public class ClassTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(overridingMethod) //
-                .extendedSearch(true) //
+                .methodSearchMode(MethodSearchMode.BY_CALL) //
                 .build();
         
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
 
         overridingMethodTestHandler.assertThat().isEqualTo(oneCorrespondingTestMember);
+    }
+
+    @Test
+    public void getOneCorrespondingMember_should_return_method_under_test_by_call_when_called_with_both_search_modes() throws CoreException
+    {
+        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
+        IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public void testGiveMe1()", "new SomeClass().getNumberOne();").get();
+
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+
+        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                .withCurrentMethod(getNumberOneMethod) //
+                .methodSearchMode(MethodSearchMode.BY_CALL_AND_BY_NAME) //
+                .build();
+
+        IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
+
+        assertThat(oneCorrespondingTestMember).isEqualTo(getNumberOneTestMethod);
+    }
+
+    @Test
+    public void getOneCorrespondingMember_should_return_method_under_test_with_naming_pattern_when_called_with_both_search_modes() throws CoreException
+    {
+        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
+        IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public void testGetNumberOne()").get();
+
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+
+        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                .withCurrentMethod(getNumberOneMethod) //
+                .methodSearchMode(MethodSearchMode.BY_CALL_AND_BY_NAME) //
+                .build();
+
+        IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
+
+        assertThat(oneCorrespondingTestMember).isEqualTo(getNumberOneTestMethod);
     }
 
     private TypeHandler cutHandler()

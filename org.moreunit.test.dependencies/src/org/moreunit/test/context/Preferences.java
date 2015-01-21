@@ -16,6 +16,8 @@ public @interface Preferences
 
     boolean extendedMethodSearch() default false;
 
+    boolean methodSearchByName() default true;
+
     boolean testMethodPrefix() default false;
 
     String testSrcFolder() default "";
@@ -27,6 +29,6 @@ public @interface Preferences
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
-    
+
     String testClassNameTemplate() default "";
 }

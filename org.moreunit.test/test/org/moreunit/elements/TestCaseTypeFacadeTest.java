@@ -8,6 +8,7 @@ package org.moreunit.elements;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
@@ -139,6 +141,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(getNumberOneTestMethod.get()) //
+                .methodSearchMode(MethodSearchMode.BY_NAME) //
                 .build();
         
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
@@ -147,9 +150,9 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    public void getOneCorrespondingMember_should_return_method_under_test_with_naming_pattern_when_calles_with_extended_search() throws CoreException
+    public void getOneCorrespondingMember_should_not_return_method_under_test_with_naming_pattern_when_called_with_extended_search() throws CoreException
     {
-        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
         MethodHandler getNumberOneTestMethod = testcaseTypeHandler.addMethod("public void testGetNumberOne()");
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
@@ -157,12 +160,12 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(getNumberOneTestMethod.get()) //
-                .extendedSearch(true) //
+                .methodSearchMode(MethodSearchMode.BY_CALL) //
                 .build();
         
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(getNumberOneMethod.get());
+        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(cutTypeHandler.get());
     }
 
     @Test
@@ -176,7 +179,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(giveMe1TestMethod.get()) //
-                .extendedSearch(true) //
+                .methodSearchMode(MethodSearchMode.BY_CALL) //
                 .build();
         
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
@@ -195,12 +198,50 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                 .withCurrentMethod(getNumberOneTestMethod.get()) //
-                .extendedSearch(true) //
+                .methodSearchMode(MethodSearchMode.BY_CALL) //
                 .build();
         
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
 
         assertEquals(getNumberOneMethod.get(), oneCorrespondingMemberUnderTest);
+    }
+
+    @Test
+    public void getOneCorrespondingMember_should_return_method_under_test_by_call_when_called_with_both_search_modes() throws CoreException
+    {
+        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler giveMe1TestMethod = testcaseTypeHandler.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
+
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
+
+        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                .withCurrentMethod(giveMe1TestMethod.get()) //
+                .methodSearchMode(MethodSearchMode.BY_CALL_AND_BY_NAME) //
+                .build();
+
+        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
+
+        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(getNumberOneMethod.get());
+    }
+
+    @Test
+    public void getOneCorrespondingMember_should_return_method_under_test_with_naming_pattern_when_called_with_both_search_modes() throws CoreException
+    {
+        MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
+        MethodHandler getNumberOneTestMethod = testcaseTypeHandler.addMethod("public void testGetNumberOne()");
+
+        TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
+
+        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                .withCurrentMethod(getNumberOneTestMethod.get()) //
+                .methodSearchMode(MethodSearchMode.BY_CALL_AND_BY_NAME) //
+                .build();
+
+        IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
+
+        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(getNumberOneMethod.get());
     }
 
     @Preferences(testClassNameTemplate="${srcFile}*Test", testSrcFolder="test")

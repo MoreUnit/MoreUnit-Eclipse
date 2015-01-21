@@ -73,6 +73,7 @@ public class Preferences
         store.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
         store.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
         store.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
+        store.setDefault(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, PreferenceConstants.DEFAULT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
         store.setDefault(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
         store.setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, PreferenceConstants.DEFAULT_TEST_METHOD_DEFAULT_CONTENT);
         return store;
@@ -225,6 +226,15 @@ public class Preferences
     public void setTestSuperClass(IJavaProject javaProject, String testSuperClass)
     {
         getProjectStore(javaProject).setValue(PreferenceConstants.TEST_SUPERCLASS, testSuperClass);
+    }
+
+    private boolean getBooleanValue(final String key, IJavaProject javaProject)
+    {
+        if(storeToRead(javaProject).contains(key))
+        {
+            return storeToRead(javaProject).getBoolean(key);
+        }
+        return storeToRead(javaProject).getDefaultBoolean(key);
     }
 
     private String getStringValue(final String key, IJavaProject javaProject)
@@ -454,18 +464,21 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.GENERATE_COMMENTS_FOR_TEST_METHOD, addComments);
     }
 
-    public boolean shouldUseTestMethodExtendedSearch(IJavaProject javaProject)
+    public MethodSearchMode getMethodSearchMode(IJavaProject javaProject)
     {
-        if(storeToRead(javaProject).contains(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH))
-        {
-            return storeToRead(javaProject).getBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
-        }
-        return storeToRead(javaProject).getDefaultBoolean(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH);
+        boolean searchByCall = getBooleanValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, javaProject);
+        boolean searchByName = ! searchByCall || getBooleanValue(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, javaProject);
+        return new MethodSearchMode(searchByCall, searchByName);
     }
 
     public void setShouldUseTestMethodExtendedSearch(IJavaProject javaProject, boolean shouldUseExtendedSearch)
     {
         getProjectStore(javaProject).setValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, shouldUseExtendedSearch);
+    }
+
+    public void setShouldUseTestMethodSearchByName(IJavaProject javaProject, boolean shouldUseTestMethodSearchByName)
+    {
+        getProjectStore(javaProject).setValue(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, shouldUseTestMethodSearchByName);
     }
 
     public static ProjectPreferences forProject(IJavaProject project)
@@ -481,6 +494,23 @@ public class Preferences
     public ProjectPreferences getWorkspaceView()
     {
         return new ProjectPreferences(this, null);
+    }
+
+    public static class MethodSearchMode
+    {
+        public static final MethodSearchMode BY_CALL = new MethodSearchMode(true, false);
+        public static final MethodSearchMode BY_NAME = new MethodSearchMode(false, true);
+        public static final MethodSearchMode BY_CALL_AND_BY_NAME = new MethodSearchMode(true, true);
+        public static final MethodSearchMode DEFAULT = BY_CALL;
+
+        public final boolean searchByCall;
+        public final boolean searchByName;
+
+        public MethodSearchMode(boolean byCall, boolean byName)
+        {
+            searchByCall = byCall;
+            searchByName = byName;
+        }
     }
 
     public static class ProjectPreferences
@@ -564,9 +594,9 @@ public class Preferences
             return prefs.hasProjectSpecificSettings(project);
         }
 
-        public boolean shouldUseTestMethodExtendedSearch()
+        public MethodSearchMode getMethodSearchMode()
         {
-            return prefs.shouldUseTestMethodExtendedSearch(project);
+            return prefs.getMethodSearchMode(project);
         }
 
         public TestClassNamePattern getTestClassNamePattern()

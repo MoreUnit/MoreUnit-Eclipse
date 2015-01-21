@@ -13,6 +13,8 @@ public @interface Properties
 
     boolean extendedMethodSearch() default false;
 
+    boolean methodSearchByName() default true;
+
     boolean testMethodPrefix() default false;
 
     TestType testType() default TestType.UNDEFINED;
@@ -22,6 +24,6 @@ public @interface Properties
     String testPackageSuffix() default "";
 
     String testSuperClass() default "";
-    
+
     String testClassNameTemplate() default "";
 }

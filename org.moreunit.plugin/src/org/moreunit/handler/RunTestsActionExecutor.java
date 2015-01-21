@@ -36,9 +36,9 @@ import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.MethodFacade;
 import org.moreunit.elements.TypeFacade;
-import org.moreunit.elements.TypeFacade.MethodSearchMode;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.util.FeatureDetector;
 
 /**
@@ -148,7 +148,7 @@ public class RunTestsActionExecutor
         else
         {
             IJavaProject javaProject = compilationUnit.getJavaProject();
-            boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(javaProject);
+            MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(javaProject);
             ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
 
             IMethod methodUnderTest = null;
@@ -159,8 +159,6 @@ public class RunTestsActionExecutor
 
             if(featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
             {
-                MethodSearchMode searchMode = extendedSearch ? MethodSearchMode.BY_CALL : MethodSearchMode.BY_NAME;
-
                 testElements.addAll(typeFacade.getCorrespondingTestMethods(methodUnderTest, searchMode));
             }
             else
@@ -168,7 +166,7 @@ public class RunTestsActionExecutor
                 CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                         .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                         .withCurrentMethod(methodUnderTest) //
-                        .extendedSearch(extendedSearch) //
+                        .methodSearchMode(searchMode) //
                         .createClassIfNoResult("Run test...") //
                         .build();
 

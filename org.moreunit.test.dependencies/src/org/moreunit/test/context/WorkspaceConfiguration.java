@@ -149,6 +149,7 @@ class WorkspaceConfiguration
     private void applyBasePreferences(DummyPreferencesForTesting prefs, IJavaProject project, PreferencesBaseConfiguration prefBaseConfig)
     {
         prefs.setShouldUseTestMethodExtendedSearch(project, prefBaseConfig.isExtendedMethodSearch());
+        prefs.setShouldUseTestMethodSearchByName(project, prefBaseConfig.isMethodSearchByName());
         prefs.setTestMethodTypeShouldUsePrefix(project, prefBaseConfig.isTestMethodPrefix());
         prefs.setTestSuperClass(project, prefBaseConfig.getTestSuperClass());
         prefs.setTestPackagePrefix(project, prefBaseConfig.getTestPackagePrefix());

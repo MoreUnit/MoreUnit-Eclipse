@@ -3,6 +3,7 @@ package org.moreunit.properties;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -39,6 +40,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Text superClassTextField;
     private Button addCommentsToTestMethodCheckbox;
     private Button extendedSearchCheckbox;
+    private Button enableSearchByNameCheckbox;
 
     private GridData layoutForOneLineControls;
 
@@ -96,7 +98,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         createMethodContentTextField(parentWith2Cols);
         createPackagePrefixSuffixTextFields(parentWith2Cols);
         createSuperClassTextField(parentWith2Cols);
-        createExtendedSearchCheckbox(parentWith2Cols);
+        createExtendedSearchCheckboxes(parentWith2Cols);
         createAddCommentsToTestMethodsCheckbox(parentWith2Cols);
 
         checkStateOfMethodPrefixButton();
@@ -226,13 +228,41 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         superClassTextField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SUPERCLASS);
     }
 
-    private void createExtendedSearchCheckbox(Composite parent)
+    private void createExtendedSearchCheckboxes(Composite parent)
     {
         extendedSearchCheckbox = new Button(parent, SWT.CHECK);
         extendedSearchCheckbox.setText(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH);
         extendedSearchCheckbox.setToolTipText(PreferenceConstants.TOOLTIP_EXTENDED_TEST_METHOD_SEARCH);
         extendedSearchCheckbox.setLayoutData(layoutForOneLineControls);
-        extendedSearchCheckbox.setSelection(preferences.shouldUseTestMethodExtendedSearch(javaProject));
+        extendedSearchCheckbox.setSelection(preferences.getMethodSearchMode(javaProject).searchByCall);
+        extendedSearchCheckbox.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                if(! extendedSearchCheckbox.getSelection())
+                {
+                    enableSearchByNameCheckbox.setSelection(true);
+                }
+            }
+        });
+
+        enableSearchByNameCheckbox = new Button(parent, SWT.CHECK);
+        enableSearchByNameCheckbox.setText(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
+        enableSearchByNameCheckbox.setToolTipText(PreferenceConstants.TOOLTIP_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
+        enableSearchByNameCheckbox.setLayoutData(layoutForOneLineControls);
+        enableSearchByNameCheckbox.setSelection(preferences.getMethodSearchMode(javaProject).searchByName);
+        enableSearchByNameCheckbox.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                if(! enableSearchByNameCheckbox.getSelection())
+                {
+                    extendedSearchCheckbox.setSelection(true);
+                }
+            }
+        });
     }
 
     private void createAddCommentsToTestMethodsCheckbox(Composite parent)
@@ -266,6 +296,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         preferences.setTestSuperClass(javaProject, superClassTextField.getText());
 
         preferences.setShouldUseTestMethodExtendedSearch(javaProject, extendedSearchCheckbox.getSelection());
+        preferences.setShouldUseTestMethodSearchByName(javaProject, enableSearchByNameCheckbox.getSelection());
         preferences.setGenerateCommentsForTestMethod(javaProject, addCommentsToTestMethodCheckbox.getSelection());
     }
 
@@ -340,6 +371,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         packageSuffixTextField.setEnabled(enabled);
         superClassTextField.setEnabled(enabled);
         extendedSearchCheckbox.setEnabled(enabled);
+        enableSearchByNameCheckbox.setEnabled(enabled);
         addCommentsToTestMethodCheckbox.setEnabled(enabled);
         testCaseNamePatternArea.setEnabled(enabled);
     }

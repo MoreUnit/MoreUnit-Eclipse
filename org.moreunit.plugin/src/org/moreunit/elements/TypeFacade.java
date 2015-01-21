@@ -172,8 +172,11 @@ public abstract class TypeFacade
             IMethod currentMethod = request.getCurrentMethod();
             if(currentMethod != null && ! classes.isEmpty())
             {
-                proposedMethods.addAll(getCorrespondingMethodsInClasses(currentMethod, classes));
-                if(request.shouldUseExtendedSearch())
+                if(request.getMethodSearchMode().searchByName)
+                {
+                    proposedMethods.addAll(getCorrespondingMethodsInClasses(currentMethod, classes));
+                }
+                if(request.getMethodSearchMode().searchByCall)
                 {
                     proposedMethods.addAll(getCallRelationshipFinder(currentMethod, classes).getMatches(new NullProgressMonitor()));
                 }
@@ -262,11 +265,6 @@ public abstract class TypeFacade
         }
 
         return this.correspondingTypeSearcher;
-    }
-
-    public static enum MethodSearchMode
-    {
-        BY_CALL, BY_NAME
     }
 
     private static interface OneCorrespondingMemberAction

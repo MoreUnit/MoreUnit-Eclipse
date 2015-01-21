@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.ui.ChooseDialog;
 import org.moreunit.ui.CreateNewClassAction;
 import org.moreunit.ui.MemberContentProvider;
@@ -134,7 +135,7 @@ public class ClassTypeFacade extends TypeFacade
     public Set<IMethod> getCorrespondingTestMethods(IMethod method, MethodSearchMode searchMethod)
     {
         final Set<IMethod> correspondingTestMethods = new HashSet<IMethod>();
-        if(searchMethod == MethodSearchMode.BY_CALL)
+        if(searchMethod.searchByCall)
         {
             Collection<IType> correspondingClasses = getCorrespondingTestCases();
             if(! correspondingClasses.isEmpty())
@@ -142,7 +143,8 @@ public class ClassTypeFacade extends TypeFacade
                 correspondingTestMethods.addAll(getCallRelationshipFinder(method, correspondingClasses).getMatches(new NullProgressMonitor()));
             }
         }
-        else
+
+        if(searchMethod.searchByName)
         {
             correspondingTestMethods.addAll(getCorrespondingTestMethods(method));
         }

@@ -1,6 +1,7 @@
 package org.moreunit.elements;
 
 import org.eclipse.jdt.core.IMethod;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 
 public class CorrespondingMemberRequest
 {
@@ -21,6 +22,11 @@ public class CorrespondingMemberRequest
         return builder.currentMethod;
     }
 
+    public MethodSearchMode getMethodSearchMode()
+    {
+        return builder.methodSearchMode;
+    }
+
     public String getPromptText()
     {
         return builder.promptText;
@@ -36,11 +42,6 @@ public class CorrespondingMemberRequest
         return builder.expectedMemberType == memberType;
     }
 
-    public boolean shouldUseExtendedSearch()
-    {
-        return builder.extendedSearch;
-    }
-
     public static enum MemberType
     {
         TYPE, TYPE_OR_METHOD
@@ -50,7 +51,7 @@ public class CorrespondingMemberRequest
     {
         private boolean createClassIfNoResult;
         private IMethod currentMethod;
-        private boolean extendedSearch;
+        private MethodSearchMode methodSearchMode = MethodSearchMode.DEFAULT;
         private String promptText;
         private MemberType expectedMemberType = MemberType.TYPE_OR_METHOD;
 
@@ -72,12 +73,12 @@ public class CorrespondingMemberRequest
         }
 
         /**
-         * Whether to also search for method calls (together with search by
-         * method name).
+         * How to search for corresponding methods (by call or/and by method
+         * name).
          */
-        public Builder extendedSearch(boolean extendedSearch)
+        public Builder methodSearchMode(MethodSearchMode methodSearchMode)
         {
-            this.extendedSearch = extendedSearch;
+            this.methodSearchMode = methodSearchMode;
             return this;
         }
 

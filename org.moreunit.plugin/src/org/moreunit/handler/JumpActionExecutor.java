@@ -27,6 +27,7 @@ import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.ui.EditorUI;
 
 /**
@@ -91,16 +92,16 @@ public class JumpActionExecutor
 
     private void executeJumpAction(ICompilationUnit compilationUnit, IMethod methodUnderCursorPosition)
     {
-        boolean extendedSearch = Preferences.getInstance().shouldUseTestMethodExtendedSearch(compilationUnit.getJavaProject());
+        MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(compilationUnit.getJavaProject());
 
         TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
 
         CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
-        .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
-        .withCurrentMethod(methodUnderCursorPosition) //
-        .extendedSearch(extendedSearch) //
-        .createClassIfNoResult("Jump to...") //
-        .build();
+            .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+            .withCurrentMethod(methodUnderCursorPosition) //
+            .methodSearchMode(searchMode) //
+            .createClassIfNoResult("Jump to...") //
+            .build();
 
         IMember memberToJump = typeFacade.getOneCorrespondingMember(request);
         if(memberToJump != null)

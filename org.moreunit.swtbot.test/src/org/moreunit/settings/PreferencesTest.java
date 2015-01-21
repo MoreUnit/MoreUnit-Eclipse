@@ -136,11 +136,13 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         openPreferencesAndSelectMoreUnitPage();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).select();
         saveAndClosePrefs();
-        assertTrue(Preferences.getInstance().shouldUseTestMethodExtendedSearch(getJavaProjectFromContext()));
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).deselect();
         saveAndClosePrefs();
-        assertFalse(Preferences.getInstance().shouldUseTestMethodExtendedSearch(getJavaProjectFromContext()));
+        assertFalse(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
     }
 }

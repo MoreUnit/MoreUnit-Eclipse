@@ -1,9 +1,5 @@
 package org.moreunit.test.context;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.Collections;
-import java.util.List;
 
 class PreferencesBaseConfiguration
 {
@@ -13,6 +9,7 @@ class PreferencesBaseConfiguration
     private TestType testType;
     private boolean extendedMethodSearch;
     private boolean flexibleNaming;
+    private boolean methodSearchByName;
     private boolean testMethodPrefix;
     private String testClassNameTemplate;
 
@@ -76,6 +73,16 @@ class PreferencesBaseConfiguration
         this.flexibleNaming = flexibleNaming;
     }
 
+    public boolean isMethodSearchByName()
+    {
+        return methodSearchByName;
+    }
+
+    public void setMethodSearchByName(boolean methodSearchByName)
+    {
+        this.methodSearchByName = methodSearchByName;
+    }
+
     public boolean isTestMethodPrefix()
     {
         return testMethodPrefix;
@@ -90,12 +97,12 @@ class PreferencesBaseConfiguration
     {
         this.testMethodPrefix = testMethodPrefix;
     }
-    
+
     public String getTestClassNameTemplate()
     {
         return testClassNameTemplate;
     }
-    
+
     public void setTestClassNameTemplate(String testClassNameTemplate)
     {
         this.testClassNameTemplate = testClassNameTemplate;
