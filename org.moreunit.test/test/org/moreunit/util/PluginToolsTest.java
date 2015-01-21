@@ -3,6 +3,7 @@ package org.moreunit.util;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
 import static org.moreunit.util.PluginTools.guessSourceFolderCorrespondingToTestFolder;
+import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -165,6 +166,104 @@ public class PluginToolsTest
 
         // then
         assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("two"));
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_source_folder_when_only_one_source_folder() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("src/folder");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/folder");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(mainSrcFolder);
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_test_folder_when_main_folder_follows_maven_conventions() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("src/test/java", "src/main/java");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("src/test/java"));
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_test_folder_regardless_of_the_language_when_main_folder_follows_maven_conventions_and_a_different_lanague_is_used_for_sources() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("src/main/java", "src/test/groovy");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("src/test/groovy"));
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_test_folder_regardless_of_the_language_when_main_folder_follows_maven_conventions_and_a_different_lanague_is_used_for_sources__2() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("src/main/resources", "src/test/resources", "src/test/groovy", "src/main/java");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("src/test/groovy"));
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_source_folder_named_test() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("test", "src");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("test"));
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_other_source_folder_when_no_clever_guess_can_be_made() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("one", "two");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("one");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("two"));
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_another_source_folder_when_no_clever_guess_can_be_made() throws Exception
+    {
+        // given
+        Project project = createAProjectWithSourceFolders("one", "two", "three");
+        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("one");
+
+        // when
+        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("two"));
     }
 
     private IJavaProject createProject(String name) throws Exception

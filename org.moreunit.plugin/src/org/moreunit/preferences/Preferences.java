@@ -1,5 +1,7 @@
 package org.moreunit.preferences;
 
+import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -384,14 +386,20 @@ public class Preferences
 
         // no mapping exists: falls back to un-mapped source folders
         String junitFolder = getJunitDirectoryFromPreferences(project);
+        List<IPackageFragmentRoot> javaSrcFolders = PluginTools.findJavaSourceFoldersFor(project);
 
-        for (IPackageFragmentRoot packageFragmentRoot : PluginTools.findJavaSourceFoldersFor(project))
+        for (IPackageFragmentRoot packageFragmentRoot : javaSrcFolders)
         {
             if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
             {
                 return packageFragmentRoot;
             }
         }
+
+        // attempt to make everyone happy
+        IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder);
+        if(mvnTestFolder != null)
+            return mvnTestFolder;
 
         // falls back to given source folder
         return mainSrcFolder;
