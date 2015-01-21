@@ -423,7 +423,7 @@
 			</section>
 			<section id="doc-mocksupport">
 				<h1>Support for mocking frameworks</h1>
-				<p>MoreUnit now proposes you to automatically mock the dependencies of your classes in their associated test cases: just select the dependencies
+				<p>MoreUnit proposes you to automatically mock the dependencies of your classes in their associated test cases: just select the dependencies
 				that you want to be mocked in the new page that appears in the "New Test Case" wizard:</p>
 				<figure><img src="img/mock-usage-example-wizard-page.png" width="552" height="417" alt="'New Test Case' wizard: 'Dependencies To Mock' page"
 				/></figure>
@@ -457,8 +457,12 @@
 				<p>Finally, you can create your own templates to support your custom configurations.</p>
 				<p>All you have to do is to place them in your workspace, under <em>.metadata/.plugins/org.moreunit.mock/templates</em>,
 				and then to load them via the "Reload templates" button in MoreUnit preferences (<em>Preferences &gt; MoreUnit &gt; Java &gt; Mock Generation</em>).
-				Your templates will also be taken into account at restart.
-				<p>A documentation is to come, in the meanwhile, you can learn from the <a href="http://sourceforge.net/p/moreunit/code/ci/master/tree/org.moreunit.mock/resources/templates/">existing templates</a>.</p>
+				Your templates will also be taken into account at restart.</p>
+				<p>Fore more information and to validate your templates, please refer to the <a href="http://moreunit.sourceforge.net/schemas/mocking-templates.xsd">XSD</a>.
+				You might also learn from the <a href="http://sourceforge.net/p/moreunit/code/ci/master/tree/org.moreunit.mock/resources/templates/">existing templates</a>.</p>
+
+				<p><em>Note: this feature &mdash; the templates &mdash; has been primarily developed to ease the pain of working with legacy code bases. Within a
+				fresh project, we advise you to adopt a test-first approach ;-)</em></p>
 			</section>
 		</article>
 		<article id="faq">
