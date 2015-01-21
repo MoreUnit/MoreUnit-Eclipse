@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<mocking-templates version="1.0">
+<mocking-templates version="1.0"
+    xmlns="http://moreunit.org/mock/mocking-templates"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://moreunit.org/mock/mocking-templates http://moreunit.sourceforge.net/schemas/mocking-templates.xsd
+    ">
     <category id="some.category" name="Some Category"/>
     <!-- no mocking template -->
 </mocking-templates>

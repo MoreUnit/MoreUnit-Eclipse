@@ -42,13 +42,4 @@ public class UnmarshallingTest
         // then
         assertThat(templates.categories()).isNotNull().isEmpty();
     }
-
-    @Test
-    public void should_handle_missing_code_templates() throws Exception
-    {
-        // given
-        MockingTemplates templates = (MockingTemplates) unmarshaller.unmarshal(getClass().getResource("no_code_template.xml"));
-        // then
-        assertThat(templates.iterator().next().codeTemplates()).isNotNull().isEmpty();
-    }
 }
