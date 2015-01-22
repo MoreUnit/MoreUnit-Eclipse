@@ -99,7 +99,7 @@
             targetID="#CompilationUnitEditorContext"
             id="org.moreunit.contribution1">
          <action
-               label="Generate Test"
+               label="Generate Test Method"
                definitionId="org.moreunit.createtestmethod"
                class="org.moreunit.actions.CreateTestMethodEditorAction"
                menubarPath="org.moreunit.ui.editor.menu.moreunit/top"
@@ -181,7 +181,7 @@
       	id="org.moreunit.testcreator"
       	objectClass="org.eclipse.jdt.core.IMethod">
       	<action id="org.moreunit.actions.testcreatoraction"
-      		label="Generate Test"
+      		label="Generate Test Method"
       		class="org.moreunit.actions.CreateTestMethodHierarchyAction"
       		icon="icons/moreunitLogo.gif"
       		menubarPath="additions"/>      		
