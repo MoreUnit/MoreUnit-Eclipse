@@ -314,6 +314,13 @@ public class TestFolderPathPatternTest
     }
 
     @Test
+    public void getTestPathFor_should_handle_range_like_parts_in_path() throws Exception
+    {
+        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        assertThat(p.getTestPathFor(path("com.example/src/dir/with [rangelike-123]")).toString()).isEqualTo("com.example/test/dir/with [rangelike-123]");
+    }
+
+    @Test
     public void getSrcPathFor_should_find_src_path_when_no_variable_part() throws Exception
     {
         TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
@@ -455,6 +462,13 @@ public class TestFolderPathPatternTest
         assertThat(p.getSrcPathFor(path("/foobar [1]/test/")).toString()).isEqualTo("foobar [1]/src");
         assertThat(p.getSrcPathFor(path("/foobar {1}/test/")).toString()).isEqualTo("foobar {1}/src");
         assertThat(p.getSrcPathFor(path("/foobar (1)/test/")).toString()).isEqualTo("foobar (1)/src");
+    }
+
+    @Test
+    public void getSrcPathFor_should_handle_range_like_parts_in_path() throws Exception
+    {
+        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        assertThat(p.getSrcPathFor(path("com.example/test/dir/with [rangelike-123]")).toString()).isEqualTo("com.example/src/dir/with [rangelike-123]");
     }
 
     private Path path(String pathStr)

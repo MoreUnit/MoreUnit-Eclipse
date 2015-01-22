@@ -2,9 +2,9 @@ package org.moreunit.core.matching;
 
 import static java.util.Collections.reverse;
 import static java.util.Collections.sort;
+import static java.util.regex.Matcher.quoteReplacement;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
-import static java.util.regex.Matcher.quoteReplacement;
 import static org.moreunit.core.util.Preconditions.checkArgument;
 import static org.moreunit.core.util.Strings.countOccurrences;
 
@@ -188,16 +188,17 @@ public class TestFolderPathPattern
         String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
-        srcPathTpl += codePathWithinSrcFolder;
+        srcPathTpl += quote(codePathWithinSrcFolder);
         tstPathTpl = resolveGroups(cleanSrcPath, srcPathTpl, tstPathTpl, srcPath);
 
         return new SourceFolderPath(tstPathTpl);
     }
-    
+
     private String resolveGroups(String path, String tplWithGroups, String tplWithRefs, Path analizedPath) throws DoesNotMatchConfigurationException
     {
         String result = tplWithRefs;
 
+        System.out.println(tplWithGroups);
         Matcher matcher = Pattern.compile(tplWithGroups).matcher(path);
         if(matcher.matches())
         {
@@ -241,7 +242,7 @@ public class TestFolderPathPattern
         if(codePathWithinSrcFolder.length() != 0 && ! codePathWithinSrcFolder.startsWith(tstProjectName))
         {
             srcPathTpl += codePathWithinSrcFolder;
-            tstPathTpl += codePathWithinSrcFolder;
+            tstPathTpl += quote(codePathWithinSrcFolder);
         }
 
         srcPathTpl = resolveGroups(cleanTestPath, tstPathTpl, srcPathTpl, testPath);
@@ -303,6 +304,7 @@ public class TestFolderPathPattern
             this.endIdx = endIdx;
         }
 
+        @Override
         public int compareTo(GroupRef o)
         {
             return num.compareTo(o.num);

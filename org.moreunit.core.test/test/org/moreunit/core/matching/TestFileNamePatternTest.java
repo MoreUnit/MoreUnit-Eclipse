@@ -14,6 +14,7 @@ import org.junit.Test;
 public class TestFileNamePatternTest
 {
     private final NameTokenizer camelCaseTokenizer = new CamelCaseNameTokenizer();
+    private final NameTokenizer spaceTokenizer = new SeparatorNameTokenizer(" ");
     private final NameTokenizer underscoreTokenizer = new SeparatorNameTokenizer("_");
 
     @Test
@@ -327,6 +328,15 @@ public class TestFileNamePatternTest
     }
 
     @Test
+    public void should_evaluate_test_file_with_regex_range_like() throws Exception
+    {
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile} test", spaceTokenizer);
+
+        assertThat(pattern.evaluate("myfile [rangelike-123] test").getAllCorrespondingFilePatterns()) //
+            .containsOnly("\\Qmyfile [rangelike-123]\\E");
+    }
+
+    @Test
     public void should_evaluate_src_file_with_prefix() throws Exception
     {
         TestFileNamePattern pattern = new TestFileNamePattern("Prefix${srcFile}", camelCaseTokenizer);
@@ -450,6 +460,15 @@ public class TestFileNamePatternTest
         .hasSize(8) //
         .contains("\\Qa_[some]*_(fi|le)_c\\E", "\\Qa_[some]*_(fi|le)_d\\E", "\\Qb_[some]*_(fi|le)_c\\E", "\\Qb_[some]*_(fi|le)_d\\E") //
         .contains("\\Qa_[some]*_(fi|le)\\E", "\\Qb_[some]*_(fi|le)\\E", "\\Q[some]*_(fi|le)_c\\E", "\\Q[some]*_(fi|le)_d\\E");
+    }
+
+    @Test
+    public void should_evaluate_src_file_with_regex_range_like() throws Exception
+    {
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile} test", spaceTokenizer);
+
+        assertThat(pattern.evaluate("myfile [rangelike-123]").getAllCorrespondingFilePatterns()) //
+            .containsOnly("\\Qmyfile [rangelike-123] test\\E");
     }
 
     @Test
