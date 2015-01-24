@@ -124,10 +124,12 @@ public class RunTestsActionExecutor
             }
         }
 
-        if(! testCases.isEmpty())
+        if(testCases.isEmpty())
         {
-            runTests(testCases);
+            testCases.add(selectedJavaType);
         }
+
+        runTests(testCases);
     }
 
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
@@ -174,10 +176,12 @@ public class RunTestsActionExecutor
             }
         }
 
-        if(! testElements.isEmpty())
+        if(testElements.isEmpty())
         {
-            runTests(testElements);
+            testElements.add(getTestElementFromTestCase(editorPart, selectedJavaType));
         }
+
+        runTests(testElements);
     }
 
     /**
