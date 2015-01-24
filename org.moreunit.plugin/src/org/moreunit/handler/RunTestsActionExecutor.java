@@ -203,7 +203,10 @@ public class RunTestsActionExecutor
     private void runTests(Collection< ? extends IMember> testElements)
     {
         IJavaElement aTestMember = testElements.iterator().next();
-        String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
-        testLauncher.launch(testType, testElements);
+        if(aTestMember != null)
+        {
+            String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
+            testLauncher.launch(testType, testElements);
+        }
     }
 }
