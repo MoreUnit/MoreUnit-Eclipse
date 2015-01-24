@@ -157,7 +157,7 @@ public class RunTestsActionExecutor
                 methodUnderTest = new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
             }
 
-            if(featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
+            if(methodUnderTest != null && featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
             {
                 testElements.addAll(typeFacade.getCorrespondingTestMethods(methodUnderTest, searchMode));
             }
