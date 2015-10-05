@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.moreunit.elements;
 
@@ -11,6 +11,8 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.ui.MethodPage;
 
 /**
@@ -39,12 +41,14 @@ public class MethodTreeContentProvider implements ITreeContentProvider
         if(! TypeFacade.isTestCase(javaFileFile))
             try
             {
+                MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(classType.getJavaProject());
+
                 ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
                 IMethod[] allMethods = javaFileFile.getMethods();
 
                 for (IMethod method : allMethods)
                 {
-                    if(typeFacade.getCorrespondingTestMethods(method).size() == 0)
+                    if(typeFacade.getCorrespondingTestMethods(method, searchMode).size() == 0)
                         methods.add(method);
                 }
             }
