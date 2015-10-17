@@ -1,16 +1,12 @@
-This repository is a fork of [MoreUnit's official master repository](http://moreunit.git.sourceforge.net/git/gitweb.cgi?p=moreunit/moreunit;a=summary) for the purpose of a special day of contributions to the project.
-If you are searching for information regarding MoreUnit of for its official code base, please go to [http://moreunit.sourceforge.net](http://moreunit.sourceforge.net).
+MoreUnit is an Eclipse plugin that should assist you in writing more unit tests.
 
+It supports all programming languages (switching between tests and classes under tests...) and has specific support for Java (creating test stubs, mock support, decoration, refactoring support...).
 
-Where to start?
----------------
+[Go to the website!](http://moreunit.sourceforge.net/)
 
-You may work on whatever comes to your mind, but if you're only willing to help without any specific idea, the [issue tracker](https://github.com/ndemengel/hackergarten-moreunit/issues) will provide you with various tasks!
+Searching for MoreUnit for IntelliJ? [Here it is!](https://github.com/MoreUnit/org.moreunit.intellij.plugin)
 
-Links:
-
-* [Eclipse Help](http://help.eclipse.org/indigo/index.jsp) (also present in your IDE)
-* [Eclipse Plugin and Eclipse RCP Tutorials](http://www.vogella.de/eclipse.html)
+MoreUnit previously was hosted on SourceForge, and you can still find information at [http://moreunit.sourceforge.net](http://moreunit.sourceforge.net).
 
 
 LICENSE
