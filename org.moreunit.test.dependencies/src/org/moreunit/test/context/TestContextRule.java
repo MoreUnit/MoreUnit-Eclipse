@@ -3,6 +3,9 @@ package org.moreunit.test.context;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.junit.rules.MethodRule;
@@ -74,10 +77,28 @@ public class TestContextRule implements MethodRule
             return statement;
         }
 
-        String projectPrefix = testCase.getClass().getName() + "." + method.getName() + "-";
+        // abbreviations prevent reaching file name size limit on some file systems (Ext, ...)
+        String projectPrefix = abbreviate(testCase.getClass().getName(), ".") + "." + abbreviate(method.getName(), "_") + "-";
         return new StatementInContext(statement, this, config, testCase.getClass(), projectPrefix);
     }
 
+    private static String abbreviate(String javaIdentifier, String newSeparator)
+    {
+        StringBuilder b = new StringBuilder();
+        for (String part : javaIdentifier.split("((?=\\p{Lu})|[\\._])"))
+        {
+            if(! part.isEmpty())
+            {
+                if(b.length() != 0)
+                {
+                    b.append(newSeparator);
+                }
+                b.append(part.substring(0, Math.min(2, part.length())));
+            }
+        }
+        return b.toString();
+    }
+ 
     /**
      * Returns a handler to manipulate the compilation unit having the given
      * name.
