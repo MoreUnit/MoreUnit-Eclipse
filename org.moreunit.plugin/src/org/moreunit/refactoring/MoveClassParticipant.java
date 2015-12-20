@@ -44,7 +44,7 @@ public class MoveClassParticipant extends MoveParticipant
     {
         compilationUnit = (ICompilationUnit) element;
         javaFileFacade = new ClassTypeFacade(compilationUnit);
-        
+
         return !ClassTypeFacade.isTestCase(compilationUnit);
     }
 
@@ -83,9 +83,18 @@ public class MoveClassParticipant extends MoveParticipant
             List<Change> changes = new ArrayList<Change>();
             IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
             String importString = String.format("%s.%s", packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
-            
+
             for (IType typeToMove : javaFileFacade.getCorrespondingTestCases())
             {
+                // fix https://sourceforge.net/p/moreunit/bugs/141/
+                // if CUT is moved to a different source folder and the test
+                // stays in the same test source folder -> don't do anything
+                // with this testcase
+                if(moveTestsDestinationPackage.equals(typeToMove.getPackageFragment()))
+                {
+                    continue;
+                }
+
                 ICompilationUnit[] members = new ICompilationUnit[1];
                 members[0] = typeToMove.getCompilationUnit();
                 ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
@@ -96,7 +105,7 @@ public class MoveClassParticipant extends MoveParticipant
                 createRefactoring.checkAllConditions(pm);
                 Change createChange = createRefactoring.createChange(null);
                 changes.add(createChange);
-                
+
                 // Because of bug
                 // https://sourceforge.net/tracker/?func=detail&aid=3191142&group_id=156007&atid=798056
                 // we need to check if there is already an import for the CUT in the tests
