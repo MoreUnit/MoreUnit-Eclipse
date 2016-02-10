@@ -48,24 +48,33 @@ public abstract class MethodCallFinder
 
     public Set<IMethod> getMatches(IProgressMonitor progressMonitor)
     {
-        CallHierarchy.getDefault().setSearchScope(searchScope);
-
-        Set<IMethod> testCallers = new LinkedHashSet<IMethod>();
-        MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
-        for (int i = 0; i < calls.length; i++)
+        CallHierarchy callHierarchy = CallHierarchy.getDefault();
+        IJavaSearchScope originalSearchScope = callHierarchy.getSearchScope();
+        try
         {
-            IMember member = calls[i].getMember();
-            if(! (member instanceof IMethod) || member.getCompilationUnit() == null)
+            callHierarchy.setSearchScope(searchScope);
+
+            Set<IMethod> testCallers = new LinkedHashSet<IMethod>();
+            MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
+            for (int i = 0; i < calls.length; i++)
             {
-                continue;
+                IMember member = calls[i].getMember();
+                if(! (member instanceof IMethod) || member.getCompilationUnit() == null)
+                {
+                    continue;
+                }
+                IMethod method = getFirstNonAnonymousMethod(member);
+                if(methodMatch(method))
+                {
+                    testCallers.add(method);
+                }
             }
-            IMethod method = getFirstNonAnonymousMethod(member);
-            if(methodMatch(method))
-            {
-                testCallers.add(method);
-            }
+            return testCallers;
         }
-        return testCallers;
+        finally
+        {
+            callHierarchy.setSearchScope(originalSearchScope);
+        }
     }
 
     private IMethod getFirstNonAnonymousMethod(IMember member)
