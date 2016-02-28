@@ -97,19 +97,19 @@ function set_version {
     failure "Unable to set version to ${NEW_VERSION}${SNAPSHOT}. Release aborted."
   fi
 
-  sed -i .bak "s/_[0-9\\.]\{1,\}\(.qualifier\)\{0,1\}.jar/_${NEW_VERSION}${QUALIFIER}.jar/g" "$CATEGORY_FILE"
+  sed -i.bak "s/_[0-9\\.]\{1,\}\(.qualifier\)\{0,1\}.jar/_${NEW_VERSION}${QUALIFIER}.jar/g" "$CATEGORY_FILE"
   if [ $? -ne 0 ]; then
     failure "Unable to set version to ${NEW_VERSION}${QUALIFIER}. Release aborted."
   fi
 
-  sed -i .bak "s/\" version=\"[^\"]\{1,\}\"/\" version=\"${NEW_VERSION}${QUALIFIER}\"/g" "$CATEGORY_FILE"
+  sed -i.bak "s/\" version=\"[^\"]\{1,\}\"/\" version=\"${NEW_VERSION}${QUALIFIER}\"/g" "$CATEGORY_FILE"
   if [ $? -ne 0 ]; then
     failure "Unable to set version to ${NEW_VERSION}${QUALIFIER}. Release aborted."
   fi
 
   # .qualifier versions are not supported when importing features, so let's just ignore it
   if [ -z "$SNAPSHOT" ]; then
-    sed -i .bak "s/import feature=\"org.moreunit\" version=\"[^\"]\{1,\}\"/import feature=\"org.moreunit\" version=\"${NEW_VERSION}\"/g" "$MOCK_FEATURE_FILE"
+    sed -i.bak "s/import feature=\"org.moreunit\" version=\"[^\"]\{1,\}\"/import feature=\"org.moreunit\" version=\"${NEW_VERSION}\"/g" "$MOCK_FEATURE_FILE"
     if [ $? -ne 0 ]; then
       failure "Unable to set version to ${NEW_VERSION}. Release aborted."
     fi
