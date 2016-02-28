@@ -102,6 +102,10 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                 if(tree.equals(e.getSource()))
                 {
                     TreeItem o = tree.getItem(new Point(e.x, e.y));
+                    if(o == null)
+                    {
+                        return;
+                    }
                     if(! o.equals(fLastItem))
                     {
                         fLastItem = o;
@@ -239,7 +243,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
             }
             catch (Throwable e)
             {
-                LogHandler.getInstance().handleWarnLog(e.getMessage());
+                LogHandler.getInstance().handleWarnLog(e.toString());
             }
         }
         display.update();
