@@ -78,6 +78,7 @@ public class Preferences
         store.setDefault(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, PreferenceConstants.DEFAULT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
         store.setDefault(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
         store.setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, PreferenceConstants.DEFAULT_TEST_METHOD_DEFAULT_CONTENT);
+        store.setDefault(PreferenceConstants.TEST_ANNOTATION_MODE, PreferenceConstants.DEFAULT_TEST_ANNOTATION_MODE);
         return store;
     }
 
@@ -504,6 +505,16 @@ public class Preferences
         return new ProjectPreferences(this, null);
     }
 
+    public String getTestAnnotationMode(IJavaProject project)
+    {
+        return getStringValue(PreferenceConstants.TEST_ANNOTATION_MODE, project);
+    }
+
+    public void setTestAnnotationMode(IJavaProject project, TestAnnotationMode mode)
+    {
+        getProjectStore(project).setValue(PreferenceConstants.TEST_ANNOTATION_MODE, mode.toString());
+    }
+
     public static class MethodSearchMode
     {
         public static final MethodSearchMode BY_CALL = new MethodSearchMode(true, false);
@@ -641,6 +652,12 @@ public class Preferences
         public String getTestClassNameTemplate()
         {
             return prefs.getStringValue(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, project);
+        }
+
+        public TestAnnotationMode getTestAnnotationMode()
+        {
+            String mode = prefs.getTestAnnotationMode(project);
+            return mode == null || mode.isEmpty() ? TestAnnotationMode.OFF : TestAnnotationMode.valueOf(mode);
         }
     }
 }

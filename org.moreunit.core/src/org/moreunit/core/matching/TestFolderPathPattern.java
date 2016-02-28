@@ -198,7 +198,6 @@ public class TestFolderPathPattern
     {
         String result = tplWithRefs;
 
-        System.out.println(tplWithGroups);
         Matcher matcher = Pattern.compile(tplWithGroups).matcher(path);
         if(matcher.matches())
         {

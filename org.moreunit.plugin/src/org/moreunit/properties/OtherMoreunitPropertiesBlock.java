@@ -22,6 +22,7 @@ import org.moreunit.core.util.StringConstants;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
+import org.moreunit.preferences.TestAnnotationMode;
 
 /**
  * @author vera 14.03.2008 23:09:24
@@ -41,6 +42,10 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Button addCommentsToTestMethodCheckbox;
     private Button extendedSearchCheckbox;
     private Button enableSearchByNameCheckbox;
+
+    private Button testAnnotationsDisabledButton;
+    private Button testAnnotationsByNameButton;
+    private Button testAnnotationsByNameAndByCallButton;
 
     private GridData layoutForOneLineControls;
 
@@ -99,6 +104,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         createPackagePrefixSuffixTextFields(parentWith2Cols);
         createSuperClassTextField(parentWith2Cols);
         createExtendedSearchCheckboxes(parentWith2Cols);
+        createTestAnnotationModeRadioButtons(parentWith2Cols);
         createAddCommentsToTestMethodsCheckbox(parentWith2Cols);
 
         checkStateOfMethodPrefixButton();
@@ -117,26 +123,26 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         // Junit3 choice
         junit3Button = new Button(group, SWT.RADIO);
         junit3Button.setText(PreferenceConstants.TEXT_JUNIT_3_8);
-        junit3Button.setLayoutData(testTypeButtonLayoutData(false));
+        junit3Button.setLayoutData(radioButtonLayoutData(false));
         junit3Button.setSelection(projectPreferences.shouldUseJunit3Type());
         junit3Button.addSelectionListener(this);
 
         // Junit 4 choice
         junit4Button = new Button(group, SWT.RADIO);
         junit4Button.setText(PreferenceConstants.TEXT_JUNIT_4);
-        junit4Button.setLayoutData(testTypeButtonLayoutData(true));
+        junit4Button.setLayoutData(radioButtonLayoutData(true));
         junit4Button.setSelection(projectPreferences.shouldUseJunit4Type());
         junit4Button.addSelectionListener(this);
 
         // TestNg choice
         testNgButton = new Button(group, SWT.RADIO);
         testNgButton.setText(PreferenceConstants.TEXT_TEST_NG);
-        testNgButton.setLayoutData(testTypeButtonLayoutData(true));
+        testNgButton.setLayoutData(radioButtonLayoutData(true));
         testNgButton.setSelection(projectPreferences.shouldUseTestNgType());
         testNgButton.addSelectionListener(this);
     }
 
-    private GridData testTypeButtonLayoutData(boolean indent)
+    private GridData radioButtonLayoutData(boolean indent)
     {
         GridData data = new GridData();
         if(indent)
@@ -265,6 +271,34 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         });
     }
 
+    private void createTestAnnotationModeRadioButtons(Composite parent)
+    {
+        Group group = new Group(parent, SWT.NONE);
+        group.setLayout(new GridLayout(3, false));
+        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        gridData.horizontalSpan = 2;
+        group.setLayoutData(gridData);
+        group.setText(PreferenceConstants.TEXT_ANNOTATION_MODE);
+
+        TestAnnotationMode mode = projectPreferences.getTestAnnotationMode();
+
+        testAnnotationsDisabledButton = new Button(group, SWT.RADIO);
+        testAnnotationsDisabledButton.setText(PreferenceConstants.TEST_ANNOTATION_MODE_DISABLED);
+        testAnnotationsDisabledButton.setLayoutData(radioButtonLayoutData(false));
+        testAnnotationsDisabledButton.setSelection(mode == null || mode == TestAnnotationMode.OFF);
+
+        testAnnotationsByNameButton = new Button(group, SWT.RADIO);
+        testAnnotationsByNameButton.setText(PreferenceConstants.TEST_ANNOTATION_MODE_BY_NAME);
+        testAnnotationsByNameButton.setLayoutData(radioButtonLayoutData(true));
+        testAnnotationsByNameButton.setSelection(mode == TestAnnotationMode.BY_NAME);
+
+        testAnnotationsByNameAndByCallButton = new Button(group, SWT.RADIO);
+        testAnnotationsByNameAndByCallButton.setText(PreferenceConstants.TEST_ANNOTATION_MODE_EXTENDED_SEARCH);
+        testAnnotationsByNameAndByCallButton.setToolTipText(PreferenceConstants.TOOLTIP_TEST_ANNOTATION_EXTENDED_SEARCH);
+        testAnnotationsByNameAndByCallButton.setLayoutData(radioButtonLayoutData(true));
+        testAnnotationsByNameAndByCallButton.setSelection(mode == TestAnnotationMode.BY_CALL_AND_BY_NAME);
+    }
+
     private void createAddCommentsToTestMethodsCheckbox(Composite parent)
     {
         addCommentsToTestMethodCheckbox = new Button(parent, SWT.CHECK);
@@ -298,6 +332,19 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         preferences.setShouldUseTestMethodExtendedSearch(javaProject, extendedSearchCheckbox.getSelection());
         preferences.setShouldUseTestMethodSearchByName(javaProject, enableSearchByNameCheckbox.getSelection());
         preferences.setGenerateCommentsForTestMethod(javaProject, addCommentsToTestMethodCheckbox.getSelection());
+
+        if(testAnnotationsByNameAndByCallButton.getSelection())
+        {
+            preferences.setTestAnnotationMode(javaProject, TestAnnotationMode.BY_CALL_AND_BY_NAME);
+        }
+        else if(testAnnotationsByNameButton.getSelection())
+        {
+            preferences.setTestAnnotationMode(javaProject, TestAnnotationMode.BY_NAME);
+        }
+        else
+        {
+            preferences.setTestAnnotationMode(javaProject, TestAnnotationMode.OFF);
+        }
     }
 
     private boolean isJunit4OrTestNgTestTypeSelected()
@@ -374,5 +421,8 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         enableSearchByNameCheckbox.setEnabled(enabled);
         addCommentsToTestMethodCheckbox.setEnabled(enabled);
         testCaseNamePatternArea.setEnabled(enabled);
+        testAnnotationsDisabledButton.setEnabled(enabled);
+        testAnnotationsByNameButton.setEnabled(enabled);
+        testAnnotationsByNameAndByCallButton.setEnabled(enabled);
     }
 }

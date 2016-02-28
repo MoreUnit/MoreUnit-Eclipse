@@ -42,6 +42,7 @@ public interface PreferenceConstants
     boolean DEFAULT_ENABLE_TEST_METHOD_SEARCH_BY_NAME = true;
     String DEFAULT_TEST_CLASS_NAME_TEMPLATE = TestFileNamePattern.SRC_FILE_VARIABLE + "Test";
     String DEFAULT_TEST_METHOD_DEFAULT_CONTENT = "throw new RuntimeException(\"not yet implemented\");";
+    String DEFAULT_TEST_ANNOTATION_MODE = "OFF";
 
     String TEXT_GENERAL_SETTINGS = "General settings for your unit tests (they can then be refined for each project):";
     String TEXT_TEST_SUPERCLASS = "Test superclass:";
@@ -57,6 +58,10 @@ public interface PreferenceConstants
     String TEXT_EXTENDED_TEST_METHOD_SEARCH = "Enable test method search \"by call\"";
     String TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME = "Enable test method search \"by name\"";
     String TEXT_GENERATE_COMMENTS_FOR_TEST_METHOD = "Generate comments for test methods";
+    String TEXT_ANNOTATION_MODE = "Annotate tested methods";
+    String TEST_ANNOTATION_MODE_DISABLED = "Disabled";
+    String TEST_ANNOTATION_MODE_BY_NAME = "Search by method name";
+    String TEST_ANNOTATION_MODE_EXTENDED_SEARCH = "Also search by call (not recommended)";
 
     String TOOLTIP_TEST_SOURCE_FOLDER = "Enter the name of the source folder that usually contains your test sources (examples: junit, test, src/test/java). It may be the same as your production code.";
     String TOOLTIP_TEST_METHOD_CONTENT = "Write here any content that you would like to be inserted in your test methods when created by MoreUnit.";
@@ -65,11 +70,14 @@ public interface PreferenceConstants
     String TOOLTIP_TEST_SUPERCLASS = "If you want your test classes to have a default superclass, enter its fully qualified name here.";
     String TOOLTIP_EXTENDED_TEST_METHOD_SEARCH = "Enable this option if you want MoreUnit to propose jumping from a given method to any test method that calls it (and vice-versa).";
     String TOOLTIP_ENABLE_TEST_METHOD_SEARCH_BY_NAME = "Check this option if you want MoreUnit to blindly propose jumping from a given method to a test method with the same name, even though the test method does not call the method under test.";
+    String TOOLTIP_TEST_ANNOTATION_EXTENDED_SEARCH = "This option will cause conflicts if other parts of Eclipse are searching for method method calls at the same time, which occurs often. Only activate if you know what you are doing.";
 
     String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
     String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";
     String TEST_METHOD_TYPE_NO_PREFIX = "testMethodTypeNoPrefix";
     String TEST_METHOD_DEFAULT_CONTENT = "org.moreunit.test.test_methodDefaultContent";
+
+    String TEST_ANNOTATION_MODE = "org.moreunit.test_annotation";
 
     interface Deprecated
     {

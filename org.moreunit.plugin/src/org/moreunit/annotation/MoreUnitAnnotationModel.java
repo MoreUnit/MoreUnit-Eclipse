@@ -36,8 +36,8 @@ import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
+import org.moreunit.preferences.TestAnnotationMode;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.preferences.Preferences.MethodSearchMode;
 
 /**
  * @author vera 01.02.2009 14:27:06
@@ -216,11 +216,18 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
     {
-        MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(type.getJavaProject());
+        TestAnnotationMode testAnnotationMode = Preferences.forProject(type.getJavaProject()).getTestAnnotationMode();
+        if(testAnnotationMode == TestAnnotationMode.OFF)
+        {
+            return;
+        }
 
         for (IMethod method : type.getMethods())
         {
-            Collection<IMethod> testMethods = classTypeFacade.getCorrespondingTestMethods(method, searchMode);
+            // never search by call, as it causes a lot of issues, the
+            // CallHierarchy singleton's state being shared between different
+            // search tasks
+            Collection<IMethod> testMethods = classTypeFacade.getCorrespondingTestMethods(method, testAnnotationMode.getMethodSearchMode());
 
             boolean hasIgnoredTest = false;
             for (IMethod testMethod : testMethods)
