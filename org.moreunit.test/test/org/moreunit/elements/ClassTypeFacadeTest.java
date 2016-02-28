@@ -60,42 +60,42 @@ public class ClassTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    public void getCorrespondingTestMethods_withSearchMode_should_return_methods_with_testnaming_convention() throws Exception
-    {
-        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
-        testCaseHandler().addMethod("public void testGetNumberOne()");
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_NAME)).isNotEmpty();
-    }
-
-    @Test
-    public void getCorrespondingTestMethods_withSearchMode_no_testmethod() throws Exception
-    {
-        IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_NAME)).isEmpty();
-    }
+        public void getCorrespondingTestMethodsByName_withSearchMode_should_return_methods_with_testnaming_convention() throws Exception
+        {
+            IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
+            testCaseHandler().addMethod("public void testGetNumberOne()");
+    
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+            assertThat(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_NAME)).isNotEmpty();
+        }
 
     @Test
-    public void getCorrespondingTestMethods_withSearchMode_testmethod_calls_method() throws Exception
-    {
-        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
-        testCaseHandler().addMethod("public void testWhichNameDoesNotMatchTestedMethodName()", "new SomeClass().getNumberOne();");
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_CALL)).isNotEmpty();
-    }
+        public void getCorrespondingTestMethodsByName_withSearchMode_no_testmethod() throws Exception
+        {
+            IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
+    
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+            assertThat(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_NAME)).isEmpty();
+        }
 
     @Test
-    public void getCorrespondingTestMethods_withSearchMode_no_test_calls_method() throws Exception
-    {
-        IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
+        public void getCorrespondingTestMethodsByName_withSearchMode_testmethod_calls_method() throws Exception
+        {
+            IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
+            testCaseHandler().addMethod("public void testWhichNameDoesNotMatchTestedMethodName()", "new SomeClass().getNumberOne();");
+    
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+            assertThat(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_CALL)).isNotEmpty();
+        }
 
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_CALL)).isEmpty();
-    }
+    @Test
+        public void getCorrespondingTestMethodsByName_withSearchMode_no_test_calls_method() throws Exception
+        {
+            IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
+    
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+            assertThat(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_CALL)).isEmpty();
+        }
 
     @Test
     public void getCorrespondingTestMethod_should_return_null_when_testmethod_is_missing() throws Exception
@@ -107,16 +107,16 @@ public class ClassTypeFacadeTest extends ContextTestCase
     }
 
     @Test
-    public void getCorrespondingTestMethods_should_return_all_testmethods_for_method() throws Exception
-    {
-        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
-        IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public int testGetNumberOne()").get();
-        IMethod getNumberOneTestMethod2 = testCaseHandler().addMethod("public int testGetNumberOne2()").get();
-
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        List<IMethod> correspondingTestMethods = classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod);
-        assertThat(correspondingTestMethods).containsExactly(getNumberOneTestMethod, getNumberOneTestMethod2);
-    }
+        public void getCorrespondingTestMethodsByName_should_return_all_testmethods_for_method() throws Exception
+        {
+            IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
+            IMethod getNumberOneTestMethod = testCaseHandler().addMethod("public int testGetNumberOne()").get();
+            IMethod getNumberOneTestMethod2 = testCaseHandler().addMethod("public int testGetNumberOne2()").get();
+    
+            ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+            List<IMethod> correspondingTestMethods = classTypeFacade.getCorrespondingTestMethodsByName(getNumberOneMethod);
+            assertThat(correspondingTestMethods).containsExactly(getNumberOneTestMethod, getNumberOneTestMethod2);
+        }
 
     @Test
     public void getOneCorrespondingMember_should_return_testcase_when_no_testmethod_given() throws Exception

@@ -38,7 +38,7 @@ public class RenameDialogRunnable implements Runnable
     {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getShell();
 
-        List<IMethod> corrspondingTests = javaFile.getCorrespondingTestMethods(renamedMethod);
+        List<IMethod> corrspondingTests = javaFile.getCorrespondingTestMethodsByName(renamedMethod);
         ListDialog listDialog = new ListDialog(shell);
         listDialog.setMessage("Should the following methods be renamed either?");
         listDialog.setTitle("Rename tests");

@@ -119,7 +119,7 @@ public class MissingTestmethodViewPart extends PageBookView
             // only if a different java file is activated, do something
             EditorPartFacade editorPartFacade = new EditorPartFacade((IEditorPart) part);
             IType primaryType = editorPartFacade.getCompilationUnit().findPrimaryType();
-            if(primaryType != null && !primaryType.equals(activePage.getInputType()))
+            if(primaryType != null && ! primaryType.equals(activePage.getInputType()))
             {
                 activePage.setNewEditorPartFacade(editorPartFacade);
                 initPage(activePage);
@@ -132,13 +132,13 @@ public class MissingTestmethodViewPart extends PageBookView
     {
         if(part instanceof EditorPart)
         {
-            
+
             partActivated(part);
             if(activePage != null)
             {
                 activePage.updateUI();
             }
-            
+
             // Bugfix for #2869899
             if(getCurrentPage() != activePage && isImportant(part))
             {

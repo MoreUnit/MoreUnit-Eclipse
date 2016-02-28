@@ -34,28 +34,27 @@ public class MethodTreeContentProvider implements ITreeContentProvider
     private void resetMethods(IType javaFileFile)
     {
         methods = new ArrayList<IMethod>();
-        if(javaFileFile == null)
+        if(javaFileFile == null || TypeFacade.isTestCase(javaFileFile))
         {
             return;
         }
-        if(! TypeFacade.isTestCase(javaFileFile))
-            try
-            {
-                MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(classType.getJavaProject());
 
-                ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
-                IMethod[] allMethods = javaFileFile.getMethods();
+        MethodSearchMode searchMode = Preferences.forProject(javaFileFile.getJavaProject()).getMethodSearchMode();
+        try
+        {
+            ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
+            IMethod[] allMethods = javaFileFile.getMethods();
 
-                for (IMethod method : allMethods)
-                {
-                    if(typeFacade.getCorrespondingTestMethods(method, searchMode).size() == 0)
-                        methods.add(method);
-                }
-            }
-            catch (JavaModelException e)
+            for (IMethod method : allMethods)
             {
-                methods = new ArrayList<IMethod>();
+                if(typeFacade.getCorrespondingTestMethods(method, searchMode).size() == 0)
+                    methods.add(method);
             }
+        }
+        catch (JavaModelException e)
+        {
+            methods = new ArrayList<IMethod>();
+        }
     }
 
     public Object[] getChildren(Object parentElement)

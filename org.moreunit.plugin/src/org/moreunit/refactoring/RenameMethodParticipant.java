@@ -63,7 +63,7 @@ public class RenameMethodParticipant extends RenameParticipant
         }
         List<Change> changes = new ArrayList<Change>();
 
-        List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethods(renamedMethod);
+        List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(renamedMethod);
         if(allTestMethods == null)
         {
             return null;

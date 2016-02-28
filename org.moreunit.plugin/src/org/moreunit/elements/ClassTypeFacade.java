@@ -84,7 +84,7 @@ public class ClassTypeFacade extends TypeFacade
         return testMethods.isEmpty() ? null : testMethods.get(0);
     }
 
-    public List<IMethod> getCorrespondingTestMethods(IMethod method)
+    public List<IMethod> getCorrespondingTestMethodsByName(IMethod method)
     {
         Collection<IType> allTestCases = getCorrespondingTestCases();
         return getTestMethodsForTestCases(method, allTestCases);
@@ -146,7 +146,7 @@ public class ClassTypeFacade extends TypeFacade
 
         if(searchMethod.searchByName)
         {
-            correspondingTestMethods.addAll(getCorrespondingTestMethods(method));
+            correspondingTestMethods.addAll(getCorrespondingTestMethodsByName(method));
         }
         return correspondingTestMethods;
     }

@@ -72,7 +72,7 @@ public class MoveMethodParticipant extends MoveParticipant
         // get the destination for the testmethods
         IType targetType = correspondingTestCaseList.iterator().next();
         
-        List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethods(movedMethod);
+        List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(movedMethod);
         
         List<Change> changes = new ArrayList<Change>();
         if(allTestMethods == null)
