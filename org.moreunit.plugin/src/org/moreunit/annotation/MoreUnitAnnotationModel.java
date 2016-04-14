@@ -36,8 +36,8 @@ import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.TestAnnotationMode;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.TestAnnotationMode;
 
 /**
  * @author vera 01.02.2009 14:27:06
@@ -49,7 +49,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
 
-    private final List<Annotation> annotations = Collections.synchronizedList(new ArrayList<Annotation>());
+    private final List<MoreUnitAnnotation> annotations = Collections.synchronizedList(new ArrayList<MoreUnitAnnotation>());
     private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
     private final IDocument document;
     private final ITextEditor textEditor;
@@ -152,10 +152,10 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     {
         synchronized (annotations)
         {
-            for (Annotation annotation : annotations)
+            for (MoreUnitAnnotation annotation : annotations)
             {
                 annotation.markDeleted(true);
-                event.annotationRemoved(annotation, ((MoreUnitAnnotation) annotation).getPosition());
+                event.annotationRemoved(annotation, annotation.getPosition());
             }
 
             annotations.clear();
@@ -304,11 +304,11 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (Annotation annotation : annotations)
+        for (MoreUnitAnnotation annotation : annotations)
         {
             try
             {
-                document.addPosition(((MoreUnitAnnotation) annotation).getPosition());
+                document.addPosition(annotation.getPosition());
             }
             catch (BadLocationException exc)
             {
@@ -324,15 +324,16 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (Annotation annotation : annotations)
+        for (MoreUnitAnnotation annotation : annotations)
         {
-            document.removePosition(((MoreUnitAnnotation) annotation).getPosition());
+            document.removePosition(annotation.getPosition());
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Iterator<Annotation> getAnnotationIterator()
     {
-        return annotations.iterator();
+        return new ArrayList(annotations).iterator();
     }
 
     public Position getPosition(Annotation annotation)
