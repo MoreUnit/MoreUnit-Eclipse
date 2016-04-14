@@ -49,7 +49,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
 
-    private final List<MoreUnitAnnotation> annotations = Collections.synchronizedList(new ArrayList<MoreUnitAnnotation>());
+    private final List<Annotation> annotations = Collections.synchronizedList(new ArrayList<Annotation>());
     private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
     private final IDocument document;
     private final ITextEditor textEditor;
@@ -152,10 +152,10 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     {
         synchronized (annotations)
         {
-            for (MoreUnitAnnotation annotation : annotations)
+            for (Annotation annotation : annotations)
             {
                 annotation.markDeleted(true);
-                event.annotationRemoved(annotation, annotation.getPosition());
+                event.annotationRemoved(annotation, ((MoreUnitAnnotation) annotation).getPosition());
             }
 
             annotations.clear();
@@ -304,11 +304,11 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (MoreUnitAnnotation annotation : annotations)
+        for (Annotation annotation : annotations)
         {
             try
             {
-                document.addPosition(annotation.getPosition());
+                document.addPosition(((MoreUnitAnnotation) annotation).getPosition());
             }
             catch (BadLocationException exc)
             {
@@ -324,13 +324,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (MoreUnitAnnotation annotation : annotations)
+        for (Annotation annotation : annotations)
         {
-            document.removePosition(annotation.getPosition());
+            document.removePosition(((MoreUnitAnnotation) annotation).getPosition());
         }
     }
 
-    public Iterator<MoreUnitAnnotation> getAnnotationIterator()
+    public Iterator<Annotation> getAnnotationIterator()
     {
         return annotations.iterator();
     }
