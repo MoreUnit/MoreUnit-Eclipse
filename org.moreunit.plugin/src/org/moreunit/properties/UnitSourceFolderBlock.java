@@ -31,6 +31,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 {
 
     private TreeViewer sourceFolderTree;
+    private Button addButton;
     private Button removeButton;
     private Button mappingButton;
     private UnitSourcesContentProvider unitSourcesContentProvider;
@@ -91,7 +92,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setFont(composite.getFont());
 
-        createAddButton(buttonComposite, composite.getFont());
+        addButton = createAddButton(buttonComposite, composite.getFont());
         removeButton = createRemoveButton(buttonComposite, composite.getFont());
         mappingButton = createMappingButton(buttonComposite, composite.getFont());
         removeButton.setEnabled(false);
@@ -220,11 +221,16 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     public void selectionChanged(SelectionChangedEvent event)
     {
-        Object selectedObject = getSelectedObject();
-        removeButton.setEnabled(selectedObject instanceof SourceFolderMapping);
-        mappingButton.setEnabled(selectedObject instanceof SourceFolderMapping);
+        removeButton.setEnabled(isSourceFolderMappingSelected());
+        mappingButton.setEnabled(isSourceFolderMappingSelected());
 
         propertyPage.updateValidState();
+    }
+
+    private boolean isSourceFolderMappingSelected()
+    {
+        Object selectedObject = getSelectedObject();
+        return selectedObject instanceof SourceFolderMapping;
     }
 
     public String getError()
@@ -234,5 +240,13 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
             return "Choose at least one test folder!";
         }
         return null;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        sourceFolderTree.getTree().setEnabled(enabled);
+        addButton.setEnabled(enabled);
+        removeButton.setEnabled(enabled && isSourceFolderMappingSelected());
+        mappingButton.setEnabled(enabled && isSourceFolderMappingSelected());
     }
 }
