@@ -98,9 +98,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         FillLayout buttonBoxLayout = new FillLayout(SWT.VERTICAL);
         buttonComposite.setLayout(buttonBoxLayout);
 
-        GridData layoutData = new GridData();
-        layoutData.widthHint = 100;
-        buttonComposite.setLayoutData(layoutData);
+        buttonComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).hint(100, SWT.DEFAULT).create());
     }
 
     private Button createAddButton(Composite buttonComposite, Font font)
