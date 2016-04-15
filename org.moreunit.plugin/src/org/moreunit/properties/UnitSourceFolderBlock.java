@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -68,10 +69,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         sourceFolderTree.setLabelProvider(new UnitSourceFolderLabelProvider());
         sourceFolderTree.addSelectionChangedListener(this);
         sourceFolderTree.setInput(javaProject);
-        GridData layoutData = new GridData();
-        layoutData.widthHint = 250;
-        layoutData.heightHint = 200;
-        sourceFolderTree.getControl().setLayoutData(layoutData);
+        sourceFolderTree.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     }
 
     private void createLabel(Composite composite)
