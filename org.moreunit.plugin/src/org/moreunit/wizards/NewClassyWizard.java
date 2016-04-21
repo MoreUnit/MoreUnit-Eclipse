@@ -17,7 +17,7 @@ import org.moreunit.log.LogHandler;
 public abstract class NewClassyWizard extends Wizard implements INewWizard
 {
     private WizardDialogFactory dialogFactory = new WizardDialogFactory();
-    
+
     private final IType element;
     private IType createdType;
 
@@ -36,6 +36,8 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
     public IType open()
     {
         WizardDialog dialog = dialogFactory.createWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
+        dialog.create();
+        dialog.getShell().setText("New JUnit Test Case");
         if(dialog.open() == Window.OK)
         {
             typeCreated(createdType);
