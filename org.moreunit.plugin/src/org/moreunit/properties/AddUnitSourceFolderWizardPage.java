@@ -6,11 +6,11 @@ import java.util.List;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.elements.SourceFolderMapping;
@@ -27,6 +27,8 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
     protected AddUnitSourceFolderWizardPage()
     {
         super("Add Unit Source Folder");
+        setTitle("Add Unit Source Folder");
+        setDescription("Please select source folders to add");
     }
 
     public void createControl(Composite parent)
@@ -42,11 +44,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
         checkboxTreeViewer.setContentProvider(workspaceSourceFolderContentProvider);
         checkboxTreeViewer.setInput(this);
 
-        GridData gridData = new GridData();
-        gridData.heightHint = 200;
-        gridData.widthHint = 400;
-
-        checkboxTreeViewer.getControl().setLayoutData(gridData);
+        checkboxTreeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         setControl(checkboxTreeViewer.getControl());
     }
 
