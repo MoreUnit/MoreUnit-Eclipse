@@ -36,8 +36,8 @@ import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
-import org.moreunit.preferences.TestAnnotationMode;
 import org.moreunit.preferences.Preferences;
+import org.moreunit.preferences.TestAnnotationMode;
 
 /**
  * @author vera 01.02.2009 14:27:06
@@ -330,9 +330,10 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
     }
 
-    public Iterator<MoreUnitAnnotation> getAnnotationIterator()
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public Iterator<Annotation> getAnnotationIterator()
     {
-        return annotations.iterator();
+        return new ArrayList(annotations).iterator();
     }
 
     public Position getPosition(Annotation annotation)

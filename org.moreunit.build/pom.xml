@@ -31,24 +31,6 @@
     <tests.use.ui>false</tests.use.ui>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>kepler</id>
-      <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/kepler</url>
-    </repository>
-    <repository>
-      <id>testng</id>
-      <layout>p2</layout>
-      <url>http://beust.com/eclipse</url>
-    </repository>
-    <repository>
-     <id>swtbot</id>
-     <layout>p2</layout>
-     <url>http://download.eclipse.org/technology/swtbot/releases/latest/</url>
-   </repository>
-  </repositories>
-
   <build>
     <extensions>
       <extension>
@@ -148,6 +130,15 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
+          <target>
+            <artifact>
+              <groupId>org.moreunit</groupId>
+              <artifactId>moreunit</artifactId>
+              <version>${project.version}</version>
+              <classifier>eclipse-4.3</classifier>
+            </artifact>
+          </target>
+          <includePackedArtifacts>true</includePackedArtifacts>
           <resolver>p2</resolver>
           <environments>
             <environment>
@@ -189,7 +180,7 @@
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
         <executions>
-          <!-- Deactivates standard Maven "deploy" goal at "deploy" phase, that makes no sens for an Eclipse plug-in. -->
+          <!-- Deactivates standard Maven "deploy" goal at "deploy" phase, that makes no sense for an Eclipse plug-in. -->
           <!-- Our deployment is handled via the org.moreunit.updatesite module -->
           <execution>
             <id>default-deploy</id>
