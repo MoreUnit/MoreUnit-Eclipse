@@ -13,12 +13,20 @@ public abstract class ShortcutStrategy
 	
 	public static ShortcutStrategy createShortcutStrategy()
 	{
-		return isRunningOnLinux() ? new LinuxShortcutStrategy() : new MacShortcutStrategy();
+	    if(isRunningOnLinuxOrWindows())
+	    {
+	        return new LinuxAndWindowsShortcutStrategy();
+	    }
+	    else
+	    {
+	        return new MacShortcutStrategy();
+	    }
 	}
 	
-	protected static boolean isRunningOnLinux() 
+	protected static boolean isRunningOnLinuxOrWindows() 
 	{
-		return System.getProperty("os.name").contains("Linux");
+		String osName = System.getProperty("os.name");
+        return osName.contains("Linux") || osName.contains("Win");
 	}
 	
 	public abstract void pressMoveShortcut();

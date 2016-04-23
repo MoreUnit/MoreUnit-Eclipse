@@ -140,6 +140,7 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     private void setEnabled(boolean enabled)
     {
+        firstTabUnitSourceFolder.setEnabled(enabled);
         secondTabOtherProperties.setEnabled(enabled);
         tabFolder.setEnabled(enabled);
     }

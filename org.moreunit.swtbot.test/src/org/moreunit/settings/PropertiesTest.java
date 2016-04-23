@@ -168,5 +168,29 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.checkBox("Use project specific settings").select();
         bot.tabItem("Other").activate();
     }
+    
+    @Test
+    public void should_DisabledUI_when_no_project_specific_settings_used() throws Exception
+    {
+        openProjectPropertiesAndSelectMoreUnitPage();
+        
+        assertTrue(bot.button("Add").isEnabled());
+        assertFalse(bot.button("Remove").isEnabled());
+        assertFalse(bot.button("Remap").isEnabled());
+        assertTrue(bot.tree(1).isEnabled());
+        
+        bot.checkBox("Use project specific settings").deselect();
+        assertFalse(bot.button("Add").isEnabled());
+        assertFalse(bot.button("Remove").isEnabled());
+        assertFalse(bot.button("Remap").isEnabled());
+        assertFalse(bot.tree(1).isEnabled());
+        
+        bot.checkBox("Use project specific settings").select();
+        bot.tree(1).select(0);
+        assertTrue(bot.button("Add").isEnabled());
+        assertTrue(bot.button("Remove").isEnabled());
+        assertTrue(bot.button("Remap").isEnabled());
+        assertTrue(bot.tree(1).isEnabled());
+    }
 
 }

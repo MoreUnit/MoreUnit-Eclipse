@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
-public class LinuxShortcutStrategy extends ShortcutStrategy
+public class LinuxAndWindowsShortcutStrategy extends ShortcutStrategy
 {
 
 	@Override

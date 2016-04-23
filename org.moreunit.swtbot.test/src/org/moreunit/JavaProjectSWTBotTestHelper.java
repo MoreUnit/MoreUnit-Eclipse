@@ -235,12 +235,13 @@ public class JavaProjectSWTBotTestHelper
 
     protected int getCmdOrStrgKeyForShortcutsDependentOnPlattform()
     {
-        return isRunningOnLinux() ? SWT.CTRL : SWT.COMMAND;
+        return isRunningOnLinuxOrWindows() ? SWT.CTRL : SWT.COMMAND;
     }
 
-    protected boolean isRunningOnLinux()
+    protected static boolean isRunningOnLinuxOrWindows() 
     {
-        return System.getProperty("os.name").contains("Linux");
+        String osName = System.getProperty("os.name");
+        return osName.contains("Linux") || osName.contains("Win");
     }
 
     protected Matcher<Shell> shellWithTextStartingWith(final String textStart)
