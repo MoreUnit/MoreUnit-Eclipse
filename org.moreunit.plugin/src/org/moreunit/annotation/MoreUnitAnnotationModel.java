@@ -304,7 +304,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (MoreUnitAnnotation annotation : annotations)
+        for (MoreUnitAnnotation annotation : copyAnnotations())
         {
             try
             {
@@ -324,7 +324,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (MoreUnitAnnotation annotation : annotations)
+        for (MoreUnitAnnotation annotation : copyAnnotations())
         {
             document.removePosition(annotation.getPosition());
         }
@@ -333,7 +333,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Iterator<Annotation> getAnnotationIterator()
     {
-        return new ArrayList(annotations).iterator();
+        return new ArrayList(copyAnnotations()).iterator();
     }
 
     public Position getPosition(Annotation annotation)
@@ -353,5 +353,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     public void removeAnnotationModelListener(IAnnotationModelListener listener)
     {
         annotationModelListeners.remove(listener);
+    }
+
+    private List<MoreUnitAnnotation> copyAnnotations()
+    {
+        synchronized (annotations)
+        {
+            return new ArrayList<MoreUnitAnnotation>(annotations);
+        }
     }
 }
