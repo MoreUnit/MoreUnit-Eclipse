@@ -17,7 +17,7 @@ import org.moreunit.log.LogHandler;
 public abstract class NewClassyWizard extends Wizard implements INewWizard
 {
     private WizardDialogFactory dialogFactory = new WizardDialogFactory();
-    
+
     private final IType element;
     private IType createdType;
 
@@ -26,6 +26,7 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
         this.element = element;
         setNeedsProgressMonitor(true);
         setDefaultPageImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/moreunitWizard.png"));
+        setWindowTitle("New JUnit Test Case");
     }
 
     protected IType getType()
