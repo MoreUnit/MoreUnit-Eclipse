@@ -6,7 +6,6 @@ package org.moreunit;
 import static org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory.withPartName;
 import static org.eclipse.swtbot.eclipse.finder.waits.Conditions.waitForView;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
-import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import java.util.List;
@@ -28,8 +27,8 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.matchers.WidgetOfType;
 import org.eclipse.swtbot.swt.finder.results.Result;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -130,11 +129,10 @@ public class JavaProjectSWTBotTestHelper
     protected void openResource(String resourceName)
     {
         KeyboardFactory.getAWTKeyboard().pressShortcut(getCmdOrStrgKeyForShortcutsDependentOnPlattform() | SWT.SHIFT, 'r');
-        SWTBotShell openTypeShell = bot.shell("Open Resource");
-        assertThat(openTypeShell).isNotNull();
-        openTypeShell.activate();
+        SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
+        bot.waitUntil(Conditions.shellIsActive("Open Resource"));
         SWTBotText searchField = new SWTBotText(bot.widget(widgetOfType(Text.class)));
-        searchField.typeText(resourceName);
+        searchField.setText(resourceName);
 
         bot.waitUntil(new DefaultCondition()
         {
