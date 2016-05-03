@@ -191,6 +191,8 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         assertTrue(bot.button("Remove").isEnabled());
         assertTrue(bot.button("Remap").isEnabled());
         assertTrue(bot.tree(1).isEnabled());
+        
+        saveAndCloseProps();
     }
 
 }
