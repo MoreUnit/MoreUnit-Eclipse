@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.core.CoreTestModule;
@@ -474,6 +475,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     @Test
     public void should_support_regex_symbols_in_file_name_separator() throws Exception
     {
+        Assume.assumeFalse("This test contains characters in files that are not supported on Windows.", System.getProperty("os.name").contains("Win"));
         // given
         preferences.add(new Language("nde", "NDE"));
 
