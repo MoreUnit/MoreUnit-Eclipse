@@ -31,6 +31,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 {
     private Button junit3Button;
     private Button junit4Button;
+    private Button spockButton;
     private Button testNgButton;
 
     private Button methodPrefixButton;
@@ -114,7 +115,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     {
         // Group with label
         Group group = new Group(parent, SWT.NONE);
-        group.setLayout(new GridLayout(3, false));
+        group.setLayout(new GridLayout(4, false));
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.horizontalSpan = 2;
         group.setLayoutData(gridData);
@@ -133,6 +134,13 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         junit4Button.setLayoutData(radioButtonLayoutData(true));
         junit4Button.setSelection(projectPreferences.shouldUseJunit4Type());
         junit4Button.addSelectionListener(this);
+
+        // Spock choice
+        spockButton = new Button(group, SWT.RADIO);
+        spockButton.setText(PreferenceConstants.TEXT_SPOCK);
+        spockButton.setLayoutData(radioButtonLayoutData(true));
+        spockButton.setSelection(projectPreferences.shouldUseSpockType());
+        spockButton.addSelectionListener(this);
 
         // TestNg choice
         testNgButton = new Button(group, SWT.RADIO);
@@ -373,7 +381,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     }
 
     /*
-     * One of the test type buttons was clicked by the use. Now it is necessary
+     * One of the test type buttons was clicked by the user. Now it is necessary
      * to check if the test method prefix checkbox should be hidden.
      */
     public void widgetSelected(SelectionEvent e)

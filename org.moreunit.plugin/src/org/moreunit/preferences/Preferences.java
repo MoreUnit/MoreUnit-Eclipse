@@ -608,6 +608,11 @@ public class Preferences
             return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(getTestType());
         }
 
+        public boolean shouldUseSpockType()
+        {
+            return PreferenceConstants.TEST_TYPE_VALUE_SPOCK.equals(getTestType());
+        }
+
         public boolean hasSpecificSettings()
         {
             return prefs.hasProjectSpecificSettings(project);
