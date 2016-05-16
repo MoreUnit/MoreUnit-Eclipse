@@ -24,6 +24,8 @@ public class TestLauncher
 {
     private static final String CONFIG_PROPERTY_CLASS = "class";
     private static final String JUNIT_EXTENSION_NAMESPACE_ID = "org.eclipse.jdt.junit";
+    /** Spock tests, by definition, run as JUnit tests */
+    private static final String SPOCK_EXTENSION_NAMESPACE_ID = "org.eclipse.jdt.junit";
     private static final String TESTNG_EXTENSION_NAMESPACE_ID = "org.testng.eclipse";
     private static final Map<String, String> EXTENSIONS_BY_TEST_TYPE;
     static
@@ -31,6 +33,7 @@ public class TestLauncher
         EXTENSIONS_BY_TEST_TYPE = new HashMap<String, String>();
         EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, JUNIT_EXTENSION_NAMESPACE_ID);
         EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, JUNIT_EXTENSION_NAMESPACE_ID);
+        EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_SPOCK, SPOCK_EXTENSION_NAMESPACE_ID);
         EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, TESTNG_EXTENSION_NAMESPACE_ID);
     }
 

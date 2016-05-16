@@ -188,6 +188,9 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
 
     public static class Defaults extends LanguagePreferencesReader
     {
+        private static final String TEST_SUFFIX = "Test";
+        private static final String SPOCK_TEST_SUFFIX = "Spec";
+
         public Defaults()
         {
             super(null, null, null);
@@ -208,7 +211,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         @Override
         public String getTestFileNameTemplate()
         {
-            return TestFileNamePattern.SRC_FILE_VARIABLE + "Test";
+            return TestFileNamePattern.SRC_FILE_VARIABLE + "(" + TEST_SUFFIX + "|"+ SPOCK_TEST_SUFFIX + ")";
         }
 
         @Override
