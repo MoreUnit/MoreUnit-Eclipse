@@ -40,6 +40,10 @@ public enum TestType {
 	 */
 	JUNIT_4(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4),
 	/**
+	 * Groovy-based Spock test method.
+	 */
+	SPOCK(PreferenceConstants.TEST_TYPE_VALUE_SPOCK), 
+	/**
 	 * TESTNG test method.
 	 */
 	TESTNG(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);

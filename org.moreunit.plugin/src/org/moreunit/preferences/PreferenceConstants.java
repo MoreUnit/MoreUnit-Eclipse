@@ -30,6 +30,7 @@ public interface PreferenceConstants
     String TEST_TYPE_VALUE_JUNIT_3 = "junit3";
     String TEST_TYPE_VALUE_JUNIT_4 = "junit4";
     String TEST_TYPE_VALUE_TESTNG = "testng";
+    String TEST_TYPE_VALUE_SPOCK = "spock";
     String TEST_SUPERCLASS = "org.moreunit.test_superclass";
 
     boolean DEFAULT_GENERATE_COMMENTS_FOR_TEST_METHOD = false;
@@ -51,6 +52,7 @@ public interface PreferenceConstants
     String TEXT_PACKAGE_PREFIX = "Test package prefix:";
     String TEXT_TEST_TYPE = "Test Type";
     String TEXT_TEST_NG = "TestNG";
+    String TEXT_SPOCK = "Spock";
     String TEXT_JUNIT_4 = "Junit 4";
     String TEXT_JUNIT_3_8 = "JUnit 3.8";
     String TEXT_TEST_METHOD_TYPE = "Use test-prefix for test-methods (e.g. testFoo())";
