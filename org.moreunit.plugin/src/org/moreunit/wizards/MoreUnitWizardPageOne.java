@@ -343,7 +343,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(fieldName.equals(JUNIT4TOGGLE))
         {
             updateBuildPathMessage();
-            boolean junit3 = ! (isJUnit4() || isTestNgSelected());
+            boolean junit3 = ! (isJUnit4() || isTestNgSelected() || isSpockSelected());
             fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, junit3);
@@ -373,6 +373,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private boolean isTestNgSelected()
     {
         return testNgToggle != null && testNgToggle.getSelection();
+    }
+
+    private boolean isSpockSelected()
+    {
+        return spockToggle != null && spockToggle.getSelection();
     }
 
     /*
@@ -573,24 +578,30 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void testTypeSelectionChanged()
     {
+        IPackageFragmentRoot mainSrcFolder = ((NewTestCaseWizard) getWizard()).getMainSrcFolder();
         if(junti3Toggle.getSelection())
         {
             setJUnit4(false, true);
+            setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
         }
         else if(unit4Toggle.getSelection())
         {
             setJUnit4(true, true);
             setSuperClass(preferences.getTestSuperClass(), true);
+            setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
         }
         else if(spockToggle.getSelection())
         {
             setJUnit4(false, true);
             setSuperClass(SPOCK_TEST_SUPERCLASS, true);
+            setPackageFragmentRoot(preferences.getSpockTestSourceFolder(mainSrcFolder), true);
+
         }
         else if(testNgToggle.getSelection())
         {
             setJUnit4(false, true);
             setSuperClass(preferences.getTestSuperClass(), true);
+            setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
             handleFieldChanged(JUNIT4TOGGLE);
         }
         updateTypeName();
@@ -1348,6 +1359,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return TestType.JUNIT_3;
         else if(unit4Toggle.getSelection())
             return TestType.JUNIT_4;
+        else if(spockToggle.getSelection())
+            return TestType.SPOCK;
         return TestType.TESTNG;
     }
 
@@ -1356,6 +1369,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
         else if(unit4Toggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        else if(spockToggle.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
     }
 
