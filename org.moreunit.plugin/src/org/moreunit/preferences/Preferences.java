@@ -368,6 +368,11 @@ public class Preferences
 
     public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder)
     {
+        return getTestSourceFolder(project, mainSrcFolder, null);
+    }
+
+    public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
+    {
         // check for project specific settings
         List<SourceFolderMapping> mappings = getSourceMappingList(project);
 
@@ -398,7 +403,7 @@ public class Preferences
         }
 
         // attempt to make everyone happy
-        IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder);
+        IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder, testFrameworkLanguage);
         if(mvnTestFolder != null)
             return mvnTestFolder;
 
@@ -565,7 +570,9 @@ public class Preferences
 
         public IPackageFragmentRoot getTestSourceFolder(IPackageFragmentRoot mainSrcFolder)
         {
-            return prefs.getTestSourceFolder(project, mainSrcFolder);
+            // trick into preferring "src/test/groovy" over "src/test/java" for java projects tested with Spock
+            String testFrameworkLanguage = shouldUseSpockType() ? "groovy" : null;
+            return prefs.getTestSourceFolder(project, mainSrcFolder, testFrameworkLanguage);
         }
 
         public String getTestMethodDefaultContent()

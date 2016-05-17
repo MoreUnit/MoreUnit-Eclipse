@@ -301,6 +301,11 @@ public class PluginTools
 
     public static IPackageFragmentRoot guessTestFolderCorrespondingToMainSrcFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder)
     {
+        return guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder, null);
+    }
+
+    public static IPackageFragmentRoot guessTestFolderCorrespondingToMainSrcFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
+    {
         List<IPackageFragmentRoot> allSourceFolders = getAllSourceFolderFromProject(project);
         if(allSourceFolders.isEmpty())
             return null;
@@ -311,7 +316,7 @@ public class PluginTools
         if(allSourceFolders.size() == 2)
             return firstSourceFolderNotEqualTo(allSourceFolders, mainSrcFolder);
 
-        IPackageFragmentRoot likelyTestFolder = findLikelyTestFolder(allSourceFolders, mainSrcFolder);
+        IPackageFragmentRoot likelyTestFolder = findLikelyTestFolder(allSourceFolders, mainSrcFolder, testFrameworkLanguage);
         if(likelyTestFolder != null)
             return likelyTestFolder;
 
@@ -319,11 +324,11 @@ public class PluginTools
         return firstSourceFolderNotEqualTo(allSourceFolders, mainSrcFolder);
     }
 
-    private static IPackageFragmentRoot findLikelyTestFolder(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot mainSrcFolder)
+    private static IPackageFragmentRoot findLikelyTestFolder(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
     {
         String mainSrcFolderPath = getPathStringWithoutProjectName(mainSrcFolder);
 
-        IPackageFragmentRoot testSrcFolder = findMavenLikeTestFolderFor(allSourceFolders, mainSrcFolderPath);
+        IPackageFragmentRoot testSrcFolder = findMavenLikeTestFolderFor(allSourceFolders, mainSrcFolderPath, testFrameworkLanguage);
         if(testSrcFolder != null)
             return testSrcFolder;
 
@@ -335,13 +340,13 @@ public class PluginTools
         return null;
     }
 
-    private static IPackageFragmentRoot findMavenLikeTestFolderFor(List<IPackageFragmentRoot> allSourceFolders, String mainSrcFolderPath)
+    private static IPackageFragmentRoot findMavenLikeTestFolderFor(List<IPackageFragmentRoot> allSourceFolders, String mainSrcFolderPath, String testFrameworkLanguage)
     {
         Matcher matcher = MAVEN_MAIN_FOLDER.matcher(mainSrcFolderPath);
         if(! matcher.matches())
             return null;
 
-        String languagePart = matcher.group(1);
+        String languagePart = testFrameworkLanguage != null ? testFrameworkLanguage : matcher.group(1);
         String testSourceFolderForLanguage = "src/test/" + languagePart;
 
         for (IPackageFragmentRoot folder : allSourceFolders)
