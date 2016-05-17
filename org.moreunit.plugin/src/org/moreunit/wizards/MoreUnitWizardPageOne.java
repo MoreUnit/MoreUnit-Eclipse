@@ -340,7 +340,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(fieldName.equals(JUNIT4TOGGLE))
         {
             updateBuildPathMessage();
-            boolean junit3 = ! (isJUnit4() || isTestNgSelected());
+            boolean junit3 = ! (isJUnit4() || isTestNgSelected() || isSpockSelected());
             fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, junit3);
@@ -370,6 +370,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private boolean isTestNgSelected()
     {
         return testNgToggle != null && testNgToggle.getSelection();
+    }
+
+    private boolean isSpockSelected()
+    {
+        return spockToggle != null && spockToggle.getSelection();
     }
 
     /*
@@ -1171,7 +1176,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     protected IStatus superClassChanged()
     {
         // replaces the super class validation of of the normal type wizard
-        if(isJUnit4() || isTestNgSelected())
+        if(isJUnit4() || isTestNgSelected() || isSpockSelected())
         {
             return new JUnitStatus();
         }
@@ -1332,6 +1337,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return TestType.JUNIT_3;
         else if(unit4Toggle.getSelection())
             return TestType.JUNIT_4;
+        else if(spockToggle.getSelection())
+            return TestType.SPOCK;
         return TestType.TESTNG;
     }
 
@@ -1340,6 +1347,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
         else if(unit4Toggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        else if(spockToggle.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
     }
 

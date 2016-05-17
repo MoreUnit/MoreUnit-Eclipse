@@ -366,6 +366,8 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
         else if(junit4Button.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        else if(spockButton.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
         else if(testNgButton.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
