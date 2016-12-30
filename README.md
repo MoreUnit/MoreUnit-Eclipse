@@ -1,16 +1,16 @@
 # MoreUnit For Eclipse
 
-<img alt="MoreUnit Logo" src="http://moreunit.sourceforge.net/img/logo.png" />
+<img alt="MoreUnit Logo" src="https://moreunit.github.io/MoreUnit-Eclipse/img/logo.png" />
 
 MoreUnit is an Eclipse plugin that should assist you in writing more unit tests.
 
 It supports all programming languages (switching between tests and classes under tests...) and has specific support for Java (creating test stubs, mock support, decoration, refactoring support...).
 
-[Go to the website!](http://moreunit.sourceforge.net/)
+[Go to the website!](https://moreunit.github.io/MoreUnit-Eclipse/)
 
 Searching for MoreUnit for IntelliJ? [Here it is!](https://github.com/MoreUnit/org.moreunit.intellij.plugin)
 
-MoreUnit previously was hosted on SourceForge, and you can still find information at [http://moreunit.sourceforge.net](http://moreunit.sourceforge.net).
+MoreUnit previously was hosted on SourceForge, and you can still find information at [https://sourceforge.net/projects/moreunit/](https://sourceforge.net/projects/moreunit/).
 
 
 ## LICENSE
