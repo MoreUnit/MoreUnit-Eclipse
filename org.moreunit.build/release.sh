@@ -9,17 +9,25 @@
 # useful for testing
 mvnopts=""
 
+
+## TODO
+# - Get rid of all Sourceforge stuff
+# - Use Github API to publish the all-in-one-zip update-site (see https://developer.github.com/v3/repos/releases/)
+
+
 CALL_DIR=`pwd`
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_DIR="$SCRIPT_DIR/.."
 
 RELEASE_REPO_DIR="$CALL_DIR/.release-build"
 RELEASE_BUILD_DIR="$RELEASE_REPO_DIR/org.moreunit.build"
+UPDATE_SITE_ARTIFACTS_DIR="$RELEASE_REPO_DIR/org.moreunit.updatesite/target/repository"
+UPDATE_SITE_REPO_DIR="$REPO_DIR/../eclipse-update-site"
 WIP_COMMENT="Work in progress"
 
 BRANCH=$(git branch --no-color | awk '$1=="*" {print $2}')
 ORIGIN=$(git remote -v | awk '$1=="origin" && $3=="(push)" {print $2}')
-MVN_PROFIL=release
+MVN_PROFILE=release
 
 function notify_user {
   echo
@@ -59,7 +67,9 @@ function restore_work_in_progress {
 }
 
 function update_local_repository {
-  echo "Updating local repository..."
+  local repo_name="$(basename `pwd`)"
+  local branch=$(git branch --no-color | awk '$1=="*" {print $2}')
+  echo "Updating local repository ($repo_name)..."
 
   git fetch
   if [ "$?" -ne 0 ]
@@ -68,7 +78,7 @@ function update_local_repository {
   fi
 
   stash_work_in_progress
-  git rebase origin/${BRANCH}
+  git rebase origin/${branch}
 
   if [ "$?" -ne 0 ]
   then
@@ -119,12 +129,27 @@ function set_version {
   rm -f "$MOCK_FEATURE_FILE.bak"
 }
 
+function publish_github_update_site {
+  local VERSION="$1"
+  cd "$UPDATE_SITE_REPO_DIR"
+  update_local_repository
+
+  git rm -r artifacts.jar content.jar features plugins
+  cp -r "$UPDATE_SITE_ARTIFACTS_DIR"/* .
+  git add *
+  git commit -m "Release $VERSION"
+  git push
+}
+
 function zip_file_reminder {
+  local VERSION="$1"
   echo
   echo "** REMINDER *****************************************************"
   echo "* Don't forget to upload                                        *"
-  echo "*     org.moreunit.updatesite/target/org.moreunit-VERSION.zip   *"
+  echo "*     org.moreunit.updatesite/target/org.moreunit-${VERSION}.zip   *"
   echo "* on                                                            *"
+  echo "*     https://github.com/MoreUnit/MoreUnit-Eclipse/releases/edit/${VERSION} *"
+  echo "* and                                                           *"
   echo "*     https://sourceforge.net/projects/moreunit/files/moreunit/ *"
   echo "*****************************************************************"
   echo
@@ -150,6 +175,13 @@ fi
 #  echo
 #fi
 
+if [ ! -d "$UPDATE_SITE_REPO_DIR" ]; then
+  echo "Expected directory $UPDATE_SITE_REPO_DIR to exist and point to https://github.com/MoreUnit/eclipse-update-site"
+  echo "Can't publish the update site otherwise."
+  echo "Please clone the repository at the expected location (or create a symlink to where you cloned it)."
+  exit 1
+fi
+
 cd "$REPO_DIR"
 
 update_local_repository
@@ -169,22 +201,24 @@ git tag -a "v$version" -m "Version $version"
 
 cd "$RELEASE_BUILD_DIR"
 
-mvn clean deploy $mvnopts -P$MVN_PROFIL
+mvn clean deploy $mvnopts -P$MVN_PROFILE
 if [ $? -ne 0 ]; then
   failure "Build failed. Release aborted."
 fi
 
-# from this point, the release cannot be aborted anymore: the artifacts are on the update site! 
+# from this point, the release shouldn't be aborted anymore: the artifacts are on the Sourceforge update site! 
 
-# first push, to ensure a consistent state between the remote repo and the update site
+# first push, to ensure a consistent state between the remote repo and the Sourceforge update site
 git push --tags $ORIGIN $BRANCH
 if [ $? -ne 0 ]; then
-  failure "Unable to push. Release aborted. THE NEWLY CREATED ARTIFACTS ARE ALREADY UPLOADED!"
+  failure "Unable to push. Release aborted. THE NEWLY CREATED ARTIFACTS ARE ALREADY UPLOADED TO SOURCEFORGE!"
 fi
+
+publish_github_update_site $nextVersion
 
 # first notification, in case of failure during the next steps
 notify_user "Release successful!"
-zip_file_reminder
+zip_file_reminder $nextVersion
 
 notify_user "Preparing code for development on version $nextVersion..."
 set_version $nextVersion 'SNAPSHOT'
@@ -203,6 +237,6 @@ notify_user "Code ready for development on version $nextVersion"
 cd "$REPO_DIR" && git fetch
 cd "$CALL_DIR"
 # second notification, to be sure we don't forget about the zip file
-zip_file_reminder
+zip_file_reminder $nextVersion
 success "Version $version successfully released!"
 
