@@ -37,6 +37,8 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
     public IType open()
     {
         WizardDialog dialog = dialogFactory.createWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
+        dialog.create();
+        dialog.getShell().setText("New JUnit Test Case");
         if(dialog.open() == Window.OK)
         {
             typeCreated(createdType);
