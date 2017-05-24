@@ -25,19 +25,22 @@ public final class FileNameEvaluation
     private static final Pattern SUCCESSIVE_QUOTE_SEPARATORS = Pattern.compile("\\\\E\\\\Q");
     private static final Pattern WILDCARDS = Pattern.compile("\\.\\*");
 
+    
     private final String evaluatedFileName;
     private final boolean testFile;
     private final Collection<String> otherCorrespondingFilePatterns;
     private final Collection<String> preferredCorrespondingFilePatterns;
     private final String preferredCorrespondingFileName;
+    private String correspondingExtension;
 
-    public FileNameEvaluation(String evaluatedFileName, boolean testFile, String preferredCorrespondingFileName, Collection<String> preferredCorrespondingFilePatterns, Collection<String> otherCorrespondingFilePatterns)
+    public FileNameEvaluation(String evaluatedFileName, boolean testFile, String preferredCorrespondingFileName, Collection<String> preferredCorrespondingFilePatterns, Collection<String> otherCorrespondingFilePatterns, String correspondingExtension)
     {
         this.evaluatedFileName = evaluatedFileName;
         this.testFile = testFile;
         this.preferredCorrespondingFileName = preferredCorrespondingFileName;
         this.preferredCorrespondingFilePatterns = simplify(preferredCorrespondingFilePatterns);
         this.otherCorrespondingFilePatterns = simplify(otherCorrespondingFilePatterns);
+        this.correspondingExtension = correspondingExtension;
     }
 
     private static Collection<String> simplify(Collection<String> patterns)
@@ -139,5 +142,15 @@ public final class FileNameEvaluation
                              preferredCorrespondingFileName, StringConstants.NEWLINE, //
                              preferredCorrespondingFilePatterns, StringConstants.NEWLINE, //
                              otherCorrespondingFilePatterns, StringConstants.NEWLINE);
+    }
+
+    public String getCorrespondingExtenstion()
+    {
+        return correspondingExtension;
+    }
+
+    public void setCorrespondingExtension(String correspondingExtension)
+    {
+        this.correspondingExtension = correspondingExtension;
     }
 }

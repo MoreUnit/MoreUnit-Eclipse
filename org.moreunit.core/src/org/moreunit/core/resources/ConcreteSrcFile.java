@@ -47,9 +47,22 @@ public class ConcreteSrcFile implements SrcFile
     {
         if(nameEvaluation == null)
         {
-            TestFileNamePattern testFilePattern = getLanguagePreferences().getTestFileNamePattern();
+            TestFileNamePattern testFilePattern = getLanguagePreferences().getTestFileNamePattern();      
+            Boolean extEnable = getLanguagePreferences().getExtEnable();
             String basename = file.getPath().getBaseNameWithoutExtension();
-            nameEvaluation = testFilePattern.evaluate(basename);
+            String actualExt = file.getPath().getExtension();
+            
+            if(extEnable)
+            {   // testExt or srcExt is used
+                String testExt = getLanguagePreferences().getTestFileExt();
+                String srcExt = getLanguagePreferences().getSrcFileExt();
+                
+                nameEvaluation = testFilePattern.evaluate(basename, actualExt, srcExt, testExt);
+            }
+            else
+            {                
+                nameEvaluation = testFilePattern.evaluate(basename, actualExt);
+            }
         }
         return nameEvaluation;
     }

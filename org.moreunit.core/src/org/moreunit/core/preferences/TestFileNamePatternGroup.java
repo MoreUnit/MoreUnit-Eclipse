@@ -19,14 +19,16 @@ import org.moreunit.core.ui.FileNamePatternDemo;
 import org.moreunit.core.ui.Labels;
 import org.moreunit.core.ui.LayoutData;
 
-public class TestFileNamePatternGroup
+public class TestFileNamePatternGroup implements GenericPreferencesGroup
 {
     private static final int EXPLANATION_WIDTH_HINT = 350;
 
     private final ExpandableCompositeContainer container;
     private final TestFileNamePatternPreferencesWriter prefWriter;
-    private final Text testFileTemplateField;
-    private final OptionalTextField wordSeparatorField;
+    private final Composite fileTplGroup;
+    private final Boolean forceCamelCase;    
+    private Text testFileTemplateField;
+    private OptionalTextField wordSeparatorField;
 
     public static TestFileNamePatternGroup forCamelCasePattern(Composite parent, ExpandableCompositeContainer container, TestFileNamePatternPreferencesWriter prefsWriter)
     {
@@ -42,14 +44,21 @@ public class TestFileNamePatternGroup
     {
         this.container = container;
         this.prefWriter = prefsWriter;
+        this.forceCamelCase = forceCamelCase;
+        
+        fileTplGroup = Composites.gridGroup(parent, "Rule for naming test files:", 2, 10);
 
-        Composite fileTplGroup = Composites.gridGroup(parent, "Rule for naming test files:", 2, 10);
+    }
+    
 
+    @Override
+    public void createContents()
+    {
         testFileTemplateField = createFileTemplateField(fileTplGroup);
         wordSeparatorField = createWordSeparatorField(fileTplGroup, forceCamelCase);
         createFileTplExplanations(fileTplGroup);
-        createOverviewArea(fileTplGroup);
-    }
+        createOverviewArea(fileTplGroup);        
+    }    
 
     private Text createFileTemplateField(Composite parent)
     {

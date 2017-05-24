@@ -659,4 +659,69 @@ public class TestFileNamePatternTest
         assertThat(result.getOtherCorrespondingFilePatterns()) //
         .hasSize(2).contains("\\Qsome*file\\E", "\\Qsome\\E");
     }
+    
+    @Test     
+    public void should_match_correct_file_with_test_ext() throws Exception
+    {
+        // given        
+        String testExt = "test";
+        String srcExt = "source";     
+        String actualExt = "test";        
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", camelCaseTokenizer);
+        
+        // when
+        FileNameEvaluation result = pattern.evaluate("someFileTest", actualExt, srcExt, testExt);
+        
+        // then
+        assertTrue(result.isTestFile());
+        assertTrue(result.getCorrespondingExtenstion().equals(srcExt));
+    }
+    
+    @Test     
+    public void should_match_correct_file_with_test_ext_but_wrong_pattern() throws Exception
+    {
+        // given        
+        String testExt = "test";
+        String srcExt = "source";        
+        String actualExt = "test";
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", camelCaseTokenizer);
+        
+        // when
+        FileNameEvaluation result = pattern.evaluate("someFile", actualExt, srcExt, testExt);
+        
+        // then
+        assertTrue(result.isTestFile() == false);
+    }
+    
+    @Test     
+    public void should_match_correct_file_with_wrong_ext_but_correct_pattern() throws Exception
+    {
+        // given        
+        String testExt = "test";
+        String srcExt = "source";     
+        String actualExt = "somethingElse";        
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", camelCaseTokenizer);
+        
+        // when
+        FileNameEvaluation result = pattern.evaluate("someFileTest", actualExt, srcExt, testExt);
+        
+        // then
+        assertTrue(result.isTestFile() == false);
+    }
+    
+    @Test     
+    public void should_match_correct_file_with_src_ext() throws Exception
+    {
+        // given        
+        String testExt = "test";
+        String srcExt = "source";     
+        String actualExt = "source";        
+        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", camelCaseTokenizer);
+        
+        // when
+        FileNameEvaluation result = pattern.evaluate("someFile", actualExt, srcExt, testExt);
+        
+        // then
+        assertTrue(result.isTestFile() == false);
+    }    
 }

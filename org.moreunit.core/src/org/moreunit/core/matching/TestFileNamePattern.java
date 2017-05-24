@@ -433,15 +433,48 @@ public final class TestFileNamePattern
      * </ul>
      *
      * @param fileBaseName the file name to evaluate
+     * @param actualExt 
      * @return the {@link FileNameEvaluation result} of the evaluation
      */
     public FileNameEvaluation evaluate(String fileBaseName)
     {
         if(fileType == FileType.TEST || (fileType == FileType.UNKNOWN && matchesAnyPattern(fileBaseName)))
         {
-            return buildTestFileResult(fileBaseName);
+            return buildTestFileResult(fileBaseName, "");
         }
-        return buildSrcFileResult(fileBaseName);
+        return buildSrcFileResult(fileBaseName, "");
+    }
+    
+    public FileNameEvaluation evaluate(String fileBaseName, String actualExt)
+    {
+        if(fileType == FileType.TEST || (fileType == FileType.UNKNOWN && matchesAnyPattern(fileBaseName)))
+        {
+            return buildTestFileResult(fileBaseName, actualExt);
+        }
+        return buildSrcFileResult(fileBaseName, actualExt);
+    }
+    
+    public FileNameEvaluation evaluate(String fileName, String fileExt, String srcExt, String testExt)
+    {
+        boolean hasSrcExt = true;
+        boolean hasTestExt = true;
+        
+        if( (0 != srcExt.length()) && (!fileExt.equals(srcExt)))
+        {
+            hasSrcExt = false;
+        }
+        
+        if( (0 < testExt.length()) && (!fileExt.equals(testExt)))
+        {
+            hasTestExt = false;
+        }   
+        
+        if( ((hasTestExt && !hasSrcExt)  && matchesAnyPattern(fileName) && (fileType == FileType.UNKNOWN)) || (fileType == FileType.TEST) )
+        {
+            return buildTestFileResult(fileName, srcExt);
+        }
+
+        return buildSrcFileResult(fileName, testExt);
     }
 
     private boolean matchesAnyPattern(String str)
@@ -456,13 +489,13 @@ public final class TestFileNamePattern
         return false;
     }
 
-    private FileNameEvaluation buildTestFileResult(String fileBaseName)
+    private FileNameEvaluation buildTestFileResult(String fileBaseName, String ext)
     {
         String preferredName = buildPreferredSrcFileName(fileBaseName);
 
         List<String> otherPatterns = buildOtherCorrespondingSrcFilePatterns(preferredName);
 
-        return new FileNameEvaluation(fileBaseName, true, preferredName, asList(quote(preferredName)), otherPatterns);
+        return new FileNameEvaluation(fileBaseName, true, preferredName, asList(quote(preferredName)), otherPatterns, ext);
     }
 
     /**
@@ -514,7 +547,7 @@ public final class TestFileNamePattern
         return patterns;
     }
 
-    private FileNameEvaluation buildSrcFileResult(String srcFileName)
+    private FileNameEvaluation buildSrcFileResult(String srcFileName, String ext)
     {
         String preferredTestFileName = buildPreferredTestFileName(srcFileName);
         ;
@@ -525,7 +558,7 @@ public final class TestFileNamePattern
 
         List<String> otherPatterns = buildOtherCorrespondingTestFilePatterns(quotedSrcFileName);
 
-        return new FileNameEvaluation(srcFileName, false, preferredTestFileName, preferredPatterns, otherPatterns);
+        return new FileNameEvaluation(srcFileName, false, preferredTestFileName, preferredPatterns, otherPatterns, ext);
     }
 
     private String buildPreferredTestFileName(String srcFileName)

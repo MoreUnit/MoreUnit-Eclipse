@@ -60,7 +60,7 @@ public abstract class FileNamePatternDemo
                     inputField.setText(generateSourceFileName(pattern));
                 }
 
-                FileNameEvaluation evaluation = pattern.evaluate(fileName);
+                FileNameEvaluation evaluation = pattern.evaluate(fileName, "");
 
                 fileTypeLbl.setText(fileName + " is a " + (evaluation.isTestFile() ? "test" : "source") + " file");
 

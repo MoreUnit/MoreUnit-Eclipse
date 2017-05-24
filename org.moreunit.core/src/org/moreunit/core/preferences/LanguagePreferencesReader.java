@@ -37,9 +37,32 @@ public class LanguagePreferencesReader extends LanguagePreferences
     {
         return orDefault(getString(LanguagePreferences.TEST_FOLDER_PATH_TEMPLATE), defaults.getTestFolderPathTemplate());
     }
+    
+    @Override
+    public String getTestFileExt()
+    {
+        return orDefault(getString(LanguagePreferences.TEST_FILE_EXT), defaults.getTestFileExt());
+    }
+    
+    @Override
+    public String getSrcFileExt()
+    {
+        return orDefault(getString(LanguagePreferences.SRC_FILE_EXT), defaults.getSrcFileExt());
+    }    
 
     public TestFolderPathPattern getTestFolderPathPattern()
     {
         return new TestFolderPathPattern(getSrcFolderPathTemplate(), getTestFolderPathTemplate());
+    }
+
+    @Override
+    public Boolean getExtEnable()
+    {
+        String string = getString(LanguagePreferences.EXT_ENABLE);
+        Boolean checkBool = null;        
+        if(null != string && 0 != string.length()) {
+            checkBool = getString(LanguagePreferences.EXT_ENABLE).equals(BOOL_TRUE);
+        }                
+        return orDefault(checkBool, defaults.getExtEnable());
     }
 }

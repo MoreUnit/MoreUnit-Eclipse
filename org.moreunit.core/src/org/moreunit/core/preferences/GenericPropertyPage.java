@@ -56,7 +56,7 @@ public class GenericPropertyPage extends PropertyPage
 
         if(prefs.isActive())
         {
-            delegate.validate();
+            delegate.validateNamePattern();
         }
         else
         {
@@ -81,7 +81,7 @@ public class GenericPropertyPage extends PropertyPage
 
                 if(checked)
                 {
-                    delegate.validate();
+                    delegate.validateNamePattern();
                 }
             }
         });

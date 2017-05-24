@@ -185,6 +185,11 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
     {
         return value != null && value.length() != 0 ? value : defaultValue;
     }
+    
+    static Boolean orDefault(Boolean value, Boolean defaultValue)
+    {
+        return value != null ? value : defaultValue;
+    }
 
     public static class Defaults extends LanguagePreferencesReader
     {
@@ -215,6 +220,21 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         public String getTestFolderPathTemplate()
         {
             return TestFolderPathPattern.SRC_PROJECT_VARIABLE;
+        }
+        
+        public String getTestFileExt()
+        {
+            return "";
+        }
+        
+        public String getSrcFileExt()
+        {
+            return "";
+        }
+        
+        public Boolean getExtEnable()
+        {
+            return false;            
         }
     }
 }

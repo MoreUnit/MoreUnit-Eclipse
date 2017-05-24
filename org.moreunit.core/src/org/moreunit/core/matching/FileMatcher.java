@@ -27,26 +27,42 @@ public class FileMatcher
         FileMatchCollector matchCollector = strategy.createMatchCollector(correspondingSrcFolder);
         Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
-        searchFor(nameEvaluation.getAllCorrespondingFilePatterns(), searchFolder, matchCollector);
+        searchFor(nameEvaluation.getAllCorrespondingFilePatterns(), searchFolder, matchCollector, nameEvaluation.getCorrespondingExtenstion());
 
         return new MatchResult(matchCollector, createPreferredFileName(nameEvaluation), correspondingSrcFolder, matchSelector);
     }
 
-    private void searchFor(Collection<String> filePatterns, Resource searchFolder, FileMatchCollector matchCollector)
+    private void searchFor(Collection<String> filePatterns, Resource searchFolder, FileMatchCollector matchCollector, String ext)
     {
         if(filePatterns.isEmpty())
             return;
-
-        Pattern fileNamePattern2 = createFileNamePattern(file, filePatterns);
+        
+        if(0 == ext.length())
+        {
+            ext = file.getExtension();
+        }
+        
+        Pattern fileNamePattern2 = createFileNamePattern(ext, filePatterns);
         searchEngine.searchFiles(searchFolder, fileNamePattern2, matchCollector);
     }
 
     private String createPreferredFileName(FileNameEvaluation evaluation)
     {
-        return evaluation.getPreferredCorrespondingFileName() + "." + file.getExtension();
+        String prefferedFileName = "";
+        
+        if(0 != evaluation.getCorrespondingExtenstion().length())
+        {
+            prefferedFileName = evaluation.getPreferredCorrespondingFileName() + "." + evaluation.getCorrespondingExtenstion();
+        }
+        else
+        {
+            prefferedFileName = evaluation.getPreferredCorrespondingFileName() + "." + file.getExtension();
+        }
+        
+        return prefferedFileName;
     }
 
-    private Pattern createFileNamePattern(SrcFile file, Collection<String> correspondingFileNames)
+    private Pattern createFileNamePattern(String extension, Collection<String> correspondingFileNames)
     {
         StringBuilder sb = null;
         // creates an OR pattern with file names
@@ -64,8 +80,6 @@ public class FileMatcher
         }
 
         sb.append(")");
-
-        String extension = file.getExtension();
 
         // creates an OR pattern with the file extension: same case OR lower
         // case OR upper case (so a file having an extension with a mixed case
