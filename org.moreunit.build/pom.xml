@@ -175,6 +175,7 @@
         <configuration>
           <useUIHarness>${tests.use.ui}</useUIHarness>
           <useUIThread>${tests.use.ui}</useUIThread>
+          <appArgLine>-consoleLog</appArgLine>
         </configuration>
       </plugin>
       <plugin>
