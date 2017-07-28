@@ -139,13 +139,15 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private Button testNgToggle;
 
     private final ProjectPreferences preferences;
+    private IJavaProject javaProjectUnderTest;
     private final LanguageType langType;
 
     private TmpMemento tmpMemento;
 
-    public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, ProjectPreferences preferences, LanguageType langType)
+    public MoreUnitWizardPageOne(NewTestCaseWizardPageTwo page2, IJavaProject javaProjectUnderTest, ProjectPreferences preferences, LanguageType langType)
     {
         super(true, PAGE_NAME);
+        this.javaProjectUnderTest = javaProjectUnderTest;
         this.preferences = preferences;
 
         fPage2 = page2;
@@ -736,7 +738,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         if(root == null)
             return null;
 
-        IJavaElement[] elements = new IJavaElement[] { root.getJavaProject() };
+        IJavaElement[] elements = new IJavaElement[] { javaProjectUnderTest };
         IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
 
         try
@@ -806,7 +808,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         IPackageFragment pack = getPackageFragment(); // can be null
         try
         {
-            IType type = resolveClassNameToType(root.getJavaProject(), pack, classToTestName);
+            IType type = resolveClassNameToType(javaProjectUnderTest, pack, classToTestName);
             if(type == null)
             {
                 status.setError(WizardMessages.NewTestCaseWizardPageOne_error_class_to_test_not_exist);

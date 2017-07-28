@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.moreunit.log.LogHandler;
@@ -35,7 +36,8 @@ public class CorrespondingTypeSearcher
     {
         this.preferences = preferences.getProjectView(compilationUnit.getJavaProject());
         nameEvaluation = this.preferences.getTestClassNamePattern().evaluate(compilationUnit.findPrimaryType());
-        searchScope = SearchScopeSingelton.getInstance().getSearchScope(PluginTools.getSourceFolder(compilationUnit));
+        IPackageFragmentRoot testSourceFolder = preferences.getTestSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit));
+        searchScope = SearchScopeSingelton.getInstance().getSearchScope(testSourceFolder);
     }
 
     public Collection<IType> getMatches(boolean alsoIncludeLikelyMatches)
