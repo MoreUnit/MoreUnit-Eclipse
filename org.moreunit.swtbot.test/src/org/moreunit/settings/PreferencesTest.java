@@ -18,7 +18,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
     private void openPreferencesAndSelectMoreUnitPage()
     {
         getShortcutStrategy().openPreferences();
-        bot.waitUntil(Conditions.shellIsActive("Preferences"));
+        bot.waitUntil(Conditions.shellIsActive("Preferences"), 20000);
         bot.shell("Preferences").activate();
         bot.shell("Preferences").setFocus();
         bot.tree().expandNode("MoreUnit").select("Java");
