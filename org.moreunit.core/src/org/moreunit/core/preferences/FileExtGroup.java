@@ -111,21 +111,24 @@ public class FileExtGroup implements GenericPreferencesGroup
     {
         String errorMsg = null;
 
-        if(0 == srcFileExt.getField().getText().length()
-           && 0 == testFileExt.getField().getText().length())
-        {
-            errorMsg = "Please enter file extensions.";
-        }
-        
-        if(0 == srcFileExt.getField().getText().length()
-            || 0 == testFileExt.getField().getText().length())
-         {
-             errorMsg = "Please enter a file extension for test files and source files.";
-         }        
-        
-        if(!(srcFileExt.isValid() && testFileExt.isValid()))
-        {
-            errorMsg = "Please enter the file extension in the format \"[.]extension\"";
+        if(checkBox.getSelection())
+        {        
+            if(0 == srcFileExt.getField().getText().length()
+               && 0 == testFileExt.getField().getText().length())
+            {
+                errorMsg = "Please enter file extensions.";
+            }
+            
+            if(0 == srcFileExt.getField().getText().length()
+                || 0 == testFileExt.getField().getText().length())
+             {
+                 errorMsg = "Please enter a file extension for test files and source files.";
+             }        
+            
+            if(!(srcFileExt.isValid() && testFileExt.isValid()))
+            {
+                errorMsg = "Please enter the file extension in the format \"[.]extension\"";
+            }
         }
 
         return errorMsg;
@@ -134,12 +137,14 @@ public class FileExtGroup implements GenericPreferencesGroup
     public String getWarning()
     {
         String warrningMsg = null;        
-        
-        if(srcFileExt.getField().getText().equals(testFileExt.getField().getText()))
-        {
-            warrningMsg = "If you want to use the same file extension you can uncheck this group.";
-        }        
-        
+        if(checkBox.getSelection())
+        {  
+            if(srcFileExt.getField().getText().equals(testFileExt.getField().getText()))
+            {
+                warrningMsg = "If you want to use the same file extension you can uncheck this group.";
+            }           
+        }
+            
         return warrningMsg;
     }
 
@@ -165,6 +170,16 @@ public class FileExtGroup implements GenericPreferencesGroup
     public void addModifyListener(ModifyListener listener)
     {
         srcFileExt.addModifyListener(listener);
-        testFileExt.addModifyListener(listener);
+        testFileExt.addModifyListener(listener);        
+      
+        checkBox.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                // we trigger the textfield modifylistener because we cant use ModifyListener on the checkbox 
+                srcFileExt.setText(srcFileExt.getExtension() + "");
+            }
+        });
+
     }
 }

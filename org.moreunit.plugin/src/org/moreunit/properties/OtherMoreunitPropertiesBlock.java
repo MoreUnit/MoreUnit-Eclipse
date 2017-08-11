@@ -173,6 +173,8 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
                 return "";
             }
         });
+
+        testCaseNamePatternArea.createContents();
     }
 
     private void createTestMethodComposite(Composite parent)
