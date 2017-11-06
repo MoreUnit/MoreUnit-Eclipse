@@ -208,7 +208,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         @Override
         public String getTestFileNameTemplate()
         {
-            return TestFileNamePattern.SRC_FILE_VARIABLE + "Test";
+            return TestFileNamePattern.SRC_FILE_VARIABLE + "(Test|Spec)";
         }
 
         @Override

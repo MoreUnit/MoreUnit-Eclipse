@@ -73,6 +73,7 @@ import org.moreunit.preferences.Preferences.ProjectPreferences;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
 {
+    private static final String SPOCK_TEST_SUPERCLASS = "spock.lang.Specification"; //$NON-NLS-1$
     private static final String GROOVY_TEST_CASE = "groovy.util.GroovyTestCase"; //$NON-NLS-1$
     private static final String PAGE_NAME = "NewTestCaseCreationWizardPage"; //$NON-NLS-1$
 
@@ -94,6 +95,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private static final String KEY_NO_LINK = "PropertyAndPreferencePage.nolink"; //$NON-NLS-1$
 
     private final static String TEST_SUFFIX = "Test"; //$NON-NLS-1$
+    private final static String SPOCK_TEST_SUFFIX = "Spec"; //$NON-NLS-1$
 
     private final static String STORE_SETUP = PAGE_NAME + ".USE_SETUP"; //$NON-NLS-1$
     private final static String STORE_TEARDOWN = PAGE_NAME + ".USE_TEARDOWN"; //$NON-NLS-1$
@@ -128,6 +130,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private Button junti3Toggle;
     private Button unit4Toggle;
+    private Button spockToggle;
     private Button testNgToggle;
 
     private final ProjectPreferences preferences;
@@ -337,7 +340,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(fieldName.equals(JUNIT4TOGGLE))
         {
             updateBuildPathMessage();
-            boolean junit3 = ! (isJUnit4() || isTestNgSelected());
+            boolean junit3 = ! (isJUnit4() || isTestNgSelected() || isSpockSelected());
             fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, junit3);
@@ -367,6 +370,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private boolean isTestNgSelected()
     {
         return testNgToggle != null && testNgToggle.getSelection();
+    }
+
+    private boolean isSpockSelected()
+    {
+        return spockToggle != null && spockToggle.getSelection();
     }
 
     /*
@@ -401,16 +409,25 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         setControl(composite);
 
         // set default and focus
-        String classUnderTest = getClassUnderTestText();
-        if(classUnderTest.length() > 0)
-        {
-            setTypeName(Signature.getSimpleName(classUnderTest) + TEST_SUFFIX, true);
-        }
+        updateTypeName();
 
         Dialog.applyDialogFont(composite);
         PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IJUnitHelpContextIds.NEW_TESTCASE_WIZARD_PAGE);
 
         setFocus();
+    }
+
+    private void updateTypeName()
+    {
+        String classUnderTest = getClassUnderTestText();
+        if(classUnderTest.length() > 0)
+        {
+            String testSuffix = spockToggle.getSelection() ? SPOCK_TEST_SUFFIX : TEST_SUFFIX;
+            // FIXME throws the following if the Groovy-Eclipse plugin is not installed:
+            // java.lang.IllegalArgumentException: Compilation unit name must
+            // end with .java, or one of the registered Java-like extensions
+            setTypeName(Signature.getSimpleName(classUnderTest) + testSuffix, true);
+        }
     }
 
     /**
@@ -518,7 +535,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
          */
         Composite inner = new Composite(composite, SWT.NONE);
         inner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, nColumns, 1));
-        GridLayout layout = new GridLayout(3, false);
+        GridLayout layout = new GridLayout(4, false);
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         inner.setLayout(layout);
@@ -544,6 +561,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         unit4Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
         unit4Toggle.addSelectionListener(listener);
 
+        spockToggle = new Button(inner, SWT.RADIO);
+        spockToggle.setText("Spock");
+        spockToggle.setSelection(preferences.shouldUseSpockType());
+        spockToggle.setEnabled(true);
+        spockToggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
+        spockToggle.addSelectionListener(listener);
+
         testNgToggle = new Button(inner, SWT.RADIO);
         testNgToggle.setText("TestNG");
         testNgToggle.setSelection(preferences.shouldUseTestNgType());
@@ -563,12 +587,18 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             setJUnit4(true, true);
             setSuperClass(preferences.getTestSuperClass(), true);
         }
+        else if(spockToggle.getSelection())
+        {
+            setJUnit4(false, true);
+            setSuperClass(SPOCK_TEST_SUPERCLASS, true);
+        }
         else if(testNgToggle.getSelection())
         {
             setJUnit4(false, true);
             setSuperClass(preferences.getTestSuperClass(), true);
             handleFieldChanged(JUNIT4TOGGLE);
         }
+        updateTypeName();
     }
 
     /**
@@ -1146,7 +1176,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     protected IStatus superClassChanged()
     {
         // replaces the super class validation of of the normal type wizard
-        if(isJUnit4() || isTestNgSelected())
+        if(isJUnit4() || isTestNgSelected() || isSpockSelected())
         {
             return new JUnitStatus();
         }
@@ -1267,9 +1297,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     @Override
     protected String getCompilationUnitName(String typeName)
     {
-        if(langType == LanguageType.GROOVY)
+        if(langType == LanguageType.GROOVY || spockToggle.getSelection())
         {
-            return typeName + "." + langType.getExtension();
+            // FIXME if Groovy-Eclipse plugin is not installed, nothing happens
+            return typeName + "." + "groovy";
         }
         return super.getCompilationUnitName(typeName);
     }
@@ -1306,6 +1337,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return TestType.JUNIT_3;
         else if(unit4Toggle.getSelection())
             return TestType.JUNIT_4;
+        else if(spockToggle.getSelection())
+            return TestType.SPOCK;
         return TestType.TESTNG;
     }
 
@@ -1314,6 +1347,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
         else if(unit4Toggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        else if(spockToggle.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
     }
 
