@@ -5,21 +5,10 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.moreunit.core.matching.TestFolderPathPattern;
-import org.moreunit.core.ui.Composites;
 import org.moreunit.core.ui.ExpandableCompositeContainer;
-import org.moreunit.core.ui.ExpandableCompositeContainer.ExpandableContent;
-import org.moreunit.core.ui.Labels;
-import org.moreunit.core.ui.LayoutData;
 
 class GenericConfigurationPage
 {

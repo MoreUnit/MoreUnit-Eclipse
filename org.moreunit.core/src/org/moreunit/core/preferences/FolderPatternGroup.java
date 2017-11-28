@@ -1,7 +1,6 @@
 package org.moreunit.core.preferences;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -12,9 +11,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.moreunit.core.matching.TestFolderPathPattern;
 import org.moreunit.core.ui.Composites;
 import org.moreunit.core.ui.ExpandableCompositeContainer;
+import org.moreunit.core.ui.ExpandableCompositeContainer.ExpandableContent;
 import org.moreunit.core.ui.Labels;
 import org.moreunit.core.ui.LayoutData;
-import org.moreunit.core.ui.ExpandableCompositeContainer.ExpandableContent;
 
 public class FolderPatternGroup implements GenericPreferencesGroup
 {
@@ -46,8 +45,7 @@ public class FolderPatternGroup implements GenericPreferencesGroup
     @Override
     public void forceFocus()
     {
-        // TODO Auto-generated method stub
-        
+        // no action on Focus
     }
 
     @Override
@@ -59,7 +57,6 @@ public class FolderPatternGroup implements GenericPreferencesGroup
     @Override
     public String getWarning()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 

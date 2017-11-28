@@ -57,8 +57,8 @@ public class TestFileNamePatternGroup implements GenericPreferencesGroup
         testFileTemplateField = createFileTemplateField(fileTplGroup);
         wordSeparatorField = createWordSeparatorField(fileTplGroup, forceCamelCase);
         createFileTplExplanations(fileTplGroup);
-        createOverviewArea(fileTplGroup);        
-    }    
+        createOverviewArea(fileTplGroup);
+    }
 
     private Text createFileTemplateField(Composite parent)
     {
