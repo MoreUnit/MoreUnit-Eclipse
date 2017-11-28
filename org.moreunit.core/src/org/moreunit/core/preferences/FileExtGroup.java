@@ -25,7 +25,6 @@ import org.moreunit.core.ui.LayoutData;
 
 public class FileExtGroup implements GenericPreferencesGroup
 {
-    private static final int EXPLANATION_WIDTH_HINT = 350;
 
     private final ExpandableCompositeContainer container;
     private final LanguagePreferencesWriter prefWriter;
@@ -88,7 +87,7 @@ public class FileExtGroup implements GenericPreferencesGroup
         srcFileExt.setEnabled(extEnable);
         checkBox.setSelection(extEnable);
         
-        checkBox.setText("Heterogen file extensions (if unchecked the same file extension for source and test files assumed");
+        checkBox.setText("Heterogen file extensions (if unchecked the same file extension for source and test files assumed)");
         checkBox.setLayoutData(LayoutData.fillRow());
         
         checkBox.addSelectionListener(new SelectionAdapter() {

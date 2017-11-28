@@ -674,7 +674,7 @@ public class TestFileNamePatternTest
         
         // then
         assertTrue(result.isTestFile());
-        assertTrue(result.getCorrespondingExtenstion().equals(srcExt));
+        assertTrue(result.getCorrespondingExtension().equals(srcExt));
     }
     
     @Test     

@@ -27,7 +27,7 @@ public class FileMatcher
         FileMatchCollector matchCollector = strategy.createMatchCollector(correspondingSrcFolder);
         Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
-        searchFor(nameEvaluation.getAllCorrespondingFilePatterns(), searchFolder, matchCollector, nameEvaluation.getCorrespondingExtenstion());
+        searchFor(nameEvaluation.getAllCorrespondingFilePatterns(), searchFolder, matchCollector, nameEvaluation.getCorrespondingExtension());
 
         return new MatchResult(matchCollector, createPreferredFileName(nameEvaluation), correspondingSrcFolder, matchSelector);
     }
@@ -48,18 +48,18 @@ public class FileMatcher
 
     private String createPreferredFileName(FileNameEvaluation evaluation)
     {
-        String prefferedFileName = "";
+        String preferredFileName = "";
         
-        if(0 != evaluation.getCorrespondingExtenstion().length())
+        if(0 != evaluation.getCorrespondingExtension().length())
         {
-            prefferedFileName = evaluation.getPreferredCorrespondingFileName() + "." + evaluation.getCorrespondingExtenstion();
+            preferredFileName = evaluation.getPreferredCorrespondingFileName() + "." + evaluation.getCorrespondingExtension();
         }
         else
         {
-            prefferedFileName = evaluation.getPreferredCorrespondingFileName() + "." + file.getExtension();
+            preferredFileName = evaluation.getPreferredCorrespondingFileName() + "." + file.getExtension();
         }
         
-        return prefferedFileName;
+        return preferredFileName;
     }
 
     private Pattern createFileNamePattern(String extension, Collection<String> correspondingFileNames)

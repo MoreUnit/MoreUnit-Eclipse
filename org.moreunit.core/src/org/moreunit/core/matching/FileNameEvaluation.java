@@ -144,7 +144,7 @@ public final class FileNameEvaluation
                              otherCorrespondingFilePatterns, StringConstants.NEWLINE);
     }
 
-    public String getCorrespondingExtenstion()
+    public String getCorrespondingExtension()
     {
         return correspondingExtension;
     }
