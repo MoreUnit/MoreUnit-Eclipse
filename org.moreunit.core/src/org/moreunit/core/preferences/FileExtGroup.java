@@ -103,7 +103,7 @@ public class FileExtGroup implements GenericPreferencesGroup
 
     public void forceFocus()
     {
-        checkBox.setFocus();
+    	// no action on Focus
     }
 
     public String getError()
