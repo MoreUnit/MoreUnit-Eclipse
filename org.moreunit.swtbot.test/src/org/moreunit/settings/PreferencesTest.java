@@ -23,6 +23,15 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.shell("Preferences").setFocus();
         bot.tree().expandNode("MoreUnit").select("Java");
     }
+    
+    private void openPreferencesAndSelectUserLanguagesPage()
+    {
+        getShortcutStrategy().openPreferences();
+        bot.waitUntil(Conditions.shellIsActive("Preferences"));
+        bot.shell("Preferences").activate();
+        bot.shell("Preferences").setFocus();
+        bot.tree().expandNode("MoreUnit").select("User Languages");
+    }
 
     @Test
     public void should_update_test_source_folder_when_preferences_change()
@@ -55,6 +64,12 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         saveAndClosePrefs();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
         assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        
+        openPreferencesAndSelectMoreUnitPage();
+        bot.radio(PreferenceConstants.TEXT_SPOCK).click();
+        saveAndClosePrefs();
+        testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
+        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_SPOCK);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.radio(PreferenceConstants.TEXT_TEST_NG).click();

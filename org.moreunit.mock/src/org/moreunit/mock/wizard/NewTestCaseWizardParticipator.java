@@ -23,6 +23,7 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
     {
         MOREUNIT_TEST_TYPES.put(TestType.JUNIT_3, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
         MOREUNIT_TEST_TYPES.put(TestType.JUNIT_4, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        MOREUNIT_TEST_TYPES.put(TestType.SPOCK, PreferenceConstants.TEST_TYPE_VALUE_SPOCK);
         MOREUNIT_TEST_TYPES.put(TestType.TESTNG, PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
     }
 

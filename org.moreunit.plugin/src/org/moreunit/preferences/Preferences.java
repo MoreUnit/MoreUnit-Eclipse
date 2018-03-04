@@ -368,6 +368,11 @@ public class Preferences
 
     public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder)
     {
+        return getTestSourceFolder(project, mainSrcFolder, null);
+    }
+
+    public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
+    {
         // check for project specific settings
         List<SourceFolderMapping> mappings = getSourceMappingList(project);
 
@@ -398,7 +403,7 @@ public class Preferences
         }
 
         // attempt to make everyone happy
-        IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder);
+        IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder, testFrameworkLanguage);
         if(mvnTestFolder != null)
             return mvnTestFolder;
 
@@ -534,6 +539,7 @@ public class Preferences
 
     public static class ProjectPreferences
     {
+        private static final String SPOCK_TEST_FOLDER_NAME = "groovy";
         private final Preferences prefs;
         private final IJavaProject project;
 
@@ -566,6 +572,12 @@ public class Preferences
         public IPackageFragmentRoot getTestSourceFolder(IPackageFragmentRoot mainSrcFolder)
         {
             return prefs.getTestSourceFolder(project, mainSrcFolder);
+        }
+
+        public IPackageFragmentRoot getSpockTestSourceFolder(IPackageFragmentRoot mainSrcFolder)
+        {
+            // prefer "src/test/groovy" over "src/test/java" for java projects being tested with Spock
+            return prefs.getTestSourceFolder(project, mainSrcFolder, SPOCK_TEST_FOLDER_NAME);
         }
 
         public String getTestMethodDefaultContent()
@@ -606,6 +618,11 @@ public class Preferences
         public boolean shouldUseTestNgType()
         {
             return PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(getTestType());
+        }
+
+        public boolean shouldUseSpockType()
+        {
+            return PreferenceConstants.TEST_TYPE_VALUE_SPOCK.equals(getTestType());
         }
 
         public boolean hasSpecificSettings()

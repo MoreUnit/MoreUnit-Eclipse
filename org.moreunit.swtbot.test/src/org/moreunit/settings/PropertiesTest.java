@@ -71,6 +71,12 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         saveAndCloseProps();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
         assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        
+        openPropertiesAndActivateOtherTab();
+        bot.radio(PreferenceConstants.TEXT_SPOCK).click();
+        saveAndCloseProps();
+        testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
+        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_SPOCK);
 
         openPropertiesAndActivateOtherTab();
         bot.radio(PreferenceConstants.TEXT_TEST_NG).click();

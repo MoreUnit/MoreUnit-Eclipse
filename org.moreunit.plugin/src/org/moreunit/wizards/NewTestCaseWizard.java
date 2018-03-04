@@ -7,7 +7,6 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.core.util.Strings;
 import org.moreunit.elements.LanguageType;
@@ -18,11 +17,14 @@ import org.moreunit.util.JavaType;
 
 public class NewTestCaseWizard extends NewClassyWizard
 {
+    private static final String SPOCK_TEST_SUPERCLASS = "spock.lang.Specification"; //$NON-NLS-1$
+    private final static String SPOCK_TEST_SUFFIX = "Spec"; //$NON-NLS-1$
     private final ProjectPreferences preferences;
     private final NewTestCaseWizardParticipatorManager participatorManager;
     private final IPackageFragmentRoot testSrcFolder;
     private final JavaType testCaseName;
     private final IPackageFragment testPackageFragment;
+    private final IPackageFragmentRoot mainSrcFolder;
 
     private MoreUnitWizardPageOne pageOne;
     private NewTestCaseWizardPageTwo pageTwo;
@@ -36,7 +38,8 @@ public class NewTestCaseWizard extends NewClassyWizard
         this.preferences = Preferences.forProject(element.getJavaProject());
         this.participatorManager = new NewTestCaseWizardParticipatorManager();
 
-        testSrcFolder = preferences.getTestSourceFolder((IPackageFragmentRoot) element.getPackageFragment().getParent());
+        mainSrcFolder = (IPackageFragmentRoot) element.getPackageFragment().getParent();
+        testSrcFolder = preferences.getTestSourceFolder(mainSrcFolder);
         testCaseName = preferences.getTestClassNamePattern().nameTestCaseFor(getType());
         testPackageFragment = testSrcFolder.getPackageFragment(testCaseName.getQualifier());
     }
@@ -82,8 +85,16 @@ public class NewTestCaseWizard extends NewClassyWizard
             this.pageOne.setSuperClass(testSuperClass, true);
         }
 
-        this.pageOne.setPackageFragmentRoot(testSrcFolder, true);
-        this.pageOne.setTypeName(testCaseName.getSimpleName(), true);
+        if(preferences.shouldUseSpockType())
+        {
+            this.pageOne.setPackageFragmentRoot(preferences.getSpockTestSourceFolder(mainSrcFolder), true);
+            this.pageOne.setTypeName(pageOne.getClassUnderTestText() + SPOCK_TEST_SUFFIX, true);
+        }
+        else
+        {
+            this.pageOne.setPackageFragmentRoot(testSrcFolder, true);
+            this.pageOne.setTypeName(testCaseName.getSimpleName(), true);
+        }
         this.pageOne.setPackageFragment(testPackageFragment, true);
     }
 
@@ -94,6 +105,10 @@ public class NewTestCaseWizard extends NewClassyWizard
         if(Strings.isBlank(result) && preferences.shouldUseJunit3Type())
         {
             return null;
+        }
+        else if(preferences.shouldUseSpockType())
+        {
+            return SPOCK_TEST_SUPERCLASS;
         }
 
         return result;
@@ -147,5 +162,10 @@ public class NewTestCaseWizard extends NewClassyWizard
     {
         super.creationAborted();
         participatorManager.testCaseCreationAborted(getContext());
+    }
+
+    public IPackageFragmentRoot getMainSrcFolder()
+    {
+        return mainSrcFolder;
     }
 }
