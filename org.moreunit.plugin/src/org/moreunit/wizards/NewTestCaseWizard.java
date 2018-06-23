@@ -70,14 +70,7 @@ public class NewTestCaseWizard extends NewClassyWizard
 
     private void configurePageOne()
     {
-        // Eclipse 3.1.x does not support junit 4
-        try
-        {
-            this.pageOne.setJUnit4(this.preferences.shouldUseJunit4Type(), true);
-        }
-        catch (NoSuchMethodError error)
-        {
-        }
+        this.pageOne.handleSelectionChanged();
 
         String testSuperClass = getTestSuperClass();
         if(testSuperClass != null)

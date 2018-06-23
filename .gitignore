@@ -8,3 +8,5 @@ docs/.project
 org.moreunit.*/classes/
 org.moreunit.*/target/
 Thumbs.db
+.recommenders
+**/.settings

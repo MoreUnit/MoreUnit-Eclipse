@@ -610,6 +610,11 @@ public class Preferences
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(getTestType());
         }
 
+        public boolean shouldUseJunit5Type()
+        {
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5.equals(getTestType());
+        }
+
         public boolean shouldUseJunit3Type()
         {
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(getTestType());
@@ -676,5 +681,6 @@ public class Preferences
             String mode = prefs.getTestAnnotationMode(project);
             return mode == null || mode.isEmpty() ? TestAnnotationMode.OFF : TestAnnotationMode.valueOf(mode);
         }
+
     }
 }

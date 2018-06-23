@@ -89,6 +89,10 @@
         	<include-if condition="test-type" value="junit4"/>
             <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)]]></pattern>
         </code-template>
+		<code-template id="mockitoExtensionDeclaration" part="test-class-annotation">
+        	<include-if condition="test-type" value="junit5"/>
+            <pattern><![CDATA[@${runWith:newType(org.junit.jupiter.api.extension.ExtendWith)}(${runner:newType(org.mockito.junit.jupiter.MockitoExtension)}.class)]]></pattern>
+        </code-template>
         <code-template id="dependencyDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             
@@ -103,6 +107,7 @@
         </code-template>
         <code-template id="mockInitialization" part="before-instance-method">
         	<exclude-if condition="test-type" value="junit4"/>
+        	<exclude-if condition="test-type" value="junit5"/>
             <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.initMocks(this);]]></pattern>
         </code-template>
     </mocking-template>
@@ -142,6 +147,7 @@ public ${iObjectFactory:newType(org.testng.IObjectFactory)} getObjectFactory() {
         </code-template>
         <code-template id="mockInitialization" part="before-instance-method">
         	<exclude-if condition="test-type" value="junit4"/>
+        	<exclude-if condition="test-type" value="junit5"/>
             <pattern><![CDATA[${mockitoAnnotations:newType(org.mockito.MockitoAnnotations)}.initMocks(this);]]></pattern>
         </code-template>
     </mocking-template>

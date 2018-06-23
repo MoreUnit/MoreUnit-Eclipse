@@ -31,6 +31,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 {
     private Button junit3Button;
     private Button junit4Button;
+    private Button junit5Button;
     private Button spockButton;
     private Button testNgButton;
 
@@ -115,7 +116,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     {
         // Group with label
         Group group = new Group(parent, SWT.NONE);
-        group.setLayout(new GridLayout(4, false));
+        group.setLayout(new GridLayout(5, false));
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.horizontalSpan = 2;
         group.setLayoutData(gridData);
@@ -134,6 +135,13 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         junit4Button.setLayoutData(radioButtonLayoutData(true));
         junit4Button.setSelection(projectPreferences.shouldUseJunit4Type());
         junit4Button.addSelectionListener(this);
+
+        // Junit 5 choice
+        junit5Button = new Button(group, SWT.RADIO);
+        junit5Button.setText(PreferenceConstants.TEXT_JUNIT_5);
+        junit5Button.setLayoutData(radioButtonLayoutData(true));
+        junit5Button.setSelection(projectPreferences.shouldUseJunit5Type());
+        junit5Button.addSelectionListener(this);
 
         // Spock choice
         spockButton = new Button(group, SWT.RADIO);
@@ -355,9 +363,9 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         }
     }
 
-    private boolean isJunit4OrTestNgTestTypeSelected()
+    private boolean doesCurrentlySelectedTestTypeSupportPrefix()
     {
-        return junit4Button.getSelection() || testNgButton.getSelection();
+        return junit5Button.getSelection() || junit4Button.getSelection() || testNgButton.getSelection();
     }
 
     private String getSelectedTestType()
@@ -366,6 +374,8 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
         else if(junit4Button.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        else if(junit5Button.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
         else if(spockButton.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
         else if(testNgButton.getSelection())
@@ -393,7 +403,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private void checkStateOfMethodPrefixButton()
     {
-        methodPrefixButton.setEnabled(isJunit4OrTestNgTestTypeSelected());
+        methodPrefixButton.setEnabled(doesCurrentlySelectedTestTypeSupportPrefix());
     }
 
     public String getError()
@@ -420,6 +430,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     {
         junit3Button.setEnabled(enabled);
         junit4Button.setEnabled(enabled);
+        junit5Button.setEnabled(enabled);
         testNgButton.setEnabled(enabled);
         methodPrefixButton.setEnabled(enabled);
         testCaseNamePatternArea.setEnabled(enabled);

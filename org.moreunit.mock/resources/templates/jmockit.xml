@@ -15,6 +15,10 @@
             <include-if condition="test-type" value="junit4"/>
             <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(mockit.integration.junit4.JMockit)}.class)]]></pattern>
         </code-template>
+        <code-template id="jmockitRunnerDeclaration" part="test-class-annotation">
+            <include-if condition="test-type" value="junit5"/>
+            <pattern><![CDATA[@${runWith:newType(org.junit.jupiter.api.extension.ExtendWith)}(${runner:newType(mockit.integration.junit5.JMockitExtension)}.class)]]></pattern>
+        </code-template>
         <code-template id="dependencyDeclaration" part="test-class-fields">
             <pattern><![CDATA[
             
