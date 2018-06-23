@@ -103,7 +103,7 @@
 
     <xs:complexType name="CodeTemplate">
         <xs:sequence>
-            <xs:element name="exclude-if" minOccurs="0" type="InclusionCondition">
+            <xs:element name="exclude-if" maxOccurs="unbounded" minOccurs="0" type="InclusionCondition">
                 <xs:annotation>
                     <xs:documentation>
                         A condition preventing this code template from being included in the test class.
@@ -187,6 +187,7 @@
             <!-- ConditionType: test-type -->
             <xs:enumeration value="junit3"/>
             <xs:enumeration value="junit4"/>
+            <xs:enumeration value="junit5"/>
             <xs:enumeration value="testng"/>
         </xs:restriction>
     </xs:simpleType>

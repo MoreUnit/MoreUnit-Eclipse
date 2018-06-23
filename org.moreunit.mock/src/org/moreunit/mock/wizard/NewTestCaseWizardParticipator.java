@@ -1,5 +1,8 @@
 package org.moreunit.mock.wizard;
 
+import static java.util.Arrays.asList;
+import static org.moreunit.mock.config.MockModule.$;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +14,6 @@ import org.moreunit.extensionpoints.TestType;
 import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.preferences.PreferenceConstants;
 
-import static java.util.Arrays.asList;
-import static org.moreunit.mock.config.MockModule.$;
-
 public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticipator
 {
     // maps a TestType to a preference value (the value internal to TestType
@@ -23,6 +23,7 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
     {
         MOREUNIT_TEST_TYPES.put(TestType.JUNIT_3, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
         MOREUNIT_TEST_TYPES.put(TestType.JUNIT_4, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        MOREUNIT_TEST_TYPES.put(TestType.JUNIT_5, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
         MOREUNIT_TEST_TYPES.put(TestType.SPOCK, PreferenceConstants.TEST_TYPE_VALUE_SPOCK);
         MOREUNIT_TEST_TYPES.put(TestType.TESTNG, PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
     }

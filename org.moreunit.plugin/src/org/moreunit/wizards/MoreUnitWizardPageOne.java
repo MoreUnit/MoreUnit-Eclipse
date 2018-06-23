@@ -70,9 +70,11 @@ import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.extensionpoints.TestType;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
+import org.moreunit.preferences.TestTypeOperationUtil;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
 {
+
     private static final String SPOCK_TEST_SUPERCLASS = "spock.lang.Specification"; //$NON-NLS-1$
     private static final String GROOVY_TEST_CASE = "groovy.util.GroovyTestCase"; //$NON-NLS-1$
     private static final String PAGE_NAME = "NewTestCaseCreationWizardPage"; //$NON-NLS-1$
@@ -125,14 +127,16 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private JavaTypeCompletionProcessor fClassToTestCompletionProcessor;
 
     // private Button fJUnit4Toggle;
-    private boolean fIsJunit4;
+    private String testType;
+    // private boolean fIsJunit4;
     private IStatus fJunit4Status; // status
     // private boolean fIsJunit4Enabled;
     private Link fLink;
     private Label fImage;
 
-    private Button junti3Toggle;
+    private Button junit3Toggle;
     private Button unit4Toggle;
+    private Button unit5Toggle;
     private Button spockToggle;
     private Button testNgToggle;
 
@@ -171,7 +175,9 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fClassUnderTestText = ""; //$NON-NLS-1$
 
         fJunit4Status = new JUnitStatus();
-        fIsJunit4 = false;
+
+        testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+
     }
 
     /**
@@ -241,25 +247,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         restoreWidgetValues();
 
-        boolean isJunit4 = false;
-        if(element != null && element.getElementType() != IJavaElement.JAVA_MODEL)
-        {
-            IJavaProject project = element.getJavaProject();
-            try
-            {
-                isJunit4 = project.findType(JUnitCorePlugin.JUNIT4_ANNOTATION_NAME) != null;
-            }
-            catch (JavaModelException e)
-            {
-                // ignore
-            }
-        }
-        setJUnit4(isJunit4, true);
-
         updateStatus(getStatusList());
     }
 
-    private IStatus junit4Changed()
+    private IStatus getJunitOkStatus()
     {
         JUnitStatus status = new JUnitStatus();
         return status;
@@ -273,20 +264,23 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      *            otherwise they are read-only
      * @since 3.2
      */
-    public void setJUnit4(boolean isJUnit4, boolean isEnabled)
+    public void handleSelectionChanged()
     {
-        // fIsJunit4Enabled = isEnabled;
-        /*
-         * if (fJUnit4Toggle != null && !fJUnit4Toggle.isDisposed()) {
-         * fJUnit4Toggle.setSelection(isJUnit4);
-         * fJUnit4Toggle.setEnabled(isEnabled); }
-         */
-        if(unit4Toggle != null && ! unit4Toggle.isDisposed())
+        testType = getTestTypePrefValue();
+        if(langType == LanguageType.GROOVY)
         {
-            unit4Toggle.setSelection(isJUnit4);
-            unit4Toggle.setEnabled(isEnabled);
+            setSuperClass(GROOVY_TEST_CASE, true);
         }
-        internalSetJUnit4(isJUnit4);
+        else if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3))
+        {
+            setSuperClass(JUnitCorePlugin.TEST_SUPERCLASS_NAME, true);
+        }
+        else
+        {
+            setSuperClass("java.lang.Object", true); //$NON-NLS-1$
+            fJunit4Status = getJunitOkStatus();
+        }
+        handleFieldChanged(JUNIT4TOGGLE);
     }
 
     /**
@@ -298,26 +292,12 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     public boolean isJUnit4()
     {
-        return fIsJunit4;
+        return testType.equals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
     }
 
-    private void internalSetJUnit4(boolean isJUnit4)
+    public boolean isJUnit5()
     {
-        fIsJunit4 = isJUnit4;
-        fJunit4Status = junit4Changed();
-        if(fIsJunit4)
-        {
-            setSuperClass("java.lang.Object", false); //$NON-NLS-1$
-        }
-        else if(langType == LanguageType.GROOVY)
-        {
-            setSuperClass(GROOVY_TEST_CASE, true);
-        }
-        else
-        {
-            setSuperClass(JUnitCorePlugin.TEST_SUPERCLASS_NAME, true);
-        }
-        handleFieldChanged(JUNIT4TOGGLE);
+        return testType.equals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
     }
 
     /*
@@ -336,14 +316,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             {
                 fClassUnderTestButton.setEnabled(getPackageFragmentRoot() != null);
             }
-            fJunit4Status = junit4Changed();
+            fJunit4Status = getJunitOkStatus();
 
             updateBuildPathMessage();
         }
-        else if(fieldName.equals(JUNIT4TOGGLE))
+        else if(fieldName.equals(JUNIT4TOGGLE)) // TODO: For spock?
         {
             updateBuildPathMessage();
-            boolean junit3 = ! (isJUnit4() || isTestNgSelected() || isSpockSelected());
+            boolean junit3 = junit3Toggle.getSelection();
             fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, junit3);
@@ -535,7 +515,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
          */
         Composite inner = new Composite(composite, SWT.NONE);
         inner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, nColumns, 1));
-        GridLayout layout = new GridLayout(4, false);
+        GridLayout layout = new GridLayout(5, false);
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         inner.setLayout(layout);
@@ -548,11 +528,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             }
         };
 
-        junti3Toggle = new Button(inner, SWT.RADIO);
-        junti3Toggle.setText("JUnit 3");
-        junti3Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
-        junti3Toggle.setSelection(preferences.shouldUseJunit3Type());
-        junti3Toggle.setEnabled(true);
+        junit3Toggle = new Button(inner, SWT.RADIO);
+        junit3Toggle.setText("JUnit 3");
+        junit3Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
+        junit3Toggle.setSelection(preferences.shouldUseJunit3Type());
+        junit3Toggle.setEnabled(true);
 
         unit4Toggle = new Button(inner, SWT.RADIO);
         unit4Toggle.setText("JUnit 4");
@@ -560,6 +540,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         unit4Toggle.setEnabled(true);
         unit4Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
         unit4Toggle.addSelectionListener(listener);
+
+        unit5Toggle = new Button(inner, SWT.RADIO);
+        unit5Toggle.setText("JUnit 5");
+        unit5Toggle.setSelection(preferences.shouldUseJunit5Type());
+        unit5Toggle.setEnabled(true);
+        unit5Toggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
+        unit5Toggle.addSelectionListener(listener);
 
         spockToggle = new Button(inner, SWT.RADIO);
         spockToggle.setText("Spock");
@@ -574,36 +561,39 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         testNgToggle.setEnabled(true);
         testNgToggle.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, 1, 1));
         testNgToggle.addSelectionListener(listener);
+
+        handleSelectionChanged();
     }
 
     private void testTypeSelectionChanged()
     {
         IPackageFragmentRoot mainSrcFolder = ((NewTestCaseWizard) getWizard()).getMainSrcFolder();
-        if(junti3Toggle.getSelection())
+        if(junit3Toggle.getSelection())
         {
-            setJUnit4(false, true);
+            testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
             setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
         }
         else if(unit4Toggle.getSelection())
         {
-            setJUnit4(true, true);
-            setSuperClass(preferences.getTestSuperClass(), true);
+            testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+            setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
+        }
+        else if(unit5Toggle.getSelection())
+        {
+            testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
             setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
         }
         else if(spockToggle.getSelection())
         {
-            setJUnit4(false, true);
-            setSuperClass(SPOCK_TEST_SUPERCLASS, true);
+            testType = PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
             setPackageFragmentRoot(preferences.getSpockTestSourceFolder(mainSrcFolder), true);
-
         }
         else if(testNgToggle.getSelection())
         {
-            setJUnit4(false, true);
-            setSuperClass(preferences.getTestSuperClass(), true);
+            testType = PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
             setPackageFragmentRoot(preferences.getTestSourceFolder(mainSrcFolder), true);
-            handleFieldChanged(JUNIT4TOGGLE);
         }
+        handleSelectionChanged();
         updateTypeName();
     }
 
@@ -705,6 +695,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     if(! JUnitStubUtility.is50OrHigher(project))
                     {
                         message = WizardMessages.NewTestCaseWizardPageOne_linkedtext_java5required;
+                    }
+                }
+                if(isJUnit5())
+                {
+                    if(! JUnitStubUtility.is18OrHigher(project))
+                    {
+                        message = WizardMessages.NewTestCaseWizardPageOne_linkedtext_java8required;
                     }
                 }
             }
@@ -910,15 +907,19 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             createTestMethodStubs(type, imports);
         }
 
+        String testImport = (String) TestTypeOperationUtil.TEST_ANNOTATION.get(testType);
+        if(testImport != null)
+        {
+            imports.addImport(testImport);
+        }
+
         if(isJUnit4())
         {
             imports.addStaticImport("org.junit.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
-            imports.addImport("org.junit.Test");
         }
         else if(isTestNgSelected())
         {
             imports.addStaticImport("org.testng.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
-            imports.addImport("org.testng.annotations.Test");
         }
     }
 
@@ -1006,7 +1007,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         String content = null;
         IMethod methodTemplate = findInHierarchy(type, methodName);
         String annotation = null;
-        if(isJUnit4() || isTestNgSelected())
+        if(isJUnit5() || isJUnit4() || isTestNgSelected())
         {
             annotation = '@' + imports.addImport(annotationType);
         }
@@ -1063,25 +1064,25 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void createSetUp(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = isTestNgSelected() ? "org.testng.annotations.BeforeMethod" : "org.junit.Before"; //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = (String) TestTypeOperationUtil.BEFORE_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "setUp", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDown(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = isTestNgSelected() ? "org.testng.annotations.AfterMethod" : "org.junit.After"; //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = (String) TestTypeOperationUtil.TEARDOWN_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "tearDown", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createSetUpClass(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = isTestNgSelected() ? "org.testng.annotations.BeforeClass" : "org.junit.BeforeClass"; //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = (String) TestTypeOperationUtil.BEFORE_CLASS_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "setUpBeforeClass", true, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDownClass(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = isTestNgSelected() ? "org.testng.annotations.AfterClass" : "org.junit.AfterClass"; //$NON-NLS-1$ //$NON-NLS-2$
+        String annotation = (String) TestTypeOperationUtil.AFTER_CLASS_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "tearDownAfterClass", true, annotation, imports); //$NON-NLS-1$
     }
 
@@ -1182,7 +1183,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     protected IStatus superClassChanged()
     {
         // replaces the super class validation of of the normal type wizard
-        if(isJUnit4() || isTestNgSelected())
+        if(isJUnit5() || isJUnit4() || isTestNgSelected())
         {
             return new JUnitStatus();
         }
@@ -1355,20 +1356,24 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private TestType determineTestType()
     {
-        if(junti3Toggle.getSelection())
+        if(junit3Toggle.getSelection())
             return TestType.JUNIT_3;
         else if(unit4Toggle.getSelection())
             return TestType.JUNIT_4;
+        else if(unit5Toggle.getSelection())
+            return TestType.JUNIT_5;
         else if(spockToggle.getSelection())
             return TestType.SPOCK;
         return TestType.TESTNG;
     }
 
     private String getTestTypePrefValue() {
-        if(junti3Toggle.getSelection())
+        if(junit3Toggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
         else if(unit4Toggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+        else if(unit5Toggle.getSelection())
+            return PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
         else if(spockToggle.getSelection())
             return PreferenceConstants.TEST_TYPE_VALUE_SPOCK;
         return PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
@@ -1391,5 +1396,12 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             this.testType = testType;
             this.testCasePackage = testCasePackage;
         }
+    }
+
+    public void setJUnit4Selection()
+    {
+        unit4Toggle.setEnabled(true);
+        unit4Toggle.setSelection(true);
+        handleSelectionChanged();
     }
 }

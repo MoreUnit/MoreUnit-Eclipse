@@ -8,7 +8,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the Eclipse Public License for more details.
- * 
+ *
  * Autor: Andreas Groll
  * Datum: 22.09.2010
  */
@@ -39,10 +39,14 @@ public enum TestType {
 	 * JUnit version 4 test method.
 	 */
 	JUNIT_4(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4),
+    /**
+     * JUnit version 5 test method.
+     */
+    JUNIT_5(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5),
 	/**
 	 * Groovy-based Spock test method.
 	 */
-	SPOCK(PreferenceConstants.TEST_TYPE_VALUE_SPOCK), 
+	SPOCK(PreferenceConstants.TEST_TYPE_VALUE_SPOCK),
 	/**
 	 * TESTNG test method.
 	 */

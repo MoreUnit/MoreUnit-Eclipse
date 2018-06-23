@@ -1,28 +1,29 @@
 package te.st;
 
-import org.junit.runner.RunWith;
-import mockit.Injectable;
-import mockit.Tested;
-import mockit.integration.junit4.JMockit;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import te.st.SomeConcept.Comparator;
 import te.st.SomeConcept.List;
 import te.st.SomeConcept.Thing;
 
-@RunWith(JMockit.class)
+@ExtendWith(MockitoExtension.class)
 public class SomeConceptTest {
-
-	@Injectable
+	@Mock
 	private Callable<Integer> integerProvider;
-	
-	@Injectable
+
+	@Mock
 	private Runnable runnable;
-	
-	@Injectable
+
+	@Mock
 	private List<Thing> someListOfThings;
-	
-	@Injectable
+
+	@Mock
 	private Comparator<String> stringComparator;
-	
-	@Tested
+
+	@InjectMocks
 	private SomeConcept someConcept;
+
 }

@@ -30,6 +30,7 @@ import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
+import org.moreunit.preferences.TestTypeOperationUtil;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
@@ -198,12 +199,10 @@ public class TestmethodCreator
         String comment = generateTestMethodComment(methodUnderTest);
 
         IMethod testMethod = null;
-        if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            testMethod = createJUnit4Testmethod(testMethodName, null, comment);
+        if(TestTypeOperationUtil.supportTestAnnotation(testType))
+            testMethod = createTestAnnotatationSupportingTestMethod(testMethodName, null, comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
             testMethod = createJUnit3Testmethod(testMethodName, null, comment);
-        else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            testMethod = createTestNgTestMethod(testMethodName, null, comment);
 
         if(! discardExtensions && testMethod != null)
         {
@@ -244,12 +243,10 @@ public class TestmethodCreator
         String comment = getComments(testMethod);
 
         IMethod newTestMethod = null;
-        if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
-            newTestMethod = createJUnit4Testmethod(testMethodName, getSiblingForInsert(testMethod), comment);
+        if(TestTypeOperationUtil.supportTestAnnotation(testType))
+            newTestMethod = createTestAnnotatationSupportingTestMethod(testMethodName, getSiblingForInsert(testMethod), comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
             newTestMethod = createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod), comment);
-        else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
-            newTestMethod = createTestNgTestMethod(testMethodName, getSiblingForInsert(testMethod), comment);
 
         if(! discardExtensions && newTestMethod != null)
         {
@@ -320,21 +317,6 @@ public class TestmethodCreator
         return createMethod(testMethodName, getJUnit3MethodStub(testMethodName, comment), sibling);
     }
 
-    private IMethod createTestNgTestMethod(String testMethodName, IMethod sibling, String comment)
-    {
-        return createMethod(testMethodName, getTestNgMethodStub(testMethodName, comment), sibling);
-    }
-
-    private String getTestNgMethodStub(String testmethodName, String comment)
-    {
-        StringBuilder methodContent = new StringBuilder();
-        methodContent.append(comment);
-        methodContent.append("@Test").append(StringConstants.NEWLINE);
-        methodContent.append(getTestMethodString(testmethodName));
-
-        return methodContent.toString();
-    }
-
     private String getJUnit3MethodStub(String testmethodName, String comment)
     {
         StringBuilder methodContent = new StringBuilder();
@@ -344,12 +326,12 @@ public class TestmethodCreator
         return methodContent.toString();
     }
 
-    protected IMethod createJUnit4Testmethod(String testMethodName, IMethod sibling, String comment)
+    protected IMethod createTestAnnotatationSupportingTestMethod(String testMethodName, IMethod sibling, String comment)
     {
-        return createMethod(testMethodName, getJUnit4MethodStub(testMethodName, comment), sibling);
+        return createMethod(testMethodName, getTestAnnotatedMethodStub(testMethodName, comment), sibling);
     }
 
-    private String getJUnit4MethodStub(String testmethodName, String comment)
+    private String getTestAnnotatedMethodStub(String testmethodName, String comment)
     {
         StringBuilder methodContent = new StringBuilder();
         methodContent.append(comment);

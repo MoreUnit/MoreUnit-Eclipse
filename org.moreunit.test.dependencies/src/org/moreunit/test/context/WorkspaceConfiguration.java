@@ -37,6 +37,7 @@ class WorkspaceConfiguration
         Map<TestType, String> m = newHashMap();
         m.put(TestType.JUNIT3, "junit3");
         m.put(TestType.JUNIT4, "junit4");
+        m.put(TestType.JUNIT5, "junit5");
         m.put(TestType.TESTNG, "testng");
         TEST_TYPE_TO_PREF_VALUE = m;
     }
@@ -200,6 +201,10 @@ class WorkspaceConfiguration
             else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4.equals(testType))
             {
                 containerPath = JUnitCore.JUNIT4_CONTAINER_PATH;
+            }
+            else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5.equals(testType))
+            {
+                containerPath = JUnitCore.JUNIT5_CONTAINER_PATH;
             }
             else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
             {
