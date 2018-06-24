@@ -699,10 +699,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 }
                 if(isJUnit5())
                 {
-                    if(! JUnitStubUtility.is18OrHigher(project))
-                    {
-                        message = WizardMessages.NewTestCaseWizardPageOne_linkedtext_java8required;
-                    }
+                    // if(! CoreTestSearchEngine.isVersionLessThan(project))
+                    // {
+                    // message = "JUnit 5 requires a Java 8 project.";
+                    // }
                 }
             }
         }
