@@ -3,10 +3,8 @@ package org.moreunit.mock.templates;
 import static java.util.Arrays.asList;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -25,7 +23,7 @@ import org.moreunit.mock.templates.resolvers.DependencyPatternsResolver;
 import org.moreunit.mock.templates.resolvers.FieldInjectionPatternResolver;
 import org.moreunit.mock.templates.resolvers.ObjectUnderTestPatternsResolver;
 import org.moreunit.mock.templates.resolvers.SetterInjectionPatternResolver;
-import org.moreunit.preferences.PreferenceConstants;
+import org.moreunit.preferences.TestTypeOperationUtil;
 
 /**
  * Holds information about the current mocking operation.
@@ -33,8 +31,6 @@ import org.moreunit.preferences.PreferenceConstants;
 public class MockingContext
 {
     static final String BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID = "org.moreunit.mock.beforeInstanceMethodCreation";
-
-    static final Map BEFORE_ANNOTATION_NAME_BY_TYPE = new HashMap();
 
     public final IType classUnderTest;
     public final ICompilationUnit testCaseCompilationUnit;
@@ -49,10 +45,6 @@ public class MockingContext
     public MockingContext(Dependencies dependencies, IType classUnderTest, ICompilationUnit testCase, String testType) throws MockingTemplateException
     {
         this(dependencies, classUnderTest, testCase, testType, null);
-
-        BEFORE_ANNOTATION_NAME_BY_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "org.junit.Before");
-        BEFORE_ANNOTATION_NAME_BY_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, "org.junit.jupiter.api.BeforeEach");
-        BEFORE_ANNOTATION_NAME_BY_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "org.testng.annotations.BeforeMethod");
     }
 
     /**
@@ -167,7 +159,7 @@ public class MockingContext
 
     private boolean hasBeforeAnnotationIfRequired(IMethod method)
     {
-        String beforeAnnotation = (String) BEFORE_ANNOTATION_NAME_BY_TYPE.get(testType);
+        String beforeAnnotation = (String) TestTypeOperationUtil.BEFORE_METHOD_ANNOTATION.get(testType);
         if(beforeAnnotation == null)
         {
             return true;
@@ -188,7 +180,7 @@ public class MockingContext
     {
         String methodName = incrementMethodNameIfRequired(methodBaseName);
 
-        String annotationClass = (String) BEFORE_ANNOTATION_NAME_BY_TYPE.get(testType);
+        String annotationClass = (String) TestTypeOperationUtil.BEFORE_METHOD_ANNOTATION.get(testType);
         String beforeMethodSource = "";
 
         if(annotationClass != null)

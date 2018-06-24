@@ -204,7 +204,7 @@ class WorkspaceConfiguration
             }
             else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5.equals(testType))
             {
-                containerPath = JUnitCore.JUNIT5_CONTAINER_PATH;
+                containerPath = new Path(JUnitCore.JUNIT_CONTAINER_ID).append("5");
             }
             else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
             {
