@@ -5,7 +5,11 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
@@ -23,8 +27,24 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     {
         SWTBotTreeItem projectItem = selectAndReturnJavaProjectFromPackageExplorer();
         getShortcutStrategy().openProperties(projectItem);
-        bot.waitUntil(waitForShell(shellWithTextStartingWith("Properties for ")));
+
+        WaitForObjectCondition<Shell> waitForShell = waitForShell(shellWithTextStartingWith("Properties for "));
+        bot.waitUntil(waitForShell);
+        setShellInFocus(waitForShell.get(0));
+
         bot.tree().expandNode("MoreUnit").select("Java");
+    }
+    
+    private void setShellInFocus(final Shell shell)
+    {
+        UIThreadRunnable.syncExec(new VoidResult()
+        {
+            public void run()
+            {
+                    shell.forceFocus();
+                    shell.forceActive();
+            }
+        });
     }
 
     private void initProjectSpecificSettings()
@@ -71,7 +91,13 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         saveAndCloseProps();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
         assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
-        
+
+        openPropertiesAndActivateOtherTab();
+        bot.radio(PreferenceConstants.TEXT_JUNIT_5).click();
+        saveAndCloseProps();
+        testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
+        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
+
         openPropertiesAndActivateOtherTab();
         bot.radio(PreferenceConstants.TEXT_SPOCK).click();
         saveAndCloseProps();

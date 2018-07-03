@@ -13,6 +13,8 @@ public class TestTypeOperationUtil
 
     public static final Map TEST_ANNOTATION = new HashMap();
 
+    public static final Map STATIC_IMPORT_BASE_CLASS = new HashMap();
+
     static
     {
 
@@ -35,6 +37,10 @@ public class TestTypeOperationUtil
         TEST_ANNOTATION.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "org.junit.Test"); //$NON-NLS-1$
         TEST_ANNOTATION.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, "org.junit.jupiter.api.Test"); //$NON-NLS-1$
         TEST_ANNOTATION.put(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "org.testng.annotations.Test"); //$NON-NLS-1$
+
+        STATIC_IMPORT_BASE_CLASS.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "org.junit.Assert"); //$NON-NLS-1$
+        STATIC_IMPORT_BASE_CLASS.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, "org.junit.jupiter.api.Assertions"); //$NON-NLS-1$
+        STATIC_IMPORT_BASE_CLASS.put(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "org.testng.Assert"); //$NON-NLS-1$
     }
 
     public static boolean supportTestAnnotation(String testType)

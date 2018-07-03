@@ -4,9 +4,11 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
+import org.fest.assertions.Condition;
 import org.junit.Test;
 import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
+import org.moreunit.test.context.configs.SimpleJUnit5Project;
 import org.moreunit.test.context.configs.SimpleTestNGProject;
 
 public class ClasspathTest extends ContextTestCase
@@ -18,7 +20,15 @@ public class ClasspathTest extends ContextTestCase
         IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
         assertThat(packageFragmentRoots).onProperty("elementName").contains("junit.jar");
     }
-    
+
+    @Project(SimpleJUnit5Project.class)
+    @Test
+    public void should_add_junit5_lib_to_classpath_when_junit5_is_used() throws JavaModelException
+    {
+        IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
+        assertThat(packageFragmentRoots).onProperty("elementName").satisfies(anyMatchOnPattern("org\\.junit\\.jupiter\\.api.*\\.jar"));
+    }
+
     @Project(SimpleJUnit3Project.class)
     @Test
     public void should_add_junit3_lib_to_classpath_when_junit3_is_used() throws JavaModelException
@@ -35,5 +45,22 @@ public class ClasspathTest extends ContextTestCase
         for(IPackageFragmentRoot root : packageFragmentRoots)
             System.out.println(root.getElementName());
         assertThat(packageFragmentRoots).onProperty("elementName").contains("testng.jar");
+    }
+
+    private Condition<Object[]> anyMatchOnPattern(final String pattern)
+    {
+        return new Condition<Object[]>()
+        {
+            @Override
+            public boolean matches(Object[] arg0)
+            {
+                for (Object arg : arg0) {
+                    if (String.valueOf(arg).matches(pattern)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 }
