@@ -913,13 +913,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             imports.addImport(testImport);
         }
 
-        if(isJUnit4())
+        String staticImportBaseClass = (String) TestTypeOperationUtil.STATIC_IMPORT_BASE_CLASS.get(testType);
+        if(staticImportBaseClass != null)
         {
-            imports.addStaticImport("org.junit.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        else if(isTestNgSelected())
-        {
-            imports.addStaticImport("org.testng.Assert", "*", false); //$NON-NLS-1$ //$NON-NLS-2$
+            imports.addStaticImport(staticImportBaseClass, "*", false); //$NON-NLS-1$
         }
     }
 

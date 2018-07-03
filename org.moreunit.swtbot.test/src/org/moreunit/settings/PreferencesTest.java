@@ -72,6 +72,12 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
         
         openPreferencesAndSelectMoreUnitPage();
+        bot.radio(PreferenceConstants.TEXT_JUNIT_5).click();
+        saveAndClosePrefs();
+        testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
+        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
+
+        openPreferencesAndSelectMoreUnitPage();
         bot.radio(PreferenceConstants.TEXT_SPOCK).click();
         saveAndClosePrefs();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());

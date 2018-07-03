@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
 import java.util.ArrayList;
@@ -244,6 +245,26 @@ public class MockingContextTest
         assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
     }
 
+    @Test
+    public void should_create_before_method_if_it_does_not_exist_when_preparing_context__junit5() throws Exception
+    {
+        // given
+        createMockingContextWithTestType(TEST_TYPE_VALUE_JUNIT_5);
+
+        when(classUnderTest.getElementName()).thenReturn("Something");
+
+        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before") };
+        when(testCase.getMethods()).thenReturn(methods);
+
+        // when
+        mockingContext.prepareContext(templateRequiringBeforeMethod(), templateProcessor);
+
+        // then
+        verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.junit.jupiter.api.BeforeAll");
+
+        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
+    }
+    
     @Test
     public void should_create_before_method_if_it_does_not_exist_when_preparing_context__testNg() throws Exception
     {
