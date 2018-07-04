@@ -89,8 +89,8 @@
         	<include-if condition="test-type" value="junit4"/>
             <pattern><![CDATA[@${runWith:newType(org.junit.runner.RunWith)}(${runner:newType(org.mockito.runners.MockitoJUnitRunner)}.class)]]></pattern>
         </code-template>
-		<code-template id="mockitoExtensionDeclaration" part="test-class-annotation">
-        	<include-if condition="test-type" value="junit5"/>
+        <code-template id="mockitoExtensionDeclaration" part="test-class-annotation">
+            <include-if condition="test-type" value="junit5"/>
             <pattern><![CDATA[@${runWith:newType(org.junit.jupiter.api.extension.ExtendWith)}(${runner:newType(org.mockito.junit.jupiter.MockitoExtension)}.class)]]></pattern>
         </code-template>
         <code-template id="dependencyDeclaration" part="test-class-fields">

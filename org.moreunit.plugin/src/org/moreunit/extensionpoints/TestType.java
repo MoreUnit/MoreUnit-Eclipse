@@ -39,10 +39,10 @@ public enum TestType {
 	 * JUnit version 4 test method.
 	 */
 	JUNIT_4(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4),
-    /**
-     * JUnit version 5 test method.
-     */
-    JUNIT_5(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5),
+	/**
+	* JUnit version 5 test method.
+	*/
+	JUNIT_5(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5),
 	/**
 	 * Groovy-based Spock test method.
 	 */
