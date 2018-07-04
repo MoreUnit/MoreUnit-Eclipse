@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+org.moreunit.extendedTestMethodSearch=true
+org.moreunit.preferences.version=2
+org.moreunit.test.test_methodDefaultContent=org.junit.Assert.fail("Not implemented yet");
+org.moreunit.test_methodType=testMethodTypeNoPrefix
+org.moreunit.test_type=junit4
+org.moreunit.unitsourcefolder=org.moreunit.mock\:src\:org.moreunit.mock.test\:test
+org.moreunit.useprojectsettings=true
