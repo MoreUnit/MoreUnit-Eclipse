@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -48,12 +47,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
 
     private void saveAndClosePrefs()
     {
-        try {
-            bot.button("OK").click();
-        } catch (WidgetNotFoundException e) {
-            // Text has changed on save button
-            bot.button("Apply and Close").click();
-        }
+        bot.button("OK").click();
     }
 
     @Test

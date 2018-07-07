@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.moreunit.preferences.Preferences;
-import org.moreunit.preferences.TestTypeOperationUtil;
+import org.moreunit.preferences.TestTypeConstants;
 import org.moreunit.util.MoreUnitContants;
 
 public class MethodFacade
@@ -39,7 +39,7 @@ public class MethodFacade
     private static boolean shouldTestMethodsBeAnnotated(IJavaProject project)
     {
         String testType = Preferences.getInstance().getTestType(project);
-        return TestTypeOperationUtil.supportTestAnnotation(testType);
+        return TestTypeConstants.TEST_ANNOTATION.containsKey(testType);
     }
 
     public boolean isAnonymous()

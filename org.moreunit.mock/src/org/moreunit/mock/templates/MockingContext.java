@@ -23,7 +23,7 @@ import org.moreunit.mock.templates.resolvers.DependencyPatternsResolver;
 import org.moreunit.mock.templates.resolvers.FieldInjectionPatternResolver;
 import org.moreunit.mock.templates.resolvers.ObjectUnderTestPatternsResolver;
 import org.moreunit.mock.templates.resolvers.SetterInjectionPatternResolver;
-import org.moreunit.preferences.TestTypeOperationUtil;
+import org.moreunit.preferences.TestTypeConstants;
 
 /**
  * Holds information about the current mocking operation.
@@ -159,7 +159,7 @@ public class MockingContext
 
     private boolean hasBeforeAnnotationIfRequired(IMethod method)
     {
-        String beforeAnnotation = (String) TestTypeOperationUtil.BEFORE_METHOD_ANNOTATION.get(testType);
+        String beforeAnnotation = (String) TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         if(beforeAnnotation == null)
         {
             return true;
@@ -180,7 +180,7 @@ public class MockingContext
     {
         String methodName = incrementMethodNameIfRequired(methodBaseName);
 
-        String annotationClass = (String) TestTypeOperationUtil.BEFORE_METHOD_ANNOTATION.get(testType);
+        String annotationClass = (String) TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         String beforeMethodSource = "";
 
         if(annotationClass != null)
