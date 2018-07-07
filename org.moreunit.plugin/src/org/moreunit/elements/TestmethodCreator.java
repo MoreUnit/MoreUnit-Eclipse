@@ -30,7 +30,7 @@ import org.moreunit.extensionpoints.AddTestMethodParticipatorHandler;
 import org.moreunit.extensionpoints.IAddTestMethodContext;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
-import org.moreunit.preferences.TestTypeOperationUtil;
+import org.moreunit.preferences.TestTypeConstants;
 import org.moreunit.util.MoreUnitContants;
 import org.moreunit.util.TestMethodDiviner;
 import org.moreunit.util.TestMethodDivinerFactory;
@@ -199,7 +199,7 @@ public class TestmethodCreator
         String comment = generateTestMethodComment(methodUnderTest);
 
         IMethod testMethod = null;
-        if(TestTypeOperationUtil.supportTestAnnotation(testType))
+        if(TestTypeConstants.TEST_ANNOTATION.containsKey(testType))
             testMethod = createTestAnnotatationSupportingTestMethod(testMethodName, null, comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
             testMethod = createJUnit3Testmethod(testMethodName, null, comment);
@@ -243,7 +243,7 @@ public class TestmethodCreator
         String comment = getComments(testMethod);
 
         IMethod newTestMethod = null;
-        if(TestTypeOperationUtil.supportTestAnnotation(testType))
+        if(TestTypeConstants.TEST_ANNOTATION.containsKey(testType))
             newTestMethod = createTestAnnotatationSupportingTestMethod(testMethodName, getSiblingForInsert(testMethod), comment);
         else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
             newTestMethod = createJUnit3Testmethod(testMethodName, getSiblingForInsert(testMethod), comment);

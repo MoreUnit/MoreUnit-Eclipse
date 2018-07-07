@@ -3,21 +3,20 @@ package org.moreunit.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestTypeOperationUtil
+public class TestTypeConstants
 {
-    public static final Map BEFORE_CLASS_METHOD_ANNOTATION = new HashMap();
-    public static final Map BEFORE_METHOD_ANNOTATION = new HashMap();
+    public static final Map<String, String> BEFORE_CLASS_METHOD_ANNOTATION = new HashMap<String, String>();
+    public static final Map<String, String> BEFORE_METHOD_ANNOTATION = new HashMap<String, String>();
 
-    public static final Map TEARDOWN_METHOD_ANNOTATION = new HashMap();
-    public static final Map AFTER_CLASS_METHOD_ANNOTATION = new HashMap();
+    public static final Map<String, String> TEARDOWN_METHOD_ANNOTATION = new HashMap<String, String>();
+    public static final Map<String, String> AFTER_CLASS_METHOD_ANNOTATION = new HashMap<String, String>();
 
-    public static final Map TEST_ANNOTATION = new HashMap();
+    public static final Map<String, String> TEST_ANNOTATION = new HashMap<String, String>();
 
-    public static final Map STATIC_IMPORT_BASE_CLASS = new HashMap();
+    public static final Map<String, String> STATIC_IMPORT_BASE_CLASS = new HashMap<String, String>();
 
     static
     {
-
         BEFORE_CLASS_METHOD_ANNOTATION.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "org.junit.BeforeClass"); //$NON-NLS-1$
         BEFORE_CLASS_METHOD_ANNOTATION.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, "org.junit.jupiter.api.BeforeAll"); //$NON-NLS-1$
         BEFORE_CLASS_METHOD_ANNOTATION.put(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "org.testng.annotations.BeforeClass"); //$NON-NLS-1$
@@ -41,10 +40,5 @@ public class TestTypeOperationUtil
         STATIC_IMPORT_BASE_CLASS.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, "org.junit.Assert"); //$NON-NLS-1$
         STATIC_IMPORT_BASE_CLASS.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, "org.junit.jupiter.api.Assertions"); //$NON-NLS-1$
         STATIC_IMPORT_BASE_CLASS.put(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, "org.testng.Assert"); //$NON-NLS-1$
-    }
-
-    public static boolean supportTestAnnotation(String testType)
-    {
-        return TEST_ANNOTATION.containsKey(testType);
     }
 }

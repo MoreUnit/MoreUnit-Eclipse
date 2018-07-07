@@ -70,7 +70,7 @@ import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.extensionpoints.TestType;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
-import org.moreunit.preferences.TestTypeOperationUtil;
+import org.moreunit.preferences.TestTypeConstants;
 
 public class MoreUnitWizardPageOne extends NewTypeWizardPage
 {
@@ -271,6 +271,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         {
             setSuperClass(GROOVY_TEST_CASE, true);
         }
+        else if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_SPOCK))
+        {
+            setSuperClass(SPOCK_TEST_SUPERCLASS, true);
+        }
         else if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3))
         {
             setSuperClass(JUnitCorePlugin.TEST_SUPERCLASS_NAME, true);
@@ -320,7 +324,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
             updateBuildPathMessage();
         }
-        else if(fieldName.equals(JUNIT4TOGGLE)) // TODO: For spock?
+        else if(fieldName.equals(JUNIT4TOGGLE))
         {
             updateBuildPathMessage();
             boolean junit3 = junit3Toggle.getSelection();
@@ -697,13 +701,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                         message = WizardMessages.NewTestCaseWizardPageOne_linkedtext_java5required;
                     }
                 }
-                if(isJUnit5())
-                {
-                    // if(! CoreTestSearchEngine.isVersionLessThan(project))
-                    // {
-                    // message = "JUnit 5 requires a Java 8 project.";
-                    // }
-                }
             }
         }
         fLink.setVisible(message != null);
@@ -907,13 +904,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             createTestMethodStubs(type, imports);
         }
 
-        String testImport = (String) TestTypeOperationUtil.TEST_ANNOTATION.get(testType);
+        String testImport = TestTypeConstants.TEST_ANNOTATION.get(testType);
         if(testImport != null)
         {
             imports.addImport(testImport);
         }
 
-        String staticImportBaseClass = (String) TestTypeOperationUtil.STATIC_IMPORT_BASE_CLASS.get(testType);
+        String staticImportBaseClass = TestTypeConstants.STATIC_IMPORT_BASE_CLASS.get(testType);
         if(staticImportBaseClass != null)
         {
             imports.addStaticImport(staticImportBaseClass, "*", false); //$NON-NLS-1$
@@ -1061,25 +1058,25 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void createSetUp(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = (String) TestTypeOperationUtil.BEFORE_METHOD_ANNOTATION.get(testType);
+        String annotation = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "setUp", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDown(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = (String) TestTypeOperationUtil.TEARDOWN_METHOD_ANNOTATION.get(testType);
+        String annotation = TestTypeConstants.TEARDOWN_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "tearDown", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createSetUpClass(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = (String) TestTypeOperationUtil.BEFORE_CLASS_METHOD_ANNOTATION.get(testType);
+        String annotation = TestTypeConstants.BEFORE_CLASS_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "setUpBeforeClass", true, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDownClass(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = (String) TestTypeOperationUtil.AFTER_CLASS_METHOD_ANNOTATION.get(testType);
+        String annotation = TestTypeConstants.AFTER_CLASS_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "tearDownAfterClass", true, annotation, imports); //$NON-NLS-1$
     }
 

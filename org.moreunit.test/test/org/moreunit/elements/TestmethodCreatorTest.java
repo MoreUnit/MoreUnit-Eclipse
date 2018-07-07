@@ -76,11 +76,29 @@ public class TestmethodCreatorTest extends ContextTestCase
         assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
         assertThat(createTestMethod.getSource()).startsWith("@Test");
         assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
-
+        
         IMethod[] methods = testcaseType.get().getMethods();
         assertThat(methods).containsOnly(createTestMethod);
     }
 
+    @Test
+    public void createTestMethod_should_create_junit5_testmethod() throws CoreException
+    {
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
+                .compilationUnit(cutType.getCompilationUnit())
+                .testType(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5)
+                .defaultTestMethodContent(SOME_TEST_CODE));
+
+        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+
+        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
+        assertThat(createTestMethod.getSource()).startsWith("@Test");
+        assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
+        
+        IMethod[] methods = testcaseType.get().getMethods();
+        assertThat(methods).containsOnly(createTestMethod);
+    }
+    
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = true)
     public void createTestMethod_should_create_junit4_testmethod_with_prefix() throws CoreException

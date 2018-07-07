@@ -1,0 +1,10 @@
+.DS_Store
+.gitignore
+.metadata
+.release-build
+target
+classes
+docs/.project
+org.moreunit.*/classes/
+org.moreunit.*/target/
+Thumbs.db

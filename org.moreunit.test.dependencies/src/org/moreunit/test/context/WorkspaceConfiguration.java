@@ -204,7 +204,7 @@ class WorkspaceConfiguration
             }
             else if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5.equals(testType))
             {
-                containerPath = new Path(JUnitCore.JUNIT_CONTAINER_ID).append("5");
+                containerPath = new Path(JUnitCore.JUNIT_CONTAINER_ID).append("5"); //$NON-NLS-1$
             }
             else if(PreferenceConstants.TEST_TYPE_VALUE_TESTNG.equals(testType))
             {
