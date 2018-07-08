@@ -2,8 +2,6 @@ package org.moreunit.test.workspace;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.math.BigDecimal;
-
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
 
@@ -21,8 +19,6 @@ public class CompilationUnitAssertions
         SourceFolderHandler srcFolderHandler = cuHandler.getSourceFolderHandler();
         String actualSource = cuHandler.getActualSource();
         String expectedSource = getSource(srcFolderHandler, expectedSourceFile);
-        System.out.println("Actual: " + actualSource);
-        System.out.println("Expected: " + expectedSource);
         assertThat(normalizeSpaces(ignoreJdkDependentImports(actualSource))).isEqualTo(normalizeSpaces(expectedSource));
         return this;
     }
@@ -33,7 +29,7 @@ public class CompilationUnitAssertions
         // For example, there is a single class named Callable in Java 8, but there are two in Java 10.
         // Save actions will not add imports for ambiguous classes, therefore to avoid making the test
         // JDK dependent, we should ignore them during th compare
-        return source.replaceAll("^import java\\.util\\.concurrent\\.Callable;$", "");
+        return source.replaceAll("import java\\.util\\.concurrent\\.Callable;", "");
     }
 
     protected String getSource(SourceFolderHandler srcFolderHandler, String expectedSourceFile)
