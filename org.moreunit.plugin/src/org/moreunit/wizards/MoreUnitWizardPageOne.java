@@ -262,6 +262,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     public void handleSelectionChanged()
     {
+        fJunitStatus = getJunitOkStatus();
         testType = getTestTypePrefValue();
         if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_SPOCK))
         {
@@ -278,7 +279,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else
         {
             setSuperClass(preferences.getTestSuperClass(), true);
-            fJunitStatus = getJunitOkStatus();
         }
         handleFieldChanged(JUNIT4TOGGLE);
     }
