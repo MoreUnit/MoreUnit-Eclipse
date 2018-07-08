@@ -70,10 +70,8 @@ public class NewTestCaseWizard extends NewClassyWizard
 
     private void configurePageOne()
     {
-        this.pageOne.handleSelectionChanged();
-
         String testSuperClass = getTestSuperClass();
-        if(testSuperClass != null)
+        if(testSuperClass != null && ! testSuperClass.isEmpty())
         {
             this.pageOne.setSuperClass(testSuperClass, true);
         }

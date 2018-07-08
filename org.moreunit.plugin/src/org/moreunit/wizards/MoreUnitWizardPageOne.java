@@ -281,7 +281,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else
         {
-            setSuperClass("java.lang.Object", true); //$NON-NLS-1$
+            setSuperClass(preferences.getTestSuperClass(), true); // $NON-NLS-1$
             fJunit4Status = getJunitOkStatus();
         }
         handleFieldChanged(JUNIT4TOGGLE);
