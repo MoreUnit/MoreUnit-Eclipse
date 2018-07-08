@@ -34,6 +34,16 @@ public class CompilationUnitAssertionsTest
         assertions.hasSameSourceAsIn("some_file_containing_the_expected_source.txt");
     }
 
+    @Test
+    public void should_ignore_jdk_dependent_imports() throws Exception
+    {
+        when(actualCu.getActualSource()).thenReturn("import java.util.concurrent.Callable;\npublic  class SomeClass      " + NL + "{ \t private String aField; } ");
+
+        assertions.whenCreatingSourceThenReturn("   public class     SomeClass " + NL + "{ private   String aField; }");
+
+        assertions.hasSameSourceAsIn("some_file_containing_the_expected_source.txt");
+    }
+
     /**
      * A test-only concrete subclass of CompilationUnitAssertions.
      */

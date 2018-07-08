@@ -174,7 +174,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fJunitStatus = new JUnitStatus();
 
         testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
-
     }
 
     /**
@@ -264,13 +263,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     public void handleSelectionChanged()
     {
         testType = getTestTypePrefValue();
-        if(langType == LanguageType.GROOVY)
-        {
-            setSuperClass(GROOVY_TEST_CASE, true);
-        }
-        else if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_SPOCK))
+        if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_SPOCK))
         {
             setSuperClass(SPOCK_TEST_SUPERCLASS, true);
+        }
+        else if(langType == LanguageType.GROOVY)
+        {
+            setSuperClass(GROOVY_TEST_CASE, true);
         }
         else if(testType.equals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3))
         {
@@ -278,7 +277,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else
         {
-            setSuperClass(preferences.getTestSuperClass(), true); // $NON-NLS-1$
+            setSuperClass(preferences.getTestSuperClass(), true);
             fJunitStatus = getJunitOkStatus();
         }
         handleFieldChanged(JUNIT4TOGGLE);
