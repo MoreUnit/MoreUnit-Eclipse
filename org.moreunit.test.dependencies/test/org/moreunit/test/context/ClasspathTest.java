@@ -52,10 +52,10 @@ public class ClasspathTest extends ContextTestCase
         return new Condition<Object[]>()
         {
             @Override
-            public boolean matches(Object[] arg0)
+            public boolean matches(Object[] elements)
             {
-                for (Object arg : arg0) {
-                    if (String.valueOf(arg).matches(pattern)) {
+                for (Object element : elements) {
+                    if (String.valueOf(element).matches(pattern)) {
                         return true;
                     }
                 }

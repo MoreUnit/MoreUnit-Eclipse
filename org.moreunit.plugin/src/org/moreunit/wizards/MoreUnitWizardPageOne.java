@@ -126,11 +126,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private Button fClassUnderTestButton;
     private JavaTypeCompletionProcessor fClassToTestCompletionProcessor;
 
-    // private Button fJUnit4Toggle;
     private String testType;
-    // private boolean fIsJunit4;
-    private IStatus fJunit4Status; // status
-    // private boolean fIsJunit4Enabled;
+    private IStatus fJunitStatus; // status
     private Link fLink;
     private Label fImage;
 
@@ -174,7 +171,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         fClassUnderTestText = ""; //$NON-NLS-1$
 
-        fJunit4Status = new JUnitStatus();
+        fJunitStatus = new JUnitStatus();
 
         testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
 
@@ -282,7 +279,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else
         {
             setSuperClass(preferences.getTestSuperClass(), true); // $NON-NLS-1$
-            fJunit4Status = getJunitOkStatus();
+            fJunitStatus = getJunitOkStatus();
         }
         handleFieldChanged(JUNIT4TOGGLE);
     }
@@ -320,7 +317,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             {
                 fClassUnderTestButton.setEnabled(getPackageFragmentRoot() != null);
             }
-            fJunit4Status = getJunitOkStatus();
+            fJunitStatus = getJunitOkStatus();
 
             updateBuildPathMessage();
         }
@@ -351,7 +348,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
          * fTypeNameStatus, fClassUnderTestStatus, fModifierStatus,
          * fSuperClassStatus, fJunit4Status };
          */
-        return new IStatus[] { fContainerStatus, fPackageStatus, fTypeNameStatus, fClassUnderTestStatus, fModifierStatus, fSuperClassStatus, fJunit4Status };
+        return new IStatus[] { fContainerStatus, fPackageStatus, fTypeNameStatus, fClassUnderTestStatus, fModifierStatus, fSuperClassStatus, fJunitStatus };
     }
 
     private boolean isTestNgSelected()
