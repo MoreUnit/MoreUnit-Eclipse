@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="eclipse-4.8" sequenceNumber="9">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.testng.eclipse.feature.group" version="6.14.0.201802161500"/>
+<repository location="http://beust.com/eclipse"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.7.0.201806111355"/>
+<unit id="org.eclipse.swtbot.feature.group" version="2.7.0.201806111355"/>
+<repository location="http://download.eclipse.org/technology/swtbot/releases/2.7.0/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="4.8.0.I20180611-0500"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.8"/>
+</location>
+</locations>
+</target>

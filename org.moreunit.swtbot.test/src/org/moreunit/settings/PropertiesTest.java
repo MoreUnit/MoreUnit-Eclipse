@@ -5,6 +5,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
@@ -68,7 +69,9 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 
     private void saveAndCloseProps()
     {
-        bot.button("OK").click();
+        // in newer version (at least 4.8), the label has been changed and is stored in a preference
+        String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
+        bot.button("PreferencesDialog.okButtonLabel".equals(label)? "OK" : label).click();
     }
 
     @Before

@@ -23,7 +23,7 @@
   </modules>
 
   <properties>
-    <tycho-version>0.19.0</tycho-version>
+    <tycho-version>1.2.0</tycho-version>
     
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -36,7 +36,7 @@
       <extension>
         <groupId>org.codehaus.mojo</groupId>
 		<artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>1.6.0</version>
       </extension>
     </extensions>
 
@@ -65,12 +65,15 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.12.1</version>
+          <version>2.22.0</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho-version}</version>
+          <configuration>
+          	<providerHint>junit4</providerHint>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -85,17 +88,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.4</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.8.2</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.2.1</version>
+          <version>1.6.0</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -135,7 +138,7 @@
               <groupId>org.moreunit</groupId>
               <artifactId>moreunit</artifactId>
               <version>${project.version}</version>
-              <classifier>eclipse-4.3</classifier>
+              <classifier>eclipse-4.8</classifier>
             </artifact>
           </target>
           <includePackedArtifacts>true</includePackedArtifacts>
