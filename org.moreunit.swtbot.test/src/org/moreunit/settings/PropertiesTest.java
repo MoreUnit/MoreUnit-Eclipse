@@ -68,6 +68,8 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 
     private void saveAndCloseProps()
     {
+        // Needs to be changed to "Apply and close" or JFaceResources.getString("PreferencesDialog.okButtonLabel")
+        // or find another way in newer version (4.7?, 4.8)
         bot.button("OK").click();
     }
 
