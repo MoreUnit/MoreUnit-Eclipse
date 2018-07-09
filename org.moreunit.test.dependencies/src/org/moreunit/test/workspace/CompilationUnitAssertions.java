@@ -28,7 +28,7 @@ public class CompilationUnitAssertions
         // Some classnames are not unique within some JVMs while unique in case of others.
         // For example, there is a single class named Callable in Java 8, but there are two in Java 10.
         // Save actions will not add imports for ambiguous classes, therefore to avoid making the test
-        // JDK dependent, we should ignore them during th compare
+        // JDK dependent, we should ignore them during the source compare
         return source.replaceAll("import java\\.util\\.concurrent\\.Callable;", "");
     }
 
