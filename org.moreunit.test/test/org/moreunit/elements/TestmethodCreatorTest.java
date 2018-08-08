@@ -313,7 +313,7 @@ public class TestmethodCreatorTest extends ContextTestCase
                            " * Test method for {@link testing.Hello#getNumberOne()}." +
                            " */" +
                            " @Test" +
-                           " public void getNumberOne() throws Exception { }");
+                           " public void getNumberOne() { }");
     }
 
     @Test
@@ -333,6 +333,6 @@ public class TestmethodCreatorTest extends ContextTestCase
         assertThat(createTestMethod.getSource().replaceAll("\\s+", " "))
                 .isEqualTo("/** Some test comments. */" +
                            " @Test" +
-                           " public void getNumberOneSuffix() throws Exception { }");
+                           " public void getNumberOneSuffix() { }");
     }
 }
