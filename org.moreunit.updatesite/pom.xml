@@ -45,31 +45,33 @@
         <rsync.dir>update-site</rsync.dir>
       </properties>
       <build>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>upload-repo</id>
-              <phase>deploy</phase>
-              <goals>
-                <goal>exec</goal>
-              </goals>
-              <configuration>
-                <executable>rsync</executable>
-                <arguments>
-                  <argument>-avz</argument>
-                  <argument>--delete</argument>
-                  <argument>-e ssh</argument>
-                  <argument>${project.build.directory}/repository/</argument>
-                  <!-- also copies distribution file for cases when update site is not accessible from within Eclipse (for example in case of a weird enterprise proxy) -->
-                  <argument>${project.build.directory}/org.moreunit-${project.version}.zip</argument>
-                  <argument>${sourceforge.username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/${rsync.dir}/</argument>
-                </arguments>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>upload-repo</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>rsync</executable>
+                  <arguments>
+                    <argument>-avz</argument>
+                    <argument>--delete</argument>
+                    <argument>-e ssh</argument>
+                    <argument>${project.build.directory}/repository/</argument>
+                    <!-- also copies distribution file for cases when update site is not accessible from within Eclipse (for example in case of a weird enterprise proxy) -->
+                    <argument>${project.build.directory}/org.moreunit-${project.version}.zip</argument>
+                    <argument>${sourceforge.username},moreunit@web.sourceforge.net:/home/groups/m/mo/moreunit/htdocs/${rsync.dir}/</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
     <profile>
