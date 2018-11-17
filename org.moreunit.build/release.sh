@@ -7,6 +7,7 @@
 
 # useful for testing
 mvnopts=""
+#mvnopts="-DskipTests"
 
 
 ## TODO
@@ -29,7 +30,15 @@ ORIGIN=$(git remote -v | awk '$1=="origin" && $3=="(push)" {print $2}')
 
 MVN_PROFILE=""
 if [[ "$DEPLOY_TO_SOURCEFORGE" == "true" ]]; then
-  MVN_PROFILE="${MVN_PROFILE},sourceforge"
+  if [ -z "$MVN_PROFILE" ]; then
+    MVN_PROFILE="sourceforge"
+  else
+    MVN_PROFILE="${MVN_PROFILE},sourceforge"
+  fi
+fi
+
+if [ ! -z "$MVN_PROFILE" ]; then
+  MVN_PROFILE="-P${MVN_PROFILE}"
 fi
 
 function notify_user {
@@ -151,7 +160,7 @@ function zip_file_reminder {
   echo "* Don't forget to upload                                        *"
   echo "*     ${RELEASE_REPO_DIR}/org.moreunit.updatesite/target/org.moreunit-${VERSION}.zip   *"
   echo "* on                                                            *"
-  echo "*     https://github.com/MoreUnit/MoreUnit-Eclipse/releases/edit/${VERSION} *"
+  echo "*     https://github.com/MoreUnit/MoreUnit-Eclipse/releases/new?tag=${VERSION} *"
   echo "* and (deprecated)                                              *"
   echo "*     https://sourceforge.net/projects/moreunit/files/moreunit/ *"
   echo "*****************************************************************"
@@ -200,7 +209,7 @@ git tag -a "v$version" -m "Version $version"
 
 cd "$RELEASE_BUILD_DIR"
 
-mvn clean deploy $mvnopts -P$MVN_PROFILE
+mvn clean deploy $mvnopts $MVN_PROFILE
 if [ $? -ne 0 ]; then
   failure "Build failed. Release aborted."
 fi
@@ -213,13 +222,13 @@ if [ $? -ne 0 ]; then
   failure "Unable to push. Release aborted. THE NEWLY CREATED ARTIFACTS ARE ALREADY UPLOADED TO SOURCEFORGE!"
 fi
 
-publish_github_update_site $nextVersion
-
-cd "$RELEASE_REPO_DIR"
+publish_github_update_site $version
 
 # first notification, in case of failure during the next steps
 notify_user "Release successful!"
-zip_file_reminder $nextVersion
+zip_file_reminder $version
+
+cd "$RELEASE_BUILD_DIR"
 
 notify_user "Preparing code for development on version $nextVersion..."
 set_version $nextVersion 'SNAPSHOT'
@@ -238,6 +247,6 @@ notify_user "Code ready for development on version $nextVersion"
 cd "$REPO_DIR" && git fetch
 cd "$CALL_DIR"
 # second notification, to be sure we don't forget about the zip file
-zip_file_reminder $nextVersion
+zip_file_reminder $version
 success "Version $version successfully released!"
 
