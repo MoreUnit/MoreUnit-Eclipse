@@ -149,7 +149,7 @@ function zip_file_reminder {
   echo
   echo "** REMINDER *****************************************************"
   echo "* Don't forget to upload                                        *"
-  echo "*     org.moreunit.updatesite/target/org.moreunit-${VERSION}.zip   *"
+  echo "*     ${RELEASE_REPO_DIR}/org.moreunit.updatesite/target/org.moreunit-${VERSION}.zip   *"
   echo "* on                                                            *"
   echo "*     https://github.com/MoreUnit/MoreUnit-Eclipse/releases/edit/${VERSION} *"
   echo "* and (deprecated)                                              *"
@@ -180,12 +180,6 @@ if [ $# -eq 0 ]; then
   echo -n "Please enter next version to develop (without 'SNAPSHOT' or other qualifier): "
   read nextVersion
 fi
-
-#if [ -z "$gitpwd" ]; then
-#  echo -n "Please enter your GIT user password: "
-#  read -s gitpwd
-#  echo
-#fi
 
 cd "$REPO_DIR"
 
@@ -220,6 +214,8 @@ if [ $? -ne 0 ]; then
 fi
 
 publish_github_update_site $nextVersion
+
+cd "$RELEASE_REPO_DIR"
 
 # first notification, in case of failure during the next steps
 notify_user "Release successful!"
