@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # examples:
-# ./release.sh 3.0.1 3.0.2 (standard usage)
-# ./release.sh 3.0.0.01 3.0.0 (during our "milestone" mode, to use 3.0.0.qualifier again)
+# ./release.sh 3.0.1 3.0.2
 
 # if anything goes wrong, don't forget to delete the created tag locally, and to discard the last commit(s)
 
@@ -27,7 +26,11 @@ WIP_COMMENT="Work in progress"
 
 BRANCH=$(git branch --no-color | awk '$1=="*" {print $2}')
 ORIGIN=$(git remote -v | awk '$1=="origin" && $3=="(push)" {print $2}')
-MVN_PROFILE=release
+
+MVN_PROFILE=""
+if [ "$DEPLOY_TO_SOURCEFORGE" == "true" ]; then
+  MVN_PROFILE="${MVN_PROFILE},sourceforge"
+fi
 
 function notify_user {
   echo
@@ -149,7 +152,7 @@ function zip_file_reminder {
   echo "*     org.moreunit.updatesite/target/org.moreunit-${VERSION}.zip   *"
   echo "* on                                                            *"
   echo "*     https://github.com/MoreUnit/MoreUnit-Eclipse/releases/edit/${VERSION} *"
-  echo "* and                                                           *"
+  echo "* and (deprecated)                                              *"
   echo "*     https://sourceforge.net/projects/moreunit/files/moreunit/ *"
   echo "*****************************************************************"
   echo
@@ -162,10 +165,19 @@ if [ $# -ne 0 ]; then
   if [ -z "$version" -o  -z "$nextVersion" ]; then
     print_usage_and_exit
   fi
-else
+fi
+
+if [ ! -d "$UPDATE_SITE_REPO_DIR" ]; then
+  echo "Expected directory $UPDATE_SITE_REPO_DIR to exist and point to https://github.com/MoreUnit/eclipse-update-site"
+  echo "Can't publish the update site otherwise."
+  echo "Please clone the repository at the expected location (or create a symlink to where you cloned it)."
+  exit 1
+fi
+
+if [ $# -eq 0 ]; then
   echo -n "Please enter the version to release: "
   read version
-  echo -n "Please enter next version to develop (without qualifier): "
+  echo -n "Please enter next version to develop (without 'SNAPSHOT' or other qualifier): "
   read nextVersion
 fi
 
@@ -174,13 +186,6 @@ fi
 #  read -s gitpwd
 #  echo
 #fi
-
-if [ ! -d "$UPDATE_SITE_REPO_DIR" ]; then
-  echo "Expected directory $UPDATE_SITE_REPO_DIR to exist and point to https://github.com/MoreUnit/eclipse-update-site"
-  echo "Can't publish the update site otherwise."
-  echo "Please clone the repository at the expected location (or create a symlink to where you cloned it)."
-  exit 1
-fi
 
 cd "$REPO_DIR"
 

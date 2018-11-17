@@ -193,25 +193,6 @@
   
   <profiles>
   	<profile>
-  		<id>latestandgreatest</id>
-  		<properties>
-  			<rsync.dir>latestandgreatest</rsync.dir>
-  		</properties>
-  	</profile>
-  	<profile>
-  		<id>mu3</id>
-  		<properties>
-  			<rsync.dir>moreunit-3-alpha</rsync.dir>
-  		</properties>
-  	</profile>
-  	<profile>
-  		<id>release</id>
-  		<properties>
-  			<rsync.dir>update-site</rsync.dir>
-  		</properties>
-  	</profile>
-  	
-  	<profile>
   	  <!-- makes test run in UI thread when under OSX -->
       <id>osx</id>
       <activation>
