@@ -28,7 +28,7 @@ BRANCH=$(git branch --no-color | awk '$1=="*" {print $2}')
 ORIGIN=$(git remote -v | awk '$1=="origin" && $3=="(push)" {print $2}')
 
 MVN_PROFILE=""
-if [ "$DEPLOY_TO_SOURCEFORGE" == "true" ]; then
+if [[ "$DEPLOY_TO_SOURCEFORGE" == "true" ]]; then
   MVN_PROFILE="${MVN_PROFILE},sourceforge"
 fi
 
