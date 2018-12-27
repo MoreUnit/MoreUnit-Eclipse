@@ -4,6 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -75,8 +76,22 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
     	getShortcutStrategy().pressJumpShortcut();
     	
-    	SWTBotEclipseEditor testEditor = bot.activeEditor().toTextEditor();
     	final int lineNumberOfTestMethod = 7;
-		assertThat(testEditor.cursorPosition().line).isEqualTo(lineNumberOfTestMethod);
+    	bot.waitUntil(new DefaultCondition()
+        {
+    	    
+            @Override
+            public boolean test() throws Exception
+            {
+                SWTBotEclipseEditor testEditor = BasicJumpTest.bot.activeEditor().toTextEditor();
+                return testEditor.cursorPosition().line == lineNumberOfTestMethod;
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "It has not jumped to the right line number inside the test class.";
+            }
+        });
     }
 }
