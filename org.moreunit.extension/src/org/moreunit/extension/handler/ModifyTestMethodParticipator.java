@@ -80,7 +80,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 * Access modifiers for methods linked in JavaDoc.
 	 */
 	private enum JavaDocVisibility {
-		Public, Protected, Package, Private
+	Public, Protected, Package, Private
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 
 		// Class under test does not exist in minor cases, just return
 		if (classUnderTest == null) {
-			LogHandler.getInstance().handleWarnLog(
-				"Missing class under test for: " + testMethod.getElementName());
+			LogHandler.getInstance()
+				.handleWarnLog("Missing class under test for: " + testMethod.getElementName());
 			return;
 		}
 
@@ -131,7 +131,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		LogHandler.getInstance().handleInfoLog("Context: " + context);
 		LogHandler.getInstance().handleInfoLog("TestType: " + testType);
 
-		// Testmethode im Editor öffnen, sonst funzt die AST-Modifikation nicht
+		// Testmethode im Editor Ã¶ffnen, sonst funzt die AST-Modifikation nicht
 		IEditorPart editorPart;
 		if (testMethod != null) {
 			editorPart = openMethodInEditor(context.getTestMethod());
@@ -150,7 +150,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		astParser.setSource(compilationUnit);
 		final CompilationUnit astRoot = (CompilationUnit)astParser.createAST(null);
 
-		// Änderungen ab jetzt aufzeichen
+		// Ã„nderungen ab jetzt aufzeichen
 		astRoot.recordModifications();
 
 		// Methode, oder Methoden modifizieren
@@ -171,15 +171,15 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 			jumpToMethod = testMethod;
 		}
 
-		// Haben wir Änderungen?
+		// Haben wir Ã„nderungen?
 		if (!changesDone) {
 			return;
 		}
 
-		// Import zufügen
+		// Import zufÃ¼gen
 		addImports(astRoot, testType);
 
-		// Änderungen committen
+		// Ã„nderungen committen
 		commitChanges(editorPart, compilationUnit, astRoot, sourceDocument, jumpToMethod);
 	}
 
@@ -214,7 +214,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 			compilationUnit.save(null, true);
 		}
 
-		// Zur Methode springen, wenn möglich
+		// Zur Methode springen, wenn mÃ¶glich
 		if (jumpToMethod != null) {
 			LogHandler.getInstance().handleInfoLog("Jump to " + jumpToMethod.getElementName());
 			jumpToMethod(editorPart, jumpToMethod);
@@ -267,11 +267,6 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Astknoten erstellen, der modifiziert werden soll
 		AST astToModify = testMethodDeclaration.getAST();
 
-		// Werfen von Exception erlauben, wenn noch keine Fehler geworfen werden
-		if (testMethodDeclaration.thrownExceptions().size() == 0) {
-			rawListAdd(testMethodDeclaration.thrownExceptions(), astToModify.newSimpleName("Exception"));
-		}
-
 		// JavaDoc erzeugen
 		Javadoc javaDoc = astToModify.newJavadoc();
 
@@ -281,25 +276,18 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 			newTextElement(astToModify, getJavaDocCommentText(methodUnderTest)));
 		rawListAdd(javaDoc.tags(), tagElement);
 
-		// Doku für Werfen aller Fehler
-		tagElement = astToModify.newTagElement();
-		tagElement.setTagName(TagElement.TAG_THROWS);
-		rawListAdd(tagElement.fragments(), astToModify.newSimpleName("Exception"));
-		rawListAdd(tagElement.fragments(), newTextElement(astToModify, "Error."));
-		rawListAdd(javaDoc.tags(), tagElement);
-
 		// JavaDoc zuweisen
 		testMethodDeclaration.setJavadoc(javaDoc);
 
-		// Nur für TESTNG die Annotation ändern
+		// Nur fÃ¼r TESTNG die Annotation Ã¤ndern
 		if (testType.equals(TestType.TESTNG)) {
-			// Alle Annotationen entfernen (nicht über Iterator, da Liste geändert wird!)
+			// Alle Annotationen entfernen (nicht Ã¼ber Iterator, da Liste geÃ¤ndert wird!)
 			removeAnnotations(testMethodDeclaration);
 			// Neue Annotation erzeugen
 			rawListInsertFirst(testMethodDeclaration.modifiers(), newTestAnnotation(astToModify));
 		}
 
-		// Methode wurde verändert
+		// Methode wurde verÃ¤ndert
 		return true;
 	}
 
@@ -310,7 +298,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 */
 	private void addImports(final CompilationUnit astRoot, final TestType testType) {
 
-		// Import zufügen
+		// Import zufÃ¼gen
 		switch (testType) {
 			case JUNIT_3:
 				addImport(astRoot, "junit.framework.TestCase", false);
@@ -331,12 +319,13 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	}
 
 	/**
-	 * Fügt eine Importanweisung hinzu.
+	 * FÃ¼gt eine Importanweisung hinzu.
 	 * @param astRoot Wurzel.
 	 * @param classToImport Zu importierende Klasse.
 	 * @param isStatic Statischer Import?
 	 */
-	private void addImport(final CompilationUnit astRoot, final String classToImport, final boolean isStatic) {
+	private void addImport(final CompilationUnit astRoot, final String classToImport,
+		final boolean isStatic) {
 
 		// Import bereits vorhanden
 		for (Object o : astRoot.imports()) {
@@ -349,7 +338,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Astknoten erstellen, der modifiziert werden soll
 		AST astToModify = astRoot.getAST();
 
-		// Importdeklaration für fail zufügen
+		// Importdeklaration fÃ¼r fail zufÃ¼gen
 		ImportDeclaration importDeclaration = astToModify.newImportDeclaration();
 		importDeclaration.setStatic(isStatic);
 		importDeclaration.setName(astToModify.newName(classToImport));
@@ -455,7 +444,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 				parameterList.append(", ");
 			}
 
-			// Name zufügen, ohne Generics
+			// Name zufÃ¼gen, ohne Generics
 			String name = Signature.toString(parameter);
 			name = name.split("<")[0];
 			parameterList.append(name);
@@ -473,7 +462,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		// Methode sichtbar? Dann Link, sonst als HTML-<code>-Tag
 		builder.append(createJavaDocLink(methodUnderTest, linkTarget));
 
-		// Punkt zugügen und liefern
+		// Punkt zugÃ¼gen und liefern
 		builder.append(".");
 		return builder.toString();
 	}
@@ -498,7 +487,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 			return createCodedTag(linkTarget);
 		}
 
-		// Einen Link auf die Klasse für unsichtbare (private) Methode
+		// Einen Link auf die Klasse fÃ¼r unsichtbare (private) Methode
 		StringBuilder builder = new StringBuilder();
 		int iPos = linkTarget.indexOf("#");
 		if (iPos > 0) {
@@ -538,7 +527,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 */
 	private boolean isJavaDocVisible(final IMethod method) throws JavaModelException {
 
-		// Zugriffsflags holen und prüfen: Sichtbar ab protected!
+		// Zugriffsflags holen und prÃ¼fen: Sichtbar ab protected!
 		int flags = method.getFlags();
 
 		switch (javaDocVisibility) {
@@ -563,7 +552,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 */
 	private MethodDeclaration findMethodDeclaration(final CompilationUnit astRoot, final IMethod testMethod) {
 
-		// Übergabevariable erstellen (Feld, da Variable final sein muss!)
+		// Ãœbergabevariable erstellen (Feld, da Variable final sein muss!)
 		final MethodDeclaration[] foundMethodDeclaration = new MethodDeclaration[1];
 		foundMethodDeclaration[0] = null;
 
@@ -596,7 +585,8 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 * @throws JavaModelException Fehler.
 	 * @throws PartInitException Fehler.
 	 */
-	private IEditorPart openMethodInEditor(final IMethod method) throws PartInitException, JavaModelException {
+	private IEditorPart openMethodInEditor(final IMethod method)
+		throws PartInitException, JavaModelException {
 
 		return JavaUI.openInEditor(method.getDeclaringType().getParent());
 	}
@@ -643,7 +633,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void rawListInsertFirst(final List list, final Object firstObj) {
 
-		// Original Listenlänge merken
+		// Original ListenlÃ¤nge merken
 		int origSize = list.size();
 
 		// Sonderfall: Liste ist leer
