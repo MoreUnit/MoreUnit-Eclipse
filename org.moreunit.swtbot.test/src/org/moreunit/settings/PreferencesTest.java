@@ -8,6 +8,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
+import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.test.context.Context;
@@ -17,11 +18,17 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
     private void openPreferencesAndSelectMoreUnitPage()
     {
+        LogHandler.getInstance().handleInfoLog("Will open Preferences dialog...");
         getShortcutStrategy().openPreferences();
+        LogHandler.getInstance().handleInfoLog("Command to open dialog launched...");
         bot.waitUntil(Conditions.shellIsActive("Preferences"));
+        LogHandler.getInstance().handleInfoLog("Preferences dialog active");
         bot.shell("Preferences").activate();
+        LogHandler.getInstance().handleInfoLog("Preferences dialog activated");
         bot.shell("Preferences").setFocus();
+        LogHandler.getInstance().handleInfoLog("Preferences dialog opened and focused");
         bot.tree().expandNode("MoreUnit").select("Java");
+        LogHandler.getInstance().handleInfoLog("MoreUnit -> java page selected in Preferences dialog");
     }
     
     private void openPreferencesAndSelectUserLanguagesPage()
