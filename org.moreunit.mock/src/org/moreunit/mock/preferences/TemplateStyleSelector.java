@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -65,8 +66,7 @@ public class TemplateStyleSelector implements SelectionListener
         Composite labelAndFieldComposite = new Composite(parent, SWT.NONE);
         labelAndFieldComposite.setLayout(new GridLayout(3, false));
 
-        GridData rowLayoutData = new GridData(GridData.FILL_HORIZONTAL);
-        rowLayoutData.heightHint = 30;
+        GridData rowLayoutData = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(- 1, 30).span(2, 1).create();
         labelAndFieldComposite.setLayoutData(rowLayoutData);
 
         Label label = new Label(labelAndFieldComposite, SWT.NONE);
