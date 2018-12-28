@@ -21,7 +21,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         LogHandler.getInstance().handleInfoLog("Will open Preferences dialog...");
         getShortcutStrategy().openPreferences();
         LogHandler.getInstance().handleInfoLog("Command to open dialog launched...");
-        bot.waitUntil(Conditions.shellIsActive("Preferences"));
+        bot.waitUntil(Conditions.shellIsActive("Preferences"), 20000);
         LogHandler.getInstance().handleInfoLog("Preferences dialog active");
         bot.shell("Preferences").activate();
         LogHandler.getInstance().handleInfoLog("Preferences dialog activated");
