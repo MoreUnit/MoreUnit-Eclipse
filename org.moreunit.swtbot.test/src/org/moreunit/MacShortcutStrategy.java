@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.moreunit.log.LogHandler;
 
 public class MacShortcutStrategy extends ShortcutStrategy 
 {
@@ -16,6 +17,7 @@ public class MacShortcutStrategy extends ShortcutStrategy
 	@Override
 	public void openPreferences() 
 	{
+	    LogHandler.getInstance().handleInfoLog("Opening Preferences usign Mac Shortcut command");
 		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND, ',');		
 	}
 	

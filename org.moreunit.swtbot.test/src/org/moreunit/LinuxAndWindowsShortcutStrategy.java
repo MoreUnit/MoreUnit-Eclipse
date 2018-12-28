@@ -2,7 +2,9 @@ package org.moreunit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.moreunit.log.LogHandler;
 
 public class LinuxAndWindowsShortcutStrategy extends ShortcutStrategy
 {
@@ -16,7 +18,13 @@ public class LinuxAndWindowsShortcutStrategy extends ShortcutStrategy
 	@Override
 	public void openPreferences() 
 	{
-		bot.menu("Window").menu("Preferences").click();		
+	    LogHandler.getInstance().handleInfoLog("Active shell: " + bot.activeShell().getText());
+		SWTBotMenu windowMenu = bot.menu("Window");
+		LogHandler.getInstance().handleInfoLog("Window menu reached");
+		SWTBotMenu preferencesMenu = windowMenu.menu("Preferences");
+		LogHandler.getInstance().handleInfoLog("Preferences menu reached");
+		preferencesMenu.click();
+		LogHandler.getInstance().handleInfoLog("Window -> Preferences menu clicked");
 	}
 
 	@Override
