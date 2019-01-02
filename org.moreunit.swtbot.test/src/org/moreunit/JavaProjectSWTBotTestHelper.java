@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -33,6 +34,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.PlatformUI;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -40,6 +42,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.moreunit.log.LogHandler;
 import org.moreunit.test.context.TestContextRule;
 
 /**
@@ -128,6 +131,21 @@ public class JavaProjectSWTBotTestHelper
 
     protected void openResource(String resourceName)
     {
+        bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+                 return bot.activeShell().isEnabled() && bot.activeShell().isOpen() && Platform.isRunning() && PlatformUI.isWorkbenchRunning();
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Application not fully ready";
+            }
+        });
         KeyboardFactory.getAWTKeyboard().pressShortcut(getCmdOrStrgKeyForShortcutsDependentOnPlattform() | SWT.SHIFT, 'r');
         SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
         bot.waitUntil(Conditions.shellIsActive("Open Resource"));
