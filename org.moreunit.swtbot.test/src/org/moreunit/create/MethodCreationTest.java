@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Test;
+import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
@@ -31,6 +32,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
     	// move cursor to method
     	int lineNumberOfMethod = 6;
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
+		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethod));
 		
 		getShortcutStrategy().pressGenerateShortcut();
 		
@@ -57,6 +59,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		// move cursor to method
     	int lineNumberOfMethod = 9;
     	testcaseEditor.navigateTo(lineNumberOfMethod, 9);
+    	bot.waitUntil(new ConditionCursorLine(testcaseEditor, lineNumberOfMethod));
 		
 		getShortcutStrategy().pressGenerateShortcut();
 

@@ -8,6 +8,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
+import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
@@ -32,6 +33,7 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 		cutEditor.setFocus();
 		int lineNumberOfMethodSignature = 4;
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 27);
+		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethodSignature));
 		getShortcutStrategy().pressMoveShortcut();
 		bot.waitUntil(Conditions.shellIsActive("Move Static Members"));
 		bot.comboBox().setText("testing.TheMoon");

@@ -7,6 +7,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Before;
 import org.junit.Test;
+import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.Project;
@@ -74,6 +75,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     	// move cursor to method
     	int lineNumberOfMethod = 6;
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
+		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethod));
     	getShortcutStrategy().pressJumpShortcut();
     	
     	final int lineNumberOfTestMethod = 7;
@@ -83,8 +85,8 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
             @Override
             public boolean test() throws Exception
             {
-                SWTBotEclipseEditor testEditor = BasicJumpTest.bot.activeEditor().toTextEditor();
-                return testEditor.cursorPosition().line == lineNumberOfTestMethod;
+                SWTBotEclipseEditor textEditor = BasicJumpTest.bot.activeEditor().toTextEditor();
+                return textEditor.cursorPosition().line == lineNumberOfTestMethod;
             }
             
             @Override
