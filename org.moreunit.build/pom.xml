@@ -139,7 +139,7 @@
               <groupId>org.moreunit</groupId>
               <artifactId>moreunit</artifactId>
               <version>${project.version}</version>
-              <classifier>eclipse-4.8</classifier>
+              <classifier>eclipse-4.10</classifier>
             </artifact>
           </target>
           <includePackedArtifacts>true</includePackedArtifacts>
