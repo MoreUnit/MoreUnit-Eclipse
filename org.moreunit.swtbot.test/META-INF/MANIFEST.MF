@@ -12,5 +12,6 @@ Require-Bundle: org.eclipse.swtbot.go,
  org.moreunit.test.dependencies,
  org.moreunit,
  org.eclipse.ltk.ui.refactoring,
- org.eclipse.jdt.ui
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.ide
 Import-Package: org.eclipse.jdt.ui

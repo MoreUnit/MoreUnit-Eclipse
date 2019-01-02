@@ -10,9 +10,11 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -34,7 +36,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ide.handlers.OpenResourceHandler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -131,22 +133,22 @@ public class JavaProjectSWTBotTestHelper
 
     protected void openResource(String resourceName)
     {
-        bot.waitUntil(new DefaultCondition()
-        {
-            
+        Display.getDefault().asyncExec(new Runnable() {
+
             @Override
-            public boolean test() throws Exception
+            public void run()
             {
-                 return bot.activeShell().isEnabled() && bot.activeShell().isOpen() && Platform.isRunning() && PlatformUI.isWorkbenchRunning();
+                try
+                {
+                    new OpenResourceHandler().execute(new ExecutionEvent());
+                }
+                catch (ExecutionException e)
+                {
+                    LogHandler.getInstance().handleExceptionLog(e);
+                }
             }
-            
-            @Override
-            public String getFailureMessage()
-            {
-                return "Application not fully ready";
-            }
+           
         });
-        KeyboardFactory.getAWTKeyboard().pressShortcut(getCmdOrStrgKeyForShortcutsDependentOnPlattform() | SWT.SHIFT, 'r');
         SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
         bot.waitUntil(Conditions.shellIsActive("Open Resource"));
         SWTBotText searchField = new SWTBotText(bot.widget(widgetOfType(Text.class)));
