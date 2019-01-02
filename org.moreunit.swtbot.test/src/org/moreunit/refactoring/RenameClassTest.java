@@ -3,6 +3,7 @@ package org.moreunit.refactoring;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
@@ -44,9 +45,24 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 	
 	private void renameSomeClassToAnyClassAndWaitUntilFinished() 
 	{
-		SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
+		final SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
 		packageItem.expand();
 		packageItem.getNode("SomeClass.java").select();
+		bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+                return packageItem.getNode("SomeClass.java").isSelected();
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Node SomeClass.java not selected";
+            }
+        });
 		getShortcutStrategy().pressRenameShortcut();
 		bot.textWithLabel("New name:").setText("AnyClass");
 		bot.button("Finish").click();

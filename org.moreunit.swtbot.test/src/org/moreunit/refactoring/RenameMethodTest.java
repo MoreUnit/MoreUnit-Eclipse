@@ -11,6 +11,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
+import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.SWTBotHelper;
 import org.moreunit.test.context.Preferences;
@@ -36,6 +37,7 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		cutEditor.setFocus();
 		int lineNumberOfMethodSignature = 4;
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 20);
+		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethodSignature));
 
 		pressRenameShortcutTwiceAndWaitForDialog();
 		renameMethodAndWaitUntilFinished();
