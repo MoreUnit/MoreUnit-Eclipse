@@ -3,9 +3,11 @@ package org.moreunit.refactoring;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.moreunit.ConditionCursorLine;
@@ -42,7 +44,23 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 		bot.waitUntil(Conditions.shellCloses(moveDialog), 10000);
 		
 		// assert that testmethod moved from TheWorldTest to TheMoonTest
-		ICompilationUnit testBeforeMove = context.getCompilationUnit("testing.TheWorldTest");
+		final ICompilationUnit testBeforeMove = context.getCompilationUnit("testing.TheWorldTest");
+		bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+                IMethod[] methods = testBeforeMove.findPrimaryType().getMethods();
+                return methods == null || methods.length == 0;
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Method not deleted from original class";
+            }
+        });
 		assertThat(testBeforeMove.findPrimaryType().getMethods()).isEmpty();
 		ICompilationUnit testAfterMove = context.getCompilationUnit("testing.TheMoonTest");
 		assertThat(testAfterMove.findPrimaryType().getMethods()).onProperty("elementName").containsOnly("testGetNumber1");
