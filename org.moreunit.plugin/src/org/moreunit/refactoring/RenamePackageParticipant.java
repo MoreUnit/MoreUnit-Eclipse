@@ -82,21 +82,25 @@ public class RenamePackageParticipant extends RenameParticipant
 
         List<Change> changes = new ArrayList<Change>();
 
+
         for (IPackageFragmentRoot packageRoot : correspondingPackageFragmentRoots)
         {
-            IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, prefs));
-            if(packageToRename != null && packageToRename.exists())
+            if(packageRoot.getResource() != null)
             {
-                RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
-                RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
-                renameJavaElementDescriptor.setJavaElement(packageToRename);
-                renameJavaElementDescriptor.setNewName(PluginTools.getTestPackageName(getArguments().getNewName(), prefs));
+                IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, prefs));
+                if(packageToRename != null && packageToRename.exists())
+                {
+                    RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
+                    RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
+                    renameJavaElementDescriptor.setJavaElement(packageToRename);
+                    renameJavaElementDescriptor.setNewName(PluginTools.getTestPackageName(getArguments().getNewName(), prefs));
 
-                RefactoringStatus refactoringStatus = new RefactoringStatus();
-                Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
-                renameRefactoring.checkAllConditions(pm);
+                    RefactoringStatus refactoringStatus = new RefactoringStatus();
+                    Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
+                    renameRefactoring.checkAllConditions(pm);
 
-                changes.add(renameRefactoring.createChange(pm));
+                    changes.add(renameRefactoring.createChange(pm));
+                }
             }
         }
 
