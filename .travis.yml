@@ -10,6 +10,7 @@ before_script:
 script: mvn verify -fae
 jdk: 
   - oraclejdk8
+  - oraclejdk11
 cache:
   directories:
     - $HOME/.m2
