@@ -158,7 +158,7 @@ function zip_file_reminder {
   echo
   echo "** REMINDER *****************************************************"
   echo "* Don't forget to upload                                        *"
-  echo "*     ${RELEASE_REPO_DIR}/org.moreunit.updatesite/target/org.moreunit-${VERSION}.zip   *"
+  echo "*     ${RELEASE_REPO_DIR}/org.moreunit.updatesite/target/org.moreunit.updatesite-${VERSION}.zip   *"
   echo "* on                                                            *"
   echo "*     https://github.com/MoreUnit/MoreUnit-Eclipse/releases/new?tag=${VERSION} *"
   echo "* and (deprecated)                                              *"
