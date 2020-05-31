@@ -3,7 +3,7 @@
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.testng.eclipse.feature.group" version="6.9.11.201604020423"/>
-<repository location="http://beust.com/eclipse"/>
+<repository location="https://dl.bintray.com/testng-team/testng-eclipse-release/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="4.3.2.M20140221-1700"/>
