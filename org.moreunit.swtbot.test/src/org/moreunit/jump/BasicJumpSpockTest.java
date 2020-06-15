@@ -1,8 +1,7 @@
 package org.moreunit.jump;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -25,18 +24,35 @@ public class BasicJumpSpockTest extends JavaProjectSWTBotTestHelper
     @Context(SimpleSpockProject.class)
     public void should_jump_to_spock_test_when_shortcut_is_pressed_in_cut()
     {
-        openResource("SomeClass.java");
-        getShortcutStrategy().pressJumpShortcut();
-        assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClassSpec.java");
+        testJump("SomeClass.java", "SomeClassSpec.java");
     }
 
     @Test
     @Context(SimpleSpockProject.class)
     public void should_jump_to_cut_when_shortcut_is_pressed_in_spock_testcase()
     {
-        openResource("SomeClassSpec.java");
+        testJump("SomeClassSpec.java", "SomeClass.java");
+    }
+
+    private void testJump(String originalFile, final String expectedJumpToFile)
+    {
+        openResource(originalFile);
         getShortcutStrategy().pressJumpShortcut();
-        assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClass.java");
+        bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+                return expectedJumpToFile.equals(JavaProjectSWTBotTestHelper.bot.activeEditor().getTitle());
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Expected editor with title "+expectedJumpToFile+" is not active. Current active editor is: "+ JavaProjectSWTBotTestHelper.bot.activeEditor().getTitle();
+            }
+        });
     }
     
 }
