@@ -38,6 +38,7 @@ import org.eclipse.jdt.internal.junit.wizards.MethodStubsSelectionButtonGroup;
 import org.eclipse.jdt.internal.junit.wizards.WizardMessages;
 import org.eclipse.jdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
 import org.eclipse.jdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
+import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne.JUnitVersion;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
@@ -153,16 +154,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         setTitle(WizardMessages.NewTestCaseWizardPageOne_title);
         setDescription(WizardMessages.NewTestCaseWizardPageOne_description);
 
-        String[] buttonNames = new String[] {
-        /* IDX_SETUP_CLASS */WizardMessages.NewTestCaseWizardPageOne_methodStub_setUpBeforeClass,
-        /* IDX_TEARDOWN_CLASS */WizardMessages.NewTestCaseWizardPageOne_methodStub_tearDownAfterClass,
-        /* IDX_SETUP */WizardMessages.NewTestCaseWizardPageOne_methodStub_setUp,
-        /* IDX_TEARDOWN */WizardMessages.NewTestCaseWizardPageOne_methodStub_tearDown,
-        /* IDX_CONSTRUCTOR */WizardMessages.NewTestCaseWizardPageOne_methodStub_constructor };
-
         enableCommentControl(true);
 
-        fMethodStubsButtons = new MethodStubsSelectionButtonGroup(SWT.CHECK, buttonNames, 2);
+        JUnitVersion junitVersion = retrieveJUnitVersion(preferences);
+
+        fMethodStubsButtons = new MethodStubsSelectionButtonGroup(SWT.CHECK, junitVersion, 2);
         fMethodStubsButtons.setLabelText(WizardMessages.NewTestCaseWizardPageOne_method_Stub_label);
 
         fClassToTestCompletionProcessor = new JavaTypeCompletionProcessor(false, false, true);
@@ -174,6 +170,23 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fJunitStatus = new JUnitStatus();
 
         testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+    }
+
+    private JUnitVersion retrieveJUnitVersion(ProjectPreferences preferences)
+    {
+        if(preferences.shouldUseJunit5Type())
+        {
+            return JUnitVersion.VERSION_5;
+        }
+        else if(preferences.shouldUseJunit4Type())
+        {
+            return JUnitVersion.VERSION_4;
+        }
+        else if(preferences.shouldUseJunit3Type())
+        {
+            return JUnitVersion.VERSION_3;
+        }
+        return JUnitVersion.VERSION_5;
     }
 
     /**

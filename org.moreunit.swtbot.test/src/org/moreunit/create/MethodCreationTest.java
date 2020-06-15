@@ -35,10 +35,22 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethod));
 		
 		getShortcutStrategy().pressGenerateShortcut();
-		
-		// adding the method to the testcase takes a short moment
-		bot.sleep(1000);
-		
+				
+		bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+                return context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods().length != 0;
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "No method added to testing.TheWorldTest";
+            }
+        });
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
 		assertThat(methods).onProperty("elementName").containsOnly("testGetNumber1");
 	}
