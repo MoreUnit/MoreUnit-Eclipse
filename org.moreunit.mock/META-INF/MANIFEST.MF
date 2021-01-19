@@ -17,4 +17,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .,
+ lib/jakarta.activation.jar,
+ lib/jakarta.xml.bind-api.jar,
+ lib/jaxb-impl.jar,
  resources/
