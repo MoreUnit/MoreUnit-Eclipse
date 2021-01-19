@@ -8,3 +8,6 @@ docs/.project
 org.moreunit.*/classes/
 org.moreunit.*/target/
 Thumbs.db
+
+# non osgi libs for JRE11+ compatibility
+org.moreunit.mock*/lib/
