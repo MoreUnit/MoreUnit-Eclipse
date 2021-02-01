@@ -2,6 +2,7 @@ package org.moreunit.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -30,12 +31,14 @@ public class NewTestCaseWizard extends NewClassyWizard
     private NewTestCaseWizardPageTwo pageTwo;
     private NewTestCaseWizardContext context;
     private NewTestCaseWizardComposer wizardComposer;
+    private IJavaProject javaProjectUnderTest;
 
     public NewTestCaseWizard(final IType element)
     {
         super(element);
 
-        this.preferences = Preferences.forProject(element.getJavaProject());
+        this.javaProjectUnderTest = element.getJavaProject();
+        this.preferences = Preferences.forProject(javaProjectUnderTest);
         this.participatorManager = new NewTestCaseWizardParticipatorManager();
 
         mainSrcFolder = (IPackageFragmentRoot) element.getPackageFragment().getParent();
@@ -48,7 +51,7 @@ public class NewTestCaseWizard extends NewClassyWizard
     public void addPages()
     {
         this.pageTwo = new NewTestCaseWizardPageTwo();
-        this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, this.preferences, LanguageType.forPath(getType().getPath()));
+        this.pageOne = new MoreUnitWizardPageOne(this.pageTwo, javaProjectUnderTest, this.preferences, LanguageType.forPath(getType().getPath()));
         this.pageOne.setWizard(this);
         this.pageTwo.setWizard(this);
         this.pageOne.init(new StructuredSelection(getType()));
