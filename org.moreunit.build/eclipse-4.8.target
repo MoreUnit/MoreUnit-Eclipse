@@ -3,7 +3,7 @@
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.testng.eclipse.feature.group" version="6.14.3.201902250526"/>
-<repository location="https://dl.bintray.com/testng-team/testng-eclipse-release/updatesites/6.14.3.201902250526/"/>
+<repository location="https://testng.org/testng-eclipse-update-site/6.14.3"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.7.0.201806111355"/>
