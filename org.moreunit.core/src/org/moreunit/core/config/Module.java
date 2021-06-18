@@ -35,7 +35,7 @@ public abstract class Module<M extends Module<M>>
         M possiblyExistingInstance = getInstance();
         if(possiblyExistingInstance != null)
         {
-            ctxt = possiblyExistingInstance.context;
+            ctxt = possiblyExistingInstance.getContext();
             possiblyExistingInstance.stop();
         }
 
