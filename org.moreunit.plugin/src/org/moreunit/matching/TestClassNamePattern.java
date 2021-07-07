@@ -48,7 +48,7 @@ public class TestClassNamePattern
 
     private ClassNameEvaluation evaluate(TestFileNamePattern pattern, JavaType type)
     {
-        FileNameEvaluation evaluation = pattern.evaluate(type.getSimpleName());
+        FileNameEvaluation evaluation = pattern.evaluate(type.getSimpleName(), "");
         return new ClassNameEvaluation(evaluation, packagePrefix, packageSuffix, type.getQualifier());
     }
 

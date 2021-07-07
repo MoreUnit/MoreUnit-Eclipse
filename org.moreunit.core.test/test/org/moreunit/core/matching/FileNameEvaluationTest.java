@@ -16,7 +16,7 @@ public class FileNameEvaluationTest
     public void should_return_all_corresponding_file_patterns__preferred_first() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), asList("other1", "other2"));
+        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), asList("other1", "other2"), "Irrelevant");
 
         // when
         assertThat(eval.getAllCorrespondingFilePatterns()).isEqualTo(asList("preferred1", "preferred2", "other1", "other2"));
@@ -26,7 +26,7 @@ public class FileNameEvaluationTest
     public void should_return_all_corresponding_file_patterns__preferred_patterns_only() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), NO_PATTERNS);
+        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), NO_PATTERNS, "Irrelevant");
 
         // when
         assertThat(eval.getAllCorrespondingFilePatterns()).isEqualTo(asList("preferred1", "preferred2"));
@@ -36,7 +36,7 @@ public class FileNameEvaluationTest
     public void should_convert_regex_to_eclipse_search_pattern() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "PreFileSuf", asList("\\QPre\\E.*\\QFile\\E.*\\QSuf\\E"), asList("\\QPre\\E.*\\QFile\\E", "\\QFile\\E.*\\QSuf\\E"));
+        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "PreFileSuf", asList("\\QPre\\E.*\\QFile\\E.*\\QSuf\\E"), asList("\\QPre\\E.*\\QFile\\E", "\\QFile\\E.*\\QSuf\\E"), "Irrelevant");
 
         // then
         assertThat(eval.getAllCorrespondingFileEclipsePatterns()).containsExactly("Pre*File*Suf", "Pre*File", "File*Suf");

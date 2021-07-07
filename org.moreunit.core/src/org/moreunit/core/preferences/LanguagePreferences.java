@@ -8,11 +8,17 @@ import org.moreunit.core.matching.TestFileNamePattern;
 
 public abstract class LanguagePreferences
 {
+    public static final String BOOL_TRUE = "true";
+    public static final String BOOL_FALSE = "false";
+    
     public static final String ANY_LANGUAGE = "anyLanguage";
     public static final String FILE_WORD_SEPARATOR = ".fileWordSeparator";
     public static final String SRC_FOLDER_PATH_TEMPLATE = ".srcFolderPathTemplate";
     public static final String TEST_FILE_NAME_TEMPLATE = ".testFileNameTemplate";
-    public static final String TEST_FOLDER_PATH_TEMPLATE = ".testFolderPathTemplate";
+    public static final String TEST_FOLDER_PATH_TEMPLATE = ".testFolderPathTemplate";    
+    public static final String TEST_FILE_EXT = ".testFileExt";
+    public static final String SRC_FILE_EXT = ".srcFileExt";
+    public static final String EXT_ENABLE = ".extEnable";
 
     private static final String BASE = Preferences.BASE;
 
@@ -39,8 +45,14 @@ public abstract class LanguagePreferences
     public abstract String getSrcFolderPathTemplate();
 
     public abstract String getTestFileNameTemplate();
-
+    
     public abstract String getTestFolderPathTemplate();
+    
+    public abstract String getSrcFileExt();    
+    
+    public abstract String getTestFileExt();
+    
+    public abstract Boolean getExtEnable();
 
     public TestFileNamePattern getTestFileNamePattern()
     {
@@ -85,4 +97,6 @@ public abstract class LanguagePreferences
     {
         parentPreferences.save();
     }
+
+
 }

@@ -76,6 +76,6 @@ abstract class PreferencePageBase extends PreferencePage implements IWorkbenchPr
             return;
         }
 
-        delegate.validate();
+        delegate.validateNamePattern();
     }
 }

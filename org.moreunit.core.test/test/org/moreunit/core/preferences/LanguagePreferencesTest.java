@@ -75,6 +75,24 @@ public class LanguagePreferencesTest
             {
                 throw new UnsupportedOperationException("test implementation");
             }
+
+            @Override
+            public String getSrcFileExt()
+            {
+                throw new UnsupportedOperationException("test implementation");
+            }
+
+            @Override
+            public String getTestFileExt()
+            {
+                throw new UnsupportedOperationException("test implementation");
+            }
+
+            @Override
+            public Boolean getExtEnable()
+            {
+                throw new UnsupportedOperationException("test implementation");
+            }
         };
     }
 }
