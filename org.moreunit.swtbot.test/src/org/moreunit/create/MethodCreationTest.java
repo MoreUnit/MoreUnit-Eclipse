@@ -52,7 +52,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
             {
                 return "No method added to testing.TheWorldTest";
             }
-        });
+        }, 20000);
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
 		assertThat(methods).onProperty("elementName").containsOnly("testGetNumber1");
 	}
