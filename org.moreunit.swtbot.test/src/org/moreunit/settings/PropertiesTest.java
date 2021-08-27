@@ -32,9 +32,11 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         SWTBotTreeItem projectItem = selectAndReturnJavaProjectFromPackageExplorer();
         getShortcutStrategy().openProperties(projectItem);
 
-        WaitForObjectCondition<Shell> waitForShell = waitForShell(shellWithTextStartingWith("Properties for "));
+        WaitForObjectCondition<Shell> waitForShell = waitForShell(shellWithTextStartingWith("Properties for "+projectItem.getText()));
         bot.waitUntil(waitForShell);
         setShellInFocus(waitForShell.get(0));
+        
+        bot.waitUntil(Conditions.shellIsActive("Properties for "+projectItem.getText()));
 
         bot.tree().expandNode("MoreUnit").select("Java");
     }
@@ -66,6 +68,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.waitUntil(Conditions.shellCloses(addFolderDialog));
         propertiesDialogShell.setFocus();
         propertiesDialogShell.activate();
+        bot.waitUntil(Conditions.shellIsActive(propertiesDialogShell.getText()));
         saveAndCloseProps();
         assertTrue(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext()));
     }
@@ -75,7 +78,9 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         // in newer version (at least 4.8), the label has been changed and is stored in a preference
         String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
         String realLabel = "PreferencesDialog.okButtonLabel".equals(label)? "OK" : label;
+        SWTBotShell shellToClose = bot.activeShell();
         bot.button(realLabel).click();
+        bot.waitUntil(Conditions.shellCloses(shellToClose));
     }
 
     @Before
