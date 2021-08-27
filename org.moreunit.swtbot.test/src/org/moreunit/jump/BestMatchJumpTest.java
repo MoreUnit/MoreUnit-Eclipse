@@ -1,8 +1,7 @@
 package org.moreunit.jump;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -35,7 +34,22 @@ public class BestMatchJumpTest extends JavaProjectSWTBotTestHelper
     	getShortcutStrategy().pressJumpShortcut();
     	waitForChooseDialog();
     	
-    	assertThat(bot.tree().rowCount()).isEqualTo(4);
+        bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+             // choose dialog should show 2 tests (and 2 more items for creation of a new test)
+                return bot.tree().rowCount() == 4;
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Expecting 4 entries in the tree but got only: "+ bot.tree().rowCount() + "\n The tree text is "+bot.tree().getText();
+            }
+        });
 
     }
 }
