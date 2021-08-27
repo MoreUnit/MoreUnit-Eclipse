@@ -4,6 +4,7 @@
 .release-build
 target
 classes
+screenshots
 docs/.project
 org.moreunit.*/classes/
 org.moreunit.*/target/

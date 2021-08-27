@@ -9,12 +9,14 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
@@ -22,6 +24,7 @@ import org.moreunit.test.context.Project;
 
 @Project(mainCls = "org:HelloWorld", mainSrcFolder = "src", testSrcFolder = "test")
 @org.moreunit.test.context.Preferences(testSrcFolder = "junit")
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class PropertiesTest extends JavaProjectSWTBotTestHelper
 {
     private void openProjectPropertiesAndSelectMoreUnitPage()
@@ -71,7 +74,8 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     {
         // in newer version (at least 4.8), the label has been changed and is stored in a preference
         String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
-        bot.button("PreferencesDialog.okButtonLabel".equals(label)? "OK" : label).click();
+        String realLabel = "PreferencesDialog.okButtonLabel".equals(label)? "OK" : label;
+        bot.button(realLabel).click();
     }
 
     @Before

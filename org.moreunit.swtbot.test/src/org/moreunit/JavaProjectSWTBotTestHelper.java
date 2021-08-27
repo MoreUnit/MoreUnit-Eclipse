@@ -287,4 +287,25 @@ public class JavaProjectSWTBotTestHelper
             }
         };
     }
+    
+    protected void testSimpleJump(String originalFile, final String expectedJumpToFile)
+    {
+        openResource(originalFile);
+        getShortcutStrategy().pressJumpShortcut();
+        bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+                return expectedJumpToFile.equals(JavaProjectSWTBotTestHelper.bot.activeEditor().getTitle());
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Expected editor with title "+expectedJumpToFile+" is not active. Current active editor is: "+ JavaProjectSWTBotTestHelper.bot.activeEditor().getTitle();
+            }
+        });
+    }
 }
