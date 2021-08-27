@@ -1,7 +1,5 @@
 package org.moreunit.jump;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -53,10 +51,23 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     {
     	openResource("SomeClass.java");
     	getShortcutStrategy().pressJumpShortcut();
-    	waitForChooseDialog();
     	
-    	// choose dialog should show 2 tests (and 2 more items for creation of a new test)
-    	assertThat(bot.tree().rowCount()).isEqualTo(4);
+    	bot.waitUntil(new DefaultCondition()
+        {
+            
+            @Override
+            public boolean test() throws Exception
+            {
+             // choose dialog should show 2 tests (and 2 more items for creation of a new test)
+                return bot.tree().rowCount() == 4;
+            }
+            
+            @Override
+            public String getFailureMessage()
+            {
+                return "Expecting 4 entries in the tree but got only: "+ bot.tree().rowCount() + "\n The tree text is "+bot.tree().getText();
+            }
+        });
     }
 
 	@Project(mainSrc = "BasicJump_class_with_method.txt",
