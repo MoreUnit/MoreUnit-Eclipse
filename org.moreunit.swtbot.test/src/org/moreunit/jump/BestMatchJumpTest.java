@@ -2,12 +2,15 @@ package org.moreunit.jump;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.configs.SimpleJUnit4Properties;
 
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class BestMatchJumpTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
@@ -17,9 +20,7 @@ public class BestMatchJumpTest extends JavaProjectSWTBotTestHelper
 	@Test
 	public void should_jump_to_test_when_two_test_exist_but_one_is_prefect_match()
 	{
-		openResource("SomeClass.java");
-		getShortcutStrategy().pressJumpShortcut();
-		assertThat(bot.activeEditor().getTitle()).isEqualTo("SomeClassTest.java");
+	    testSimpleJump("SomeClass.java", "SomeClassTest.java");
 	}
 	
 	@Project(

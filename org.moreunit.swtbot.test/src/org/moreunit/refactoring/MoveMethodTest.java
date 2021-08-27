@@ -7,9 +7,11 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Preferences;
@@ -20,6 +22,7 @@ import org.moreunit.test.context.TestType;
              testSrcFolder="test",
              testMethodPrefix=true,
              testType=TestType.JUNIT4)
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class MoveMethodTest extends JavaProjectSWTBotTestHelper 
 {
 	@Project(
