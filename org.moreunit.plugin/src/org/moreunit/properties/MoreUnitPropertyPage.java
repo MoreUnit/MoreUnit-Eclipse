@@ -7,6 +7,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -16,8 +18,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.moreunit.log.LogHandler;
@@ -29,7 +29,7 @@ import org.moreunit.preferences.Preferences;
 public class MoreUnitPropertyPage extends PropertyPage
 {
     private Button projectSpecificSettingsCheckbox;
-    private TabFolder tabFolder;
+    private CTabFolder tabFolder;
 
     private UnitSourceFolderBlock firstTabUnitSourceFolder;
     private OtherMoreunitPropertiesBlock secondTabOtherProperties;
@@ -78,13 +78,13 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     private void createTabContent(Composite parent)
     {
-        tabFolder = new TabFolder(parent, SWT.BORDER);
-        TabItem sourceFolderItem = new TabItem(tabFolder, SWT.NONE);
+        tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.TOP);
+        CTabItem sourceFolderItem = new CTabItem(tabFolder, SWT.NONE);
         sourceFolderItem.setText("Test source folder");
         firstTabUnitSourceFolder = new UnitSourceFolderBlock(getJavaProject(), this);
         sourceFolderItem.setControl(fixesFirstTabStyle(firstTabUnitSourceFolder.getControl(tabFolder)));
 
-        TabItem otherFolderItem = new TabItem(tabFolder, SWT.NONE);
+        CTabItem otherFolderItem = new CTabItem(tabFolder, SWT.NONE);
         otherFolderItem.setText("Other");
         secondTabOtherProperties = new OtherMoreunitPropertiesBlock(getJavaProject());
         otherFolderItem.setControl(fixesSecondTabStyle(secondTabOtherProperties.getControl(tabFolder, true)));
@@ -104,6 +104,7 @@ public class MoreUnitPropertyPage extends PropertyPage
         GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = otherFolderItem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
         tabFolder.setLayoutData(gridData);
+        tabFolder.setSelection(0);
 
         setEnabled(shouldUseProjectspecificSettings());
     }
