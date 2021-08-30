@@ -27,6 +27,13 @@ If you wish to verify the setup, you can run the Maven/Tycho build with the `mvn
 MoreUnit-Eclipse uses Maven/Tycho to build, the master pom file can be found in the `org.moreunit.build` project.
 
 # How to release
+
+Preliminary information:
+
+* Ensure Java used by your Maven installation is java 11
+* Check that [MoreUnit:eclipse-update-site](https://github.com/MoreUnit/eclipse-update-site) is cloned besides this repository
+* When gitHub password is asked, it is a [GitHub Personal Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) which is required. The GitHub simple password authentication is no more working.
+
 Run the following commands:
 
 ```
