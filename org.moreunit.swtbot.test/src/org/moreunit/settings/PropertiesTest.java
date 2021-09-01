@@ -210,7 +210,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     {
         openProjectPropertiesAndSelectMoreUnitPage();
         bot.checkBox("Use project specific settings").select();
-        bot.tabItem("Other").activate();
+        bot.cTabItem("Other").activate();
     }
     
     @Test
