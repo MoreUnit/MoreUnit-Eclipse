@@ -1345,6 +1345,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             modifiers &= ~ F_PRIVATE;
             modifiers &= ~ F_PROTECTED;
         }
+        else if(unit5Toggle.getSelection())
+        {
+            modifiers &= ~ F_PUBLIC;
+        }
 
         return modifiers;
     }
