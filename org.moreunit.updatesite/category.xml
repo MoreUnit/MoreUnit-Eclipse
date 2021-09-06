@@ -10,4 +10,5 @@
       <category name="org.moreunit"/>
    </feature>
    <category-def name="org.moreunit" label="MoreUnit"/>
+   <repository-reference location="http://https://download.jboss.org/jbosstools/photon/stable/updates/" enabled="true" />
 </site>
