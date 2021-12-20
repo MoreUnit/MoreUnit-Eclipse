@@ -17,7 +17,7 @@
 </location>
 	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 		<repository location="https://download.jboss.org/jbosstools/photon/stable/updates/"/>
-		<unit id="org.jboss.tools.common.jaxb" version="3.16.100.v20210622-0730"/>
+		<unit id="org.jboss.tools.common.jaxb" version="3.17.0.v20210819-1425"/>
 	</location>
 </locations>
 	<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
