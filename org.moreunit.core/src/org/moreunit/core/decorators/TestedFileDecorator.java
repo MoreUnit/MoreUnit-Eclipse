@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.ui.PlatformUI;
 import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
@@ -62,7 +63,7 @@ public class TestedFileDecorator extends LabelProvider implements ILightweightLa
      */
     public static TestedFileDecorator getInstanceIfExisting()
     {
-        return (TestedFileDecorator) MoreUnitCore.get().getWorkbench().getDecoratorManager().getBaseLabelProvider("org.moreunit.core.decorators.testedFileDecorator");
+        return (TestedFileDecorator) PlatformUI.getWorkbench().getDecoratorManager().getBaseLabelProvider("org.moreunit.core.decorators.testedFileDecorator");
     }
 
     public void refreshIndicatorFor(Object... elements)
