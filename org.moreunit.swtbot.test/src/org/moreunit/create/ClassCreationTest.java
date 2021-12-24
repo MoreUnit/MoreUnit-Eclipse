@@ -2,6 +2,7 @@ package org.moreunit.create;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
@@ -59,7 +60,9 @@ public class ClassCreationTest extends JavaProjectSWTBotTestHelper
                 return "Test not created testing.TheWorldTest";
             }
         }, 20000);
-        assertThat(context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getFlags()).isEqualTo(FLAG_DEFAULT_PACKAGE);
+        ICompilationUnit compilationUnitOfTest = context.getCompilationUnit("testing.TheWorldTest");
+        assertThat(compilationUnitOfTest.findPrimaryType().getFlags()).isEqualTo(FLAG_DEFAULT_PACKAGE);
+        assertThat(compilationUnitOfTest.getImport("org.junit.jupiter.api.Test").exists()).isTrue();
     }
 
     private void moveCursorToMethod()
