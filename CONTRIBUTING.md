@@ -32,7 +32,7 @@ Preliminary information:
 
 * Ensure Java used by your Maven installation is java 11
 * Check that [MoreUnit:eclipse-update-site](https://github.com/MoreUnit/eclipse-update-site) is cloned besides this repository
-* When gitHub password is asked, it is a [GitHub Personal Token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) which is required. The GitHub simple password authentication is no more working.
+* Ensure you are logged from the command-line to GitHub, `gh auth login`
 
 Run the following commands:
 
