@@ -17,13 +17,14 @@ jobs:
     strategy:
       matrix:
         targetplatform: [eclipse-4.20, eclipse-4.21, eclipse-4.22]
+        java: ['11', '17']
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: ${{ matrix.java }}
         distribution: 'adopt'
     - name: Cache Maven packages
       uses: actions/cache@v2
