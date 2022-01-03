@@ -30,6 +30,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     
     <tests.use.ui>false</tests.use.ui>
+    
+    <target.platform.classifier>eclipse-4.20</target.platform.classifier>
   </properties>
 
   <build>
@@ -139,7 +141,7 @@
               <groupId>org.moreunit</groupId>
               <artifactId>moreunit</artifactId>
               <version>${project.version}</version>
-              <classifier>eclipse-4.20</classifier>
+              <classifier>${target.platform.classifier}</classifier>
             </artifact>
           </target>
           <includePackedArtifacts>true</includePackedArtifacts>
