@@ -13,6 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        targetplatform: [eclipse-4.20, eclipse-4.21, eclipse-4.22]
 
     steps:
     - uses: actions/checkout@v2
@@ -30,5 +34,4 @@ jobs:
     - name: Build with Maven
       uses: GabrielBB/xvfb-action@v1
       with:
-        run: mvn verify -fae --file org.moreunit.build/pom.xml
-
+        run: mvn verify -fae --file org.moreunit.build/pom.xml -Dtarget.platform.classifier=${{ matrix.targetplatform }}

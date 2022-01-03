@@ -64,6 +64,6 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		bot.textWithLabel(RefactoringUIMessages.RenameResourceWizard_name_field_label).setText("getNumberOne");
 		SWTBotShell renameDialog = bot.activeShell();
 		bot.button(IDialogConstants.OK_LABEL).click();
-		bot.waitUntil(Conditions.shellCloses(renameDialog));
+		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
 	}
 }
