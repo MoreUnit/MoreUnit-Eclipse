@@ -36,8 +36,10 @@ public class CorrespondingTypeSearcher
     {
         this.preferences = preferences.getProjectView(compilationUnit.getJavaProject());
         nameEvaluation = this.preferences.getTestClassNamePattern().evaluate(compilationUnit.findPrimaryType());
-        IPackageFragmentRoot testSourceFolder = preferences.getTestSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit));
-        searchScope = SearchScopeSingelton.getInstance().getSearchScope(testSourceFolder);
+        IPackageFragmentRoot sourceFolder = nameEvaluation.isTestCase()
+            ? preferences.getTestSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit))
+            : preferences.getMainSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit));
+        searchScope = SearchScopeSingelton.getInstance().getSearchScope(sourceFolder);
     }
 
     public Collection<IType> getMatches(boolean alsoIncludeLikelyMatches)
