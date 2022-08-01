@@ -19,19 +19,31 @@ jobs:
         targetplatform: [eclipse-4.21, eclipse-4.22, eclipse-4.24]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adopt'
-    - name: Cache Maven packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    - name: Build with Maven
-      uses: GabrielBB/xvfb-action@v1
-      with:
-        run: mvn verify -fae --file org.moreunit.build/pom.xml -Dtarget.platform.classifier=${{ matrix.targetplatform }}
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+
+      - name: Get Time for BUILD_ID
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYYMMDD_HHmm'
+          
+      - name: Get Branch name for BUILD_LABEL
+        id: branch_name
+        shell: bash
+        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+        
+      - name: Set up Java ☕️
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'maven'
+
+      - name: Build Everything
+        env:
+          BUILD_ID: "${{ steps.time.outputs.time }}"
+          BUILD_TYPE: "S"
+          BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
+        run: mvn -file org.moreunit.build/pom.xml verify -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
