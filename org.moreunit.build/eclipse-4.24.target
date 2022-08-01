@@ -15,6 +15,16 @@
 <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 <repository location="https://download.eclipse.org/eclipse/updates/4.24"/>
 </location>
+<location includeDependencyDepth="none" includeSource="true" missingManifest="generate" type="Maven">
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.0</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+</location>
 </locations>
 	<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 </target>
