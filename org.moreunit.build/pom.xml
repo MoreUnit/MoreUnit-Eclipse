@@ -25,13 +25,13 @@
   <properties>
     <tycho-version>2.5.0</tycho-version>
     <exec-maven-version>3.0.0</exec-maven-version>
-    
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    
+
     <tests.use.ui>false</tests.use.ui>
-    
-    <target.platform.classifier>eclipse-4.20</target.platform.classifier>
+
+    <target.platform.classifier>eclipse-4.24</target.platform.classifier>
   </properties>
 
   <build>
@@ -187,7 +187,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <profiles>
   	<profile>
   	  <!-- makes test run in UI thread when under OSX -->
@@ -219,4 +219,4 @@
   <!-- [WARNING] Dependency from [..]/org.moreunit.mock/resources to nested classpath entry YYY can not be represented in Maven model and will not be visible to non-OSGi aware Maven plugins -->
   <!-- Maven assumes all dependencies are files and these are directories. This would only be a problem for plugins such as findbugs or javadoc, but we don't need to expose these resources to them -->
   <!-- see http://dev.eclipse.org/mhonarc/lists/tycho-user/msg00896.html -->
-</project> 
+</project>

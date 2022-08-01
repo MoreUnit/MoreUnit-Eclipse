@@ -16,7 +16,7 @@ jobs:
     
     strategy:
       matrix:
-        targetplatform: [eclipse-4.20, eclipse-4.21, eclipse-4.22]
+        targetplatform: [eclipse-4.21, eclipse-4.22, eclipse-4.24]
 
     steps:
     - uses: actions/checkout@v2
