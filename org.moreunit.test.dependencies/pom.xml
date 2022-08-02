@@ -12,9 +12,13 @@
   <groupId>org.moreunit.plugins</groupId>
   <artifactId>org.moreunit.test.dependencies</artifactId>
   <packaging>eclipse-test-plugin</packaging>
-  
+
   <name>${project.artifactId}</name>
-  
+
+  <properties>
+  	<tests.use.ui>true</tests.use.ui>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -29,8 +33,5 @@
       </plugin>
     </plugins>
   </build>
-  
-  <properties>
-  	<tests.use.ui>true</tests.use.ui>
-  </properties>
-</project> 
+
+</project>
