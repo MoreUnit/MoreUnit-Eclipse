@@ -40,10 +40,14 @@ jobs:
           java-version: '11'
           cache: 'maven'
 
+
+      - name: Install xvfb
+        run: sudo apt-get install xvfb
+
       - name: Build Everything
         env:
           BUILD_ID: "${{ steps.time.outputs.time }}"
           BUILD_TYPE: "S"
           BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
-        run: mvn -file org.moreunit.build/pom.xml verify -Dtarget.platform.classifier=${{ matrix.targetplatform }} -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: xvfb-run mvn -file org.moreunit.build/pom.xml verify -Dtarget.platform.classifier=${{ matrix.targetplatform }} -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
