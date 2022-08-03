@@ -8,7 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.moreunit.test.dependencies,
  org.junit;bundle-version="4.11.0"
-Bundle-ClassPath: .,
- lib/jakarta.activation.jar,
- lib/jakarta.xml.bind-api.jar,
- lib/jaxb-impl.jar
+Bundle-ClassPath: .
+Import-Package: javax.xml.bind;version="2.3.3"
