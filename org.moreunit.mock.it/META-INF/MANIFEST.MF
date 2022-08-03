@@ -7,7 +7,12 @@ Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Require-Bundle: org.eclipse.jdt.launching,
  org.junit;bundle-version="4.8.0",
  org.moreunit.test.dependencies,
- org.testng.eclipse;bundle-version="5.14.2.10"
+ org.testng.eclipse;bundle-version="5.14.2.10",
+ org.glassfish.hk2.osgi-resource-locator;bundle-version="2.4.0",
+ com.sun.xml.bind.jaxb-impl;bundle-version="4.0.0",
+ org.glassfish.jaxb.runtime;bundle-version="4.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .
+Import-Package: jakarta.activation;version="2.1.0",
+ jakarta.xml.bind;version="4.0.0"

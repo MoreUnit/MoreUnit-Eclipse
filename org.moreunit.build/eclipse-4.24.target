@@ -15,24 +15,47 @@
 			<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
 			<repository location="https://download.eclipse.org/eclipse/updates/4.24"/>
 		</location>
-		<location includeDependencyDepth="none" includeSource="true" missingManifest="generate" type="Maven">
+		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="generate" type="Maven">
+			<feature id="org.moreunit.dependencies" label="MoreUnit Runtime Dependencies" version="3.3.2.qualifier">
+			</feature>
 			<dependencies>
 				<dependency>
-                    <groupId>com.sun.activation</groupId>
-                    <artifactId>jakarta.activation</artifactId>
-                    <version>1.2.2</version>
+				    <groupId>jakarta.activation</groupId>
+				    <artifactId>jakarta.activation-api</artifactId>
+				    <version>2.1.0</version>
+					<type>jar</type>
+   				</dependency>
+				<dependency>
+					<groupId>com.sun.xml.bind</groupId>
+					<artifactId>jaxb-impl</artifactId>
+					<version>4.0.0</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
-                    <groupId>jakarta.xml.bind</groupId>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                    <version>2.3.3</version>
+				    <groupId>com.sun.xml.bind</groupId>
+				    <artifactId>jaxb-core</artifactId>
+				    <version>4.0.0</version>
+				</dependency>
+				<dependency>
+				    <groupId>com.sun.xml.bind</groupId>
+				    <artifactId>jaxb-core</artifactId>
+				    <version>4.0.0</version>
+				</dependency>
+				<dependency>
+				    <groupId>org.glassfish.jaxb</groupId>
+				    <artifactId>jaxb-runtime</artifactId>
+				    <version>4.0.0</version>
+				</dependency>
+				<dependency>
+					<groupId>jakarta.xml.bind</groupId>
+					<artifactId>jakarta.xml.bind-api</artifactId>
+					<version>4.0.0</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-impl</artifactId>
-                    <version>2.3.3</version>
+					<groupId>org.glassfish.hk2</groupId>
+					<artifactId>osgi-resource-locator</artifactId>
+					<version>2.4.0</version>
 					<type>jar</type>
 				</dependency>
 			</dependencies>

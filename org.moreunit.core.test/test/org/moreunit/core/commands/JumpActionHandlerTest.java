@@ -261,6 +261,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         openEditor(sourceFile);
 
+        config.wizardDriver = new AutoPerformWizard();
+
         // when
         executeCommand(JUMP_COMMAND);
 
@@ -281,6 +283,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         capturingSelector.fileToReturn = testFile2;
 
         openEditor(sourceFile);
+
+        config.wizardDriver = new AutoPerformWizard();
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -303,6 +307,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         capturingSelector.fileToReturn = null; // == cancellation
 
         openEditor(sourceFile);
+
+        config.wizardDriver = new AutoPerformWizard();
 
         // when
         executeCommand(JUMP_COMMAND);

@@ -1,6 +1,6 @@
 package org.moreunit.mock.model;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 public abstract class InclusionCondition
 {

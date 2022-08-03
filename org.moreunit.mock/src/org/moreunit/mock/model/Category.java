@@ -2,8 +2,8 @@ package org.moreunit.mock.model;
 
 import java.text.Collator;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import static org.moreunit.core.util.Strings.emptyIfNull;
 

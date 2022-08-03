@@ -18,5 +18,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .,
  resources/
-Import-Package: javax.xml.bind,
- javax.xml.bind.annotation
+Import-Package: jakarta.xml.bind;version="4.0.0",
+ jakarta.xml.bind.annotation;version="4.0.0"
