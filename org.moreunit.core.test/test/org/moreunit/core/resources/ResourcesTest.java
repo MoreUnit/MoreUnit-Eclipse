@@ -422,7 +422,7 @@ public abstract class ResourcesTest
         assertThat(namesOf(container.listFiles())).containsExactly((Object[]) fileNames);
     }
 
-    private void assertContainsFolders(ResourceContainer container, String... folderNames)
+    protected void assertContainsFolders(ResourceContainer container, String... folderNames)
     {
         assertThat(namesOf(container.listFolders())).containsExactly((Object[]) folderNames);
     }
@@ -499,7 +499,7 @@ public abstract class ResourcesTest
         };
     }
 
-    private List<String> namesOf(List< ? extends Resource> resources)
+    protected List<String> namesOf(List< ? extends Resource> resources)
     {
         return Lists.transform(resources, new Function<Resource, String>()
         {
