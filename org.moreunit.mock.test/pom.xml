@@ -14,38 +14,4 @@
   <packaging>eclipse-test-plugin</packaging>
 
   <name>${project.artifactId}</name>
-
-  <!-- TODO Nicolas: we could merge org.moreunit.mock.test and org.moreunit.mock.it and run both sets of tests (unit/integration) differently -->
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <executions>
-          <!-- activates simple unit test run during "test" phase -->
-          <execution>
-            <id>test</id>
-            <phase>test</phase>
-            <configuration>
-              <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-            </configuration>
-            <goals>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <executions>
-          <!-- deactivates default integration test run during "verify" phase -->
-          <execution>
-            <id>default-test</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
