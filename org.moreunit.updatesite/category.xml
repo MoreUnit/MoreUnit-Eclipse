@@ -9,6 +9,8 @@
    <feature url="features/org.moreunit.light_3.3.2.qualifier.jar" id="org.moreunit.light" version="3.3.2.qualifier">
       <category name="org.moreunit"/>
    </feature>
+   <feature url="features/org.moreunit.dependencies_3.3.2.qualifier.jar" id="org.moreunit.dependencies" version="3.3.2.qualifier">
+      <category name="org.moreunit"/>
+   </feature>
    <category-def name="org.moreunit" label="MoreUnit"/>
-   <repository-reference location="https://download.jboss.org/jbosstools/photon/stable/updates/" enabled="true" />
 </site>

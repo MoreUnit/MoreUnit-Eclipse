@@ -2,11 +2,11 @@ package org.moreunit.mock.model;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Test;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 
 public class UnmarshallingTest
 {

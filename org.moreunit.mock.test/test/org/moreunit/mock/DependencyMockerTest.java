@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -75,6 +76,7 @@ public class DependencyMockerTest
     }
 
     @Test
+    @Ignore
     public void should_log_error_and_abort_when_template_not_found() throws Exception
     {
         // given

@@ -23,15 +23,15 @@
   </modules>
 
   <properties>
-    <tycho-version>2.5.0</tycho-version>
+    <tycho-version>2.7.4</tycho-version>
     <exec-maven-version>3.0.0</exec-maven-version>
-    
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    
+
     <tests.use.ui>false</tests.use.ui>
-    
-    <target.platform.classifier>eclipse-4.20</target.platform.classifier>
+
+    <target.platform.classifier>eclipse-4.24</target.platform.classifier>
   </properties>
 
   <build>
@@ -76,6 +76,9 @@
           <version>${tycho-version}</version>
           <configuration>
           	<providerHint>junit4</providerHint>
+            <argLine>
+              --add-opens java.base/java.lang=ALL-UNNAMED
+            </argLine>
           </configuration>
         </plugin>
         <plugin>
@@ -171,7 +174,8 @@
         <configuration>
           <useUIHarness>${tests.use.ui}</useUIHarness>
           <useUIThread>${tests.use.ui}</useUIThread>
-          <appArgLine>-consoleLog</appArgLine>
+          <showEclipseLog>true</showEclipseLog>
+          <skipAfterFailureCount>10</skipAfterFailureCount>
         </configuration>
       </plugin>
       <plugin>
@@ -187,16 +191,15 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <profiles>
   	<profile>
   	  <!-- makes test run in UI thread when under OSX -->
       <id>osx</id>
       <activation>
-        <property>
-          <name>java.vendor.url</name>
-          <value>http://www.apple.com/</value>
-        </property>
+        <os>
+            <family>mac</family>
+        </os>
       </activation>
       <build>
         <pluginManagement>
@@ -206,7 +209,10 @@
               <artifactId>tycho-surefire-plugin</artifactId>
               <version>${tycho-version}</version>
               <configuration>
-                <argLine>-XstartOnFirstThread</argLine>
+                <argLine>
+                  -XstartOnFirstThread
+                  --add-opens java.base/java.lang=ALL-UNNAMED
+                </argLine>
               </configuration>
             </plugin>
           </plugins>
@@ -219,4 +225,4 @@
   <!-- [WARNING] Dependency from [..]/org.moreunit.mock/resources to nested classpath entry YYY can not be represented in Maven model and will not be visible to non-OSGi aware Maven plugins -->
   <!-- Maven assumes all dependencies are files and these are directories. This would only be a problem for plugins such as findbugs or javadoc, but we don't need to expose these resources to them -->
   <!-- see http://dev.eclipse.org/mhonarc/lists/tycho-user/msg00896.html -->
-</project> 
+</project>

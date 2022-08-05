@@ -10,5 +10,8 @@ org.moreunit.*/classes/
 org.moreunit.*/target/
 Thumbs.db
 
+# Tycho temp
+.tycho*
+
 # non osgi libs for JRE11+ compatibility
 org.moreunit.mock*/lib/

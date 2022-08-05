@@ -1,7 +1,7 @@
 package org.moreunit.mock.model;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnumValue;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;

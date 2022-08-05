@@ -1,6 +1,6 @@
 package org.moreunit.mock.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "exclude-if")
 public class ExcludeIf extends InclusionCondition
