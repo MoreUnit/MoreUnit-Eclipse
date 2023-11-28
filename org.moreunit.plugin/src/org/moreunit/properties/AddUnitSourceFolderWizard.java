@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Shell;
 import org.moreunit.elements.SourceFolderMapping;
 
 /**
@@ -54,9 +54,9 @@ public class AddUnitSourceFolderWizard extends Wizard
         super.createPageControls(pageContainer);
     }
 
-    public void open()
+    public void open(Shell parentShell)
     {
-        WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
+        WizardDialog dialog = new WizardDialog(parentShell, this);
         dialog.open();
     }
 

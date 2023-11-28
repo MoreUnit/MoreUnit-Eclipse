@@ -19,7 +19,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
 import org.moreunit.SourceFolderContext;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.Preferences;
@@ -164,7 +163,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private void addButtonClicked()
     {
-        new AddUnitSourceFolderWizard(javaProject, this).open();
+        new AddUnitSourceFolderWizard(javaProject, this).open(propertyPage.getShell());
     }
 
     private void removeButtonClicked()
@@ -182,7 +181,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
     private void mappingButtonClicked()
     {
         TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
-        (new SourceFolderMappingDialog(this, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), (SourceFolderMapping) selection.getFirstElement())).open();
+        (new SourceFolderMappingDialog(this, propertyPage.getShell(), (SourceFolderMapping) selection.getFirstElement())).open();
     }
 
     public void handlePerformFinishFromAddUnitSourceFolderWizard(List<SourceFolderMapping> mappingsToAdd)
