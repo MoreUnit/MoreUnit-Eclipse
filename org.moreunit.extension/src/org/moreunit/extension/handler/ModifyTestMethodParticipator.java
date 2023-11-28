@@ -80,7 +80,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 	 * Access modifiers for methods linked in JavaDoc.
 	 */
 	private enum JavaDocVisibility {
-	Public, Protected, Package, Private
+		Public, Protected, Package, Private
 	}
 
 	/**
@@ -307,6 +307,10 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 				addImport(astRoot, "org.junit.Test", false);
 				addImport(astRoot, "org.junit.Assert", false);
 				addImport(astRoot, "org.junit.Assert.fail", true);
+				break;
+			case JUNIT_5:
+				addImport(astRoot, "org.junit.jupiter.api.Assertions.fail", true);
+				addImport(astRoot, "org.junit.jupiter.api.Test", false);
 				break;
 			case TESTNG:
 				addImport(astRoot, "org.testng.annotations.Test", false);
