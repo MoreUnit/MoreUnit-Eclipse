@@ -23,22 +23,35 @@
   </modules>
 
   <properties>
-    <tycho-version>3.0.3</tycho-version>
-    <exec-maven-version>3.0.0</exec-maven-version>
+    <tycho-version>4.0.4</tycho-version>
+    <exec-maven-version>3.1.1</exec-maven-version>
+    <surefire-version>3.2.2</surefire-version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <tests.use.ui>false</tests.use.ui>
 
-    <target.platform.classifier>eclipse-4.24</target.platform.classifier>
+    <eclipse-repo.url>https://download.eclipse.org/releases/latest</eclipse-repo.url>
+    <testng-repo.url>https://testng.org/testng-eclipse-update-site</testng-repo.url>
   </properties>
-
+  <repositories>
+    <repository>
+      <id>eclipse-release</id>
+      <url>${eclipse-repo.url}</url>
+      <layout>p2</layout>
+    </repository>
+    <repository>
+      <id>testng-release</id>
+      <url>${testng-repo.url}</url>
+      <layout>p2</layout>
+    </repository>
+  </repositories>
   <build>
     <extensions>
       <extension>
         <groupId>org.codehaus.mojo</groupId>
-		<artifactId>exec-maven-plugin</artifactId>
+          <artifactId>exec-maven-plugin</artifactId>
         <version>${exec-maven-version}</version>
       </extension>
     </extensions>
@@ -68,14 +81,14 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>${surefire-version}</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho-version}</version>
           <configuration>
-          	<providerHint>junit4</providerHint>
+            <providerHint>junit4</providerHint>
             <argLine>
               --add-opens java.base/java.lang=ALL-UNNAMED
             </argLine>
@@ -131,24 +144,14 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-compiler-plugin</artifactId>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <source>17</source>
+          <target>17</target>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
-          <target>
-            <artifact>
-              <groupId>org.moreunit</groupId>
-              <artifactId>moreunit</artifactId>
-              <version>${project.version}</version>
-              <classifier>${target.platform.classifier}</classifier>
-            </artifact>
-          </target>
-          <includePackedArtifacts>true</includePackedArtifacts>
-          <resolver>p2</resolver>
           <environments>
             <environment>
               <os>linux</os>

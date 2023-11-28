@@ -14,8 +14,13 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.moreunit.core,
  org.moreunit
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
-Bundle-ClassPath: .
-Import-Package: jakarta.xml.bind;version="4.0.0",
- jakarta.xml.bind.annotation;version="4.0.0"
+Bundle-ClassPath: .,
+ libs/angus-activation.jar,
+ libs/jakarta.activation-api.jar,
+ libs/jakarta.xml.bind-api.jar,
+ libs/jaxb-core.jar,
+ libs/jaxb-impl.jar,
+ libs/jaxb-jxc.jar,
+ libs/jaxb-xjc.jar

@@ -13,10 +13,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        targetplatform: [eclipse-4.22, eclipse-4.24]
 
     steps:
       - name: Checkout 🛎
@@ -37,9 +33,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
           cache: 'maven'
-
+      -  name: Setup Maven
+         uses: stCarolas/setup-maven@v.4.5
+         with:
+           maven-version: 3.9.4
 
       - name: Install xvfb
         run: sudo apt-get install xvfb
@@ -49,11 +48,20 @@ jobs:
           BUILD_ID: "${{ steps.time.outputs.time }}"
           BUILD_TYPE: "S"
           BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
-        run: xvfb-run mvn -file org.moreunit.build/pom.xml verify -Dtarget.platform.classifier=${{ matrix.targetplatform }}  --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean install --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
       - name: Publish Surefire Test Results for  🖨
         if: ${{ always() }}
         uses: ScaCap/action-surefire-report@v1
         with:
-          check_name: Test Results for ${{ matrix.targetplatform }} 
+          check_name: Test Results
 
+      - name: Release SNAPSHOT
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            ./org.moreunit.updatesite/target/org.moreunit.updatesite-*-SNAPSHOT.zip

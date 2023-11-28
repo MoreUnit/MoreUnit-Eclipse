@@ -21,7 +21,7 @@ xxEclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-Vendor: MoreUnit.org
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreuni
  t.mock",org.moreunit.actions;x-friends:="org.moreunit.test",org.moreu
  nit.annotation;x-friends:="org.moreunit.test",org.moreunit.decorator;

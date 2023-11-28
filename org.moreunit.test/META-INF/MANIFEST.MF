@@ -22,5 +22,5 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.moreunit.test.dependencies,
  org.testng.eclipse
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
