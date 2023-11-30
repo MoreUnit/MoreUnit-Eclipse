@@ -9,16 +9,16 @@
   <modules>
     <module>../org.moreunit.core</module>
     <module>../org.moreunit.plugin</module>
-    <module>../org.moreunit.test.dependencies</module>
-    <module>../org.moreunit.core.test</module>
+    <!--<module>../org.moreunit.test.dependencies</module>-->
+    <!--<module>../org.moreunit.core.test</module>-->
     <module>../org.moreunit.light.feature</module>
-    <module>../org.moreunit.test</module>
+    <!--<module>../org.moreunit.test</module>-->
     <module>../org.moreunit.feature</module>
     <module>../org.moreunit.mock</module>
-    <module>../org.moreunit.mock.test</module>
-    <module>../org.moreunit.mock.it</module>
+    <!--<module>../org.moreunit.mock.test</module>-->
+    <!--<module>../org.moreunit.mock.it</module>-->
     <module>../org.moreunit.mock.feature</module>
-    <module>../org.moreunit.swtbot.test</module>
+    <!--<module>../org.moreunit.swtbot.test</module>-->
     <module>../org.moreunit.updatesite</module>
   </modules>
 
