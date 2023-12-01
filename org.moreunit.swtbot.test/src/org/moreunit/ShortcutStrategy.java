@@ -38,11 +38,11 @@ public abstract class ShortcutStrategy
 	
 	public void pressGenerateShortcut() 
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.CTRL, 'u');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.CTRL, 'u');
 	}
 	
 	public void pressJumpShortcut() 
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.CTRL, 'j');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.CTRL, 'j');
 	}
 }

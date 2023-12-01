@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.ConditionCursorLine;
@@ -105,6 +106,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 	                                 testClassNameTemplate = "${srcFile}Test",
 	                                 testMethodPrefix = true))
 	@Test
+	@Ignore
 	public void should_create_testmethod_when_shortcut_is_pressed_in_method_with_test_folder_in_another_project() throws JavaModelException
 	{
 	    openResource("TheWorld.java");

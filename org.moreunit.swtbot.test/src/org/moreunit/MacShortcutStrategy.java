@@ -11,32 +11,32 @@ public class MacShortcutStrategy extends ShortcutStrategy
 	@Override
 	public void pressMoveShortcut() 
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.ALT | SWT.COMMAND, 'v');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.ALT | SWT.COMMAND, 'v');
 	}
 
 	@Override
 	public void openPreferences() 
 	{
 	    LogHandler.getInstance().handleInfoLog("Opening Preferences usign Mac Shortcut command");
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND, ',');		
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND, ',');		
 	}
 	
 	public void pressRenameShortcutTwiceAndWaitForDialog() 
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
 		bot.waitUntil(Conditions.shellIsActive("Rename Method"));
 	}
 
 	@Override
 	public void pressRenameShortcut() 
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
 	}
 
 	@Override
 	public void openProperties(SWTBotTreeItem projectItem)
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.COMMAND, 'i');		
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND, 'i');		
 	}
 }

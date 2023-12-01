@@ -10,11 +10,8 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -36,7 +33,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.internal.ide.handlers.OpenResourceHandler;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -44,7 +40,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.moreunit.log.LogHandler;
 import org.moreunit.test.context.TestContextRule;
 
 /**
@@ -133,22 +128,7 @@ public class JavaProjectSWTBotTestHelper
 
     protected void openResource(String resourceName)
     {
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run()
-            {
-                try
-                {
-                    new OpenResourceHandler().execute(new ExecutionEvent());
-                }
-                catch (ExecutionException e)
-                {
-                    LogHandler.getInstance().handleExceptionLog(e);
-                }
-            }
-           
-        });
+        bot.menu("Navigate").menu("Open Resource...").click();
         SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
         bot.waitUntil(Conditions.shellIsActive("Open Resource"));
         SWTBotText searchField = new SWTBotText(bot.widget(widgetOfType(Text.class)));
@@ -169,7 +149,7 @@ public class JavaProjectSWTBotTestHelper
                 return null;
             }
         });
-        KeyboardFactory.getAWTKeyboard().pressShortcut(Keystrokes.DOWN);
+        KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.DOWN);
         bot.button("Open").click();
         bot.waitUntilWidgetAppears(new DefaultCondition()
         {

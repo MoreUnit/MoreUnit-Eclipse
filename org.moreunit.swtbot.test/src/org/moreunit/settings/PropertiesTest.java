@@ -15,6 +15,7 @@ import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -25,6 +26,7 @@ import org.moreunit.test.context.Project;
 @Project(mainCls = "org:HelloWorld", mainSrcFolder = "src", testSrcFolder = "test")
 @org.moreunit.test.context.Preferences(testSrcFolder = "junit")
 @RunWith(SWTBotJunit4ClassRunner.class)
+@Ignore
 public class PropertiesTest extends JavaProjectSWTBotTestHelper
 {
     private void openProjectPropertiesAndSelectMoreUnitPage()

@@ -11,7 +11,7 @@ public class LinuxAndWindowsShortcutStrategy extends ShortcutStrategy
 	@Override
 	public void pressMoveShortcut()
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.ALT | SWT.SHIFT, 'v');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.ALT | SWT.SHIFT, 'v');
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class LinuxAndWindowsShortcutStrategy extends ShortcutStrategy
 	@Override
 	public void pressRenameShortcut() 
 	{
-		KeyboardFactory.getAWTKeyboard().pressShortcut(SWT.SHIFT | SWT.ALT, 'r');	
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.SHIFT | SWT.ALT, 'r');	
 	}
 
 	@Override

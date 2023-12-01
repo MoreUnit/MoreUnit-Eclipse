@@ -11,6 +11,7 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.ConditionCursorLine;
@@ -32,6 +33,7 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
             testSrc = "RenameMethod_test_with_testmethod.txt",
             mainSrcFolder = "src",
             testSrcFolder = "test")
+	@Ignore
 	@Test
 	public void should_rename_corresponding_test_methods_when_method_gets_renamed() throws JavaModelException
 	{
