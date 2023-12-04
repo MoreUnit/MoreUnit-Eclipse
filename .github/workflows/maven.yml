@@ -68,7 +68,7 @@ jobs:
             ./org.moreunit.updatesite/target/org.moreunit.updatesite-*-SNAPSHOT.zip
             ./org.moreunit.updatesite/target/flat-repository/*
 
-	- name: Release RELEASE
+      - name: Release RELEASE
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
