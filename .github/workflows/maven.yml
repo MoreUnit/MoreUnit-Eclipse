@@ -57,6 +57,7 @@ jobs:
           check_name: Test Results
 
       - name: Release SNAPSHOT
+        if: github.ref == 'refs/heads/master'
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -65,3 +66,12 @@ jobs:
           title: "Development Build"
           files: |
             ./org.moreunit.updatesite/target/org.moreunit.updatesite-*-SNAPSHOT.zip
+            ./org.moreunit.updatesite/target/flat-repository/*
+
+	- name: Release RELEASE
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./org.moreunit.updatesite/target/org.moreunit.updatesite-*-SNAPSHOT.zip
+            ./org.moreunit.updatesite/target/flat-repository/*        

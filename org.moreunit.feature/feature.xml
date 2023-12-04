@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.moreunit"
+      id="org.moreunit.feature"
       label="MoreUnit For Java"
       version="3.3.2.qualifier"
       provider-name="MoreUnit.org"

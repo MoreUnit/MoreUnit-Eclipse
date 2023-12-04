@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.moreunit.mock"
+      id="org.moreunit.mock.feature"
       label="MoreUnit For Java: Mock Support"
       version="3.3.2.qualifier"
       provider-name="MoreUnit.org"
@@ -111,7 +111,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.jdt.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import feature="org.moreunit" version="3.2.1" match="greaterOrEqual"/>
+      <import feature="org.moreunit.feature" version="3.2.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin

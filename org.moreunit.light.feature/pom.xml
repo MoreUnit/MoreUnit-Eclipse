@@ -9,7 +9,7 @@
 		<version>3.3.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.moreunit.light</artifactId>
+	<artifactId>org.moreunit.light.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 
 	<name>org.moreunit.light.feature</name>

@@ -9,7 +9,7 @@
 		<version>3.3.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.moreunit.mock</artifactId>
+	<artifactId>org.moreunit.mock.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 
 	<name>org.moreunit.mock.feature</name>
