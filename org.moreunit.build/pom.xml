@@ -51,7 +51,7 @@
     <extensions>
       <extension>
         <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
+        <artifactId>exec-maven-plugin</artifactId>
         <version>${exec-maven-version}</version>
       </extension>
     </extensions>
@@ -118,6 +118,11 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>${exec-maven-version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-packaging-plugin</artifactId>
+          <version>${tycho-version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -188,6 +193,17 @@
           <!-- Our deployment is handled via the org.moreunit.updatesite module -->
           <execution>
             <id>default-deploy</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
+        <executions>
+          <execution>
+            <!-- avoid warning, a consumer POM is not needed -->
+            <id>default-update-consumer-pom</id>
             <phase>none</phase>
           </execution>
         </executions>
