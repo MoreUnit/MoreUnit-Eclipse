@@ -59,7 +59,7 @@ jobs:
       - name: Flatten P2 repository
         uses: RoiSoleil/flatten-p2-repo@main
         with:
-          repository-path: "./org.moreunit.updatesite"
+          repository-path: "./org.moreunit.updatesite/target/repository/"
 
       - name: Release SNAPSHOT
         if: github.ref == 'refs/heads/master'
