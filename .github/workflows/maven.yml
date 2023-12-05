@@ -56,12 +56,17 @@ jobs:
         with:
           check_name: Test Results
 
+      - name: Flatten P2 repository
+        uses: RoiSoleil/flatten-p2-repo@main
+        with:
+          repository-path: "./org.moreunit.updatesite"
+
       - name: Release SNAPSHOT
         if: github.ref == 'refs/heads/master'
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: "snapshot"
           prerelease: true
           title: "Development Build"
           files: |
@@ -73,5 +78,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./org.moreunit.updatesite/target/org.moreunit.updatesite-*-SNAPSHOT.zip
+            ./org.moreunit.updatesite/target/org.moreunit.updatesite-*.zip
             ./org.moreunit.updatesite/target/flat-repository/*        
