@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Core Test
 Bundle-SymbolicName: org.moreunit.core.test
-Bundle-Version: 3.3.2.qualifier
+Bundle-Version: 3.3.2
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.moreunit.core,
  org.eclipse.core.commands,
