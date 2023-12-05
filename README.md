@@ -13,6 +13,20 @@ Searching for MoreUnit for IntelliJ? [Here it is!](https://github.com/MoreUnit/o
 MoreUnit previously was hosted on SourceForge, and you can still find information at [https://sourceforge.net/projects/moreunit/](https://sourceforge.net/projects/moreunit/).
 
 
+# Update Site
+
+You can find the latest release of MoreUnit-Eclipse here:
+
+https://github.com/MoreUnit/MoreUnit-Eclipse/releases/latest/download/
+
+or any specific version here:
+
+https://github.com/MoreUnit/MoreUnit-Eclipse/releases/download/$VERSION/ (with $VERSION corresponding to a Release)
+
+or snapshot version here:
+
+https://github.com/MoreUnit/MoreUnit-Eclipse/releases/download/snapshot/
+
 ## LICENSE
 
 Eclipse Public License - v 1.0
