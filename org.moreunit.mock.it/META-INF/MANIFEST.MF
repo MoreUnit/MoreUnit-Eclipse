@@ -12,3 +12,4 @@ Require-Bundle: org.eclipse.jdt.launching,
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .
+Automatic-Module-Name: org.moreunit.mock.it

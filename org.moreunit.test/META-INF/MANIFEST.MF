@@ -24,3 +24,4 @@ Require-Bundle: org.eclipse.ui,
  org.testng.eclipse
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
+Automatic-Module-Name: org.moreunit.test

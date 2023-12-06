@@ -24,3 +24,4 @@ Bundle-ClassPath: .,
  libs/jaxb-impl.jar,
  libs/jaxb-jxc.jar,
  libs/jaxb-xjc.jar
+Automatic-Module-Name: org.moreunit.mock

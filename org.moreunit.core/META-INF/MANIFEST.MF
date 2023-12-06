@@ -30,3 +30,4 @@ Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test,o
  it.core.ui;x-friends:="org.moreunit.core.test,org.moreunit.mock",org.
  moreunit.core.util; x-friends:="org.moreunit,  org.moreunit.core.test
  ,  org.moreunit.mock,  org.moreunit.extension,  org.moreunit.test"
+Automatic-Module-Name: org.moreunit.core

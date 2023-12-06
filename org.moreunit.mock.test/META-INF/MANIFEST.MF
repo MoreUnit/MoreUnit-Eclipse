@@ -10,3 +10,4 @@ Require-Bundle: org.moreunit.test.dependencies,
  org.junit;bundle-version="4.11.0",
  org.glassfish.hk2.osgi-resource-locator
 Bundle-ClassPath: .
+Automatic-Module-Name: org.moreunit.mock.test
