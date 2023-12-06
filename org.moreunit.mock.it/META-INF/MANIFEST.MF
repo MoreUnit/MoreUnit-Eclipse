@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.jdt.launching,
  org.junit;bundle-version="4.8.0",
  org.moreunit.test.dependencies,
  org.testng.eclipse;bundle-version="5.14.2.10",
- org.glassfish.hk2.osgi-resource-locator;bundle-version="2.4.0"
+ org.glassfish.hk2.osgi-resource-locator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .

@@ -8,5 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.moreunit.test.dependencies,
  org.junit;bundle-version="4.11.0",
- org.glassfish.hk2.osgi-resource-locator;bundle-version="1.0.3"
+ org.glassfish.hk2.osgi-resource-locator
 Bundle-ClassPath: .

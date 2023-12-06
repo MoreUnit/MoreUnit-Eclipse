@@ -49,7 +49,7 @@ jobs:
           BUILD_ID: "${{ steps.time.outputs.time }}"
           BUILD_TYPE: "S"
           BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
-        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean install --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean install -Dtarget.platform.classifier=eclipse --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
       - name: Publish Surefire Test Results for  🖨
         if: ${{ always() }}

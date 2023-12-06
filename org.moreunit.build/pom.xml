@@ -33,21 +33,7 @@
 
     <tests.use.ui>false</tests.use.ui>
 
-    <eclipse-repo.url>https://download.eclipse.org/releases/latest</eclipse-repo.url>
-    <testng-repo.url>https://testng.org/testng-eclipse-update-site</testng-repo.url>
   </properties>
-  <repositories>
-    <repository>
-      <id>eclipse-release</id>
-      <url>${eclipse-repo.url}</url>
-      <layout>p2</layout>
-    </repository>
-    <repository>
-      <id>testng-release</id>
-      <url>${testng-repo.url}</url>
-      <layout>p2</layout>
-    </repository>
-  </repositories>
   <build>
     <extensions>
       <extension>
@@ -158,6 +144,16 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
+          <target>
+            <artifact>
+              <groupId>org.moreunit</groupId>
+              <artifactId>moreunit</artifactId>
+              <version>${project.version}</version>
+              <classifier>${target.platform.classifier}</classifier>
+            </artifact>
+          </target>
+          <includePackedArtifacts>true</includePackedArtifacts>
+          <resolver>p2</resolver>
           <environments>
             <environment>
               <os>linux</os>
