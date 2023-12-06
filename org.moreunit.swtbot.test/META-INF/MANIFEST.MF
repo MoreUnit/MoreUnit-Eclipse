@@ -15,3 +15,4 @@ Require-Bundle: org.eclipse.swtbot.go,
  org.eclipse.jdt.ui,
  org.eclipse.ui.ide
 Import-Package: org.eclipse.jdt.ui
+Automatic-Module-Name: org.moreunit.swtbot.test

@@ -60,4 +60,5 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreuni
  nit.wizards,  org.moreunit.preferences,  org.eclipse.jface.wizard,  o
  rg.eclipse.core.runtime,  org.eclipse.swt.widgets,  org.eclipse.ui"
 Import-Package: org.moreunit.extensionpoints
+Automatic-Module-Name: org.moreunit
 

@@ -52,3 +52,4 @@ Require-Bundle: org.eclipse.core.resources,
  org.testng.eclipse
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.eclipse.jdt.junit
+Automatic-Module-Name: org.moreunit.test.dependencies
