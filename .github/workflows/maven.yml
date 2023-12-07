@@ -15,6 +15,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      checks: write
+      contents: read
+
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@v3
@@ -36,10 +40,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      -  name: Setup Maven
-         uses: stCarolas/setup-maven@v.4.5
-         with:
-           maven-version: 3.9.4
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v.4.5
+        with:
+          maven-version: 3.9.4
 
       - name: Build and verify for eclipse-4.25 (ignoring test results)
         env:
