@@ -3,6 +3,8 @@ package org.moreunit.properties;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Adapters;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -126,11 +128,15 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     private IJavaProject getJavaProject()
     {
-        if(getElement() instanceof IJavaProject)
+        IAdaptable selection = getElement();
+        if(selection instanceof IJavaProject)
         {
-            return (IJavaProject) getElement();
+            return (IJavaProject) selection;
         }
-        return JavaCore.create((IProject) getElement());
+        // when files are selected, they need to be adapted to their project
+        // first (see enabledWhen clause of plugin.xml)
+        IProject project = Adapters.adapt(selection, IProject.class);
+        return JavaCore.create(project);
     }
 
     private void handleCheckboxSelectionChanged()
