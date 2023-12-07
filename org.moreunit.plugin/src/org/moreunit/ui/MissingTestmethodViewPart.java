@@ -9,7 +9,6 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.MessagePage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
-import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.EditorPartFacade;
 import org.moreunit.util.PluginTools;
 
@@ -20,13 +19,6 @@ public class MissingTestmethodViewPart extends PageBookView
 {
 
     MethodPage activePage;
-
-    public MissingTestmethodViewPart()
-    {
-        super();
-
-        setTitleImage(MoreUnitPlugin.getImageDescriptor("icons/moreunitLogo.gif").createImage());
-    }
 
     @Override
     public void createPartControl(Composite parent)
