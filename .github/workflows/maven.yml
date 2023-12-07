@@ -41,15 +41,19 @@ jobs:
          with:
            maven-version: 3.9.4
 
-      - name: Install xvfb
-        run: sudo apt-get install xvfb
-
-      - name: Build Everything
+      - name: Build and verify for eclipse-4.25 (ignoring test results)
         env:
           BUILD_ID: "${{ steps.time.outputs.time }}"
           BUILD_TYPE: "S"
           BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
-        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean install -Dtarget.platform.classifier=eclipse --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean verify -Dtarget.platform.classifier=eclipse-4.25 -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+      - name: Build and verify for eclipse-4.30
+        env:
+          BUILD_ID: "${{ steps.time.outputs.time }}"
+          BUILD_TYPE: "S"
+          BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
+        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean install -Dtarget.platform.classifier=eclipse-4.30 --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
       - name: Publish Surefire Test Results for  🖨
         if: ${{ always() }}
