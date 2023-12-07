@@ -33,6 +33,8 @@
 
     <tests.use.ui>false</tests.use.ui>
 
+    <target.platform.classifier>eclipse-4.25</target.platform.classifier>
+
   </properties>
   <build>
     <extensions>
@@ -145,15 +147,8 @@
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
           <target>
-            <artifact>
-              <groupId>org.moreunit</groupId>
-              <artifactId>moreunit</artifactId>
-              <version>${project.version}</version>
-              <classifier>${target.platform.classifier}</classifier>
-            </artifact>
+            <file>${basedir}/../org.moreunit.build/${target.platform.classifier}.target</file>
           </target>
-          <includePackedArtifacts>true</includePackedArtifacts>
-          <resolver>p2</resolver>
           <environments>
             <environment>
               <os>linux</os>
@@ -209,12 +204,12 @@
   </build>
 
   <profiles>
-  	<profile>
-  	  <!-- makes test run in UI thread when under OSX -->
+    <profile>
+      <!-- makes test run in UI thread when under OSX -->
       <id>osx</id>
       <activation>
         <os>
-            <family>mac</family>
+          <family>mac</family>
         </os>
       </activation>
       <build>
