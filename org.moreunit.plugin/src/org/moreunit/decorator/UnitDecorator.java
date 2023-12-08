@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.ui.IDecoratorManager;
+import org.eclipse.ui.PlatformUI;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.core.log.Logger;
 import org.moreunit.elements.ClassTypeFacade;
@@ -141,7 +142,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 
     public static UnitDecorator getUnitDecorator()
     {
-        IDecoratorManager decoratorManager = MoreUnitPlugin.getDefault().getWorkbench().getDecoratorManager();
+        IDecoratorManager decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
 
         if(decoratorManager.getEnabled(MoreUnitContants.TEST_CASE_DECORATOR))
             return (UnitDecorator) decoratorManager.getBaseLabelProvider(MoreUnitContants.TEST_CASE_DECORATOR);

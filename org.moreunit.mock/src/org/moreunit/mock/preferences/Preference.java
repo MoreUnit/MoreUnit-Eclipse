@@ -15,6 +15,7 @@ abstract class Preference<T>
     final T defaultValue;
     final Set<T> possibleValues;
 
+    @SafeVarargs
     public Preference(String name, T defaultValue, T... possibleValues)
     {
         this.name = MoreUnitMockPlugin.PLUGIN_ID + "." + name;

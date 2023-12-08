@@ -9,10 +9,9 @@ import org.eclipse.ui.IEditorPart;
 
 public class ConversionUtils
 {
-    @SuppressWarnings("unchecked")
     public <T> T adapt(IAdaptable adaptable, Class<T> requiredClass)
     {
-        return (T) adaptable.getAdapter(requiredClass);
+        return adaptable.getAdapter(requiredClass);
     }
 
     public IFile getFile(IEditorPart editorPart)

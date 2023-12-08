@@ -1,7 +1,6 @@
 package org.moreunit.util;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.moreunit.core.util.CollectionUtils.asSet;
 
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class TestMethodCalleeFinderTest extends ContextTestCase
     {
         MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()");
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), Set.of(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).isEmpty();
     }
 
@@ -46,7 +45,7 @@ public class TestMethodCalleeFinderTest extends ContextTestCase
     {
         MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", "new Hello1().getNumber1();");
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), Set.of(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).onProperty("elementName").containsOnly("getNumber1");
     }
 
@@ -57,7 +56,7 @@ public class TestMethodCalleeFinderTest extends ContextTestCase
                                "new HelloTest().testGetNumberOne();";
         MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", methodContent);
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), Set.of(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).hasSize(1);
     }
 
@@ -69,7 +68,7 @@ public class TestMethodCalleeFinderTest extends ContextTestCase
                                "new Hello2().getNumberOneAgain();";
         MethodHandler testMethod = testCase.addMethod("public int testGetNumberOne()", methodContent);
 
-        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), asSet(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new TestMethodCalleeFinder(testMethod.get(), Set.of(cutHello1.get(), cutHello2.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).hasSize(3);
     }
 }

@@ -109,7 +109,7 @@ public class FeatureDetector
         }
         try
         {
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         }
         catch (Exception e)
         {

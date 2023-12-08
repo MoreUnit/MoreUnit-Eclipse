@@ -145,7 +145,7 @@ public class ModifyTestMethodParticipator implements ITestMethodParticipator {
 		final IDocument sourceDocument = new Document(compilationSource);
 
 		// Erzeuge AST-Wurzel aus ICompilationUnit
-		final ASTParser astParser = ASTParser.newParser(AST.JLS3);
+		final ASTParser astParser = ASTParser.newParser(AST.getJLSLatest());
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
 		astParser.setSource(compilationUnit);
 		final CompilationUnit astRoot = (CompilationUnit)astParser.createAST(null);

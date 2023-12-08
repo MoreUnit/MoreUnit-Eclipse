@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.moreunit.core.languages" name="Langages having specific support in MoreUnit" schema="schema/org.moreunit.core.languages.exsd"/>
-   
+   <extension-point id="org.moreunit.core.languages" name="Languages having specific support in MoreUnit" schema="schema/org.moreunit.core.languages.exsd"/>
+
    <extension point="org.eclipse.ui.startup">
       <startup class="org.moreunit.core.EarlyStartup"/>
    </extension>
-   
+
    <extension point="org.eclipse.ui.commands">
       <category id="org.moreunit.core.commands.category"
          name="MoreUnit"/>
@@ -36,7 +36,7 @@
          class="org.moreunit.core.expressions.FileTester">
       </propertyTester>
    </extension>
-  
+
    <extension point="org.eclipse.core.expressions.definitions">
       <definition id="org.moreunit.core.definitions.languageHasDefaultSupport">
          <iterate ifEmpty="false">
@@ -46,7 +46,7 @@
          </iterate>
       </definition>
    </extension>
-   
+
    <extension point="org.eclipse.ui.menus">
       <menuContribution
          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
@@ -71,11 +71,11 @@
          </menu>
       </menuContribution>
    </extension>
-   
+
    <extension id="org.moreunit.core.keywords" point="org.eclipse.ui.keywords">
       <keyword id="org.moreunit.core.keywords.moreUnit" label="MoreUnit"/>
    </extension>
-   
+
    <extension point="org.eclipse.ui.preferencePages">
       <page id="org.moreunit.core.preferences.featuredLanguagesPage"
          name="MoreUnit"
@@ -89,7 +89,7 @@
          <keywordReference id="org.moreunit.core.keywords.moreUnit"/>
       </page>
    </extension>
-   
+
    <extension point="org.eclipse.ui.propertyPages">
       <page id="org.moreunit.core.properties.featuredLanguagesPage"
          name="MoreUnit"
@@ -109,7 +109,7 @@
          </enabledWhen>
       </page>
    </extension>
-   
+
    <extension point="org.eclipse.ui.decorators">
       <decorator id="org.moreunit.core.decorators.testedFileDecorator"
          label="Tested File Indicator (MoreUnit)"

@@ -1,7 +1,6 @@
 package org.moreunit.util;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.moreunit.core.util.CollectionUtils.asSet;
 
 import java.util.Set;
 
@@ -35,7 +34,7 @@ public class MethodTestCallerFinderTest extends ContextTestCase
     @Test
     public void getMatches_should_return_empty_list_when_no_testmethod_exists() throws JavaModelException
     {
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).isEmpty();
     }
 
@@ -44,7 +43,7 @@ public class MethodTestCallerFinderTest extends ContextTestCase
     {
         MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).contains(giveMe1TestMethod.get());
     }
 
@@ -55,7 +54,7 @@ public class MethodTestCallerFinderTest extends ContextTestCase
         MethodHandler gimme1TestMethod = testcaseType.addMethod("public void testGimme1()", "new Hello().getNumberOne();");
         MethodHandler getNumber1TestMethod = testcaseType.addMethod("public void testGetNumber1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), asSet(testcaseType.get())).getMatches(new NullProgressMonitor());
+        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertThat(matches).containsOnly(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get());
     }
 }
