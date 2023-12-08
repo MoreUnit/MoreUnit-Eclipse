@@ -26,9 +26,9 @@
 	            categoryId="org.eclipse.jdt.ui.category.source"
 	            id="org.moreunit.createtestmethod">
 	   </command>
-   </extension> 
+   </extension>
    <extension point="org.eclipse.ui.bindings">
-       <!-- redefines this binding at a more specific level than org.eclipse.ui.textEditorScope, 
+       <!-- redefines this binding at a more specific level than org.eclipse.ui.textEditorScope,
           otherwise other commands may silently win the battle in org.eclipse.jdt.ui.javaEditorScope -->
 	   <key sequence="CTRL+J"
           commandId="org.moreunit.core.commands.jumpCommand"
@@ -44,7 +44,7 @@
           commandId="org.moreunit.runtestsofselectedmemberaction"
           contextId="org.eclipse.jdt.ui.javaEditorScope"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-        </key>    
+        </key>
 	   <key
 	      sequence="CTRL+U"
 	      commandId="org.moreunit.createtestmethod"
@@ -52,16 +52,14 @@
 	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 	</extension>
-   
+
    <extension point="org.eclipse.ui.menus">
       <menuContribution
-         id="org.moreunit.ui.editor.menucontribution"
          locationURI="popup:#CompilationUnitEditorContext?after=additions">
          <menu
             id="org.moreunit.ui.editor.menu.moreunit"
             label="MoreUnit"
-            icon="icons/moreunitLogo.gif"
-            path="additions">
+            icon="icons/moreunitLogo.gif">
             <command
                commandId="org.moreunit.core.commands.jumpCommand"
                mnemonic="J"/>
@@ -71,7 +69,7 @@
          </menu>
       </menuContribution>
    </extension>
-   
+
    <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
             targetID="#CompilationUnitEditorContext"
@@ -106,7 +104,7 @@
                id="org.moreunit.actions.createtestmethodaction">
          </action>
       </viewerContribution>
-      
+
       <objectContribution
             adaptable="false"
             id="org.moreunit.ui.compilationunit.menucontribution"
@@ -141,7 +139,7 @@
                menubarPath="org.moreunit.ui.compilationunit.menu.moreunit/top">
          </action>
       </objectContribution>
-      
+
       <objectContribution
             adaptable="false"
             id="org.moreunit.ui.type.menucontribution"
@@ -176,7 +174,7 @@
                menubarPath="org.moreunit.ui.type.menu.moreunit/top">
          </action>
       </objectContribution>
-      
+
       <objectContribution
       	id="org.moreunit.testcreator"
       	objectClass="org.eclipse.jdt.core.IMethod">
@@ -184,7 +182,7 @@
       		label="Generate Test Method"
       		class="org.moreunit.actions.CreateTestMethodHierarchyAction"
       		icon="icons/moreunitLogo.gif"
-      		menubarPath="additions"/>      		
+      		menubarPath="additions"/>
       </objectContribution>
      </extension>
 
@@ -198,24 +196,24 @@
     </extension>
 
 	<extension point="org.eclipse.ui.ide.markerImageProviders">
-		<imageprovider 
+		<imageprovider
 			markertype="org.moreunit.testCase"
 			icon="icons/classHasTest.gif"
 			id="org.moreunit.testcaseimageprovider">
 		</imageprovider>
 	</extension>
 	-->
-	
+
 	<!--
 	<extension point="org.eclipse.ui.editors.annotationTypes">
-		<type 
+		<type
 			name="org.moreunit.testCaseAnnotation"
 			super="org.eclipse.ui.workbench.texteditor.info"
 			markerType="org.moreunit.testCase">
 		</type>
 	</extension>
 	-->
-	
+
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
 		<specification
 			annotationType="org.moreunit.testCaseAnnotation"
@@ -265,7 +263,7 @@
 			</description>
 		</decorator>
 	</extension>
-	
+
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
         class="org.moreunit.preferences.MoreUnitPreferencePage"
@@ -284,7 +282,7 @@
 		</page>
 		-->
 	</extension>
-	
+
 	<extension
          id="org.moreunit.keywordReferences"
          name="org.moreunit Preferences Keywords"
@@ -299,11 +297,11 @@
             id="morg.oreunit.keywordReference.test"
             label="Test"/>
    </extension>
-	
-	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants">
 		<renameParticipant id="org.moreunit.renameMethodParticipant"
 			name="MoreUnitRenameMethodParticipant"
-			class="org.moreunit.refactoring.RenameMethodParticipant">  
+			class="org.moreunit.refactoring.RenameMethodParticipant">
 			<enablement>
 				<with variable="affectedNatures">
 					<iterate operator="or">
@@ -316,11 +314,11 @@
 			</enablement>
 		</renameParticipant>
 	</extension>
-	
-	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants">
 		<renameParticipant id="org.moreunit.renameClassParticipant"
 			name="MoreUnitMethodClassParticipant"
-			class="org.moreunit.refactoring.RenameClassParticipant">  
+			class="org.moreunit.refactoring.RenameClassParticipant">
 			<enablement>
 				<with variable="affectedNatures">
 					<iterate operator="or">
@@ -333,11 +331,11 @@
 			</enablement>
 		</renameParticipant>
 	</extension>
-	
-	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants"> 
+
+	<extension point="org.eclipse.ltk.core.refactoring.renameParticipants">
 		<renameParticipant id="org.moreunit.renamePackageParticipant"
 			name="MoreUniPackageParticipant"
-			class="org.moreunit.refactoring.RenamePackageParticipant">  
+			class="org.moreunit.refactoring.RenamePackageParticipant">
 			<enablement>
 				<with variable="affectedNatures">
 					<iterate operator="or">
@@ -350,11 +348,11 @@
 			</enablement>
 		</renameParticipant>
 	</extension>
-	
-	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
+
+	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants">
 		<moveParticipant id="moreunit.moveMethodParticipant"
 			name="MoreUnitMethodMethodParticipant"
-			class="org.moreunit.refactoring.MoveMethodParticipant">  
+			class="org.moreunit.refactoring.MoveMethodParticipant">
 			<enablement>
 				<with variable="affectedNatures">
 					<iterate operator="or">
@@ -367,11 +365,11 @@
 			</enablement>
 		</moveParticipant>
 	</extension>
-	
-	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants"> 
+
+	<extension point="org.eclipse.ltk.core.refactoring.moveParticipants">
 		<moveParticipant id="moreunit.moveClassParticipant"
 			name="MoreUnitMethodMethodParticipant"
-			class="org.moreunit.refactoring.MoveClassParticipant">  
+			class="org.moreunit.refactoring.MoveClassParticipant">
 			<enablement>
 				<with variable="affectedNatures">
 					<iterate operator="or">
@@ -384,14 +382,14 @@
 			</enablement>
 		</moveParticipant>
 	</extension>
-	
+
 	<extension
        point="org.eclipse.help.toc">
       <toc
             file="help/toc.xml"
             primary="true"/>
    </extension>
-   
+
     <extension
          point="org.eclipse.ui.propertyPages">
       <!--
@@ -421,7 +419,7 @@
 		         </adapt>
 		      </enabledWhen>
 		  </page>
-      <!--   
+      <!--
       <page
             class="org.moreunit.properties.UnitSourcesPropertiesPage"
             id="org.moreunit.unitSourcesPropertiesPage"
@@ -465,7 +463,7 @@
       </page>
       -->
    </extension>
-   
+
    <extension point="org.eclipse.ui.views">
    		<category id="org.moreunit.ui" name="MoreUnit"/>
    		<view id="org.moreunit.missingtestmethodview"
@@ -491,7 +489,7 @@
    			  name="Missing Tests per Project"
    			  category="org.moreunit.ui"/>
    </extension>
-   
+
    <extension point="org.moreunit.core.languages">
       <language fileExtension="java" name="Java">
          <jumper class="org.moreunit.handler.Jumper" />

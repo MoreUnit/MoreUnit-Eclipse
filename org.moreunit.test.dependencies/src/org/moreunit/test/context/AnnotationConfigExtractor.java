@@ -113,7 +113,6 @@ class AnnotationConfigExtractor
         };
     }
 
-    @SuppressWarnings("unchecked")
     private boolean hasAtLeastOneHandledAnnotationDefined(AnnotatedElement annotatedElement)
     {
         if(annotatedElement != null)
@@ -147,7 +146,6 @@ class AnnotationConfigExtractor
         return defaultAnnotatedElement.getAnnotation(Context.class);
     }
 
-    @SuppressWarnings("unchecked")
     private void checkNoProjectOrPreferencesAnnotationDefined(AnnotatedElement annotatedElement)
     {
         if(annotatedElement == null)

@@ -14,12 +14,14 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IOrdinaryClassFile;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.core.manipulation.CodeGeneration;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.corext.util.JavaConventionsUtil;
@@ -40,7 +42,6 @@ import org.eclipse.jdt.internal.ui.refactoring.contentassist.ControlContentAssis
 import org.eclipse.jdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne.JUnitVersion;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
-import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
@@ -230,8 +231,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                         try
                         {
                             IClassFile cf = (IClassFile) element;
-                            if(cf.isStructureKnown())
-                                classToTest = cf.getType();
+                            if(cf.isStructureKnown() && cf instanceof IOrdinaryClassFile ordinaryClassFile)
+                                classToTest = ordinaryClassFile.getType();
                         }
                         catch (JavaModelException e)
                         {

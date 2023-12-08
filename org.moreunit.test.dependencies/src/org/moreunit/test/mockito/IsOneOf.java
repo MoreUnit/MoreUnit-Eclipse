@@ -11,6 +11,7 @@ public class IsOneOf<T> extends ArgumentMatcher<T>
 {
     private final List<T> wanted;
 
+    @SafeVarargs
     public IsOneOf(T... wanted)
     {
         this.wanted = asList(wanted);

@@ -12,6 +12,7 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
+import org.eclipse.text.templates.ContextTypeRegistry;
 
 /**
  * Contains Eclipse-specific logic to evaluate {@link Template}s.
@@ -85,7 +86,7 @@ public class EclipseTemplateContext
      */
     private static class CustomJavaContext extends JavaContext
     {
-        private static final TemplateContextType TYPE = JavaPlugin.getDefault().getTemplateContextRegistry().getContextType(CONTEXT_TYPE);
+        private static final TemplateContextType TYPE = ((ContextTypeRegistry) JavaPlugin.getDefault().getTemplateContextRegistry()).getContextType(CONTEXT_TYPE);
 
         public CustomJavaContext(IDocument document, int insertionOffset, ICompilationUnit compilationUnit)
         {
