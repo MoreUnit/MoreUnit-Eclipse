@@ -33,7 +33,7 @@
 
     <tests.use.ui>false</tests.use.ui>
 
-    <target.platform.classifier>eclipse-4.25</target.platform.classifier>
+    <target.platform.classifier>eclipse-4.30</target.platform.classifier>
 
   </properties>
   <build>
@@ -224,6 +224,8 @@
         </executions>
       </plugin>
     </plugins>
+
+    <defaultGoal>verify</defaultGoal>
   </build>
 
   <profiles>
