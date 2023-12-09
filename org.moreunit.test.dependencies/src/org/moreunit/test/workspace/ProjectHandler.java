@@ -1,7 +1,6 @@
 package org.moreunit.test.workspace;
 
-import static com.google.common.collect.Maps.newHashMap;
-
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -15,7 +14,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
     private final WorkspaceHandler workspaceHandler;
     private final String projectName;
     private final String prefix;
-    private final Map<String, SourceFolderHandler> sourceFolders = newHashMap();
+    private final Map<String, SourceFolderHandler> sourceFolders = new HashMap<>();
     private IJavaProject project;
     private SourceFolderHandler mainSrcFolderHandler;
     private SourceFolderHandler testSrcFolderHandler;

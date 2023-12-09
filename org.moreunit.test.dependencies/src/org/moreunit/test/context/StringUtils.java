@@ -1,8 +1,7 @@
 package org.moreunit.test.context;
 
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 public class StringUtils
 {
@@ -22,18 +21,20 @@ public class StringUtils
 
     public static String[] split(String str, String separator)
     {
-        return Iterables.toArray(Splitter.on(separator).trimResults().omitEmptyStrings().split(str), String.class);
+        return Arrays.stream(str.split("\\Q" + separator + "\\E"))
+                .filter(Predicate.not(StringUtils::isNullOrEmpty))
+                .map(String::strip)
+                .toArray(String[]::new);
     }
 
     public static boolean atLeastOneNotEmpty(String... strings)
     {
-        for (String str : strings)
-        {
-            if(! Strings.isNullOrEmpty(str))
-            {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(strings)
+                .anyMatch(Predicate.not(StringUtils::isNullOrEmpty));
+    }
+
+    public static boolean isNullOrEmpty(String input)
+    {
+        return input == null || input.isEmpty();
     }
 }

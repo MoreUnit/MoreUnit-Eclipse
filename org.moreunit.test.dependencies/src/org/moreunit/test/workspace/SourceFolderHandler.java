@@ -1,8 +1,7 @@
 package org.moreunit.test.workspace;
 
-import static com.google.common.collect.Maps.newHashMap;
-
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -17,7 +16,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 {
     private final ProjectHandler projectHandler;
     private final String sourceFolderName;
-    private final Map<String, CompilationUnitHandler> cuHandlers = newHashMap();
+    private final Map<String, CompilationUnitHandler> cuHandlers = new HashMap<>();
     private IPackageFragmentRoot sourceFolder;
 
     public SourceFolderHandler(ProjectHandler projectHandler, String sourceFolderName)

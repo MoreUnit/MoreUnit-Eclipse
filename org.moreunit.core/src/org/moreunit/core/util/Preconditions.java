@@ -16,7 +16,7 @@ public final class Preconditions
 {
     /**
      * Checks that the given object reference is not null.
-     * 
+     *
      * @param reference the reference to test for nullity
      * @return {@code reference} if not null
      * @throws NullPointerException if {@code reference} is null
@@ -32,7 +32,7 @@ public final class Preconditions
 
     /**
      * Checks that the given object reference is not null.
-     * 
+     *
      * @param reference the reference to test for nullity
      * @param errorMessage the exception message to use if {@code reference} is
      *            null (will be converted to a string if not already one)
@@ -50,7 +50,7 @@ public final class Preconditions
 
     /**
      * Checks that the given expression is true.
-     * 
+     *
      * @param expression the boolean expression to evaluate
      * @throws IllegalArgumentException if {@code expression} is false
      */
@@ -64,7 +64,7 @@ public final class Preconditions
 
     /**
      * Checks that the given expression is true.
-     * 
+     *
      * @param expression the boolean expression to evaluate
      * @param errorMessage the exception message to use if {@code expression} is
      *            false (will be converted to a string if not already one)
@@ -79,9 +79,25 @@ public final class Preconditions
     }
 
     /**
+     * Checks that the given state is true.
+     *
+     * @param state the boolean expression to evaluate
+     * @param errorMessage the exception message to use if {@code state} is
+     *            false (will be converted to a string if not already one)
+     * @throws IllegalStateException if {@code state} is false
+     */
+    public static void checkState(boolean state, Object errorMessage)
+    {
+        if(! state)
+        {
+            throw new IllegalStateException(String.valueOf(errorMessage));
+        }
+    }
+
+    /**
      * Checks that the given collection reference is not null and - if not null
      * - checks that the collection is not empty.
-     * 
+     *
      * @param collection the collection reference to test for nullity or
      *            emptiness
      * @return {@code collection} if not null or empty
@@ -98,7 +114,7 @@ public final class Preconditions
     /**
      * Checks that the given collection reference is not null and - if not null
      * - checks that the collection is not empty.
-     * 
+     *
      * @param collection the collection reference to test for nullity or
      *            emptiness
      * @param errorMessage the exception message to use if

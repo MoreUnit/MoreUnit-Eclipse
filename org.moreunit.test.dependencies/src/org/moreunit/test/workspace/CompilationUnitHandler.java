@@ -1,6 +1,6 @@
 package org.moreunit.test.workspace;
 
-import static com.google.common.base.Preconditions.checkState;
+import static org.moreunit.core.util.Preconditions.checkState;
 
 import java.util.regex.Pattern;
 

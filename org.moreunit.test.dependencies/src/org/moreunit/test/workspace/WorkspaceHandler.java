@@ -1,14 +1,13 @@
 package org.moreunit.test.workspace;
 
-import static com.google.common.collect.Maps.newHashMap;
-
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 
 public class WorkspaceHandler
 {
-    private final Map<String, ProjectHandler> projectHandlers = newHashMap();
+    private final Map<String, ProjectHandler> projectHandlers = new HashMap<>();
     private final String projectPrefix;
     private final Class< ? > loadingClass;
 

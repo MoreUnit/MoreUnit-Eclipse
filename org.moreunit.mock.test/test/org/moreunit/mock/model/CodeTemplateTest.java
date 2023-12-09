@@ -1,9 +1,9 @@
 package org.moreunit.mock.model;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class CodeTemplateTest
     @Mock
     private MockingContext context;
 
-    private Set<InclusionCondition> conditions = newHashSet();
+    private Set<InclusionCondition> conditions = new HashSet<>();
     private CodeTemplate codeTemplate = new CodeTemplate(null, null, null, conditions);
 
     @Test

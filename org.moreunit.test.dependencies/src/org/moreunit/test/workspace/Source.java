@@ -1,7 +1,10 @@
 package org.moreunit.test.workspace;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,9 +13,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 
 public class Source
 {
@@ -48,18 +48,13 @@ public class Source
 
     private String loadSource(Class< ? > loadingClass, String sourceLocation)
     {
-        try
-        {
-            URL definitionUrl = loadingClass.getResource(sourceLocation.trim());
-            if(definitionUrl == null)
-            {
-                throw new RuntimeException(String.format("Resource not found: '%s'", sourceLocation));
-            }
-            return Resources.toString(definitionUrl, Charsets.UTF_8);
+        InputStream resourceAsStream = loadingClass.getResourceAsStream(sourceLocation.trim());
+        if (resourceAsStream == null) {
+            return null;
         }
-        catch (IOException e)
+        try (Scanner scanner = new Scanner(resourceAsStream, StandardCharsets.UTF_8))
         {
-            throw new RuntimeException(String.format("Could not load class definition '%s'", sourceLocation), e);
+            return scanner.useDelimiter("\\A").next();
         }
     }
 

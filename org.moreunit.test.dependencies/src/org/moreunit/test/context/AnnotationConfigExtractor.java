@@ -1,16 +1,14 @@
 package org.moreunit.test.context;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.moreunit.test.workspace.JavaType;
-
-import com.google.common.base.Strings;
 
 class AnnotationConfigExtractor
 {
@@ -210,11 +208,11 @@ class AnnotationConfigExtractor
         TestProject testProject = project.testProject();
         if(testProject != null && testProject.value() != Default.class)
         {
-            if(! Strings.isNullOrEmpty(project.testCls()))
+            if(! StringUtils.isNullOrEmpty(project.testCls()))
             {
                 throw new IllegalConfigurationException("Both testCls and testProject are defined for @Project");
             }
-            if(! Strings.isNullOrEmpty(project.testSrc()))
+            if(! StringUtils.isNullOrEmpty(project.testSrc()))
             {
                 throw new IllegalConfigurationException("Both testSrc and testProject are defined for @Project");
             }
@@ -236,7 +234,7 @@ class AnnotationConfigExtractor
 
     private Collection<JavaType> splitTypes(String classes)
     {
-        Set<JavaType> types = newHashSet();
+        Set<JavaType> types = new HashSet<>();
 
         String[] typeDefsByPackage = StringUtils.split(classes, ";");
         if(typeDefsByPackage.length == 0)

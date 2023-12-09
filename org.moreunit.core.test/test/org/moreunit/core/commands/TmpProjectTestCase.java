@@ -1,9 +1,8 @@
 package org.moreunit.core.commands;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -42,7 +41,7 @@ public abstract class TmpProjectTestCase
     protected static final String TEST_PROJECT = "test-project";
 
     protected IProject project;
-    private Set<String> extensionsToClean = newHashSet();
+    private Set<String> extensionsToClean = new HashSet<>();
 
     @Before
     public void createProject() throws Exception

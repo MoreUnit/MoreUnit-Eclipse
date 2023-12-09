@@ -1,8 +1,9 @@
 package org.moreunit.core.resources;
 
-import static com.google.common.collect.Lists.asList;
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -28,13 +29,16 @@ public class EclipseResourcesTest extends ResourcesTest
     @Override
     protected void assertContainsFiles(Project project, String... fileNames)
     {
-        super.assertContainsFiles(project, asList(".project", fileNames).toArray(new String[0]));
+        var names = new ArrayList<>();
+        names.add(".project");
+        names.addAll(Arrays.asList(fileNames));
+        super.assertContainsFiles(project, names.toArray(new String[0]));
     }
 
     @Override
     protected void assertContainsFolders(ResourceContainer container, String... folderNames)
     {
-        List<String> expectedFolders = namesOf(container.listFolders());
+        List<String> expectedFolders = new ArrayList<>(namesOf(container.listFolders()));
         expectedFolders.removeIf(".settings"::equals);
         assertThat(expectedFolders).containsExactly((Object[]) folderNames);
     }

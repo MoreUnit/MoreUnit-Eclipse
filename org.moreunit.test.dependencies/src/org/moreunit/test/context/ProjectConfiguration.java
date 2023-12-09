@@ -1,7 +1,6 @@
 package org.moreunit.test.context;
 
-import static com.google.common.collect.Lists.newArrayList;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -12,10 +11,10 @@ class ProjectConfiguration
     private final String projectName;
     private PropertiesConfiguration propertiesConfig;
     private TestProjectConfiguration testProjectConfig;
-    private final Collection<JavaType> mainTypes = newArrayList();
-    private final Collection<String> mainSources = newArrayList();
-    private final Collection<JavaType> testTypes = newArrayList();
-    private final Collection<String> testSources = newArrayList();
+    private final Collection<JavaType> mainTypes = new ArrayList<>();
+    private final Collection<String> mainSources = new ArrayList<>();
+    private final Collection<JavaType> testTypes = new ArrayList<>();
+    private final Collection<String> testSources = new ArrayList<>();
     private String mainSrcFolder;
     private String testSrcFolder;
 
