@@ -111,7 +111,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
                 addItem();
             }
         };
-        this.addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/add.png"));
+        this.addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/new_testcase.png"));
         this.addTestAction.setToolTipText("Add test");
 
         IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
