@@ -7,13 +7,11 @@
       plugin="org.moreunit.core">
 
    <description url="http://moreunit.org">
-      MoreUnit is an Eclipse plug-in that assists you in writing more
-unit tests. This feature provides basic tools available for all
-languages.
+      MoreUnit is an Eclipse plug-in that assists you in writing more unit tests. This feature provides basic tools available for all languages.
    </description>
 
    <copyright url="http://moreunit.org/#about">
-      MoreUnit-Team (Henneberger Vera, Walton Channing, Nicolas Demengel)
+      MoreUnit Team (Vera Henneberger, Walton Channing, Nicolas Demengel)
    </copyright>
 
    <license>
@@ -116,9 +114,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
 
    <plugin
          id="org.moreunit.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
