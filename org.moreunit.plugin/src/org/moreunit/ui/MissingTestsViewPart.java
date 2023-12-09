@@ -1,7 +1,6 @@
 package org.moreunit.ui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -44,7 +43,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         GridLayout layout = new GridLayout(1, true);
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
+
         projectComboBox = new Combo(composite, SWT.NONE);
         projectComboBox.setItems(getNamesOfJavaProjects());
         projectComboBox.addSelectionListener(this);
@@ -56,21 +55,13 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         treeViewer.setInput(this);
         treeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         treeViewer.addDoubleClickListener(this);
-        
+
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
     private String[] getNamesOfJavaProjects()
     {
-        List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
-        String[] result = new String[javaProjectsFromWorkspace.size()];
-
-        for (int i = 0; i < javaProjectsFromWorkspace.size(); i++)
-        {
-            result[i] = javaProjectsFromWorkspace.get(i).getElementName();
-        }
-
-        return result;
+        return PluginTools.getJavaProjectsFromWorkspace().stream().map(IJavaProject::getElementName).toArray(String[]::new);
     }
 
     @Override
@@ -101,14 +92,14 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         ICompilationUnit compilationUnit = (ICompilationUnit) selection.getFirstElement();
         new EditorUI().open(compilationUnit);
     }
-    
+
     @Override
     public void dispose()
     {
         super.dispose();
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
-    
+
     public void resourceChanged(IResourceChangeEvent event)
     {
         if(event.getType() == IResourceChangeEvent.PRE_DELETE)
@@ -116,13 +107,13 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             updateProjectsInComboBox();
             return;
         }
-        
+
         if (event.getType() != IResourceChangeEvent.POST_CHANGE)
             return;
-        
+
         if(selectedJavaProject == null)
             return;
-        
+
         IResourceDelta delta = event.getDelta();
         IResourceDelta projectDelta = delta.findMember(selectedJavaProject.getPath());
         if(projectDelta == null)
@@ -130,7 +121,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             checkNewProject(delta);
             return;
         }
-        
+
         final ArrayList<IResource> addedOrRemovedResource = new ArrayList<IResource>();
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
         {
@@ -146,7 +137,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
                 return true;
             }
         };
-        
+
         try
         {
             projectDelta.accept(visitor);
@@ -155,12 +146,12 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         {
             e.printStackTrace();
         }
-        
+
         if(!addedOrRemovedResource.isEmpty())
         {
             PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
             {
-                
+
                 public void run()
                 {
                     treeViewer.refresh();
@@ -168,7 +159,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             });
         }
     }
-    
+
     private void checkNewProject(IResourceDelta delta)
     {
         final ArrayList<IResource> addedProjects = new ArrayList<IResource>();
@@ -186,7 +177,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
                 return true;
             }
         };
-        
+
         try
         {
             delta.accept(visitor);
@@ -195,7 +186,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         {
             e.printStackTrace();
         }
-        
+
         if(!addedProjects.isEmpty())
         {
             updateProjectsInComboBox();

@@ -38,6 +38,6 @@ class JUnitTestSelectionLaunchConfigurationDelegate extends JUnitLaunchConfigura
     @Override
     protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException
     {
-        return testCasesToRun.toArray(new IMember[testCasesToRun.size()]);
+        return testCasesToRun.toArray(new IMember[0]);
     }
 }

@@ -28,7 +28,7 @@ public class EclipseResourcesTest extends ResourcesTest
     @Override
     protected void assertContainsFiles(Project project, String... fileNames)
     {
-        super.assertContainsFiles(project, asList(".project", fileNames).toArray(new String[fileNames.length + 1]));
+        super.assertContainsFiles(project, asList(".project", fileNames).toArray(new String[0]));
     }
 
     @Override

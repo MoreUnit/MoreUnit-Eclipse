@@ -38,7 +38,7 @@ public class MoveMethodParticipant extends MoveParticipant
         movedMethod = (IMethod) element;
         if(TypeFacade.isTestCase(movedMethod.getCompilationUnit().findPrimaryType()))
             return false;
-        
+
         javaFileFacade = new ClassTypeFacade(movedMethod.getCompilationUnit());
         testMethodDivinerFactory = new TestMethodDivinerFactory(movedMethod.getCompilationUnit());
         //testMethodDiviner = testMethodDivinerFactory.create();
@@ -62,24 +62,24 @@ public class MoveMethodParticipant extends MoveParticipant
         ICompilationUnit destinationCompilationUnit = (ICompilationUnit) destination.getParent();
         ClassTypeFacade destinationFacade = new ClassTypeFacade(destinationCompilationUnit);
         Collection<IType> correspondingTestCaseList = destinationFacade.getCorrespondingTestCases();
-        
+
         // if no tests or more than one, don't do anything
         if(correspondingTestCaseList.size() != 1)
         {
             return null;
         }
-        
+
         // get the destination for the testmethods
         IType targetType = correspondingTestCaseList.iterator().next();
-        
+
         List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(movedMethod);
-        
+
         List<Change> changes = new ArrayList<Change>();
         if(allTestMethods == null)
         {
             return null;
         }
-        
+
         for(IMethod testMethod : allTestMethods)
         {
             if(testMethod != null)
@@ -87,17 +87,17 @@ public class MoveMethodParticipant extends MoveParticipant
                changes.add(new MoveMethodChange(javaFileFacade.getType(), targetType, testMethod));
             }
         }
-        
+
         if(changes.size() == 1)
         {
             return changes.get(0);
         }
-        
+
         if(changes.size() > 0)
         {
-            return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+            return new CompositeChange(getName(), changes.toArray(new Change[0]));
         }
-        
+
         return null;
     }
 }

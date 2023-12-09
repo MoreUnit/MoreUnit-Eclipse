@@ -84,7 +84,7 @@ public class RenameMethodParticipant extends RenameParticipant
 
         if(changes.size() > 0)
         {
-            return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+            return new CompositeChange(getName(), changes.toArray(new Change[0]));
         }
 
         return null;

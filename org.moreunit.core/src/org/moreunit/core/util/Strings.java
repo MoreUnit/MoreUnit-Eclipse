@@ -65,7 +65,7 @@ public class Strings
     public static String[] split(String str, String regex)
     {
         List<String> parts = splitAsList(str, regex);
-        return parts.toArray(new String[parts.size()]);
+        return parts.toArray(new String[0]);
     }
 
     public static List<String> splitAsList(String str, String regex)
