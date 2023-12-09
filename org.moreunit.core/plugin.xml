@@ -123,5 +123,12 @@
             <description>Decorates source files which have a corresponding test file.</description>
       </decorator>
    </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.moreunit.core.commands.jumpCommand"
+            icon="icons/goto_input.png">
+      </image>
+   </extension>
 
 </plugin>
