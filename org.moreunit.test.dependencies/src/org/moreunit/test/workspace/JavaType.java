@@ -1,8 +1,8 @@
 package org.moreunit.test.workspace;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 public class JavaType
 {
@@ -41,7 +41,7 @@ public class JavaType
         if(! (other instanceof JavaType))
             return false;
         JavaType o = (JavaType) other;
-        return Objects.equal(typeName, o.typeName) && Objects.equal(packageName, o.packageName) && Objects.equal(typeKind, o.typeKind);
+        return Objects.equals(typeName, o.typeName) && Objects.equals(packageName, o.packageName) && Objects.equals(typeKind, o.typeKind);
     }
 
     @Override

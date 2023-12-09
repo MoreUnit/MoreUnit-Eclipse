@@ -1,7 +1,6 @@
 package org.moreunit.mock;
 
-import static com.google.common.collect.Sets.newHashSet;
-
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jdt.core.IMember;
@@ -98,7 +97,7 @@ public final class WizardDriver
 
         public void checkElements(String... elementNames)
         {
-            Set<Object> elementsToCheck = newHashSet();
+            Set<Object> elementsToCheck = new HashSet<>();
 
             for (String elName : elementNames)
             {

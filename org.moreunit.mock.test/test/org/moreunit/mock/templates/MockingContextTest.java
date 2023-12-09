@@ -1,6 +1,5 @@
 package org.moreunit.mock.templates;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -16,6 +15,8 @@ import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -266,7 +267,7 @@ public class MockingContextTest
 
         assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
     }
-    
+
     @Test
     public void should_create_before_method_if_it_does_not_exist_when_preparing_context__testNg() throws Exception
     {
@@ -384,7 +385,7 @@ public class MockingContextTest
 
     private MockingTemplate templateRequiringBeforeMethod(InclusionCondition... conditions)
     {
-        CodeTemplate templateRequiringBeforeMethod = new CodeTemplate("", Part.BEFORE_INSTANCE_METHOD, "", newHashSet(conditions));
+        CodeTemplate templateRequiringBeforeMethod = new CodeTemplate("", Part.BEFORE_INSTANCE_METHOD, "", Set.of(conditions));
         return new MockingTemplate("", "", "", asList(templateRequiringBeforeMethod));
     }
 

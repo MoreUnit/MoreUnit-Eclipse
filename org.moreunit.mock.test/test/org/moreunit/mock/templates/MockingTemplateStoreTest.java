@@ -1,11 +1,12 @@
 package org.moreunit.mock.templates;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +95,7 @@ public class MockingTemplateStoreTest
         templateStore.store(new MockingTemplates(asList(category2), new ArrayList<MockingTemplate>()));
 
         // then
-        assertThat(newHashSet(templateStore.getCategories())).isEqualTo(newHashSet(category1, category2));
+        assertThat(new HashSet<>(templateStore.getCategories())).isEqualTo(Set.of(category1, category2));
         assertThat(templateStore.getCategory("category1")).isEqualTo(category1);
         assertThat(templateStore.getCategory("category2")).isEqualTo(category2);
     }
@@ -110,8 +111,8 @@ public class MockingTemplateStoreTest
         templateStore.store(new MockingTemplates(asList(category2), asList(template2, template3)));
 
         // then
-        assertThat(templateStore.getTemplates(category1)).isEqualTo(newHashSet(template1, template3));
-        assertThat(templateStore.getTemplates(category2)).isEqualTo(newHashSet(template2));
+        assertThat(templateStore.getTemplates(category1)).isEqualTo(Set.of(template1, template3));
+        assertThat(templateStore.getTemplates(category2)).isEqualTo(Set.of(template2));
     }
 
     @Test

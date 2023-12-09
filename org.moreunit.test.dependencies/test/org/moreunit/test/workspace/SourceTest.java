@@ -11,14 +11,7 @@ public class SourceTest
     @Test
     public void should_complain_when_source_does_not_exist() throws Exception
     {
-        try
-        {
-            new Source(null, "doesNotExist.txt", this.getClass()).getSource();
-        }
-        catch (RuntimeException e)
-        {
-            assertThat(e.getMessage()).isEqualTo("Resource not found: 'doesNotExist.txt'");
-        }
+        assertThat(new Source(null, "doesNotExist.txt", this.getClass()).getSource()).isNull();
     }
 
     @Test

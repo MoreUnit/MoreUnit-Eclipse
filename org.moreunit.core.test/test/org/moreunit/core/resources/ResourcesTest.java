@@ -11,10 +11,7 @@ import org.fest.assertions.Condition;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
-public abstract class ResourcesTest
+abstract class ResourcesTest
 {
     protected abstract Workspace getWorkspaceToTest() throws Exception;
 
@@ -51,7 +48,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void wokspace_should_be_traversable_from_top_to_bottom_ignoring_resources_that_do_not_exist() throws Exception
+    public void workspace_should_be_traversable_from_top_to_bottom_ignoring_resources_that_do_not_exist() throws Exception
     {
         List<Project> projects = workspace.listProjects();
         assertThat(namesOf(projects)).containsExactly("project1", "project2");
@@ -69,7 +66,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void wokspace_should_be_traversable_from_bottom_to_top__existing_resource() throws Exception
+    public void workspace_should_be_traversable_from_bottom_to_top__existing_resource() throws Exception
     {
         File fileA2A = workspace.getFile("/project1/folderA/subfolderA2/subsubfolderA/fileA2A");
 
@@ -81,7 +78,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void wokspace_should_be_traversable_from_bottom_to_top__non_existing_resource() throws Exception
+    public void workspace_should_be_traversable_from_bottom_to_top__non_existing_resource() throws Exception
     {
         File fileD3 = workspace.getFile("/project1/folderD/fileD3");
 
@@ -316,7 +313,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void pathes_should_know_when_they_are_relatives() throws Exception
+    public void paths_should_know_when_they_are_relatives() throws Exception
     {
         Path childPath = workspace.path("/some/path/with/lots/of/segments");
         Path parentPath = workspace.path("/some/path/");
@@ -329,7 +326,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void pathes_should_return_themselves_without_the_last_segment() throws Exception
+    public void paths_should_return_themselves_without_the_last_segment() throws Exception
     {
         Path longPath = workspace.path("/some/path/with/lots/of/segments");
         assertThat(longPath.withoutLastSegment().toString()).isEqualTo("/some/path/with/lots/of");
@@ -348,7 +345,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void absolute_pathes_should_return_themselves_up_to_a_given_segment() throws Exception
+    public void absolute_paths_should_return_themselves_up_to_a_given_segment() throws Exception
     {
         Path absolutePath = workspace.path("/some/path/with/lots/of/segments");
 
@@ -369,7 +366,7 @@ public abstract class ResourcesTest
     }
 
     @Test
-    public void relative_pathes_should_return_themselves_up_to_a_given_segment() throws Exception
+    public void relative_paths_should_return_themselves_up_to_a_given_segment() throws Exception
     {
         Path relativePath = workspace.path("some/path/with/lots/of/segments");
 
@@ -501,13 +498,9 @@ public abstract class ResourcesTest
 
     protected List<String> namesOf(List< ? extends Resource> resources)
     {
-        return Lists.transform(resources, new Function<Resource, String>()
-        {
-            public String apply(Resource r)
-            {
-                return r.getName();
-            }
-        });
+        return resources.stream()
+                .map(Resource::getName)
+                .toList();
     }
 
     private String[] none()

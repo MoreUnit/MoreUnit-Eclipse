@@ -1,10 +1,10 @@
 package org.moreunit.test.context;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
@@ -26,15 +26,13 @@ import org.moreunit.test.workspace.WorkspaceHandler;
 import org.moreunit.test.workspace.WorkspaceHelper;
 import org.moreunit.util.SearchScopeSingelton;
 
-import com.google.common.base.Strings;
-
 @SuppressWarnings("restriction")
 class WorkspaceConfiguration
 {
     private static final Map<TestType, String> TEST_TYPE_TO_PREF_VALUE;
     static
     {
-        Map<TestType, String> m = newHashMap();
+        Map<TestType, String> m = new HashMap<>();
         m.put(TestType.JUNIT3, "junit3");
         m.put(TestType.JUNIT4, "junit4");
         m.put(TestType.JUNIT5, "junit5");
@@ -42,7 +40,7 @@ class WorkspaceConfiguration
         TEST_TYPE_TO_PREF_VALUE = m;
     }
 
-    private final Map<String, ProjectConfiguration> projectConfigs = newHashMap();
+    private final Map<String, ProjectConfiguration> projectConfigs = new HashMap<>();
     private PreferencesConfiguration preferencesConfig;
 
     public WorkspaceHandler initWorkspace(Class< ? > loadingClass, String projectPrefix)
@@ -115,11 +113,11 @@ class WorkspaceConfiguration
     private void createTestSources(ProjectHandler projectHandler, ProjectConfiguration projectConfig)
     {
         String testSourcefolderName = projectConfig.getTestSourceFolder();
-        if(Strings.isNullOrEmpty(testSourcefolderName) && preferencesConfig != null && ! Strings.isNullOrEmpty(preferencesConfig.getTestSourceFolder()))
+        if(StringUtils.isNullOrEmpty(testSourcefolderName) && preferencesConfig != null && ! StringUtils.isNullOrEmpty(preferencesConfig.getTestSourceFolder()))
         {
             testSourcefolderName = preferencesConfig.getTestSourceFolder();
         }
-        if(Strings.isNullOrEmpty(testSourcefolderName))
+        if(StringUtils.isNullOrEmpty(testSourcefolderName))
         {
             testSourcefolderName = PreferenceConstants.PREF_JUNIT_PATH_DEFAULT;
         }
