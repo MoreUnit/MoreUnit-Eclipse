@@ -104,7 +104,7 @@ public class RenamePackageParticipant extends RenameParticipant
             }
         }
 
-        return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+        return new CompositeChange(getName(), changes.toArray(new Change[0]));
     }
 
     private List<IPackageFragmentRoot> getSourceFolderFromContext()

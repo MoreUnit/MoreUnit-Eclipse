@@ -150,24 +150,12 @@ public class TemplateStyleSelector implements SelectionListener
 
     private String[] categoryNames()
     {
-        String[] categoryNames = new String[categories.size()];
-        int i = 0;
-        for (Category category : categories)
-        {
-            categoryNames[i++] = category.name();
-        }
-        return categoryNames;
+        return categories.stream().map(Category::name).toArray(String[]::new);
     }
 
     private String[] templateNames()
     {
-        String[] templateNames = new String[categoryTemplates.size()];
-        int i = 0;
-        for (MockingTemplate template : categoryTemplates)
-        {
-            templateNames[i++] = template.name();
-        }
-        return templateNames;
+        return categoryTemplates.stream().map(MockingTemplate::name).toArray(String[]::new);
     }
 
     public void initValues(IJavaProject project)

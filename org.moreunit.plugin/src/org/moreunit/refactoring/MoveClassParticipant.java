@@ -124,7 +124,7 @@ public class MoveClassParticipant extends MoveParticipant
 
             if(changes.size() > 0)
             {
-                return new CompositeChange(getName(), changes.toArray(new Change[changes.size()]));
+                return new CompositeChange(getName(), changes.toArray(new Change[0]));
             }
         }
         catch (Exception e)
