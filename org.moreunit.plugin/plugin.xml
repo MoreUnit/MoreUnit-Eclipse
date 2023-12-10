@@ -129,6 +129,20 @@
                label="Run Tests"
                menubarPath="org.moreunit.ui.compilationunit.menu.moreunit/top">
          </action>
+         <visibility>
+            <not>
+               <or>
+                  <objectState
+                        name="name"
+                        value="module-info.java">
+                  </objectState>
+                  <objectState
+                        name="name"
+                        value="package-info.java">
+                  </objectState>
+               </or>
+            </not>
+         </visibility>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -141,6 +155,20 @@
                label="Jump to Test/Member under Test"
                menubarPath="org.moreunit.ui.compilationunit.menu.moreunit/top">
          </action>
+         <visibility>
+            <not>
+               <or>
+                  <objectState
+                        name="name"
+                        value="module-info.java">
+                  </objectState>
+                  <objectState
+                        name="name"
+                        value="package-info.java">
+                  </objectState>
+               </or>
+            </not>
+         </visibility>
       </objectContribution>
 
       <objectContribution
