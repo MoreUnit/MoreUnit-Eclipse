@@ -38,7 +38,7 @@ public interface PreferenceConstants
     boolean DEFAULT_SWITCH_TO_MATCHING_METHOD = true;
     String DEFAULT_TEST_PACKAGE_PREFIX = "";
     String DEFAULT_TEST_PACKAGE_SUFFIX = "";
-    String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+    String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
     String DEFAULT_TEST_SUPERCLASS = "";
     boolean DEFAULT_EXTENDED_TEST_METHOD_SEARCH = true;
     boolean DEFAULT_ENABLE_TEST_METHOD_SEARCH_BY_NAME = true;

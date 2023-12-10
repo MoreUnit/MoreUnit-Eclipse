@@ -73,7 +73,7 @@ public class Preferences
         store.setDefault(PreferenceConstants.SWITCH_TO_MATCHING_METHOD, PreferenceConstants.DEFAULT_SWITCH_TO_MATCHING_METHOD);
         store.setDefault(PreferenceConstants.TEST_PACKAGE_PREFIX, PreferenceConstants.DEFAULT_TEST_PACKAGE_PREFIX);
         store.setDefault(PreferenceConstants.TEST_SUPERCLASS, PreferenceConstants.DEFAULT_TEST_SUPERCLASS);
-        store.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
+        store.setDefault(PreferenceConstants.TEST_METHOD_TYPE, PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX);
         store.setDefault(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, PreferenceConstants.DEFAULT_EXTENDED_TEST_METHOD_SEARCH);
         store.setDefault(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, PreferenceConstants.DEFAULT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
         store.setDefault(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
