@@ -255,7 +255,7 @@
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
 			id="org.moreunit.testdecorator"
-			label="Decorate Classes with Test Case"
+			label="Tested Class Indicator (MoreUnit)"
 			state="true"
 			class="org.moreunit.decorator.UnitDecorator"
 			adaptable="true"
@@ -264,7 +264,7 @@
 				<objectClass name="org.eclipse.core.resources.IResource"/>
 			</enablement>
 			<description>
-				Classes which have a Testclass get decorated.
+				Decorates classes which have at least one test.
 			</description>
 		</decorator>
 	</extension>
