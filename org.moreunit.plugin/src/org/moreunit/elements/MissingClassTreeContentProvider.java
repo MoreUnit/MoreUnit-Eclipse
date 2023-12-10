@@ -16,10 +16,10 @@ import org.moreunit.util.PluginTools;
 
 public class MissingClassTreeContentProvider implements ITreeContentProvider
 {
-    
+
     public MissingClassTreeContentProvider()
     {
-        
+
     }
 
     public Object[] getChildren(Object arg0)
@@ -57,9 +57,14 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                             ICompilationUnit[] compilationUnits = ((IPackageFragment) javaPackage).getCompilationUnits();
                             for (ICompilationUnit compilationUnit : compilationUnits)
                             {
-                                ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-                                if(!TypeFacade.isTestCase(compilationUnit) && !classTypeFacade.hasTestCase())
-                                    elements.add(compilationUnit);
+                                if(compilationUnit.findPrimaryType() != null)
+                                {
+                                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                                    if(! TypeFacade.isTestCase(compilationUnit) && ! classTypeFacade.hasTestCase())
+                                    {
+                                        elements.add(compilationUnit);
+                                    }
+                                }
                             }
                         }
                     }
