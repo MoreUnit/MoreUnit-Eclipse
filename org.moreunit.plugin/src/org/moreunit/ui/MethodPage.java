@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
@@ -59,6 +60,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         this.treeViewer.setLabelProvider(new JavaElementLabelProvider());
         this.treeViewer.setInput(this);
         this.treeViewer.addDoubleClickListener(this);
+        treeViewer.setComparator(new ViewerComparator());
 
         createToolbar();
     }
