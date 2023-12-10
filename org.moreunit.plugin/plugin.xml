@@ -51,7 +51,26 @@
 	      contextId="org.eclipse.jdt.ui.javaEditorScope"
 	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
-	</extension>
+       <key
+             sequence="M2+M3+Q M"
+             commandId="org.eclipse.ui.views.showView"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+          <parameter
+                id="org.eclipse.ui.views.showView.viewId"
+                value="org.moreunit.missingtestmethodview">
+          </parameter>
+       </key>
+       <key
+             platform="carbon"
+             sequence="M1+M3+Q M"
+             commandId="org.eclipse.ui.views.showView"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+          <parameter
+                id="org.eclipse.ui.views.showView.viewId"
+                value="org.moreunit.missingtestmethodview">
+          </parameter>
+       </key>
+  </extension>
 
    <extension point="org.eclipse.ui.menus">
       <menuContribution
@@ -504,18 +523,6 @@
    			class="org.moreunit.ui.MissingTestmethodViewPart"
    			icon="icons/moreunitLogo.gif"
    			category="org.moreunit.ui"/>
-   </extension>
-   <!--
-   <extension point="org.eclipse.ui.views">
-   		<category id="org.moreunit.ui"
-   			name="MoreUnit"/>
-   		<view id="org.moreunit.missingtestclassview"
-   			name="Missing Test Classes"
-   			class="org.moreunit.ui.MissingTestclassViewPart"/>
-   </extension>
-   -->
-   <extension point="org.eclipse.ui.views">
-   		<category id="org.moreunit.ui" name="MoreUnit"/>
    		<view id="org.moreunit.missingtestsview"
    			  class="org.moreunit.ui.MissingTestsViewPart"
    			  icon="icons/moreunitLogo.gif"
@@ -531,5 +538,26 @@
          <condition type="dependency" value="org.codehaus.groovy.eclipse.ui" />
          <jumper class="org.moreunit.handler.Jumper" />
       </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <viewShortcut
+               id="org.moreunit.missingtestmethodview">
+         </viewShortcut>
+         <viewShortcut
+               id="org.moreunit.missingtestsview">
+         </viewShortcut>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+         <viewShortcut
+               id="org.moreunit.missingtestmethodview">
+         </viewShortcut>
+         <viewShortcut
+               id="org.moreunit.missingtestsview">
+         </viewShortcut>
+      </perspectiveExtension>
    </extension>
 </plugin>
