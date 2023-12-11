@@ -12,3 +12,6 @@ Thumbs.db
 
 # Tycho temp
 .tycho*
+
+# JVM crash dumps
+hs_err*.log
