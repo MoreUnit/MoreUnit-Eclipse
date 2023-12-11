@@ -1,9 +1,14 @@
 version: 2
 updates:
 - package-ecosystem: maven
-  directory: "/org.moreunit.build"
+  directory: /
   schedule:
     interval: daily
   open-pull-requests-limit: 10
   reviewers:
   - apupier
+
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: daily
