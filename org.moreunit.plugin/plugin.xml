@@ -560,4 +560,29 @@
          </viewShortcut>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.codeMiningProviders">
+      <codeMiningProvider
+            class="org.moreunit.codemining.MoreUnitCodeMiningProvider"
+            id="org.moreunit.MoreUnitCodeMiningProvider"
+            label="MoreUnit Code Mining">
+        <enabledWhen>
+          <and>
+            <with variable="editor">
+               <instanceof value="org.eclipse.jdt.internal.ui.javaeditor.JavaEditor" />
+            </with>
+            <with variable="editorInput">
+               <or>
+                  <adapt type="org.eclipse.core.resources.IFile">
+                     <test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.jdt.core.javaSource" />
+                  </adapt>
+                  <adapt type="org.eclipse.jdt.core.IClassFile">
+                     <instanceof value="org.eclipse.jdt.core.IClassFile" />
+                  </adapt>
+               </or>
+            </with>
+         </and>
+      </enabledWhen>
+      </codeMiningProvider>
+   </extension>
 </plugin>

@@ -25,6 +25,7 @@ public interface PreferenceConstants
     String ENABLE_TEST_METHOD_SEARCH_BY_NAME = "org.moreunit.enableTestMethodSearchByName";
     String TEST_CLASS_NAME_TEMPLATE = "org.moreunit.testClassNameTemplate";
     String GENERATE_COMMENTS_FOR_TEST_METHOD = "org.moreunit.generateCommentsForTestMethod";
+    String ENABLE_MOREUNIT_CODE_MINING = "org.moreunit.enableMoreUnitCodeMining";
 
     String TEST_TYPE = "org.moreunit.test_type";
     String TEST_TYPE_VALUE_JUNIT_3 = "junit3";
@@ -62,6 +63,7 @@ public interface PreferenceConstants
     String TEXT_EXTENDED_TEST_METHOD_SEARCH = "Enable test method search \"by call\"";
     String TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME = "Enable test method search \"by name\"";
     String TEXT_GENERATE_COMMENTS_FOR_TEST_METHOD = "Generate comments for test methods";
+    String TEXT_ENABLE_MOREUNIT_CODEMINING = "Enable MoreUnit Code Mining (Beta)";
     String TEXT_ANNOTATION_MODE = "Annotate tested methods";
     String TEST_ANNOTATION_MODE_DISABLED = "Disabled";
     String TEST_ANNOTATION_MODE_BY_NAME = "Search by method name";

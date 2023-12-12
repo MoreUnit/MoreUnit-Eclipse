@@ -42,6 +42,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Text packageSuffixTextField;
     private Text superClassTextField;
     private Button addCommentsToTestMethodCheckbox;
+    private Button enableMoreUnitCodeMining;
     private Button extendedSearchCheckbox;
     private Button enableSearchByNameCheckbox;
 
@@ -108,6 +109,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         createExtendedSearchCheckboxes(parentWith2Cols);
         createTestAnnotationModeRadioButtons(parentWith2Cols);
         createAddCommentsToTestMethodsCheckbox(parentWith2Cols);
+        createEnableMoreUnitCodeMiningCheckbox(parentWith2Cols);
 
         checkStateOfMethodPrefixButton();
     }
@@ -323,6 +325,14 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         addCommentsToTestMethodCheckbox.setSelection(preferences.shouldGenerateCommentsForTestMethod(javaProject));
     }
 
+    private void createEnableMoreUnitCodeMiningCheckbox(Composite parent)
+    {
+        enableMoreUnitCodeMining = new Button(parent, SWT.CHECK);
+        enableMoreUnitCodeMining.setText(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING);
+        enableMoreUnitCodeMining.setLayoutData(layoutForOneLineControls);
+        enableMoreUnitCodeMining.setSelection(preferences.shouldEnableMoreUnitCodeMining(javaProject));
+    }
+
     public void saveProperties()
     {
         preferences.setTestType(javaProject, getSelectedTestType());
@@ -348,6 +358,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         preferences.setShouldUseTestMethodExtendedSearch(javaProject, extendedSearchCheckbox.getSelection());
         preferences.setShouldUseTestMethodSearchByName(javaProject, enableSearchByNameCheckbox.getSelection());
         preferences.setGenerateCommentsForTestMethod(javaProject, addCommentsToTestMethodCheckbox.getSelection());
+        preferences.setEnableMoreUnitCodeMining(javaProject, enableMoreUnitCodeMining.getSelection());
 
         if(testAnnotationsByNameAndByCallButton.getSelection())
         {

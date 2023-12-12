@@ -478,6 +478,20 @@ public class Preferences
         getProjectStore(javaProject).setValue(PreferenceConstants.GENERATE_COMMENTS_FOR_TEST_METHOD, addComments);
     }
 
+    public boolean shouldEnableMoreUnitCodeMining(IJavaProject javaProject)
+    {
+        if(storeToRead(javaProject).contains(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING))
+        {
+            return storeToRead(javaProject).getBoolean(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING);
+        }
+        return storeToRead(javaProject).getDefaultBoolean(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING);
+    }
+
+    public void setEnableMoreUnitCodeMining(IJavaProject javaProject, boolean enableMoreUnitCodeMining)
+    {
+        getProjectStore(javaProject).setValue(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING, enableMoreUnitCodeMining);
+    }
+
     public MethodSearchMode getMethodSearchMode(IJavaProject javaProject)
     {
         boolean searchByCall = getBooleanValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, javaProject);
