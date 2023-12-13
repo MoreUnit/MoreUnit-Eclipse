@@ -23,7 +23,7 @@ public class MethodFacade
     {
         if(shouldTestMethodsBeAnnotated(method.getJavaProject()))
         {
-            return method.getAnnotation(MoreUnitContants.TEST_ANNOTATION_NAME).exists();
+            return MoreUnitContants.TEST_ANNOTATION_NAMES.stream().anyMatch(n -> method.getAnnotation(n).exists());
         }
 
         try

@@ -17,7 +17,11 @@ public class MoreUnitContants
 
     public static final List<String> SUPPORTED_EXTENSIONS = asList("java", "groovy");
 
-    public static final String TEST_ANNOTATION_NAME = "Test";
+    public static final List<String> TEST_ANNOTATION_NAMES = asList("Test",
+                                                                    // JUnit-Jupiter
+                                                                    "RepeatedTest", "ParameterizedTest", "TestFactory",
+                                                                    // io.github.artsok:rerunner-jupiter
+                                                                    "RepeatedIfExceptionsTest", "ParameterizedRepeatedIfExceptionsTest");
     public static final String GETTER_PREFIX = "get";
     public static final String SETTER_PREFIX = "set";
 

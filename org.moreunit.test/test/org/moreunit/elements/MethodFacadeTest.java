@@ -35,6 +35,37 @@ public class MethodFacadeTest extends ContextTestCase
         assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
     }
 
+    @Preferences(testType = TestType.JUNIT5)
+    @Test
+    public void isTestMethod_should_return_true_when_junit5_method_and_junit5_pref() throws JavaModelException
+    {
+        MethodHandler method = typeHandler.addMethod("public void testIt()");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        
+        method = typeHandler.addMethod("@Test public void testIt2()", "");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+
+        method = typeHandler.addMethod("@ParameterizedTest public void testIt2()", "");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        
+        method = typeHandler.addMethod("@RepeatedTest public void testIt2()", "");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        
+        method = typeHandler.addMethod("@TestFactory public void testIt2()", "");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+    }
+
+    @Preferences(testType = TestType.JUNIT5)
+    @Test
+    public void isTestMethod_should_return_true_when_rerunner_junit5_method_and_junit5_pref() throws JavaModelException
+    {
+        MethodHandler method = typeHandler.addMethod("@RepeatedIfExceptionsTest public void testIt2()", "");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        
+        method = typeHandler.addMethod("@ParameterizedRepeatedIfExceptionsTest public void testIt2()", "");
+        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+    }
+    
     @Preferences(testType = TestType.JUNIT4)
     @Test
     public void isTestMethod_should_return_true_when_junit4_method_and_junit4_pref() throws JavaModelException
