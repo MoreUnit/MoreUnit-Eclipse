@@ -9,9 +9,9 @@ import org.moreunit.handler.RunTestsActionExecutor;
 
 /**
  * This class delegates the action from the menu in the editor to run the test
- * corresponding to the open type or selected method.
+ * corresponding to the open type.
  */
-public class RunTestsOfSelectedMemberAction implements IEditorActionDelegate
+public class DebugTestAction implements IEditorActionDelegate
 {
 
     private IEditorPart editorPart;
@@ -23,7 +23,7 @@ public class RunTestsOfSelectedMemberAction implements IEditorActionDelegate
 
     public void run(IAction action)
     {
-        RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
+        RunTestsActionExecutor.getInstance().executeRunTestAction(editorPart, ILaunchManager.DEBUG_MODE);
     }
 
     public void selectionChanged(IAction action, ISelection selection)

@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -79,10 +80,10 @@ public class RunTestsActionExecutor
         return instance;
     }
 
-    public void executeRunTestAction(IEditorPart editorPart)
+    public void executeRunTestAction(IEditorPart editorPart, String launchMode)
     {
         ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        executeRunAllTestsAction(editorPart, compilationUnit);
+        executeRunAllTestsAction(editorPart, compilationUnit, launchMode);
     }
 
     private ICompilationUnit createCompilationUnitFrom(IEditorPart editorPart)
@@ -91,12 +92,12 @@ public class RunTestsActionExecutor
         return JavaCore.createCompilationUnitFrom(file);
     }
 
-    public void executeRunTestAction(ICompilationUnit compilationUnit)
+    public void executeRunTestAction(ICompilationUnit compilationUnit, String launchMode)
     {
-        executeRunAllTestsAction(null, compilationUnit);
+        executeRunAllTestsAction(null, compilationUnit, launchMode);
     }
 
-    private void executeRunAllTestsAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    private void executeRunAllTestsAction(IEditorPart editorPart, ICompilationUnit compilationUnit, String launchMode)
     {
         IType selectedJavaType = compilationUnit.findPrimaryType();
 
@@ -129,16 +130,16 @@ public class RunTestsActionExecutor
             testCases.add(selectedJavaType);
         }
 
-        runTests(testCases);
+        runTests(testCases, launchMode);
     }
 
-    public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart)
+    public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, String launchMode)
     {
         ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        executeRunTestsOfSelectedMemberAction(editorPart, compilationUnit);
+        executeRunTestsOfSelectedMemberAction(editorPart, compilationUnit, launchMode);
     }
 
-    private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit)
+    private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit, String launchMode)
     {
         IType selectedJavaType = compilationUnit.findPrimaryType();
 
@@ -181,7 +182,7 @@ public class RunTestsActionExecutor
             testElements.add(getTestElementFromTestCase(editorPart, selectedJavaType));
         }
 
-        runTests(testElements);
+        runTests(testElements, launchMode);
     }
 
     /**
@@ -204,13 +205,13 @@ public class RunTestsActionExecutor
         return testCaseType;
     }
 
-    private void runTests(Collection< ? extends IMember> testElements)
+    private void runTests(Collection< ? extends IMember> testElements, String launchMode)
     {
         IJavaElement aTestMember = testElements.iterator().next();
         if(aTestMember != null)
         {
             String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
-            testLauncher.launch(testType, testElements);
+            testLauncher.launch(testType, testElements, launchMode);
         }
     }
 }

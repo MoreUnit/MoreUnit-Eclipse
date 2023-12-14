@@ -1,5 +1,6 @@
 package org.moreunit.actions;
 
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,7 +24,7 @@ public class RunTestFromCompilationUnitAction implements IObjectActionDelegate
 
     public void run(IAction action)
     {
-        RunTestsActionExecutor.getInstance().executeRunTestAction(compilationUnit);
+        RunTestsActionExecutor.getInstance().executeRunTestAction(compilationUnit, ILaunchManager.RUN_MODE);
     }
 
     public void selectionChanged(IAction action, ISelection selection)

@@ -50,7 +50,7 @@ public class TestLauncher
         this.additionalShortcutProvider = additionalShortcutProvider;
     }
 
-    public void launch(String testType, Collection< ? extends IMember> testMembers)
+    public void launch(String testType, Collection< ? extends IMember> testMembers, String launchMode)
     {
         ILaunchShortcut launchShortcut = getLaunchShortcut(testType, testMembers);
         if(launchShortcut == null)
@@ -59,7 +59,7 @@ public class TestLauncher
         }
         else
         {
-            launchShortcut.launch(createSelection(testMembers), ILaunchManager.RUN_MODE);
+            launchShortcut.launch(createSelection(testMembers), launchMode);
         }
     }
 
