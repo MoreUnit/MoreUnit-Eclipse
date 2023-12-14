@@ -13,7 +13,7 @@ import org.moreunit.handler.RunTestsActionExecutor;
  * This class delegates the action from the menu in the package explorer to run
  * the test case corresponding to the selected type.
  */
-public class RunTestFromTypeAction implements IObjectActionDelegate
+public class DebugTestFromTypeAction implements IObjectActionDelegate
 {
 
     private IType type;
@@ -24,7 +24,7 @@ public class RunTestFromTypeAction implements IObjectActionDelegate
 
     public void run(IAction action)
     {
-        RunTestsActionExecutor.getInstance().executeRunTestAction(type.getCompilationUnit(), ILaunchManager.RUN_MODE);
+        RunTestsActionExecutor.getInstance().executeRunTestAction(type.getCompilationUnit(), ILaunchManager.DEBUG_MODE);
     }
 
     public void selectionChanged(IAction action, ISelection selection)
