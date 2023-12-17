@@ -43,7 +43,7 @@ public interface PreferenceConstants
     String DEFAULT_TEST_SUPERCLASS = "";
     boolean DEFAULT_EXTENDED_TEST_METHOD_SEARCH = true;
     boolean DEFAULT_ENABLE_TEST_METHOD_SEARCH_BY_NAME = true;
-    String DEFAULT_TEST_CLASS_NAME_TEMPLATE = TestFileNamePattern.SRC_FILE_VARIABLE + "Test";
+    String DEFAULT_TEST_CLASS_NAME_TEMPLATE = TestFileNamePattern.SRC_FILE_VARIABLE + "(Test|IT)";
     String DEFAULT_TEST_METHOD_DEFAULT_CONTENT = "throw new RuntimeException(\"not yet implemented\");";
     String DEFAULT_TEST_ANNOTATION_MODE = "OFF";
 
