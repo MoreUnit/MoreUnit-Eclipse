@@ -1,6 +1,6 @@
 package org.moreunit.preferences;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class PreferencesConverterTest extends ContextTestCase
     {
         testUnitSourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
         sampleFolder.delete(true, null);
-        
+
         unit1SourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
         unit2SourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
         unit3SourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
@@ -62,29 +62,29 @@ public class PreferencesConverterTest extends ContextTestCase
         mappingList.add(mapping1);
         mappingList.add(mapping2);
 
-        String expected = String.format("%s:%s:%s:%s#%s:%s:%s:%s", unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName() 
+        String expected = String.format("%s:%s:%s:%s#%s:%s:%s:%s", unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName()
                                                                  , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
                                                                  , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
                                                                  , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
-    
+
         assertThat(PreferencesConverter.convertSourceMappingsToString(mappingList)).isEqualTo(expected);
     }
-    
+
     @Test
     public void createStringFromSourceMapping_should_convert_multiple_sourcefolder_to_concatenated_mapping_string()
     {
         SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, unit3SourceFolder);
-        
+
         List<IPackageFragmentRoot> asList = new ArrayList<IPackageFragmentRoot>();
         asList.add(unit1SourceFolder);
         asList.add(unit2SourceFolder);
         mapping.setSourceFolderList(asList);
-        
+
         String expected = String.format("%s:%s:%s:%s#%s:%s:%s:%s", unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName()
                                                                  , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName()
                                                                  , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
                                                                  , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
-        
+
         assertThat(PreferencesConverter.createStringFromSourceMapping(mapping)).isEqualTo(expected);
     }
 
@@ -112,7 +112,7 @@ public class PreferencesConverterTest extends ContextTestCase
     {
         String mappingString = String.format("%s:%s:%s:%s#%s:%s:%s:%s", unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName()
                                                                       , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
-                                                                      , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName() 
+                                                                      , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
                                                                       , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
 
         List<SourceFolderMapping> mappingList = PreferencesConverter.convertStringToSourceMappingList(mappingString);

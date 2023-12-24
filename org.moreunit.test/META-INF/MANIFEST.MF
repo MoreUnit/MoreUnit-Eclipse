@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.moreunit,
  org.junit,
  org.moreunit.test.dependencies,
- org.testng.eclipse
+ org.testng.eclipse,
+ assertj-core;bundle-version="3.24.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
 Automatic-Module-Name: org.moreunit.test

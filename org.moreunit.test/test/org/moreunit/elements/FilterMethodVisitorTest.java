@@ -1,6 +1,6 @@
 package org.moreunit.elements;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -29,12 +29,12 @@ public class FilterMethodVisitorTest extends ContextTestCase
     public void getPrivateMethods_should_return_simple_getter() throws CoreException
     {
         IType typeWithOnePrivateMethod = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
-        
+
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOnePrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertThat(privateMethods).hasSize(1);
         assertThat(privateMethods.get(0).getName().toString()).isEqualTo("getNumberOne");
-        
+
         // cleanup
         WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOnePrivateMethod});
     }
@@ -50,7 +50,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         assertThat(privateMethods).hasSize(2);
         assertThat(privateMethods.get(0).getName().toString()).isEqualTo("getNumberOne");
         assertThat(privateMethods.get(1).getName().toString()).isEqualTo("getNumberOne");
-        
+
         // cleanup
         WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOverloadedPrivateMethod});
     }
@@ -66,7 +66,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         assertThat(privateMethods).hasSize(2);
         assertThat(privateMethods.get(0).getName().toString()).isEqualTo("getNumberOne");
         assertThat(privateMethods.get(1).getName().toString()).isEqualTo("getNumberOne");
-        
+
         // cleanup
         WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOverloadedPrivateMethod});
     }
@@ -85,7 +85,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         assertThat(filterMethodVisitor.isPrivateMethod(publicMethod.get())).isFalse();
         assertThat(filterMethodVisitor.isPrivateMethod(protectedMethod.get())).isFalse();
         assertThat(filterMethodVisitor.isPrivateMethod(defaultMethod.get())).isFalse();
-        
+
         // cleanup
         WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {createdClass.get()});
     }
@@ -100,7 +100,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(createdClass.get());
         assertThat(filterMethodVisitor.isPrivateMethod(privateMethod.get())).isTrue();
         assertThat(filterMethodVisitor.isPrivateMethod(overloadedPrivateMethod.get())).isTrue();
-        
+
         // cleanup
         WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {createdClass.get()});
     }
@@ -110,7 +110,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
     public void getFieldDeclarations_should_return_two_fields() throws CoreException
     {
         IType typeWithTwoFields = context.getCompilationUnitHandler("te.st.SomeClass").getPrimaryTypeHandler().get();
-        
+
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoFields);
         List<FieldDeclaration> fieldDeclarations = filterMethodVisitor.getFieldDeclarations();
         assertThat(fieldDeclarations).hasSize(2);
@@ -122,7 +122,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         fieldDeclaration = fieldDeclarations.get(1);
         variable = (VariableDeclarationFragment) fieldDeclaration.fragments().get(0);
         assertThat(variable.getName().getFullyQualifiedName()).isEqualTo("fieldName2");
-        
+
         // cleanup
        typeWithTwoFields.getCompilationUnit().delete(true, null);
     }
@@ -138,7 +138,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         assertThat(getterMethods).hasSize(2);
         assertThat(getterMethods.get(0).getName().toString()).isEqualTo("getFieldName1");
         assertThat(getterMethods.get(1).getName().toString()).isEqualTo("getFieldName2");
-        
+
         // cleanup
         typeWithTwoGetters.getCompilationUnit().delete(true, null);
     }
@@ -154,7 +154,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         assertThat(setterMethods).hasSize(2);
         assertThat(setterMethods.get(0).getName().toString()).isEqualTo("setFieldName1");
         assertThat(setterMethods.get(1).getName().toString()).isEqualTo("setFieldName2");
-        
+
         // cleanup
         typeWithTwoSetters.getCompilationUnit().delete(true, null);
 
@@ -168,7 +168,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoSetters);
         IMethod method = typeWithTwoSetters.getMethod("getFieldName1", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isTrue();
-        
+
         // cleanup
         typeWithTwoSetters.getCompilationUnit().delete(true, null);
     }
@@ -182,7 +182,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = typeWithTwoSetters.getMethod("getTheWorld", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isFalse();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_getter_but_different_type.java.txt")
     public void isGetterMethod_should_return_false_when_field_has_different_type()
@@ -192,7 +192,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("getTheWorld", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isFalse();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_getter_and_fieldname_with_underscore.txt")
     public void isGetterMethod_should_return_true_when_field_starts_with_underscore()
@@ -202,7 +202,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("getFieldName1", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isTrue();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_getter_and_fieldname_with_member_prefix.txt")
     public void isGetterMethod_should_return_true_when_field_starts_with_member_prefix()
@@ -212,7 +212,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("getFieldName1", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isTrue();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_method_and_fieldname.java.txt")
     public void isGetterMethod_should_return_false_when_method_does_not_start_with_get()
@@ -222,7 +222,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("aFieldName1", new String[] {});
         assertThat(filterMethodVisitor.isGetterMethod(method)).isFalse();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_setter.java.txt")
     public void isSetterMethod_should_return_true_when_field_exists()
@@ -232,7 +232,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("setFieldName1", new String[] { "QString;"});
         assertThat(filterMethodVisitor.isSetterMethod(method)).isTrue();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_setter_with_two_parameters.java.txt")
     public void isSetterMethod_should_return_false_when_setter_has_more_than_one_parameter()
@@ -242,7 +242,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("setFieldName1", new String[] { "QString;", "I" });
         assertThat(filterMethodVisitor.isSetterMethod(method)).isFalse();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_setter_with_different_type.java.txt")
     public void isSetterMethod_should_return_false_when_setter_has_different_type()
@@ -252,7 +252,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("setFieldName1", new String[] { "QString;" });
         assertThat(filterMethodVisitor.isSetterMethod(method)).isFalse();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_setter_and_fieldname_with_underscore.java.txt")
     public void isSetterMethod_should_return_true_when_field_starts_with_underscore()
@@ -262,7 +262,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("setFieldName1", new String[] { "QString;"});
         assertThat(filterMethodVisitor.isSetterMethod(method)).isTrue();
     }
-    
+
     @Test
     @Context(mainSrc = "FilterMethodVisitor_class_with_setter_and_fieldname_with_member_prefix.java.txt")
     public void isSetterMethod_should_return_true_when_field_starts_with_member_prefix()
@@ -272,6 +272,6 @@ public class FilterMethodVisitorTest extends ContextTestCase
         IMethod method = type.getMethod("setFieldName1", new String[] { "QString;"});
         assertThat(filterMethodVisitor.isSetterMethod(method)).isTrue();
     }
-    
-    
+
+
 }

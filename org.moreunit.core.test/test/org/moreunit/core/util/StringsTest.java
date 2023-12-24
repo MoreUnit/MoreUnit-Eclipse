@@ -1,8 +1,6 @@
 package org.moreunit.core.util;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -11,43 +9,43 @@ public class StringsTest
     @Test
     public void should_be_empty_when_null() throws Exception
     {
-        assertTrue(Strings.isEmpty(null));
+        assertThat(Strings.isEmpty(null)).isTrue();
     }
 
     @Test
     public void should_be_empty_when_empty() throws Exception
     {
-        assertTrue(Strings.isEmpty(""));
+        assertThat(Strings.isEmpty("")).isTrue();
     }
 
     @Test
     public void should_not_be_empty_when_containing_spaces_only() throws Exception
     {
-        assertFalse(Strings.isEmpty("  "));
+        assertThat(Strings.isEmpty("  ")).isFalse();
     }
 
     @Test
     public void should_be_blank_when_null() throws Exception
     {
-        assertTrue(Strings.isBlank(null));
+        assertThat(Strings.isBlank(null)).isTrue();
     }
 
     @Test
     public void should_be_blank_when_empty() throws Exception
     {
-        assertTrue(Strings.isBlank(""));
+        assertThat(Strings.isBlank("")).isTrue();
     }
 
     @Test
     public void should_be_blank_when_containing_spaces_only() throws Exception
     {
-        assertTrue(Strings.isBlank("  "));
+        assertThat(Strings.isBlank("  ")).isTrue();
     }
 
     @Test
     public void should_not_be_blank_when_containing_characters() throws Exception
     {
-        assertFalse(Strings.isBlank(" blah "));
+        assertThat(Strings.isBlank(" blah ")).isFalse();
     }
 
     @Test

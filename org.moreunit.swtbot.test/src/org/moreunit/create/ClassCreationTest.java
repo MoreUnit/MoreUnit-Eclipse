@@ -1,6 +1,7 @@
 package org.moreunit.create;
 
-import static org.fest.assertions.Assertions.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
@@ -36,11 +37,11 @@ public class ClassCreationTest extends JavaProjectSWTBotTestHelper
         moveCursorToMethod();
 
         getShortcutStrategy().pressGenerateShortcut();
-        
+
         bot.waitUntil(Conditions.shellIsActive("New JUnit Test Case"));
-        
+
         bot.button(IDialogConstants.FINISH_LABEL).click();
-        
+
         bot.waitUntil(new DefaultCondition()
         {
             @Override

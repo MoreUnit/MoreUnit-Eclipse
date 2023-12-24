@@ -1,6 +1,6 @@
 package org.moreunit.matching;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 
@@ -36,7 +36,7 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = testCaseDiviner.getMatches(false);
 
-        assertThat(matches).hasSize(2).onProperty("elementName").contains("FooTest", "FooTestNG");
+        assertThat(matches).hasSize(2).extracting("elementName").contains("FooTest", "FooTestNG");
     }
 
     @Preferences(testClassNameTemplate = "Test${srcFile}", testSrcFolder = "test")

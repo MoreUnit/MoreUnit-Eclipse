@@ -2,10 +2,8 @@ package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.fest.assertions.MapAssert.entry;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -99,7 +97,7 @@ public class MockingTemplateLoaderTest
         // then
         verify(templateStore).store(someTemplates);
 
-        assertFalse(result.invalidTemplatesFound());
+        assertThat(result.invalidTemplatesFound()).isFalse();
         assertThat(result.invalidTemplates()).isEmpty();
     }
 
@@ -129,9 +127,9 @@ public class MockingTemplateLoaderTest
         LoadingResult result = loader.loadTemplates();
 
         // then
-        assertTrue(result.invalidTemplatesFound());
+        assertThat(result.invalidTemplatesFound()).isTrue();
         assertThat(result.invalidTemplates()).hasSize(3)
-                .includes(entry(invalidDefinition1Url, someException.toString()),
+                .contains(entry(invalidDefinition1Url, someException.toString()),
                           entry(invalidDefinition2Url, someException.toString()),
                           entry(invalidDefinition3Url, someException.toString()));
     }
@@ -152,9 +150,9 @@ public class MockingTemplateLoaderTest
         LoadingResult result = loader.loadTemplates();
 
         // then
-        assertTrue(result.invalidTemplatesFound());
+        assertThat(result.invalidTemplatesFound()).isTrue();
         assertThat(result.invalidTemplates()).hasSize(2)
-                .includes(entry(existingDefinition1Url, "A template is already defined with this ID"),
+                .contains(entry(existingDefinition1Url, "A template is already defined with this ID"),
                           entry(existingDefinition2Url, "A template is already defined with this ID"));
     }
 

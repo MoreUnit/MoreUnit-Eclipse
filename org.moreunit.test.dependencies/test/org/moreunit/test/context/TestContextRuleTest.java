@@ -1,8 +1,8 @@
 package org.moreunit.test.context;
 
 import static java.util.Arrays.asList;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
@@ -39,15 +39,9 @@ public class TestContextRuleTest
 
         for (Runnable runnable : runnables)
         {
-            try
-            {
-                runnable.run();
-                fail();
-            }
-            catch (IllegalStateException e)
-            {
-                assertThat(e.getMessage()).isEqualTo("No context defined. Are you accessing this rule from outside a test method? or from one that has no Context annotation?");
-            }
+            assertThatThrownBy(() -> runnable.run())
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("No context defined. Are you accessing this rule from outside a test method? or from one that has no Context annotation?");
         }
     }
 
@@ -55,14 +49,8 @@ public class TestContextRuleTest
     @Context(mainSrc = "", testSrc = "")
     public void should_complain_when_source_is_undefined() throws Exception
     {
-        try
-        {
-            context.getCompilationUnit("AClass");
-        }
-        catch (RuntimeException e)
-        {
-            assertThat(e.getMessage()).isEqualTo("No compilation unit defined with name: AClass");
-        }
+        assertThatThrownBy(() -> context.getCompilationUnit("AClass"))
+        .hasMessage("No compilation unit defined with name: AClass");
     }
 
     @Test

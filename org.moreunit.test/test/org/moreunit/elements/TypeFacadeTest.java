@@ -1,12 +1,12 @@
 package org.moreunit.elements;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author vera
  *
  * 23.05.2006 21:09:05
  */
-
-import static org.fest.assertions.Assertions.assertThat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.JavaModelException;
@@ -17,7 +17,7 @@ import org.moreunit.test.context.Project;
 
 public class TypeFacadeTest extends ContextTestCase
 {
-    
+
     @Project(mainCls="Hello")
     @Preferences(testClassNameTemplate="${srcFile}Test")
     @Test

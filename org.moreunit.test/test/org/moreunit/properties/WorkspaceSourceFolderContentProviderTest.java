@@ -1,7 +1,5 @@
 package org.moreunit.properties;
 
-import static org.junit.Assert.fail;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -24,15 +22,15 @@ import static org.mockito.Mockito.*;
 @Context(SimpleJUnit4Project.class)
 public class WorkspaceSourceFolderContentProviderTest extends ContextTestCase
 {
-    
+
     /*
      * Test for Bug 3590427 (Exception was logged on closed projects)
      */
     @Test
-    public void getElements_should_not_throw_exception_when_workspace_contains_closed_projects() throws Exception 
+    public void getElements_should_not_throw_exception_when_workspace_contains_closed_projects() throws Exception
     {
         closeProjectAndPrepareMockedLoggerToThrowExcpetionWhenErrorGetsLogged();
-        
+
         ArrayList<SourceFolderMapping> list = new ArrayList<SourceFolderMapping>(0);
         WorkspaceSourceFolderContentProvider provider = new WorkspaceSourceFolderContentProvider(list);
         provider.getElements(null);
@@ -41,10 +39,10 @@ public class WorkspaceSourceFolderContentProviderTest extends ContextTestCase
     private void closeProjectAndPrepareMockedLoggerToThrowExcpetionWhenErrorGetsLogged() throws CoreException, NoSuchFieldException, IllegalAccessException
     {
         context.getProjectHandler().get().getProject().close(null);
-        
+
         Field loggerField = LogHandler.getInstance().getClass().getDeclaredField("logger");
         loggerField.setAccessible(true);
-        
+
         Logger mockedLogger = mock(Logger.class);
         doThrow(new RuntimeException("error must not get thrown on closed projects")).when(mockedLogger).error(notNull(Throwable.class));
         loggerField.set(LogHandler.getInstance(), mockedLogger);

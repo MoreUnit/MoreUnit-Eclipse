@@ -1,7 +1,6 @@
 package org.moreunit.core.resources;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +52,8 @@ public class ContainerCreationRecordTest
         containerCreationRecord.cancelCreation();
 
         // then
-        assertFalse(grandGrandParent.exists());
-        assertTrue(grandGrandParent.getParent().exists());
+        assertThat(grandGrandParent.exists()).isFalse();
+        assertThat(grandGrandParent.getParent().exists()).isTrue();
     }
 
     @Test
@@ -64,7 +63,7 @@ public class ContainerCreationRecordTest
         containerCreationRecord.cancelCreationOfFoldersThatAreNotAncestorsOf(workspace.getFile("/segment1/segment2/someFile"));
 
         // then
-        assertFalse(grandParent.exists());
-        assertTrue(grandGrandParent.exists());
+        assertThat(grandParent.exists()).isFalse();
+        assertThat(grandGrandParent.exists()).isTrue();
     }
 }

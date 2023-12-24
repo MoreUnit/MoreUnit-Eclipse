@@ -1,6 +1,6 @@
 package org.moreunit.decorator;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragmentRoot;

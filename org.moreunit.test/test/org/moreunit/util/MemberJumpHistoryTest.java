@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,7 +63,7 @@ public class MemberJumpHistoryTest
         when(mock.getDeclaringType()).thenReturn(declaringType);
         return mock;
     }
-    
+
     @Test
     public void getLastCorrespondingJumpMember_test_having_reached_by_type()
     {
@@ -75,16 +75,16 @@ public class MemberJumpHistoryTest
         IType fromType2 = mockType("FromType2");
         history.registerJump(fromType2, toType);
         assertThat(history.getLastCorrespondingJumpMember(toType)).isEqualTo(fromType2);
-        
+
         IMethod fromMethod = mockMethod(fromType2, "fromMethod");
         history.registerJump(fromMethod, toType);
         assertThat(history.getLastCorrespondingJumpMember(toType)).isEqualTo(fromMethod);
-        
+
         assertThat(history.getLastCorrespondingJumpMember(fromType)).isEqualTo(toType);
         assertThat(history.getLastCorrespondingJumpMember(fromType2)).isEqualTo(toType);
         assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toType);
     }
-    
+
     @Test
     public void getLastCorrespondingJumpMember_test_having_reached_by_method()
     {
@@ -96,11 +96,11 @@ public class MemberJumpHistoryTest
         IType fromType2 = mockType("FromType2");
         history.registerJump(fromType2, toMethod);
         assertThat(history.getLastCorrespondingJumpMember(toMethod)).isEqualTo(fromType2);
-        
+
         IMethod fromMethod = mockMethod(fromType2, "fromMethod");
         history.registerJump(fromMethod, toMethod);
         assertThat(history.getLastCorrespondingJumpMember(toMethod)).isEqualTo(fromMethod);
-        
+
         assertThat(history.getLastCorrespondingJumpMember(fromType)).isEqualTo(toMethod);
         assertThat(history.getLastCorrespondingJumpMember(fromType2)).isEqualTo(toMethod);
         assertThat(history.getLastCorrespondingJumpMember(fromMethod)).isEqualTo(toMethod);

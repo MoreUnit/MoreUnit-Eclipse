@@ -1,6 +1,6 @@
 package org.moreunit.test.workspace;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.JavaModelException;
 
@@ -17,7 +17,7 @@ public class ProjectAssertions
     {
         try
         {
-            assertThat(projectHandler.get().getPackageFragmentRoots()).onProperty("elementName").contains(srcFolder);
+            assertThat(projectHandler.get().getPackageFragmentRoots()).extracting("elementName").contains(srcFolder);
         }
         catch (JavaModelException e)
         {

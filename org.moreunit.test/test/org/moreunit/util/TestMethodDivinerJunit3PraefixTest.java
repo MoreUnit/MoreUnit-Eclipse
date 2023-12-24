@@ -1,7 +1,6 @@
 package org.moreunit.util;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -54,8 +53,7 @@ public class TestMethodDivinerJunit3PraefixTest
     {
         TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
 
-        assertEquals("testCountAllMembersSpecialCase", testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembersSpecialCase"));
-        assertEquals("testCountAllMembers", testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembers"));
-
+        assertThat(testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembersSpecialCase")).isEqualTo("testCountAllMembersSpecialCase");
+        assertThat(testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembers")).isEqualTo("testCountAllMembers");
     }
 }

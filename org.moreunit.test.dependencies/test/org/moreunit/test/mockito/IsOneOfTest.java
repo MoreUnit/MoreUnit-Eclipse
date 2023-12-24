@@ -1,8 +1,6 @@
 package org.moreunit.test.mockito;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -16,22 +14,22 @@ public class IsOneOfTest
     @Test
     public void should_match_either_one_of_given_args() throws Exception
     {
-        assertTrue(stringMatcher.matches("a"));
-        assertTrue(stringMatcher.matches("b"));
-        assertTrue(stringMatcher.matches("c"));
+        assertThat(stringMatcher.matches("a")).isTrue();
+        assertThat(stringMatcher.matches("b")).isTrue();
+        assertThat(stringMatcher.matches("c")).isTrue();
 
-        assertTrue(intMatcher.matches(1));
-        assertTrue(intMatcher.matches(2));
+        assertThat(intMatcher.matches(1)).isTrue();
+        assertThat(intMatcher.matches(2)).isTrue();
     }
 
     @Test
     public void should_not_match_any_other_arg() throws Exception
     {
-        assertFalse(stringMatcher.matches("e"));
-        assertFalse(stringMatcher.matches("Z"));
+        assertThat(stringMatcher.matches("e")).isFalse();
+        assertThat(stringMatcher.matches("Z")).isFalse();
 
-        assertFalse(intMatcher.matches(7));
-        assertFalse(intMatcher.matches(- 9));
+        assertThat(intMatcher.matches(7)).isFalse();
+        assertThat(intMatcher.matches(- 9)).isFalse();
     }
 
     @Test

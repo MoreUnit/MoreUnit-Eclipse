@@ -1,9 +1,7 @@
 package org.moreunit.elements;
 
 import static java.util.Arrays.asList;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
@@ -53,8 +51,8 @@ public class TestmethodCreatorTest extends ContextTestCase
                 .defaultTestMethodContent(SOME_TEST_CODE));
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
-        assertTrue(result.methodCreated());
-        assertFalse(result.methodAlreadyExists());
+        assertThat(result.methodCreated()).isTrue();
+        assertThat(result.methodAlreadyExists()).isFalse();
 
         IMethod createTestMethod = result.getMethod();
         assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
@@ -76,7 +74,7 @@ public class TestmethodCreatorTest extends ContextTestCase
         assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
         assertThat(createTestMethod.getSource()).startsWith("@Test");
         assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
-        
+
         IMethod[] methods = testcaseType.get().getMethods();
         assertThat(methods).containsOnly(createTestMethod);
     }
@@ -94,11 +92,11 @@ public class TestmethodCreatorTest extends ContextTestCase
         assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
         assertThat(createTestMethod.getSource()).startsWith("@Test");
         assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
-        
+
         IMethod[] methods = testcaseType.get().getMethods();
         assertThat(methods).containsOnly(createTestMethod);
     }
-    
+
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = true)
     public void createTestMethod_should_create_junit4_testmethod_with_prefix() throws CoreException
@@ -228,7 +226,7 @@ public class TestmethodCreatorTest extends ContextTestCase
         testmethodCreator.createTestMethod(doSomethingElseWithString.get());
 
         // then
-        assertThat(testcaseType.get().getMethods()).hasSize(4).onProperty("elementName")
+        assertThat(testcaseType.get().getMethods()).hasSize(4).extracting("elementName")
             // overloaded method: no parameter
             .contains("doSomething")
             // overloaded method: parameter types are used
@@ -255,7 +253,7 @@ public class TestmethodCreatorTest extends ContextTestCase
         testmethodCreator.createTestMethods(asList(doSomethingWithoutArg.get(), doSomethingWithStringArray.get()));
 
         // then
-        assertThat(testcaseType.get().getMethods()).hasSize(2).onProperty("elementName")
+        assertThat(testcaseType.get().getMethods()).hasSize(2).extracting("elementName")
             // overloaded method: no parameter
             .contains("doSomething")
             // overloaded method: parameter types are used
@@ -274,11 +272,11 @@ public class TestmethodCreatorTest extends ContextTestCase
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
-        assertTrue(result.methodAlreadyExists());
-        assertFalse(result.methodCreated());
+        assertThat(result.methodAlreadyExists()).isTrue();
+        assertThat(result.methodCreated()).isFalse();
         assertThat(result.getMethod()).isEqualTo(existingTestMethod.get());
     }
-    
+
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType=TestType.JUNIT4)
     public void createTestMethod_should_not_add_comments_for_the_new_test_method_when_not_requested() throws Exception
@@ -290,7 +288,7 @@ public class TestmethodCreatorTest extends ContextTestCase
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
-        assertTrue(result.methodCreated());
+        assertThat(result.methodCreated()).isTrue();
         assertThat(result.getMethod().getJavadocRange()).isNull();
     }
 
@@ -306,7 +304,7 @@ public class TestmethodCreatorTest extends ContextTestCase
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
-        assertTrue(result.methodCreated());
+        assertThat(result.methodCreated()).isTrue();
         assertThat(result.getMethod().getJavadocRange()).isNotNull();
         assertThat(result.getMethod().getSource().replaceAll("\\s+", " "))
                 .isEqualTo("/**" +

@@ -1,7 +1,6 @@
 package org.moreunit.core.languages;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +34,7 @@ public class MainLanguageRepositoryTest
         when(extensionManager.extensionExistsForLanguage("vb")).thenReturn(false);
 
         // then
-        assertTrue(mainRepo.contains("vb"));
+        assertThat(mainRepo.contains("vb")).isTrue();
     }
 
     @Test
@@ -46,7 +45,7 @@ public class MainLanguageRepositoryTest
         when(extensionManager.extensionExistsForLanguage("pl")).thenReturn(true);
 
         // then
-        assertTrue(mainRepo.contains("pl"));
+        assertThat(mainRepo.contains("pl")).isTrue();
     }
 
     @Test
@@ -57,7 +56,7 @@ public class MainLanguageRepositoryTest
         when(extensionManager.extensionExistsForLanguage("cpp")).thenReturn(false);
 
         // then
-        assertFalse(mainRepo.contains("cpp"));
+        assertThat(mainRepo.contains("cpp")).isFalse();
     }
 
     @Test

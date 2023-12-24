@@ -8,6 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.moreunit.test.dependencies,
  org.junit;bundle-version="4.11.0",
- org.glassfish.hk2.osgi-resource-locator
+ org.glassfish.hk2.osgi-resource-locator,
+ assertj-core;bundle-version="3.24.2"
 Bundle-ClassPath: .
 Automatic-Module-Name: org.moreunit.mock.test

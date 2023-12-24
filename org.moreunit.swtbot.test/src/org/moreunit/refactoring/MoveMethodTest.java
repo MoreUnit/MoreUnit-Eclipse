@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
@@ -18,12 +18,12 @@ import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 
-@Preferences(testClassNameTemplate="${srcFile}Test", 
+@Preferences(testClassNameTemplate="${srcFile}Test",
              testSrcFolder="test",
              testMethodPrefix=true,
              testType=TestType.JUNIT4)
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class MoveMethodTest extends JavaProjectSWTBotTestHelper 
+public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
             mainSrc = "MoveMethod_class_with_static_method.txt,MoveMethod_class_without_methods.txt",
@@ -45,19 +45,19 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 		SWTBotShell moveDialog = bot.activeShell();
 		bot.button("OK").click();
 		bot.waitUntil(Conditions.shellCloses(moveDialog), 10000);
-		
+
 		// assert that testmethod moved from TheWorldTest to TheMoonTest
 		final ICompilationUnit testBeforeMove = context.getCompilationUnit("testing.TheWorldTest");
 		bot.waitUntil(new DefaultCondition()
         {
-            
+
             @Override
             public boolean test() throws Exception
             {
                 IMethod[] methods = testBeforeMove.findPrimaryType().getMethods();
                 return methods == null || methods.length == 0;
             }
-            
+
             @Override
             public String getFailureMessage()
             {
@@ -66,6 +66,6 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
         });
 		assertThat(testBeforeMove.findPrimaryType().getMethods()).isEmpty();
 		ICompilationUnit testAfterMove = context.getCompilationUnit("testing.TheMoonTest");
-		assertThat(testAfterMove.findPrimaryType().getMethods()).onProperty("elementName").containsOnly("testGetNumber1");
+		assertThat(testAfterMove.findPrimaryType().getMethods()).extracting("elementName").containsOnly("testGetNumber1");
 	}
 }
