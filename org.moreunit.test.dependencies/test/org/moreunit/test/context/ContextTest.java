@@ -1,6 +1,6 @@
 package org.moreunit.test.context;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Test;

@@ -1,10 +1,7 @@
 package org.moreunit.matching;
 
 import static java.util.Arrays.asList;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.test.model.Types.typeWithPackage;
 
 import org.junit.Test;
@@ -21,7 +18,7 @@ public class TestClassNamePatternTest
         ClassNameEvaluation evaluation = pattern.evaluate(typeWithPackage("Source", "pack.age"));
 
         // then
-        assertFalse(evaluation.isTestCase());
+        assertThat(evaluation.isTestCase()).isFalse();
 
         assertThat(evaluation.getAllCorrespondingClassPatterns(false)).hasSize(8) //
             // preferred patterns
@@ -42,7 +39,7 @@ public class TestClassNamePatternTest
         // then
         assertThat(evaluation.getAllCorrespondingClassPatterns(true)).hasSize(8) //
             // preferred patterns
-            .startsWith("pp.pack.age.Pre1*Source*Suf1", // 
+            .startsWith("pp.pack.age.Pre1*Source*Suf1", //
                         "pp.pack.age.Pre1*Source*Suf2", //
                         "pp.pack.age.Pre2*Source*Suf1", //
                         "pp.pack.age.Pre2*Source*Suf2")
@@ -126,7 +123,7 @@ public class TestClassNamePatternTest
             ClassNameEvaluation evaluation = pattern.evaluate(typeWithPackage(testCase, "pp.pack.age.ps"));
 
             // then
-            assertTrue(evaluation.isTestCase());
+            assertThat(evaluation.isTestCase()).isTrue();
             assertThat(evaluation.getAllCorrespondingClassPatterns(false)).hasSize(2) //
                 .startsWith("MyFile") // preferred patterns
                 .contains("File"); // other patterns
@@ -136,7 +133,7 @@ public class TestClassNamePatternTest
         ClassNameEvaluation  evaluation = pattern.evaluate(typeWithPackage("Pre2FooMyFileSuf2Bar", "pp.pack.age.ps"));
 
         // then
-        assertTrue(evaluation.isTestCase());
+        assertThat(evaluation.isTestCase()).isTrue();
         assertThat(evaluation.getAllCorrespondingClassPatterns(false)).hasSize(3) //
             .startsWith("FooMyFile") // preferred patterns
             .contains("MyFile", "File"); // other patterns
@@ -152,6 +149,6 @@ public class TestClassNamePatternTest
         ClassNameEvaluation evaluation = pattern.evaluate(typeWithPackage("SourceTest", "pack.age"));
 
         // then
-        assertFalse(evaluation.isTestCase());
+        assertThat(evaluation.isTestCase()).isFalse();
     }
 }

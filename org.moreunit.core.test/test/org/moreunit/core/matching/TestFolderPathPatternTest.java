@@ -1,10 +1,10 @@
 package org.moreunit.core.matching;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.moreunit.core.matching.TestFolderPathPattern.isValid;
+
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.moreunit.core.CoreTestModule;
@@ -28,167 +28,167 @@ public class TestFolderPathPatternTest
     @Test
     public void isValid_should_return_false_when_path_is_blank() throws Exception
     {
-        assertFalse(isValid(null, validTestPath));
-        assertFalse(isValid("", validTestPath));
-        assertFalse(isValid("  ", validTestPath));
+        assertThat(isValid(null, validTestPath)).isFalse();
+        assertThat(isValid("", validTestPath)).isFalse();
+        assertThat(isValid("  ", validTestPath)).isFalse();
 
-        assertFalse(isValid(validSrcPath, null));
-        assertFalse(isValid(validSrcPath, ""));
-        assertFalse(isValid(validSrcPath, "  "));
+        assertThat(isValid(validSrcPath, null)).isFalse();
+        assertThat(isValid(validSrcPath, "")).isFalse();
+        assertThat(isValid(validSrcPath, "  ")).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_path_does_not_contain_project_name() throws Exception
     {
-        assertFalse(isValid(validSrcPath, "path"));
-        assertFalse(isValid("path", validTestPath));
+        assertThat(isValid(validSrcPath, "path")).isFalse();
+        assertThat(isValid("path", validTestPath)).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_path_does_not_start_with_project_name() throws Exception
     {
-        assertFalse(isValid(validSrcPath, "path/${srcProject}-test"));
-        assertFalse(isValid("path/${srcProject}", validTestPath));
+        assertThat(isValid(validSrcPath, "path/${srcProject}-test")).isFalse();
+        assertThat(isValid("path/${srcProject}", validTestPath)).isFalse();
     }
 
     @Test
     public void isValid_should_return_true_when_path_starts_with_project_name() throws Exception
     {
-        assertTrue(isValid("${srcProject}", "${srcProject}"));
-        assertTrue(isValid("${srcProject}/path", validTestPath));
+        assertThat(isValid("${srcProject}", "${srcProject}")).isTrue();
+        assertThat(isValid("${srcProject}/path", validTestPath)).isTrue();
 
-        assertTrue(isValid(validSrcPath, "${srcProject}-test/path"));
-        assertTrue(isValid(validSrcPath, "test-${srcProject}/path"));
+        assertThat(isValid(validSrcPath, "${srcProject}-test/path")).isTrue();
+        assertThat(isValid(validSrcPath, "test-${srcProject}/path")).isTrue();
     }
 
     @Test
     public void isValid_should_ignore_leading_separator() throws Exception
     {
-        assertTrue(isValid("/${srcProject}/path", validTestPath));
+        assertThat(isValid("/${srcProject}/path", validTestPath)).isTrue();
 
-        assertTrue(isValid(validSrcPath, "/${srcProject}-test/path"));
-        assertTrue(isValid(validSrcPath, "/test-${srcProject}/path"));
+        assertThat(isValid(validSrcPath, "/${srcProject}-test/path")).isTrue();
+        assertThat(isValid(validSrcPath, "/test-${srcProject}/path")).isTrue();
     }
 
     @Test
     public void isValid_should_return_false_when_test_path_contains_stars() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/", "${srcProject}/*/"));
+        assertThat(isValid("${srcProject}/src/", "${srcProject}/*/")).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_test_path_contains_parentheses() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/", "${srcProject}/(test)/"));
+        assertThat(isValid("${srcProject}/src/", "${srcProject}/(test)/")).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_group_is_not_closed() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(*/blah/", "${srcProject}/test/\\1"));
+        assertThat(isValid("${srcProject}/src/(*/blah/", "${srcProject}/test/\\1")).isFalse();
     }
 
     @Test
     public void isValid_should_return_true_when_variable_segment_is_not_captured() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/*/", "${srcProject}/test/"));
+        assertThat(isValid("${srcProject}/src/*/", "${srcProject}/test/")).isTrue();
     }
 
     @Test
     public void isValid_should_return_true_when_variable_segment_is_captured() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/(*)/", "${srcProject}/test/\\1/"));
+        assertThat(isValid("${srcProject}/src/(*)/", "${srcProject}/test/\\1/")).isTrue();
     }
 
     @Test
     public void isValid_should_return_false_when_captured_variable_segment_is_not_used() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(*)/", "${srcProject}/test/"));
-        assertFalse("should ignore protected backslash", isValid("${srcProject}/src/(*)/", "${srcProject}/test/\\"));
+        assertThat(isValid("${srcProject}/src/(*)/", "${srcProject}/test/")).isFalse();
+        assertThat(isValid("${srcProject}/src/(*)/", "${srcProject}/test/\\")).withFailMessage("should ignore protected backslash").isFalse();
     }
 
     @Test
     public void isValid_should_return_true_when_variable_path_is_not_captured() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/**/", "${srcProject}/test/"));
+        assertThat(isValid("${srcProject}/src/**/", "${srcProject}/test/")).isTrue();
     }
 
     @Test
     public void isValid_should_return_true_when_variable_path_is_captured() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/(**)/", "${srcProject}/test/\\1/"));
+        assertThat(isValid("${srcProject}/src/(**)/", "${srcProject}/test/\\1/")).isTrue();
     }
 
     @Test
     public void isValid_should_return_false_when_captured_variable_path_is_not_used() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(**)/", "${srcProject}/test/"));
+        assertThat(isValid("${srcProject}/src/(**)/", "${srcProject}/test/")).isFalse();
     }
 
     @Test
     public void isValid_should_return_true_when_star_is_used_for_part_of_segment() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/seg*ment/", "${srcProject}/test/"));
+        assertThat(isValid("${srcProject}/src/seg*ment/", "${srcProject}/test/")).isTrue();
     }
 
     @Test
     public void isValid_should_return_false_for_three_stars() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/***/", "${srcProject}/test/"));
+        assertThat(isValid("${srcProject}/src/***/", "${srcProject}/test/")).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_double_star_is_used_for_part_of_segment() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/seg**ment/", "${srcProject}/test/"));
+        assertThat(isValid("${srcProject}/src/seg**ment/", "${srcProject}/test/")).isFalse();
     }
 
     @Test
     public void isValid_should_return_true_when_all_captured_groups_are_used() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/(*)/(**)/blah-(*)/", "${srcProject}/test/\\3/abc-\\1/\\2"));
+        assertThat(isValid("${srcProject}/src/(*)/(**)/blah-(*)/", "${srcProject}/test/\\3/abc-\\1/\\2")).isTrue();
     }
 
     @Test
     public void isValid_should_return_true_when_group_references_follow_each_other() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/(*)/blah-(*)/", "${srcProject}/test/\\1\\2"));
+        assertThat(isValid("${srcProject}/src/(*)/blah-(*)/", "${srcProject}/test/\\1\\2")).isTrue();
     }
 
     @Test
     public void isValid_should_return_false_when_one_captured_group_is_not_used() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(*)/(**)/blah-(*)", "${srcProject}/test/\\3/\\2/"));
+        assertThat(isValid("${srcProject}/src/(*)/(**)/blah-(*)", "${srcProject}/test/\\3/\\2/")).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_one_group_number_is_unknown() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(*)/(**)/blah-(*)/", "${srcProject}/test/\\3/abc-\\1/\\4"));
+        assertThat(isValid("${srcProject}/src/(*)/(**)/blah-(*)/", "${srcProject}/test/\\3/abc-\\1/\\4")).isFalse();
     }
 
     @Test
     public void isValid_should_return_true_when_group_reference_is_escaped() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/", "${srcProject}/test/\\\\1"));
+        assertThat(isValid("${srcProject}/src/", "${srcProject}/test/\\\\1")).isTrue();
     }
 
     @Test
     public void isValid_should_return_true_when_group_reference_is_escaped_and_another_is_valid() throws Exception
     {
-        assertTrue(isValid("${srcProject}/src/main/(*)", "${srcProject}/src/test\\\\1/\\1"));
+        assertThat(isValid("${srcProject}/src/main/(*)", "${srcProject}/src/test\\\\1/\\1")).isTrue();
     }
 
     @Test
     public void isValid_should_return_false_when_parentheses_contain_non_stars() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(a)/", "${srcProject}/test/\\1"));
+        assertThat(isValid("${srcProject}/src/(a)/", "${srcProject}/test/\\1")).isFalse();
     }
 
     @Test
     public void isValid_should_return_false_when_more_than_9_groups() throws Exception
     {
-        assertFalse(isValid("${srcProject}/src/(*)1(*)2(*)3(*)4(*)5(*)6(*)7(*)8(*)9(*)/", "${srcProject}/test/\\1\\2\\3\\4\\5\\6\\7\\8\\9\\10"));
+        assertThat(isValid("${srcProject}/src/(*)1(*)2(*)3(*)4(*)5(*)6(*)7(*)8(*)9(*)/", "${srcProject}/test/\\1\\2\\3\\4\\5\\6\\7\\8\\9\\10")).isFalse();
     }
 
     @Test
@@ -401,17 +401,7 @@ public class TestFolderPathPatternTest
         // does not start with myproject-test
         Path tstPath = path("myproject/test-java/code");
 
-        try
-        {
-            // when
-            p.getSrcPathFor(tstPath);
-            fail("expected " + DoesNotMatchConfigurationException.class.getSimpleName());
-        }
-        catch (DoesNotMatchConfigurationException e)
-        {
-            // then
-            assertThat((Object) e.getPath()).isEqualTo(tstPath);
-        }
+        assertThatThrownBy(() -> p.getSrcPathFor(tstPath)).isInstanceOf(DoesNotMatchConfigurationException.class).extracting(e -> ((DoesNotMatchConfigurationException)e).getPath()).isEqualTo(tstPath);
     }
 
     @Test

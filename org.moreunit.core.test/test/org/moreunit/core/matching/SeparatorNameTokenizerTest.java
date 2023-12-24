@@ -1,9 +1,7 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
@@ -80,14 +78,14 @@ public class SeparatorNameTokenizerTest
         TokenizationResult result = tokenizer.tokenize("name");
 
         // then
-        assertTrue(result.getCombinationsFromStart().isEmpty());
-        assertTrue(result.getCombinationsFromEnd().isEmpty());
+        assertThat(result.getCombinationsFromStart()).isEmpty();
+        assertThat(result.getCombinationsFromEnd()).isEmpty();
 
         // when
         result = tokenizer.tokenize("name_with_several_parts");
 
         // then
-        assertEquals(asList("name", "name_with", "name_with_several"), result.getCombinationsFromStart());
-        assertEquals(asList("with_several_parts", "several_parts", "parts"), result.getCombinationsFromEnd());
+        assertThat(result.getCombinationsFromStart()).containsExactly("name", "name_with", "name_with_several");
+        assertThat(result.getCombinationsFromEnd()).containsExactly("with_several_parts", "several_parts", "parts");
     }
 }

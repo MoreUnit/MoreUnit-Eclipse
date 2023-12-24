@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
 import static org.moreunit.util.PluginTools.guessSourceFolderCorrespondingToTestFolder;
 import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;

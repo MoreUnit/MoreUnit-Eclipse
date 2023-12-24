@@ -1,13 +1,14 @@
 package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.mock.model.Category;
@@ -133,16 +134,9 @@ public class MockingTemplateStoreTest
     {
         MockingTemplate template1bis = new MockingTemplate("template1", "category1");
 
-        try
-        {
-            // when
-            templateStore.store(new MockingTemplates(new ArrayList<Category>(), asList(template1bis)));
-            fail("expected TemplateAlreadyDefinedException");
-        }
-        catch (TemplateAlreadyDefinedException e)
-        {
-            // then
-            assertThat(e.getTemplateId()).isEqualTo(template1bis.id());
-        }
+        assertThatThrownBy(() -> templateStore.store(new MockingTemplates(new ArrayList<Category>(), asList(template1bis))))
+        .isInstanceOf(TemplateAlreadyDefinedException.class)
+        .extracting(e -> ((TemplateAlreadyDefinedException)e).getTemplateId())
+        .isEqualTo(template1bis.id());
     }
 }

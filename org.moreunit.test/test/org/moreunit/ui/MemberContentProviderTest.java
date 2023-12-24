@@ -1,6 +1,6 @@
 package org.moreunit.ui;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.moreunit.test.model.Types.type;
@@ -43,7 +43,7 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type1", "type2", "type3");
+        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type1", "type2", "type3");
     }
 
     @Test
@@ -62,13 +62,13 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type1", "type2");
+        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type1", "type2");
 
         Object[] children1 = contentProvider.getChildren(elements[0]);
-        assertThat(Arrays.asList(children1)).onProperty("elementName").containsExactly("method1A", "method1B");
+        assertThat(Arrays.asList(children1)).extracting("elementName").containsExactly("method1A", "method1B");
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertThat(children2).onProperty("elementName").containsOnly("method2A");
+        assertThat(children2).extracting("elementName").containsOnly("method2A");
     }
 
     @Test
@@ -83,10 +83,10 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type1", "type2");
+        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type1", "type2");
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertThat(children2).onProperty("elementName").containsOnly("method2A");
+        assertThat(children2).extracting("elementName").containsOnly("method2A");
     }
 
     @Test
@@ -105,13 +105,13 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).onProperty("elementName").containsExactly("type2", "type1", "type3");
+        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type2", "type1", "type3");
 
         Object[] children1 = contentProvider.getChildren(elements[1]);
-        assertThat(Arrays.asList(children1)).onProperty("elementName").containsExactly("method1A", "method1B");
+        assertThat(Arrays.asList(children1)).extracting("elementName").containsExactly("method1A", "method1B");
 
         Object[] children3 = contentProvider.getChildren(elements[2]);
-        assertThat(children3).onProperty("elementName").containsOnly("method3A");
+        assertThat(children3).extracting("elementName").containsOnly("method3A");
     }
 
     private IMethod mockMethod(IType declaringType, String methodName)

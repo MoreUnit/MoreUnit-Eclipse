@@ -1,6 +1,6 @@
 package org.moreunit.preferences;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.preferences.PreferenceConstants.PREFERENCES_VERSION;
 import static org.moreunit.preferences.PreferenceConstants.TEST_CLASS_NAME_TEMPLATE;
 import static org.moreunit.preferences.PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS;

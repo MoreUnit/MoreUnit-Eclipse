@@ -1,8 +1,6 @@
 package org.moreunit.core.commands;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.core.config.CoreModule.$;
 
 import java.util.Collection;
@@ -379,7 +377,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
             @Override
             protected int onOpen(DrivableWizardDialog dialog)
             {
-                assertTrue("preferred test folder should exist", getFolder("test/folder/having/many/parts").exists());
+                assertThat(getFolder("test/folder/having/many/parts").exists()).withFailMessage("preferred test folder should exist").isTrue();
                 return userCancelsCreation(dialog);
             }
         };
@@ -388,9 +386,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertTrue("partial path to preferred test folder should still exist", getFolder("test/folder/having").exists());
-        assertFalse("unneeded segments of path to preferred test folder should no longer exist (1)", getFolder("test/folder/having/many/parts").exists());
-        assertFalse("unneeded segments of path to preferred test folder should no longer exist (2)", getFolder("test/folder/having/many").exists());
+        assertThat(getFolder("test/folder/having").exists()).withFailMessage("partial path to preferred test folder should still exist").isTrue();
+        assertThat(getFolder("test/folder/having/many/parts").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (1)").isFalse();
+        assertThat(getFolder("test/folder/having/many").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (2)").isFalse();
     }
 
     @Test
@@ -420,10 +418,10 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertTrue("partial path to preferred test folder should still exist", getFolder("test/some").exists());
-        assertTrue("chosen folder should exist", getFolder("test/some/path").exists());
-        assertFalse("unneeded segments of path to preferred test folder should no longer exist (1)", getFolder("test/some/path/to/file").exists());
-        assertFalse("unneeded segments of path to preferred test folder should no longer exist (2)", getFolder("test/some/path/to").exists());
+        assertThat(getFolder("test/some").exists()).withFailMessage("partial path to preferred test folder should still exist").isTrue();
+        assertThat(getFolder("test/some/path").exists()).withFailMessage("chosen folder should exist").isTrue();
+        assertThat(getFolder("test/some/path/to/file").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (1)").isFalse();
+        assertThat(getFolder("test/some/path/to").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (2)").isFalse();
 
         assertThat(getFileInActiveEditor()).isEqualTo(getFile("test/some/path/SomeConcept4Test.thing"));
     }

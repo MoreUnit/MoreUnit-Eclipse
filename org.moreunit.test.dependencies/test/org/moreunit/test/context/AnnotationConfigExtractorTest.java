@@ -1,8 +1,7 @@
 package org.moreunit.test.context;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.lang.annotation.Annotation;
 
@@ -35,7 +34,7 @@ public class AnnotationConfigExtractorTest
     @Test
     public void should_return_null_when_no_annotations() throws Exception
     {
-        assertNull(configExtractor.extractFrom(new ElementWithoutAnnotation(), null));
+        assertThat(configExtractor.extractFrom(new ElementWithoutAnnotation(), null)).isNull();
     }
 
     @Test
@@ -90,7 +89,7 @@ public class AnnotationConfigExtractorTest
         @Context
         @Project
         class AnnotationHolder {}
-        
+
         // when
         configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
     }
@@ -102,7 +101,7 @@ public class AnnotationConfigExtractorTest
         @Context
         @Project
         class DefaultAnnotationHolder {}
-        
+
         // when
         configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class));
     }
@@ -153,7 +152,7 @@ public class AnnotationConfigExtractorTest
         // given
         @Project(mainSrc = "SampleType")
         class AnnotationHolder {}
-        
+
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         class DefaultAnnotationHolder {}
 
@@ -171,7 +170,7 @@ public class AnnotationConfigExtractorTest
         // given
         @Preferences(testClassNameTemplate = "${srcFile}Suf")
         class AnnotationHolder {}
-        
+
         @Project(mainSrcFolder = "sources")
         class DefaultAnnotationHolder {}
 
@@ -196,7 +195,7 @@ public class AnnotationConfigExtractorTest
         // then
         assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Pre");
     }
-    
+
     @Test
     public void should_not_load_default_preferences_from_context_annotation() throws Exception
     {
@@ -231,7 +230,7 @@ public class AnnotationConfigExtractorTest
         // given
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         class PreferencesDefinition {}
-        
+
         @Preferences(PreferencesDefinition.class)
         @Project
         class AnnotationHolder {}
@@ -249,7 +248,7 @@ public class AnnotationConfigExtractorTest
         // given
         @Project(properties = @Properties(testClassNameTemplate = "${srcFile}Prefix"))
         class AnnotationHolder {}
-        
+
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
@@ -263,7 +262,7 @@ public class AnnotationConfigExtractorTest
         // given
         @Properties(testSuperClass = "SuperClass")
         class PropertiesDefinition {}
-        
+
         @Project(properties = @Properties(PropertiesDefinition.class))
         class AnnotationHolder {}
 
@@ -273,7 +272,7 @@ public class AnnotationConfigExtractorTest
         // then
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestSuperClass()).isEqualTo("SuperClass");
     }
-    
+
     @Test
     public void should_ignore_properties_when_not_provided() throws Exception
     {
@@ -287,7 +286,7 @@ public class AnnotationConfigExtractorTest
         // then
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig()).isNull();
     }
-    
+
     @Test
     public void should_load_test_project_from_project_annotation() throws Exception
     {
@@ -320,7 +319,7 @@ public class AnnotationConfigExtractorTest
         // when
         configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
     }
-    
+
     @Test(expected = IllegalConfigurationException.class)
     public void should_complain_when_both_testProject_and_testCls_are_defined() throws Exception
     {
@@ -331,17 +330,17 @@ public class AnnotationConfigExtractorTest
         // when
         configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
     }
-    
+
     @Test
     public void should_recursively_load_preferences_from_annotation_value() throws Exception
     {
         // given
         @Preferences(testClassNameTemplate = "Pfx${srcFile}")
         class PreferencesDefinition1 {}
-        
+
         @Preferences(PreferencesDefinition1.class)
         class PreferencesDefinition2 {}
-        
+
         @Preferences(PreferencesDefinition2.class)
         @Project
         class AnnotationHolder {}
@@ -361,28 +360,22 @@ public class AnnotationConfigExtractorTest
 
         @Preferences(testClassNameTemplate = "Pfx${srcFile}")
         class PreferencesDefinition1 {}
-        
+
         @Preferences(PreferencesDefinition1.class)
         class PreferencesDefinition2 {}
-        
+
         @Preferences(PreferencesDefinition2.class)
         @Project
         class PreferencesDefinition3 {}
-        
+
         @Preferences(PreferencesDefinition3.class)
         @Project
         class AnnotationHolder {}
 
-        // when
-        try
-        {
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
-            fail("expected IllegalConfigurationException");
-        }
-        catch (IllegalConfigurationException e)
-        {
-            assertThat(e).hasMessage("Too much recursion in @Preferences definitions");
-        }
+        assertThatThrownBy(() ->
+            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
+        .isInstanceOf(IllegalConfigurationException.class)
+        .hasMessage("Too much recursion in @Preferences definitions");
     }
 
     @Test
@@ -394,7 +387,7 @@ public class AnnotationConfigExtractorTest
 
         @Properties(PropertiesDefinition1.class)
         class PropertiesDefinition2 {}
-        
+
         @Project(properties = @Properties(PropertiesDefinition2.class))
         class AnnotationHolder {}
 
@@ -404,47 +397,41 @@ public class AnnotationConfigExtractorTest
         // then
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestType()).isEqualTo(TestType.TESTNG);
     }
-    
+
     @Test
     public void should_prevent_too_much_recursion_when_loading_properties_from_annotation_value () throws Exception
     {
         // given
         configExtractor.setMaximimDefinitionDepth(1);
-        
+
         @Properties(testType = TestType.TESTNG)
         class PropertiesDefinition1 {}
 
         @Properties(PropertiesDefinition1.class)
         class PropertiesDefinition2 {}
-        
+
         @Project(properties = @Properties(PropertiesDefinition2.class))
         class AnnotationHolder {}
 
-        // when
-        try
-        {
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
-            fail("expected IllegalConfigurationException");
-        }
-        catch (IllegalConfigurationException e)
-        {
-            assertThat(e).hasMessage("Too much recursion in @Properties definitions");
-        }
+        assertThatThrownBy(() ->
+            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
+        .isInstanceOf(IllegalConfigurationException.class)
+        .hasMessage("Too much recursion in @Properties definitions");
     }
-    
+
     @Test
     public void should_recursively_load_project_from_annotation_value() throws Exception
     {
         // given
         @Project(testSrcFolder = "tests")
         class ProjectDefinition {}
-        
+
         @Project(ProjectDefinition.class)
         class ProjectDefinition1 {}
-        
+
         @Project(ProjectDefinition1.class)
         class ProjectDefinition2 {}
-        
+
         @Project(ProjectDefinition2.class)
         class AnnotationHolder {}
 
@@ -463,28 +450,22 @@ public class AnnotationConfigExtractorTest
 
         @Project(mainSrc = "SomeConcept")
         class ProjectDefinition {}
-        
+
         @Project(ProjectDefinition.class)
         class ProjectDefinition1 {}
-        
+
         @Project(ProjectDefinition1.class)
         class ProjectDefinition2 {}
-        
+
         @Project(ProjectDefinition2.class)
         class AnnotationHolder {}
 
-        // when
-        try
-        {
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
-            fail("expected IllegalConfigurationException");
-        }
-        catch (IllegalConfigurationException e)
-        {
-            assertThat(e).hasMessage("Too much recursion in @Project definitions");
-        }
+        assertThatThrownBy(() ->
+            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
+        .isInstanceOf(IllegalConfigurationException.class)
+        .hasMessage("Too much recursion in @Project definitions");
     }
-    
+
     @Test
     public void should_recursively_load_project_and_preferences_from_context_value() throws Exception
     {
@@ -493,14 +474,14 @@ public class AnnotationConfigExtractorTest
         class PreferencesDefinition {}
         @Project(mainSrc = "SomeConcept")
         class ProjectDefinition {}
-        
+
         @Preferences(PreferencesDefinition.class)
         @Project(ProjectDefinition.class)
         class ContextDefinition1 {}
-        
+
         @Context(ContextDefinition1.class)
         class ContextDefinition2 {}
-        
+
         @Context(ContextDefinition2.class)
         class AnnotationHolder {}
 
@@ -511,33 +492,27 @@ public class AnnotationConfigExtractorTest
         assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SomeConcept");
     }
-    
+
     @Test
     public void should_prevent_too_much_recursion_when_loading_project_and_properties_from_context_value() throws Exception
     {
         // given
         configExtractor.setMaximimDefinitionDepth(1);
-        
+
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         @Project(mainSrc = "SomeConcept")
         class ContextDefinition1 {}
-        
+
         @Context(ContextDefinition1.class)
         class ContextDefinition2 {}
-        
+
         @Context(ContextDefinition2.class)
         class AnnotationHolder {}
 
-        // when
-        try
-        {
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
-            fail("expected IllegalConfigurationException");
-        }
-        catch (IllegalConfigurationException e)
-        {
-            assertThat(e).hasMessage("Too much recursion in @Context definitions");
-        }
+        assertThatThrownBy(() ->
+            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
+        .isInstanceOf(IllegalConfigurationException.class)
+        .hasMessage("Too much recursion in @Context definitions");
     }
 
     @Test
@@ -571,7 +546,7 @@ public class AnnotationConfigExtractorTest
        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getTestTypes())
                .containsOnly(JavaType.newClass("", "ClassTest"), JavaType.newClass("net", "AType"));
     }
-    
+
     private static final String DEFAULT_PROJECT_NAME = Defaults.PROJECT_NAME;
 
     private static AnnotatedElement annotatedElement(final Class< ? > clazz)
@@ -598,14 +573,14 @@ public class AnnotationConfigExtractorTest
             return getClass().getSimpleName();
         }
     }
-    
-    @Test 
+
+    @Test
     public void should_load_test_class_template_from_preferences()
     {
         // given
         @Preferences(testClassNameTemplate = "{srcFile}Mest")
         class AnnotationHolder {}
-        
+
         @Project(mainSrcFolder = "sources")
         class DefaultAnnotationHolder {}
 

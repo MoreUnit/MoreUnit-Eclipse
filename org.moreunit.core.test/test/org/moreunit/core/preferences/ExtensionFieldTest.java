@@ -1,7 +1,6 @@
 package org.moreunit.core.preferences;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,23 +25,23 @@ public class ExtensionFieldTest
     public void should_reject_empty_extension() throws Exception
     {
         when(textField.getText()).thenReturn("");
-        assertFalse(field.isValid());
+        assertThat(field.isValid()).isFalse();
 
         when(textField.getText()).thenReturn(".");
-        assertFalse(field.isValid());
+        assertThat(field.isValid()).isFalse();
 
         when(textField.getText()).thenReturn("*.");
-        assertFalse(field.isValid());
+        assertThat(field.isValid()).isFalse();
     }
 
     @Test
     public void should_reject_non_alphanum_extension() throws Exception
     {
         when(textField.getText()).thenReturn("a*bc");
-        assertFalse(field.isValid());
+        assertThat(field.isValid()).isFalse();
 
         when(textField.getText()).thenReturn("a_bc");
-        assertFalse(field.isValid());
+        assertThat(field.isValid()).isFalse();
     }
 
     @Test
@@ -50,7 +49,7 @@ public class ExtensionFieldTest
     {
         when(textField.getText()).thenReturn("rb");
         assertThat(field.getExtension()).isEqualTo("rb");
-        
+
         when(textField.getText()).thenReturn("RB");
         assertThat(field.getExtension()).isEqualTo("rb");
 

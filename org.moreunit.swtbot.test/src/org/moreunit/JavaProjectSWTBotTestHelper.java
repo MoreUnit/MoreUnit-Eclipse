@@ -1,12 +1,12 @@
 /**
- * 
+ *
  */
 package org.moreunit;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory.withPartName;
 import static org.eclipse.swtbot.eclipse.finder.waits.Conditions.waitForView;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class JavaProjectSWTBotTestHelper
         if(! isWorkspacePrepared)
         {
             // SWTBotPreferences.PLAYBACK_DELAY = 10;
-            
+
             // not all keyboard layouts are supported by SWTBot
             // e.g. MAC_DE is missing (see http://wiki.eclipse.org/SWTBot/Keyboard_Layouts)
             // therefore we do check if SWTBot can find the default layout
@@ -196,8 +196,7 @@ public class JavaProjectSWTBotTestHelper
         SWTBotView packageExplorerView = bot.viewByTitle("Package Explorer");
 
         List<Tree> findControls = new ChildrenControlFinder(packageExplorerView.getWidget()).findControls(WidgetOfType.widgetOfType(Tree.class));
-        if(findControls.isEmpty())
-            fail("Tree in Package Explorer View was not found.");
+        assertThat(findControls).isNotEmpty();
 
         SWTBotTree tree = new SWTBotTree(findControls.get(0));
 
@@ -236,7 +235,7 @@ public class JavaProjectSWTBotTestHelper
         return isRunningOnLinuxOrWindows() ? SWT.CTRL : SWT.COMMAND;
     }
 
-    protected static boolean isRunningOnLinuxOrWindows() 
+    protected static boolean isRunningOnLinuxOrWindows()
     {
         String osName = System.getProperty("os.name");
         return osName.contains("Linux") || osName.contains("Win");
@@ -267,20 +266,20 @@ public class JavaProjectSWTBotTestHelper
             }
         };
     }
-    
+
     protected void testSimpleJump(String originalFile, final String expectedJumpToFile)
     {
         openResource(originalFile);
         getShortcutStrategy().pressJumpShortcut();
         bot.waitUntil(new DefaultCondition()
         {
-            
+
             @Override
             public boolean test() throws Exception
             {
                 return expectedJumpToFile.equals(JavaProjectSWTBotTestHelper.bot.activeEditor().getTitle());
             }
-            
+
             @Override
             public String getFailureMessage()
             {

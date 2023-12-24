@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -15,11 +15,11 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
-@Preferences(testClassNameTemplate = "${srcFile}Test", 
-             testSrcFolder = "test", 
+@Preferences(testClassNameTemplate = "${srcFile}Test",
+             testSrcFolder = "test",
              testType = TestType.JUNIT4)
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class MoveClassTest extends JavaProjectSWTBotTestHelper 
+public class MoveClassTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
             mainCls = "org:SomeClass",
@@ -33,12 +33,12 @@ public class MoveClassTest extends JavaProjectSWTBotTestHelper
 		assertThat(context.getCompilationUnit("com.SomeClassTest")).isNotNull();
 	}
 
-	protected void moveSomeClassFromOrgtoComPackageAndWaitUntilFinished() throws JavaModelException 
+	protected void moveSomeClassFromOrgtoComPackageAndWaitUntilFinished() throws JavaModelException
 	{
 		WorkspaceHelper.createNewPackageInSourceFolder(context.getProjectHandler().getMainSrcFolderHandler().get(), "com");
 		SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
 		packageItem.expand();
-		packageItem.getNode("SomeClass.java").select();		
+		packageItem.getNode("SomeClass.java").select();
 		getShortcutStrategy().pressMoveShortcut();
 		bot.waitUntil(Conditions.shellIsActive("Move"));
 		SWTBotTreeItem projectItem = bot.tree().getTreeItem(context.getProjectHandler().getName());

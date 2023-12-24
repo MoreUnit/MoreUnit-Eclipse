@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -15,11 +15,11 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 
 
-@Preferences(testClassNameTemplate="${srcFile}Test", 
-             testSrcFolder="test", 
+@Preferences(testClassNameTemplate="${srcFile}Test",
+             testSrcFolder="test",
              testType=TestType.JUNIT4)
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class RenameClassTest extends JavaProjectSWTBotTestHelper 
+public class RenameClassTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
             mainCls = "org:SomeClass",
@@ -33,7 +33,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		assertThat(context.getCompilationUnit("org.AnyClassTest")).isNotNull();
 	}
 
-	
+
 	@Project(
             mainCls = "org:SomeClass",
             testCls = "com:SomeClassTest",
@@ -45,21 +45,21 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		renameSomeClassToAnyClassAndWaitUntilFinished();
 		assertThat(context.getCompilationUnit("com.SomeClassTest")).isNotNull();
 	}
-	
-	private void renameSomeClassToAnyClassAndWaitUntilFinished() 
+
+	private void renameSomeClassToAnyClassAndWaitUntilFinished()
 	{
 		final SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
 		packageItem.expand();
 		packageItem.getNode("SomeClass.java").select();
 		bot.waitUntil(new DefaultCondition()
         {
-            
+
             @Override
             public boolean test() throws Exception
             {
                 return packageItem.getNode("SomeClass.java").isSelected();
             }
-            
+
             @Override
             public String getFailureMessage()
             {
@@ -72,5 +72,5 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		SWTBotShell renameDialog = bot.activeShell();
 		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
 	}
-	
+
 }

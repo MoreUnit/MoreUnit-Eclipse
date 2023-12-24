@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
@@ -21,8 +21,8 @@ import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 
-@Preferences(testClassNameTemplate = "${srcFile}Test", 
-             testSrcFolder = "test", 
+@Preferences(testClassNameTemplate = "${srcFile}Test",
+             testSrcFolder = "test",
              testType = TestType.JUNIT4,
              testMethodPrefix = true)
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -46,22 +46,22 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 
 		pressRenameShortcutTwiceAndWaitForDialog();
 		renameMethodAndWaitUntilFinished();
-		
+
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
-		assertThat(methods).onProperty("elementName").containsOnly("testGetNumberOne");
+		assertThat(methods).extracting("elementName").containsOnly("testGetNumberOne");
 	}
-	
-	private void pressRenameShortcutTwiceAndWaitForDialog() 
+
+	private void pressRenameShortcutTwiceAndWaitForDialog()
 	{
 		getShortcutStrategy().pressRenameShortcut();
 		getShortcutStrategy().pressRenameShortcut();
-		
+
 		SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
 
 		bot.waitUntil(Conditions.shellIsActive(RefactoringMessages.RenameMethodWizard_defaultPageTitle));
 	}
 
-	protected void renameMethodAndWaitUntilFinished() 
+	protected void renameMethodAndWaitUntilFinished()
 	{
 		bot.textWithLabel(RefactoringUIMessages.RenameResourceWizard_name_field_label).setText("getNumberOne");
 		SWTBotShell renameDialog = bot.activeShell();

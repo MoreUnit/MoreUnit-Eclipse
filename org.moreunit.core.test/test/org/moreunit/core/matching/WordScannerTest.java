@@ -1,8 +1,6 @@
 package org.moreunit.core.matching;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -21,10 +19,10 @@ public class WordScannerTest
         WordScanner scanner = new WordScanner("");
 
         // then
-        assertFalse(scanner.hasNext());
-        assertFalse(scanner.hasNext(2));
-        assertFalse(scanner.hasPrevious());
-        assertFalse(scanner.hasPrevious(2));
+        assertThat(scanner.hasNext()).isFalse();
+        assertThat(scanner.hasNext(2)).isFalse();
+        assertThat(scanner.hasPrevious()).isFalse();
+        assertThat(scanner.hasPrevious(2)).isFalse();
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -41,10 +39,10 @@ public class WordScannerTest
         WordScanner scanner = new WordScanner("some text");
 
         // then (start index is -1)
-        assertTrue(scanner.hasNext());
-        assertTrue(scanner.hasNext(2));
-        assertFalse(scanner.hasPrevious());
-        assertFalse(scanner.hasPrevious(2));
+        assertThat(scanner.hasNext()).isTrue();
+        assertThat(scanner.hasNext(2)).isTrue();
+        assertThat(scanner.hasPrevious()).isFalse();
+        assertThat(scanner.hasPrevious(2)).isFalse();
         assertThat(scanner.next()).isEqualTo('s');
         assertThat(scanner.next(2)).isEqualTo('o');
 
@@ -52,10 +50,10 @@ public class WordScannerTest
         scanner.forward();
 
         // then
-        assertTrue(scanner.hasNext());
-        assertTrue(scanner.hasNext(2));
-        assertFalse(scanner.hasPrevious());
-        assertFalse(scanner.hasPrevious(2));
+        assertThat(scanner.hasNext()).isTrue();
+        assertThat(scanner.hasNext(2)).isTrue();
+        assertThat(scanner.hasPrevious()).isFalse();
+        assertThat(scanner.hasPrevious(2)).isFalse();
         assertThat(scanner.current()).isEqualTo('s');
         assertThat(scanner.next()).isEqualTo('o');
         assertThat(scanner.next(2)).isEqualTo('m');
@@ -64,10 +62,10 @@ public class WordScannerTest
         scanner.forward(8);
 
         // then
-        assertFalse(scanner.hasNext());
-        assertFalse(scanner.hasNext(2));
-        assertTrue(scanner.hasPrevious());
-        assertTrue(scanner.hasPrevious(2));
+        assertThat(scanner.hasNext()).isFalse();
+        assertThat(scanner.hasNext(2)).isFalse();
+        assertThat(scanner.hasPrevious()).isTrue();
+        assertThat(scanner.hasPrevious(2)).isTrue();
         assertThat(scanner.current()).isEqualTo('t');
         assertThat(scanner.previous()).isEqualTo('x');
         assertThat(scanner.previous(2)).isEqualTo('e');
@@ -76,10 +74,10 @@ public class WordScannerTest
         scanner.backward(4);
 
         // then
-        assertTrue(scanner.hasNext());
-        assertTrue(scanner.hasNext(3));
-        assertTrue(scanner.hasPrevious());
-        assertTrue(scanner.hasPrevious(3));
+        assertThat(scanner.hasNext()).isTrue();
+        assertThat(scanner.hasNext(3)).isTrue();
+        assertThat(scanner.hasPrevious()).isTrue();
+        assertThat(scanner.hasPrevious(3)).isTrue();
         assertThat(scanner.current()).isEqualTo(' ');
         assertThat(scanner.next()).isEqualTo('t');
         assertThat(scanner.next(2)).isEqualTo('e');

@@ -1,9 +1,7 @@
 package org.moreunit.settings;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.swtbot.swt.finder.waits.Conditions.waitForShell;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
@@ -37,12 +35,12 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         WaitForObjectCondition<Shell> waitForShell = waitForShell(shellWithTextStartingWith("Properties for "+projectItem.getText()));
         bot.waitUntil(waitForShell);
         setShellInFocus(waitForShell.get(0));
-        
+
         bot.waitUntil(Conditions.shellIsActive("Properties for "+projectItem.getText()));
 
         bot.tree().expandNode("MoreUnit").select("Java");
     }
-    
+
     private void setShellInFocus(final Shell shell)
     {
         UIThreadRunnable.syncExec(new VoidResult()
@@ -72,7 +70,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         propertiesDialogShell.activate();
         bot.waitUntil(Conditions.shellIsActive(propertiesDialogShell.getText()));
         saveAndCloseProps();
-        assertTrue(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext()));
+        assertThat(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext())).isTrue();
     }
 
     private void saveAndCloseProps()
@@ -198,14 +196,14 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).select();
         saveAndCloseProps();
-        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
-        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
+        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isTrue();
+        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
 
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).deselect();
         saveAndCloseProps();
-        assertFalse(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
-        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
+        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isFalse();
+        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
     }
 
     protected void openPropertiesAndActivateOtherTab()
@@ -214,30 +212,30 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.checkBox("Use project specific settings").select();
         bot.cTabItem("Other").activate();
     }
-    
+
     @Test
     public void should_DisabledUI_when_no_project_specific_settings_used() throws Exception
     {
         openProjectPropertiesAndSelectMoreUnitPage();
-        
-        assertTrue(bot.button("Add").isEnabled());
-        assertFalse(bot.button("Remove").isEnabled());
-        assertFalse(bot.button("Remap").isEnabled());
-        assertTrue(bot.tree(1).isEnabled());
-        
+
+        assertThat(bot.button("Add").isEnabled()).isTrue();
+        assertThat(bot.button("Remove").isEnabled()).isFalse();
+        assertThat(bot.button("Remap").isEnabled()).isFalse();
+        assertThat(bot.tree(1).isEnabled()).isTrue();
+
         bot.checkBox("Use project specific settings").deselect();
-        assertFalse(bot.button("Add").isEnabled());
-        assertFalse(bot.button("Remove").isEnabled());
-        assertFalse(bot.button("Remap").isEnabled());
-        assertFalse(bot.tree(1).isEnabled());
-        
+        assertThat(bot.button("Add").isEnabled()).isFalse();
+        assertThat(bot.button("Remove").isEnabled()).isFalse();
+        assertThat(bot.button("Remap").isEnabled()).isFalse();
+        assertThat(bot.tree(1).isEnabled()).isFalse();
+
         bot.checkBox("Use project specific settings").select();
         bot.tree(1).select(0);
-        assertTrue(bot.button("Add").isEnabled());
-        assertTrue(bot.button("Remove").isEnabled());
-        assertTrue(bot.button("Remap").isEnabled());
-        assertTrue(bot.tree(1).isEnabled());
-        
+        assertThat(bot.button("Add").isEnabled()).isTrue();
+        assertThat(bot.button("Remove").isEnabled()).isTrue();
+        assertThat(bot.button("Remap").isEnabled()).isTrue();
+        assertThat(bot.tree(1).isEnabled()).isTrue();
+
         saveAndCloseProps();
     }
 

@@ -1,8 +1,6 @@
 package org.moreunit.core.preferences;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
@@ -33,7 +31,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertFalse(pageCreated);
+        assertThat(pageCreated).isFalse();
     }
 
     @Test
@@ -46,7 +44,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertFalse(pageCreated);
+        assertThat(pageCreated).isFalse();
     }
 
     @Test
@@ -59,7 +57,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertTrue(pageCreated);
+        assertThat(pageCreated).isTrue();
         assertThat(languageId).isEqualTo("py");
         assertThat(description).isNull();
     }
@@ -74,7 +72,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertTrue(pageCreated);
+        assertThat(pageCreated).isTrue();
         assertThat(languageId).isEqualTo("rb");
         assertThat(description).isEqualTo("Page for Ruby");
     }
@@ -89,7 +87,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertTrue(pageCreated);
+        assertThat(pageCreated).isTrue();
         assertThat(languageId).isEqualTo("clj");
         assertThat(description).isNull();
     }
