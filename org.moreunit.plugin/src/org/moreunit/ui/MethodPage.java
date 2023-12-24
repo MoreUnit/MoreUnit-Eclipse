@@ -184,7 +184,10 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
 
     public void updateUI()
     {
-        this.treeViewer.refresh();
+        if(! treeViewer.getControl().isDisposed())
+        {
+            treeViewer.refresh();
+        }
     }
 
     public void elementChanged(ElementChangedEvent event)
