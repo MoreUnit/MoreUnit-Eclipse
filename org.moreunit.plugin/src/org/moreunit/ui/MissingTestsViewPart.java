@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -61,7 +62,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
 
     private String[] getNamesOfJavaProjects()
     {
-        return PluginTools.getJavaProjectsFromWorkspace().stream().map(IJavaProject::getElementName).toArray(String[]::new);
+        return PluginTools.getJavaProjectsFromWorkspace().stream().map(IJavaProject::getElementName).sorted(String.CASE_INSENSITIVE_ORDER).toArray(String[]::new);
     }
 
     @Override
@@ -79,6 +80,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
         selectedJavaProject = JavaCore.create(project);
         treeViewer.refresh();
+        treeViewer.expandAll();
     }
 
     public IJavaProject getSelectedJavaProject()
@@ -89,8 +91,17 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
     public void doubleClick(DoubleClickEvent event)
     {
         ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
-        ICompilationUnit compilationUnit = (ICompilationUnit) selection.getFirstElement();
-        new EditorUI().open(compilationUnit);
+        Object firstElement = selection.getFirstElement();
+        if(firstElement instanceof ICompilationUnit compilationUnit)
+        {
+            new EditorUI().open(compilationUnit);
+        }
+        else
+        {
+            PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+            part.selectAndReveal(firstElement);
+            part.setFocus();
+        }
     }
 
     @Override
@@ -108,7 +119,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             return;
         }
 
-        if (event.getType() != IResourceChangeEvent.POST_CHANGE)
+        if(event.getType() != IResourceChangeEvent.POST_CHANGE)
             return;
 
         if(selectedJavaProject == null)
@@ -147,7 +158,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             e.printStackTrace();
         }
 
-        if(!addedOrRemovedResource.isEmpty())
+        if(! addedOrRemovedResource.isEmpty())
         {
             PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
             {
@@ -187,7 +198,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             e.printStackTrace();
         }
 
-        if(!addedProjects.isEmpty())
+        if(! addedProjects.isEmpty())
         {
             updateProjectsInComboBox();
         }
