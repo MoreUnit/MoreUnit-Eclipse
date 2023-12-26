@@ -1,7 +1,9 @@
 package org.moreunit.elements;
 
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -17,33 +19,54 @@ import org.moreunit.util.PluginTools;
 public class MissingClassTreeContentProvider implements ITreeContentProvider
 {
 
-    public MissingClassTreeContentProvider()
+    public Object[] getChildren(Object parent)
     {
-
-    }
-
-    public Object[] getChildren(Object arg0)
-    {
+        if(parent instanceof IPackageFragment packageFragment)
+        {
+            try
+            {
+            Set<ICompilationUnit> compilationUnits = new HashSet<>();
+            for (ICompilationUnit compilationUnit : packageFragment.getCompilationUnits())
+            {
+                if(compilationUnit.findPrimaryType() != null)
+                {
+                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                    if(! TypeFacade.isTestCase(compilationUnit) && ! classTypeFacade.hasTestCase())
+                    {
+                        compilationUnits.add(compilationUnit);
+                    }
+                }
+            }
+            return compilationUnits.stream().sorted(Comparator.comparing(Object::toString, String.CASE_INSENSITIVE_ORDER)).toArray(ICompilationUnit[]::new);
+        }
+        catch (JavaModelException e)
+        {
+            e.printStackTrace();
+        }
+        }
         return null;
     }
 
-    public Object getParent(Object arg0)
+    public Object getParent(Object child)
     {
+        if(child instanceof ICompilationUnit unit)
+        {
+            return unit.getParent();
+        }
         return null;
     }
 
-    public boolean hasChildren(Object arg0)
+    public boolean hasChildren(Object parent)
     {
-        return false;
+        return ! (parent instanceof ICompilationUnit);
     }
 
     public Object[] getElements(Object inputElement)
     {
-        List<Object> elements = new ArrayList<Object>();
-
-        if(inputElement instanceof MissingTestsViewPart)
+        Set<IPackageFragment> packages = new HashSet<>();
+        if(inputElement instanceof MissingTestsViewPart missingTestsViewPart)
         {
-            IJavaProject javaProject = ((MissingTestsViewPart) inputElement).getSelectedJavaProject();
+            IJavaProject javaProject = missingTestsViewPart.getSelectedJavaProject();
             if(javaProject != null)
             {
                 List<IPackageFragmentRoot> allSourceFolderFromProject = PluginTools.getAllSourceFolderFromProject(javaProject);
@@ -62,7 +85,8 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                                     ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
                                     if(! TypeFacade.isTestCase(compilationUnit) && ! classTypeFacade.hasTestCase())
                                     {
-                                        elements.add(compilationUnit);
+                                        packages.add((IPackageFragment) javaPackage);
+                                        break;
                                     }
                                 }
                             }
@@ -75,8 +99,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                 }
             }
         }
-
-        return elements.toArray();
+        return packages.stream().sorted(Comparator.comparing(Object::toString, String.CASE_INSENSITIVE_ORDER)).toArray(IJavaElement[]::new);
     }
 
     public void inputChanged(Viewer arg0, Object arg1, Object arg2)
