@@ -61,7 +61,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
 
     private String[] getNamesOfJavaProjects()
     {
-        return PluginTools.getJavaProjectsFromWorkspace().stream().map(IJavaProject::getElementName).toArray(String[]::new);
+        return PluginTools.getJavaProjectsFromWorkspace().stream().map(IJavaProject::getElementName).sorted(String.CASE_INSENSITIVE_ORDER).toArray(String[]::new);
     }
 
     @Override
@@ -79,6 +79,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
         selectedJavaProject = JavaCore.create(project);
         treeViewer.refresh();
+        treeViewer.expandAll();
     }
 
     public IJavaProject getSelectedJavaProject()
