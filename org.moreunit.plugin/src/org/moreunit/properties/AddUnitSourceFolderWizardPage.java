@@ -29,6 +29,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
         super("Add Unit Source Folder");
         setTitle("Add Unit Source Folder");
         setDescription("Please select source folders to add");
+        setPageComplete(false);
     }
 
     public void createControl(Composite parent)
@@ -83,6 +84,8 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
             else if(! isChecked && ! isNoSourceFolderInProjectSelected(javaProject))
                 checkboxTreeViewer.setGrayChecked(javaProject, true);
         }
+
+        setPageComplete(checkboxTreeViewer.getCheckedElements().length > 0);
     }
 
     private boolean areAllSourceFolderInProjectSelected(Object javaProjectElement)

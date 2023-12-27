@@ -1,6 +1,7 @@
 package org.moreunit.properties;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -97,7 +98,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
             }
         }
 
-        return allJavaProjectsInWorkspace;
+        return allJavaProjectsInWorkspace.stream().sorted(Comparator.comparing((IJavaProject project) -> project.getElementName(), String.CASE_INSENSITIVE_ORDER)).toList();
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.moreunit.mock.preferences;
 
+import static org.moreunit.mock.config.MockModule.$;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -13,8 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.moreunit.core.log.Logger;
-
-import static org.moreunit.mock.config.MockModule.$;
 
 public class MainPropertyPage extends PropertyPage
 {
@@ -34,6 +34,7 @@ public class MainPropertyPage extends PropertyPage
         this.preferences = preferences;
         this.templateStyleSelector = templateStyleSelector;
         this.logger = logger;
+        noDefaultButton();
     }
 
     @Override
