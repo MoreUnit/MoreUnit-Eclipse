@@ -3,95 +3,38 @@
  */
 package org.moreunit.properties;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.util.PluginTools;
 
-/**
- * @author vera 15.03.2008 19:38:50
- */
-public class SourceFolderMappingDialog extends Dialog implements ICheckStateListener, ITreeContentProvider
+public class SourceFolderMappingDialog
 {
 
-    private SourceFolderMapping sourceFolderMapping;
-    private CheckboxTreeViewer checkboxTreeViewer;
-    private UnitSourceFolderBlock unitSourceFolderBlock;
-
-    protected SourceFolderMappingDialog(UnitSourceFolderBlock unitSourceFolderBlock, Shell parentShell, SourceFolderMapping sourceFolderMapping)
+    private SourceFolderMappingDialog()
     {
-        super(parentShell);
-
-        this.unitSourceFolderBlock = unitSourceFolderBlock;
-        this.sourceFolderMapping = sourceFolderMapping;
+        // utility class
     }
 
-    @Override
-    protected Control createDialogArea(Composite parent)
+    public static void open(UnitSourceFolderBlock unitSourceFolderBlock, Shell parentShell, SourceFolderMapping sourceFolderMapping)
     {
-        checkboxTreeViewer = new CheckboxTreeViewer(parent);
-        checkboxTreeViewer.addCheckStateListener(this);
-        checkboxTreeViewer.setLabelProvider(new JavaElementLabelProvider());
-        checkboxTreeViewer.setContentProvider(this);
-        checkboxTreeViewer.setInput(this);
+        var input = PluginTools.getAllSourceFolderFromProject(sourceFolderMapping.getJavaProject()).toArray();
+        var selected = sourceFolderMapping.getSourceFolderList().toArray();
+        var title = "Mapped folders";
+        var message = "Select mapped source folders";
+        var dialog = ListSelectionDialog.of(input).preselect(selected).title(title).message(message).labelProvider(new JavaElementLabelProvider()).create(parentShell);
+        if(dialog.open() != Window.OK || dialog.getResult() == null)
+        {
+            return;
+        }
 
-        return parent;
+        var result = Arrays.stream(dialog.getResult()).filter(IPackageFragmentRoot.class::isInstance).map(IPackageFragmentRoot.class::cast).toList();
+        unitSourceFolderBlock.handleSourceDialogMappingFinished(sourceFolderMapping, result);
     }
 
-    public void checkStateChanged(CheckStateChangedEvent event)
-    {
-
-    }
-
-    public Object[] getChildren(Object parentElement)
-    {
-        return null;
-    }
-
-    public Object getParent(Object element)
-    {
-        return null;
-    }
-
-    public boolean hasChildren(Object element)
-    {
-        return false;
-    }
-
-    public Object[] getElements(Object inputElement)
-    {
-        return PluginTools.getAllSourceFolderFromProject(sourceFolderMapping.getJavaProject()).toArray();
-    }
-
-    public void dispose()
-    {
-    }
-
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-    {
-    }
-
-    @Override
-    protected void okPressed()
-    {
-        Object[] checkedFolder = checkboxTreeViewer.getCheckedElements();
-        List<IPackageFragmentRoot> asList = new ArrayList<IPackageFragmentRoot>();
-        for(Object elem : checkedFolder) asList.add((IPackageFragmentRoot) elem);
-        if(checkedFolder != null && checkedFolder.length > 0)
-            unitSourceFolderBlock.handleSourceDialogMappingFinished(sourceFolderMapping, asList);
-
-        super.okPressed();
-    }
 }

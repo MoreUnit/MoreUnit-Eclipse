@@ -7,7 +7,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.moreunit.elements.SourceFolderMapping;
 
@@ -24,11 +23,12 @@ public class AddUnitSourceFolderWizard extends Wizard
 
     private UnitSourceFolderBlock unitSourceFolderBlock;
 
-
     public AddUnitSourceFolderWizard(IJavaProject javaProject, UnitSourceFolderBlock unitSourceFolderBlock)
     {
         this.javaProject = javaProject;
         this.unitSourceFolderBlock = unitSourceFolderBlock;
+        setWindowTitle("MoreUnit test source folders");
+        setHelpAvailable(false);
     }
 
     @Override
@@ -46,12 +46,10 @@ public class AddUnitSourceFolderWizard extends Wizard
     }
 
     @Override
-    public void createPageControls(Composite pageContainer)
+    public void addPages()
     {
-        setWindowTitle("MoreUnit test source folders");
         page = new AddUnitSourceFolderWizardPage();
         addPage(page);
-        super.createPageControls(pageContainer);
     }
 
     public void open(Shell parentShell)

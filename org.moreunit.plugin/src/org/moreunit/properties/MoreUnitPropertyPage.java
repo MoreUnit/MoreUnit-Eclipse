@@ -36,6 +36,11 @@ public class MoreUnitPropertyPage extends PropertyPage
     private UnitSourceFolderBlock firstTabUnitSourceFolder;
     private OtherMoreunitPropertiesBlock secondTabOtherProperties;
 
+    public MoreUnitPropertyPage()
+    {
+        noDefaultButton();
+    }
+
     @Override
     protected Control createContents(Composite parent)
     {

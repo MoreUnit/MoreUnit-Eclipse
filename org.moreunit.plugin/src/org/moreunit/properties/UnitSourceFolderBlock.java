@@ -181,7 +181,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
     private void mappingButtonClicked()
     {
         TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
-        (new SourceFolderMappingDialog(this, propertyPage.getShell(), (SourceFolderMapping) selection.getFirstElement())).open();
+        SourceFolderMappingDialog.open(this, propertyPage.getShell(), (SourceFolderMapping) selection.getFirstElement());
     }
 
     public void handlePerformFinishFromAddUnitSourceFolderWizard(List<SourceFolderMapping> mappingsToAdd)
