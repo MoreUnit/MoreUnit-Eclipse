@@ -53,11 +53,37 @@
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-compiler-plugin</artifactId>
           <version>${tycho-version}</version>
+          <configuration>
+            <source>17</source>
+            <target>17</target>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>target-platform-configuration</artifactId>
           <version>${tycho-version}</version>
+          <configuration>
+            <target>
+              <file>${basedir}/../org.moreunit.build/${target.platform.classifier}.target</file>
+            </target>
+            <environments>
+              <environment>
+                <os>linux</os>
+                <ws>gtk</ws>
+                <arch>x86_64</arch>
+              </environment>
+              <environment>
+                <os>win32</os>
+                <ws>win32</ws>
+                <arch>x86_64</arch>
+              </environment>
+              <environment>
+                <os>macosx</os>
+                <ws>cocoa</ws>
+                <arch>x86_64</arch>
+              </environment>
+            </environments>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -69,6 +95,10 @@
           <artifactId>tycho-surefire-plugin</artifactId>
           <version>${tycho-version}</version>
           <configuration>
+            <useUIHarness>${tests.use.ui}</useUIHarness>
+            <useUIThread>${tests.use.ui}</useUIThread>
+            <showEclipseLog>true</showEclipseLog>
+            <skipAfterFailureCount>10</skipAfterFailureCount>
             <providerHint>junit4</providerHint>
             <argLine>
               --add-opens java.base/java.lang=ALL-UNNAMED
@@ -180,46 +210,14 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-compiler-plugin</artifactId>
-        <configuration>
-          <source>17</source>
-          <target>17</target>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <target>
-            <file>${basedir}/../org.moreunit.build/${target.platform.classifier}.target</file>
-          </target>
-          <environments>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
-              <arch>x86_64</arch>
-            </environment>
-          </environments>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
-        <configuration>
-          <useUIHarness>${tests.use.ui}</useUIHarness>
-          <useUIThread>${tests.use.ui}</useUIThread>
-          <showEclipseLog>true</showEclipseLog>
-          <skipAfterFailureCount>10</skipAfterFailureCount>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
