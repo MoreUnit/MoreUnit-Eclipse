@@ -75,7 +75,7 @@ public class JumpCodeMining extends LineEndCodeMining
                 IMember memberToJump = typeFacade.getOneCorrespondingMember(request);
                 if(memberToJump != null)
                 {
-                    setLabel(" Jump to " + testOrTested + " class");
+                    setLabel("Jump to " + testOrTested + " class");
                 }
                 else
                 {
@@ -108,7 +108,7 @@ public class JumpCodeMining extends LineEndCodeMining
                 }
                 if(jumpable)
                 {
-                    setLabel(" Jump to " + testOrTested + " method");
+                    setLabel("Jump to " + testOrTested + " method");
                 }
                 else
                 {
