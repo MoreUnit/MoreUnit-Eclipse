@@ -18,9 +18,6 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Cygwin
-        uses: cygwin/cygwin-install-action@v4
- 
       - name: Checkout 🛎
         uses: actions/checkout@v4
         
