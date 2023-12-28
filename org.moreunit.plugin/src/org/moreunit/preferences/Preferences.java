@@ -79,6 +79,7 @@ public class Preferences
         store.setDefault(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE, PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
         store.setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, PreferenceConstants.DEFAULT_TEST_METHOD_DEFAULT_CONTENT);
         store.setDefault(PreferenceConstants.TEST_ANNOTATION_MODE, PreferenceConstants.DEFAULT_TEST_ANNOTATION_MODE);
+        store.setDefault(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING, PreferenceConstants.DEFAULT_ENABLE_MOREUNIT_CODEMINING);
         return store;
     }
 
