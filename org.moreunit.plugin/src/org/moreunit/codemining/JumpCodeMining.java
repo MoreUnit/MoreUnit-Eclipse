@@ -6,11 +6,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.IType;
@@ -58,22 +56,25 @@ public class JumpCodeMining extends LineEndCodeMining
     @Override
     protected CompletableFuture<Void> doResolve(ITextViewer viewer, IProgressMonitor monitor)
     {
-        String testOrTested = isTest() ? "tested" : "test";
         return CompletableFuture.runAsync(() -> {
+            IMember member = (IMember) element;
+            TypeFacade typeFacade = TypeFacade.createFacade(member.getCompilationUnit());
+            String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
             if(element instanceof IType)
             {
-                MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(element.getJavaProject());
-
-                TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());
-
-                CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
-                        .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
-                        .withCurrentMethod(element instanceof IMethod method ? method : null) //
-                        .methodSearchMode(searchMode) //
-                        .build();
-
-                IMember memberToJump = typeFacade.getOneCorrespondingMember(request);
-                if(memberToJump != null)
+                boolean jumpable = false;
+                if(typeFacade instanceof ClassTypeFacade)
+                {
+                    ClassTypeFacade classTypeFacade = (ClassTypeFacade) typeFacade;
+                    jumpable = classTypeFacade.hasTestCase();
+                }
+                else if(typeFacade instanceof TestCaseTypeFacade)
+                {
+                    TestCaseTypeFacade testCaseTypeFacade = (TestCaseTypeFacade) typeFacade;
+                    IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
+                    jumpable = correspondingClassUnderTest != null;
+                }
+                if(jumpable)
                 {
                     setLabel("Jump to " + testOrTested + " class");
                 }
@@ -85,17 +86,11 @@ public class JumpCodeMining extends LineEndCodeMining
             else if(element instanceof IMethod)
             {
                 IMethod method = (IMethod) element;
-                TestAnnotationMode testAnnotationMode = Preferences.forProject(method.getJavaProject()).getTestAnnotationMode();
-                if(testAnnotationMode == TestAnnotationMode.OFF)
-                {
-                    return;
-                }
-                TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());
                 boolean jumpable = false;
                 if(typeFacade instanceof ClassTypeFacade)
                 {
                     ClassTypeFacade classTypeFacade = (ClassTypeFacade) typeFacade;
-                    jumpable = ! (classTypeFacade.getCorrespondingTestMethods(method, testAnnotationMode.getMethodSearchMode()).isEmpty());
+                    jumpable = ! (classTypeFacade.getCorrespondingTestMethods(method, TestAnnotationMode.BY_CALL_AND_BY_NAME.getMethodSearchMode()).isEmpty());
                 }
                 else if(typeFacade instanceof TestCaseTypeFacade)
                 {
@@ -116,23 +111,6 @@ public class JumpCodeMining extends LineEndCodeMining
                 }
             }
         });
-    }
-
-    private boolean isTest()
-    {
-        IPackageFragmentRoot packageFragmentRoot = (IPackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-        if(packageFragmentRoot != null)
-        {
-            try
-            {
-                IClasspathEntry resolvedClasspathEntry = packageFragmentRoot.getResolvedClasspathEntry();
-                return resolvedClasspathEntry != null && resolvedClasspathEntry.isTest();
-            }
-            catch (JavaModelException e)
-            {
-            }
-        }
-        return false;
     }
 
     @Override

@@ -46,6 +46,7 @@ public interface PreferenceConstants
     String DEFAULT_TEST_CLASS_NAME_TEMPLATE = TestFileNamePattern.SRC_FILE_VARIABLE + "(Test|IT)";
     String DEFAULT_TEST_METHOD_DEFAULT_CONTENT = "throw new RuntimeException(\"not yet implemented\");";
     String DEFAULT_TEST_ANNOTATION_MODE = "OFF";
+    boolean DEFAULT_ENABLE_MOREUNIT_CODEMINING = true;
 
     String TEXT_GENERAL_SETTINGS = "General settings for your unit tests (they can then be refined for each project):";
     String TEXT_TEST_SUPERCLASS = "Test superclass:";
@@ -63,7 +64,7 @@ public interface PreferenceConstants
     String TEXT_EXTENDED_TEST_METHOD_SEARCH = "Enable test method search \"by call\"";
     String TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME = "Enable test method search \"by name\"";
     String TEXT_GENERATE_COMMENTS_FOR_TEST_METHOD = "Generate comments for test methods";
-    String TEXT_ENABLE_MOREUNIT_CODEMINING = "Enable MoreUnit Code Mining (Beta)";
+    String TEXT_ENABLE_MOREUNIT_CODEMINING = "Enable MoreUnit Code Mining";
     String TEXT_ANNOTATION_MODE = "Annotate tested methods";
     String TEST_ANNOTATION_MODE_DISABLED = "Disabled";
     String TEST_ANNOTATION_MODE_BY_NAME = "Search by method name";
