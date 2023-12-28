@@ -6,7 +6,6 @@
   <artifactId>moreunit</artifactId>
   <version>3.3.3-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>MoreUnit Parent</name>
   <modules>
     <module>../org.moreunit.core</module>
     <module>../org.moreunit.plugin</module>
