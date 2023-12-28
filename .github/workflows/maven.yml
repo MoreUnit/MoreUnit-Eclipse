@@ -1,6 +1,3 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: MoreUnit Build
 
 on:
@@ -13,26 +10,19 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     permissions:
       checks: write
-      contents: write
+      contents: read
+      pull-requests: write
 
     steps:
+      - name: Cygwin
+        uses: cygwin/cygwin-install-action@v4
+ 
       - name: Checkout 🛎
         uses: actions/checkout@v4
-
-      - name: Get Time for BUILD_ID
-        id: time
-        uses: nanzm/get-time-action@v2.0
-        with:
-          format: 'YYYYMMDD_HHmm'
-          
-      - name: Get Branch name for BUILD_LABEL
-        id: branch_name
-        shell: bash
-        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
         
       - name: Set up Java ☕️
         uses: actions/setup-java@v4
@@ -46,24 +36,16 @@ jobs:
           maven-version: 3.9.4
 
       - name: Build and verify for eclipse-4.25 (ignoring test results)
-        env:
-          BUILD_ID: "${{ steps.time.outputs.time }}"
-          BUILD_TYPE: "S"
-          BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
-        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean verify -Dtarget.platform.classifier=eclipse-4.25 -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: mvn -file org.moreunit.build/pom.xml clean verify "-Dtarget.platform.classifier=eclipse-4.25" "-Dmaven.test.failure.ignore=true" "-Dmaven.test.error.ignore=true" --fail-at-end "-Dtycho.disableP2Mirrors=true" --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Build and verify for eclipse-4.30
-        env:
-          BUILD_ID: "${{ steps.time.outputs.time }}"
-          BUILD_TYPE: "S"
-          BUILD_LABEL: "CI ${{ steps.time.outputs.time }} (${{ steps.branch_name.outputs.branch }})"
-        run: xvfb-run mvn -file org.moreunit.build/pom.xml clean install -Dtarget.platform.classifier=eclipse-4.30 --fail-at-end -Dtycho.disableP2Mirrors=true --batch-mode --strict-checksums --update-snapshots -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-4.30" --fail-at-end "-Dtycho.disableP2Mirrors=true" --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Publish Surefire Test Results for  🖨
         if: ${{ always() }}
         uses: ScaCap/action-surefire-report@v1
         with:
-          check_name: Test Results
+          check_name: test results
 
       - name: Flatten P2 repository
         uses: RoiSoleil/flatten-p2-repo@main
