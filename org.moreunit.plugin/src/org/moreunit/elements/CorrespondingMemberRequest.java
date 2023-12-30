@@ -61,17 +61,25 @@ public class CorrespondingMemberRequest
 
         /**
          * Will propose the creation of a type if no correspondence is found.
-         * 
+         *
          * @param promptText the prompt text to display in the dialog asking the
          *            user to choose for a member
          */
         public Builder createClassIfNoResult(String promptText)
         {
             this.createClassIfNoResult = true;
+            return promptText(promptText);
+        }
+
+        /**
+         * @param promptText the prompt text to display in the dialog asking the
+         *            user to choose for a member
+         */
+        public Builder promptText(String promptText)
+        {
             this.promptText = promptText;
             return this;
         }
-
         /**
          * How to search for corresponding methods (by call or/and by method
          * name).

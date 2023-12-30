@@ -121,10 +121,12 @@ public class JumpCodeMining extends LineEndCodeMining
 
             TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());
 
+            String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
             CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                     .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                     .withCurrentMethod(element instanceof IMethod method ? method : null) //
                     .methodSearchMode(searchMode) //
+                    .promptText("Jump to " + testOrTested + " class...")
                     .build();
 
             IMember memberToJump = typeFacade.getOneCorrespondingMember(request);

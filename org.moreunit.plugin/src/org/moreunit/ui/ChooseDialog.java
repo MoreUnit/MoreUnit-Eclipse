@@ -2,9 +2,12 @@ package org.moreunit.ui;
 
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
+import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -26,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
+import org.moreunit.core.util.Strings;
 import org.moreunit.log.LogHandler;
 
 public class ChooseDialog<T> extends PopupDialog implements DisposeListener
@@ -209,7 +213,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         TreeViewer viewer = new TreeViewer(parent, SWT.NO_TRIM);
         viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new LabelProvider());
+        viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new LabelProvider()));
         viewer.setInput(this);
         return viewer;
     }
@@ -251,29 +255,45 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
     private static class LabelProvider extends JavaElementLabelProvider
     {
+        public LabelProvider()
+        {
+            super(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_OVERLAY_ICONS);
+        }
+
         @Override
         public Image getImage(Object element)
         {
-            if(element instanceof TreeActionElement)
+            if(element instanceof TreeActionElement action)
             {
-                return ((TreeActionElement< ? >) element).getImage();
+                return action.getImage();
             }
             return super.getImage(element);
         }
 
         @Override
-        public String getText(Object element)
+        public StyledString getStyledText(Object element)
         {
-            if(element instanceof TreeActionElement)
+            if(element instanceof TreeActionElement action)
             {
-                return ((TreeActionElement< ? >) element).getText();
+                return styled(action.getText(), null);
             }
-            else if(element instanceof IType)
+            else if(element instanceof IType type)
             {
-                IType type = (IType) element;
-                return String.format("%s - %s", type.getElementName(), type.getPackageFragment().getElementName());
+                return styled(type.getElementName(), type.getPackageFragment().getElementName());
             }
-            return super.getText(element);
+            return super.getStyledText(element);
+        }
+
+        private StyledString styled(String text, String decoration)
+        {
+            StyledString styled = new StyledString();
+            styled.append(text);
+            if(decoration != null && ! Strings.isBlank(decoration))
+            {
+                styled.append(JavaElementLabels.CONCAT_STRING + decoration, StyledString.DECORATIONS_STYLER);
+            }
+            return styled;
         }
     }
+
 }
