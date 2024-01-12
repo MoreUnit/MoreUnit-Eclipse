@@ -1,40 +1,15 @@
 package org.moreunit.annotation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.IAnnotation;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.AnnotationModelEvent;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelExtension;
-import org.eclipse.jface.text.source.IAnnotationModelListener;
-import org.eclipse.jface.text.source.IAnnotationModelListenerExtension;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.moreunit.elements.ClassTypeFacade;
-import org.moreunit.elements.EditorPartFacade;
-import org.moreunit.elements.TypeFacade;
+import org.eclipse.jdt.core.*;
+import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.source.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.texteditor.*;
+import org.moreunit.elements.*;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.TestAnnotationMode;
@@ -49,10 +24,11 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private static final String MODEL_KEY = "org.moreunit.model_key";
 
-    private final List<MoreUnitAnnotation> annotations = Collections.synchronizedList(new ArrayList<MoreUnitAnnotation>());
-    private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<IAnnotationModelListener>(2);
+    private final List<MoreUnitAnnotation> annotations = Collections.synchronizedList(new ArrayList<>());
+    private final List<IAnnotationModelListener> annotationModelListeners = new ArrayList<>(2);
     private final IDocument document;
     private final ITextEditor textEditor;
+    private Job updateJob;
 
     /*
      * Could be private, but is public for testing.
@@ -145,7 +121,11 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             return;
         }
         IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-        modelExtension.removeAnnotationModel(MODEL_KEY);
+        model = modelExtension.removeAnnotationModel(MODEL_KEY);
+        if(model instanceof MoreUnitAnnotationModel && ((MoreUnitAnnotationModel) model).updateJob != null)
+        {
+            ((MoreUnitAnnotationModel) model).updateJob.cancel();
+        }
     }
 
     private void clear(AnnotationModelEvent event)
@@ -165,65 +145,73 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     private void updateAnnotations()
     {
         final MoreUnitAnnotationModel modelInstance = this;
-        Job updateJob = new Job("Update MoreUnit Annotations")
+        if(updateJob == null)
         {
-
-            @Override
-            protected IStatus run(IProgressMonitor monitor)
+            updateJob = new Job("Update MoreUnit Annotations")
             {
-                AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
-                clear(event);
-
-                try
+                @Override
+                protected IStatus run(IProgressMonitor monitor)
                 {
-                    EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
-                    if(! editorPartFacade.isJavaLikeFile())
+                    if(monitor.isCanceled())
                     {
-                        return Status.OK_STATUS;
+                        return Status.CANCEL_STATUS;
                     }
-
-                    ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
-                    if(TypeFacade.isTestCase(compilationUnit))
+                    AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
+                    clear(event);
+                    try
                     {
-                        return Status.OK_STATUS;
+                        EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+                        if(! editorPartFacade.isJavaLikeFile())
+                        {
+                            return Status.OK_STATUS;
+                        }
+                        ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+                        if(TypeFacade.isTestCase(compilationUnit))
+                        {
+                            return Status.OK_STATUS;
+                        }
+                        ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                        IType type = classTypeFacade.getType();
+                        if(type == null)
+                        {
+                            return Status.OK_STATUS; // this could happen if the
+                                                     // resource is out of sync
+                                                     // with
+                                                     // the file system
+                        }
+                        annotateTestedMethods(type, classTypeFacade, event, monitor);
                     }
-
-                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-                    IType type = classTypeFacade.getType();
-                    if(type == null)
+                    catch (Exception exc)
                     {
-                        return Status.OK_STATUS; // this could happen if the
-                                                 // resource is out of sync with
-                                                 // the file system
+                        LogHandler.getInstance().handleExceptionLog(exc);
                     }
-
-                    annotateTestedMethods(type, classTypeFacade, event);
+                    fireModelChanged(event);
+                    return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
                 }
-                catch (Exception exc)
-                {
-                    LogHandler.getInstance().handleExceptionLog(exc);
-                }
-
-                fireModelChanged(event);
-
-                return Status.OK_STATUS;
-            }
-        };
-
-        updateJob.setPriority(Job.DECORATE);
+            };
+            updateJob.setPriority(Job.DECORATE);
+        }
+        if(updateJob.getResult() != null && updateJob.getResult().getSeverity() == IStatus.CANCEL)
+        {
+            return;
+        }
         updateJob.schedule();
     }
 
-    private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event) throws JavaModelException
+    private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event, IProgressMonitor monitor) throws JavaModelException
     {
         TestAnnotationMode testAnnotationMode = Preferences.forProject(type.getJavaProject()).getTestAnnotationMode();
         if(testAnnotationMode == TestAnnotationMode.OFF)
         {
             return;
         }
-
+        monitor.beginTask("Processing type \"" + type.getElementName() + "\"", type.getMethods().length);
         for (IMethod method : type.getMethods())
         {
+            if(monitor.isCanceled())
+            {
+                return;
+            }
             // never search by call, as it causes a lot of issues, the
             // CallHierarchy singleton's state being shared between different
             // search tasks
@@ -261,6 +249,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                 }
                 event.annotationAdded(annotation);
             }
+            monitor.worked(1);
         }
     }
 
