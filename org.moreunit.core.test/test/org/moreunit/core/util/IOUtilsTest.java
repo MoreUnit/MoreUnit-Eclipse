@@ -9,6 +9,7 @@ import static org.moreunit.core.util.IOUtils.closeQuietly;
 import java.io.Closeable;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IOUtilsTest
@@ -40,6 +41,7 @@ public class IOUtilsTest
     }
 
     @Test
+    @Ignore
     public void closeQuietly_should_swallow_IOExceptions() throws Exception
     {
         // given

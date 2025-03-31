@@ -1,7 +1,6 @@
 package org.moreunit.util;
 
-import static org.moreunit.core.util.Preconditions.checkNotNull;
-import static org.moreunit.core.util.Preconditions.checkNotNullOrEmpty;
+import static org.moreunit.core.util.Preconditions.*;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -20,28 +19,15 @@ import org.moreunit.elements.MethodFacade;
 public abstract class MethodCallFinder
 {
 
-    public static enum Direction
-    {
-        CALLEE, CALLER
-    }
-
     private final IJavaSearchScope searchScope;
     private final MethodWrapper methodWrapper;
 
-    protected MethodCallFinder(IMethod method, Collection< ? extends IJavaElement> searchScope, Direction direction)
+    protected MethodCallFinder(IMethod method, Collection< ? extends IJavaElement> searchScope)
     {
         checkNotNull(method, "Method can not be null");
         checkNotNullOrEmpty(searchScope, "Missing search scope");
-        checkNotNull(direction, "Missing direction");
 
-        if(Direction.CALLEE == direction)
-        {
-            this.methodWrapper = CallHierarchy.getDefault().getCalleeRoots(new IMethod[] { method })[0];
-        }
-        else
-        {
-            this.methodWrapper = CallHierarchy.getDefault().getCallerRoots(new IMethod[] { method })[0];
-        }
+        this.methodWrapper = CallHierarchy.getDefault().getCallerRoots(new IMethod[] { method })[0];
 
         this.searchScope = SearchEngine.createJavaSearchScope(JavaElementUtils.toArray(searchScope));
     }

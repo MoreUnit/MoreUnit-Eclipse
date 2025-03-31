@@ -1,6 +1,5 @@
 package org.moreunit.core.matching;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;

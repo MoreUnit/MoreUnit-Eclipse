@@ -1,6 +1,7 @@
 package org.moreunit.matching;
 
 import static java.util.Arrays.asList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.test.model.Types.typeWithPackage;
 

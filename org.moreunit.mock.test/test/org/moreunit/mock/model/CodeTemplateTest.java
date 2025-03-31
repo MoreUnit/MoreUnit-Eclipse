@@ -9,7 +9,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.templates.MockingContext;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -66,7 +66,6 @@ public class CodeTemplateTest
         conditions.add(new ExcludeIf(ConditionType.INJECTION_TYPE, InjectionType.constructor.name()));
         conditions.add(new ExcludeIf(ConditionType.INJECTION_TYPE, InjectionType.setter.name()));
 
-        when(context.usesInjectionType(InjectionType.constructor)).thenReturn(false);
         when(context.usesInjectionType(InjectionType.setter)).thenReturn(true);
 
         // when

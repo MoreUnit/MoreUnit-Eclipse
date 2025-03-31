@@ -23,16 +23,16 @@
   </modules>
 
   <properties>
-    <tycho-version>4.0.4</tycho-version>
-    <exec-maven-version>3.1.1</exec-maven-version>
-    <surefire-version>3.2.2</surefire-version>
+    <tycho-version>4.0.12</tycho-version>
+    <exec-maven-version>3.5.0</exec-maven-version>
+    <surefire-version>3.5.3</surefire-version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <tests.use.ui>false</tests.use.ui>
 
-    <target.platform.classifier>eclipse-4.30</target.platform.classifier>
+    <target.platform.classifier>eclipse-latest</target.platform.classifier>
 
   </properties>
   <build>

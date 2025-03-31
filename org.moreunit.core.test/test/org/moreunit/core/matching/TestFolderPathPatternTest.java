@@ -1,17 +1,13 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.moreunit.core.matching.TestFolderPathPattern.isValid;
-
-import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.moreunit.core.CoreTestModule;
 import org.moreunit.core.resources.InMemoryPath;
 import org.moreunit.core.resources.InMemoryWorkspace;
 import org.moreunit.core.resources.Path;
-import org.moreunit.core.ui.NonBlockingDialogFactory;
 
 public class TestFolderPathPatternTest
 {

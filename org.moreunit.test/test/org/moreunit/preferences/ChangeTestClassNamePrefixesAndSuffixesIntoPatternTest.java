@@ -1,24 +1,19 @@
 package org.moreunit.preferences;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.moreunit.core.util.ArrayUtils.array;
 import static org.moreunit.core.util.Strings.emptyArray;
-import static org.moreunit.preferences.PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE;
-import static org.moreunit.preferences.PreferenceConstants.TEST_CLASS_NAME_TEMPLATE;
-import static org.moreunit.preferences.PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING;
-import static org.moreunit.preferences.PreferenceConstants.Deprecated.PREFIXES;
-import static org.moreunit.preferences.PreferenceConstants.Deprecated.SUFFIXES;
+import static org.moreunit.preferences.PreferenceConstants.*;
+import static org.moreunit.preferences.PreferenceConstants.Deprecated.*;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 
 @RunWith(MockitoJUnitRunner.class)

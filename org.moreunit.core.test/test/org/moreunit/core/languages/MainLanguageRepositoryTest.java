@@ -1,14 +1,13 @@
 package org.moreunit.core.languages;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.extension.LanguageExtensionManager;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,7 +30,6 @@ public class MainLanguageRepositoryTest
     {
         // given
         when(userDefinedLanguagesRepo.contains("vb")).thenReturn(true);
-        when(extensionManager.extensionExistsForLanguage("vb")).thenReturn(false);
 
         // then
         assertThat(mainRepo.contains("vb")).isTrue();

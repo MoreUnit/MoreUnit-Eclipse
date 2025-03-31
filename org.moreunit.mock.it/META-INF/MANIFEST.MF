@@ -5,11 +5,11 @@ Bundle-SymbolicName: org.moreunit.mock.it
 Bundle-Version: 3.3.3.qualifier
 Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Require-Bundle: org.eclipse.jdt.launching,
- org.junit;bundle-version="4.8.0",
+ org.junit,
  org.moreunit.test.dependencies,
- org.testng.eclipse;bundle-version="5.14.2.10",
+ org.testng.eclipse,
  org.glassfish.hk2.osgi-resource-locator
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .
 Automatic-Module-Name: org.moreunit.mock.it

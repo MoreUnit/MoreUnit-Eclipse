@@ -10,10 +10,10 @@ Require-Bundle: org.moreunit.core,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
- org.junit;bundle-version="4.8.2",
- org.moreunit.test.dependencies;bundle-version="0.0.0",
- assertj-core;bundle-version="3.24.2",
- net.bytebuddy.byte-buddy;bundle-version="1.12.21"
+ org.junit,
+ org.moreunit.test.dependencies,
+ org.assertj,
+ org.mockito.mockito-core
 Bundle-Activator: org.moreunit.core.MoreUnitCoreTest
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: MoreUnit.org

@@ -10,14 +10,14 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.MethodCallFinder;
-import org.moreunit.util.TestMethodCalleeFinder;
+import org.moreunit.util.MethodTestCallerFinder;
 import org.moreunit.wizards.NewClassWizard;
 import org.moreunit.wizards.NewClassyWizard;
 
 /**
  * ClassTypeFacade offers easy access to a simple java file within eclipse. The
  * file represented by this instance is not a testcase.
- * 
+ *
  * @author vera 23.05.2006 20:29:57
  */
 public class TestCaseTypeFacade extends TypeFacade
@@ -94,7 +94,7 @@ public class TestCaseTypeFacade extends TypeFacade
     @Override
     protected MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope)
     {
-        return new TestMethodCalleeFinder(method, searchScope);
+        return new MethodTestCallerFinder(method, searchScope);
     }
 
     @Override

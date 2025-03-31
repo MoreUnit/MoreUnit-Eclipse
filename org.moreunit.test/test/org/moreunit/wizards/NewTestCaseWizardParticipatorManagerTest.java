@@ -1,13 +1,10 @@
 package org.moreunit.wizards;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import java.util.Collection;
 
@@ -17,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.extensionpoints.INewTestCaseWizardContext;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 import org.moreunit.extensionpoints.INewTestCaseWizardParticipator;
@@ -68,7 +65,7 @@ public class NewTestCaseWizardParticipatorManagerTest
         NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
         manager.addExtensionPagesToComposer(composer, new TestContext(), participators);
 
-        assertThat(composer.getExtensionPages(), is(equalTo(asList(page("1"), page("2"), page("3"), page("4"), page("5"), page("6")))));
+        assertThat(composer.getExtensionPages()).containsExactly(page("1"), page("2"), page("3"), page("4"), page("5"), page("6"));
     }
 
     @Test
@@ -82,7 +79,7 @@ public class NewTestCaseWizardParticipatorManagerTest
         manager.addExtensionPagesToComposer(composer, new TestContext(), participators);
 
         // then
-        assertThat(composer.getExtensionPages(), is(equalTo(asList(page("1"), page("2"), page("4"), page("5"), page("6")))));
+        assertThat(composer.getExtensionPages()).containsExactly(page("1"), page("2"), page("4"), page("5"), page("6"));
     }
 
     @Test

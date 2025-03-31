@@ -1,12 +1,7 @@
 package org.moreunit.mock.actions;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
@@ -17,7 +12,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.CorrespondingMemberRequest;
@@ -69,7 +64,7 @@ public class MockDependenciesActionTest
         action.run(anAction);
 
         // then
-        verifyZeroInteractions(pageManager);
+        verifyNoInteractions(pageManager);
     }
 
     private ClassTypeFacade classFacadeThatWillFindTestCase(IType testCase)
@@ -142,6 +137,6 @@ public class MockDependenciesActionTest
         action.run(anAction);
 
         // then
-        verifyZeroInteractions(pageManager);
+        verifyNoInteractions(pageManager);
     }
 }

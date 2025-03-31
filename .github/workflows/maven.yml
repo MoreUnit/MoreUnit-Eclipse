@@ -34,11 +34,8 @@ jobs:
         with:
           maven-version: 3.9.4
 
-      - name: Build and verify for eclipse-4.25 (ignoring test results)
-        run: mvn -file org.moreunit.build/pom.xml clean verify "-Dtarget.platform.classifier=eclipse-4.25" "-Dmaven.test.failure.ignore=true" "-Dmaven.test.error.ignore=true" --fail-at-end "-Dtycho.disableP2Mirrors=true" --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-
-      - name: Build and verify for eclipse-4.30
-        run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-4.30" --fail-at-end "-Dtycho.disableP2Mirrors=true" --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+      - name: Build and verify
+        run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Publish Surefire Test Results for  🖨
         if: ${{ always() }}

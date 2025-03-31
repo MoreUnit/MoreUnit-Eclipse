@@ -1,9 +1,8 @@
 package org.moreunit.core.ui;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.eclipse.core.resources.IFile;
 import org.junit.Test;
@@ -30,7 +29,7 @@ public class MarkCorrespondingFileAsTestedIfRequiredTest
         listener.fileCreated(createdFile);
 
         // then
-        verifyZeroInteractions(decoratorChangeNotifier);
+        verifyNoInteractions(decoratorChangeNotifier);
     }
 
     @Test
@@ -43,7 +42,7 @@ public class MarkCorrespondingFileAsTestedIfRequiredTest
         listener.fileCreated(createdFile);
 
         // then
-        verifyZeroInteractions(decoratorChangeNotifier);
+        verifyNoInteractions(decoratorChangeNotifier);
     }
 
     @Test
