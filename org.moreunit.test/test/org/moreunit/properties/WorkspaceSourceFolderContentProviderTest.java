@@ -1,5 +1,8 @@
 package org.moreunit.properties;
 
+import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.*;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -11,8 +14,6 @@ import org.moreunit.log.LogHandler;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
-
-import static org.mockito.Mockito.*;
 
 
 

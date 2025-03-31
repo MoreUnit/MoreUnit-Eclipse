@@ -76,7 +76,7 @@ public class JumpCodeMining extends LineEndCodeMining
                 }
                 if(jumpable)
                 {
-                    setLabel("Jump to " + testOrTested + " class");
+                    setLabel(" Jump to " + testOrTested + " class");
                 }
                 else
                 {
@@ -103,7 +103,7 @@ public class JumpCodeMining extends LineEndCodeMining
                 }
                 if(jumpable)
                 {
-                    setLabel("Jump to " + testOrTested + " method");
+                    setLabel(" Jump to " + testOrTested + " method");
                 }
                 else
                 {
@@ -126,7 +126,7 @@ public class JumpCodeMining extends LineEndCodeMining
                     .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                     .withCurrentMethod(element instanceof IMethod method ? method : null) //
                     .methodSearchMode(searchMode) //
-                    .promptText("Jump to " + testOrTested + " class...")
+                    .promptText(" Jump to " + testOrTested + " class...")
                     .build();
 
             IMember memberToJump = typeFacade.getOneCorrespondingMember(request);

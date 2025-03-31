@@ -2,17 +2,11 @@ package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.moreunit.mock.templates.MockingTemplateLoader.TEMPLATE_DIRECTORY;
-import static org.moreunit.test.mockito.MoreUnitMatchers.oneOf;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,9 +15,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.PluginResourceLoader;
 import org.moreunit.mock.model.Category;
@@ -174,4 +169,29 @@ public class MockingTemplateLoaderTest
             when(templateDefinitionReader.read(url)).thenReturn(someTemplates());
         }
     }
+
+    @SafeVarargs
+    private <T> T oneOf(T... args)
+    {
+        return argThat(new IsOneOf<T>(args));
+    }
+
+    private class IsOneOf<T> implements ArgumentMatcher<T>
+    {
+        private final List<T> wanted;
+
+        @SafeVarargs
+        public IsOneOf(T... wanted)
+        {
+            this.wanted = asList(wanted);
+        }
+
+        @Override
+        public boolean matches(Object arg)
+        {
+            return wanted.contains(arg);
+        }
+
+    }
+
 }

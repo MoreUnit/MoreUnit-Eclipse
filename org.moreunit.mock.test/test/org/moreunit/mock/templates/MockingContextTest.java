@@ -1,21 +1,13 @@
 package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.moreunit.preferences.PreferenceConstants.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jdt.core.IAnnotation;
@@ -31,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.ConditionType;
@@ -167,7 +159,7 @@ public class MockingContextTest
         mockingContext.prepareContext(templateRequiringBeforeMethod(), null);
 
         // then
-        verifyZeroInteractions(templateProcessor);
+        verifyNoInteractions(templateProcessor);
         assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("setUp");
     }
 
@@ -186,7 +178,7 @@ public class MockingContextTest
         mockingContext.prepareContext(templateRequiringBeforeMethod(), null);
 
         // then
-        verifyZeroInteractions(templateProcessor);
+        verifyNoInteractions(templateProcessor);
         assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("createSomething");
     }
 
@@ -205,7 +197,7 @@ public class MockingContextTest
         mockingContext.prepareContext(templateRequiringBeforeMethod(), null);
 
         // then
-        verifyZeroInteractions(templateProcessor);
+        verifyNoInteractions(templateProcessor);
         assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("createSomething");
     }
 

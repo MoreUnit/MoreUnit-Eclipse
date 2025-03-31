@@ -1,11 +1,7 @@
 package org.moreunit.mock;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -14,10 +10,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.Dependencies;
-import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
@@ -58,22 +53,15 @@ public class DependencyMockerTest
     public void should_abort_when_there_are_dependencies() throws Exception
     {
         // given
-        mockTemplateRetrieval();
-
         when(dependencies.isEmpty()).thenReturn(true);
 
         // when
         dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
 
         // then
-        verifyZeroInteractions(templateApplicator);
+        verifyNoInteractions(templateApplicator);
     }
 
-    private void mockTemplateRetrieval()
-    {
-        MockingTemplate template = mock(MockingTemplate.class);
-        when(templateStore.get(anyString())).thenReturn(template);
-    }
 
     @Test
     @Ignore
@@ -87,7 +75,7 @@ public class DependencyMockerTest
 
         // then
         verify(logger).error(any());
-        verifyZeroInteractions(templateApplicator);
+        verifyNoInteractions(templateApplicator);
     }
 
     @Test

@@ -1,8 +1,7 @@
 package org.moreunit.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.moreunit.test.model.Types.type;
 
 import java.util.Arrays;

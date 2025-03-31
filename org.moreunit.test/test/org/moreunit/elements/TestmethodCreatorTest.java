@@ -1,10 +1,9 @@
 package org.moreunit.elements;
 
 import static java.util.Arrays.asList;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
-import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
+import static org.moreunit.preferences.PreferenceConstants.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;

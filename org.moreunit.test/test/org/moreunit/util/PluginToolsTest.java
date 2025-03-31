@@ -1,9 +1,7 @@
 package org.moreunit.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
-import static org.moreunit.util.PluginTools.guessSourceFolderCorrespondingToTestFolder;
-import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;
+import static org.moreunit.util.PluginTools.*;
 
 import java.util.HashSet;
 import java.util.List;

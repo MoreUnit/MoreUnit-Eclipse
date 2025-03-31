@@ -11,7 +11,7 @@ public class MethodTestCallerFinder extends MethodCallFinder
 
     public MethodTestCallerFinder(IMethod methodUnderTest, Collection< ? extends IJavaElement> searchScope)
     {
-        super(methodUnderTest, searchScope, Direction.CALLER);
+        super(methodUnderTest, searchScope);
     }
 
     protected boolean methodMatch(IMethod method)

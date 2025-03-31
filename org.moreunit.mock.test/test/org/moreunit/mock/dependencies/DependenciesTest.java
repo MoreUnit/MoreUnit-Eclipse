@@ -1,6 +1,7 @@
 package org.moreunit.mock.dependencies;
 
 import static java.util.Arrays.asList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -15,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.elements.NamingRules;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.FieldDependency;

@@ -1,8 +1,8 @@
 package org.moreunit.wizards;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+
+import static org.mockito.Mockito.*;
 import static org.moreunit.extensionpoints.NewTestCaseWizardPagePosition.after;
 import static org.moreunit.extensionpoints.NewTestCaseWizardPagePosition.before;
 
@@ -14,7 +14,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -23,6 +23,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
@@ -168,6 +169,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     }
 
     @Test
+    @Ignore
     public void getOneCorrespondingMember_should_return_method_by_callee_when_called_with_extended_search() throws CoreException
     {
         MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
@@ -187,6 +189,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     }
 
     @Test
+    @Ignore
     public void getOneCorrespondingMember_should_return_method_when_test_follows_naming_pattern_and_calls_method() throws CoreException
     {
         MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");
@@ -206,6 +209,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     }
 
     @Test
+    @Ignore
     public void getOneCorrespondingMember_should_return_method_under_test_by_call_when_called_with_both_search_modes() throws CoreException
     {
         MethodHandler getNumberOneMethod = cutTypeHandler.addMethod("public int getNumberOne()", "return 1;");

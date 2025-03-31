@@ -3,7 +3,7 @@ package org.moreunit.core.decorators;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -40,7 +40,7 @@ public class TestedFileDecoratorTest
         decorator.decorate(fileToDecorate, decoration);
 
         // then
-        verifyZeroInteractions(decoration);
+        verifyNoInteractions(decoration);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class TestedFileDecoratorTest
         decorator.decorate(fileToDecorate, decoration);
 
         // then
-        verifyZeroInteractions(decoration);
+        verifyNoInteractions(decoration);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestedFileDecoratorTest
         decorator.decorate(fileToDecorate, decoration);
 
         // then
-        verifyZeroInteractions(decoration);
+        verifyNoInteractions(decoration);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class TestedFileDecoratorTest
         decorator.decorate(fileToDecorate, decoration);
 
         // then no exception is thrown, no window opens, and:
-        verifyZeroInteractions(decoration);
+        verifyNoInteractions(decoration);
     }
 
     @Test
@@ -113,6 +113,6 @@ public class TestedFileDecoratorTest
         decorator.decorate(fileToDecorate, decoration);
 
         // then no exception is thrown, no window opens, and:
-        verifyZeroInteractions(decoration);
+        verifyNoInteractions(decoration);
     }
 }
