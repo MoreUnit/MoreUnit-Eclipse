@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Test Dependencies
 Bundle-SymbolicName: org.moreunit.test.dependencies
-Bundle-Version: 3.3.3
+Bundle-Version: 3.4.0.qualifier
 Bundle-ClassPath: .,
  mockito-all-1.9.0.jar
 Bundle-Vendor: MoreUnit.org
