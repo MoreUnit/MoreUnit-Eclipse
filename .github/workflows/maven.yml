@@ -57,7 +57,7 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            ./org.moreunit.updatesite/target/org.moreunit.updatesite-*-SNAPSHOT.zip
+            ./org.moreunit.updatesite/target/org.moreunit.updatesite-*.zip
             ./org.moreunit.updatesite/target/flat-repository/*
 
       - name: Release RELEASE
