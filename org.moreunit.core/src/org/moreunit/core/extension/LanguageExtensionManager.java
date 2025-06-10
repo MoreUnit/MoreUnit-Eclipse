@@ -31,16 +31,18 @@ public class LanguageExtensionManager
 
     private final BundleContext bundleContext;
     private final Logger logger;
+    private final Collection<Language> languages;
 
     public LanguageExtensionManager(BundleContext bundleContext, Logger logger)
     {
         this.bundleContext = bundleContext;
         this.logger = logger;
+        this.languages = getLanguages();
     }
 
     public boolean extensionExistsForLanguage(String langId)
     {
-        return getLanguages().contains(new Language(langId));
+        return languages.contains(new Language(langId));
     }
 
     private Collection<Language> getLanguages()
