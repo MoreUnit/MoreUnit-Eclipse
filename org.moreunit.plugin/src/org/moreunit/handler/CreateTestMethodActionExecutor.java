@@ -23,10 +23,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.actions.CreateTestMethodEditorAction;
 import org.moreunit.actions.CreateTestMethodHierarchyAction;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
+import org.moreunit.core.util.Jobs;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.EditorPartFacade;
-import org.moreunit.elements.MethodCreationResult;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.elements.TypeFacade;
@@ -89,43 +89,43 @@ public class CreateTestMethodActionExecutor
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
         ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
         IMethod originalMethod = editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition();
-
-        // Creates an intermediate object to clarify code that follows
-        CreationContext context = createContext(compilationUnit, originalMethod);
-
-        // Creates test method template
-        ProjectPreferences prefs = preferences.getProjectView(editorPartFacade.getJavaProject());
-        TestmethodCreator creator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(compilationUnit, context.testCaseUnit)
-                .testCaseJustCreated(context.newTestClassCreated)
-                .testType(prefs.getTestType())
-                .generateComments(prefs.shouldGenerateCommentsForTestMethod())
-                .defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
-        MethodCreationResult creationResult = creator.createTestMethod(originalMethod);
-
-        if(creationResult.methodAlreadyExists())
-        {
-            editorUI.open(creationResult.getMethod());
-        }
-        else if(creationResult.methodCreated())
-        {
-            IMethod createdMethod = creationResult.getMethod();
-
-            editorUI.open(createdMethod);
-
-            if(createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
+        Jobs.executeAndRunInUI("Create test method ... ", () -> {
+            // Creates an intermediate object to clarify code that follows
+            CreationContext context = createContext(compilationUnit);
+            if(context != null)
             {
-                markMethodSuffix(editorPartFacade, createdMethod);
-            }
+                // Creates test method template
+                ProjectPreferences prefs = preferences.getProjectView(editorPartFacade.getJavaProject());
+                TestmethodCreator creator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(compilationUnit, context.testCaseUnit).testCaseJustCreated(context.newTestClassCreated).testType(prefs.getTestType()).generateComments(prefs.shouldGenerateCommentsForTestMethod()).defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
 
-            if(editorPart instanceof ITextEditor)
-            {
-                MoreUnitAnnotationModel.updateAnnotations((ITextEditor) editorPart);
+                return creator.createTestMethod(originalMethod);
             }
-        }
+            return null;
+        }, creationResult -> {
+            if(creationResult.methodAlreadyExists())
+            {
+                editorUI.open(creationResult.getMethod());
+            }
+            else if(creationResult.methodCreated())
+            {
+                IMethod createdMethod = creationResult.getMethod();
+
+                editorUI.open(createdMethod);
+
+                if(createdMethod.getElementName().endsWith(MoreUnitContants.SUFFIX_NAME))
+                {
+                    markMethodSuffix(editorPartFacade, createdMethod);
+                }
+
+                if(editorPart instanceof ITextEditor textEditor)
+                {
+                    MoreUnitAnnotationModel.updateAnnotations(textEditor);
+                }
+            }
+        });
     }
 
-    private CreationContext createContext(ICompilationUnit currentlyEditedUnit, IMethod currentlyEditedMethod)
+    private CreationContext createContext(ICompilationUnit currentlyEditedUnit)
     {
         if(TypeFacade.isTestCase(currentlyEditedUnit.findPrimaryType()))
         {

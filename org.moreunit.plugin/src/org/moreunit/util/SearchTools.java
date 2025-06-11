@@ -1,11 +1,7 @@
 package org.moreunit.util;
 
-import static org.eclipse.jdt.core.search.IJavaSearchConstants.DECLARATIONS;
-import static org.eclipse.jdt.core.search.IJavaSearchConstants.TYPE;
-import static org.eclipse.jdt.core.search.SearchPattern.R_EXACT_MATCH;
-import static org.eclipse.jdt.core.search.SearchPattern.R_PATTERN_MATCH;
-import static org.eclipse.jdt.core.search.SearchPattern.createOrPattern;
-import static org.eclipse.jdt.core.search.SearchPattern.createPattern;
+import static org.eclipse.jdt.core.search.IJavaSearchConstants.*;
+import static org.eclipse.jdt.core.search.SearchPattern.*;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -26,9 +22,8 @@ import org.eclipse.jdt.core.search.SearchRequestor;
  */
 public class SearchTools
 {
-    public static Set<IType> searchFor(String typeName, IJavaSearchScope scope) throws CoreException
+    private SearchTools()
     {
-        return search(createPattern(typeName, TYPE, DECLARATIONS, R_EXACT_MATCH), scope);
     }
 
     public static Set<IType> searchFor(Collection<String> typeNamePatterns, IJavaSearchScope scope) throws CoreException
@@ -50,7 +45,7 @@ public class SearchTools
     {
         // copy preserving order (we don't pass the TreeSet, since it does not
         // allow for calling contains() with an object that is not an IType)
-        return new LinkedHashSet<IType>(collector.matches);
+        return new LinkedHashSet<>(collector.matches);
     }
 
     private static SearchPattern createSearchPattern(Collection<String> typeNamePatterns, int searchFor, int limitTo, int matchRule)
@@ -77,7 +72,7 @@ public class SearchTools
 
     private static class MatchCollector extends SearchRequestor
     {
-        private final Set<IType> matches = new TreeSet<IType>(new TypeComparator());
+        private final Set<IType> matches = new TreeSet<>(new TypeComparator());
 
         public void acceptSearchMatch(SearchMatch match)
         {

@@ -22,6 +22,7 @@ import org.eclipse.ui.IEditorPart;
 import org.moreunit.actions.JumpAction;
 import org.moreunit.actions.JumpFromCompilationUnitAction;
 import org.moreunit.actions.JumpFromTypeAction;
+import org.moreunit.core.util.Jobs;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.elements.EditorPartFacade;
@@ -39,7 +40,7 @@ import org.moreunit.ui.EditorUI;
  * {@link JumpFromCompilationUnitAction} and {@link JumpFromTypeAction}</li>
  * </ul>
  * This executor is a singleton.
- * 
+ *
  * @author vera 25.10.2005
  * @version 30.09.2010
  */
@@ -92,29 +93,26 @@ public class JumpActionExecutor
 
     private void executeJumpAction(ICompilationUnit compilationUnit, IMethod methodUnderCursorPosition)
     {
-        MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(compilationUnit.getJavaProject());
+        Jobs.executeAndRunInUI("Jump to ... ", () -> {
+            MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(compilationUnit.getJavaProject());
 
-        TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
+            TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
 
-        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
-            .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
-            .withCurrentMethod(methodUnderCursorPosition) //
-            .methodSearchMode(searchMode) //
-            .createClassIfNoResult("Jump to...") //
-            .build();
+            CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                    .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                    .withCurrentMethod(methodUnderCursorPosition) //
+                    .methodSearchMode(searchMode) //
+                    .createClassIfNoResult("Jump to...") //
+                    .build();
 
-        IMember memberToJump = typeFacade.getOneCorrespondingMember(request);
-        if(memberToJump != null)
-        {
-            jumpToMember(memberToJump);
-        }
+            return typeFacade.getOneCorrespondingMember(request);
+        }, this::jumpToMember);
     }
 
     private void jumpToMember(IMember memberToJump)
     {
-        if(memberToJump instanceof IMethod)
+        if(memberToJump instanceof IMethod methodToJump)
         {
-            IMethod methodToJump = (IMethod) memberToJump;
             IEditorPart openedEditor = editorUI.open(methodToJump.getDeclaringType().getParent());
             revealInEditor(openedEditor, methodToJump);
         }

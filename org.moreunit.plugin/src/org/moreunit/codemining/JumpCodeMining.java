@@ -21,6 +21,7 @@ import org.eclipse.jface.text.codemining.ICodeMiningProvider;
 import org.eclipse.jface.text.codemining.LineEndCodeMining;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.ui.IEditorPart;
+import org.moreunit.core.util.Jobs;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
@@ -117,6 +118,7 @@ public class JumpCodeMining extends LineEndCodeMining
     public Consumer<MouseEvent> getAction()
     {
         return e -> {
+            Jobs.executeAndRunInUI("Jump to ... ", () -> {
             MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(element.getJavaProject());
 
             TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());
@@ -129,11 +131,8 @@ public class JumpCodeMining extends LineEndCodeMining
                     .promptText(" Jump to " + testOrTested + " class...")
                     .build();
 
-            IMember memberToJump = typeFacade.getOneCorrespondingMember(request);
-            if(memberToJump != null)
-            {
-                jumpToMember(memberToJump);
-            }
+                return typeFacade.getOneCorrespondingMember(request);
+            }, this::jumpToMember);
         };
     }
 

@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.core.util.StringConstants;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
@@ -81,7 +82,7 @@ public abstract class TypeFacade
 
     protected TypeFacade(IEditorPart editorPart)
     {
-        this((IFile) editorPart.getEditorInput().getAdapter(IFile.class));
+        this(editorPart.getEditorInput().getAdapter(IFile.class));
     }
 
     public IType getType()
@@ -103,7 +104,7 @@ public abstract class TypeFacade
      * to make a choice via a dialog. If no member is found <tt>null</tt> is
      * returned, or a wizard opens to create a new type if
      * <tt>createIfNecessary</tt> is true.
-     * 
+     *
      * @param request the details of the request for corresponding member.
      * @return one corresponding member or <code>null</code>
      * @see CorrespondingMemberRequest
@@ -165,7 +166,7 @@ public abstract class TypeFacade
 
     private Collection<IMethod> findCorrespondingMethodsInClasses(CorrespondingMemberRequest request, Collection<IType> classes)
     {
-        Collection<IMethod> proposedMethods = new LinkedHashSet<IMethod>();
+        Collection<IMethod> proposedMethods = new LinkedHashSet<>();
 
         if(request.shouldReturn(MemberType.TYPE_OR_METHOD))
         {
@@ -200,40 +201,16 @@ public abstract class TypeFacade
         return null;
     }
 
-    abstract protected Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes);
+    protected abstract Collection<IMethod> getCorrespondingMethodsInClasses(IMethod method, Collection<IType> classes);
 
     public final Collection<IType> getCorrespondingClasses(boolean alsoIncludeLikelyMatches)
     {
         return getCorrespondingTypeSearcher().getMatches(alsoIncludeLikelyMatches);
     }
 
-    abstract protected MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope);
+    protected abstract MethodCallFinder getCallRelationshipFinder(IMethod method, Collection<IType> searchScope);
 
-    abstract protected NewClassyWizard newCorrespondingClassWizard(IType fromType);
-
-    private IMember openDialog(CorrespondingMemberRequest request, Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, boolean perfectMatches)
-    {
-        String promptText = request.getPromptText();
-        String infoText = null;
-        if(! perfectMatches)
-        {
-            promptText = String.format("%s %s%s", promptText, StringConstants.NEWLINE, "We could find the following classes, but their packages do not match:");
-            infoText = "Please note that theses classes will not be considered for other MoreUnit features such as test launching or refactoring.";
-        }
-
-        IMember startMember = request.getCurrentMethod() != null ? request.getCurrentMethod() : getType();
-        IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
-        MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection).withAction(new CreateNewClassAction()
-        {
-            @Override
-            public IType execute()
-            {
-                return newCorrespondingClassWizard(getType()).open();
-            }
-        });
-
-        return new ChooseDialog<IMember>(promptText, infoText, contentProvider).getChoice();
-    }
+    protected abstract NewClassyWizard newCorrespondingClassWizard(IType fromType);
 
     private IMember getDefaultSelection(Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, IMember startMember)
     {
@@ -311,13 +288,39 @@ public abstract class TypeFacade
         {
             return openDialog(request, proposedClasses, proposedMethods, perfectMatches);
         }
+
+        private IMember openDialog(CorrespondingMemberRequest request, Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, boolean perfectMatches)
+        {
+            String promptText = request.getPromptText();
+            String infoText = null;
+            if(! perfectMatches)
+            {
+                promptText = String.format("%s %s%s", promptText, StringConstants.NEWLINE, "We could find the following classes, but their packages do not match:");
+                infoText = "Please note that theses classes will not be considered for other MoreUnit features such as test launching or refactoring.";
+            }
+
+            IMember startMember = request.getCurrentMethod() != null ? request.getCurrentMethod() : getType();
+            IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
+            MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection).withAction(new CreateNewClassAction()
+            {
+                @Override
+                public IType execute()
+                {
+                    return newCorrespondingClassWizard(getType()).open();
+                }
+            });
+
+            String finalPromptTest = promptText;
+            String finalInfoText = infoText;
+            return Display.getDefault().syncCall(() -> new ChooseDialog<IMember>(finalPromptTest, finalInfoText, contentProvider).getChoice());
+        }
     }
 
     private class OpenNewClassWizard implements OneCorrespondingMemberAction
     {
         public IMember getCorrespondingMember()
         {
-            return newCorrespondingClassWizard(getType()).open();
+            return Display.getDefault().syncCall(() -> newCorrespondingClassWizard(getType()).open());
         }
     }
 }

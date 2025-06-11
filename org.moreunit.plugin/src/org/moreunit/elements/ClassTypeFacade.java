@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
@@ -61,12 +62,12 @@ public class ClassTypeFacade extends TypeFacade
             CreateNewTestCaseAction newTestCaseAction = new CreateNewTestCaseAction(getType());
             MemberContentProvider contentProvider = new MemberContentProvider(testcases, null).withAction(newTestCaseAction);
 
-            IType testCase = new ChooseDialog<IType>(promptText, contentProvider).getChoice();
+            IType testCase = Display.getDefault().syncCall(() -> new ChooseDialog<IType>(promptText, contentProvider).getChoice());
             return new CorrespondingTestCase(testCase, newTestCaseAction.testCaseCreated);
         }
         else if(createIfNecessary)
         {
-            IType testcaseToJump = new NewTestCaseWizard(getType()).open();
+            IType testcaseToJump = Display.getDefault().syncCall(() -> new NewTestCaseWizard(getType()).open());
             return new CorrespondingTestCase(testcaseToJump, testcaseToJump != null);
         }
 
@@ -92,7 +93,7 @@ public class ClassTypeFacade extends TypeFacade
 
     private List<IMethod> getTestMethodsForTestCases(IMethod method, Collection<IType> testCases)
     {
-        List<IMethod> result = new ArrayList<IMethod>();
+        List<IMethod> result = new ArrayList<>();
 
         for (IType testCaseType : testCases)
         {
@@ -104,7 +105,7 @@ public class ClassTypeFacade extends TypeFacade
 
     private List<IMethod> getTestMethodsForTestCase(IMethod method, IType testCaseType)
     {
-        List<IMethod> result = new ArrayList<IMethod>();
+        List<IMethod> result = new ArrayList<>();
 
         if(testCaseType == null)
         {
@@ -134,7 +135,7 @@ public class ClassTypeFacade extends TypeFacade
 
     public Set<IMethod> getCorrespondingTestMethods(IMethod method, MethodSearchMode searchMethod)
     {
-        final Set<IMethod> correspondingTestMethods = new HashSet<IMethod>();
+        final Set<IMethod> correspondingTestMethods = new HashSet<>();
         if(searchMethod.searchByCall)
         {
             Collection<IType> correspondingClasses = getCorrespondingTestCases();

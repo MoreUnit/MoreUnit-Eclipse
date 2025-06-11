@@ -9,7 +9,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.moreunit.elements.MethodCreationResult;
+import org.moreunit.core.util.Jobs;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
@@ -59,22 +59,22 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
     private void createTestMethod(IMethod method)
     {
         ICompilationUnit cu = method.getCompilationUnit();
-        ProjectPreferences prefs = preferencesFor(cu);
-        if(prefs == null)
-            return;
+        Jobs.executeAndRunInUI("Create test method ... ", () -> {
+            ProjectPreferences prefs = preferencesFor(cu);
+            if(prefs != null)
+            {
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cu)
-                .testType(prefs.getTestType())
-                .generateComments(prefs.shouldGenerateCommentsForTestMethod())
-                .defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
+                TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cu).testType(prefs.getTestType()).generateComments(prefs.shouldGenerateCommentsForTestMethod()).defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
 
-        MethodCreationResult result = testmethodCreator.createTestMethod(method);
-
-        if(result.methodCreated())
-        {
-            editorUI.open(result.getMethod());
-        }
+                return testmethodCreator.createTestMethod(method);
+            }
+            return null;
+        }, creationResult -> {
+            if(creationResult.methodCreated())
+            {
+                editorUI.open(creationResult.getMethod());
+            }
+        });
     }
 
     private ProjectPreferences preferencesFor(ICompilationUnit cu)
