@@ -89,7 +89,7 @@ public class CreateTestMethodActionExecutor
         EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
         ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
         IMethod originalMethod = editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition();
-        Jobs.executeAndRunInUI("Create test method ... ", () -> {
+        Jobs.waitForIndexExecuteAndRunInUI("Create test method ... ", () -> {
             // Creates an intermediate object to clarify code that follows
             CreationContext context = createContext(compilationUnit);
             if(context != null)

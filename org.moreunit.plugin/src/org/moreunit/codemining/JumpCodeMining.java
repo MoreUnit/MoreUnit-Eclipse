@@ -118,7 +118,7 @@ public class JumpCodeMining extends LineEndCodeMining
     public Consumer<MouseEvent> getAction()
     {
         return e -> {
-            Jobs.executeAndRunInUI("Jump to ... ", () -> {
+            Jobs.waitForIndexExecuteAndRunInUI("Jump to ... ", () -> {
             MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(element.getJavaProject());
 
             TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());

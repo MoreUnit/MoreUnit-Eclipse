@@ -59,7 +59,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
     private void createTestMethod(IMethod method)
     {
         ICompilationUnit cu = method.getCompilationUnit();
-        Jobs.executeAndRunInUI("Create test method ... ", () -> {
+        Jobs.waitForIndexExecuteAndRunInUI("Create test method ... ", () -> {
             ProjectPreferences prefs = preferencesFor(cu);
             if(prefs != null)
             {

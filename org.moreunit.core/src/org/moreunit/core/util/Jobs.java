@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -19,7 +20,7 @@ public class Jobs
     {
     }
 
-    public static <T> void executeAndRunInUI(String jobName, Supplier<T> backgroundJob, Consumer<T> uiJob)
+    public static <T> void waitForIndexExecuteAndRunInUI(String jobName, Supplier<T> backgroundJob, Consumer<T> uiJob)
     {
         Job job = new Job(jobName)
         {
@@ -27,6 +28,11 @@ public class Jobs
             @Override
             protected IStatus run(IProgressMonitor progressmonitor)
             {
+                JavaModelManager.getIndexManager().waitForIndex(true, progressmonitor);
+                if(progressmonitor.isCanceled())
+                {
+                    return Status.CANCEL_STATUS;
+                }
                 T result = backgroundJob.get();
                 if(progressmonitor.isCanceled())
                 {

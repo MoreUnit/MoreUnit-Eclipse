@@ -99,7 +99,7 @@ public class RunTestsActionExecutor
 
     private void executeRunAllTestsAction(ICompilationUnit compilationUnit, String launchMode)
     {
-        Jobs.executeAndRunInUI("Running tests ... ", () -> {
+        Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
 
             Collection<IType> testCases = new LinkedHashSet<>();
             IType selectedJavaType = compilationUnit.findPrimaryType();
@@ -143,7 +143,7 @@ public class RunTestsActionExecutor
 
     private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit, String launchMode)
     {
-        Jobs.executeAndRunInUI("Running tests ... ", () -> {
+        Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
             Collection<IMember> testElements = new LinkedHashSet<>();
             IType selectedJavaType = compilationUnit.findPrimaryType();
 

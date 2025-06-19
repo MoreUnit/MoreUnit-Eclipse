@@ -93,7 +93,7 @@ public class JumpActionExecutor
 
     private void executeJumpAction(ICompilationUnit compilationUnit, IMethod methodUnderCursorPosition)
     {
-        Jobs.executeAndRunInUI("Jump to ... ", () -> {
+        Jobs.waitForIndexExecuteAndRunInUI("Jump to ... ", () -> {
             MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(compilationUnit.getJavaProject());
 
             TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
