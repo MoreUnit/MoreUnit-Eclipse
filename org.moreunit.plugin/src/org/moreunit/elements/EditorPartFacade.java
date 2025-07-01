@@ -34,7 +34,7 @@ public class EditorPartFacade
     {
         checkNotNull(editorPart, "Can not wrap a null editor part");
         this.editorPart = editorPart;
-        this.file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
+        this.file = editorPart.getEditorInput().getAdapter(IFile.class);
     }
 
     public IFile getFile()
@@ -128,8 +128,6 @@ public class EditorPartFacade
             {
                 method = (IMethod) javaElement.getParent();
             }
-            else
-                LogHandler.getInstance().handleInfoLog("No method found surrounding cursor position.");
         }
         catch (JavaModelException e)
         {

@@ -1,12 +1,9 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.sort;
+import static java.util.Collections.*;
 import static java.util.regex.Matcher.quoteReplacement;
-import static java.util.regex.Pattern.compile;
-import static java.util.regex.Pattern.quote;
+import static java.util.regex.Pattern.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -276,6 +273,8 @@ public final class TestFileNamePattern
 
     private static String toSuffixPattern(UserDefinedPart part)
     {
+        if("*".equals(part.raw()))
+            return ".*";
         if(! part.hasAlternatives())
             return "";
 
@@ -471,7 +470,7 @@ public final class TestFileNamePattern
     private String buildPreferredSrcFileName(String testFileName)
     {
         String maybeSeparator = String.format("(%s)?", quote(separator));
-        return testFileName.replaceFirst("^" + prefix + maybeSeparator, "").replaceFirst(maybeSeparator + suffix + "$", "");
+        return testFileName.replaceFirst("^" + prefix + maybeSeparator, "").replaceFirst(maybeSeparator + (suffix.equals(".*") ? "" : suffix) + "$", "");
     }
 
     /**
@@ -517,7 +516,6 @@ public final class TestFileNamePattern
     private FileNameEvaluation buildSrcFileResult(String srcFileName)
     {
         String preferredTestFileName = buildPreferredTestFileName(srcFileName);
-        ;
 
         String quotedSrcFileName = quote(srcFileName);
 
@@ -585,7 +583,7 @@ public final class TestFileNamePattern
             {
                 if(! suffixPart.hasAlternatives())
                 {
-                    result.add(toPattern(prefixPart, preAlt) + quotedSrcFileName);
+                    result.add(toPattern(prefixPart, preAlt) + quotedSrcFileName + toSuffixPattern(suffixPart));
                 }
                 else
                 {

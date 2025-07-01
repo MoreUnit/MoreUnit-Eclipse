@@ -1328,7 +1328,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     @Override
     protected String getCompilationUnitName(String typeName)
     {
-        if(langType == LanguageType.GROOVY || spockToggle.getSelection())
+        if(langType == LanguageType.GROOVY || isSpockSelected())
         {
             return typeName + GROOVY_FILE_SUFFIX;
         }

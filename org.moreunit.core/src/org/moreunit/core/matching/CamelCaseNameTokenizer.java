@@ -15,7 +15,8 @@ public class CamelCaseNameTokenizer extends NameTokenizer
             scanner.forward();
             if(scanner.hasNext() //
                && (Character.isUpperCase(scanner.next()) //
-               || (Character.isDigit(scanner.next()) && ! Character.isDigit(scanner.current()))))
+                   || ('_' == scanner.next()) //
+                   || (Character.isDigit(scanner.next()) && !Character.isDigit(scanner.current()))))
             {
                 break;
             }
