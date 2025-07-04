@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -24,6 +25,7 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.actions.RunTestAction;
 import org.moreunit.actions.RunTestFromCompilationUnitAction;
@@ -99,6 +101,7 @@ public class RunTestsActionExecutor
 
     private void executeRunAllTestsAction(ICompilationUnit compilationUnit, String launchMode)
     {
+        saveIfNeeded(compilationUnit);
         Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
 
             Collection<IType> testCases = new LinkedHashSet<>();
@@ -135,6 +138,15 @@ public class RunTestsActionExecutor
         }, testCases -> runTests(testCases, launchMode));
     }
 
+    private void saveIfNeeded(ICompilationUnit compilationUnit)
+    {
+        IEditorPart editorPart = EditorUtility.isOpenInEditor(compilationUnit);
+        if(editorPart != null && editorPart.isDirty())
+        {
+            editorPart.doSave(new NullProgressMonitor());
+        }
+    }
+
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, String launchMode)
     {
         ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
@@ -143,6 +155,7 @@ public class RunTestsActionExecutor
 
     private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit, String launchMode)
     {
+        saveIfNeeded(compilationUnit);
         Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
             Collection<IMember> testElements = new LinkedHashSet<>();
             IType selectedJavaType = compilationUnit.findPrimaryType();
