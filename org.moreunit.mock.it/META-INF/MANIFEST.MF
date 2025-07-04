@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Mock Support - Integration Tests
 Bundle-SymbolicName: org.moreunit.mock.it
-Bundle-Version: 3.4.0
+Bundle-Version: 3.4.1.qualifier
 Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Require-Bundle: org.eclipse.jdt.launching,
  org.junit,
