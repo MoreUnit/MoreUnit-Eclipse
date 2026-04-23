@@ -67,6 +67,10 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
             {
                 type = WorkspaceHelper.createJavaClass(packageFragment, javaType.typeName);
             }
+            else if(javaType.typeKind == JavaTypeKind.INTERFACE)
+            {
+                type = WorkspaceHelper.createJavaInterface(packageFragment, javaType.typeName);
+            }
             else
             {
                 type = WorkspaceHelper.createJavaEnum(packageFragment, javaType.typeName);
@@ -88,6 +92,11 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
     public TypeHandler createEnum(String fullyQualifiedTypeName)
     {
         return createType(JavaTypeKind.ENUM, fullyQualifiedTypeName);
+    }
+
+    public TypeHandler createInterface(String fullyQualifiedTypeName)
+    {
+        return createType(JavaTypeKind.INTERFACE, fullyQualifiedTypeName);
     }
 
     public CompilationUnitHandler createCompilationUnit(String fullyQualifiedTypeName, String contents)
@@ -112,6 +121,10 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         if(typeKind == JavaTypeKind.ENUM)
         {
             return createType(JavaType.newEnum(name.packageName, name.typeName));
+        }
+        if(typeKind == JavaTypeKind.INTERFACE)
+        {
+            return createType(JavaType.newInterface(name.packageName, name.typeName));
         }
         return createType(JavaType.newClass(name.packageName, name.typeName));
     }

@@ -265,6 +265,10 @@ class AnnotationConfigExtractor
                 {
                     types.add(JavaType.newEnum(packageName, typeDef.substring(5)));
                 }
+                else if(typeDef.startsWith("interface "))
+                {
+                    types.add(JavaType.newInterface(packageName, typeDef.substring(10)));
+                }
                 else if(typeDef.startsWith("class "))
                 {
                     types.add(JavaType.newClass(packageName, typeDef.substring(6)));

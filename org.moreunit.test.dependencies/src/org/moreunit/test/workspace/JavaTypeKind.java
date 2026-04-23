@@ -2,7 +2,7 @@ package org.moreunit.test.workspace;
 
 public enum JavaTypeKind
 {
-    CLASS, ENUM;
+    CLASS, ENUM, INTERFACE;
 
     String toJavaCode()
     {

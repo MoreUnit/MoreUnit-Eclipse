@@ -27,6 +27,11 @@ public class JavaType
         return new JavaType(JavaTypeKind.CLASS, packageName, typeName);
     }
 
+    public static JavaType newInterface(String packageName, String typeName)
+    {
+        return new JavaType(JavaTypeKind.INTERFACE, packageName, typeName);
+    }
+
     @Override
     public int hashCode()
     {
