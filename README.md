@@ -1,3 +1,5 @@
+[![CodeQL](https://github.com/MoreUnit/MoreUnit-Eclipse/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MoreUnit/MoreUnit-Eclipse/actions/workflows/codeql-analysis.yml)
+
 # MoreUnit For Eclipse
 
 <img alt="MoreUnit Logo" src="https://moreunit.github.io/MoreUnit-Eclipse/img/logo.png" />
