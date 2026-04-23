@@ -34,7 +34,7 @@
     <tests.use.ui>false</tests.use.ui>
 
     <target.platform.classifier>eclipse-latest</target.platform.classifier>
-    <argLine></argLine>
+    <tycho.testArgLine></tycho.testArgLine>
 
   </properties>
   <build>
@@ -101,7 +101,7 @@
             <showEclipseLog>true</showEclipseLog>
             <skipAfterFailureCount>10</skipAfterFailureCount>
             <providerHint>junit4</providerHint>
-            <argLine>@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+            <argLine>${tycho.testArgLine} --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
           </configuration>
         </plugin>
         <plugin>
@@ -282,6 +282,9 @@
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
+                <configuration>
+                  <propertyName>tycho.testArgLine</propertyName>
+                </configuration>
               </execution>
               <execution>
                 <id>merge-all</id>
