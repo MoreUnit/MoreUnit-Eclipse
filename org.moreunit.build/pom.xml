@@ -34,6 +34,7 @@
     <tests.use.ui>false</tests.use.ui>
 
     <target.platform.classifier>eclipse-latest</target.platform.classifier>
+    <argLine></argLine>
 
   </properties>
   <build>
