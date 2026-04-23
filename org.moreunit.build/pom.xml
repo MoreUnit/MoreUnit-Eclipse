@@ -20,6 +20,7 @@
     <module>../org.moreunit.mock.feature</module>
     <module>../org.moreunit.swtbot.test</module>
     <module>../org.moreunit.updatesite</module>
+    <module>../org.moreunit.report</module>
   </modules>
 
   <properties>
@@ -303,18 +304,6 @@
                     </fileSet>
                   </fileSets>
                   <destFile>${project.build.directory}/jacoco-all.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>report-aggregate</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>report-aggregate</goal>
-                </goals>
-                <inherited>false</inherited>
-                <configuration>
-                  <dataFile>${project.build.directory}/jacoco-all.exec</dataFile>
-                  <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
                 </configuration>
               </execution>
             </executions>
