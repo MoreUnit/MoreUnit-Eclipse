@@ -18,26 +18,16 @@ import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationDelegate;
  */
 class JUnitTestSelectionLaunchConfigurationDelegate extends JUnitLaunchConfigurationDelegate
 {
-    private final Collection<IType> testCasesToRun;
+    private final Collection<IMember> testMembersToRun;
 
     JUnitTestSelectionLaunchConfigurationDelegate(Collection< ? extends IMember> testsToRun)
     {
-        testCasesToRun = getTestCases(testsToRun);
-    }
-
-    private Collection<IType> getTestCases(Collection< ? extends IMember> testsToRun)
-    {
-        Collection<IType> testCases = new LinkedHashSet<IType>();
-        for (IMember testMember : testsToRun)
-        {
-            testCases.add(testMember instanceof IType ? (IType) testMember : testMember.getDeclaringType());
-        }
-        return testCases;
+        testMembersToRun = new LinkedHashSet<>(testsToRun);
     }
 
     @Override
     protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException
     {
-        return testCasesToRun.toArray(new IMember[0]);
+        return testMembersToRun.toArray(new IMember[0]);
     }
 }

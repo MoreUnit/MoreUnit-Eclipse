@@ -189,6 +189,11 @@ public class WorkspaceHelper
         return createJavaType(packageFragment, javaClassName, JavaTypeKind.ENUM);
     }
 
+    public static IType createJavaInterface(IPackageFragment packageFragment, String javaClassName) throws JavaModelException
+    {
+        return createJavaType(packageFragment, javaClassName, JavaTypeKind.INTERFACE);
+    }
+
     private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, JavaTypeKind type) throws JavaModelException
     {
         String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), NEW_LINE, getTypeDeclarationString(type, javaClassName));

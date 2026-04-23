@@ -9,7 +9,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchMatch;
@@ -29,6 +33,21 @@ public class SearchTools
     public static Set<IType> searchFor(Collection<String> typeNamePatterns, IJavaSearchScope scope) throws CoreException
     {
         return search(createSearchPattern(typeNamePatterns, TYPE, DECLARATIONS, R_PATTERN_MATCH), scope);
+    }
+
+    public static Set<IType> findConcreteSubclasses(IType type) throws JavaModelException
+    {
+        Set<IType> concreteSubclasses = new LinkedHashSet<>();
+        ITypeHierarchy hierarchy = type.newTypeHierarchy(new NullProgressMonitor());
+        IType[] subtypes = hierarchy.getAllSubtypes(type);
+        for (IType subtype : subtypes)
+        {
+            if(! Flags.isAbstract(subtype.getFlags()) && ! Flags.isInterface(subtype.getFlags()))
+            {
+                concreteSubclasses.add(subtype);
+            }
+        }
+        return concreteSubclasses;
     }
 
     private static Set<IType> search(SearchPattern pattern, IJavaSearchScope scope) throws CoreException
