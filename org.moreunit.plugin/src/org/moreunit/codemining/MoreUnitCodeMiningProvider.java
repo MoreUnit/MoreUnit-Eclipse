@@ -92,7 +92,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
                     addMining = true;
                 }
             }
-            else if(element instanceof IMethod)
+            else if(element instanceof IMethod && preferences.shouldEnableJumpToMethodCodeMining(unit.getJavaProject()))
             {
                 addMining = true;
             }

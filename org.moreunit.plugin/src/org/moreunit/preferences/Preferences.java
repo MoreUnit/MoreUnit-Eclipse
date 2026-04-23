@@ -80,6 +80,7 @@ public class Preferences
         store.setDefault(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT, PreferenceConstants.DEFAULT_TEST_METHOD_DEFAULT_CONTENT);
         store.setDefault(PreferenceConstants.TEST_ANNOTATION_MODE, PreferenceConstants.DEFAULT_TEST_ANNOTATION_MODE);
         store.setDefault(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING, PreferenceConstants.DEFAULT_ENABLE_MOREUNIT_CODEMINING);
+        store.setDefault(PreferenceConstants.ENABLE_JUMP_TO_METHOD_CODE_MINING, PreferenceConstants.DEFAULT_ENABLE_JUMP_TO_METHOD_CODE_MINING);
         return store;
     }
 
@@ -491,6 +492,20 @@ public class Preferences
     public void setEnableMoreUnitCodeMining(IJavaProject javaProject, boolean enableMoreUnitCodeMining)
     {
         getProjectStore(javaProject).setValue(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING, enableMoreUnitCodeMining);
+    }
+
+    public boolean shouldEnableJumpToMethodCodeMining(IJavaProject javaProject)
+    {
+        if(storeToRead(javaProject).contains(PreferenceConstants.ENABLE_JUMP_TO_METHOD_CODE_MINING))
+        {
+            return storeToRead(javaProject).getBoolean(PreferenceConstants.ENABLE_JUMP_TO_METHOD_CODE_MINING);
+        }
+        return storeToRead(javaProject).getDefaultBoolean(PreferenceConstants.ENABLE_JUMP_TO_METHOD_CODE_MINING);
+    }
+
+    public void setEnableJumpToMethodCodeMining(IJavaProject javaProject, boolean enableJumpToMethodCodeMining)
+    {
+        getProjectStore(javaProject).setValue(PreferenceConstants.ENABLE_JUMP_TO_METHOD_CODE_MINING, enableJumpToMethodCodeMining);
     }
 
     public MethodSearchMode getMethodSearchMode(IJavaProject javaProject)
