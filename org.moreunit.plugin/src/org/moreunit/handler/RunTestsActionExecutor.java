@@ -150,10 +150,11 @@ public class RunTestsActionExecutor
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, String launchMode)
     {
         ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        executeRunTestsOfSelectedMemberAction(editorPart, compilationUnit, launchMode);
+        IMethod methodFromEditor = editorPart == null ? null : new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
+        executeRunTestsOfSelectedMemberAction(methodFromEditor, compilationUnit, launchMode);
     }
 
-    private void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, ICompilationUnit compilationUnit, String launchMode)
+    private void executeRunTestsOfSelectedMemberAction(IMethod methodFromEditor, ICompilationUnit compilationUnit, String launchMode)
     {
         saveIfNeeded(compilationUnit);
         Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
@@ -162,7 +163,7 @@ public class RunTestsActionExecutor
 
             if(TypeFacade.isTestCase(selectedJavaType))
             {
-                testElements.add(getTestElementFromTestCase(editorPart, selectedJavaType));
+                testElements.add(getTestElementFromTestCase(methodFromEditor, selectedJavaType));
             }
             else
             {
@@ -170,11 +171,7 @@ public class RunTestsActionExecutor
                 MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(javaProject);
                 ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
 
-                IMethod methodUnderTest = null;
-                if(editorPart != null)
-                {
-                    methodUnderTest = new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
-                }
+                IMethod methodUnderTest = methodFromEditor;
 
                 if(methodUnderTest != null && featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
                 {
@@ -195,7 +192,7 @@ public class RunTestsActionExecutor
 
             if(testElements.isEmpty())
             {
-                testElements.add(getTestElementFromTestCase(editorPart, selectedJavaType));
+                testElements.add(getTestElementFromTestCase(methodFromEditor, selectedJavaType));
             }
             return testElements;
         }, testElements -> runTests(testElements, launchMode));
@@ -205,17 +202,11 @@ public class RunTestsActionExecutor
      * Returns the test method that is selected in editor if any, otherwise
      * returns the test case.
      */
-    private IMember getTestElementFromTestCase(IEditorPart editorPart, IType testCaseType)
+    private IMember getTestElementFromTestCase(IMethod methodFromEditor, IType testCaseType)
     {
-        if(editorPart == null)
+        if(methodFromEditor != null && new MethodFacade(methodFromEditor).isTestMethod())
         {
-            return testCaseType;
-        }
-
-        IMethod method = new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
-        if(method != null && new MethodFacade(method).isTestMethod())
-        {
-            return method;
+            return methodFromEditor;
         }
 
         return testCaseType;
