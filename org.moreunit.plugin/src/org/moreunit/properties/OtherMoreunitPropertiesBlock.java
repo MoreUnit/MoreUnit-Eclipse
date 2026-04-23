@@ -43,6 +43,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Text superClassTextField;
     private Button addCommentsToTestMethodCheckbox;
     private Button enableMoreUnitCodeMining;
+    private Button enableJumpToMethodCodeMiningCheckbox;
     private Button extendedSearchCheckbox;
     private Button enableSearchByNameCheckbox;
 
@@ -110,6 +111,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         createTestAnnotationModeRadioButtons(parentWith2Cols);
         createAddCommentsToTestMethodsCheckbox(parentWith2Cols);
         createEnableMoreUnitCodeMiningCheckbox(parentWith2Cols);
+        createEnableJumpToMethodCodeMiningCheckbox(parentWith2Cols);
 
         checkStateOfMethodPrefixButton();
     }
@@ -329,8 +331,32 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     {
         enableMoreUnitCodeMining = new Button(parent, SWT.CHECK);
         enableMoreUnitCodeMining.setText(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING);
+        enableMoreUnitCodeMining.setToolTipText(PreferenceConstants.TOOLTIP_ENABLE_MOREUNIT_CODEMINING);
         enableMoreUnitCodeMining.setLayoutData(layoutForOneLineControls);
         enableMoreUnitCodeMining.setSelection(preferences.shouldEnableMoreUnitCodeMining(javaProject));
+        enableMoreUnitCodeMining.addSelectionListener(new SelectionAdapter()
+        {
+            @Override
+            public void widgetSelected(SelectionEvent e)
+            {
+                enableJumpToMethodCodeMiningCheckbox.setEnabled(enableMoreUnitCodeMining.getSelection());
+            }
+        });
+    }
+
+    private void createEnableJumpToMethodCodeMiningCheckbox(Composite parent)
+    {
+        enableJumpToMethodCodeMiningCheckbox = new Button(parent, SWT.CHECK);
+        enableJumpToMethodCodeMiningCheckbox.setText(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING);
+        enableJumpToMethodCodeMiningCheckbox.setToolTipText(PreferenceConstants.TOOLTIP_ENABLE_JUMP_TO_METHOD_CODE_MINING);
+
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        gridData.horizontalSpan = 2;
+        gridData.horizontalIndent = 20;
+        enableJumpToMethodCodeMiningCheckbox.setLayoutData(gridData);
+
+        enableJumpToMethodCodeMiningCheckbox.setSelection(preferences.shouldEnableJumpToMethodCodeMining(javaProject));
+        enableJumpToMethodCodeMiningCheckbox.setEnabled(enableMoreUnitCodeMining.getSelection());
     }
 
     public void saveProperties()
@@ -359,6 +385,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         preferences.setShouldUseTestMethodSearchByName(javaProject, enableSearchByNameCheckbox.getSelection());
         preferences.setGenerateCommentsForTestMethod(javaProject, addCommentsToTestMethodCheckbox.getSelection());
         preferences.setEnableMoreUnitCodeMining(javaProject, enableMoreUnitCodeMining.getSelection());
+        preferences.setEnableJumpToMethodCodeMining(javaProject, enableJumpToMethodCodeMiningCheckbox.getSelection());
 
         if(testAnnotationsByNameAndByCallButton.getSelection())
         {
@@ -452,6 +479,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         extendedSearchCheckbox.setEnabled(enabled);
         enableSearchByNameCheckbox.setEnabled(enabled);
         addCommentsToTestMethodCheckbox.setEnabled(enabled);
+        enableJumpToMethodCodeMiningCheckbox.setEnabled(enabled && enableMoreUnitCodeMining.getSelection());
         testCaseNamePatternArea.setEnabled(enabled);
         testAnnotationsDisabledButton.setEnabled(enabled);
         testAnnotationsByNameButton.setEnabled(enabled);
