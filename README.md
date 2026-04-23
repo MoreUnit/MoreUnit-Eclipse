@@ -1,5 +1,7 @@
 # MoreUnit For Eclipse
 
+[![codecov](https://codecov.io/gh/MoreUnit/MoreUnit-Eclipse/branch/master/graph/badge.svg)](https://codecov.io/gh/MoreUnit/MoreUnit-Eclipse)
+
 <img alt="MoreUnit Logo" src="https://moreunit.github.io/MoreUnit-Eclipse/img/logo.png" />
 
 MoreUnit is an Eclipse plugin that should assist you in writing more unit tests.

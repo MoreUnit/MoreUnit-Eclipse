@@ -26,6 +26,7 @@
     <tycho-version>4.0.12</tycho-version>
     <exec-maven-version>3.5.0</exec-maven-version>
     <surefire-version>3.5.3</surefire-version>
+    <jacoco.version>0.8.14</jacoco.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -99,10 +100,13 @@
             <showEclipseLog>true</showEclipseLog>
             <skipAfterFailureCount>10</skipAfterFailureCount>
             <providerHint>junit4</providerHint>
-            <argLine>
-              --add-opens java.base/java.lang=ALL-UNNAMED
-            </argLine>
+            <argLine>@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -264,6 +268,56 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>merge-all</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>merge</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <fileSets>
+                    <fileSet>
+                      <directory>${project.basedir}/..</directory>
+                      <includes>
+                        <include>**/target/jacoco.exec</include>
+                      </includes>
+                    </fileSet>
+                  </fileSets>
+                  <destFile>${project.build.directory}/jacoco-all.exec</destFile>
+                </configuration>
+              </execution>
+              <execution>
+                <id>report-aggregate</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report-aggregate</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <dataFile>${project.build.directory}/jacoco-all.exec</dataFile>
+                  <outputDirectory>${project.build.directory}/site/jacoco-aggregate</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <!-- makes test run in UI thread when under OSX -->
       <id>osx</id>
