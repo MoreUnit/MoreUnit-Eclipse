@@ -102,11 +102,14 @@ public class CorrespondingTypeSearcher
 
                 if(type.isInterface() || Flags.isAbstract(type.getFlags()))
                 {
-                    Set<IType> foundConcrete = SearchTools.findConcreteSubclasses(type, searchScope);
-                    for (IType subType : foundConcrete)
+                    IType[] subtypes = hierarchy.getAllSubtypes(type);
+                    for (IType subType : subtypes)
                     {
-                        ClassNameEvaluation subEval = preferences.getTestClassNamePattern().evaluate(subType);
-                        patterns.addAll(subEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
+                        if(! Flags.isAbstract(subType.getFlags()) && ! subType.isInterface())
+                        {
+                            ClassNameEvaluation subEval = preferences.getTestClassNamePattern().evaluate(subType);
+                            patterns.addAll(subEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
+                        }
                     }
                 }
             }
@@ -128,7 +131,7 @@ public class CorrespondingTypeSearcher
                 {
                     if(match.isInterface() || Flags.isAbstract(match.getFlags()))
                     {
-                        concreteImplementations.addAll(SearchTools.findConcreteSubclasses(match, searchScope));
+                        concreteImplementations.addAll(SearchTools.findConcreteSubclasses(match));
                     }
                 }
                 catch (JavaModelException e)
