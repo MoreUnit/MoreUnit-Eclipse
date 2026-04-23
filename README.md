@@ -1,8 +1,7 @@
 [![CodeQL](https://github.com/MoreUnit/MoreUnit-Eclipse/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MoreUnit/MoreUnit-Eclipse/actions/workflows/codeql-analysis.yml)
+[![codecov](https://codecov.io/gh/MoreUnit/MoreUnit-Eclipse/branch/master/graph/badge.svg)](https://codecov.io/gh/MoreUnit/MoreUnit-Eclipse)
 
 # MoreUnit For Eclipse
-
-[![codecov](https://codecov.io/gh/MoreUnit/MoreUnit-Eclipse/branch/master/graph/badge.svg)](https://codecov.io/gh/MoreUnit/MoreUnit-Eclipse)
 
 <img alt="MoreUnit Logo" src="https://moreunit.github.io/MoreUnit-Eclipse/img/logo.png" />
 
