@@ -37,20 +37,32 @@ public class SearchTools
 
     public static Set<IType> findConcreteSubclasses(IType type) throws JavaModelException
     {
+        return findConcreteSubclasses(type, SearchEngine.createWorkspaceScope());
+    }
+
+    public static Set<IType> findConcreteSubclasses(IType type, IJavaSearchScope scope)
+    {
         Set<IType> concreteSubclasses = new LinkedHashSet<>();
-        ITypeHierarchy hierarchy = type.newTypeHierarchy(new NullProgressMonitor());
-        IType[] subtypes = hierarchy.getAllSubtypes(type);
-        for (IType subtype : subtypes)
+        try
         {
-            if(! Flags.isAbstract(subtype.getFlags()) && ! Flags.isInterface(subtype.getFlags()))
+            SearchPattern pattern = SearchPattern.createPattern(type, IMPLEMENTORS);
+            Set<IType> found = search(pattern, scope);
+            for (IType t : found)
             {
-                concreteSubclasses.add(subtype);
+                if(! Flags.isAbstract(t.getFlags()) && ! t.isInterface())
+                {
+                    concreteSubclasses.add(t);
+                }
             }
+        }
+        catch (CoreException e)
+        {
+            // ignore
         }
         return concreteSubclasses;
     }
 
-    private static Set<IType> search(SearchPattern pattern, IJavaSearchScope scope) throws CoreException
+    public static Set<IType> search(SearchPattern pattern, IJavaSearchScope scope) throws CoreException
     {
         SearchParticipant[] participants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
         MatchCollector collector = new MatchCollector();

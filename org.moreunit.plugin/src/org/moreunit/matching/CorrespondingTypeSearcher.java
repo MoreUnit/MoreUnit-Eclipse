@@ -48,7 +48,7 @@ public class CorrespondingTypeSearcher
         nameEvaluation = this.preferences.getTestClassNamePattern().evaluate(this.type);
         IPackageFragmentRoot sourceFolder = nameEvaluation.isTestCase()
             ? preferences.getTestSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit))
-            : preferences.getMainSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit));
+            : this.preferences.getMainSourceFolder(PluginTools.getSourceFolder(compilationUnit));
         searchScope = SearchScopeSingelton.getInstance().getSearchScope(sourceFolder);
     }
 
@@ -102,13 +102,11 @@ public class CorrespondingTypeSearcher
 
                 if(type.isInterface() || Flags.isAbstract(type.getFlags()))
                 {
-                    for (IType subType : hierarchy.getAllSubtypes(type))
+                    Set<IType> foundConcrete = SearchTools.findConcreteSubclasses(type, searchScope);
+                    for (IType subType : foundConcrete)
                     {
-                        if(! Flags.isAbstract(subType.getFlags()) && ! subType.isInterface())
-                        {
-                            ClassNameEvaluation subEval = preferences.getTestClassNamePattern().evaluate(subType);
-                            patterns.addAll(subEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
-                        }
+                        ClassNameEvaluation subEval = preferences.getTestClassNamePattern().evaluate(subType);
+                        patterns.addAll(subEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
                     }
                 }
             }
@@ -130,7 +128,7 @@ public class CorrespondingTypeSearcher
                 {
                     if(match.isInterface() || Flags.isAbstract(match.getFlags()))
                     {
-                        concreteImplementations.addAll(SearchTools.findConcreteSubclasses(match));
+                        concreteImplementations.addAll(SearchTools.findConcreteSubclasses(match, searchScope));
                     }
                 }
                 catch (JavaModelException e)
