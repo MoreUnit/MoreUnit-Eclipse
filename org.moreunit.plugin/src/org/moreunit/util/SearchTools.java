@@ -37,27 +37,15 @@ public class SearchTools
 
     public static Set<IType> findConcreteSubclasses(IType type) throws JavaModelException
     {
-        return findConcreteSubclasses(type, SearchEngine.createWorkspaceScope());
-    }
-
-    public static Set<IType> findConcreteSubclasses(IType type, IJavaSearchScope scope)
-    {
         Set<IType> concreteSubclasses = new LinkedHashSet<>();
-        try
+        ITypeHierarchy hierarchy = type.newTypeHierarchy(new NullProgressMonitor());
+        IType[] subtypes = hierarchy.getAllSubtypes(type);
+        for (IType subtype : subtypes)
         {
-            SearchPattern pattern = SearchPattern.createPattern(type, IMPLEMENTORS);
-            Set<IType> found = search(pattern, scope);
-            for (IType t : found)
+            if(! Flags.isAbstract(subtype.getFlags()) && ! Flags.isInterface(subtype.getFlags()))
             {
-                if(! Flags.isAbstract(t.getFlags()) && ! t.isInterface())
-                {
-                    concreteSubclasses.add(t);
-                }
+                concreteSubclasses.add(subtype);
             }
-        }
-        catch (CoreException e)
-        {
-            // ignore
         }
         return concreteSubclasses;
     }
