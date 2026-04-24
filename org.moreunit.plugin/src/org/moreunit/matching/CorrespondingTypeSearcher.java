@@ -86,6 +86,13 @@ public class CorrespondingTypeSearcher
         boolean qualifyWithPackage = ! withLikelyMatches;
         Set<String> patterns = new LinkedHashSet<>(nameEvaluation.getAllCorrespondingClassPatterns(qualifyWithPackage));
 
+        Set<IType> matches = SearchTools.searchFor(patterns, searchScope);
+
+        if(matches.size() == 1 && ! matches.iterator().next().isInterface())
+        {
+            return matches;
+        }
+
         if(type != null && ! nameEvaluation.isTestCase())
         {
             try
@@ -119,7 +126,7 @@ public class CorrespondingTypeSearcher
             }
         }
 
-        Set<IType> matches = SearchTools.searchFor(patterns, searchScope);
+        matches = SearchTools.searchFor(patterns, searchScope);
 
         if(nameEvaluation.isTestCase())
         {

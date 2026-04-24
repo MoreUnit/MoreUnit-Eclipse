@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collection;
 
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.junit.Test;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
@@ -15,7 +16,7 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
 {
     @Project(mainCls = "class Foo", testCls = "FooTest")
     @Test
-    public void getMatches_should_return_test_for_class() throws Exception
+    public void getMatches_should_return_test_for_class()
     {
         CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = searcher.getMatches(false);
@@ -25,7 +26,7 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
     @Test
-    public void getMatches_should_return_test_for_interface() throws Exception
+    public void getMatches_should_return_test_for_interface()
     {
         context.getPrimaryTypeHandler("Foo").createSubclass("FooImpl");
 
@@ -37,7 +38,7 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
     @Test
-    public void getMatches_should_return_implementation_for_interface_test_and_exclude_interface() throws Exception
+    public void getMatches_should_return_implementation_for_interface_test_and_exclude_interface()
     {
         context.getPrimaryTypeHandler("Foo").createSubclass("FooImpl");
 
@@ -50,7 +51,7 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
     @Test
-    public void getMatches_should_return_interface_test_for_implementation() throws Exception
+    public void getMatches_should_return_interface_test_for_implementation()
     {
         context.getPrimaryTypeHandler("Foo").createSubclass("FooImpl");
 
@@ -62,7 +63,7 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
 
     @Project(mainCls = "interface Foo")
     @Test
-    public void getMatches_should_return_interface_for_implementation_test() throws Exception
+    public void getMatches_should_return_interface_for_implementation_test()
     {
         context.getPrimaryTypeHandler("Foo").createSubclass("FooImpl");
         context.getProjectHandler().getTestSrcFolderHandler().createClass("FooImplTest");
@@ -75,7 +76,7 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
     @Test
-    public void getMatches_should_include_interface_if_it_has_default_method() throws Exception
+    public void getMatches_should_include_interface_if_it_has_default_method() throws JavaModelException
     {
         IType foo = context.getPrimaryTypeHandler("Foo").get();
         foo.createMethod("default void bar() {}", null, true, null);
