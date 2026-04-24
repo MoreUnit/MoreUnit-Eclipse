@@ -3,6 +3,7 @@ package org.moreunit.elements;
 import static java.util.Collections.addAll;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -419,9 +420,18 @@ public class TestmethodCreator
     {
         if(doesMethodExist(methodName))
             return null;
-
         try
         {
+            String testImport = TestTypeConstants.TEST_ANNOTATION.get(testType);
+            if(testImport != null && Arrays.stream(testCaseCompilationUnit.getImports()).noneMatch(i -> i.getElementName().equals(testImport)))
+            {
+                testCaseCompilationUnit.createImport(testImport, null, null);
+            }
+            String staticImportBaseClass = TestTypeConstants.STATIC_IMPORT_BASE_CLASS.get(testType);
+            if(staticImportBaseClass != null && Arrays.stream(testCaseCompilationUnit.getImports()).noneMatch(i -> i.getElementName().equals(staticImportBaseClass)))
+            {
+                testCaseCompilationUnit.createImport(staticImportBaseClass, null, null);
+            }
             return testCaseCompilationUnit.findPrimaryType().createMethod(format(methodString), sibling, true, null);
         }
         catch (JavaModelException e)

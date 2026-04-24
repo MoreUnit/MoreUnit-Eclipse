@@ -48,11 +48,10 @@ public class ClassCreationTest extends JavaProjectSWTBotTestHelper
             public boolean test() throws Exception
             {
                 try {
-                    context.getCompilationUnit("testing.TheWorldTest");
+                    return context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods().length > 0;
                 } catch (IllegalArgumentException ex) {
-                    return false;
                 }
-                return true;
+                return false;
             }
 
             @Override
