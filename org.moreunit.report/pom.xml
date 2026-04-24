@@ -40,18 +40,23 @@
           <version>${project.version}</version>
         </dependency>
         <dependency>
-          <groupId>org.moreunit</groupId>
+          <groupId>org.moreunit.plugins</groupId>
           <artifactId>org.moreunit.mock.test</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
-          <groupId>org.moreunit</groupId>
+          <groupId>org.moreunit.plugins</groupId>
           <artifactId>org.moreunit.swtbot.test</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
           <groupId>org.moreunit.plugins</groupId>
           <artifactId>org.moreunit.test</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.moreunit.plugins</groupId>
+          <artifactId>org.moreunit.mock.it</artifactId>
           <version>${project.version}</version>
         </dependency>
       </dependencies>
