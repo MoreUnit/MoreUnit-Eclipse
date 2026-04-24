@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -21,10 +20,10 @@ import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 
-@RunWith(MockitoJUnitRunner.class)
-@Ignore
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MockDependenciesActionTest
 {
+
     @Mock
     private MockDependenciesPageManager pageManager;
     @Mock

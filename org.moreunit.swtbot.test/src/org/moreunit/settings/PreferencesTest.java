@@ -6,7 +6,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -16,7 +15,6 @@ import org.moreunit.test.context.Context;
 
 @Context(mainCls = "org:HelloWorld")
 @RunWith(SWTBotJunit4ClassRunner.class)
-@Ignore
 public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
     private void openPreferencesAndSelectMoreUnitPage()

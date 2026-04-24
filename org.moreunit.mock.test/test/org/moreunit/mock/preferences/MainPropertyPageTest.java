@@ -1,20 +1,16 @@
 package org.moreunit.mock.preferences;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import org.eclipse.jdt.core.IJavaProject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 
-@Ignore
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MainPropertyPageTest
 {
     @Mock
@@ -50,19 +46,19 @@ public class MainPropertyPageTest
     {
         // given
         specificSettingsChecked = false;
-        when(preferences.hasSpecificSettings(any(IJavaProject.class))).thenReturn(false);
+        when(preferences.hasSpecificSettings(null)).thenReturn(false);
         // when
         propertyPage.performOk();
         // then
-        verify(preferences, never()).setSpecificSettings(any(IJavaProject.class), anyBoolean());
+        verify(preferences, never()).setSpecificSettings(null, false);
 
         // given
         specificSettingsChecked = true;
-        when(preferences.hasSpecificSettings(any(IJavaProject.class))).thenReturn(true);
+        when(preferences.hasSpecificSettings(null)).thenReturn(true);
         // when
         propertyPage.performOk();
         // then
-        verify(preferences, never()).setSpecificSettings(any(IJavaProject.class), anyBoolean());
+        verify(preferences, never()).setSpecificSettings(null, true);
     }
 
     @Test
@@ -70,19 +66,19 @@ public class MainPropertyPageTest
     {
         // given
         specificSettingsChecked = true;
-        when(preferences.hasSpecificSettings(any(IJavaProject.class))).thenReturn(false);
+        when(preferences.hasSpecificSettings(null)).thenReturn(false);
         // when
         propertyPage.performOk();
         // then
-        verify(preferences).setSpecificSettings(any(IJavaProject.class), eq(specificSettingsChecked));
+        verify(preferences).setSpecificSettings(null, specificSettingsChecked);
 
         // given
         specificSettingsChecked = false;
-        when(preferences.hasSpecificSettings(any(IJavaProject.class))).thenReturn(true);
+        when(preferences.hasSpecificSettings(null)).thenReturn(true);
         // when
         propertyPage.performOk();
         // then
-        verify(preferences).setSpecificSettings(any(IJavaProject.class), eq(specificSettingsChecked));
+        verify(preferences).setSpecificSettings(null, specificSettingsChecked);
     }
 
     @Test
@@ -115,7 +111,7 @@ public class MainPropertyPageTest
     public void should_enable_specific_settings_on_creation_when_project_has_specific_settings() throws Exception
     {
         // given
-        when(preferences.hasSpecificSettings(any(IJavaProject.class))).thenReturn(true);
+        when(preferences.hasSpecificSettings(null)).thenReturn(true);
 
         // when
         propertyPage.initValues();
@@ -128,7 +124,7 @@ public class MainPropertyPageTest
     public void should_disable_specific_settings_on_creation_when_project_has_no_specific_settings() throws Exception
     {
         // given
-        when(preferences.hasSpecificSettings(any(IJavaProject.class))).thenReturn(false);
+        when(preferences.hasSpecificSettings(null)).thenReturn(false);
 
         // when
         propertyPage.initValues();

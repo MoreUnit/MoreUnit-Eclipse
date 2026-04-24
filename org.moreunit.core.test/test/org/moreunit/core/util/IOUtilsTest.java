@@ -41,7 +41,6 @@ public class IOUtilsTest
     }
 
     @Test
-    @Ignore
     public void closeQuietly_should_swallow_IOExceptions() throws Exception
     {
         // given

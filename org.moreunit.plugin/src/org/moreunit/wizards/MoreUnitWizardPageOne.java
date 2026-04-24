@@ -25,7 +25,6 @@ import org.eclipse.jdt.core.manipulation.CodeGeneration;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.internal.corext.util.JavaConventionsUtil;
-import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.junit.BasicElementLabels;
 import org.eclipse.jdt.internal.junit.JUnitCorePlugin;
 import org.eclipse.jdt.internal.junit.Messages;
@@ -704,17 +703,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         IPackageFragmentRoot root = getPackageFragmentRoot();
         if(root != null)
         {
-            IJavaProject project = root.getJavaProject();
-            if(project.exists())
-            {
-                if(isJUnit4())
-                {
-                    if(! JavaModelUtil.is15OrHigher(project))
-                    {
-                        message = "JUnit 4 requires a project with 1.5 compliance or more.";
-                    }
-                }
-            }
+            root.getJavaProject();
         }
         fLink.setVisible(message != null);
         fImage.setVisible(message != null);
@@ -1155,11 +1144,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 {
                     if(isJUnit4())
                     {
-                        if(! JavaModelUtil.is15OrHigher(project))
-                        {
-                            status.setError("JUnit 4 requires a project with 1.5 compliance or more.");
-                            return status;
-                        }
                         if(project.findType(JUnitCorePlugin.JUNIT4_ANNOTATION_NAME) == null)
                         {
                             status.setWarning(WizardMessages.NewTestCaseWizardPageOne__error_junit4NotOnbuildpath);

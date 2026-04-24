@@ -42,9 +42,9 @@ public class JavaProjectOptions
         OPTS.put("org.eclipse.jdt.core.compiler.annotation.nullable", "org.eclipse.jdt.annotation.Nullable");
         OPTS.put("org.eclipse.jdt.core.compiler.annotation.nullanalysis", "disabled");
         OPTS.put("org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode", "enabled");
-        OPTS.put("org.eclipse.jdt.core.compiler.codegen.targetPlatform", "1.5");
+        OPTS.put("org.eclipse.jdt.core.compiler.codegen.targetPlatform", "1.8");
         OPTS.put("org.eclipse.jdt.core.compiler.codegen.unusedLocal", "preserve");
-        OPTS.put("org.eclipse.jdt.core.compiler.compliance", "1.5");
+        OPTS.put("org.eclipse.jdt.core.compiler.compliance", "1.8");
         OPTS.put("org.eclipse.jdt.core.compiler.debug.lineNumber", "generate");
         OPTS.put("org.eclipse.jdt.core.compiler.debug.localVariable", "generate");
         OPTS.put("org.eclipse.jdt.core.compiler.debug.sourceFile", "generate");
@@ -153,7 +153,7 @@ public class JavaProjectOptions
         OPTS.put("org.eclipse.jdt.core.compiler.problem.unusedWarningToken", "warning");
         OPTS.put("org.eclipse.jdt.core.compiler.problem.varargsArgumentNeedCast", "warning");
         OPTS.put("org.eclipse.jdt.core.compiler.processAnnotations", "disabled");
-        OPTS.put("org.eclipse.jdt.core.compiler.source", "1.5");
+        OPTS.put("org.eclipse.jdt.core.compiler.source", "1.8");
         OPTS.put("org.eclipse.jdt.core.compiler.taskCaseSensitive", "enabled");
         OPTS.put("org.eclipse.jdt.core.compiler.taskPriorities", "NORMAL,HIGH,NORMAL");
         OPTS.put("org.eclipse.jdt.core.compiler.taskTags", "TODO,FIXME,XXX");

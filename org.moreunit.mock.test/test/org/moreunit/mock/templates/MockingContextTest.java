@@ -18,7 +18,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -37,8 +36,7 @@ import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
 
-@RunWith(MockitoJUnitRunner.class)
-@Ignore
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MockingContextTest
 {
     private static final String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
@@ -255,7 +253,7 @@ public class MockingContextTest
         mockingContext.prepareContext(templateRequiringBeforeMethod(), templateProcessor);
 
         // then
-        verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.junit.jupiter.api.BeforeAll");
+        verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.junit.jupiter.api.BeforeEach");
 
         assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
     }

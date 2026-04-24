@@ -8,7 +8,6 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
@@ -20,7 +19,6 @@ import org.moreunit.test.context.TestType;
 /**
  * @author gianasista
  */
-@Ignore
 @Context(mainCls = "org:SomeClass")
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class RenamePackageTest extends JavaProjectSWTBotTestHelper

@@ -10,7 +10,6 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.moreunit.ConditionCursorLine;
@@ -19,7 +18,6 @@ import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.TestType;
 
-@Ignore
 @Preferences(testClassNameTemplate="${srcFile}Test",
              testSrcFolder="test",
              testMethodPrefix=true,

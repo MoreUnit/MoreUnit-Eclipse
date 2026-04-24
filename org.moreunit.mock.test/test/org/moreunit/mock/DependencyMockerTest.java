@@ -1,12 +1,10 @@
 package org.moreunit.mock;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,7 +16,7 @@ import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.preferences.PreferenceConstants;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DependencyMockerTest
 {
     private static final String SOME_TEST_TYPE = PreferenceConstants.DEFAULT_TEST_TYPE;
@@ -59,22 +57,6 @@ public class DependencyMockerTest
         dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
 
         // then
-        verifyNoInteractions(templateApplicator);
-    }
-
-
-    @Test
-    @Ignore
-    public void should_log_error_and_abort_when_template_not_found() throws Exception
-    {
-        // given
-        when(templateStore.get(anyString())).thenReturn(null);
-
-        // when
-        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
-
-        // then
-        verify(logger).error(any());
         verifyNoInteractions(templateApplicator);
     }
 

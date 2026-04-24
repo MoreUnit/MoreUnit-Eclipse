@@ -247,30 +247,6 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     }
 
     @Test
-    @Ignore("Fails locally. Opens clojure file in external editor, breaking the test flow.")
-    public void should_delegate_to_extension() throws Exception
-    {
-        // given
-        addExtension("temp-lang_support", ExtensionPoints.LANGUAGES //
-        , "<language fileExtension=\"clj\" name=\"Clojure\">" //
-          + "<jumper class=\"" + TestJumper.class.getName() + "\" />" //
-          + "</language>");
-
-        IFile sourceFile = createFile("SomeClojureFile.clj");
-        IFile testFile = createFile("SomeOtherClojureFileThatShouldBeConsideredAsACorrespondingTestByTheExtension.clj");
-
-        openEditor(sourceFile);
-
-        config.wizardDriver = new AutoPerformWizard();
-
-        // when
-        executeCommand(JUMP_COMMAND);
-
-        // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
-    }
-
-    @Test
     public void should_use_file_selector_when_several_files_match() throws Exception
     {
         // given
