@@ -30,9 +30,9 @@ jobs:
           java-version: '21'
           cache: 'maven'
       - name: Setup Maven
-        uses: stCarolas/setup-maven@v.4.5
+        uses: stCarolas/setup-maven@v5
         with:
-          maven-version: 3.9.4
+          maven-version: 3.9.9
 
       - name: Build and verify
         run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
