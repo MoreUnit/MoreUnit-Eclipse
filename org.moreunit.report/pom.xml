@@ -34,6 +34,26 @@
           <artifactId>org.moreunit.mock</artifactId>
           <version>${project.version}</version>
         </dependency>
+        <dependency>
+          <groupId>org.moreunit</groupId>
+          <artifactId>org.moreunit.core.test</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.moreunit</groupId>
+          <artifactId>org.moreunit.mock.test</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.moreunit</groupId>
+          <artifactId>org.moreunit.swtbot.test</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.moreunit.plugins</groupId>
+          <artifactId>org.moreunit.test</artifactId>
+          <version>${project.version}</version>
+        </dependency>
       </dependencies>
       <build>
         <plugins>
