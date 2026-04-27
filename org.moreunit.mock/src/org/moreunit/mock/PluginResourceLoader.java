@@ -64,9 +64,13 @@ public class PluginResourceLoader
     public boolean ensureStateExists(String subPath)
     {
         IPath userTemplateDir = MoreUnitMockPlugin.getDefault().getStateLocation().append(subPath);
-        if(! userTemplateDir.toFile().exists())
+        File templateDirFile = userTemplateDir.toFile();
+        if(! templateDirFile.exists())
         {
-            userTemplateDir.toFile().mkdir();
+            if (!templateDirFile.mkdirs() && !templateDirFile.exists())
+            {
+                logger.error("Failed to create state directory: " + templateDirFile.getAbsolutePath());
+            }
             return false;
         }
         return true;
