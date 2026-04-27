@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.languages.LanguageRepository;
-import org.moreunit.core.ui.Labels;
 
 public class GenericPreferencePage extends PreferencePageBase
 {
