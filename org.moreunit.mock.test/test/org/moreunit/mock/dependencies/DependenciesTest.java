@@ -3,6 +3,7 @@ package org.moreunit.mock.dependencies;
 import static java.util.Arrays.asList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -74,7 +75,24 @@ public class DependenciesTest
         assertThat(dependencies.resolveTypeSignature("@NonNull Comparator<String>")).isEqualTo("java.util.Comparator");
     }
 
-    // TODO see what to do with array types (should not be mockable...)
+    @Test
+    public void should_ignore_array_types() throws Exception
+    {
+        // given
+        when(dependencyInjectionPointStore.getConstructors()).thenReturn(Collections.<IMethod> emptySet());
+        when(dependencyInjectionPointStore.getSetters()).thenReturn(Collections.<IMethod> emptySet());
+
+        IField field = mock(IField.class);
+        when(field.getTypeSignature()).thenReturn("[Ljava.lang.String;");
+
+        when(dependencyInjectionPointStore.getFields()).thenReturn(Collections.singleton(field));
+
+        // when
+        dependencies.init();
+
+        // then
+        assertThat(dependencies.injectableByField()).isEmpty();
+    }
 
     @Test
     public void resolveTypeParameters_should_return_an_empty_list_when_there_are_no_type_parameters() throws Exception

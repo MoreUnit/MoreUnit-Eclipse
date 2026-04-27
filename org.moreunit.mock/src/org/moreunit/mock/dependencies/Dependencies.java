@@ -72,7 +72,7 @@ public class Dependencies extends ArrayList<Dependency>
             for (int i = 0; i < parameterNames.length; i++)
             {
                 Dependency dependency = createConstructorDependency(parameterTypes[i], parameterNames[i]);
-                if(! contains(dependency))
+                if(dependency != null && ! contains(dependency))
                 {
                     constructorDependencies.add(dependency);
                     add(dependency);
@@ -83,6 +83,10 @@ public class Dependencies extends ArrayList<Dependency>
 
     private Dependency createConstructorDependency(String parameterType, String parameterName) throws JavaModelException
     {
+        if (Signature.getArrayCount(parameterType) > 0)
+        {
+            return null;
+        }
         String signature = Signature.toString(parameterType);
         String dependencyName = namingRules.cleanParameterName(parameterName);
         return new Dependency(resolveTypeSignature(signature), dependencyName, resolveTypeParameters(signature));
@@ -93,7 +97,7 @@ public class Dependencies extends ArrayList<Dependency>
         for (IMethod method : injectionPointProvider.getSetters())
         {
             SetterDependency dependency = createSetterDependency(method);
-            if(! contains(dependency))
+            if(dependency != null && ! contains(dependency))
             {
                 setterDependencies.add(dependency);
                 add(dependency);
@@ -103,7 +107,12 @@ public class Dependencies extends ArrayList<Dependency>
 
     private SetterDependency createSetterDependency(IMethod method) throws JavaModelException
     {
-        String signature = Signature.toString(method.getParameterTypes()[0]);
+        String parameterType = method.getParameterTypes()[0];
+        if (Signature.getArrayCount(parameterType) > 0)
+        {
+            return null;
+        }
+        String signature = Signature.toString(parameterType);
         return new SetterDependency(resolveTypeSignature(signature), method.getElementName(), resolveTypeParameters(signature));
     }
 
@@ -131,7 +140,7 @@ public class Dependencies extends ArrayList<Dependency>
         for (IField field : injectionPointProvider.getFields())
         {
             FieldDependency dependency = createFieldDependency(field);
-            if(! contains(dependency))
+            if(dependency != null && ! contains(dependency))
             {
                 fieldDependencies.add(dependency);
                 add(dependency);
@@ -141,7 +150,12 @@ public class Dependencies extends ArrayList<Dependency>
 
     private FieldDependency createFieldDependency(IField field) throws JavaModelException
     {
-        String signature = Signature.toString(field.getTypeSignature());
+        String typeSignature = field.getTypeSignature();
+        if (Signature.getArrayCount(typeSignature) > 0)
+        {
+            return null;
+        }
+        String signature = Signature.toString(typeSignature);
         String fieldName = field.getElementName();
         String dependencyName = namingRules.cleanFieldName(fieldName);
         return new FieldDependency(resolveTypeSignature(signature), fieldName, dependencyName, resolveTypeParameters(signature));
