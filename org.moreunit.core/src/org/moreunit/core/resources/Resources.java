@@ -2,6 +2,12 @@ package org.moreunit.core.resources;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -27,36 +33,38 @@ public class Resources
             return new CreatedFolder(srcFolder);
         }
 
-        IFolder folder = null;
-        CreatedFolderPath createdFolderPath = null;
+        List<IFolder> foldersToCreate = new ArrayList<IFolder>();
+        IFolder current = srcFolder;
 
-        for (String segment : folderPath.segments())
+        while (!current.exists())
         {
-            if(folder == null)
+            foldersToCreate.add(current);
+            IContainer parent = current.getParent();
+            if(parent == null || parent.getType() != IResource.FOLDER)
             {
-                folder = project.getFolder(segment);
+                break;
             }
-            else
-            {
-                folder = folder.getFolder(segment);
-            }
-
-            if(! folder.exists())
-            {
-                try
-                {
-                    folder.create(false, true, null);
-                }
-                catch (CoreException e)
-                {
-                    throw new FolderCreationException(e, folder);
-                }
-
-                createdFolderPath = new CreatedFolderPath(createdFolderPath, folder);
-            }
+            current = (IFolder) parent;
         }
 
-        return new CreatedFolder(folder, createdFolderPath);
+        Collections.reverse(foldersToCreate);
+
+        CreatedFolderPath createdFolderPath = null;
+        for (IFolder folder : foldersToCreate)
+        {
+            try
+            {
+                folder.create(false, true, null);
+            }
+            catch (CoreException e)
+            {
+                throw new FolderCreationException(e, folder);
+            }
+
+            createdFolderPath = new CreatedFolderPath(createdFolderPath, folder);
+        }
+
+        return new CreatedFolder(srcFolder, createdFolderPath);
     }
 
     public static class CreatedFolder
