@@ -127,4 +127,10 @@ public class StringsTest
         assertThat(Strings.join(",", "1", "2", "3")).isEqualTo("1,2,3");
         assertThat(Strings.join(" -> ", "aBc", "2", "DEf")).isEqualTo("aBc -> 2 -> DEf");
     }
+
+    @Test
+    public void emptyArray_should_return_empty_array()
+    {
+        assertThat(Strings.emptyArray()).isEmpty();
+    }
 }

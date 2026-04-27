@@ -70,6 +70,8 @@ public class ExtendedSafeRunnerTest
             public void handleException(Throwable throwable, String element)
             {
                 exceptionHandled[0] = true;
+                assertThat(element).isEqualTo("input");
+                assertThat(throwable.getMessage()).isEqualTo("failed");
             }
         });
 
