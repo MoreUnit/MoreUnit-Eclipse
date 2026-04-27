@@ -40,14 +40,14 @@ public class MockingTemplateLoader implements Service
         {
             loadTemplate(template, result);
         }
-        logger.debug(String.format("%d default templates loaded", templates.size()));
+        logger.debug("%d default templates loaded".formatted(templates.size()));
 
         templates = resourceLoader.findWorkspaceStateResources(TEMPLATE_DIRECTORY, "*.xml");
         for (URL template : templates)
         {
             loadTemplate(template, result);
         }
-        logger.debug(String.format("%d user templates loaded", templates.size()));
+        logger.debug("%d user templates loaded".formatted(templates.size()));
 
         if(templateStore.getCategories().isEmpty())
         {

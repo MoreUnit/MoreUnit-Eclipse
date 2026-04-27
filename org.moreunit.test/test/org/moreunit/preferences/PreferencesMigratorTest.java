@@ -132,7 +132,7 @@ public class PreferencesMigratorTest
         @Override
         public String toString()
         {
-            return String.format("%s(%s)", getClass().getSimpleName(), targetVersion);
+            return "%s(%s)".formatted(getClass().getSimpleName(), targetVersion);
         }
     }
 }

@@ -71,12 +71,12 @@ public class ClassNameEvaluation
 
         if(packagePrefix != null)
         {
-            packageName = String.format("%s.%s", packagePrefix, packageName);
+            packageName = "%s.%s".formatted(packagePrefix, packageName);
         }
 
         if(packageSuffix != null)
         {
-            packageName = String.format("%s.%s", packageName, packageSuffix);
+            packageName = "%s.%s".formatted(packageName, packageSuffix);
         }
 
         return packageName;

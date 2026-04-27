@@ -81,7 +81,7 @@ public class MockingTemplate implements Comparable<MockingTemplate>
     @Override
     public String toString()
     {
-        return String.format("MockingTemplate [id=%s, category=%s]", id, categoryId);
+        return "MockingTemplate [id=%s, category=%s]".formatted(id, categoryId);
     }
 
     @Override

@@ -269,7 +269,7 @@ public class RunTestsActionExecutor
 
     private Collection<IMember> resolveAbstractTestElement(IMember testElement)
     {
-        IType type = testElement instanceof IType ? (IType) testElement : testElement.getDeclaringType();
+        IType type = testElement instanceof IType it ? it : testElement.getDeclaringType();
         try
         {
             if(! Flags.isAbstract(type.getFlags()))
@@ -344,9 +344,9 @@ public class RunTestsActionExecutor
             {
                 return (Collection<IType>) choice;
             }
-            if(choice instanceof IType)
+            if(choice instanceof IType type)
             {
-                return Collections.singleton((IType) choice);
+                return Collections.singleton(type);
             }
             return null;
         });

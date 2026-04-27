@@ -24,25 +24,25 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
 
     public void partActivated(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor)
+        if(part instanceof ITextEditor editor)
         {
-            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) part);
+            MoreUnitAnnotationModel.updateAnnotations(editor);
         }
     }
 
     public void partBroughtToTop(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor)
+        if(part instanceof ITextEditor editor)
         {
-            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) part);
+            MoreUnitAnnotationModel.updateAnnotations(editor);
         }
     }
 
     public void partClosed(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor)
+        if(part instanceof ITextEditor editor)
         {
-            MoreUnitAnnotationModel.detach((ITextEditor) part);
+            MoreUnitAnnotationModel.detach(editor);
         }
     }
 
@@ -52,9 +52,9 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
 
     public void partOpened(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor)
+        if(part instanceof ITextEditor editor)
         {
-            MoreUnitAnnotationModel.attach((ITextEditor) part);
+            MoreUnitAnnotationModel.attach(editor);
         }
     }
 
@@ -66,7 +66,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
     public void resourceChanged(IResourceChangeEvent event)
     {
         IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
-        if(openEditorPart instanceof ITextEditor)
+        if(openEditorPart instanceof ITextEditor editor)
         {
             if(PluginTools.isJavaFile(openEditorPart))
             {
@@ -79,7 +79,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
                     {
                         IResourceDelta member = delta.findMember(file.getFullPath());
                         if(member != null)
-                            MoreUnitAnnotationModel.updateAnnotations((ITextEditor) openEditorPart);
+                            MoreUnitAnnotationModel.updateAnnotations(editor);
                     }
                 }
             }

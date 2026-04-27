@@ -84,7 +84,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         {
             return store.getBoolean(BASE + LanguagePreferences.ANY_LANGUAGE + PROPERTIES_ACTIVE);
         }
-        return orDefault(store.getString(LANGUAGES), "").matches(String.format(".*\\b%s\\b.*", language));
+        return orDefault(store.getString(LANGUAGES), "").matches(".*\\b%s\\b.*".formatted(language));
     }
 
     public void activatePreferencesForLanguage(String language, boolean active)
@@ -107,7 +107,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
             }
             else
             {
-                activeLanguages = activeLanguages.replaceFirst(String.format(",?\\b%s\\b,?", language), "");
+                activeLanguages = activeLanguages.replaceFirst(",?\\b%s\\b,?".formatted(language), "");
             }
             store.setValue(LANGUAGES, activeLanguages);
         }

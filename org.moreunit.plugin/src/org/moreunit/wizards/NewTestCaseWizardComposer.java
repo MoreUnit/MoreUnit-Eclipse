@@ -52,8 +52,7 @@ public class NewTestCaseWizardComposer
     private void orderPages()
     {
         while (insertExtensionPages())
-        {
-            ; // iterate
+        { // iterate
         }
 
         if(! extensionPages.isEmpty())

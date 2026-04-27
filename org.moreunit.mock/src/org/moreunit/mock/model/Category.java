@@ -41,7 +41,7 @@ public class Category implements Comparable<Category>
     @Override
     public String toString()
     {
-        return String.format("Category [id=%s]", id);
+        return "Category [id=%s]".formatted(id);
     }
 
     @Override

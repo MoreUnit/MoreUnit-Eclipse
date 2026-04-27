@@ -38,10 +38,10 @@ public class LayoutUtil
     {
         Assert.isNotNull(button);
         Object gd = button.getLayoutData();
-        if(gd instanceof GridData)
+        if(gd instanceof GridData data)
         {
-            ((GridData) gd).widthHint = getButtonWidthHint(button);
-            ((GridData) gd).horizontalAlignment = GridData.FILL;
+            data.widthHint = getButtonWidthHint(button);
+            data.horizontalAlignment = GridData.FILL;
         }
     }
 }

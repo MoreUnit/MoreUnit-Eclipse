@@ -159,7 +159,7 @@ public class BaseTools
     {
         StringBuilder stringBuilder = new StringBuilder();
         if(wordList.size() > 0)
-            stringBuilder.append(wordList.get(wordList.size() - 1));
+            stringBuilder.append(wordList.getLast());
         stringBuilder.append(word);
         return stringBuilder.toString();
     }

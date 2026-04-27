@@ -91,7 +91,7 @@ public class TypeUse<T extends TypeUse<T>> extends TypeRef<TypeUse<T>>
     @Override
     public String toString()
     {
-        return String.format("TypeUse[\nclassName=%s, \nannotations=%s, \ntypeParams=%s]", fullyQualifiedClassName, annotations, typeParameters);
+        return "TypeUse[\nclassName=%s, \nannotations=%s, \ntypeParams=%s]".formatted(fullyQualifiedClassName, annotations, typeParameters);
     }
 
     @SuppressWarnings("unchecked")

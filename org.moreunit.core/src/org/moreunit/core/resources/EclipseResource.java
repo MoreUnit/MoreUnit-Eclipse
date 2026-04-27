@@ -61,13 +61,13 @@ abstract class EclipseResource implements Resource
         {
             return EclipseWorkspace.get();
         }
-        if(parent instanceof IProject)
+        if(parent instanceof IProject project)
         {
-            return new EclipseProject((IProject) parent);
+            return new EclipseProject(project);
         }
-        if(parent instanceof IFolder)
+        if(parent instanceof IFolder folder)
         {
-            return new EclipseFolder((IFolder) parent);
+            return new EclipseFolder(folder);
         }
         throw new ResourceException("Unknown parent type: " + parent.getClass().getName());
     }

@@ -118,7 +118,7 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
     private ILaunchConfiguration findExistingLaunchConfiguration(ILaunchConfigurationWorkingCopy template) throws CoreException
     {
         List<ILaunchConfiguration> candidateConfigs = findExistingLaunchConfigurations(template);
-        return candidateConfigs.isEmpty() ? null : candidateConfigs.get(0);
+        return candidateConfigs.isEmpty() ? null : candidateConfigs.getFirst();
     }
 
     // taken from org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut

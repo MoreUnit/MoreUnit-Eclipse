@@ -46,7 +46,7 @@ public class InMemoryPath implements Path
         if(isEmpty())
             return "";
 
-        return segments.isEmpty() ? "/" : segments.get(segments.size() - 1);
+        return segments.isEmpty() ? "/" : segments.getLast();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class InMemoryPath implements Path
     @Override
     public String getProjectName()
     {
-        return segments.isEmpty() ? "" : segments.get(0);
+        return segments.isEmpty() ? "" : segments.getFirst();
     }
 
     @Override

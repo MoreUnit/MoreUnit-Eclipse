@@ -95,6 +95,6 @@ public abstract class InclusionCondition
     @Override
     public final String toString()
     {
-        return String.format("%s [%s = %s]", getClass().getSimpleName(), type, value);
+        return "%s [%s = %s]".formatted(getClass().getSimpleName(), type, value);
     }
 }

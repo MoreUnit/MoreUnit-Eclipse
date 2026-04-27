@@ -120,9 +120,9 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                         // Scroll up
                         Point p = tree.toDisplay(e.x, e.y);
                         Item item = treeViewer.scrollUp(p.x, p.y);
-                        if(item instanceof TreeItem)
+                        if(item instanceof TreeItem treeItem)
                         {
-                            fLastItem = (TreeItem) item;
+                            fLastItem = treeItem;
                             tree.setSelection(new TreeItem[] { fLastItem });
                         }
                     }
@@ -131,9 +131,9 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                         // Scroll down
                         Point p = tree.toDisplay(e.x, e.y);
                         Item item = treeViewer.scrollDown(p.x, p.y);
-                        if(item instanceof TreeItem)
+                        if(item instanceof TreeItem treeItem1)
                         {
-                            fLastItem = (TreeItem) item;
+                            fLastItem = treeItem1;
                             tree.setSelection(new TreeItem[] { fLastItem });
                         }
                     }

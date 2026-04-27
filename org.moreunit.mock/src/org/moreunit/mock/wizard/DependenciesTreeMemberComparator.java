@@ -17,9 +17,9 @@ public class DependenciesTreeMemberComparator implements Comparator<IMember>
             return result;
         }
 
-        if(m1 instanceof IMethod && m2 instanceof IMethod)
+        if(m1 instanceof IMethod method && m2 instanceof IMethod method1)
         {
-            result = compareMethodTypes((IMethod) m1, (IMethod) m2);
+            result = compareMethodTypes(method, method1);
             if(result != 0)
             {
                 return result;

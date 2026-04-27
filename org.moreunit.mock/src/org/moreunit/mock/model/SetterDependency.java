@@ -26,7 +26,7 @@ public class SetterDependency extends Dependency
 
         if(setterMethod.length() < 4 || ! setterMethod.startsWith("set"))
         {
-            throw new IllegalArgumentException(String.format("'%s' is not a setter", setterMethod));
+            throw new IllegalArgumentException("'%s' is not a setter".formatted(setterMethod));
         }
 
         String withoutSet = setterMethod.substring(3);

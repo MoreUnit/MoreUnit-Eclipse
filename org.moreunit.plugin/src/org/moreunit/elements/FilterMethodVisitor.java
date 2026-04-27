@@ -164,12 +164,12 @@ public class FilterMethodVisitor extends ASTVisitor
             return true;
 
         // check underscore
-        String getterWithUnderscore = String.format("_%s", getterVariableName);
+        String getterWithUnderscore = "_%s".formatted(getterVariableName);
         if(getterWithUnderscore.equalsIgnoreCase(fieldName))
             return true;
 
         // check m-prefix
-        String getterWithMemberPrefix = String.format("m%s", getterVariableName);
+        String getterWithMemberPrefix = "m%s".formatted(getterVariableName);
         if(getterWithMemberPrefix.equalsIgnoreCase(fieldName))
             return true;
 

@@ -469,7 +469,7 @@ public final class TestFileNamePattern
      */
     private String buildPreferredSrcFileName(String testFileName)
     {
-        String maybeSeparator = String.format("(%s)?", quote(separator));
+        String maybeSeparator = "(%s)?".formatted(quote(separator));
         return testFileName.replaceFirst("^" + prefix + maybeSeparator, "").replaceFirst(maybeSeparator + (suffix.equals(".*") ? "" : suffix) + "$", "");
     }
 

@@ -82,7 +82,7 @@ public class ClassTypeFacade extends TypeFacade
     public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType)
     {
         List<IMethod> testMethods = getTestMethodsForTestCase(method, testCaseType);
-        return testMethods.isEmpty() ? null : testMethods.get(0);
+        return testMethods.isEmpty() ? null : testMethods.getFirst();
     }
 
     public List<IMethod> getCorrespondingTestMethodsByName(IMethod method)

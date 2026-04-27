@@ -59,7 +59,7 @@ public class SourceFolderMapping
         toStringParts.add(SourceFolderMapping.class.getSimpleName());
         for (IPackageFragmentRoot sourceFolder : sourceFolderList)
         {
-            toStringParts.add(String.format(" (%s:%s => %s:%s)", sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName()));
+            toStringParts.add(" (%s:%s => %s:%s)".formatted(sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName()));
         }
         return Strings.join(StringConstants.EMPTY_STRING, toStringParts);
     }

@@ -82,7 +82,7 @@ public class MoveClassParticipant extends MoveParticipant
 
             List<Change> changes = new ArrayList<Change>();
             IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
-            String importString = String.format("%s.%s", packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
+            String importString = "%s.%s".formatted(packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
 
             for (IType typeToMove : javaFileFacade.getCorrespondingTestCases())
             {
@@ -119,7 +119,7 @@ public class MoveClassParticipant extends MoveParticipant
 
             if(changes.size() == 1)
             {
-                return changes.get(0);
+                return changes.getFirst();
             }
 
             if(changes.size() > 0)

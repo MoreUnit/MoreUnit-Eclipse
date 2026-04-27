@@ -145,7 +145,7 @@ public class TestFileNamePatternParser
             this.quotedSeparator = quote(separator);
             this.separatorChars = escapeCharsWhereNeeded(separator).toCharArray();
             parse();
-            firstAlternative = alternatives.isEmpty() ? null : alternatives.get(0);
+            firstAlternative = alternatives.isEmpty() ? null : alternatives.getFirst();
             sort(alternatives, new ReversedLengthComparator());
         }
 

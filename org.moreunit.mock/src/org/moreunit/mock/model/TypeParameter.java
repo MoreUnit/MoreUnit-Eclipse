@@ -130,6 +130,6 @@ public class TypeParameter extends TypeUse<TypeParameter>
     @Override
     public String toString()
     {
-        return String.format("TypeParameter[\nwildcardExpression=\"%s\", \nclassName=%s, \nannotations=%s, \nbaseTypeAnnotations=%s, \ntypeParams=%s]", wildcardExpression, fullyQualifiedClassName, annotations, baseTypeAnnotations, typeParameters);
+        return "TypeParameter[\nwildcardExpression=\"%s\", \nclassName=%s, \nannotations=%s, \nbaseTypeAnnotations=%s, \ntypeParams=%s]".formatted(wildcardExpression, fullyQualifiedClassName, annotations, baseTypeAnnotations, typeParameters);
     }
 }

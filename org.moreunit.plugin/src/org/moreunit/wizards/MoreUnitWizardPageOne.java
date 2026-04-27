@@ -226,11 +226,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     classToTest = cu.findPrimaryType();
                 else
                 {
-                    if(element instanceof IClassFile)
+                    if(element instanceof IClassFile cf)
                     {
                         try
                         {
-                            IClassFile cf = (IClassFile) element;
                             if(cf.isStructureKnown() && cf instanceof IOrdinaryClassFile ordinaryClassFile)
                                 classToTest = ordinaryClassFile.getType();
                         }

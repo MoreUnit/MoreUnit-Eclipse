@@ -212,7 +212,7 @@ public class TemplateStyleSelector implements SelectionListener
 
         if(logger.debugEnabled())
         {
-            logger.debug(String.format("Defined template %s for %s", template.id(), project == null ? "workspace" : "project " + project.getElementName()));
+            logger.debug("Defined template %s for %s".formatted(template.id(), project == null ? "workspace" : "project " + project.getElementName()));
         }
     }
 

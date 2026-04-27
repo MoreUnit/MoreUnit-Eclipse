@@ -1,7 +1,10 @@
 package org.moreunit.mock.templates;
 
+import java.io.Serial;
+
 public class TemplateAlreadyDefinedException extends Exception
 {
+    @Serial
     private static final long serialVersionUID = - 6594805348873016229L;
 
     private final String templateId;

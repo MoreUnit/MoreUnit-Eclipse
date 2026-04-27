@@ -76,10 +76,10 @@ public class MatchingFile
     @Override
     public String toString()
     {
-        return String.format("%s(%s)", getClass().getSimpleName(), (isSearchCancelled() ? //
-        "search cancelled" : //
-        (isFound() ? //
-        "found: " + file : //
-        "to create: " + srcFolderToCreate + "/" + fileToCreate)));
+        return "%s(%s)".formatted(getClass().getSimpleName(), (isSearchCancelled() ? //
+                "search cancelled" : //
+                (isFound() ? //
+                        "found: " + file : //
+                        "to create: " + srcFolderToCreate + "/" + fileToCreate)));
     }
 }

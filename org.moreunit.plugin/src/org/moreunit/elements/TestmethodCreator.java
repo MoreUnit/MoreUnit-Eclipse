@@ -399,7 +399,7 @@ public class TestmethodCreator
                 methodBody = "// " + todoTaskTag + recommendedLineSeparator + defaultTestMethodContent;
             }
         }
-        return String.format("public %svoid %s() {%s%s%s}", finalPlaceholder, testmethodName, recommendedLineSeparator, methodBody, recommendedLineSeparator);
+        return "public %svoid %s() {%s%s%s}".formatted(finalPlaceholder, testmethodName, recommendedLineSeparator, methodBody, recommendedLineSeparator);
     }
 
     private String findRecommendedLineSeparator()

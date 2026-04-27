@@ -132,12 +132,12 @@ public final class FileNameEvaluation
     @Override
     public String toString()
     {
-        return String.format("%s(%s\t%s%s\t%s%s\t%s%s\t%s%s)", //
-                             getClass().getSimpleName(), StringConstants.NEWLINE, //
-                             evaluatedFileName, StringConstants.NEWLINE, //
-                             (testFile ? "test file" : "src file"), StringConstants.NEWLINE, //
-                             preferredCorrespondingFileName, StringConstants.NEWLINE, //
-                             preferredCorrespondingFilePatterns, StringConstants.NEWLINE, //
-                             otherCorrespondingFilePatterns, StringConstants.NEWLINE);
+        return "%s(%s\t%s%s\t%s%s\t%s%s\t%s%s)".formatted( //
+                getClass().getSimpleName(), StringConstants.NEWLINE, //
+                evaluatedFileName, StringConstants.NEWLINE, //
+                (testFile ? "test file" : "src file"), StringConstants.NEWLINE, //
+                preferredCorrespondingFileName, StringConstants.NEWLINE, //
+                preferredCorrespondingFilePatterns, StringConstants.NEWLINE, //
+                otherCorrespondingFilePatterns, StringConstants.NEWLINE);
     }
 }

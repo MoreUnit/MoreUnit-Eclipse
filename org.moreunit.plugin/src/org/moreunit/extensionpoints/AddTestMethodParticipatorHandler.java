@@ -114,7 +114,7 @@ public final class AddTestMethodParticipatorHandler
             return null;
         }
 
-        return callExtension(new AddTestMethodContext(testMethod, methodsUnderTest.get(0)));
+        return callExtension(new AddTestMethodContext(testMethod, methodsUnderTest.getFirst()));
     }
 
     /**

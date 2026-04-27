@@ -50,24 +50,24 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
 
     public Object[] getChildren(Object parentElement)
     {
-        if(parentElement instanceof IJavaProject)
-            return getRelevantSourceFolderForProject((IJavaProject) parentElement).toArray();
+        if(parentElement instanceof IJavaProject project)
+            return getRelevantSourceFolderForProject(project).toArray();
 
         return new Object[0];
     }
 
     public Object getParent(Object element)
     {
-        if(element instanceof IPackageFragmentRoot)
-            return ((IPackageFragmentRoot) element).getJavaProject();
+        if(element instanceof IPackageFragmentRoot root)
+            return root.getJavaProject();
 
         return null;
     }
 
     public boolean hasChildren(Object element)
     {
-        if(element instanceof IJavaProject)
-            return ! getRelevantSourceFolderForProject((IJavaProject) element).isEmpty();
+        if(element instanceof IJavaProject project)
+            return ! getRelevantSourceFolderForProject(project).isEmpty();
 
         return false;
     }

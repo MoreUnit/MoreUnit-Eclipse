@@ -134,9 +134,9 @@ public class MoreUnitPropertyPage extends PropertyPage
     private IJavaProject getJavaProject()
     {
         IAdaptable selection = getElement();
-        if(selection instanceof IJavaProject)
+        if(selection instanceof IJavaProject project)
         {
-            return (IJavaProject) selection;
+            return project;
         }
         // when files are selected, they need to be adapted to their project
         // first (see enabledWhen clause of plugin.xml)
@@ -187,8 +187,8 @@ public class MoreUnitPropertyPage extends PropertyPage
                 secondTabOtherProperties.saveProperties();
             }
             IPreferenceStore store = Preferences.getInstance().getProjectStore(getJavaProject());
-            if(store instanceof ScopedPreferenceStore)
-                ((ScopedPreferenceStore) store).save();
+            if(store instanceof ScopedPreferenceStore preferenceStore)
+                preferenceStore.save();
         }
         catch (IOException e)
         {

@@ -119,8 +119,8 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 
         for (Object checkedElement : checkedElements)
         {
-            if(checkedElement instanceof IPackageFragmentRoot)
-                selectedFolders.add((IPackageFragmentRoot) checkedElement);
+            if(checkedElement instanceof IPackageFragmentRoot root)
+                selectedFolders.add(root);
         }
 
         return selectedFolders;

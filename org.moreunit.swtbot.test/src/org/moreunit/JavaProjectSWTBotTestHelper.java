@@ -198,7 +198,7 @@ public class JavaProjectSWTBotTestHelper
         List<Tree> findControls = new ChildrenControlFinder(packageExplorerView.getWidget()).findControls(WidgetOfType.widgetOfType(Tree.class));
         assertThat(findControls).isNotEmpty();
 
-        SWTBotTree tree = new SWTBotTree(findControls.get(0));
+        SWTBotTree tree = new SWTBotTree(findControls.getFirst());
 
         SWTBotTreeItem projectNode = tree.expandNode(getProjectNameFromContext());
         tree.select(projectNode);

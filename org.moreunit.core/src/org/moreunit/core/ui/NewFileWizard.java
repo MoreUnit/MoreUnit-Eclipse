@@ -31,9 +31,9 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     @Override
     public void addPage(IWizardPage page)
     {
-        if(page instanceof WizardNewFileCreationPage)
+        if(page instanceof WizardNewFileCreationPage creationPage)
         {
-            ((WizardNewFileCreationPage) page).setFileName(fileNameInitialValue);
+            creationPage.setFileName(fileNameInitialValue);
         }
         super.addPage(page);
     }

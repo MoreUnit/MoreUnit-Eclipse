@@ -1,7 +1,10 @@
 package org.moreunit.mock.templates;
 
+import java.io.Serial;
+
 public class MockingTemplateException extends Exception
 {
+    @Serial
     private static final long serialVersionUID = 5284818313493437214L;
 
     private final boolean userMessage;

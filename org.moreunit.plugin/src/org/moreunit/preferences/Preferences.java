@@ -389,7 +389,7 @@ public class Preferences
         if(! mappings.isEmpty())
         {
             // falls back to first test folder defined
-            return mappings.get(0).getTestFolder();
+            return mappings.getFirst().getTestFolder();
         }
 
         // no mapping exists: falls back to un-mapped source folders
@@ -421,21 +421,21 @@ public class Preferences
         {
             if(mapping.getTestFolder().equals(testSrcFolder))
             {
-                return mapping.getSourceFolderList().get(0);
+                return mapping.getSourceFolderList().getFirst();
             }
         }
 
         if(! mappings.isEmpty())
         {
             // falls back to first main folder defined
-            return mappings.get(0).getSourceFolderList().get(0);
+            return mappings.getFirst().getSourceFolderList().getFirst();
         }
 
         // no mapping exists: falls back to un-mapped source folders
         List<IPackageFragmentRoot> possibleMainSourceFolders = findPossibleMainSourceFolders(PluginTools.findJavaSourceFoldersFor(mainProject));
         if(! possibleMainSourceFolders.isEmpty())
         {
-            return possibleMainSourceFolders.get(0);
+            return possibleMainSourceFolders.getFirst();
         }
 
         // falls back to given source folder

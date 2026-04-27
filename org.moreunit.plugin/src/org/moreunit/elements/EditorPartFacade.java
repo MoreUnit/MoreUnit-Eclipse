@@ -74,9 +74,9 @@ public class EditorPartFacade
                 return null;
 
             IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
-            if(javaElement instanceof IMethod)
+            if(javaElement instanceof IMethod iMethod)
             {
-                method = (IMethod) javaElement;
+                method = iMethod;
             }
             else
                 LogHandler.getInstance().handleInfoLog("No method found under cursor position.");
@@ -120,11 +120,11 @@ public class EditorPartFacade
                 return null;
 
             IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
-            if(javaElement instanceof IMethod)
+            if(javaElement instanceof IMethod iMethod)
             {
-                method = (IMethod) javaElement;
+                method = iMethod;
             }
-            else if(javaElement instanceof IType && ((IType) javaElement).isAnonymous() && javaElement.getParent() instanceof IMethod)
+            else if(javaElement instanceof IType type && type.isAnonymous() && javaElement.getParent() instanceof IMethod)
             {
                 method = (IMethod) javaElement.getParent();
             }

@@ -105,7 +105,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         {
             TypeName cuName = new TypeName(fullyQualifiedTypeName);
             IPackageFragment pf = WorkspaceHelper.createNewPackageInSourceFolder(get(), cuName.packageName);
-            ICompilationUnit cu = pf.createCompilationUnit(String.format("%s.java", cuName.typeName), contents, false, null);
+            ICompilationUnit cu = pf.createCompilationUnit("%s.java".formatted(cuName.typeName), contents, false, null);
             return new CompilationUnitHandler(this, cu);
         }
         catch (JavaModelException e)

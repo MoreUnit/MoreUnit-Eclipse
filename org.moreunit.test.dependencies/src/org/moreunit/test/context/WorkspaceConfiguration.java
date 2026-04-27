@@ -217,7 +217,7 @@ class WorkspaceConfiguration
                 IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(containerPath, project);
                 if(classpathContainer == null)
                 {
-                    throw new RuntimeException(String.format("Could not find classpath container %s for project %s", containerPath, project));
+                    throw new RuntimeException("Could not find classpath container %s for project %s".formatted(containerPath, project));
                 }
                 WorkspaceHelper.addContainerToProject(project, classpathContainer);
             }

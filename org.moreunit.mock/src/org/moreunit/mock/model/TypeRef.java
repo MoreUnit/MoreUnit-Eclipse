@@ -56,6 +56,6 @@ public class TypeRef<T extends TypeRef<T>>
     @Override
     public String toString()
     {
-        return String.format("TypeRef[%s]", fullyQualifiedClassName);
+        return "TypeRef[%s]".formatted(fullyQualifiedClassName);
     }
 }

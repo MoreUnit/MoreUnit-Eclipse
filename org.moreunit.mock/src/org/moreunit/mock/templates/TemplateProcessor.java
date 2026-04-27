@@ -45,9 +45,9 @@ public class TemplateProcessor
         }
         catch (Exception e)
         {
-            if(e instanceof MockingTemplateException)
+            if(e instanceof MockingTemplateException exception)
             {
-                throw (MockingTemplateException) e;
+                throw exception;
             }
             throw new MockingTemplateException(e);
         }

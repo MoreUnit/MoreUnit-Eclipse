@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.moreunit.mock.templates.MockingTemplateLoader.TEMPLATE_DIRECTORY;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +62,7 @@ public class MockingTemplateLoaderTest
     public void should_log_error_when_template_definition_is_invalid() throws Exception
     {
         // given
-        URL invalidDefinitionUrl = new URL("file:/invalid.definition.url");
+        URL invalidDefinitionUrl = URI.create("file:/invalid.definition.url").toURL();
 
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(invalidDefinitionUrl));
         when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
@@ -79,7 +80,7 @@ public class MockingTemplateLoaderTest
     public void should_store_templates() throws Exception
     {
         // given
-        URL validDefinitionUrl = new URL("file:/valid.definition.url");
+        URL validDefinitionUrl = URI.create("file:/valid.definition.url").toURL();
 
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(validDefinitionUrl));
         when(resourceLoader.findWorkspaceStateResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(noResources);
@@ -100,11 +101,11 @@ public class MockingTemplateLoaderTest
     public void should_return_urls_of_templates_that_could_not_be_loaded_with_a_reason() throws Exception
     {
         // given
-        URL validDefinition1Url = new URL("file:/valid.definition.1.url");
-        URL validDefinition2Url = new URL("file:/valid.definition.2.url");
-        URL invalidDefinition1Url = new URL("file:/invalid.definition.1.url");
-        URL invalidDefinition2Url = new URL("file:/invalid.definition.2.url");
-        URL invalidDefinition3Url = new URL("file:/invalid.definition.3.url");
+        URL validDefinition1Url = URI.create("file:/valid.definition.1.url").toURL();
+        URL validDefinition2Url = URI.create("file:/valid.definition.2.url").toURL();
+        URL invalidDefinition1Url = URI.create("file:/invalid.definition.1.url").toURL();
+        URL invalidDefinition2Url = URI.create("file:/invalid.definition.2.url").toURL();
+        URL invalidDefinition3Url = URI.create("file:/invalid.definition.3.url").toURL();
 
         // some template definitions will be found in the plugin resources and
         // in the workspace resources
@@ -133,8 +134,8 @@ public class MockingTemplateLoaderTest
     public void should_return_urls_of_templates_that_are_already_defined_with_a_reason() throws Exception
     {
         // given
-        URL existingDefinition1Url = new URL("file:/existing.definition.1.url");
-        URL existingDefinition2Url = new URL("file:/existing.definition.2.url");
+        URL existingDefinition1Url = URI.create("file:/existing.definition.1.url").toURL();
+        URL existingDefinition2Url = URI.create("file:/existing.definition.2.url").toURL();
         workspaceResourcesContainTemplateDefinitions(existingDefinition1Url, existingDefinition2Url);
 
         doThrow(new TemplateAlreadyDefinedException("templateId1"))

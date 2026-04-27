@@ -175,7 +175,7 @@ class AnnotationConfigExtractor
 
     private void bothAnnotationsDefined(AnnotatedElement annotatedElement, Class< ? extends Annotation> annotationType1, Class< ? extends Annotation> annotationType2)
     {
-        throw new IllegalConfigurationException(String.format("%s defines both a %s and a %s", annotatedElement, annotationType1.getSimpleName(), annotationType2.getSimpleName()));
+        throw new IllegalConfigurationException("%s defines both a %s and a %s".formatted(annotatedElement, annotationType1.getSimpleName(), annotationType2.getSimpleName()));
     }
 
     private void extractProjectConfiguration(WorkspaceConfiguration config, Project project)

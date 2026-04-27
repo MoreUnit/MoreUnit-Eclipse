@@ -74,8 +74,8 @@ public class MethodTreeContentProvider implements ITreeContentProvider
 
     public Object[] getElements(Object inputElement)
     {
-        if(inputElement instanceof MethodPage)
-            resetMethods(((MethodPage) inputElement).getInputType());
+        if(inputElement instanceof MethodPage page)
+            resetMethods(page.getInputType());
 
         List<IMethod> resultMethodList = new ArrayList<IMethod>();
         if(isPrivateFiltered)

@@ -25,7 +25,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 {
     public static enum VisibleFields
     {
-        ALL, VISIBLE_TO_TEST_CASE_AND_INJECTABLE, VISIBLE_TO_TEST_CASE_ONLY;
+        ALL, VISIBLE_TO_TEST_CASE_AND_INJECTABLE, VISIBLE_TO_TEST_CASE_ONLY
     }
 
     private static final Object[] EMPTY_ARRAY = new Object[0];
@@ -93,8 +93,8 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
             for (ListIterator<IMember> memberIt = members.listIterator(); memberIt.hasNext();)
             {
                 IMember alreadyCollectedMember = memberIt.next();
-                if(alreadyCollectedMember instanceof IMethod && alreadyCollectedMember.getElementName().equals(method.getElementName())
-                   && ((IMethod) alreadyCollectedMember).getSignature().equals(method.getSignature()))
+                if(alreadyCollectedMember instanceof IMethod iMethod && alreadyCollectedMember.getElementName().equals(method.getElementName())
+                   && iMethod.getSignature().equals(method.getSignature()))
                 {
                     memberIt.set(method);
                     continue for_methods;
@@ -157,9 +157,8 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     public Object[] getChildren(Object parentElement)
     {
-        if(parentElement instanceof IType)
+        if(parentElement instanceof IType parentType)
         {
-            IType parentType = (IType) parentElement;
             List<IMember> result = new ArrayList<IMember>(members.size());
             for (IMember member : members)
             {
@@ -175,9 +174,9 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     public Object getParent(Object element)
     {
-        if(element instanceof IMethod)
+        if(element instanceof IMethod method)
         {
-            return ((IMethod) element).getDeclaringType();
+            return method.getDeclaringType();
         }
         return null;
     }

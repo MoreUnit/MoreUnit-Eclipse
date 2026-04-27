@@ -1,10 +1,14 @@
 package org.moreunit.core.resources;
 
+import java.io.Serial;
+
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 
 public class FolderCreationException extends ResourceException
 {
+    @Serial
     private static final long serialVersionUID = - 1772490604895269295L;
 
     private final IFolder folder;

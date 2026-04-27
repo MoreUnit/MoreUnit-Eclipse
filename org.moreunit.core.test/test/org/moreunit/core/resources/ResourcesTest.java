@@ -52,10 +52,10 @@ abstract class ResourcesTest
 
         assertContainsFolders(projects.get(0), "folderA", "folderB", "folderC", "folderD");
         assertContainsFiles(projects.get(0), none());
-        assertContainsFolders(projects.get(0).getFolder("folderA"), "subfolderA1", "subfolderA2");
-        assertContainsFiles(projects.get(0).getFolder("folderA").getFolder("subfolderA2").getFolder("subsubfolderA"), "fileA2A");
-        assertThat(projects.get(0).getFolder("folderB").listFiles()).isEmpty();
-        assertThat(projects.get(0).getFolder("folderB").listFolders()).isEmpty();
+        assertContainsFolders(projects.getFirst().getFolder("folderA"), "subfolderA1", "subfolderA2");
+        assertContainsFiles(projects.getFirst().getFolder("folderA").getFolder("subfolderA2").getFolder("subsubfolderA"), "fileA2A");
+        assertThat(projects.getFirst().getFolder("folderB").listFiles()).isEmpty();
+        assertThat(projects.getFirst().getFolder("folderB").listFolders()).isEmpty();
 
         assertContainsFolders(projects.get(1), "folderZ");
         assertContainsFiles(projects.get(1), "fileAtProjectRoot");

@@ -112,11 +112,11 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         }
         else if(! types.isEmpty())
         {
-            defaultSelectedMember = types.get(0);
+            defaultSelectedMember = types.getFirst();
             List<IMethod> methods = methodsByType.get(defaultSelectedMember);
             if(methods != null && ! methods.isEmpty())
             {
-                defaultSelectedMember = methods.get(0);
+                defaultSelectedMember = methods.getFirst();
             }
         }
         return defaultSelectedMember == null ? null : new StructuredSelection(defaultSelectedMember);
@@ -161,7 +161,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         List<Object> elements = new ArrayList<Object>();
         Collections.addAll(elements, this.elements);
 
-        if(! elements.isEmpty() && ! (elements.get(elements.size() - 1) instanceof SeparatorElement))
+        if(! elements.isEmpty() && ! (elements.getLast() instanceof SeparatorElement))
         {
             elements.add(new SeparatorElement());
         }

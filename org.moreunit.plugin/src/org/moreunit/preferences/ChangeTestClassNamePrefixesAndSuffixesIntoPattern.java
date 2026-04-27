@@ -63,7 +63,7 @@ public class ChangeTestClassNamePrefixesAndSuffixesIntoPattern implements Migrat
 
         if(logger.debugEnabled())
         {
-            logger.debug(String.format("Test class naming: (%s, %s, %s) converted to (%s) for store %s", asList(prefixes), asList(suffixes), flexibleNaming, template, store));
+            logger.debug("Test class naming: (%s, %s, %s) converted to (%s) for store %s".formatted(asList(prefixes), asList(suffixes), flexibleNaming, template, store));
         }
     }
 

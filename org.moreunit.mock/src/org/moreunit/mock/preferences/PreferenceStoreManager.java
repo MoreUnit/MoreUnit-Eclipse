@@ -72,11 +72,11 @@ public class PreferenceStoreManager
 
     void save(IJavaProject project, IPreferenceStore store)
     {
-        if(store instanceof ScopedPreferenceStore)
+        if(store instanceof ScopedPreferenceStore preferenceStore)
         {
             try
             {
-                ((ScopedPreferenceStore) store).save();
+                preferenceStore.save();
             }
             catch (IOException e)
             {

@@ -32,13 +32,12 @@ public class DependencyInjectionPointStore
         {
             for (IMember member : members)
             {
-                if(member instanceof IField)
+                if(member instanceof IField field)
                 {
-                    fields.add((IField) member);
+                    fields.add(field);
                 }
-                else if(member instanceof IMethod)
+                else if(member instanceof IMethod method)
                 {
-                    IMethod method = (IMethod) member;
                     if(method.isConstructor())
                     {
                         constructors.add(method);

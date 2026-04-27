@@ -25,9 +25,9 @@ public class Selection
     public SelectedSrcFile getUniqueSrcFile()
     {
         Object firstElement = getUniqueSelectedElement();
-        if(firstElement instanceof IAdaptable)
+        if(firstElement instanceof IAdaptable adaptable)
         {
-            IFile file = toFile((IAdaptable) firstElement);
+            IFile file = toFile(adaptable);
             if(file != null)
                 return SelectedSrcFile.fromSelection(toSrcFile(file), executionContext);
         }

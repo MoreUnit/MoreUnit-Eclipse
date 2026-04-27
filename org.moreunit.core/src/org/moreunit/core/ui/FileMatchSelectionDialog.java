@@ -105,9 +105,9 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
                         // Scroll up
                         Point p = tree.toDisplay(e.x, e.y);
                         Item item = treeViewer.scrollUp(p.x, p.y);
-                        if(item instanceof TreeItem)
+                        if(item instanceof TreeItem treeItem)
                         {
-                            fLastItem = (TreeItem) item;
+                            fLastItem = treeItem;
                             tree.setSelection(new TreeItem[] { fLastItem });
                         }
                     }
@@ -116,9 +116,9 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
                         // Scroll down
                         Point p = tree.toDisplay(e.x, e.y);
                         Item item = treeViewer.scrollDown(p.x, p.y);
-                        if(item instanceof TreeItem)
+                        if(item instanceof TreeItem treeItem1)
                         {
-                            fLastItem = (TreeItem) item;
+                            fLastItem = treeItem1;
                             tree.setSelection(new TreeItem[] { fLastItem });
                         }
                     }
@@ -245,9 +245,9 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         @Override
         public Image getImage(Object element)
         {
-            if(element instanceof TreeActionElement)
+            if(element instanceof TreeActionElement< ? > actionElement)
             {
-                return ((TreeActionElement< ? >) element).getImage();
+                return actionElement.getImage();
             }
             else if(element instanceof IFile)
             {
@@ -259,14 +259,13 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         @Override
         public String getText(Object element)
         {
-            if(element instanceof TreeActionElement)
+            if(element instanceof TreeActionElement< ? > actionElement)
             {
-                return ((TreeActionElement< ? >) element).getText();
+                return actionElement.getText();
             }
-            else if(element instanceof IFile)
+            else if(element instanceof IFile file)
             {
-                IFile file = (IFile) element;
-                return String.format("%s - %s", file.getName(), file.getFullPath().removeLastSegments(1));
+                return "%s - %s".formatted(file.getName(), file.getFullPath().removeLastSegments(1));
             }
             return super.getText(element);
         }

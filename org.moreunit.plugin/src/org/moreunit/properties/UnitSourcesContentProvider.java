@@ -48,9 +48,9 @@ public class UnitSourcesContentProvider implements ITreeContentProvider
 
     public Object[] getChildren(Object parentElement)
     {
-        if(parentElement instanceof SourceFolderMapping)
+        if(parentElement instanceof SourceFolderMapping mapping)
         {
-            return ((SourceFolderMapping) parentElement).getSourceFolderList().toArray();
+            return mapping.getSourceFolderList().toArray();
         }
         return getListOfSourceFoldersFromPreferences().toArray();
     }

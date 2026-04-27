@@ -40,9 +40,9 @@ public class ExecutionContext
     public IEditorPart getActiveEditorPart()
     {
         Object editor = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_NAME);
-        if(editor instanceof IEditorPart)
+        if(editor instanceof IEditorPart part)
         {
-            return (IEditorPart) editor;
+            return part;
         }
         return null;
     }

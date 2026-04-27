@@ -179,8 +179,8 @@ public class WorkspaceHelper
 
     public static IType createJavaClassExtending(IPackageFragment packageFragment, String javaClassName, String parentClassName) throws JavaModelException
     {
-        String declaration = String.format("public %1$s %2$s extends %3$s { %4$s%4$s } %4$s", JavaTypeKind.CLASS.toJavaCode(), javaClassName, parentClassName, NEW_LINE);
-        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), NEW_LINE, declaration);
+        String declaration = "public %1$s %2$s extends %3$s { %4$s%4$s } %4$s".formatted(JavaTypeKind.CLASS.toJavaCode(), javaClassName, parentClassName, NEW_LINE);
+        String sourceCode = "%s%s%s".formatted(getPackageDeclarationString(packageFragment), NEW_LINE, declaration);
         return createJavaType(packageFragment, javaClassName, sourceCode);
     }
 
@@ -196,29 +196,29 @@ public class WorkspaceHelper
 
     private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, JavaTypeKind type) throws JavaModelException
     {
-        String sourceCode = String.format("%s%s%s", getPackageDeclarationString(packageFragment), NEW_LINE, getTypeDeclarationString(type, javaClassName));
+        String sourceCode = "%s%s%s".formatted(getPackageDeclarationString(packageFragment), NEW_LINE, getTypeDeclarationString(type, javaClassName));
         return createJavaType(packageFragment, javaClassName, sourceCode);
     }
 
     private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, String sourceCode) throws JavaModelException
     {
-        ICompilationUnit compilationUnit = packageFragment.createCompilationUnit(String.format("%s.java", javaClassName), sourceCode, false, null);
+        ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("%s.java".formatted(javaClassName), sourceCode, false, null);
         return compilationUnit.getTypes()[0];
     }
 
     private static String getPackageDeclarationString(IPackageFragment packageFragment)
     {
-        return String.format("package %s;%s", packageFragment.getElementName(), NEW_LINE);
+        return "package %s;%s".formatted(packageFragment.getElementName(), NEW_LINE);
     }
 
     private static String getTypeDeclarationString(JavaTypeKind type, String javaClassName)
     {
-        return String.format("public %1$s %2$s { %3$s%3$s } %3$s", type.toJavaCode(), javaClassName, NEW_LINE);
+        return "public %1$s %2$s { %3$s%3$s } %3$s".formatted(type.toJavaCode(), javaClassName, NEW_LINE);
     }
 
     public static IMethod createMethodInJavaType(IType javaType, String methodDeclaration, String methodSourceCode) throws JavaModelException
     {
-        String completeMethodCodeString = String.format("%s{%s%s}", methodDeclaration, NEW_LINE, methodSourceCode);
+        String completeMethodCodeString = "%s{%s%s}".formatted(methodDeclaration, NEW_LINE, methodSourceCode);
         return javaType.createMethod(completeMethodCodeString, null, true, null);
     }
 

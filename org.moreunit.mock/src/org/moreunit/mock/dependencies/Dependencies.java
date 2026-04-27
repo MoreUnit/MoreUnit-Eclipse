@@ -1,5 +1,6 @@
 package org.moreunit.mock.dependencies;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.moreunit.mock.model.TypeParameter.Kind;
 
 public class Dependencies extends ArrayList<Dependency>
 {
+    @Serial
     private static final long serialVersionUID = - 8786785084170298943L;
 
     private static final Pattern TYPE_ANNOTATION = Pattern.compile("^(\\S+).*");

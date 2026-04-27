@@ -125,7 +125,7 @@ public abstract class NameTokenizer
                 combination.insert(0, separator);
                 combination.insert(0, token);
             }
-            combinations.add(0, combination.toString());
+            combinations.addFirst(combination.toString());
         }
 
         return combinations;

@@ -21,9 +21,9 @@ public class UnitSourceFolderLabelProvider extends LabelProvider
     @Override
     public Image getImage(Object element)
     {
-        if(element instanceof SourceFolderMapping)
+        if(element instanceof SourceFolderMapping mapping)
         {
-            IPackageFragmentRoot testFolder = ((SourceFolderMapping) element).getTestFolder();
+            IPackageFragmentRoot testFolder = mapping.getTestFolder();
             return baseLabelProvider.getImage(testFolder);
         }
 
@@ -33,15 +33,15 @@ public class UnitSourceFolderLabelProvider extends LabelProvider
     @Override
     public String getText(Object element)
     {
-        if(element instanceof SourceFolderMapping)
+        if(element instanceof SourceFolderMapping mapping)
         {
-            IPackageFragmentRoot sourceFolder = ((SourceFolderMapping) element).getTestFolder();
+            IPackageFragmentRoot sourceFolder = mapping.getTestFolder();
             return getLabelForPackageFragmentRoot(sourceFolder);
         }
 
-        if(element instanceof IPackageFragmentRoot)
+        if(element instanceof IPackageFragmentRoot root)
         {
-            return getLabelForPackageFragmentRoot((IPackageFragmentRoot) element) + SUFFIX_SOURCE;
+            return getLabelForPackageFragmentRoot(root) + SUFFIX_SOURCE;
         }
 
         return baseLabelProvider.getText(element);

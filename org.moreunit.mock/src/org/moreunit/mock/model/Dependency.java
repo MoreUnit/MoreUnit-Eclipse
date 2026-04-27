@@ -84,6 +84,6 @@ public class Dependency extends TypeUse<Dependency> implements Comparable<Depend
     @Override
     public String toString()
     {
-        return String.format("Dependency[%s]", name);
+        return "Dependency[%s]".formatted(name);
     }
 }

@@ -74,6 +74,6 @@ public class Language implements Comparable<Language>
     @Override
     public String toString()
     {
-        return String.format("%s[.%s]", label, extension);
+        return "%s[.%s]".formatted(label, extension);
     }
 }

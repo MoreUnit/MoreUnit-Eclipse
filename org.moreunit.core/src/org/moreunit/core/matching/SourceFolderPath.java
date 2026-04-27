@@ -82,9 +82,9 @@ public class SourceFolderPath
     public ContainerCreationRecord createResolvedPartIfItDoesNotExist()
     {
         Resource resolvedPart = getResolvedPartAsResource();
-        if(resolvedPart instanceof Folder && ! resolvedPart.exists())
+        if(resolvedPart instanceof Folder folder && ! resolvedPart.exists())
         {
-            return ((Folder) resolvedPart).createWithRecord();
+            return folder.createWithRecord();
         }
         return new ContainerCreationRecord();
     }

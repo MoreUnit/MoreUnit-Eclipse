@@ -38,7 +38,7 @@ public class CutImportChange extends Change
     @Override
     public String getName()
     {
-        return String.format("Remove %s from imports of %s", importCutString, testCompilationUnit);
+        return "Remove %s from imports of %s".formatted(importCutString, testCompilationUnit);
     }
 
     @Override

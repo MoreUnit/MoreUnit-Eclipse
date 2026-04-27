@@ -6,7 +6,7 @@ public class MethodCreationResult
 {
     private static enum MethodType
     {
-        EXISTING, JUST_CREATED, NOT_APPLICABLE;
+        EXISTING, JUST_CREATED, NOT_APPLICABLE
     }
 
     private final IMethod method;

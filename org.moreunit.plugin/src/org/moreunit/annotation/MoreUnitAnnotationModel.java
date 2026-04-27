@@ -99,9 +99,9 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                 for (IEditorReference editorReference : editors)
                 {
                     IWorkbenchPart editorPart = editorReference.getPart(false);
-                    if(editorPart instanceof ITextEditor)
+                    if(editorPart instanceof ITextEditor editor)
                     {
-                        attach((ITextEditor) editorPart);
+                        attach(editor);
                     }
                 }
             }
@@ -148,9 +148,9 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
         IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
         model = modelExtension.removeAnnotationModel(MODEL_KEY);
-        if(model instanceof MoreUnitAnnotationModel && ((MoreUnitAnnotationModel) model).updateJob != null)
+        if(model instanceof MoreUnitAnnotationModel annotationModel && annotationModel.updateJob != null)
         {
-            ((MoreUnitAnnotationModel) model).updateJob.cancel();
+            annotationModel.updateJob.cancel();
         }
     }
 
@@ -301,9 +301,9 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         {
             for (IAnnotationModelListener listener : annotationModelListeners)
             {
-                if(listener instanceof IAnnotationModelListenerExtension)
+                if(listener instanceof IAnnotationModelListenerExtension extension)
                 {
-                    ((IAnnotationModelListenerExtension) listener).modelChanged(event);
+                    extension.modelChanged(event);
                 }
                 else
                 {
@@ -354,9 +354,9 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     public Position getPosition(Annotation annotation)
     {
-        if(annotation instanceof MoreUnitAnnotation)
+        if(annotation instanceof MoreUnitAnnotation unitAnnotation)
         {
-            return ((MoreUnitAnnotation) annotation).getPosition();
+            return unitAnnotation.getPosition();
         }
         return null;
     }

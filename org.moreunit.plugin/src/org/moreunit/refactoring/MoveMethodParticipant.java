@@ -90,7 +90,7 @@ public class MoveMethodParticipant extends MoveParticipant
 
         if(changes.size() == 1)
         {
-            return changes.get(0);
+            return changes.getFirst();
         }
 
         if(changes.size() > 0)

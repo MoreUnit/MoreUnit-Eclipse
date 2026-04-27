@@ -99,7 +99,7 @@ public class CodeTemplate
     @Override
     public String toString()
     {
-        return String.format("CodeTemplate [id=%s, part=%s, pattern=%s]", id, part, pattern);
+        return "CodeTemplate [id=%s, part=%s, pattern=%s]".formatted(id, part, pattern);
     }
 
     @Override

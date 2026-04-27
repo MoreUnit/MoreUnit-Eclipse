@@ -105,7 +105,7 @@ public final class WizardDriver
                 {
                     for (Object el : page.getTreeContentProvider().getChildren(type))
                     {
-                        if(el instanceof IMember && ((IMember) el).getElementName().equals(elName))
+                        if(el instanceof IMember member && member.getElementName().equals(elName))
                         {
                             elementsToCheck.add(el);
                             break;

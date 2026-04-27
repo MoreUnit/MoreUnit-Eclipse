@@ -33,7 +33,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOnePrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertThat(privateMethods).hasSize(1);
-        assertThat(privateMethods.get(0).getName().toString()).isEqualTo("getNumberOne");
+        assertThat(privateMethods.getFirst().getName().toString()).isEqualTo("getNumberOne");
 
         // cleanup
         WorkspaceHelper.deleteCompilationUnitsForTypes(new IType[] {typeWithOnePrivateMethod});
@@ -48,7 +48,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOverloadedPrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertThat(privateMethods).hasSize(2);
-        assertThat(privateMethods.get(0).getName().toString()).isEqualTo("getNumberOne");
+        assertThat(privateMethods.getFirst().getName().toString()).isEqualTo("getNumberOne");
         assertThat(privateMethods.get(1).getName().toString()).isEqualTo("getNumberOne");
 
         // cleanup
@@ -64,7 +64,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithOverloadedPrivateMethod);
         List<MethodDeclaration> privateMethods = filterMethodVisitor.getPrivateMethods();
         assertThat(privateMethods).hasSize(2);
-        assertThat(privateMethods.get(0).getName().toString()).isEqualTo("getNumberOne");
+        assertThat(privateMethods.getFirst().getName().toString()).isEqualTo("getNumberOne");
         assertThat(privateMethods.get(1).getName().toString()).isEqualTo("getNumberOne");
 
         // cleanup
@@ -115,12 +115,12 @@ public class FilterMethodVisitorTest extends ContextTestCase
         List<FieldDeclaration> fieldDeclarations = filterMethodVisitor.getFieldDeclarations();
         assertThat(fieldDeclarations).hasSize(2);
 
-        FieldDeclaration fieldDeclaration = fieldDeclarations.get(0);
-        VariableDeclarationFragment variable = (VariableDeclarationFragment) fieldDeclaration.fragments().get(0);
+        FieldDeclaration fieldDeclaration = fieldDeclarations.getFirst();
+        VariableDeclarationFragment variable = (VariableDeclarationFragment) fieldDeclaration.fragments().getFirst();
         assertThat(variable.getName().getFullyQualifiedName()).isEqualTo("fieldName1");
 
         fieldDeclaration = fieldDeclarations.get(1);
-        variable = (VariableDeclarationFragment) fieldDeclaration.fragments().get(0);
+        variable = (VariableDeclarationFragment) fieldDeclaration.fragments().getFirst();
         assertThat(variable.getName().getFullyQualifiedName()).isEqualTo("fieldName2");
 
         // cleanup
@@ -136,7 +136,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoGetters);
         List<MethodDeclaration> getterMethods = filterMethodVisitor.getGetterMethods();
         assertThat(getterMethods).hasSize(2);
-        assertThat(getterMethods.get(0).getName().toString()).isEqualTo("getFieldName1");
+        assertThat(getterMethods.getFirst().getName().toString()).isEqualTo("getFieldName1");
         assertThat(getterMethods.get(1).getName().toString()).isEqualTo("getFieldName2");
 
         // cleanup
@@ -152,7 +152,7 @@ public class FilterMethodVisitorTest extends ContextTestCase
         FilterMethodVisitor filterMethodVisitor = new FilterMethodVisitor(typeWithTwoSetters);
         List<MethodDeclaration> setterMethods = filterMethodVisitor.getSetterMethods();
         assertThat(setterMethods).hasSize(2);
-        assertThat(setterMethods.get(0).getName().toString()).isEqualTo("setFieldName1");
+        assertThat(setterMethods.getFirst().getName().toString()).isEqualTo("setFieldName1");
         assertThat(setterMethods.get(1).getName().toString()).isEqualTo("setFieldName2");
 
         // cleanup

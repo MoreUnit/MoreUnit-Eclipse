@@ -209,12 +209,12 @@ public class PluginTools
 
         if(testPackagePrefix != null)
         {
-            testPackageName = String.format("%s.%s", testPackagePrefix, testPackageName);
+            testPackageName = "%s.%s".formatted(testPackagePrefix, testPackageName);
         }
 
         if(testPackageSuffix != null)
         {
-            testPackageName = String.format("%s.%s", testPackageName, testPackageSuffix);
+            testPackageName = "%s.%s".formatted(testPackageName, testPackageSuffix);
         }
 
         return testPackageName;
@@ -227,7 +227,7 @@ public class PluginTools
             return null;
 
         if(allSourceFolders.size() == 1)
-            return allSourceFolders.get(0);
+            return allSourceFolders.getFirst();
 
         if(allSourceFolders.size() == 2)
             return firstSourceFolderNotEqualTo(allSourceFolders, testFolder);
@@ -271,7 +271,7 @@ public class PluginTools
                 return folder;
 
         // if that guess is wrong, then user will have to choose manually
-        return allSourceFolders.get(0);
+        return allSourceFolders.getFirst();
     }
 
     private static IPackageFragmentRoot findMavenLikeSrcFolderFor(List<IPackageFragmentRoot> allSourceFolders, String testFolderPath)
@@ -311,7 +311,7 @@ public class PluginTools
             return null;
 
         if(allSourceFolders.size() == 1)
-            return allSourceFolders.get(0);
+            return allSourceFolders.getFirst();
 
         if(allSourceFolders.size() == 2)
             return firstSourceFolderNotEqualTo(allSourceFolders, mainSrcFolder);

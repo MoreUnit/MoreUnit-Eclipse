@@ -81,7 +81,7 @@ public class Source
         Matcher matcher = pattern.matcher(src);
         if(! matcher.matches())
         {
-            throw new RuntimeException(String.format("Could not match pattern <%s> in file <%s>", pattern.pattern(), location));
+            throw new RuntimeException("Could not match pattern <%s> in file <%s>".formatted(pattern.pattern(), location));
         }
         return matcher.group(1).trim();
     }

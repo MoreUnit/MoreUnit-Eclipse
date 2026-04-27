@@ -37,7 +37,7 @@ public class MoveMethodChange extends Change
     @Override
     public String getName()
     {
-        return String.format("Move method %s from %s to %s", methodToMove.getElementName(), sourceType.getElementName(), destinationType.getElementName());
+        return "Move method %s from %s to %s".formatted(methodToMove.getElementName(), sourceType.getElementName(), destinationType.getElementName());
     }
 
     @Override
