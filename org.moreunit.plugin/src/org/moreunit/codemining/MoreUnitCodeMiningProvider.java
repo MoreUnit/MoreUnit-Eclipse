@@ -87,7 +87,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             if(element instanceof IType)
             {
                 IType type = (IType) element;
-                if(type.isClass())
+                if(type.isClass() || type.isEnum() || type.isInterface() || type.isRecord() || type.isAnnotation())
                 {
                     addMining = true;
                 }
