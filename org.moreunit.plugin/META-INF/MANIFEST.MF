@@ -40,7 +40,7 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreuni
  reunit.matching;x-friends:="org.moreunit.test",org.moreunit.preferenc
  es; x-friends:="org.moreunit.test,  org.moreunit.extension,  org.more
  unit.test.dependencies,  org.moreunit.swtbot.test,  org.moreunit.mock
- ,  org.moreunit.mock.test"; uses:="org.eclipse.jface.preference,  org.e
+ ,org.moreunit.mock.test"; uses:="org.eclipse.jface.preference,  org.e
  clipse.ui,  com.bdaum.overlayPages",org.moreunit.properties;x-friends
  :="org.moreunit.test"; uses:="org.eclipse.jdt.core,  org.eclipse.jfac
  e.viewers,  org.eclipse.swt.events,  org.eclipse.ui.dialogs,  org.ecl
