@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.moreunit.log.LogHandler;
 import org.moreunit.ui.MissingTestsViewPart;
 import org.moreunit.util.PluginTools;
 
@@ -41,7 +42,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
         }
         catch (JavaModelException e)
         {
-            e.printStackTrace();
+            LogHandler.getInstance().handleExceptionLog(e);
         }
         }
         return null;
@@ -94,7 +95,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                     }
                     catch (JavaModelException e)
                     {
-                        e.printStackTrace();
+                        LogHandler.getInstance().handleExceptionLog(e);
                     }
                 }
             }
