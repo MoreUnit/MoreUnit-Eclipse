@@ -15,7 +15,7 @@ public class StringLengthComparatorTest
     @Test
     public void should_return_negative_integer_when_second_has_greater_length_than_first_parameter() throws Exception
     {
-        assertThat(new StringLengthComparator().compare("", "Long")).isLessThanOrEqualTo(0);
+        assertThat(new StringLengthComparator().compare("", "Long")).isLessThan(0);
     }
 
     @Test
