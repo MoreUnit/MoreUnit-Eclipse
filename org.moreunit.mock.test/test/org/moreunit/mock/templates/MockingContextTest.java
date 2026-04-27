@@ -35,6 +35,7 @@ import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
+import org.moreunit.preferences.TestTypeConstants;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class MockingContextTest
