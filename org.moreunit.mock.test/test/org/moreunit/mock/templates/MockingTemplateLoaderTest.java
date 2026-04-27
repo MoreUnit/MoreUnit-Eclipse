@@ -173,6 +173,30 @@ public class MockingTemplateLoaderTest
                           entry(existingDefinition2Url, "A template is already defined with this ID"));
     }
 
+    @Test
+    public void should_log_error_when_template_already_defined() throws Exception
+    {
+        // given
+        URL definitionUrl = URI.create("file:/already.defined.url").toURL();
+        when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(definitionUrl));
+        when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
+
+        TemplateAlreadyDefinedException exception = new TemplateAlreadyDefinedException("templateId");
+        when(templateDefinitionReader.read(definitionUrl)).thenReturn(someTemplates);
+        doThrow(exception).when(templateStore).store(someTemplates);
+
+        // when
+        LoadingResult result = loader.loadTemplates();
+
+        // then
+        verify(logger).error("Could not load template " + definitionUrl, exception);
+
+        assertThat(result.invalidTemplatesFound()).isTrue();
+        assertThat(result.invalidTemplates()).hasSize(1)
+                .contains(entry(definitionUrl, "A template is already defined with this ID"));
+
+    }
+
     private MockingTemplates someTemplates()
     {
         return new MockingTemplates(new ArrayList<Category>(), asList(new MockingTemplate("template")));
