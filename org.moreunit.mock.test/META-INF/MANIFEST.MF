@@ -10,6 +10,7 @@ Require-Bundle: org.moreunit.test.dependencies,
  org.junit,
  org.glassfish.hk2.osgi-resource-locator,
  org.assertj,
- org.mockito.mockito-core
+ org.mockito.mockito-core,
+ org.moreunit
 Bundle-ClassPath: .
 Automatic-Module-Name: org.moreunit.mock.test
