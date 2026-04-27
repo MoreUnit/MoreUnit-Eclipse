@@ -3,7 +3,6 @@ package org.moreunit.test.workspace;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IType;
 
 public class TypeAssertions
 {

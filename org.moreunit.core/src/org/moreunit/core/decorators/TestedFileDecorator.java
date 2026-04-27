@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.ui.PlatformUI;
-import org.moreunit.core.MoreUnitCore;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.resources.SrcFile;
