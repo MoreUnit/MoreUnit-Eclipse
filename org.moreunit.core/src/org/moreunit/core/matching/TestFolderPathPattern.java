@@ -21,7 +21,7 @@ import org.moreunit.core.util.Strings;
 
 public class TestFolderPathPattern
 {
-    private static final Map<String, Pattern> PATTERN_CACHE = new LRUCache<String, Pattern>(50);
+    private static final Map<String, Pattern> PATTERN_CACHE = new LRUCache<String, Pattern>(500);
 
     public static final String SRC_PROJECT_VARIABLE = "${srcProject}";
 
@@ -207,9 +207,13 @@ public class TestFolderPathPattern
         synchronized (PATTERN_CACHE)
         {
             pattern = PATTERN_CACHE.get(tplWithGroups);
-            if(pattern == null)
+        }
+
+        if(pattern == null)
+        {
+            pattern = Pattern.compile(tplWithGroups);
+            synchronized (PATTERN_CACHE)
             {
-                pattern = compile(tplWithGroups);
                 PATTERN_CACHE.put(tplWithGroups, pattern);
             }
         }
