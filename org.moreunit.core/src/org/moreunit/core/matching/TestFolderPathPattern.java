@@ -16,10 +16,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.moreunit.core.resources.Path;
+import org.moreunit.core.util.LRUCache;
 import org.moreunit.core.util.Strings;
 
 public class TestFolderPathPattern
 {
+    private static final Map<String, Pattern> PATTERN_CACHE = new LRUCache<String, Pattern>(50);
+
     public static final String SRC_PROJECT_VARIABLE = "${srcProject}";
 
     private static final int MAX_GROUPS = 9;
@@ -200,7 +203,18 @@ public class TestFolderPathPattern
     {
         String result = tplWithRefs;
 
-        Matcher matcher = Pattern.compile(tplWithGroups).matcher(path);
+        Pattern pattern;
+        synchronized (PATTERN_CACHE)
+        {
+            pattern = PATTERN_CACHE.get(tplWithGroups);
+            if(pattern == null)
+            {
+                pattern = compile(tplWithGroups);
+                PATTERN_CACHE.put(tplWithGroups, pattern);
+            }
+        }
+
+        Matcher matcher = pattern.matcher(path);
         if(matcher.matches())
         {
             List<GroupRef> groupRefs = getGroupRefs(result);
