@@ -37,7 +37,6 @@ import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
 
-@Ignore
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class MockingContextTest
 {
@@ -317,6 +316,32 @@ public class MockingContextTest
         verify(templateProcessor, never()).applyTemplate(codeTemplate, mockingContext);
 
         assertThat(mockingContext.getBeforeInstanceMethodName()).isNull();
+    }
+
+    @Test
+    public void should_return_true_when_has_dependencies_to_mock() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("pack.age.Type", "aType"));
+
+        // when
+        mockingContext = createMockingContext();
+
+        // then
+        assertThat(mockingContext.hasDependenciesToMock()).isTrue();
+    }
+
+    @Test
+    public void should_return_false_when_has_no_dependencies_to_mock() throws Exception
+    {
+        // given
+        // dependencies is empty
+
+        // when
+        mockingContext = createMockingContext();
+
+        // then
+        assertThat(mockingContext.hasDependenciesToMock()).isFalse();
     }
 
     @Test
