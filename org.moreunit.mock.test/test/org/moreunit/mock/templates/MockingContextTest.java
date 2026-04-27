@@ -339,6 +339,28 @@ public class MockingContextTest
         }
     }
 
+    @Test
+    public void should_return_true_if_test_type_matches() throws Exception
+    {
+        // given
+        String testType = TEST_TYPE_VALUE_JUNIT_4;
+        createMockingContextWithTestType(testType);
+
+        // then
+        assertThat(mockingContext.isTestType(testType)).isTrue();
+    }
+
+    @Test
+    public void should_return_false_if_test_type_does_not_match() throws Exception
+    {
+        // given
+        String testType = TEST_TYPE_VALUE_JUNIT_4;
+        createMockingContextWithTestType(testType);
+
+        // then
+        assertThat(mockingContext.isTestType(TEST_TYPE_VALUE_JUNIT_5)).isFalse();
+    }
+
     private void createMockingContextWithTestType(String testType) throws MockingTemplateException
     {
         mockingContext = createMockingContext(testType);
