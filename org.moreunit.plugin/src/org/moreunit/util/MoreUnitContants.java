@@ -10,7 +10,7 @@ import java.util.List;
 public class MoreUnitContants
 {
     public static final String TEST_CASE_MARKER = "org.moreunit.testCase";
-    public static final String TEST_CASE_DECORATOR = "moreunit.testdecorator";
+    public static final String TEST_CASE_DECORATOR = "org.moreunit.testdecorator";
 
     public static final String TEST_JUNIT3_METHOD_PRAEFIX = "test";
     public static final String SUFFIX_NAME = "Suffix";

@@ -22,7 +22,6 @@ import org.moreunit.util.MoreUnitContants;
  * Handles the decoration of java files. If the class has a testcase a overlay
  * icon is added.
  */
-// TODO force re-decoration on preferences change (use refreshAll)
 public class UnitDecorator extends LabelProvider implements ILightweightLabelDecorator
 {
     private final Logger logger;
@@ -150,11 +149,15 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             return null;
     }
 
-    public void refreshAll()
+    public static void refreshAll()
     {
-        UnitDecorator unitDecorator = getUnitDecorator();
+        PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
+            UnitDecorator unitDecorator = getUnitDecorator();
 
-        if(unitDecorator != null)
-            unitDecorator.fireLabelProviderChanged(new LabelProviderChangedEvent(unitDecorator));
+            if(unitDecorator != null)
+            {
+                unitDecorator.fireLabelProviderChanged(new LabelProviderChangedEvent(unitDecorator));
+            }
+        });
     }
 }

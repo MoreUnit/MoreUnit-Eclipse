@@ -6,12 +6,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.annotation.AnnotationUpdateListener;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
+import org.moreunit.decorator.UnitDecorator;
 import org.moreunit.core.log.DefaultLogger;
 import org.moreunit.core.log.Logger;
 import org.moreunit.log.LogHandler;
@@ -34,6 +36,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 
     private Logger logger;
     private AnnotationUpdateListener annotationUpdateListener;
+    private IPropertyChangeListener propertyChangeListener;
 
     /**
      * The constructor.
@@ -66,6 +69,9 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 
         MoreUnitAnnotationModel.attachForAllOpenEditor();
         removeMarkerFromOlderMoreUnitVersions();
+
+        propertyChangeListener = event -> UnitDecorator.refreshAll();
+        getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
     }
 
     protected IPartService getPartService()
@@ -109,6 +115,11 @@ public class MoreUnitPlugin extends AbstractUIPlugin
         IPartService partService = getPartService();
         if(partService != null)
             partService.removePartListener(annotationUpdateListener);
+
+        if(propertyChangeListener != null)
+        {
+            getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
+        }
 
         plugin = null;
     }
