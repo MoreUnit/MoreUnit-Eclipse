@@ -45,7 +45,7 @@ public class MockingTemplateLoaderTest
     MockingTemplates someTemplates = someTemplates();
 
     @Test
-    public void should_log_error_when_template_definition_resource_is_not_found() throws Exception
+    public void should_clear_template_store_before_loading() throws Exception
     {
         // given
         when(resourceLoader.findBundleResources(anyString(), anyString())).thenReturn(noResources);
@@ -55,7 +55,49 @@ public class MockingTemplateLoaderTest
         loader.loadTemplates();
 
         // then
-        verify(logger, atLeastOnce()).error(anyString());
+        verify(templateStore).clear();
+    }
+
+    @Test
+    public void should_load_from_both_bundle_and_workspace_state() throws Exception
+    {
+        // given
+        URL bundleUrl = URI.create("file:/bundle.url").toURL();
+        URL workspaceUrl = URI.create("file:/workspace.url").toURL();
+
+        when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(bundleUrl));
+        when(resourceLoader.findWorkspaceStateResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(workspaceUrl));
+
+        MockingTemplates bundleTemplates = someTemplates();
+        MockingTemplates workspaceTemplates = someTemplates();
+
+        when(templateDefinitionReader.read(bundleUrl)).thenReturn(bundleTemplates);
+        when(templateDefinitionReader.read(workspaceUrl)).thenReturn(workspaceTemplates);
+
+        // when
+        LoadingResult result = loader.loadTemplates();
+
+        // then
+        verify(templateStore).store(bundleTemplates);
+        verify(templateStore).store(workspaceTemplates);
+
+        assertThat(result.invalidTemplatesFound()).isFalse();
+        assertThat(result.invalidTemplates()).isEmpty();
+    }
+
+    @Test
+    public void should_log_error_when_template_definition_resource_is_not_found() throws Exception
+    {
+        // given
+        when(resourceLoader.findBundleResources(anyString(), anyString())).thenReturn(noResources);
+        when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
+        when(templateStore.getCategories()).thenReturn(new ArrayList<Category>());
+
+        // when
+        loader.loadTemplates();
+
+        // then
+        verify(logger).error("Failed to find valid templates.");
     }
 
     @Test
