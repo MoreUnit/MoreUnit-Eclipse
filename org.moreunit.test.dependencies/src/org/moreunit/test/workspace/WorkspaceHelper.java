@@ -236,6 +236,7 @@ public class WorkspaceHelper
         }
 
         IFolder folder = null;
+        boolean folderExists = true;
 
         for (String part : StringUtils.split(folderName, "/"))
         {
@@ -248,7 +249,12 @@ public class WorkspaceHelper
                 folder = folder.getFolder(part);
             }
 
-            if(! folder.exists())
+            if(folderExists && ! folder.exists())
+            {
+                folderExists = false;
+            }
+
+            if(! folderExists)
             {
                 folder.create(false, true, null);
             }

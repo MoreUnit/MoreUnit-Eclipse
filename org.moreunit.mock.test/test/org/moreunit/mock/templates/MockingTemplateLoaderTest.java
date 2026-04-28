@@ -59,6 +59,27 @@ public class MockingTemplateLoaderTest
     }
 
     @Test
+    public void should_log_error_and_add_to_invalid_templates_when_generic_exception_occurs() throws Exception
+    {
+        // given
+        URL definitionUrl = URI.create("file:/generic.exception.url").toURL();
+        RuntimeException genericException = new RuntimeException("generic exception");
+
+        when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(definitionUrl));
+        when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
+
+        when(templateDefinitionReader.read(definitionUrl)).thenThrow(genericException);
+
+        // when
+        LoadingResult result = loader.loadTemplates();
+
+        // then
+        verify(logger).error(anyString(), eq(genericException));
+        assertThat(result.invalidTemplatesFound()).isTrue();
+        assertThat(result.invalidTemplates()).contains(entry(definitionUrl, genericException.toString()));
+    }
+
+    @Test
     public void should_log_error_when_template_definition_is_invalid() throws Exception
     {
         // given
@@ -150,6 +171,30 @@ public class MockingTemplateLoaderTest
         assertThat(result.invalidTemplates()).hasSize(2)
                 .contains(entry(existingDefinition1Url, "A template is already defined with this ID"),
                           entry(existingDefinition2Url, "A template is already defined with this ID"));
+    }
+
+    @Test
+    public void should_log_error_when_template_already_defined() throws Exception
+    {
+        // given
+        URL definitionUrl = URI.create("file:/already.defined.url").toURL();
+        when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(definitionUrl));
+        when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
+
+        TemplateAlreadyDefinedException exception = new TemplateAlreadyDefinedException("templateId");
+        when(templateDefinitionReader.read(definitionUrl)).thenReturn(someTemplates);
+        doThrow(exception).when(templateStore).store(someTemplates);
+
+        // when
+        LoadingResult result = loader.loadTemplates();
+
+        // then
+        verify(logger).error("Could not load template " + definitionUrl, exception);
+
+        assertThat(result.invalidTemplatesFound()).isTrue();
+        assertThat(result.invalidTemplates()).hasSize(1)
+                .contains(entry(definitionUrl, "A template is already defined with this ID"));
+
     }
 
     private MockingTemplates someTemplates()

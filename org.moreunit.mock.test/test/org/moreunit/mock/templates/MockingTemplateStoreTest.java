@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
 import org.moreunit.mock.model.Category;

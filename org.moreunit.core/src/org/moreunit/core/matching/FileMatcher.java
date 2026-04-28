@@ -8,6 +8,16 @@ import org.moreunit.core.resources.SrcFile;
 
 public class FileMatcher
 {
+    // Use an LRU cache to prevent memory leaks from unbounded growth
+    private static final int MAX_CACHE_SIZE = 1000;
+    private static final java.util.Map<String, Pattern> PATTERN_CACHE = java.util.Collections.synchronizedMap(
+        new java.util.LinkedHashMap<String, Pattern>(16, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(java.util.Map.Entry<String, Pattern> eldest) {
+                return size() > MAX_CACHE_SIZE;
+            }
+        });
+
     private final SrcFile file;
     private final SearchEngine searchEngine;
     private final FileMatchSelector matchSelector;
@@ -77,6 +87,13 @@ public class FileMatcher
         .append("|").append(extension.toUpperCase()) //
         .append(")");
 
-        return Pattern.compile(sb.toString());
+        String regex = sb.toString();
+        Pattern pattern = PATTERN_CACHE.get(regex);
+        if (pattern == null)
+        {
+            pattern = Pattern.compile(regex);
+            PATTERN_CACHE.put(regex, pattern);
+        }
+        return pattern;
     }
 }

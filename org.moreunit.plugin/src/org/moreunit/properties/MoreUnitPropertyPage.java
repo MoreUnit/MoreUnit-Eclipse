@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.moreunit.decorator.UnitDecorator;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
@@ -189,6 +190,8 @@ public class MoreUnitPropertyPage extends PropertyPage
             IPreferenceStore store = Preferences.getInstance().getProjectStore(getJavaProject());
             if(store instanceof ScopedPreferenceStore preferenceStore)
                 preferenceStore.save();
+
+            UnitDecorator.refreshAll();
         }
         catch (IOException e)
         {

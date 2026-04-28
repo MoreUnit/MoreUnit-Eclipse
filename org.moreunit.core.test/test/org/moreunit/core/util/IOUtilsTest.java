@@ -9,7 +9,6 @@ import static org.moreunit.core.util.IOUtils.closeQuietly;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class IOUtilsTest

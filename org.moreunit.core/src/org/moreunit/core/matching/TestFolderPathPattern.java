@@ -16,10 +16,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.moreunit.core.resources.Path;
+import org.moreunit.core.util.LRUCache;
 import org.moreunit.core.util.Strings;
 
 public class TestFolderPathPattern
 {
+    private static final Map<String, Pattern> PATTERN_CACHE = new LRUCache<String, Pattern>(500);
+
     public static final String SRC_PROJECT_VARIABLE = "${srcProject}";
 
     private static final int MAX_GROUPS = 9;
@@ -47,6 +50,8 @@ public class TestFolderPathPattern
     {
         TEST_PATH_VALIDATOR = compile("^/?[^/\\*\\(\\)]*" + quote(SRC_PROJECT_VARIABLE) + "[^\\*\\(\\)]*$");
     }
+
+    private static final Pattern GROUP_PATTERN = Pattern.compile("\\([^\\)]+\\)");
 
     private final String srcPathTemplate;
     private final String testPathTemplate;
@@ -198,12 +203,28 @@ public class TestFolderPathPattern
     {
         String result = tplWithRefs;
 
-        Matcher matcher = Pattern.compile(tplWithGroups).matcher(path);
+        Pattern pattern;
+        synchronized (PATTERN_CACHE)
+        {
+            pattern = PATTERN_CACHE.get(tplWithGroups);
+        }
+
+        if(pattern == null)
+        {
+            pattern = Pattern.compile(tplWithGroups);
+            synchronized (PATTERN_CACHE)
+            {
+                PATTERN_CACHE.put(tplWithGroups, pattern);
+            }
+        }
+
+        Matcher matcher = pattern.matcher(path);
         if(matcher.matches())
         {
             List<GroupRef> groupRefs = getGroupRefs(result);
             reverse(groupRefs);
 
+            StringBuilder resultBuilder = new StringBuilder(result);
             for (int i = 0; i < groupRefs.size(); i++)
             {
                 GroupRef ref = groupRefs.get(i);
@@ -218,8 +239,9 @@ public class TestFolderPathPattern
                     throw new DoesNotMatchConfigurationException(analizedPath);
                 }
 
-                result = result.substring(0, ref.startIdx) + groupContent + result.substring(ref.endIdx);
+                resultBuilder.replace(ref.startIdx, ref.endIdx, groupContent);
             }
+            result = resultBuilder.toString();
         }
         return result;
     }
@@ -251,6 +273,11 @@ public class TestFolderPathPattern
 
     private String replaceGroupsWithRefs(String template, List<GroupRef> groupRefs)
     {
+        if (groupRefs.isEmpty())
+        {
+            return template;
+        }
+
         Map<Integer, Integer> refIndices = new HashMap<Integer, Integer>();
         int idx = 1;
         for (GroupRef ref : groupRefs)
@@ -259,12 +286,16 @@ public class TestFolderPathPattern
             idx++;
         }
 
-        String result = template;
-        for (int i = 0; i < groupRefs.size(); i++)
+        Matcher matcher = GROUP_PATTERN.matcher(template);
+        StringBuffer sb = new StringBuffer();
+        int i = 0;
+        while (matcher.find() && i < groupRefs.size())
         {
-            result = result.replaceFirst("\\([^\\)]+\\)", "\\\\" + refIndices.get(i));
+            matcher.appendReplacement(sb, Matcher.quoteReplacement("\\" + refIndices.get(i)));
+            i++;
         }
-        return result;
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     private String getSrcProjectName(String tstProjectName, Path tstPath) throws DoesNotMatchConfigurationException
