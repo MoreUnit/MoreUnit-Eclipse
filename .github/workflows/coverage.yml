@@ -33,7 +33,7 @@ jobs:
         run: mvn -file org.moreunit.build/pom.xml clean install -Pcoverage "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: ./org.moreunit.build/target/site/jacoco-aggregate/jacoco.xml
           verbose: true
