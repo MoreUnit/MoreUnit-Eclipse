@@ -74,4 +74,62 @@ public class DependencyMockerTest
         // then
         verify(templateStore).get("test-template-id");
     }
+
+    @Test
+    public void should_abort_when_template_is_null() throws Exception
+    {
+        // given
+        when(dependencies.isEmpty()).thenReturn(false);
+        when(classUnderTest.getJavaProject()).thenReturn(project);
+        when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
+        when(templateStore.get("test-template-id")).thenReturn(null);
+
+        // when
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
+
+        // then
+        verify(logger).error("Template not found: test-template-id");
+        verifyNoInteractions(templateApplicator);
+    }
+
+    @Test
+    public void should_apply_template_when_found() throws Exception
+    {
+        // given
+        when(dependencies.isEmpty()).thenReturn(false);
+        when(classUnderTest.getJavaProject()).thenReturn(project);
+        when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
+
+        org.moreunit.mock.model.MockingTemplate template = new org.moreunit.mock.model.MockingTemplate("test-template-id");
+        when(templateStore.get("test-template-id")).thenReturn(template);
+
+        // when
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
+
+        // then
+        verify(templateApplicator).applyTemplate(template, dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
+    }
+
+    @Test
+    public void should_log_error_when_template_application_fails() throws Exception
+    {
+        // given
+        when(dependencies.isEmpty()).thenReturn(false);
+        when(classUnderTest.getJavaProject()).thenReturn(project);
+        when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
+
+        org.moreunit.mock.model.MockingTemplate template = new org.moreunit.mock.model.MockingTemplate("test-template-id");
+        when(templateStore.get("test-template-id")).thenReturn(template);
+
+        when(testCase.getElementName()).thenReturn("MyTest");
+
+        org.moreunit.mock.templates.MockingTemplateException exception = new org.moreunit.mock.templates.MockingTemplateException("error");
+        doThrow(exception).when(templateApplicator).applyTemplate(template, dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
+
+        // when
+        dependencyMocker.mockDependencies(dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
+
+        // then
+        verify(logger).error("Could not apply MockingTemplate [id=test-template-id, category=null] to MyTest", exception);
+    }
 }
