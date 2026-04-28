@@ -5,5 +5,6 @@ XVFB_PID=$!
 sleep 2
 
 mvn -f org.moreunit.build/pom.xml test -pl :org.moreunit.test -Dtest=MissingClassTreeContentProviderTest
+mvn -f org.moreunit.build/pom.xml install -pl :org.moreunit.report -Pcoverage
 
 kill $XVFB_PID
