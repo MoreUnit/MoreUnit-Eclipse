@@ -2,7 +2,7 @@
 <feature
       id="org.moreunit.mock.feature"
       label="MoreUnit For Java: Mock Support"
-      version="4.0.0"
+      version="4.0.2.qualifier"
       provider-name="MoreUnit.org"
       plugin="org.moreunit.mock">
 

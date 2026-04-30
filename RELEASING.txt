@@ -9,3 +9,14 @@ git commit --message="Release v4.0.1"
 git tag v4.0.1
 git push --tags
 ```
+
+# How to start a new version
+
+Run the following commands:
+
+```
+mvn -file org.moreunit.build/pom.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=4.0.2-SNAPSHOT
+git add .
+git commit --message="Prepare for next release"
+git push
+```
