@@ -15,3 +15,4 @@ Thumbs.db
 
 # JVM crash dumps
 hs_err*.log
+/.project

@@ -1,0 +1,11 @@
+# How to release
+
+Run the following commands:
+
+```
+mvn -file org.moreunit.build/pom.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=4.0.1
+git add .
+git commit --message="Release v4.0.1"
+git tag v4.0.1
+git push --tags
+```
