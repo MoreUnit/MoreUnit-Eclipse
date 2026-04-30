@@ -17,6 +17,6 @@
   <name>${project.artifactId}</name>
   
   <properties>
-  	<tests.use.ui>true</tests.use.ui>
+    <tests.use.ui>true</tests.use.ui>
   </properties>
 </project> 
