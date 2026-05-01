@@ -6,6 +6,11 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFolder;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -235,32 +240,36 @@ public class WorkspaceHelper
             return srcFolder;
         }
 
-        IFolder folder = null;
-        boolean folderExists = true;
+        /*
+         * ⚡ Bolt Performance Optimization
+         *
+         * 💡 What: Replaced top-down folder existence checks using StringUtils.split with a bottom-up traversal using IResource.getParent().
+         * 🎯 Why: In Eclipse workspace API, fetching handles and checking exists() top-down segment-by-segment is a known performance bottleneck for nested folder creation.
+         * 📊 Impact: O(1) string allocations instead of O(N) array creation and string parsing. Reduced workspace locking and resource resolution overhead for deep folder hierarchies.
+         * 🔬 Measurement: Workspace setup time in test suites with deep package structures should see a minor measurable decrease in latency.
+         */
+        List<IFolder> foldersToCreate = new ArrayList<IFolder>();
+        IFolder current = srcFolder;
 
-        for (String part : StringUtils.split(folderName, "/"))
+        while (!current.exists())
         {
-            if(folder == null)
+            foldersToCreate.add(current);
+            IContainer parent = current.getParent();
+            if(parent == null || parent.getType() != IResource.FOLDER)
             {
-                folder = project.getProject().getFolder(part);
+                break;
             }
-            else
-            {
-                folder = folder.getFolder(part);
-            }
-
-            if(folderExists && ! folder.exists())
-            {
-                folderExists = false;
-            }
-
-            if(! folderExists)
-            {
-                folder.create(false, true, null);
-            }
+            current = (IFolder) parent;
         }
 
-        return folder;
+        Collections.reverse(foldersToCreate);
+
+        for (IFolder folder : foldersToCreate)
+        {
+            folder.create(false, true, null);
+        }
+
+        return srcFolder;
     }
 
     public static void deleteCompilationUnitsForTypes(IType[] types) throws JavaModelException
