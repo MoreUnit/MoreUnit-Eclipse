@@ -21,7 +21,15 @@ import org.moreunit.core.util.Strings;
 
 public class TestFolderPathPattern
 {
-    private static final Map<String, Pattern> PATTERN_CACHE = new LRUCache<String, Pattern>(500);
+    /*
+     * ⚡ Bolt Performance Optimization
+     *
+     * 💡 What: Upgraded the synchronized PATTERN_CACHE lookup to avoid synchronization bottlenecks.
+     * 🎯 Why: Instead of block-synchronizing the LRUCache, we use a ConcurrentHashMap for highly concurrent, lock-free pattern reads. To bound memory, we do not need the LRUCache eviction logic because the number of distinct path templates is statically limited by the user's workspace configuration, avoiding cache eviction overhead altogether.
+     * 📊 Impact: O(1) lock-free regex caching matching across multiple concurrent file matches.
+     * 🔬 Measurement: Reduced blocking threads inside `resolveGroups`.
+     */
+    private static final Map<String, Pattern> PATTERN_CACHE = new java.util.concurrent.ConcurrentHashMap<String, Pattern>();
 
     public static final String SRC_PROJECT_VARIABLE = "${srcProject}";
 
@@ -203,19 +211,12 @@ public class TestFolderPathPattern
     {
         String result = tplWithRefs;
 
-        Pattern pattern;
-        synchronized (PATTERN_CACHE)
-        {
-            pattern = PATTERN_CACHE.get(tplWithGroups);
-        }
+        Pattern pattern = PATTERN_CACHE.get(tplWithGroups);
 
         if(pattern == null)
         {
             pattern = Pattern.compile(tplWithGroups);
-            synchronized (PATTERN_CACHE)
-            {
-                PATTERN_CACHE.put(tplWithGroups, pattern);
-            }
+            PATTERN_CACHE.putIfAbsent(tplWithGroups, pattern);
         }
 
         Matcher matcher = pattern.matcher(path);
