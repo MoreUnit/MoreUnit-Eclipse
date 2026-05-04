@@ -15,6 +15,10 @@ Require-Bundle: org.eclipse.swtbot.go,
  org.eclipse.jdt.ui,
  org.eclipse.ui.ide,
  org.eclipse.platform,
- org.assertj
-Import-Package: org.eclipse.jdt.ui
+ org.assertj,
+ org.junit.jupiter.api,
+ org.junit.jupiter.engine,
+ org.mockito.junit.jupiter
+Import-Package: org.eclipse.jdt.ui,
+ org.eclipse.swtbot.swt.finder.junit5
 Automatic-Module-Name: org.moreunit.swtbot.test

@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.Preferences;
@@ -20,7 +20,7 @@ import org.moreunit.test.context.TestType;
  * @author gianasista
  */
 @Context(mainCls = "org:SomeClass")
-@RunWith(SWTBotJunit4ClassRunner.class)
+@RunWith(SWTBotJunit5ClassRunner.class)
 public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 {
 	/*

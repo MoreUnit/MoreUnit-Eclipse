@@ -2,11 +2,11 @@ package org.moreunit.jump;
 
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Context;
@@ -15,10 +15,10 @@ import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
+@RunWith(SWTBotJunit5ClassRunner.class)
 public class BasicJumpTest extends JavaProjectSWTBotTestHelper
 {
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		for(SWTBotEditor editor : bot.editors())
