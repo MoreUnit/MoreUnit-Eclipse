@@ -5,10 +5,13 @@ Bundle-SymbolicName: org.moreunit.mock.it
 Bundle-Version: 4.0.2.qualifier
 Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Require-Bundle: org.eclipse.jdt.launching,
- org.junit,
+ org.junit.jupiter.api,
+ org.junit.jupiter.engine,
+ org.junit.jupiter.params,
  org.moreunit.test.dependencies,
  org.testng.eclipse,
- org.glassfish.hk2.osgi-resource-locator
+ org.glassfish.hk2.osgi-resource-locator,
+ org.mockito.junit.jupiter
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: MoreUnit.org
 Bundle-ClassPath: .

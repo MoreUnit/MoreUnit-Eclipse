@@ -1,11 +1,11 @@
 package org.moreunit.mock;
 
-import org.junit.Rule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.moreunit.test.context.TestContextRule;
 
 public class UiTestCase
 {
-    @Rule
+    @RegisterExtension
     public final TestContextRule context = new TestContextRule();
 
     private MockTestModule config = new MockTestModule()

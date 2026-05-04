@@ -1,7 +1,7 @@
 package org.moreunit.mock.it;
 
 import org.eclipse.jdt.ui.JavaUI;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.mock.UiTestCase;
 import org.moreunit.mock.actions.MockDependenciesAction;
 import org.moreunit.test.context.Context;
