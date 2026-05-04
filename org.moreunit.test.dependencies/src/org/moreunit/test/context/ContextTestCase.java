@@ -1,10 +1,10 @@
 package org.moreunit.test.context;
 
-import org.junit.Rule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 public abstract class ContextTestCase
 {
-    @Rule
+    @RegisterExtension
     public final TestContextRule context = new TestContextRule();
 
     public org.moreunit.preferences.Preferences getPreferences()

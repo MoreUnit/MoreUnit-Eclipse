@@ -6,12 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 public class TestContextRuleTest
 {
-    @Rule
+    @RegisterExtension
     public TestContextRule context = new TestContextRule(new ConfigExtractorThatDoesNotInteractWithWorkspace());
 
     @Test
@@ -41,7 +41,7 @@ public class TestContextRuleTest
         {
             assertThatThrownBy(() -> runnable.run())
             .isInstanceOf(IllegalStateException.class)
-            .hasMessage("No context defined. Are you accessing this rule from outside a test method? or from one that has no Context annotation?");
+            .hasMessage("No context defined. Are you accessing this extension from outside a test method? or from one that has no Context annotation?");
         }
     }
 

@@ -3,8 +3,7 @@ package org.moreunit.test.context;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IJavaProject;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 @Preferences(testPackagePrefix="Test")
 public class ContextTest extends ContextTestCase

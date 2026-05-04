@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.lang.annotation.Annotation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.workspace.JavaType;
 
 public class AnnotationConfigExtractorTest

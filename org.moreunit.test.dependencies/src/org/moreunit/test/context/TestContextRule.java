@@ -5,9 +5,9 @@ import static org.moreunit.core.util.Preconditions.checkState;
 import java.lang.annotation.Annotation;
 
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.moreunit.test.workspace.CompilationUnitAssertions;
 import org.moreunit.test.workspace.CompilationUnitHandler;
 import org.moreunit.test.workspace.ProjectHandler;
@@ -15,7 +15,7 @@ import org.moreunit.test.workspace.TypeHandler;
 import org.moreunit.test.workspace.WorkspaceHandler;
 
 /**
- * A rule that loads the context associated with the current test method (when
+ * A JUnit 5 extension that loads the context associated with the current test method (when
  * annotated with {@link Context}) and then:
  * <ul>
  * <li>creates the initial production compilation units if any are defined,</li>
@@ -23,10 +23,10 @@ import org.moreunit.test.workspace.WorkspaceHandler;
  * <li>provides assertions to run against those compilation units.</li>
  * </ul>
  */
-public class TestContextRule implements MethodRule
+public class TestContextRule implements BeforeEachCallback, AfterEachCallback
 {
     private final AnnotationConfigExtractor configExtractor;
-    private StatementInContext currentStatement;
+    private final ThreadLocal<ContextState> state = new ThreadLocal<>();
 
     public TestContextRule()
     {
@@ -38,48 +38,74 @@ public class TestContextRule implements MethodRule
         this.configExtractor = configExtractor;
     }
 
-    public final Statement apply(Statement statement, final FrameworkMethod method, final Object testCase)
+    @Override
+    public void beforeEach(ExtensionContext context) throws Exception
     {
+        // Extract config from method and class annotations
         WorkspaceConfiguration config = configExtractor.extractFrom(new AnnotatedElement()
         {
+            @Override
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
-                return method.getAnnotation(annotationClass);
+                return context.getTestMethod().map(m -> m.getAnnotation(annotationClass)).orElse(null);
             }
 
             @Override
             public String toString()
             {
-                return "method " + method.getName();
+                return "method " + context.getTestMethod().map(m -> m.getName()).orElse("unknown");
             }
         }, new AnnotatedElement()
         {
+            @Override
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
-                T annotation = null;
+                Class<?> testClass = context.getTestClass().orElse(null);
+                if (testClass == null) return null;
 
-                Class< ? > cls = testCase.getClass();
+                T annotation = null;
+                Class<?> cls = testClass;
                 while (annotation == null && cls != null)
                 {
                     annotation = cls.getAnnotation(annotationClass);
                     cls = cls.getSuperclass();
                 }
-
                 return annotation;
             }
         });
 
-        if(config == null)
+        if (config == null)
         {
-            return statement;
+            return;
         }
 
-        // abbreviations prevent reaching file name size limit on some file systems (Ext, ...)
-        String projectPrefix = abbreviate(testCase.getClass().getName(), ".") + "." + abbreviate(method.getName(), "_") + "-";
-        return new StatementInContext(statement, this, config, testCase.getClass(), projectPrefix);
+        // Abbreviate to prevent reaching file name size limit on some file systems
+        String projectPrefix = abbreviate(context.getTestClass().map(c -> c.getName()).orElse("")) + "."
+                + abbreviate(context.getTestMethod().map(m -> m.getName()).orElse("")) + "-";
+
+        ContextState newState = new ContextState(config, context.getTestClass().map(c -> c).orElse(null), projectPrefix);
+        state.set(newState);
+        newState.initWorkspace();
     }
 
-    private static String abbreviate(String javaIdentifier, String newSeparator)
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception
+    {
+        ContextState current = state.get();
+        if (current != null)
+        {
+            try
+            {
+                current.clearWorkspace();
+            }
+            finally
+            {
+                state.remove();
+            }
+        }
+    }
+
+    private static String abbreviate(String javaIdentifier)
     {
         StringBuilder b = new StringBuilder();
         for (String part : javaIdentifier.split("((?=\\p{Lu})|[\\._])"))
@@ -88,7 +114,7 @@ public class TestContextRule implements MethodRule
             {
                 if(b.length() != 0)
                 {
-                    b.append(newSeparator);
+                    b.append(".");
                 }
                 b.append(part.substring(0, Math.min(2, part.length())));
             }
@@ -191,18 +217,19 @@ public class TestContextRule implements MethodRule
 
     public WorkspaceHandler getWorkspaceHandler()
     {
-        return currentStatement().workspaceHandler;
+        return currentState().workspaceHandler;
     }
 
-    private StatementInContext currentStatement()
+    private ContextState currentState()
     {
-        checkState(currentStatement != null, "No context defined. Are you accessing this rule from outside a test method? or from one that has no Context annotation?");
-        return currentStatement;
+        ContextState s = state.get();
+        checkState(s != null, "No context defined. Are you accessing this extension from outside a test method? or from one that has no Context annotation?");
+        return s;
     }
 
     public boolean isDefined()
     {
-        return currentStatement != null;
+        return state.get() != null;
     }
 
     /**
@@ -219,32 +246,23 @@ public class TestContextRule implements MethodRule
         return getCompilationUnitHandler(cuName).assertThat();
     }
 
-    private static class StatementInContext extends Statement
+    private static class ContextState
     {
-        private final Statement statement;
-        private final TestContextRule rule;
-        private final WorkspaceHandler workspaceHandler;
+        final WorkspaceHandler workspaceHandler;
 
-        public StatementInContext(Statement statement, TestContextRule rule, WorkspaceConfiguration config, Class< ? > testClass, String projectPrefix)
+        ContextState(WorkspaceConfiguration config, Class<?> testClass, String projectPrefix)
         {
-            this.statement = statement;
-            this.rule = rule;
             this.workspaceHandler = config.initWorkspace(testClass, projectPrefix);
         }
 
-        @Override
-        public void evaluate() throws Throwable
+        void initWorkspace()
         {
-            rule.currentStatement = this;
-            try
-            {
-                statement.evaluate();
-            }
-            finally
-            {
-                rule.currentStatement = null;
-                workspaceHandler.clearWorkspace();
-            }
+            // Workspace is already initialized in constructor
+        }
+
+        void clearWorkspace()
+        {
+            workspaceHandler.clearWorkspace();
         }
     }
 }

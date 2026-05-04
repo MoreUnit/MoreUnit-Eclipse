@@ -2,14 +2,14 @@ package org.moreunit.test.context;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.Test;
 
 @Context(mainSrc = "DefaultClassUnderTest.txt",
         testSrc = "DefaultTestCase.txt")
 public class TestContextRuleWithClassAnnotationTest extends AnnotatedSuperClass
 {
-    @Rule
+    @RegisterExtension
     public TestContextRule context = new TestContextRule(new ConfigExtractorThatDoesNotInteractWithWorkspace());
 
     @Test

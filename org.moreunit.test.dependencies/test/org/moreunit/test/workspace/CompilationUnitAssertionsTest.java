@@ -2,13 +2,13 @@ package org.moreunit.test.workspace;
 
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoJUnitRunner.class)
 public class CompilationUnitAssertionsTest
 {
     private static final String NL = System.getProperty("line.separator");
@@ -18,7 +18,7 @@ public class CompilationUnitAssertionsTest
 
     private TestAssertions assertions;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         assertions = new TestAssertions(actualCu);

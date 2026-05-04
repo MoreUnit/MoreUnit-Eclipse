@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.moreunit.test;
 
 import java.util.ArrayList;
@@ -13,10 +10,10 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.test.workspace.WorkspaceHelper;
@@ -39,7 +36,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 
     private Set<IType> typesToClean;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpProject() throws Exception
     {
         sourcesFolder = WorkspaceHelper.createSourceFolderInProject(workspaceTestProject, SOURCES_FOLDER_NAME);
@@ -50,7 +47,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
         initPreferencesForTestCaseContext();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownProject() throws JavaModelException
     {
         sourcesPackage.delete(true, null);
@@ -60,13 +57,13 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
         testFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);
     }
 
-    @Before
+    @BeforeEach
     public void setUpTestCase()
     {
         typesToClean = new HashSet<IType>();
     }
 
-    @After
+    @AfterEach
     public void tearDownTestCase() throws JavaModelException
     {
         WorkspaceHelper.deleteCompilationUnitsForTypes(typesToClean.toArray(new IType[typesToClean.size()]));
@@ -105,7 +102,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     /**
      * Registers the given type to be removed from the workspace after test
      * completion.
-     * 
+     *
      * @param type the type to delete
      * @return the type (convenient for method chaining)
      */

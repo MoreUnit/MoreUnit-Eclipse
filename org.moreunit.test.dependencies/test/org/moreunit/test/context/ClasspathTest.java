@@ -7,7 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Condition;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
 import org.moreunit.test.context.configs.SimpleJUnit5Project;
