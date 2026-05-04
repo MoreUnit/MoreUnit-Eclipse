@@ -9,10 +9,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.ltk.internal.ui.refactoring.RefactoringUIMessages;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.SWTBotHelper;
@@ -24,7 +24,7 @@ import org.moreunit.test.context.TestType;
              testSrcFolder = "test",
              testType = TestType.JUNIT4,
              testMethodPrefix = true)
-@RunWith(SWTBotJunit5ClassRunner.class)
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(

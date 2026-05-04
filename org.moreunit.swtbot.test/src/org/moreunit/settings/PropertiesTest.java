@@ -7,14 +7,14 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
@@ -22,7 +22,7 @@ import org.moreunit.test.context.Project;
 
 @Project(mainCls = "org:HelloWorld", mainSrcFolder = "src", testSrcFolder = "test")
 @org.moreunit.test.context.Preferences(testSrcFolder = "junit")
-@RunWith(SWTBotJunit5ClassRunner.class)
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class PropertiesTest extends JavaProjectSWTBotTestHelper
 {
     private void openProjectPropertiesAndSelectMoreUnitPage()
@@ -81,7 +81,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.waitUntil(Conditions.shellCloses(shellToClose));
     }
 
-    @BeforeEach
+    @Before
     public void before()
     {
         initProjectSpecificSettings();

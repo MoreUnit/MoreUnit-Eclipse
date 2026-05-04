@@ -4,17 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.test.context.Context;
 
 @Context(mainCls = "org:HelloWorld")
-@RunWith(SWTBotJunit5ClassRunner.class)
+@RunWith(SWTBotJunit4ClassRunner.class)
 public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
     private void openPreferencesAndSelectMoreUnitPage()
