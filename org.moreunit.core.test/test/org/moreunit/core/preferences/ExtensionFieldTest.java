@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class ExtensionFieldTest

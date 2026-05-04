@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 
 import org.assertj.core.api.Condition;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 abstract class ResourcesTest
 {
@@ -14,7 +14,7 @@ abstract class ResourcesTest
 
     private Workspace workspace;
 
-    @Before
+    @BeforeEach
     public void buildWorkspace() throws Exception
     {
         workspace = getWorkspaceToTest();

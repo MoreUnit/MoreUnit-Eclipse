@@ -2,7 +2,7 @@ package org.moreunit.core.matching;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
 
 public class SeparatorNameTokenizerTest

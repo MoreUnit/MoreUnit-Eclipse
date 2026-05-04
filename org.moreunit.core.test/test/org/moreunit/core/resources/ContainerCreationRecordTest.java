@@ -2,8 +2,8 @@ package org.moreunit.core.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ContainerCreationRecordTest
 {
@@ -16,7 +16,7 @@ public class ContainerCreationRecordTest
     private Folder grandParent;
     private Folder grandGrandParent;
 
-    @Before
+    @BeforeEach
     public void given_that_several_parent_folders_have_been_created() throws Exception
     {
         childFile = workspace.getFile("/segment1/segment2/segment3/segment4/file");

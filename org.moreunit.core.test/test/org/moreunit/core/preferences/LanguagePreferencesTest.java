@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.TestFileNamePattern;
 
 public class LanguagePreferencesTest

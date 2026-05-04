@@ -2,7 +2,7 @@ package org.moreunit.core.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.CamelCaseNameTokenizer;
 import org.moreunit.core.matching.SeparatorNameTokenizer;
 import org.moreunit.core.matching.TestFileNamePattern;

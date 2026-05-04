@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.eclipse.core.resources.IFile;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.decorators.TestedFileDecorator;
 import org.moreunit.core.matching.MatchingFile;
 import org.moreunit.core.resources.SrcFile;

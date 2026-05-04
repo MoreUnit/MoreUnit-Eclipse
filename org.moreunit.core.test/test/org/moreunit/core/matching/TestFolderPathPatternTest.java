@@ -3,7 +3,7 @@ package org.moreunit.core.matching;
 import static org.assertj.core.api.Assertions.*;
 import static org.moreunit.core.matching.TestFolderPathPattern.isValid;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.CoreTestModule;
 import org.moreunit.core.resources.InMemoryPath;
 import org.moreunit.core.resources.InMemoryWorkspace;

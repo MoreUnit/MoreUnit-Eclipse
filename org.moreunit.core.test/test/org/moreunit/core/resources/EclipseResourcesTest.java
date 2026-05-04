@@ -8,13 +8,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 public class EclipseResourcesTest extends ResourcesTest
 {
     private IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
-    @After
+    @AfterEach
     public void cleanWorkspace() throws Exception
     {
         workspaceRoot.delete(true, true, null);

@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.log.Logger;
 import org.moreunit.core.matching.DoesNotMatchConfigurationException;
 import org.moreunit.core.resources.SrcFile;
@@ -23,7 +23,7 @@ public class TestedFileDecoratorTest
     IDecoration decoration = mock(IDecoration.class);
     SrcFile fileToDecorate = mock(SrcFile.class);
 
-    @Before
+    @BeforeEach
     public void prepareImageRegistry() throws Exception
     {
         ImageDescriptor imageDescriptor = mock(ImageDescriptor.class);

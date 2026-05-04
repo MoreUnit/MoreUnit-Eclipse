@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.resources.InMemoryWorkspace;
 
 public class SourceFolderPathTest

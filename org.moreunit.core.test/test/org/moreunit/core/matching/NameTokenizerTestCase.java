@@ -1,6 +1,6 @@
 package org.moreunit.core.matching;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class NameTokenizerTestCase
 {

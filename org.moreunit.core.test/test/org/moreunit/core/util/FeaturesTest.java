@@ -3,7 +3,7 @@ package org.moreunit.core.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.core.util.Features.isActive;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FeaturesTest
 {

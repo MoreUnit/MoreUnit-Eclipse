@@ -29,8 +29,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.moreunit.core.MoreUnitCoreTest;
 import org.moreunit.core.resources.FolderCreationException;
 import org.moreunit.core.resources.Resources;
@@ -43,7 +43,7 @@ public abstract class TmpProjectTestCase
     protected IProject project;
     private Set<String> extensionsToClean = new HashSet<>();
 
-    @Before
+    @BeforeEach
     public void createProject() throws Exception
     {
         IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -52,7 +52,7 @@ public abstract class TmpProjectTestCase
         project.open(null);
     }
 
-    @After
+    @AfterEach
     public void deleteProject() throws Exception
     {
         project.delete(true, true, null);
@@ -141,7 +141,7 @@ public abstract class TmpProjectTestCase
         return ((ExtensionRegistry) extensionRegistry).getTemporaryUserToken();
     }
 
-    @After
+    @AfterEach
     public void cleanExtensions()
     {
         for (String id : extensionsToClean)

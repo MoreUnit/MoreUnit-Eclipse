@@ -9,7 +9,7 @@ import static org.moreunit.core.util.IOUtils.closeQuietly;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class IOUtilsTest
 {

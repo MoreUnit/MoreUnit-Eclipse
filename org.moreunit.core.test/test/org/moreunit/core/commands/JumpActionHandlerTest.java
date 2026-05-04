@@ -10,10 +10,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.CoreTestModule;
 import org.moreunit.core.extension.jump.IJumpContext;
 import org.moreunit.core.extension.jump.IJumper;
@@ -44,7 +44,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
     Preferences preferences;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         preferences = $().getPreferences();
@@ -52,7 +52,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}", "${srcProject}");
     }
 
-    @After
+    @AfterEach
     public void cleanPreferences() throws Exception
     {
         for (Language l : preferences.getLanguages())
@@ -455,7 +455,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     @Test
     public void should_support_regex_symbols_in_file_name_separator() throws Exception
     {
-        Assume.assumeFalse("This test contains characters in files that are not supported on Windows.", System.getProperty("os.name").contains("Win"));
+        Assumptions.assumeFalse("This test contains characters in files that are not supported on Windows.", System.getProperty("os.name").contains("Win"));
         // given
         preferences.add(new Language("nde", "NDE"));
 
