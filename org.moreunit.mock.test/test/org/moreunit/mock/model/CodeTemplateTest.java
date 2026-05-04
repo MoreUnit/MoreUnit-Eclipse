@@ -6,13 +6,13 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.templates.MockingContext;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CodeTemplateTest
 {
     @Mock

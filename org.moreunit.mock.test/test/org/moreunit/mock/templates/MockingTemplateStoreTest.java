@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.MockingTemplates;
@@ -22,7 +22,7 @@ public class MockingTemplateStoreTest
     private Category category2;
     private MockingTemplate template1;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         templateStore = new MockingTemplateStore();

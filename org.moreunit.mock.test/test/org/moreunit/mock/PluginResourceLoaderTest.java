@@ -15,15 +15,15 @@ import java.util.Set;
 import org.osgi.framework.Bundle;
 
 import org.eclipse.core.runtime.IPath;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PluginResourceLoaderTest {
 
     @Mock
@@ -40,7 +40,7 @@ public class PluginResourceLoaderTest {
 
     PluginResourceLoader loader;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         loader = new PluginResourceLoader(plugin, logger);
         Field field = MoreUnitMockPlugin.class.getDeclaredField("plugin");
@@ -48,7 +48,7 @@ public class PluginResourceLoaderTest {
         field.set(null, plugin);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Field field = MoreUnitMockPlugin.class.getDeclaredField("plugin");
         field.setAccessible(true);

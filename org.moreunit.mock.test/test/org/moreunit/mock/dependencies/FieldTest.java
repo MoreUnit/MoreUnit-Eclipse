@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IField;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class FieldTest
 {
@@ -21,7 +21,7 @@ public class FieldTest
     private IField eclipseField;
     private Field field = new Field(eclipseField, false);
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         autowiredAnnotation = mock(IAnnotation.class);

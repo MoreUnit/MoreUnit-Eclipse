@@ -6,16 +6,16 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 
 import org.eclipse.jdt.core.IType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.templates.MockingContext;
 import org.moreunit.mock.templates.PatternResolver;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ObjectUnderTestPatternsResolverTest
 {
     @Mock
@@ -25,7 +25,7 @@ public class ObjectUnderTestPatternsResolverTest
     private MockingContext context;
     private ObjectUnderTestPatternsResolver resolver;
 
-    @Before
+    @BeforeEach
     public void createResolver() throws Exception
     {
         when(classUnderTest.getFullyQualifiedName()).thenReturn("some.pack.age.SomeThing");

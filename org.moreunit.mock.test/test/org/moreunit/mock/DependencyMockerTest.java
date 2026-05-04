@@ -4,9 +4,9 @@ import static org.mockito.Mockito.*;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
@@ -16,7 +16,7 @@ import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.preferences.PreferenceConstants;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(MockitoExtension.Silent.class)
 public class DependencyMockerTest
 {
     private static final String SOME_TEST_TYPE = PreferenceConstants.DEFAULT_TEST_TYPE;
@@ -41,7 +41,7 @@ public class DependencyMockerTest
     @Mock
     private IType testCase;
 
-    @Before
+    @BeforeEach
     public void createDependencyMocker() throws Exception
     {
         dependencyMocker = new DependencyMocker(preferences, templateStore, templateApplicator, logger);

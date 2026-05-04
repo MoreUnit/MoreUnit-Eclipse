@@ -5,9 +5,9 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.dependencies.Dependencies;
@@ -15,7 +15,7 @@ import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.TypeParameter;
 import org.moreunit.mock.templates.MockingContext;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DependencyPatternsResolverTest
 {
     @Mock
@@ -24,7 +24,7 @@ public class DependencyPatternsResolverTest
     private Dependencies dependencies;
     private DependencyPatternsResolver resolver;
 
-    @Before
+    @BeforeEach
     public void createResolver() throws Exception
     {
         dependencies = new Dependencies(null, null, null);

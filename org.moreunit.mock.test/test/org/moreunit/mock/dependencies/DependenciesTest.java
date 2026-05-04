@@ -12,9 +12,9 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.mock.elements.NamingRules;
@@ -23,7 +23,7 @@ import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.model.TypeParameter;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class DependenciesTest
 {
     @Mock
@@ -35,7 +35,7 @@ public class DependenciesTest
 
     private Dependencies dependencies;
 
-    @Before
+    @BeforeEach
     public void createDependencies()
     {
         dependencies = new Dependencies(classUnderTest, dependencyInjectionPointStore, namingRules);

@@ -3,14 +3,14 @@ package org.moreunit.mock.preferences;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(MockitoExtension.Silent.class)
 public class MainPropertyPageTest
 {
     @Mock
@@ -24,7 +24,7 @@ public class MainPropertyPageTest
 
     private boolean specificSettingsChecked;
 
-    @Before
+    @BeforeEach
     public void createPropertyPage() throws Exception
     {
         propertyPage = new MainPropertyPage(preferences, templateStyleSelector, logger)

@@ -13,8 +13,8 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class DependencyInjectionPointCollectorTest
 {
@@ -25,7 +25,7 @@ public class DependencyInjectionPointCollectorTest
 
     private DependencyInjectionPointCollector collector;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception
     {
         classUnderTest = mockType();

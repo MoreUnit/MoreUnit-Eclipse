@@ -17,9 +17,9 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -36,7 +36,7 @@ import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(MockitoExtension.Silent.class)
 public class MockingContextTest
 {
     private static final String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
@@ -54,7 +54,7 @@ public class MockingContextTest
     private ArrayList<PatternResolver> patternResolvers;
     private MockingContext mockingContext;
 
-    @Before
+    @BeforeEach
     public void prepareMockingContextConfiguration() throws Exception
     {
         when(testCaseCompilationUnit.findPrimaryType()).thenReturn(testCase);

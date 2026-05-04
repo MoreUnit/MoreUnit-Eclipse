@@ -7,9 +7,9 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.elements.ClassTypeFacade;
@@ -20,7 +20,7 @@ import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@ExtendWith(MockitoExtension.Silent.class)
 public class MockDependenciesActionTest
 {
 
@@ -37,7 +37,7 @@ public class MockDependenciesActionTest
 
     private IAction anAction = null;
 
-    @Before
+    @BeforeEach
     public void createAction() throws Exception
     {
         action = new MockDependenciesAction(pageManager, conversionUtils, facadeFactory);
