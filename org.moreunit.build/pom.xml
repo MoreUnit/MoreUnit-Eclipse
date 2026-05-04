@@ -102,7 +102,6 @@
             <useUIThread>${tests.use.ui}</useUIThread>
             <showEclipseLog>true</showEclipseLog>
             <skipAfterFailureCount>10</skipAfterFailureCount>
-            <providerHint>junit4</providerHint>
           </configuration>
         </plugin>
         <plugin>
