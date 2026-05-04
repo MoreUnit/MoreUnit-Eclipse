@@ -22,8 +22,8 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.test.context.ContextTestCase;
@@ -40,7 +40,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     private TypeHandler cutTypeHandler;
     private TypeHandler testcaseTypeHandler;
 
-    @Before
+    @BeforeEach
     public void setUp() throws JavaModelException
     {
         cutTypeHandler = context.getPrimaryTypeHandler("org.Hello");

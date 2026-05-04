@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.test.context.Context;

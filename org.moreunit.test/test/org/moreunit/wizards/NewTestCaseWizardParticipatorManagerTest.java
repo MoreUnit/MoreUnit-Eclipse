@@ -10,9 +10,9 @@ import java.util.Collection;
 
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.extensionpoints.INewTestCaseWizardContext;
@@ -22,7 +22,7 @@ import org.moreunit.extensionpoints.TestType;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.TestSafeRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NewTestCaseWizardParticipatorManagerTest
 {
     @Mock
@@ -38,13 +38,13 @@ public class NewTestCaseWizardParticipatorManagerTest
 
     private NewTestCaseWizardParticipatorManager manager;
 
-    @Before
+    @BeforeEach
     public void createParticipatorManager() throws Exception
     {
         manager = new NewTestCaseWizardParticipatorManager(logger, new TestSafeRunner());
     }
 
-    @Before
+    @BeforeEach
     public void createParticipators() throws Exception
     {
         when(participator1.getPages(any(INewTestCaseWizardContext.class))).thenReturn(asList(page("1"), page("2")));

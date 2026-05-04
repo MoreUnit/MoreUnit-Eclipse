@@ -10,15 +10,15 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MemberContentProviderTest
 {
     private Set<IType> types;
     private Set<IMethod> methods;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         types = new LinkedHashSet<IType>();

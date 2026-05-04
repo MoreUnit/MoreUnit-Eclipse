@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;

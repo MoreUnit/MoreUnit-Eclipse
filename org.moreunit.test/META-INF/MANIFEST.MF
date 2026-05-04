@@ -19,11 +19,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core.manipulation,
  org.moreunit.core,
  org.moreunit,
- org.junit,
+ org.junit.jupiter.api,
+ org.junit.jupiter.engine,
+ org.junit.jupiter.params,
  org.moreunit.test.dependencies,
  org.testng.eclipse,
  org.assertj,
- org.mockito.mockito-core
+ org.mockito.mockito-core,
+ org.mockito.junit.jupiter
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: MoreUnit.org
 Automatic-Module-Name: org.moreunit.test

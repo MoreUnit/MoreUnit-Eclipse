@@ -6,7 +6,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.preferences.Preferences;
@@ -18,7 +18,7 @@ import org.moreunit.test.workspace.SourceFolderHandler;
 
 public abstract class NewClassyWizardTestCase extends ContextTestCase
 {
-    @Before
+    @BeforeEach
     public void resetDialogSettings()
     {
         if(context.isDefined())

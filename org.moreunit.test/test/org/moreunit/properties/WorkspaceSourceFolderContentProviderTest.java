@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.CoreException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.core.log.Logger;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.log.LogHandler;

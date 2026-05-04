@@ -5,9 +5,9 @@ import static org.moreunit.preferences.PreferenceConstants.*;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.Test;
 import org.moreunit.preferences.PreferenceConstants.Deprecated;
 import org.moreunit.test.DummyPreferencesForTesting;
 import org.moreunit.test.context.Project;
@@ -15,12 +15,12 @@ import org.moreunit.test.context.TestContextRule;
 
 public class PreferencesMigrationTest
 {
-    @Rule
+    @RegisterExtension
     public final TestContextRule context = new TestContextRule();
 
     private DummyPreferencesForTesting prefs;
 
-    @Before
+    @BeforeEach
     public void createTestPreferences() throws Exception
     {
         prefs = new DummyPreferencesForTesting();

@@ -7,8 +7,8 @@ import static org.moreunit.preferences.PreferenceConstants.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.test.context.ContextTestCase;
@@ -31,7 +31,7 @@ public class TestmethodCreatorTest extends ContextTestCase
     private MethodHandler methodUnderTest;
     private TypeHandler testcaseType;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         TestmethodCreator.discardExtensions = true;

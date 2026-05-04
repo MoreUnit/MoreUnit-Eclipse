@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;

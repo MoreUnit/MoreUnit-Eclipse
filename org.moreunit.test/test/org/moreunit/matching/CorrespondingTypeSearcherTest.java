@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collection;
 
 import org.eclipse.jdt.core.IType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;

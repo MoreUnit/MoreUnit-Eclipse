@@ -7,9 +7,9 @@ import static org.moreunit.extensionpoints.NewTestCaseWizardPagePosition.after;
 import static org.moreunit.extensionpoints.NewTestCaseWizardPagePosition.before;
 
 import org.eclipse.jface.wizard.IWizardPage;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,7 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NewTestCaseWizardComposerTest
 {
     @Mock
@@ -29,7 +29,7 @@ public class NewTestCaseWizardComposerTest
 
     private NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
 
-    @Before
+    @BeforeEach
     public void createBasePages() throws Exception
     {
         MockitoAnnotations.initMocks(this);

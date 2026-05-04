@@ -5,14 +5,14 @@ import static org.mockito.Mockito.*;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MemberJumpHistoryTest
 {
     private MemberJumpHistory history;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         history = new MemberJumpHistory();

@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;

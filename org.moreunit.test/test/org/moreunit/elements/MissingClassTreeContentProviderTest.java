@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mockStatic;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MissingClassTreeContentProviderTest
 {

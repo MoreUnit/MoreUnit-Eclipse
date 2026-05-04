@@ -9,14 +9,14 @@ import static org.moreunit.preferences.PreferenceConstants.*;
 import static org.moreunit.preferences.PreferenceConstants.Deprecated.*;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.moreunit.core.log.Logger;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ChangeTestClassNamePrefixesAndSuffixesIntoPatternTest
 {
     @Mock

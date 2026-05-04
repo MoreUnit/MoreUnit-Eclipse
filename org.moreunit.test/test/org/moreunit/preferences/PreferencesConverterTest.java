@@ -8,9 +8,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.elements.SourceFolderMapping;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
@@ -31,7 +31,7 @@ public class PreferencesConverterTest extends ContextTestCase
     private IPackageFragmentRoot testUnitSourceFolder;
     private IFolder sampleFolder;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception
     {
         unit1SourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_UNIT1);
@@ -41,7 +41,7 @@ public class PreferencesConverterTest extends ContextTestCase
         testUnitSourceFolder = WorkspaceHelper.createSourceFolderInProject(context.getProjectHandler().get(), SOURCEFOLDER_NAME_TEST_UNIT);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception
     {
         testUnitSourceFolder.delete(IResource.FORCE, IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH, null);

@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
@@ -18,7 +18,7 @@ public class MethodFacadeTest extends ContextTestCase
 {
     private TypeHandler typeHandler;
 
-    @Before
+    @BeforeEach
     public void init()
     {
         this.typeHandler = context.getCompilationUnitHandler("org.AType").getPrimaryTypeHandler();

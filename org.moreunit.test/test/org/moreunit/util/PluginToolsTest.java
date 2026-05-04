@@ -11,15 +11,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class PluginToolsTest
 {
     private Set<IProject> projectsToDeleteAfterTest = new HashSet<IProject>();
 
-    @After
+    @AfterEach
     public void deleteCreatedProjects() throws Exception
     {
         for (IProject project : projectsToDeleteAfterTest)

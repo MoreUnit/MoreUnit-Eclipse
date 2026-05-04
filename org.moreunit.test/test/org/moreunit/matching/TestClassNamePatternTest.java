@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.moreunit.test.model.Types.typeWithPackage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestClassNamePatternTest
 {

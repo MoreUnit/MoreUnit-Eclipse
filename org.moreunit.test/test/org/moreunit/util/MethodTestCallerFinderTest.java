@@ -7,8 +7,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.Context;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
@@ -23,7 +23,7 @@ public class MethodTestCallerFinderTest extends ContextTestCase
     private TypeHandler testcaseType;
     private MethodHandler getNumberOneMethod;
 
-    @Before
+    @BeforeEach
     public void setUp() throws JavaModelException
     {
         cutType = context.getCompilationUnitHandler("testing.Hello").getPrimaryTypeHandler();
