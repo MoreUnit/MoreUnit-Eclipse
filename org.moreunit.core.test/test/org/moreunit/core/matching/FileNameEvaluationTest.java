@@ -42,4 +42,14 @@ public class FileNameEvaluationTest
         // then
         assertThat(eval.getAllCorrespondingFileEclipsePatterns()).containsExactly("Pre*File*Suf", "Pre*File", "File*Suf");
     }
+
+    @Test
+    public void should_simplify_successive_quote_separators() throws Exception
+    {
+        // given
+        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "PreFileSuf", asList("\\QPre\\E\\QFile\\E"), NO_PATTERNS);
+
+        // then
+        assertThat(eval.getAllCorrespondingFilePatterns()).containsExactly("\\QPreFile\\E");
+    }
 }
