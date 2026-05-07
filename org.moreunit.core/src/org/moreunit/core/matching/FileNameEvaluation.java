@@ -21,10 +21,6 @@ import org.moreunit.core.util.StringConstants;
  */
 public final class FileNameEvaluation
 {
-    private static final Pattern QUOTE_SEPARATORS = Pattern.compile("(?:\\\\Q|\\\\E)");
-    private static final Pattern SUCCESSIVE_QUOTE_SEPARATORS = Pattern.compile("\\\\E\\\\Q");
-    private static final Pattern WILDCARDS = Pattern.compile("\\.\\*");
-
     private final String evaluatedFileName;
     private final boolean testFile;
     private final Collection<String> otherCorrespondingFilePatterns;
@@ -45,7 +41,9 @@ public final class FileNameEvaluation
         List<String> result = new ArrayList<String>();
         for (String pattern : patterns)
         {
-            result.add(SUCCESSIVE_QUOTE_SEPARATORS.matcher(pattern).replaceAll(""));
+            // ⚡ Bolt: Replaced Matcher.replaceAll with literal String.replace
+            // ⚡ Impact: Avoids Matcher instantiation and regex execution overhead, providing a significant speedup
+            result.add(pattern.replace("\\E\\Q", ""));
         }
         return result;
     }
@@ -83,7 +81,9 @@ public final class FileNameEvaluation
 
     private String convertWildcards(String str)
     {
-        return WILDCARDS.matcher(str).replaceAll("*");
+        // ⚡ Bolt: Replaced Matcher.replaceAll with literal String.replace
+        // ⚡ Impact: Avoids Matcher instantiation and regex execution overhead
+        return str.replace(".*", "*");
     }
 
     /**
@@ -126,7 +126,9 @@ public final class FileNameEvaluation
 
     private String removeQuotes(String str)
     {
-        return QUOTE_SEPARATORS.matcher(str).replaceAll("");
+        // ⚡ Bolt: Replaced Matcher.replaceAll with literal String.replace
+        // ⚡ Impact: Avoids Matcher instantiation and regex execution overhead
+        return str.replace("\\Q", "").replace("\\E", "");
     }
 
     @Override
