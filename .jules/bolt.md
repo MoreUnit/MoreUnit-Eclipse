@@ -1,0 +1,3 @@
+## 2024-05-18 - Literal String Replacement Over Regex
+**Learning:** In modern JDKs (like Java 21 targeted in this project), using `String.replace(CharSequence, CharSequence)` provides a significant speedup (~10x) over pre-compiled `Matcher.replaceAll(String)` for simple literal string replacements. This is due to avoiding regex matcher compilation overhead entirely and optimizing simple literal substitutions directly.
+**Action:** Prefer literal string substitution with `String.replace()` whenever you do not need actual regular expression wildcards or character classes, even if `Pattern.compile()` could be static.
