@@ -42,4 +42,25 @@ public class FileNameEvaluationTest
         // then
         assertThat(eval.getAllCorrespondingFileEclipsePatterns()).containsExactly("Pre*File*Suf", "Pre*File", "File*Suf");
     }
+
+    @Test
+    public void should_identify_as_test_file() throws Exception
+    {
+        // given
+        FileNameEvaluation eval = new FileNameEvaluation("IrrelevantTest", true, "Irrelevant", NO_PATTERNS, NO_PATTERNS);
+
+        // then
+        assertThat(eval.isTestFile()).isTrue();
+        assertThat(eval.getPreferredCorrespondingFileName()).isEqualTo("Irrelevant");
+    }
+
+    @Test
+    public void should_generate_to_string() throws Exception
+    {
+        // given
+        FileNameEvaluation eval = new FileNameEvaluation("IrrelevantTest", true, "Irrelevant", NO_PATTERNS, NO_PATTERNS);
+
+        // then
+        assertThat(eval.toString()).contains("IrrelevantTest");
+    }
 }
