@@ -3,7 +3,6 @@ package org.moreunit.core.matching;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.moreunit.core.util.StringConstants;
 
@@ -21,10 +20,6 @@ import org.moreunit.core.util.StringConstants;
  */
 public final class FileNameEvaluation
 {
-    private static final Pattern QUOTE_SEPARATORS = Pattern.compile("(?:\\\\Q|\\\\E)");
-    private static final Pattern SUCCESSIVE_QUOTE_SEPARATORS = Pattern.compile("\\\\E\\\\Q");
-    private static final Pattern WILDCARDS = Pattern.compile("\\.\\*");
-
     private final String evaluatedFileName;
     private final boolean testFile;
     private final Collection<String> otherCorrespondingFilePatterns;
@@ -42,10 +37,11 @@ public final class FileNameEvaluation
 
     private static Collection<String> simplify(Collection<String> patterns)
     {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (String pattern : patterns)
         {
-            result.add(SUCCESSIVE_QUOTE_SEPARATORS.matcher(pattern).replaceAll(""));
+            // Replaces regex matching of \E\Q with literal replacement
+            result.add(pattern.replace("\\E\\Q", ""));
         }
         return result;
     }
@@ -83,7 +79,8 @@ public final class FileNameEvaluation
 
     private String convertWildcards(String str)
     {
-        return WILDCARDS.matcher(str).replaceAll("*");
+        // Replaces regex matching of .* with literal replacement
+        return str.replace(".*", "*");
     }
 
     /**
@@ -126,7 +123,8 @@ public final class FileNameEvaluation
 
     private String removeQuotes(String str)
     {
-        return QUOTE_SEPARATORS.matcher(str).replaceAll("");
+        // Replaces regex matching of (?:\\Q|\\E) with literal replacement
+        return str.replace("\\Q", "").replace("\\E", "");
     }
 
     @Override
