@@ -1,0 +1,4 @@
+
+## 2024-05-18 - Replacing Regex matchers with literal String.replace
+**Learning:** In modern JDKs (Java 21 in this project), using `String.replace()` for literal string replacements provides a significant performance improvement (avoiding regex compilation and matching overhead) compared to using `Matcher.replaceAll()`, even when the `Pattern` is pre-compiled. In `FileNameEvaluation`, replacing `QUOTE_SEPARATORS.matcher(str).replaceAll("")` and similar regex-based replacements with literal replacements like `str.replace("\\Q", "").replace("\\E", "")` removes unnecessary regex overhead.
+**Action:** When performing simple string replacements, always check if `String.replace()` can be used instead of `String.replaceAll()` or `Matcher.replaceAll()`, particularly in heavily used utilities like filename evaluators or caching keys.
