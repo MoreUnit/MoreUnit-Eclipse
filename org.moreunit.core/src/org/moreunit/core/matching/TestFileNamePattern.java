@@ -532,7 +532,7 @@ public final class TestFileNamePattern
 
         if(! prefixPart.hasAlternatives() && ! suffixPart.hasAlternatives())
         {
-            result = SRC_FILE_VARIABLE_PATTERN.matcher(patternString).replaceAll(quoteReplacement(srcFileName));
+            result = patternString.replace(SRC_FILE_VARIABLE, srcFileName);
         }
         else if(! prefixPart.hasAlternatives())
         {
@@ -574,7 +574,7 @@ public final class TestFileNamePattern
 
         if(! prefixPart.hasAlternatives() && ! suffixPart.hasAlternatives())
         {
-            result.add(SRC_FILE_VARIABLE_PATTERN.matcher(patternString).replaceAll(quoteReplacement(quotedSrcFileName)));
+            result.add(patternString.replace(SRC_FILE_VARIABLE, quotedSrcFileName));
         }
         else if(! prefixPart.hasAlternatives())
         {
