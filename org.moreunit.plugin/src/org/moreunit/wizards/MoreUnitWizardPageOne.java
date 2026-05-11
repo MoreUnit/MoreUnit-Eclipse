@@ -1119,8 +1119,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         {
             saveWidgetValues();
         }
-
-        // if (visible) setFocus();
     }
 
     /**
