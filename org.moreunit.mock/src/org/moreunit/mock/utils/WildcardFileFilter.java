@@ -11,10 +11,6 @@ import java.util.regex.Pattern;
  */
 public class WildcardFileFilter implements FileFilter
 {
-    private static final Pattern PATTERN_BACK_SLASH = Pattern.compile("\\\\"); //$NON-NLS-1$
-    private static final Pattern PATTERN_QUESTION = Pattern.compile("\\?"); //$NON-NLS-1$
-    private static final Pattern PATTERN_STAR = Pattern.compile("\\*"); //$NON-NLS-1$
-
     private final Pattern wildcardPattern;
 
     public WildcardFileFilter(String patternString)
@@ -32,9 +28,10 @@ public class WildcardFileFilter implements FileFilter
 
         // Replace \ with \\, * with .* and ? with .
         // Quote remaining characters
-        result = PATTERN_BACK_SLASH.matcher(result).replaceAll("\\\\E\\\\\\\\\\\\Q"); //$NON-NLS-1$
-        result = PATTERN_STAR.matcher(result).replaceAll("\\\\E.*\\\\Q"); //$NON-NLS-1$
-        result = PATTERN_QUESTION.matcher(result).replaceAll("\\\\E.\\\\Q"); //$NON-NLS-1$
+        // PERFORMANCE: Use literal String.replace instead of regex Matcher.replaceAll
+        result = result.replace("\\", "\\E\\\\\\Q"); //$NON-NLS-1$
+        result = result.replace("*", "\\E.*\\Q"); //$NON-NLS-1$
+        result = result.replace("?", "\\E.\\Q"); //$NON-NLS-1$
         return "\\Q" + result + "\\E"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
