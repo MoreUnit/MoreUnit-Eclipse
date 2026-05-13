@@ -41,7 +41,7 @@ public class DependencyPatternsResolver implements PatternResolver
 
     private String newTypeTpl(String simpleName, String qualifiedName)
     {
-        return "\\${%sType:newType(%s)}".formatted(simpleName, qualifiedName);
+        return "${%sType:newType(%s)}".formatted(simpleName, qualifiedName);
     }
 
     private StringBuilder buildTypeParametersDeclaration(List<TypeParameter> typeParameters, StringBuilder buffer)
