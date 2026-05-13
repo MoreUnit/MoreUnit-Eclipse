@@ -32,9 +32,9 @@ public class DependencyPatternsResolver implements PatternResolver
             String typeParams = buildTypeParametersDeclaration(d.typeParameters, new StringBuilder()).toString();
 
             buffer.append(codePattern.
-                    replaceAll("\\$\\{dependencyType\\}\\s*\\.\\s*class", resolvedType + ".class").
-                    replaceAll("\\$\\{dependencyType\\}", resolvedType + typeParams).
-                    replaceAll("\\$\\{dependency\\}", d.name));
+                    replaceAll("\\$\\{dependencyType\\}\\s*\\.\\s*class", java.util.regex.Matcher.quoteReplacement(resolvedType + ".class")).
+                    replace("${dependencyType}", resolvedType + typeParams).
+                    replace("${dependency}", d.name));
         }
         return buffer.toString();
     }

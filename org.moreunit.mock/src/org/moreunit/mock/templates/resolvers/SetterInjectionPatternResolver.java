@@ -22,8 +22,8 @@ public class SetterInjectionPatternResolver extends SimplePatternResolver
         StringBuilder buffer = new StringBuilder();
         for (SetterDependency d : context.dependenciesToMock().injectableBySetter())
         {
-            String resolvedPattern = "\\$\\{objectUnderTest\\}.%s(%s)".formatted(d.setterMethodName, d.name);
-            buffer.append(matcher.replaceAll(resolvedPattern));
+            String resolvedPattern = "${objectUnderTest}.%s(%s)".formatted(d.setterMethodName, d.name);
+            buffer.append(matcher.replaceAll(java.util.regex.Matcher.quoteReplacement(resolvedPattern)));
         }
         return buffer.toString();
     }

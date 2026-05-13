@@ -20,7 +20,7 @@ public class ConstructorInjectionPatternResolver extends SimplePatternResolver
     @Override
     protected String matched(Matcher matcher)
     {
-        StringBuilder buffer = new StringBuilder("new \\$\\{objectUnderTestType\\}(");
+        StringBuilder buffer = new StringBuilder("new ${objectUnderTestType}(");
 
         for (Iterator<Dependency> it = context.dependenciesToMock().injectableByConstructor().iterator(); it.hasNext();)
         {
@@ -30,6 +30,6 @@ public class ConstructorInjectionPatternResolver extends SimplePatternResolver
                 buffer.append(",");
             }
         }
-        return matcher.replaceAll(buffer.append(")").toString());
+        return matcher.replaceAll(java.util.regex.Matcher.quoteReplacement(buffer.append(")").toString()));
     }
 }

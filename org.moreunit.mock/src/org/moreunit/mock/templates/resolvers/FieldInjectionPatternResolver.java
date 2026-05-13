@@ -22,8 +22,8 @@ public class FieldInjectionPatternResolver extends SimplePatternResolver
         StringBuilder buffer = new StringBuilder();
         for (FieldDependency d : context.dependenciesToMock().injectableByField())
         {
-            String resolvedPattern = "\\$\\{objectUnderTest\\}.%s = %s".formatted(d.fieldName, d.name);
-            buffer.append(matcher.replaceAll(resolvedPattern));
+            String resolvedPattern = "${objectUnderTest}.%s = %s".formatted(d.fieldName, d.name);
+            buffer.append(matcher.replaceAll(java.util.regex.Matcher.quoteReplacement(resolvedPattern)));
         }
         return buffer.toString();
     }

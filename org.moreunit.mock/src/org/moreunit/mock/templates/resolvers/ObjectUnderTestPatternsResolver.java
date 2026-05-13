@@ -20,8 +20,8 @@ public class ObjectUnderTestPatternsResolver implements PatternResolver
         }
 
         return codePattern
-                .replaceAll("\\$\\{objectUnderTestType\\}", "\\${classUnderTest:newType(" + context.classUnderTest.getFullyQualifiedName() + ")}")
-                .replaceAll("\\$\\{objectUnderTest\\}", objectUnderTestName());
+                .replace("${objectUnderTestType}", "${classUnderTest:newType(" + context.classUnderTest.getFullyQualifiedName() + ")}")
+                .replace("${objectUnderTest}", objectUnderTestName());
     }
 
     private String objectUnderTestName()
