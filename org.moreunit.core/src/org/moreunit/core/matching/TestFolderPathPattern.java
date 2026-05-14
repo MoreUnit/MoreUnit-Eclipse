@@ -263,15 +263,7 @@ public class TestFolderPathPattern
          * 📊 Impact: ~2.5x speedup (from 850ms to 351ms for 1M iterations).
          * 🔬 Measurement: Benchmarked against regex replaceAll using a 1M loop on sample path templates.
          */
-        tstPathTpl = tstPathTpl.replace("\\1", "(.*)")
-                               .replace("\\2", "(.*)")
-                               .replace("\\3", "(.*)")
-                               .replace("\\4", "(.*)")
-                               .replace("\\5", "(.*)")
-                               .replace("\\6", "(.*)")
-                               .replace("\\7", "(.*)")
-                               .replace("\\8", "(.*)")
-                               .replace("\\9", "(.*)");
+        for (int i = 1; i <= 9; i++) tstPathTpl = tstPathTpl.replace("\\" + i, "(.*)");
 
         String srcPathTpl = getSrcPathTemplateForSrcProject(srcProjectName);
         srcPathTpl = replaceGroupsWithRefs(srcPathTpl, groupRefs);
