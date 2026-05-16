@@ -84,6 +84,16 @@ public class StringsTest
     }
 
     @Test
+    public void should_return_zero_when_count_occurrences_is_called_with_empty_strings() throws Exception
+    {
+        assertThat(Strings.countOccurrences("", "test")).isEqualTo(0);
+        assertThat(Strings.countOccurrences(null, "test")).isEqualTo(0);
+        assertThat(Strings.countOccurrences("test", "")).isEqualTo(0);
+        assertThat(Strings.countOccurrences("test", null)).isEqualTo(0);
+        assertThat(Strings.countOccurrences(null, null)).isEqualTo(0);
+    }
+
+    @Test
     public void split_should_ignore_blank_parts() throws Exception
     {
         assertThat(Strings.split(",a4,,b,   ,cD, ", ",")).isEqualTo(new String[] { "a4", "b", "cD" });
@@ -126,6 +136,22 @@ public class StringsTest
     {
         assertThat(Strings.join(",", "1", "2", "3")).isEqualTo("1,2,3");
         assertThat(Strings.join(" -> ", "aBc", "2", "DEf")).isEqualTo("aBc -> 2 -> DEf");
+    }
+
+    @Test
+    public void join_should_append_to_string_builder_with_given_separator_for_collection() throws Exception
+    {
+        StringBuilder sb = new StringBuilder("prefix: ");
+        Strings.join(sb, ",", java.util.Arrays.asList("1", "2", "3"));
+        assertThat(sb.toString()).isEqualTo("prefix: 1,2,3");
+    }
+
+    @Test
+    public void join_should_append_to_string_builder_with_given_separator_for_array() throws Exception
+    {
+        StringBuilder sb = new StringBuilder("prefix: ");
+        Strings.join(sb, " -> ", new String[]{"aBc", "2", "DEf"});
+        assertThat(sb.toString()).isEqualTo("prefix: aBc -> 2 -> DEf");
     }
 
     @Test
