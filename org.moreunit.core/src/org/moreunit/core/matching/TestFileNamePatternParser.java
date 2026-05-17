@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 public class TestFileNamePatternParser
 {
     public static final String SRC_FILE_VARIABLE = "${srcFile}";
-    private static final Pattern CHARS_TO_ESCAPE = Pattern.compile("([\\*\\(\\)\\|])");
-
     private final String patternToParse;
     private final NameTokenizer tokenizer;
 
@@ -151,7 +149,11 @@ public class TestFileNamePatternParser
 
         private static String escapeCharsWhereNeeded(String str)
         {
-            return CHARS_TO_ESCAPE.matcher(str).replaceAll(quoteReplacement("\\$1"));
+            // PERFORMANCE: Use chained literal String.replace instead of regex Matcher.replaceAll
+            return str.replace("*", "\\*")
+                      .replace("(", "\\(")
+                      .replace(")", "\\)")
+                      .replace("|", "\\|");
         }
 
         private void parse()
