@@ -19,4 +19,14 @@ public class ArrayUtilsTest
         Object[] objects = ArrayUtils.array();
         assertThat(objects).isEmpty();
     }
+
+    @Test
+    public void array_should_handle_null_arguments()
+    {
+        Object[] objects = ArrayUtils.array((Object) null);
+        assertThat(objects).containsExactly((Object) null);
+
+        String[] strings = ArrayUtils.array("a", null, "c");
+        assertThat(strings).containsExactly("a", null, "c");
+    }
 }
