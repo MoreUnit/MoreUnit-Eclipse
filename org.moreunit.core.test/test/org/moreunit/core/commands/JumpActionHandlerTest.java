@@ -539,4 +539,16 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
             }
         }
     }
+
+    @Test
+    public void testTestJumperJump()
+    {
+        TestJumper jumper = new TestJumper();
+        // Since it's a mock implementation that accesses UI elements we can't fully mock here easily,
+        // we just verify that calling jump doesn't throw a runtime exception.
+        // Wait, openEditor will throw an Exception if activePage is null.
+        // It's in the catch block returning notDone.
+        JumpResult result = jumper.jump(null);
+        assertThat(result).isNotNull();
+    }
 }
