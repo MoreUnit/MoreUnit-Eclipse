@@ -1,31 +1,34 @@
 package org.moreunit.mock.templates.resolvers;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.moreunit.mock.templates.MockingContext;
 import org.moreunit.mock.templates.PatternResolver;
 
 public abstract class SimplePatternResolver implements PatternResolver
 {
-    private final Pattern pattern;
+    private final String prefix;
     protected final MockingContext context;
 
-    protected SimplePatternResolver(MockingContext context, Pattern pattern)
+    protected SimplePatternResolver(MockingContext context, String prefix)
     {
         this.context = context;
-        this.pattern = pattern;
+        this.prefix = prefix;
     }
 
     public String resolve(String codePattern)
     {
-        Matcher matcher = pattern.matcher(codePattern);
-        if(matcher.find())
+        int startIdx = codePattern.indexOf(prefix);
+        if(startIdx != -1)
         {
-            return matched(matcher);
+            int endIdx = codePattern.indexOf(")}", startIdx + prefix.length());
+            if(endIdx != -1)
+            {
+                String preMatch = codePattern.substring(0, startIdx);
+                String postMatch = codePattern.substring(endIdx + 2);
+                return matched(preMatch, postMatch);
+            }
         }
         return codePattern;
     }
 
-    protected abstract String matched(Matcher matcher);
+    protected abstract String matched(String preMatch, String postMatch);
 }

@@ -1,29 +1,23 @@
 package org.moreunit.mock.templates.resolvers;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.templates.MockingContext;
 
 public class SetterInjectionPatternResolver extends SimplePatternResolver
 {
-    // content between parentheses is ignored for now
-    private static final Pattern SETTER_INJECTION = Pattern.compile("\\$\\{:setDependency\\(.*\\)\\}");
-
     public SetterInjectionPatternResolver(MockingContext context)
     {
-        super(context, SETTER_INJECTION);
+        super(context, "${:setDependency(");
     }
 
     @Override
-    protected String matched(Matcher matcher)
+    protected String matched(String preMatch, String postMatch)
     {
         StringBuilder buffer = new StringBuilder();
         for (SetterDependency d : context.dependenciesToMock().injectableBySetter())
         {
-            String resolvedPattern = "\\$\\{objectUnderTest\\}.%s(%s)".formatted(d.setterMethodName, d.name);
-            buffer.append(matcher.replaceAll(resolvedPattern));
+            String resolvedPattern = "${objectUnderTest}.%s(%s)".formatted(d.setterMethodName, d.name);
+            buffer.append(preMatch).append(resolvedPattern).append(postMatch);
         }
         return buffer.toString();
     }
