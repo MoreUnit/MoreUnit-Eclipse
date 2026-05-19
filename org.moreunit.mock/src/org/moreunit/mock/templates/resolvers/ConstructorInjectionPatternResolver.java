@@ -1,26 +1,21 @@
 package org.moreunit.mock.templates.resolvers;
 
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.templates.MockingContext;
 
 public class ConstructorInjectionPatternResolver extends SimplePatternResolver
 {
-    // content between parentheses is ignored for now
-    private static final Pattern CONSTRUCTOR_INJECTION = Pattern.compile("\\$\\{:constructWithDependencies\\(.*\\)\\}");
-
     public ConstructorInjectionPatternResolver(MockingContext context)
     {
-        super(context, CONSTRUCTOR_INJECTION);
+        super(context, "${:constructWithDependencies(");
     }
 
     @Override
-    protected String matched(Matcher matcher)
+    protected String matched(String preMatch, String postMatch)
     {
-        StringBuilder buffer = new StringBuilder("new \\$\\{objectUnderTestType\\}(");
+        StringBuilder buffer = new StringBuilder("new ${objectUnderTestType}(");
 
         for (Iterator<Dependency> it = context.dependenciesToMock().injectableByConstructor().iterator(); it.hasNext();)
         {
@@ -30,6 +25,6 @@ public class ConstructorInjectionPatternResolver extends SimplePatternResolver
                 buffer.append(",");
             }
         }
-        return matcher.replaceAll(buffer.append(")").toString());
+        return preMatch + buffer.append(")").toString() + postMatch;
     }
 }
