@@ -1,0 +1,830 @@
+[INFO] Scanning for projects...
+[INFO] Tycho Version:  5.0.2 (9f65dc09a72ee08f29cc8a4d5381a45b33dc7144)
+[INFO] Tycho Mode:     project
+[INFO] Tycho Builder:  maven
+[INFO] Build Threads:  1
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] moreunit                                                           [pom]
+[INFO] org.moreunit.core                                       [eclipse-plugin]
+[INFO] org.moreunit                                            [eclipse-plugin]
+[INFO] org.moreunit.test.dependencies                     [eclipse-test-plugin]
+[INFO] org.moreunit.core.test                             [eclipse-test-plugin]
+[INFO] org.moreunit.light.feature                             [eclipse-feature]
+[INFO] org.moreunit.test                                  [eclipse-test-plugin]
+[INFO] org.moreunit.feature                                   [eclipse-feature]
+[INFO] org.moreunit.mock                                       [eclipse-plugin]
+[INFO] org.moreunit.mock.test                             [eclipse-test-plugin]
+[INFO] org.moreunit.mock.it                               [eclipse-test-plugin]
+[INFO] org.moreunit.mock.feature                              [eclipse-feature]
+[INFO] org.moreunit.swtbot.test                           [eclipse-test-plugin]
+[INFO] org.moreunit.updatesite                             [eclipse-repository]
+[INFO] org.moreunit.report                                                [pom]
+[INFO]
+[INFO] -----------------------< org.moreunit:moreunit >------------------------
+[INFO] Building moreunit 4.0.2-SNAPSHOT                                  [1/15]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ moreunit ---
+[INFO] Deleting /app/org.moreunit.build/target
+[INFO]
+[INFO] --- antrun:3.2.0:run (avoid-equinox-exception) @ moreunit ---
+[INFO] Executing tasks
+[INFO] Executed tasks
+[INFO]
+[INFO] --- tycho-source:5.0.2:plugin-source (plugin-source) @ moreunit ---
+[INFO]
+[INFO] -------------------< org.moreunit:org.moreunit.core >-------------------
+[INFO] Building org.moreunit.core 4.0.2-SNAPSHOT                         [2/15]
+[INFO]   from /app/org.moreunit.core/pom.xml
+[INFO] ---------------------------[ eclipse-plugin ]---------------------------
+[INFO] Resolving target definition file:/app/org.moreunit.updatesite/../org.moreunit.build/eclipse-latest.target for environments=[linux/gtk/x86_64, win32/win32/x86_64, macosx/cocoa/x86_64], include source mode=honor, referenced repository mode =include, execution environment=StandardEEResolutionHints [executionEnvironment=OSGi profile 'JavaSE-21' { source level: 21, target level: 21}] with Tycho Provisioning Agent (extension>org.eclipse.tycho:tycho-maven-plugin:5.0.2)
+[INFO] ### Using TychoRepositoryTransport for remote P2 access ###
+[INFO]     Cache location:         /home/jules/.m2/repository/.cache/tycho
+[INFO]     Transport mode:         online
+[INFO]     Http Transport type:    Java11Client
+[INFO]     Update mode:            cache first
+[INFO]     Minimum cache duration: 60 minutes
+[INFO]       (you can configure this with -Dtycho.p2.transport.min-cache-minutes=<desired minimum cache duration>)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/latest/p2.index (158 bytes at 0 bytes/s)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/4.39/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/4.39/p2.index (158 bytes at 154 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.13/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.13.201609291640/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.12/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.12.201607091356/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.11/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.11.201604020423/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.10/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.10.201512240000/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.5/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.5.201505251947/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.10.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.10.0.201612030230/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.11.0.201703011520/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.12.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709030110/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709030110/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709050550/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709050550/p2.index (172 bytes at 83 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.13.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.13.0.201712040650/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.13.0.201712040650/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.14.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.0.201802161500/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.0.201802161500/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.14.3/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.3.201902250526/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.3.201902250526/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.0.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.0.0/p2.index (128 bytes at 41 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908201535/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908201535/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908240652/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908240652/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.1.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.1.0/p2.index (128 bytes at 41 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.0.202003090500/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.0.202003090500/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.1.1/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.1.1/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.1.202003100345/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.1.202003100345/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.2.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.2.0/p2.index (128 bytes at 41 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202004281604/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202004281604/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202005051752/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202005051752/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.3.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.3.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.3.0.202008060412/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.3.0.202008060412/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.4.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.4.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202105021622/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202105021622/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202106051955/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202106051955/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.8.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202308061717/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202308061717/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202306071550/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202306071550/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.9.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.9.0.202312310355/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.9.0.202312310355/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.10.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.0.202404131040/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.0.202404131040/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.10.2/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.2.202503082113/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.2.202503082113/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.11.0.202503091801/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.11.0.202503091801/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.11.0.r201704240320/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.12.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.12.0.r201709030044/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.13.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040202/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040515/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.14.2/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.14.2.r201802161450/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.14.3/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.14.3.r201802240500/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.0.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.0.0.r201908191551/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.1.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.1.0.r202001120626/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.2.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.2.0.r202003151902/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.3.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.3.0.r202008060316/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.4.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.4.0.r202105021533/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.5.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.5.0.r202201070709/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.6.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.6.1.r202207070546/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.7.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.7.0.r202306070455/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.7.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.7.1.r202305281608/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.8.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.8.0.r202306071539/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.9.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.9.0.r202312310341/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.10.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.10.1.r202404130807/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.10.2/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.10.2.r202404291553/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.11.0.r202503091654/p2.index
+[INFO] Downloading from p2: http://download.eclipse.org/technology/m2e/releases/p2.index
+[INFO] Downloading from p2: http://download.eclipse.org/technology/m2e/releases/site.xml
+[WARNING] Skip referenced repository: http://download.eclipse.org/technology/m2e/releases/: org.eclipse.equinox.p2.core.ProvisionException: No repository found at http://download.eclipse.org/technology/m2e/releases.
+[INFO] Downloading from p2: https://download.eclipse.org/technology/m2e/releases/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/technology/m2e/releases/latest/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/wildwebdeveloper/releases/1.4.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/wildwebdeveloper/releases/1.4.0/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/webtools/downloads/drops/R3.40.0/R-3.40.0-20251124015847/repository/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/webtools/downloads/drops/R3.40.0/R-3.40.0-20251124015847/repository/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/egit/updates-7.6/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/egit/updates-7.6/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/modeling/emf/emf/builds/release/2.45.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/modeling/emf/emf/builds/release/2.45.0/p2.index (172 bytes at 83 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/tm4e/releases/0.17.2/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/tm4e/releases/0.17.2/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/lsp4e/releases/0.30.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/lsp4e/releases/0.30.0/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/4.38/R-4.38-202512010920/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/4.38/R-4.38-202512010920/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: http://dl.bintray.com/testng-team/testng-p2-release/p2.index
+[INFO] Downloaded from p2: http://dl.bintray.com/testng-team/testng-p2-release/p2.index (164 bytes at 160 KB/s)
+[WARNING] Skip referenced repository: http://dl.bintray.com/testng-team/testng-p2-release/: org.eclipse.equinox.p2.core.ProvisionException: Unable to read repository at http://dl.bintray.com/testng-team/testng-p2-release.
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.11.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.11.0.r201704240320/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.12.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.12.0.r201709030044/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.13.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040202/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040515/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.14.2/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.14.2.r201802161450/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.14.3/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.14.3.r201802240500/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.0.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.0.0.r201908191551/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.1.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.1.0.r202001120626/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.2.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.2.0.r202003151902/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.3.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.3.0.r202008060316/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.4.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.4.0.r202105021533/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.5.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.5.0.r202201070709/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.6.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.6.1.r202207070546/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.7.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.7.0.r202306070455/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.7.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.7.1.r202305281608/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.8.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.8.0.r202306071539/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.9.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.9.0.r202312310341/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.10.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.10.1.r202404130807/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.10.2/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.10.2.r202404291553/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.11.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.11.0.r202503091654/p2.index
+[INFO] Downloading from p2: https://download.eclipse.org/technology/swtbot/releases/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/technology/swtbot/releases/latest/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/oomph/simrel-orbit/release/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/oomph/simrel-orbit/release/latest/p2.index (126 bytes at 123 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/oomph/simrel-orbit/release/4.28.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/oomph/simrel-orbit/release/4.28.0/p2.index (172 bytes at 167 KB/s)
+[WARNING] Problems resolving provisioning plan.:
+   Unable to satisfy dependency from org.eclipse.jetty.plus 10.0.6 to java.package; org.eclipse.jetty.servlet [10.0.6,11.0.0).
+   Unable to satisfy dependency from org.eclipse.jetty.webapp 10.0.6 to java.package; org.eclipse.jetty.servlet [10.0.6,11.0.0).
+   Unable to satisfy dependency from org.eclipse.wst.server.preview 1.2.0.v202105161646 to osgi.bundle; org.eclipse.jetty.servlet [10.0.1,11.0.0).
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/latest/p2.index (158 bytes at 154 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/4.39/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/4.39/p2.index (158 bytes at 154 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/4.39/R-4.39-202602260420/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/technology/m2e/releases/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/technology/m2e/releases/latest/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.11.0.r201704240320/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.12.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.12.0.r201709030044/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.13.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040202/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040515/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.14.2/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.14.2.r201802161450/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/6.14.3/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/6.14.3.r201802240500/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.0.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.0.0.r201908191551/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.1.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.1.0.r202001120626/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.2.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.2.0.r202003151902/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.3.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.3.0.r202008060316/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.4.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.4.0.r202105021533/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.5.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.5.0.r202201070709/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.6.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.6.1.r202207070546/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.7.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.7.0.r202306070455/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.7.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.7.1.r202305281608/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.8.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.8.0.r202306071539/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.9.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.9.0.r202312310341/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.10.1/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.10.1.r202404130807/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.10.2/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.10.2.r202404291553/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/7.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-p2-update-site/updatesites/7.11.0.r202503091654/p2.index
+[INFO] Downloading from p2: https://download.eclipse.org/wildwebdeveloper/releases/1.4.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/wildwebdeveloper/releases/1.4.0/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/webtools/downloads/drops/R3.40.0/R-3.40.0-20251124015847/repository/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/webtools/downloads/drops/R3.40.0/R-3.40.0-20251124015847/repository/p2.index (172 bytes at 83 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.36.0/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/modeling/emf/emf/builds/release/2.45.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/modeling/emf/emf/builds/release/2.45.0/p2.index (172 bytes at 83 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/egit/updates-7.6/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/egit/updates-7.6/p2.index (172 bytes at 83 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/tm4e/releases/0.17.2/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/tm4e/releases/0.17.2/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/eclipse/updates/4.38/R-4.38-202512010920/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/eclipse/updates/4.38/R-4.38-202512010920/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/lsp4e/releases/0.30.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/lsp4e/releases/0.30.0/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.11.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.11.0.r201704240320/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.12.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.12.0.r201709030044/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.13.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040202/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.13.1.r201712040515/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.14.2/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.14.2.r201802161450/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/6.14.3/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/6.14.3.r201802240500/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.0.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.0.0.r201908191551/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.1.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.1.0.r202001120626/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.2.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.2.0.r202003151902/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.3.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.3.0.r202008060316/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.4.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.4.0.r202105021533/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.5.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.5.0.r202201070709/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.6.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.6.1.r202207070546/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.7.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.7.0.r202306070455/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.7.1/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.7.1.r202305281608/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.8.0/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/updatesites/7.8.0.r202306071539/p2.index
+[INFO] Downloading from p2: http://testng.org/testng-p2-update-site/7.9.0/p2.index
+[ERROR] [0cef6830-8020-4318-9cd0-3e599e305dd7][extension>org.eclipse.tycho:tycho-maven-plugin:5.0.2] Provisioning exception
+org.eclipse.equinox.p2.core.ProvisionException: Unable to read repository at http://testng.org/testng-p2-update-site/7.9.0.
+    at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.load (SimpleArtifactRepositoryFactory.java:135)
+    at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.load (SimpleArtifactRepositoryFactory.java:83)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.factoryLoad (ArtifactRepositoryManager.java:94)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:853)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:743)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.loadRepository (ArtifactRepositoryManager.java:128)
+    at org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager.loadRepository (IArtifactRepositoryManager.java:136)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.lambda$loadRepository$1 (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.accessRepository (RemoteArtifactRepositoryManager.java:137)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.loadRepository (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository.load (CompositeArtifactRepository.java:495)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository.addChild (CompositeArtifactRepository.java:158)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository.<init> (CompositeArtifactRepository.java:79)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepositoryFactory.load (CompositeArtifactRepositoryFactory.java:127)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.factoryLoad (ArtifactRepositoryManager.java:94)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:853)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:743)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.loadRepository (ArtifactRepositoryManager.java:128)
+    at org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager.loadRepository (IArtifactRepositoryManager.java:136)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.lambda$loadRepository$1 (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.accessRepository (RemoteArtifactRepositoryManager.java:137)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.loadRepository (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.tycho.p2.resolver.URITargetDefinitionContent.lambda$loadArtifactRepositories$0 (URITargetDefinitionContent.java:161)
+    at org.eclipse.tycho.p2.repository.LazyArtifactRepository.getDelegate (LazyArtifactRepository.java:50)
+    at org.eclipse.tycho.p2.repository.LazyArtifactRepository.getArtifactDescriptors (LazyArtifactRepository.java:97)
+    at org.eclipse.tycho.p2.repository.RepositoryArtifactProvider.getArtifactDescriptorsOfAllSources (RepositoryArtifactProvider.java:153)
+    at org.eclipse.tycho.p2.repository.CompositeArtifactProviderBaseImpl.getArtifactDescriptors (CompositeArtifactProviderBaseImpl.java:42)
+    at org.eclipse.tycho.p2.repository.MirroringArtifactProvider.isFileAlreadyAvailable (MirroringArtifactProvider.java:441)
+    at org.eclipse.tycho.p2.repository.CompositeArtifactProvider.lambda$isFileAlreadyAvailable$0 (CompositeArtifactProvider.java:173)
+    at java.util.stream.MatchOps$1MatchSink.accept (MatchOps.java:90)
+    at java.util.Spliterators$ArraySpliterator.tryAdvance (Spliterators.java:1034)
+    at java.util.stream.ReferencePipeline.forEachWithCancel (ReferencePipeline.java:129)
+    at java.util.stream.AbstractPipeline.copyIntoWithCancel (AbstractPipeline.java:527)
+    at java.util.stream.AbstractPipeline.copyInto (AbstractPipeline.java:513)
+    at java.util.stream.AbstractPipeline.wrapAndCopyInto (AbstractPipeline.java:499)
+    at java.util.stream.MatchOps$MatchOp.evaluateSequential (MatchOps.java:230)
+    at java.util.stream.MatchOps$MatchOp.evaluateSequential (MatchOps.java:196)
+    at java.util.stream.AbstractPipeline.evaluate (AbstractPipeline.java:234)
+    at java.util.stream.ReferencePipeline.anyMatch (ReferencePipeline.java:632)
+    at org.eclipse.tycho.p2.repository.CompositeArtifactProvider.isFileAlreadyAvailable (CompositeArtifactProvider.java:173)
+    at org.eclipse.tycho.p2resolver.TargetPlatformBaseImpl.isFileAlreadyAvailable (TargetPlatformBaseImpl.java:200)
+    at org.eclipse.tycho.p2resolver.PreliminaryTargetPlatformImpl.isFileAlreadyAvailable (PreliminaryTargetPlatformImpl.java:39)
+    at org.eclipse.tycho.core.resolver.DefaultP2ResolutionResult.lambda$new$1 (DefaultP2ResolutionResult.java:56)
+    at java.util.stream.ReferencePipeline$3$1.accept (ReferencePipeline.java:197)
+    at java.util.HashMap$KeySpliterator.forEachRemaining (HashMap.java:1715)
+    at java.util.stream.AbstractPipeline.copyInto (AbstractPipeline.java:509)
+    at java.util.stream.AbstractPipeline.wrapAndCopyInto (AbstractPipeline.java:499)
+    at java.util.stream.ReduceOps$ReduceOp.evaluateSequential (ReduceOps.java:921)
+    at java.util.stream.AbstractPipeline.evaluate (AbstractPipeline.java:234)
+    at java.util.stream.ReferencePipeline.collect (ReferencePipeline.java:682)
+    at org.eclipse.tycho.core.resolver.DefaultP2ResolutionResult.<init> (DefaultP2ResolutionResult.java:70)
+    at org.eclipse.tycho.p2resolver.P2ResolverImpl.toResolutionResult (P2ResolverImpl.java:256)
+    at org.eclipse.tycho.p2resolver.P2ResolverImpl.resolveDependencies (P2ResolverImpl.java:250)
+    at org.eclipse.tycho.p2resolver.P2ResolverImpl.resolveTargetDependencies (P2ResolverImpl.java:125)
+    at org.eclipse.tycho.p2resolver.P2DependencyResolver.doResolveDependencies (P2DependencyResolver.java:375)
+    at org.eclipse.tycho.p2resolver.P2DependencyResolver.resolveDependencies (P2DependencyResolver.java:326)
+    at org.eclipse.tycho.core.osgitools.AbstractTychoProject.lambda$getDependencyArtifacts$0 (AbstractTychoProject.java:92)
+    at org.eclipse.tycho.core.osgitools.DefaultReactorProject$LazyValue.get (DefaultReactorProject.java:307)
+    at org.eclipse.tycho.core.osgitools.DefaultReactorProject.computeContextValue (DefaultReactorProject.java:200)
+    at org.eclipse.tycho.core.osgitools.AbstractTychoProject.getDependencyArtifacts (AbstractTychoProject.java:82)
+    at org.eclipse.tycho.core.resolver.DefaultTychoResolver.resolveProject (DefaultTychoResolver.java:98)
+    at org.eclipse.tycho.core.maven.TychoProjectExecutionListener.beforeProjectLifecycleExecution (TychoProjectExecutionListener.java:111)
+    at org.apache.maven.lifecycle.internal.CompoundProjectExecutionListener.beforeProjectLifecycleExecution (CompoundProjectExecutionListener.java:42)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:103)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:919)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:285)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:207)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+Caused by: java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+    at jdk.internal.net.http.HttpClientImpl.send (HttpClientImpl.java:949)
+    at jdk.internal.net.http.HttpClientFacade.send (HttpClientFacade.java:133)
+    at org.eclipse.tycho.p2maven.transport.Java11HttpTransportFactory$Java11HttpTransport.performGet (Java11HttpTransportFactory.java:131)
+    at org.eclipse.tycho.p2maven.transport.Java11HttpTransportFactory$Java11HttpTransport.get (Java11HttpTransportFactory.java:113)
+    at org.eclipse.tycho.p2maven.transport.SharedHttpCacheStorage$CacheLine.fetchFile (SharedHttpCacheStorage.java:243)
+    at org.eclipse.tycho.p2maven.transport.SharedHttpCacheStorage$2.getCacheFile (SharedHttpCacheStorage.java:126)
+    at org.eclipse.tycho.p2maven.transport.HttpTransportProtocolHandler.getFile (HttpTransportProtocolHandler.java:51)
+    at org.eclipse.tycho.p2maven.transport.TychoRepositoryTransportCacheManager.createCache (TychoRepositoryTransportCacheManager.java:46)
+    at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.getLocalFile (SimpleArtifactRepositoryFactory.java:71)
+    at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.load (SimpleArtifactRepositoryFactory.java:95)
+    at org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepositoryFactory.load (SimpleArtifactRepositoryFactory.java:83)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.factoryLoad (ArtifactRepositoryManager.java:94)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:853)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:743)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.loadRepository (ArtifactRepositoryManager.java:128)
+    at org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager.loadRepository (IArtifactRepositoryManager.java:136)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.lambda$loadRepository$1 (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.accessRepository (RemoteArtifactRepositoryManager.java:137)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.loadRepository (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository.load (CompositeArtifactRepository.java:495)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository.addChild (CompositeArtifactRepository.java:158)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository.<init> (CompositeArtifactRepository.java:79)
+    at org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepositoryFactory.load (CompositeArtifactRepositoryFactory.java:127)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.factoryLoad (ArtifactRepositoryManager.java:94)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:853)
+    at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository (AbstractRepositoryManager.java:743)
+    at org.eclipse.equinox.internal.p2.artifact.repository.ArtifactRepositoryManager.loadRepository (ArtifactRepositoryManager.java:128)
+    at org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager.loadRepository (IArtifactRepositoryManager.java:136)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.lambda$loadRepository$1 (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.accessRepository (RemoteArtifactRepositoryManager.java:137)
+    at org.eclipse.tycho.p2maven.transport.RemoteArtifactRepositoryManager.loadRepository (RemoteArtifactRepositoryManager.java:105)
+    at org.eclipse.tycho.p2.resolver.URITargetDefinitionContent.lambda$loadArtifactRepositories$0 (URITargetDefinitionContent.java:161)
+    at org.eclipse.tycho.p2.repository.LazyArtifactRepository.getDelegate (LazyArtifactRepository.java:50)
+    at org.eclipse.tycho.p2.repository.LazyArtifactRepository.getArtifactDescriptors (LazyArtifactRepository.java:97)
+    at org.eclipse.tycho.p2.repository.RepositoryArtifactProvider.getArtifactDescriptorsOfAllSources (RepositoryArtifactProvider.java:153)
+    at org.eclipse.tycho.p2.repository.CompositeArtifactProviderBaseImpl.getArtifactDescriptors (CompositeArtifactProviderBaseImpl.java:42)
+    at org.eclipse.tycho.p2.repository.MirroringArtifactProvider.isFileAlreadyAvailable (MirroringArtifactProvider.java:441)
+    at org.eclipse.tycho.p2.repository.CompositeArtifactProvider.lambda$isFileAlreadyAvailable$0 (CompositeArtifactProvider.java:173)
+    at java.util.stream.MatchOps$1MatchSink.accept (MatchOps.java:90)
+    at java.util.Spliterators$ArraySpliterator.tryAdvance (Spliterators.java:1034)
+    at java.util.stream.ReferencePipeline.forEachWithCancel (ReferencePipeline.java:129)
+    at java.util.stream.AbstractPipeline.copyIntoWithCancel (AbstractPipeline.java:527)
+    at java.util.stream.AbstractPipeline.copyInto (AbstractPipeline.java:513)
+    at java.util.stream.AbstractPipeline.wrapAndCopyInto (AbstractPipeline.java:499)
+    at java.util.stream.MatchOps$MatchOp.evaluateSequential (MatchOps.java:230)
+    at java.util.stream.MatchOps$MatchOp.evaluateSequential (MatchOps.java:196)
+    at java.util.stream.AbstractPipeline.evaluate (AbstractPipeline.java:234)
+    at java.util.stream.ReferencePipeline.anyMatch (ReferencePipeline.java:632)
+    at org.eclipse.tycho.p2.repository.CompositeArtifactProvider.isFileAlreadyAvailable (CompositeArtifactProvider.java:173)
+    at org.eclipse.tycho.p2resolver.TargetPlatformBaseImpl.isFileAlreadyAvailable (TargetPlatformBaseImpl.java:200)
+    at org.eclipse.tycho.p2resolver.PreliminaryTargetPlatformImpl.isFileAlreadyAvailable (PreliminaryTargetPlatformImpl.java:39)
+    at org.eclipse.tycho.core.resolver.DefaultP2ResolutionResult.lambda$new$1 (DefaultP2ResolutionResult.java:56)
+    at java.util.stream.ReferencePipeline$3$1.accept (ReferencePipeline.java:197)
+    at java.util.HashMap$KeySpliterator.forEachRemaining (HashMap.java:1715)
+    at java.util.stream.AbstractPipeline.copyInto (AbstractPipeline.java:509)
+    at java.util.stream.AbstractPipeline.wrapAndCopyInto (AbstractPipeline.java:499)
+    at java.util.stream.ReduceOps$ReduceOp.evaluateSequential (ReduceOps.java:921)
+    at java.util.stream.AbstractPipeline.evaluate (AbstractPipeline.java:234)
+    at java.util.stream.ReferencePipeline.collect (ReferencePipeline.java:682)
+    at org.eclipse.tycho.core.resolver.DefaultP2ResolutionResult.<init> (DefaultP2ResolutionResult.java:70)
+    at org.eclipse.tycho.p2resolver.P2ResolverImpl.toResolutionResult (P2ResolverImpl.java:256)
+    at org.eclipse.tycho.p2resolver.P2ResolverImpl.resolveDependencies (P2ResolverImpl.java:250)
+    at org.eclipse.tycho.p2resolver.P2ResolverImpl.resolveTargetDependencies (P2ResolverImpl.java:125)
+    at org.eclipse.tycho.p2resolver.P2DependencyResolver.doResolveDependencies (P2DependencyResolver.java:375)
+    at org.eclipse.tycho.p2resolver.P2DependencyResolver.resolveDependencies (P2DependencyResolver.java:326)
+    at org.eclipse.tycho.core.osgitools.AbstractTychoProject.lambda$getDependencyArtifacts$0 (AbstractTychoProject.java:92)
+    at org.eclipse.tycho.core.osgitools.DefaultReactorProject$LazyValue.get (DefaultReactorProject.java:307)
+    at org.eclipse.tycho.core.osgitools.DefaultReactorProject.computeContextValue (DefaultReactorProject.java:200)
+    at org.eclipse.tycho.core.osgitools.AbstractTychoProject.getDependencyArtifacts (AbstractTychoProject.java:82)
+    at org.eclipse.tycho.core.resolver.DefaultTychoResolver.resolveProject (DefaultTychoResolver.java:98)
+    at org.eclipse.tycho.core.maven.TychoProjectExecutionListener.beforeProjectLifecycleExecution (TychoProjectExecutionListener.java:111)
+    at org.apache.maven.lifecycle.internal.CompoundProjectExecutionListener.beforeProjectLifecycleExecution (CompoundProjectExecutionListener.java:42)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:103)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:919)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:285)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:207)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+Caused by: java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+    at jdk.internal.net.http.ResponseTimerEvent.handle (ResponseTimerEvent.java:68)
+    at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline (HttpClientImpl.java:1788)
+    at jdk.internal.net.http.HttpClientImpl$SelectorManager.run (HttpClientImpl.java:1386)
+Caused by: java.net.ConnectException: HTTP connect timed out
+    at jdk.internal.net.http.ResponseTimerEvent.handle (ResponseTimerEvent.java:69)
+    at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline (HttpClientImpl.java:1788)
+    at jdk.internal.net.http.HttpClientImpl$SelectorManager.run (HttpClientImpl.java:1386)
+[WARNING] Skip referenced repository: http://testng.org/testng-p2-update-site/: org.eclipse.equinox.p2.core.ProvisionException: Unable to read repository at http://testng.org/testng-p2-update-site.
+[INFO] Downloading from p2: http://download.eclipse.org/technology/m2e/releases/p2.index
+[INFO] Downloading from p2: http://download.eclipse.org/technology/m2e/releases/site.xml
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.13/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.13.201609291640/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.12/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.12.201607091356/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.11/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.11.201604020423/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.10/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.10.201512240000/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.9.5/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.9.5.201505251947/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.10.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.10.0.201612030230/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.11.0.201703011520/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.12.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709030110/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709030110/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709050550/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.12.0.201709050550/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.13.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.13.0.201712040650/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.13.0.201712040650/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.14.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.0.201802161500/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.0.201802161500/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/6.14.3/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.3.201902250526/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/6.14.3.201902250526/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.0.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.0.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908201535/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908201535/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908240652/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.0.0.201908240652/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.1.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.1.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.0.202003090500/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.0.202003090500/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.1.1/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.1.1/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.1.202003100345/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.1.1.202003100345/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.2.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.2.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202004281604/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202004281604/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202005051752/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.2.0.202005051752/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.3.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.3.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.3.0.202008060412/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.3.0.202008060412/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.4.0/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/7.4.0/p2.index (128 bytes at 125 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202105021622/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202105021622/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202106051955/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.4.0.202106051955/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.8.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202308061717/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202308061717/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202306071550/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.8.0.202306071550/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.9.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.9.0.202312310355/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.9.0.202312310355/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.10.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.0.202404131040/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.0.202404131040/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.10.2/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.2.202503082113/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.10.2.202503082113/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/7.11.0/p2.index
+[INFO] Downloading from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.11.0.202503091801/p2.index
+[INFO] Downloaded from p2: https://testng.org/testng-eclipse-update-site/updatesites/7.11.0.202503091801/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/technology/swtbot/releases/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/technology/swtbot/releases/latest/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository/p2.index (172 bytes at 167 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/oomph/simrel-orbit/release/latest/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/oomph/simrel-orbit/release/latest/p2.index (126 bytes at 61 KB/s)
+[INFO] Downloading from p2: https://download.eclipse.org/oomph/simrel-orbit/release/4.28.0/p2.index
+[INFO] Downloaded from p2: https://download.eclipse.org/oomph/simrel-orbit/release/4.28.0/p2.index (172 bytes at 167 KB/s)
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ org.moreunit.core ---
+[INFO] Deleting /app/org.moreunit.core/target
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:build-qualifier (default-build-qualifier) @ org.moreunit.core ---
+[INFO] The project's OSGi version is 4.0.2.202605200051
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:validate-id (default-validate-id) @ org.moreunit.core ---
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:validate-version (default-validate-version) @ org.moreunit.core ---
+[INFO]
+[INFO] --- target-platform-configuration:5.0.2:target-platform (default-target-platform) @ org.moreunit.core ---
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:validate-classpath (default-validate-classpath) @ org.moreunit.core ---
+[INFO] Resolving class path of org.moreunit.core
+[INFO]
+[INFO] --- antrun:3.2.0:run (avoid-equinox-exception) @ org.moreunit.core ---
+[INFO] Executing tasks
+[INFO] Executed tasks
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ org.moreunit.core ---
+[INFO] skip non existing resourceDirectory /app/org.moreunit.core/src/main/resources
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:compile (default-compile) @ org.moreunit.core ---
+[INFO] Compiling 120 source files to /app/org.moreunit.core/target/classes using Eclipse Compiler for Java(TM) 3.44.0.v20251118-1623
+[INFO]
+[INFO] --- tycho-bnd:5.0.2:process (default-process) @ org.moreunit.core ---
+[INFO]
+[INFO] --- tycho-ds:5.0.2:declarative-services (default-declarative-services) @ org.moreunit.core ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ org.moreunit.core ---
+[INFO] skip non existing resourceDirectory /app/org.moreunit.core/src/test/resources
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:testCompile (default-testCompile) @ org.moreunit.core ---
+[INFO]
+[INFO] --- tycho-source:5.0.2:plugin-source (plugin-source) @ org.moreunit.core ---
+[INFO] Building jar: /app/org.moreunit.core/target/org.moreunit.core-4.0.2-SNAPSHOT-sources.jar
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:package-plugin (default-package-plugin) @ org.moreunit.core ---
+[INFO] Building jar: /app/org.moreunit.core/target/org.moreunit.core-4.0.2-SNAPSHOT.jar
+[INFO]
+[INFO] --- tycho-p2-plugin:5.0.2:p2-metadata-default (default-p2-metadata-default) @ org.moreunit.core ---
+[INFO]
+[INFO] -----------------< org.moreunit.plugins:org.moreunit >------------------
+[INFO] Building org.moreunit 4.0.2-SNAPSHOT                              [3/15]
+[INFO]   from /app/org.moreunit.plugin/pom.xml
+[INFO] ---------------------------[ eclipse-plugin ]---------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ org.moreunit ---
+[INFO] Deleting /app/org.moreunit.plugin/target
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:build-qualifier (default-build-qualifier) @ org.moreunit ---
+[INFO] The project's OSGi version is 4.0.2.202605200051
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:validate-id (default-validate-id) @ org.moreunit ---
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:validate-version (default-validate-version) @ org.moreunit ---
+[INFO]
+[INFO] --- target-platform-configuration:5.0.2:target-platform (default-target-platform) @ org.moreunit ---
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:validate-classpath (default-validate-classpath) @ org.moreunit ---
+[INFO] Resolving class path of org.moreunit
+[INFO]
+[INFO] --- antrun:3.2.0:run (avoid-equinox-exception) @ org.moreunit ---
+[INFO] Executing tasks
+[INFO] Executed tasks
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ org.moreunit ---
+[INFO] skip non existing resourceDirectory /app/org.moreunit.plugin/src/main/resources
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:compile (default-compile) @ org.moreunit ---
+[INFO] Compiling 129 source files to /app/org.moreunit.plugin/target/classes using Eclipse Compiler for Java(TM) 3.44.0.v20251118-1623
+[INFO]
+[INFO] --- tycho-bnd:5.0.2:process (default-process) @ org.moreunit ---
+[INFO]
+[INFO] --- tycho-ds:5.0.2:declarative-services (default-declarative-services) @ org.moreunit ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ org.moreunit ---
+[INFO] skip non existing resourceDirectory /app/org.moreunit.plugin/src/test/resources
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:testCompile (default-testCompile) @ org.moreunit ---
+[INFO]
+[INFO] --- tycho-source:5.0.2:plugin-source (plugin-source) @ org.moreunit ---
+[INFO] Building jar: /app/org.moreunit.plugin/target/org.moreunit-4.0.2-SNAPSHOT-sources.jar
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:package-plugin (default-package-plugin) @ org.moreunit ---
+[INFO] Building jar: /app/org.moreunit.plugin/target/org.moreunit-4.0.2-SNAPSHOT.jar
+[INFO]
+[INFO] --- tycho-p2-plugin:5.0.2:p2-metadata-default (default-p2-metadata-default) @ org.moreunit ---
+[INFO]
+[INFO] --------< org.moreunit.plugins:org.moreunit.test.dependencies >---------
+[INFO] Building org.moreunit.test.dependencies 4.0.2-SNAPSHOT            [4/15]
+[INFO]   from /app/org.moreunit.test.dependencies/pom.xml
+[INFO] ------------------------[ eclipse-test-plugin ]-------------------------
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ org.moreunit.test.dependencies ---
+[INFO] Deleting /app/org.moreunit.test.dependencies/target
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:build-qualifier (default-build-qualifier) @ org.moreunit.test.dependencies ---
+[INFO] The project's OSGi version is 4.0.2.202605200051
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:validate-id (default-validate-id) @ org.moreunit.test.dependencies ---
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:validate-version (default-validate-version) @ org.moreunit.test.dependencies ---
+[INFO]
+[INFO] --- target-platform-configuration:5.0.2:target-platform (default-target-platform) @ org.moreunit.test.dependencies ---
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:validate-classpath (default-validate-classpath) @ org.moreunit.test.dependencies ---
+[INFO] Resolving class path of org.moreunit.test.dependencies
+[INFO]
+[INFO] --- antrun:3.2.0:run (avoid-equinox-exception) @ org.moreunit.test.dependencies ---
+[INFO] Executing tasks
+[INFO] Executed tasks
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ org.moreunit.test.dependencies ---
+[INFO] skip non existing resourceDirectory /app/org.moreunit.test.dependencies/src/main/resources
+[INFO]
+[INFO] --- tycho-compiler:5.0.2:compile (default-compile) @ org.moreunit.test.dependencies ---
+[INFO] Compiling 67 source files to /app/org.moreunit.test.dependencies/target/classes using Eclipse Compiler for Java(TM) 3.44.0.v20251118-1623
+[INFO]
+[INFO] --- tycho-ds:5.0.2:declarative-services (default-declarative-services) @ org.moreunit.test.dependencies ---
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ org.moreunit.test.dependencies ---
+[INFO] skip non existing resourceDirectory /app/org.moreunit.test.dependencies/src/test/resources
+[INFO]
+[INFO] --- tycho-source:5.0.2:plugin-source (plugin-source) @ org.moreunit.test.dependencies ---
+[INFO] Building jar: /app/org.moreunit.test.dependencies/target/org.moreunit.test.dependencies-4.0.2-SNAPSHOT-sources.jar
+[INFO]
+[INFO] --- tycho-packaging:5.0.2:package-plugin (default-package-plugin) @ org.moreunit.test.dependencies ---
+[INFO] Building jar: /app/org.moreunit.test.dependencies/target/org.moreunit.test.dependencies-4.0.2-SNAPSHOT.jar
+[INFO]
+[INFO] --- tycho-p2-plugin:5.0.2:p2-metadata-default (default-p2-metadata-default) @ org.moreunit.test.dependencies ---
+[INFO]
+[INFO] --- tycho-surefire:5.0.2:test (default-test) @ org.moreunit.test.dependencies ---
+[INFO] Selected test framework junit (4.0.0) with provider junit4 [4.0.0,5.0.0)
+[INFO] Executing test runtime with timeout (seconds): 0, logs, if any, will be placed at: /app/org.moreunit.test.dependencies/target/work/data/.metadata/.log
+[INFO] Command line: /usr/lib/jvm/java-21-openjdk-amd64/bin/java -Dosgi.noShutdown=false -Dosgi.os=linux -Dosgi.ws=gtk -Dosgi.arch=x86_64 -Dosgi.clean=true -jar /home/jules/.m2/repository/p2/osgi/bundle/org.eclipse.equinox.launcher/1.7.100.v20251111-0406/org.eclipse.equinox.launcher-1.7.100.v20251111-0406.jar -consolelog -data /app/org.moreunit.test.dependencies/target/work/data -install /app/org.moreunit.test.dependencies/target/work -configuration /app/org.moreunit.test.dependencies/target/work/configuration -application org.eclipse.tycho.surefire.osgibooter.uitest -testproperties /app/org.moreunit.test.dependencies/target/surefire.properties
+SWT SessionManagerDBus: Failed to connect to org.gnome.SessionManager: Failed to execute child process “dbus-launch” (No such file or directory)
+SWT SessionManagerDBus: Failed to connect to org.xfce.SessionManager: Failed to execute child process “dbus-launch” (No such file or directory)
+WARNING: A Java agent has been loaded dynamically (/home/jules/.m2/repository/p2/osgi/bundle/net.bytebuddy.byte-buddy-agent/1.18.5/net.bytebuddy.byte-buddy-agent-1.18.5.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Running org.moreunit.test.workspace.CompilationUnitAssertionsTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.304 s -- in org.moreunit.test.workspace.CompilationUnitAssertionsTest
+org.moreunit.test.workspace.CompilationUnitAssertionsTest.should_ignore_jdk_dependent_imports -- Time elapsed: 0.286 s
+org.moreunit.test.workspace.CompilationUnitAssertionsTest.should_normalize_spaces_when_comparing_sources -- Time elapsed: 0.005 s
+Running org.moreunit.test.workspace.SourceTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in org.moreunit.test.workspace.SourceTest
+org.moreunit.test.workspace.SourceTest.should_complain_when_source_does_not_exist -- Time elapsed: 0.002 s
+org.moreunit.test.workspace.SourceTest.should_extract_classname_from_source -- Time elapsed: 0.001 s
+org.moreunit.test.workspace.SourceTest.should_extract_package_from_source -- Time elapsed: 0 s
+Running org.moreunit.test.context.ContextTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.083 s -- in org.moreunit.test.context.ContextTest
+org.moreunit.test.context.ContextTest.should_use_preferences_when_not_annotated_with_properties -- Time elapsed: 2.566 s
+org.moreunit.test.context.ContextTest.should_read_properties_from_annotation -- Time elapsed: 1.230 s
+org.moreunit.test.context.ContextTest.should_use_properties_when_annotated_with_properties -- Time elapsed: 0.525 s
+org.moreunit.test.context.ContextTest.should_read_preferences_from_annotation -- Time elapsed: 0.759 s
+Running org.moreunit.test.context.AnnotationConfigExtractorTest
+Tests run: 34, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.113 s -- in org.moreunit.test.context.AnnotationConfigExtractorTest
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_config_from_default_context -- Time elapsed: 0.026 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_config_from_preferences_and_default_project -- Time elapsed: 0.003 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_reject_null_annotated_element -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_complain_when_both_context_and_preferences_are_defined_for_default_annotated_element -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_preferences_from_context_annotation -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_properties_from_annotation_value -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_prevent_too_much_recursion_when_loading_project_and_properties_from_context_value -- Time elapsed: 0.005 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_extract_type_defs_from_project_annotation -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_recursively_load_properties_from_annotation_value -- Time elapsed: 0.007 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_recursively_load_preferences_from_annotation_value -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_complain_when_both_context_and_project_are_defined_for_annotated_element -- Time elapsed: 0.005 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_recursively_load_project_and_preferences_from_context_value -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_not_load_default_preferences_from_context_annotation -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_complain_when_both_context_and_project_are_defined_for_default_annotated_element -- Time elapsed: 0.005 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_complain_when_both_testProject_and_testCls_are_defined -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_complain_when_both_testProject_and_testSrc_are_defined -- Time elapsed: 0 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_prevent_too_much_recursion_when_loading_preferences_from_annotation_value -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_extract_type_defs_from_context_annotation -- Time elapsed: 0.003 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_recursively_load_project_from_annotation_value -- Time elapsed: 0.005 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_test_class_template_from_preferences -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_create_project_config_with_default_name_for_context_annotation -- Time elapsed: 0.003 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_ignore_properties_when_not_provided -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_prevent_too_much_recursion_when_loading_properties_from_annotation_value -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_context_from_target_element_even_when_default_element_is_provided -- Time elapsed: 0.004 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_accept_null_default_annotated_element -- Time elapsed: 0 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_preferences_from_annotation_value -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_return_null_when_no_annotations -- Time elapsed: 0 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_config_from_preferences_and_project -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_config_from_context_annotation -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_properties_from_project_annotation -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_config_from_default_preferences_and_project -- Time elapsed: 0.005 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_complain_when_both_context_and_preferences_are_defined_for_annotated_element -- Time elapsed: 0.001 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_prevent_too_much_recursion_when_loading_project_from_annotation_value -- Time elapsed: 0.002 s
+org.moreunit.test.context.AnnotationConfigExtractorTest.should_load_test_project_from_project_annotation -- Time elapsed: 0.002 s
+Running org.moreunit.test.context.TestContextRuleWithSuperClassAnnotationTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in org.moreunit.test.context.TestContextRuleWithSuperClassAnnotationTest
+org.moreunit.test.context.TestContextRuleWithSuperClassAnnotationTest.should_load_superclass_context_when_class_context -- Time elapsed: 0.015 s
+Running org.moreunit.test.context.TestContextRuleTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in org.moreunit.test.context.TestContextRuleTest
+org.moreunit.test.context.TestContextRuleTest.should_complain_when_there_is_no_context -- Time elapsed: 0.002 s
+org.moreunit.test.context.TestContextRuleTest.should_create_production_sources -- Time elapsed: 0.002 s
+org.moreunit.test.context.TestContextRuleTest.should_create_test_sources -- Time elapsed: 0.003 s
+org.moreunit.test.context.TestContextRuleTest.should_complain_when_source_is_undefined -- Time elapsed: 0.002 s
+Running org.moreunit.test.context.TestContextRuleWithClassAnnotationTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in org.moreunit.test.context.TestContextRuleWithClassAnnotationTest
+org.moreunit.test.context.TestContextRuleWithClassAnnotationTest.should_load_method_context_when_present -- Time elapsed: 0.003 s
+org.moreunit.test.context.TestContextRuleWithClassAnnotationTest.should_load_class_context_when_no_method_context -- Time elapsed: 0.002 s
+Running org.moreunit.test.context.StringUtilsTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in org.moreunit.test.context.StringUtilsTest
+org.moreunit.test.context.StringUtilsTest.testSplit -- Time elapsed: 0.019 s
+org.moreunit.test.context.StringUtilsTest.testSplitEmpty -- Time elapsed: 0.001 s
+org.moreunit.test.context.StringUtilsTest.testAtLeastOneNotEmpty -- Time elapsed: 0 s
+org.moreunit.test.context.StringUtilsTest.testFirstNonBlank -- Time elapsed: 0.001 s
+org.moreunit.test.context.StringUtilsTest.testIsNullOrEmpty -- Time elapsed: 0 s
+org.moreunit.test.context.StringUtilsTest.testIsBlank -- Time elapsed: 0 s
+
+Results:
+
+Tests run: 56, Failures: 0, Errors: 0, Skipped: 0
