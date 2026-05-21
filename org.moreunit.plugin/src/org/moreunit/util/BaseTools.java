@@ -41,11 +41,23 @@ public class BaseTools
         {
             if(packagePrefix != null && packagePrefix.length() > 0)
             {
-                packagePath = packagePath.replaceFirst("^" + packagePrefix + "\\.", "");
+                String prefixWithDot = packagePrefix + ".";
+                if(packagePath.startsWith(prefixWithDot))
+                {
+                    packagePath = packagePath.substring(prefixWithDot.length());
+                }
             }
             if(packageSuffix != null && packageSuffix.length() > 0)
             {
-                packagePath = packagePath.replaceFirst("\\b" + packageSuffix + "\\.$", "");
+                String dotWithSuffixWithDot = "." + packageSuffix + ".";
+                if(packagePath.endsWith(dotWithSuffixWithDot))
+                {
+                    packagePath = packagePath.substring(0, packagePath.length() - dotWithSuffixWithDot.length() + 1);
+                }
+                else if(packagePath.equals(packageSuffix + "."))
+                {
+                    packagePath = "";
+                }
             }
         }
 
@@ -69,7 +81,7 @@ public class BaseTools
             {
                 if(typeName.startsWith(prefix))
                 {
-                    results.add(packagePath + typeName.replaceFirst(prefix, ""));
+                    results.add(packagePath + typeName.substring(prefix.length()));
                 }
             }
         }
