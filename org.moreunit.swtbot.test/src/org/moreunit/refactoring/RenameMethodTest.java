@@ -65,5 +65,6 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		SWTBotShell renameDialog = bot.activeShell();
 		bot.button(IDialogConstants.OK_LABEL).click();
 		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
+		bot.sleep(3000); // Wait for background refactoring job to update Java Model
 	}
 }

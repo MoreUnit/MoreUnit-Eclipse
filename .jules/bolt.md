@@ -24,3 +24,6 @@
 ## 2026-05-21 - Code Coverage Reductions from Edge Case Fixes
 **Learning:** When refactoring regex paths (like `replaceFirst`) into equivalent literal matches (`startsWith`, `endsWith`, `equals`), new specific edge-case branches (like `else if(packagePath.equals(packageSuffix + "."))`) might not have existing unit test coverage. This will trigger Codecov PR failures.
 **Action:** When adding new conditional branches to mimic regex edge cases, immediately add corresponding test coverage to prevent Codecov suite failures.
+## 2026-05-21 - SWTBot Race Condition in Refactoring Tests
+**Learning:** `RenameMethodTest` occasionally fails in CI because the rename refactoring runs asynchronously after the Rename dialog closes. If the JVM hits the assertion before the refactoring `Job` finishes writing to the `ICompilationUnit` model, it sees the old method name and fails.
+**Action:** When an Eclipse refactoring is tested in SWTBot, ensure you wait for the specific result (like the new method name appearing in the model) rather than just waiting for the dialog shell to close. Or, artificially sleep the test thread for a second.
