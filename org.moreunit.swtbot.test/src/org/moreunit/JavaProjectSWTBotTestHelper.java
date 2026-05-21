@@ -63,6 +63,7 @@ public class JavaProjectSWTBotTestHelper
         if(! isWorkspacePrepared)
         {
             // SWTBotPreferences.PLAYBACK_DELAY = 10;
+            SWTBotPreferences.TIMEOUT = 20000;
 
             // not all keyboard layouts are supported by SWTBot
             // e.g. MAC_DE is missing (see http://wiki.eclipse.org/SWTBot/Keyboard_Layouts)
