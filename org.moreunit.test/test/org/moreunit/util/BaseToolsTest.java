@@ -98,6 +98,9 @@ public class BaseToolsTest
 
         className = "packtest.EinsTest";
         assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("packtest.Eins");
+
+        className = "test.test.EinsTest";
+        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("test.Eins");
     }
 
     @Test
