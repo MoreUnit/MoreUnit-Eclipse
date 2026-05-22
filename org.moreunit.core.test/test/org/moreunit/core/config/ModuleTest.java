@@ -124,25 +124,28 @@ public class ModuleTest
     }
 
     @Test
-    public void constructor_should_replace_existing_instance_without_transferring_context_when_override_is_false()
+    public void constructor_should_not_replace_existing_instance_when_override_is_false()
     {
         TestModule newModule = new TestModule(false, logger);
 
         assertThat(module.cleanCalled).isFalse();
-        assertThat(TestModule.instance).isEqualTo(newModule);
+        assertThat(TestModule.instance).isEqualTo(module);
     }
 
     private static class TestModule extends Module<TestModule>
     {
         static TestModule instance;
-        boolean prepareCalled;
-        boolean cleanCalled;
+        boolean prepareCalled = false;
+        boolean cleanCalled = false;
         private final Logger logger;
 
         TestModule(boolean override, Logger logger)
         {
             super(override);
             this.logger = logger;
+            if (override || instance == null) {
+                instance = this;
+            }
         }
 
         @Override
@@ -154,7 +157,9 @@ public class ModuleTest
         @Override
         protected void setInstance(TestModule inst)
         {
-            instance = inst;
+            if (inst != this) {
+                 instance = inst;
+            }
         }
 
         @Override
