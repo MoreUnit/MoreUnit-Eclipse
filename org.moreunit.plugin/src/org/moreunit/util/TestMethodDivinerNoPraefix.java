@@ -10,7 +10,13 @@ public class TestMethodDivinerNoPraefix implements TestMethodDiviner
 
     public String getTestMethodNameAfterRename(String methodNameBeforeRename, String methodNameAfterRename, String testMethodName)
     {
-        return testMethodName.replaceFirst(methodNameBeforeRename, methodNameAfterRename);
+        // Performance optimization: Replaced regex-based replaceFirst with
+        // faster manual indexOf and substring extraction for literal replacement.
+        int index = testMethodName.indexOf(methodNameBeforeRename);
+        if (index != -1) {
+            return testMethodName.substring(0, index) + methodNameAfterRename + testMethodName.substring(index + methodNameBeforeRename.length());
+        }
+        return testMethodName;
     }
 
     public String getMethodNameFromTestMethodName(String testMethodName)

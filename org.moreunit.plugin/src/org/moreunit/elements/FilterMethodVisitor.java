@@ -110,7 +110,12 @@ public class FilterMethodVisitor extends ASTVisitor
 
     public boolean isGetterMethod(IMethod method)
     {
-        String getterVariableName = method.getElementName().replaceFirst(MoreUnitContants.GETTER_PREFIX, StringConstants.EMPTY_STRING);
+        // Performance optimization: Avoids regex compilation overhead of replaceFirst by using
+        // startsWith and substring, which is faster for simple literal prefix removal.
+        String elementName = method.getElementName();
+        String getterVariableName = elementName.startsWith(MoreUnitContants.GETTER_PREFIX)
+            ? elementName.substring(MoreUnitContants.GETTER_PREFIX.length())
+            : elementName;
 
         for (FieldDeclaration fieldDeclaration : fieldDeclarations)
         {
@@ -191,7 +196,12 @@ public class FilterMethodVisitor extends ASTVisitor
 
     public boolean isSetterMethod(IMethod method)
     {
-        String setterVariableName = method.getElementName().replaceFirst(MoreUnitContants.SETTER_PREFIX, StringConstants.EMPTY_STRING);
+        // Performance optimization: Avoids regex compilation overhead of replaceFirst by using
+        // startsWith and substring, which is faster for simple literal prefix removal.
+        String elementName = method.getElementName();
+        String setterVariableName = elementName.startsWith(MoreUnitContants.SETTER_PREFIX)
+            ? elementName.substring(MoreUnitContants.SETTER_PREFIX.length())
+            : elementName;
 
         for (FieldDeclaration fieldDeclaration : fieldDeclarations)
         {
