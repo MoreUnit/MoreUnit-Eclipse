@@ -135,8 +135,8 @@ public class ModuleTest
     private static class TestModule extends Module<TestModule>
     {
         static TestModule instance;
-        boolean prepareCalled = false;
-        boolean cleanCalled = false;
+        boolean prepareCalled;
+        boolean cleanCalled;
         private final Logger logger;
 
         TestModule(boolean override, Logger logger)
