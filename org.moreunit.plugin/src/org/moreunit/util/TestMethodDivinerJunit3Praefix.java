@@ -14,15 +14,23 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
             LogHandler.getInstance().handleWarnLog("Methodname is null or has length of 0");
             return StringConstants.EMPTY_STRING;
         }
-        String firstChar = String.valueOf(methodName.charAt(0));
-        return TEST_METHOD_PRAEFIX + methodName.replaceFirst(firstChar, firstChar.toUpperCase());
+        // Performance optimization: Avoids replaceFirst by using the helper method.
+        // It is faster to use substring/concatenation instead of regex matching.
+        return TEST_METHOD_PRAEFIX + getStringWithFirstCharToUpperCase(methodName);
     }
 
     public String getTestMethodNameAfterRename(String methodNameBeforeRename, String methodNameAfterRename, String testMethodName)
     {
         String old = getStringWithFirstCharToUpperCase(methodNameBeforeRename);
         String newName = getStringWithFirstCharToUpperCase(methodNameAfterRename);
-        return testMethodName.replaceFirst(old, newName);
+
+        // Performance optimization: Replaced regex-based replaceFirst with
+        // faster manual indexOf and substring extraction for literal replacement.
+        int index = testMethodName.indexOf(old);
+        if (index != -1) {
+            return testMethodName.substring(0, index) + newName + testMethodName.substring(index + old.length());
+        }
+        return testMethodName;
     }
 
     private String getStringWithFirstCharToUpperCase(String string)
