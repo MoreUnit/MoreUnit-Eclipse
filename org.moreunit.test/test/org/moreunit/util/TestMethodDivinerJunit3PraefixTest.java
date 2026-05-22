@@ -56,4 +56,11 @@ public class TestMethodDivinerJunit3PraefixTest
         assertThat(testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembersSpecialCase")).isEqualTo("testCountAllMembersSpecialCase");
         assertThat(testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testCountMembers")).isEqualTo("testCountAllMembers");
     }
+
+    @Test
+    public void getTestMethodNameAfterRename_noMatch()
+    {
+        TestMethodDiviner testMethodDiviner = new TestMethodDivinerJunit3Praefix();
+        assertThat(testMethodDiviner.getTestMethodNameAfterRename("countMembers", "countAllMembers", "testSomethingElse")).isEqualTo("testSomethingElse");
+    }
 }
