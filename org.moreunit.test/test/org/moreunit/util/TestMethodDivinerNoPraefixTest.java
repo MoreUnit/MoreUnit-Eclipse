@@ -22,6 +22,13 @@ public class TestMethodDivinerNoPraefixTest
     }
 
     @Test
+    public void testGetTestMethodNameAfterRename_noMatch() throws Exception
+    {
+        TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
+        assertThat(testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "somethingElse")).isEqualTo("somethingElse");
+    }
+
+    @Test
     public void getMethodNameFromTestMethodName() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
