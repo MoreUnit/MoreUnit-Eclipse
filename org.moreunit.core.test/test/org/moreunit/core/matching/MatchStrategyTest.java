@@ -1,5 +1,6 @@
 package org.moreunit.core.matching;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -17,9 +18,13 @@ public class MatchStrategyTest {
         when(mockFolder.isResolved()).thenReturn(true);
         FileMatchCollector collector = MatchStrategy.ALL_MATCHES.createMatchCollector(mockFolder);
 
-        assertFalse(collector.searchIsOver());
-        collector.acceptFile(mock(IFile.class));
-        assertFalse(collector.searchIsOver());
+        // acceptFile returns false to continue searching
+        boolean stopSearch1 = collector.acceptFile(mock(IFile.class));
+        boolean stopSearch2 = collector.acceptFile(mock(IFile.class));
+
+        assertFalse(stopSearch1);
+        assertFalse(stopSearch2);
+        assertEquals(2, collector.getResults().size());
     }
 
     @Test
@@ -28,9 +33,16 @@ public class MatchStrategyTest {
         when(mockFolder.isResolved()).thenReturn(true);
         FileMatchCollector collector = MatchStrategy.ANY_MATCH.createMatchCollector(mockFolder);
 
-        assertFalse(collector.searchIsOver());
+        // First match found, continue searching from the perspective of this call returning false,
+        // but internal state marks it as found.
+        boolean stopSearch1 = collector.acceptFile(mock(IFile.class));
+        assertFalse(stopSearch1);
+        assertEquals(1, collector.getResults().size());
 
-        collector.acceptFile(mock(IFile.class));
-        assertTrue(collector.searchIsOver());
+        // Second match should be ignored, and return true to stop searching
+        boolean stopSearch2 = collector.acceptFile(mock(IFile.class));
+        assertTrue(stopSearch2);
+        // Size remains 1
+        assertEquals(1, collector.getResults().size());
     }
 }
