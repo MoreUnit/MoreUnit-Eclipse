@@ -110,11 +110,29 @@ public class Dependencies extends ArrayList<Dependency>
     String resolveTypeSignature(String signature) throws JavaModelException
     {
         // removes type parameters
-        String cleanSignature = signature.replaceFirst("<.+>$", "");
+        String cleanSignature = signature;
+        int angleBracketIdx = cleanSignature.indexOf('<');
+        if(angleBracketIdx != -1 && cleanSignature.endsWith(">"))
+        {
+            cleanSignature = cleanSignature.substring(0, angleBracketIdx);
+        }
 
         // removes type use annotations:
         // @NonNull etc. should probably not be put on test case fields
-        cleanSignature = cleanSignature.replaceAll("^\\s*(?:\\S+\\s+)*?(\\S+)\\s*$", "$1");
+        cleanSignature = cleanSignature.trim();
+        int lastSpaceIdx = -1;
+        for (int i = cleanSignature.length() - 1; i >= 0; i--)
+        {
+            if(Character.isWhitespace(cleanSignature.charAt(i)))
+            {
+                lastSpaceIdx = i;
+                break;
+            }
+        }
+        if(lastSpaceIdx != -1)
+        {
+            cleanSignature = cleanSignature.substring(lastSpaceIdx + 1);
+        }
 
         String[][] possibleFieldTypes = classUnderTest.resolveType(cleanSignature);
         if(possibleFieldTypes == null || possibleFieldTypes.length == 0)
