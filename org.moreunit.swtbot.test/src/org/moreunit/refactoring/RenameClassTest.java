@@ -46,6 +46,21 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		assertThat(context.getCompilationUnit("com.SomeClassTest")).isNotNull();
 	}
 
+	@Project(
+            mainCls = "org:SomeClass",
+            testCls = "org:SomeTest",
+            mainSrcFolder = "src",
+            testSrcFolder = "test")
+	@Test
+	public void should_not_rename_test_if_cut_name_not_part_of_test_name()
+	{
+		renameSomeClassToAnyClassAndWaitUntilFinished();
+
+		// Ensure SomeTest wasn't renamed because "SomeClass" isn't in its name.
+		// (The "index == -1" condition in RenameClassParticipant).
+		assertThat(context.getCompilationUnit("org.SomeTest")).isNotNull();
+	}
+
 	private void renameSomeClassToAnyClassAndWaitUntilFinished()
 	{
 		final SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
