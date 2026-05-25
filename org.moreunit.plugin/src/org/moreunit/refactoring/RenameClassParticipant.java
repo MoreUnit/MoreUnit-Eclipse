@@ -100,9 +100,10 @@ public class RenameClassParticipant extends RenameParticipant
         // Performance optimization: Avoid regex compilation overhead for replaceFirst
         String newName = getArguments().getNewName();
 
-        // Note: The previous regex newName.replaceFirst("\\.[^\\.]*$", StringConstants.EMPTY_STRING)
-        // was intended to strip a suffix if present, but for renaming a class in Eclipse JDT,
-        // getNewName() strictly returns the *new name* without the .java extension.
+        int lastDotIndex = newName.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+            newName = newName.substring(0, lastDotIndex);
+        }
 
         String testName = typeToRename.getElementName();
         String mainName = compilationUnit.findPrimaryType().getElementName();
@@ -111,6 +112,8 @@ public class RenameClassParticipant extends RenameParticipant
             return testName.substring(0, index) + newName + testName.substring(index + mainName.length());
         }
 
+        // If mainName isn't found exactly, we fall back to the original replaceFirst logic
+        // in case the user was relying on regex matching in their class names, though rare.
         return testName.replaceFirst(mainName, newName);
     }
 
