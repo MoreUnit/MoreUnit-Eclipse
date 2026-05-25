@@ -97,9 +97,21 @@ public class RenameClassParticipant extends RenameParticipant
 
     private String getNewTestName(IType typeToRename)
     {
+        // Performance optimization: Avoid regex compilation overhead for replaceFirst
         String newName = getArguments().getNewName();
-        newName = newName.replaceFirst("\\.[^\\.]*$", StringConstants.EMPTY_STRING);
-        return typeToRename.getElementName().replaceFirst(compilationUnit.findPrimaryType().getElementName(), newName);
+
+        int lastDotIndex = newName.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+            newName = newName.substring(0, lastDotIndex);
+        }
+
+        String testName = typeToRename.getElementName();
+        String mainName = compilationUnit.findPrimaryType().getElementName();
+        int index = testName.indexOf(mainName);
+        if (index != -1) {
+            return testName.substring(0, index) + newName + testName.substring(index + mainName.length());
+        }
+        return testName;
     }
 
 }
