@@ -110,7 +110,8 @@ public class RenameClassParticipant extends RenameParticipant
         if (index != -1) {
             return testName.substring(0, index) + newName + testName.substring(index + mainName.length());
         }
-        return testName;
+
+        return testName.replaceFirst(mainName, newName);
     }
 
 }

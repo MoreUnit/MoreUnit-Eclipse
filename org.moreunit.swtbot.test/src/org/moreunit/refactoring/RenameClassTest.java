@@ -61,6 +61,19 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		assertThat(context.getCompilationUnit("org.SomeTest")).isNotNull();
 	}
 
+	@Project(
+            mainCls = "org:SomeClass",
+            testCls = "org:OtherClassTest",
+            mainSrcFolder = "src",
+            testSrcFolder = "test")
+	@Test
+	public void should_rename_test_using_regex_fallback_when_cut_gets_renamed()
+	{
+		renameSomeClassToAnyClassAndWaitUntilFinished();
+
+		assertThat(context.getCompilationUnit("org.OtherClassTest")).isNotNull();
+	}
+
 	private void renameSomeClassToAnyClassAndWaitUntilFinished()
 	{
 		final SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
