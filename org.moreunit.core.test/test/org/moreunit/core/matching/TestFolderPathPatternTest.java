@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.moreunit.core.matching.TestFolderPathPattern.isValid;
 
 import org.junit.jupiter.api.Test;

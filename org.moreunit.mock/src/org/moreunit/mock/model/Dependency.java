@@ -1,11 +1,11 @@
 package org.moreunit.mock.model;
 
+import static org.moreunit.core.util.Preconditions.checkArgument;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
+
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.moreunit.core.util.Preconditions.checkArgument;
-import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 public class Dependency extends TypeUse<Dependency> implements Comparable<Dependency>
 {
@@ -13,7 +13,7 @@ public class Dependency extends TypeUse<Dependency> implements Comparable<Depend
 
     public Dependency(String fullyQualifiedClassName, String name)
     {
-        this(fullyQualifiedClassName, name, new ArrayList<TypeParameter>());
+        this(fullyQualifiedClassName, name, new ArrayList<>());
     }
 
     public Dependency(String fullyQualifiedClassName, String name, List<TypeParameter> typeParameters)
@@ -42,11 +42,7 @@ public class Dependency extends TypeUse<Dependency> implements Comparable<Depend
         {
             return true;
         }
-        if(obj == null)
-        {
-            return false;
-        }
-        if(! (obj instanceof Dependency))
+        if((obj == null) || ! (obj instanceof Dependency))
         {
             return false;
         }
@@ -76,6 +72,7 @@ public class Dependency extends TypeUse<Dependency> implements Comparable<Depend
         return true;
     }
 
+    @Override
     public int compareTo(Dependency otherDependency)
     {
         return Collator.getInstance().compare(name, otherDependency.name);

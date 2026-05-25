@@ -2,10 +2,15 @@ package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.moreunit.mock.templates.MockingTemplateLoader.TEMPLATE_DIRECTORY;
 
 import java.net.URI;
@@ -19,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.PluginResourceLoader;
 import org.moreunit.mock.model.Category;
@@ -91,7 +96,7 @@ public class MockingTemplateLoaderTest
         // given
         when(resourceLoader.findBundleResources(anyString(), anyString())).thenReturn(noResources);
         when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
-        when(templateStore.getCategories()).thenReturn(new ArrayList<Category>());
+        when(templateStore.getCategories()).thenReturn(new ArrayList<>());
 
         // when
         loader.loadTemplates();
@@ -241,7 +246,7 @@ public class MockingTemplateLoaderTest
 
     private MockingTemplates someTemplates()
     {
-        return new MockingTemplates(new ArrayList<Category>(), asList(new MockingTemplate("template")));
+        return new MockingTemplates(new ArrayList<>(), asList(new MockingTemplate("template")));
     }
 
     private void workspaceResourcesContainTemplateDefinitions(URL... definitionUrls) throws MockingTemplateException
@@ -261,7 +266,7 @@ public class MockingTemplateLoaderTest
     @SafeVarargs
     private <T> T oneOf(T... args)
     {
-        return argThat(new IsOneOf<T>(args));
+        return argThat(new IsOneOf<>(args));
     }
 
     private class IsOneOf<T> implements ArgumentMatcher<T>

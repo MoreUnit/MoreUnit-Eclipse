@@ -107,6 +107,7 @@ public class MockModule extends Module<MockModule>
         return new DependencyMocker(getPreferences(), mockingTemplateStore, getTemplateProcessor(), getLogger());
     }
 
+    @Override
     public Logger getLogger()
     {
         return logger;

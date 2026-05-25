@@ -17,7 +17,7 @@ public class SearchScopeSingelton
 
     private static final SearchScopeSingelton instance = new SearchScopeSingelton();
 
-    private Map<IPackageFragmentRoot, IJavaSearchScope> searchScopeMap = new HashMap<IPackageFragmentRoot, IJavaSearchScope>();
+    private Map<IPackageFragmentRoot, IJavaSearchScope> searchScopeMap = new HashMap<>();
 
     public static SearchScopeSingelton getInstance()
     {
@@ -47,6 +47,6 @@ public class SearchScopeSingelton
      */
     public void resetCachedSearchScopes()
     {
-        searchScopeMap = new HashMap<IPackageFragmentRoot, IJavaSearchScope>();
+        searchScopeMap = new HashMap<>();
     }
 }

@@ -22,16 +22,19 @@ public class ExtensionPage implements INewTestCaseWizardPage
         this.position = position;
     }
 
+    @Override
     public String getId()
     {
         return id;
     }
 
+    @Override
     public IWizardPage getPage()
     {
         return page;
     }
 
+    @Override
     public NewTestCaseWizardPagePosition getPosition()
     {
         return position;

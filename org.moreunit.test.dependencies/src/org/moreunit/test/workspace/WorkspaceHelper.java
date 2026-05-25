@@ -2,17 +2,15 @@ package org.moreunit.test.workspace;
 
 import java.io.IOException;
 import java.net.URL;
-
-import junit.framework.TestCase;
-
-import org.eclipse.core.resources.IFolder;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,7 +31,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.moreunit.test.context.StringUtils;
 
 /**
  * @author vera 29.11.2008 13:41:52
@@ -229,7 +226,7 @@ public class WorkspaceHelper
 
     public static void assertSameMethodName(IMethod method, MethodDeclaration methodDeclaration)
     {
-        TestCase.assertEquals(method.getElementName(), methodDeclaration.getName().getFullyQualifiedName());
+        org.junit.jupiter.api.Assertions.assertEquals(method.getElementName(), methodDeclaration.getName().getFullyQualifiedName());
     }
 
     public static IFolder createFolder(IJavaProject project, String folderName) throws CoreException
@@ -248,7 +245,7 @@ public class WorkspaceHelper
          * 📊 Impact: O(1) string allocations instead of O(N) array creation and string parsing. Reduced workspace locking and resource resolution overhead for deep folder hierarchies.
          * 🔬 Measurement: Workspace setup time in test suites with deep package structures should see a minor measurable decrease in latency.
          */
-        List<IFolder> foldersToCreate = new ArrayList<IFolder>();
+        List<IFolder> foldersToCreate = new ArrayList<>();
         IFolder current = srcFolder;
 
         while (!current.exists())

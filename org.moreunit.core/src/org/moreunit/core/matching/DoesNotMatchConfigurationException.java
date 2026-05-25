@@ -2,7 +2,6 @@ package org.moreunit.core.matching;
 
 import java.io.Serial;
 
-
 import org.moreunit.core.resources.Path;
 
 public class DoesNotMatchConfigurationException extends Exception

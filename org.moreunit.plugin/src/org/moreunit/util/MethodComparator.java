@@ -12,6 +12,7 @@ public class MethodComparator implements Comparator<IMethod>, Serializable
     @Serial
     private static final long serialVersionUID = 8951644304593298761L;
 
+    @Override
     public int compare(IMethod method1, IMethod method2)
     {
         return Collator.getInstance().compare(method1.getElementName(), method2.getElementName());

@@ -1,5 +1,8 @@
 package org.moreunit.mock.wizard;
 
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.ALL;
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,9 +21,6 @@ import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.DependencyInjectionPointProvider;
 import org.moreunit.mock.dependencies.Field;
 
-import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.ALL;
-import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
-
 public class DependenciesTreeContentProvider implements ITreeContentProvider
 {
     public static enum VisibleFields
@@ -34,8 +34,8 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
     private final DependencyInjectionPointProvider provider;
     private VisibleFields visibleFields;
     private final Logger logger;
-    private final List<IType> types = new ArrayList<IType>();
-    private final List<IMember> members = new ArrayList<IMember>();
+    private final List<IType> types = new ArrayList<>();
+    private final List<IMember> members = new ArrayList<>();
 
     public DependenciesTreeContentProvider(IType classUnderTest, DependencyInjectionPointProvider provider, VisibleFields visibleFields, Logger logger)
     {
@@ -127,11 +127,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     private boolean shouldShowField(Field field) throws JavaModelException
     {
-        if(visibleFields == ALL)
-        {
-            return true;
-        }
-        if(field.isVisibleToTestCase() && field.isAssignable())
+        if((visibleFields == ALL) || (field.isVisibleToTestCase() && field.isAssignable()))
         {
             return true;
         }
@@ -146,7 +142,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     private void removeUnusedTypes()
     {
-        Set<IType> usedTypes = new HashSet<IType>(types.size());
+        Set<IType> usedTypes = new HashSet<>(types.size());
         for (IMember member : members)
         {
             usedTypes.add(member.getDeclaringType());
@@ -155,11 +151,12 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
         types.retainAll(usedTypes);
     }
 
+    @Override
     public Object[] getChildren(Object parentElement)
     {
         if(parentElement instanceof IType parentType)
         {
-            List<IMember> result = new ArrayList<IMember>(members.size());
+            List<IMember> result = new ArrayList<>(members.size());
             for (IMember member : members)
             {
                 if(member.getDeclaringType().equals(parentType))
@@ -172,6 +169,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
         return EMPTY_ARRAY;
     }
 
+    @Override
     public Object getParent(Object element)
     {
         if(element instanceof IMethod method)
@@ -181,11 +179,13 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
         return null;
     }
 
+    @Override
     public boolean hasChildren(Object element)
     {
         return getChildren(element).length > 0;
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         return getTypes();
@@ -196,11 +196,13 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
         return types.toArray();
     }
 
+    @Override
     public void dispose()
     {
         // void implementation
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
         // void implementation

@@ -8,9 +8,9 @@ import static org.mockito.Mockito.verify;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 public class DefaultLoggerTest
@@ -20,13 +20,13 @@ public class DefaultLoggerTest
 
     private ILog mockLog;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         mockLog = mock(ILog.class);
     }
 
-    @After
+    @AfterEach
     public void tearDown()
     {
         System.clearProperty(LOG_LEVEL_PROPERTY);

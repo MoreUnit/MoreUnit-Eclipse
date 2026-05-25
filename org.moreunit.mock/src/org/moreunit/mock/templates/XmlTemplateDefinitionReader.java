@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.SchemaFactory;
 
 import org.moreunit.core.util.IOUtils;
 import org.moreunit.mock.model.MockingTemplates;
 import org.xml.sax.SAXException;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 
 public class XmlTemplateDefinitionReader
 {

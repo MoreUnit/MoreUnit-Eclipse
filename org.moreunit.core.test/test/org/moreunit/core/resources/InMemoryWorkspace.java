@@ -11,7 +11,7 @@ import org.moreunit.core.preferences.Preferences;
 
 public final class InMemoryWorkspace extends InMemoryResourceContainer implements Workspace
 {
-    private final Map<String, InMemoryProject> projects = new TreeMap<String, InMemoryProject>();
+    private final Map<String, InMemoryProject> projects = new TreeMap<>();
 
     public InMemoryWorkspace()
     {

@@ -16,16 +16,19 @@ public class DebugTestAction implements IEditorActionDelegate
 
     private IEditorPart editorPart;
 
+    @Override
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
         editorPart = targetEditor;
     }
 
+    @Override
     public void run(IAction action)
     {
         RunTestsActionExecutor.getInstance().executeRunTestAction(editorPart, ILaunchManager.DEBUG_MODE);
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection)
     {
     }

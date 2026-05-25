@@ -49,7 +49,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         methodsByType = groupMethodsByType(methods);
 
         List<IType> sortedTypes = sortTypes(types);
-        Set<IType> allTypes = new LinkedHashSet<IType>(sortedTypes);
+        Set<IType> allTypes = new LinkedHashSet<>(sortedTypes);
         allTypes.addAll(sortTypes(methodsByType.keySet()));
         this.elements = allTypes.toArray();
 
@@ -65,7 +65,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
      */
     public MemberContentProvider(Collection<IType> types, IType typeProposedForSelection)
     {
-        methodsByType = new HashMap<IType, List<IMethod>>();
+        methodsByType = new HashMap<>();
 
         List<IType> sortedTypes = sortTypes(types);
         this.elements = sortedTypes.toArray();
@@ -75,14 +75,14 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     private Map<IType, List<IMethod>> groupMethodsByType(Collection<IMethod> methods)
     {
-        Map<IType, List<IMethod>> methodsByType = new LinkedHashMap<IType, List<IMethod>>();
+        Map<IType, List<IMethod>> methodsByType = new LinkedHashMap<>();
         for (IMethod method : methods)
         {
             IType type = method.getDeclaringType();
             List<IMethod> methodsForType = methodsByType.get(type);
             if(methodsForType == null)
             {
-                methodsForType = new ArrayList<IMethod>();
+                methodsForType = new ArrayList<>();
                 methodsByType.put(type, methodsForType);
             }
             methodsForType.add(method);
@@ -98,7 +98,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     private List<IType> sortTypes(Collection<IType> types)
     {
-        List<IType> list = new ArrayList<IType>(types);
+        List<IType> list = new ArrayList<>(types);
         Collections.sort(list, new TypeComparator());
         return list;
     }
@@ -122,35 +122,42 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         return defaultSelectedMember == null ? null : new StructuredSelection(defaultSelectedMember);
     }
 
+    @Override
     public Object[] getChildren(Object parentElement)
     {
         List<IMethod> children = methodsByType.get(parentElement);
         return children == null ? new IMethod[0] : children.toArray();
     }
 
+    @Override
     public Object getParent(Object element)
     {
         return element instanceof IType ? null : ((IMethod) element).getDeclaringType();
     }
 
+    @Override
     public boolean hasChildren(Object element)
     {
         return element instanceof IType && methodsByType.get(element) != null;
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         return elements;
     }
 
+    @Override
     public void dispose()
     {
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
     }
 
+    @Override
     public ISelection getDefaultSelection()
     {
         return defaultSelection;
@@ -158,7 +165,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     public MemberContentProvider withAction(TreeActionElement< ? > action)
     {
-        List<Object> elements = new ArrayList<Object>();
+        List<Object> elements = new ArrayList<>();
         Collections.addAll(elements, this.elements);
 
         if(! elements.isEmpty() && ! (elements.getLast() instanceof SeparatorElement))

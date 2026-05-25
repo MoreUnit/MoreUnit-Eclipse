@@ -33,6 +33,7 @@ public class MoveMethodParticipant extends MoveParticipant
 
     // JavaFileFacade javaFileFacade;
 
+    @Override
     protected boolean initialize(Object element)
     {
         movedMethod = (IMethod) element;
@@ -46,16 +47,19 @@ public class MoveMethodParticipant extends MoveParticipant
         return true;
     }
 
+    @Override
     public String getName()
     {
         return "MoreUnit Move Method";
     }
 
+    @Override
     public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
     {
         return new RefactoringStatus();
     }
 
+    @Override
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
         SourceType destination = (SourceType) getArguments().getDestination();
@@ -74,7 +78,7 @@ public class MoveMethodParticipant extends MoveParticipant
 
         List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(movedMethod);
 
-        List<Change> changes = new ArrayList<Change>();
+        List<Change> changes = new ArrayList<>();
         if(allTestMethods == null)
         {
             return null;

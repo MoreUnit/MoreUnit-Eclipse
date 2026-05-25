@@ -68,11 +68,7 @@ public class TestClassNamePattern
 
     private boolean matchesTestPackagePattern(String packageName)
     {
-        if(packagePrefix != null && ! packageName.startsWith(packagePrefix + "."))
-        {
-            return false;
-        }
-        if(packageSuffix != null && ! packageName.endsWith("." + packageSuffix))
+        if((packagePrefix != null && ! packageName.startsWith(packagePrefix + ".")) || (packageSuffix != null && ! packageName.endsWith("." + packageSuffix)))
         {
             return false;
         }

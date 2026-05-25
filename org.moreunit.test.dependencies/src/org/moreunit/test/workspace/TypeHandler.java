@@ -15,6 +15,7 @@ public class TypeHandler implements ElementHandler<IType, TypeAssertions>
         this.type = type;
     }
 
+    @Override
     public IType get()
     {
         return type;
@@ -47,11 +48,13 @@ public class TypeHandler implements ElementHandler<IType, TypeAssertions>
         return cuHandler;
     }
 
+    @Override
     public WorkspaceHandler getWorkspaceHandler()
     {
         return cuHandler.getWorkspaceHandler();
     }
 
+    @Override
     public TypeAssertions assertThat()
     {
         return new TypeAssertions(this);

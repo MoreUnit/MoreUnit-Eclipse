@@ -213,11 +213,13 @@ public final class AddTestMethodParticipatorHandler
             // Create safe runner
             ISafeRunnable runnable = new ISafeRunnable()
             {
+                @Override
                 public void handleException(Throwable throwable)
                 {
                     LogHandler.getInstance().handleExceptionLog("Error running extension", throwable);
                 }
 
+                @Override
                 public void run() throws Exception
                 {
                     LogHandler.getInstance().handleInfoLog("Run extension class " + extension.getClass().getName());

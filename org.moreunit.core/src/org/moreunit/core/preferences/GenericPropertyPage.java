@@ -73,6 +73,7 @@ public class GenericPropertyPage extends PropertyPage
 
         projectSpecificSettingsCheckbox.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 boolean checked = projectSpecificSettingsCheckbox.getSelection();

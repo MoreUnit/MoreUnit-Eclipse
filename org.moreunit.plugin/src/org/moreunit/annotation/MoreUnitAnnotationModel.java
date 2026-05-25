@@ -280,11 +280,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
     }
 
+    @Override
     public void addAnnotation(Annotation annotation, Position position)
     {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addAnnotationModelListener(IAnnotationModelListener listener)
     {
         if(! annotationModelListeners.contains(listener))
@@ -313,6 +315,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
     }
 
+    @Override
     public void connect(IDocument document)
     {
         if(this.document != document)
@@ -333,6 +336,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
     }
 
+    @Override
     public void disconnect(IDocument document)
     {
         if(this.document != document)
@@ -346,12 +350,14 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         }
     }
 
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Iterator<Annotation> getAnnotationIterator()
     {
         return new ArrayList(copyAnnotations()).iterator();
     }
 
+    @Override
     public Position getPosition(Annotation annotation)
     {
         if(annotation instanceof MoreUnitAnnotation unitAnnotation)
@@ -361,11 +367,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         return null;
     }
 
+    @Override
     public void removeAnnotation(Annotation annotation)
     {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeAnnotationModelListener(IAnnotationModelListener listener)
     {
         annotationModelListeners.remove(listener);
@@ -375,7 +383,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     {
         synchronized (annotations)
         {
-            return new ArrayList<MoreUnitAnnotation>(annotations);
+            return new ArrayList<>(annotations);
         }
     }
 }

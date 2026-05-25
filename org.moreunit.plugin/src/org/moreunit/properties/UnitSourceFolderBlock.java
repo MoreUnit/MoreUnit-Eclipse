@@ -108,10 +108,12 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         button.setText("Add");
         button.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
             }
 
+            @Override
             public void widgetSelected(SelectionEvent selectionEvent)
             {
                 addButtonClicked();
@@ -128,10 +130,12 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         button.setText("Remove");
         button.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 removeButtonClicked();
@@ -148,10 +152,12 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         button.setText("Remap");
         button.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 mappingButtonClicked();
@@ -214,6 +220,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         SearchScopeSingelton.getInstance().resetCachedSearchScopes();
     }
 
+    @Override
     public void selectionChanged(SelectionChangedEvent event)
     {
         removeButton.setEnabled(isSourceFolderMappingSelected());

@@ -23,6 +23,7 @@ public class FileTester extends PropertyTester
         this.workspace = workspace;
     }
 
+    @Override
     public boolean test(Object receiver, String method, Object[] args, Object expectedValue)
     {
         if(! (receiver instanceof IFile))

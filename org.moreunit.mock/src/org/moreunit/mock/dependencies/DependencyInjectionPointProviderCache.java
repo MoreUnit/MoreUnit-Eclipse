@@ -12,9 +12,9 @@ import org.eclipse.jdt.core.JavaModelException;
  */
 public class DependencyInjectionPointProviderCache implements DependencyInjectionPointProvider
 {
-    private final Collection<IMethod> constructors = new HashSet<IMethod>();
-    private final Collection<IMethod> setters = new HashSet<IMethod>();
-    private final Collection<Field> fields = new HashSet<Field>();
+    private final Collection<IMethod> constructors = new HashSet<>();
+    private final Collection<IMethod> setters = new HashSet<>();
+    private final Collection<Field> fields = new HashSet<>();
     private JavaModelException exception;
 
     public DependencyInjectionPointProviderCache(DependencyInjectionPointProvider provider)
@@ -31,6 +31,7 @@ public class DependencyInjectionPointProviderCache implements DependencyInjectio
         }
     }
 
+    @Override
     public Collection<IMethod> getConstructors() throws JavaModelException
     {
         rethrowExceptionIfAny();
@@ -45,12 +46,14 @@ public class DependencyInjectionPointProviderCache implements DependencyInjectio
         }
     }
 
+    @Override
     public Collection<IMethod> getSetters() throws JavaModelException
     {
         rethrowExceptionIfAny();
         return setters;
     }
 
+    @Override
     public Collection<Field> getFields() throws JavaModelException
     {
         rethrowExceptionIfAny();

@@ -10,13 +10,13 @@ Require-Bundle: org.moreunit.core,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
- org.junit.jupiter.api,
- org.junit.jupiter.engine,
- org.junit.jupiter.params,
  org.moreunit.test.dependencies,
  org.assertj,
  org.mockito.mockito-core,
- org.mockito.junit.jupiter
+ junit-jupiter-api,
+ junit-jupiter-engine,
+ junit-jupiter-params,
+ org.mockito.junit-jupiter
 Bundle-Activator: org.moreunit.core.MoreUnitCoreTest
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: MoreUnit.org

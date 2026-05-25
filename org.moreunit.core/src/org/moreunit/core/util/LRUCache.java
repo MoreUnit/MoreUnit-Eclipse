@@ -17,7 +17,7 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V>
 
     /**
      * Constructs a new LRUCache.
-     * 
+     *
      * @param maxSize The maximum number of entries this cache can contain
      */
     public LRUCache(int maxSize)
@@ -26,6 +26,7 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V>
         this.maxSize = maxSize;
     }
 
+    @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest)
     {
         return size() > this.maxSize;

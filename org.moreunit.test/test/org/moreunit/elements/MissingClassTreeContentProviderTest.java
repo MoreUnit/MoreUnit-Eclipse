@@ -2,16 +2,14 @@ package org.moreunit.elements;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import org.moreunit.log.LogHandler;
-import org.moreunit.core.log.Logger;
-import org.mockito.MockedStatic;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.moreunit.log.LogHandler;
 
 public class MissingClassTreeContentProviderTest
 {

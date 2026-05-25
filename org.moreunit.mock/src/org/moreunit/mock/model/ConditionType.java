@@ -5,10 +5,10 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.moreunit.preferences.PreferenceConstants;
+
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
-
-import org.moreunit.preferences.PreferenceConstants;
 
 @XmlEnum
 public enum ConditionType
@@ -23,7 +23,7 @@ public enum ConditionType
 
     private ConditionType(String... validValues)
     {
-        this.validValues = validValues == null ? null : new HashSet<String>(asList(validValues));
+        this.validValues = validValues == null ? null : new HashSet<>(asList(validValues));
     }
 
     public boolean isValidValue(String value)

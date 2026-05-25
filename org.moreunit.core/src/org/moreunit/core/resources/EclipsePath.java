@@ -19,17 +19,23 @@ public class EclipsePath implements Path
     public boolean equals(Object other)
     {
         if(other == this)
+        {
             return true;
+        }
         if(! (other instanceof Path))
+        {
             return false;
-        return ((Path) other).toString().equals(toString());
+        }
+        return other.toString().equals(toString());
     }
 
     @Override
     public String getBaseName()
     {
         if(isEmpty())
+        {
             return "";
+        }
 
         String lastSegment = path.lastSegment();
         return lastSegment == null ? "/" : lastSegment;

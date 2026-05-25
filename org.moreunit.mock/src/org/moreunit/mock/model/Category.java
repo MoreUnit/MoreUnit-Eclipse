@@ -1,11 +1,11 @@
 package org.moreunit.mock.model;
 
+import static org.moreunit.core.util.Strings.emptyIfNull;
+
 import java.text.Collator;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import static org.moreunit.core.util.Strings.emptyIfNull;
 
 @XmlRootElement(name = "category")
 public class Category implements Comparable<Category>
@@ -60,11 +60,7 @@ public class Category implements Comparable<Category>
         {
             return true;
         }
-        if(obj == null)
-        {
-            return false;
-        }
-        if(getClass() != obj.getClass())
+        if((obj == null) || (getClass() != obj.getClass()))
         {
             return false;
         }
@@ -83,6 +79,7 @@ public class Category implements Comparable<Category>
         return true;
     }
 
+    @Override
     public int compareTo(Category otherCategory)
     {
         return Collator.getInstance().compare(emptyIfNull(name), emptyIfNull(otherCategory.name));

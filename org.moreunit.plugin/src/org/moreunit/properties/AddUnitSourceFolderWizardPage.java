@@ -32,6 +32,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
         setPageComplete(false);
     }
 
+    @Override
     public void createControl(Composite parent)
     {
         GridLayout gridLayout = new GridLayout();
@@ -54,6 +55,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
         return ((AddUnitSourceFolderWizard) getWizard()).getUnitSourceFolderFromPropertyPage();
     }
 
+    @Override
     public void checkStateChanged(CheckStateChangedEvent event)
     {
         Object element = event.getElement();
@@ -114,7 +116,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 
     protected List<IPackageFragmentRoot> getSelectedSourceFolder()
     {
-        List<IPackageFragmentRoot> selectedFolders = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> selectedFolders = new ArrayList<>();
         Object[] checkedElements = checkboxTreeViewer.getCheckedElements();
 
         for (Object checkedElement : checkedElements)

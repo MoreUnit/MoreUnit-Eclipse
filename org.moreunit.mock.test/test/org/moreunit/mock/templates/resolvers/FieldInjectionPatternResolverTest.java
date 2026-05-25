@@ -5,16 +5,18 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.templates.MockingContext;
 
-@ExtendWith(MockitoExtension.class)
 public class FieldInjectionPatternResolverTest
 {
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
     @Mock
     private MockingContext context;
 

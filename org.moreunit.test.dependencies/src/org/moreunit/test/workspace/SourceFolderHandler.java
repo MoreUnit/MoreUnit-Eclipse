@@ -30,11 +30,13 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         return projectHandler;
     }
 
+    @Override
     public WorkspaceHandler getWorkspaceHandler()
     {
         return projectHandler.getWorkspaceHandler();
     }
 
+    @Override
     public IPackageFragmentRoot get()
     {
         if(sourceFolder == null)
@@ -51,6 +53,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         return sourceFolder;
     }
 
+    @Override
     public SourceFolderAssertions assertThat()
     {
         return new SourceFolderAssertions();

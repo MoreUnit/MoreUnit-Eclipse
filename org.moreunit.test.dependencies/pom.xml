@@ -19,20 +19,4 @@
   <properties>
   	<tests.use.ui>true</tests.use.ui>
   </properties>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <!-- problem still to be solved -->
-            <exclude>**/ClasspathTest.java</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>

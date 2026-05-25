@@ -21,7 +21,7 @@ import org.moreunit.ui.MethodPage;
 public class MethodTreeContentProvider implements ITreeContentProvider
 {
     IType classType;
-    List<IMethod> methods = new ArrayList<IMethod>();
+    List<IMethod> methods = new ArrayList<>();
     private boolean isPrivateFiltered = false;
     private boolean isGetterFiltered = false;
 
@@ -33,7 +33,7 @@ public class MethodTreeContentProvider implements ITreeContentProvider
 
     private void resetMethods(IType javaFileFile)
     {
-        methods = new ArrayList<IMethod>();
+        methods = new ArrayList<>();
         if(javaFileFile == null || TypeFacade.isTestCase(javaFileFile))
         {
             return;
@@ -53,31 +53,35 @@ public class MethodTreeContentProvider implements ITreeContentProvider
         }
         catch (JavaModelException e)
         {
-            methods = new ArrayList<IMethod>();
+            methods = new ArrayList<>();
         }
     }
 
+    @Override
     public Object[] getChildren(Object parentElement)
     {
         return null;
     }
 
+    @Override
     public Object getParent(Object element)
     {
         return null;
     }
 
+    @Override
     public boolean hasChildren(Object element)
     {
         return false;
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         if(inputElement instanceof MethodPage page)
             resetMethods(page.getInputType());
 
-        List<IMethod> resultMethodList = new ArrayList<IMethod>();
+        List<IMethod> resultMethodList = new ArrayList<>();
         if(isPrivateFiltered)
             resultMethodList.addAll(filterPrivateMethods(methods));
         else
@@ -91,18 +95,20 @@ public class MethodTreeContentProvider implements ITreeContentProvider
         return resultMethodList.toArray();
     }
 
+    @Override
     public void dispose()
     {
         methods = null;
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
     }
 
     private List<IMethod> filterPrivateMethods(List<IMethod> methodList)
     {
-        List<IMethod> resultList = new ArrayList<IMethod>();
+        List<IMethod> resultList = new ArrayList<>();
         FilterMethodVisitor privateMethodVisitor = new FilterMethodVisitor(classType);
 
         for (IMethod method : methodList)
@@ -116,7 +122,7 @@ public class MethodTreeContentProvider implements ITreeContentProvider
 
     private List<IMethod> filterGetterAndSetter(List<IMethod> methodList)
     {
-        List<IMethod> resultList = new ArrayList<IMethod>();
+        List<IMethod> resultList = new ArrayList<>();
         FilterMethodVisitor getterMethodVisitor = new FilterMethodVisitor(classType);
 
         for (IMethod method : methodList)

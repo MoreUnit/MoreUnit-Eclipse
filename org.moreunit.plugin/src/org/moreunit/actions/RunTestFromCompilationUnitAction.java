@@ -18,15 +18,18 @@ public class RunTestFromCompilationUnitAction implements IObjectActionDelegate
 
     private ICompilationUnit compilationUnit;
 
+    @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart)
     {
     }
 
+    @Override
     public void run(IAction action)
     {
         RunTestsActionExecutor.getInstance().executeRunTestAction(compilationUnit, ILaunchManager.RUN_MODE);
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection)
     {
         IStructuredSelection structuredSelection = (IStructuredSelection) selection;

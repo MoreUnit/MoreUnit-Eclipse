@@ -14,6 +14,7 @@ public class MethodTestCallerFinder extends MethodCallFinder
         super(methodUnderTest, searchScope);
     }
 
+    @Override
     protected boolean methodMatch(IMethod method)
     {
         return TypeFacade.isTestCase(method.getCompilationUnit().findPrimaryType());

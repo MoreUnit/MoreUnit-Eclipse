@@ -31,9 +31,10 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
         this.testCasePackage = testCasePackage;
     }
 
+    @Override
     public Collection<IMethod> getConstructors() throws JavaModelException
     {
-        Collection<IMethod> constructors = new HashSet<IMethod>();
+        Collection<IMethod> constructors = new HashSet<>();
 
         for (IMethod method : classUnderTest.getMethods())
         {
@@ -57,9 +58,10 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
         return packageFragment.getElementName().equals(type.getPackageFragment().getElementName());
     }
 
+    @Override
     public Collection<IMethod> getSetters() throws JavaModelException
     {
-        Collection<IMethod> setters = new HashSet<IMethod>();
+        Collection<IMethod> setters = new HashSet<>();
 
         for (IMethod method : getAllMethods())
         {
@@ -75,7 +77,7 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
 
     private Set<IMethod> getAllMethods() throws JavaModelException
     {
-        Set<IMethod> methods = new HashSet<IMethod>();
+        Set<IMethod> methods = new HashSet<>();
         for (IType type : getTypeHierarchy().getAllClasses())
         {
             Collections.addAll(methods, type.getMethods());
@@ -92,9 +94,10 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
         return typeHierarchy;
     }
 
+    @Override
     public Collection<Field> getFields() throws JavaModelException
     {
-        HashSet<Field> fields = new HashSet<Field>();
+        HashSet<Field> fields = new HashSet<>();
 
         for (IField field : getAllFields())
         {
@@ -106,7 +109,7 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
 
     private Set<IField> getAllFields() throws JavaModelException
     {
-        Set<IField> fields = new HashSet<IField>();
+        Set<IField> fields = new HashSet<>();
         for (IType type : getTypeHierarchy().getAllClasses())
         {
             Collections.addAll(fields, type.getFields());

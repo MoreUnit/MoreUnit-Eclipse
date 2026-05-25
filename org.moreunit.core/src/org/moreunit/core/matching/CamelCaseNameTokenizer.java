@@ -29,9 +29,10 @@ public class CamelCaseNameTokenizer extends NameTokenizer
         return scanner.hasNext();
     }
 
+    @Override
     public List<String> getWords(String name)
     {
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
 
         WordScanner scanner = new WordScanner(name);
         while (hasNextWord(scanner))

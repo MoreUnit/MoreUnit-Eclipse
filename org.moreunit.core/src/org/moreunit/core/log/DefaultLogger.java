@@ -21,11 +21,13 @@ public class DefaultLogger implements Logger
         logLevel = Level.valueOf(System.getProperty(logLevelProperty, Level.INFO.name()).toUpperCase());
     }
 
+    @Override
     public boolean traceEnabled()
     {
         return levelEnabled(Level.TRACE);
     }
 
+    @Override
     public void trace(Object message)
     {
         if(traceEnabled())
@@ -34,6 +36,7 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public boolean debugEnabled()
     {
         return levelEnabled(Level.DEBUG);
@@ -44,6 +47,7 @@ public class DefaultLogger implements Logger
         return ! level.isLowerThan(logLevel);
     }
 
+    @Override
     public void debug(Object message)
     {
         if(debugEnabled())
@@ -52,11 +56,13 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public boolean infoEnabled()
     {
         return levelEnabled(Level.INFO);
     }
 
+    @Override
     public void info(Object message)
     {
         if(infoEnabled())
@@ -65,11 +71,13 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public boolean warnEnabled()
     {
         return levelEnabled(Level.WARNING);
     }
 
+    @Override
     public void warn(Object message)
     {
         if(warnEnabled())
@@ -78,6 +86,7 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public void warn(Object message, Throwable throwable)
     {
         if(warnEnabled())
@@ -86,11 +95,13 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public boolean errorEnabled()
     {
         return levelEnabled(Level.ERROR);
     }
 
+    @Override
     public void error(Object message)
     {
         if(errorEnabled())
@@ -99,6 +110,7 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public void error(Throwable throwable)
     {
         if(errorEnabled())
@@ -124,6 +136,7 @@ public class DefaultLogger implements Logger
         }
     }
 
+    @Override
     public void error(Object message, Throwable throwable)
     {
         if(errorEnabled())

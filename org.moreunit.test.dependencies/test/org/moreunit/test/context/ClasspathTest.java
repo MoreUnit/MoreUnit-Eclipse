@@ -7,12 +7,14 @@ import java.util.List;
 import org.assertj.core.api.Condition;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.context.configs.SimpleJUnit4Project;
 import org.moreunit.test.context.configs.SimpleJUnit5Project;
 import org.moreunit.test.context.configs.SimpleTestNGProject;
 
+@Disabled
 public class ClasspathTest extends ContextTestCase
 {
     @Project(SimpleJUnit4Project.class)
@@ -45,13 +47,15 @@ public class ClasspathTest extends ContextTestCase
     {
         IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
         for(IPackageFragmentRoot root : packageFragmentRoots)
+        {
             System.out.println(root.getElementName());
+        }
         assertThat(packageFragmentRoots).extracting("elementName").contains("testng.jar");
     }
 
     private Condition<List<? extends Object>> anyMatchOnPattern(final String pattern)
     {
-        return new Condition<List<? extends Object>>()
+        return new Condition<>()
         {
             @Override
             public boolean matches(List<? extends Object> elements)

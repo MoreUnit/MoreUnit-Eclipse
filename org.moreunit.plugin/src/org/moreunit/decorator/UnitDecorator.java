@@ -36,6 +36,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
         this.logger = logger;
     }
 
+    @Override
     public void decorate(Object element, IDecoration decoration)
     {
         StringBuilder logMessage = null;

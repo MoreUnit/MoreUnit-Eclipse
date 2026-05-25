@@ -11,7 +11,7 @@ public class SetterDependency extends Dependency
 
     public SetterDependency(String fullyQualifiedClassName, String setterMethodName)
     {
-        this(fullyQualifiedClassName, setterMethodName, new ArrayList<TypeParameter>());
+        this(fullyQualifiedClassName, setterMethodName, new ArrayList<>());
     }
 
     public SetterDependency(String fullyQualifiedClassName, String setterMethodName, List<TypeParameter> typeParameters)

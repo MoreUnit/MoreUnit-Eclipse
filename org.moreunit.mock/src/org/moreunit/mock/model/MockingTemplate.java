@@ -1,5 +1,8 @@
 package org.moreunit.mock.model;
 
+import static java.util.Collections.emptyList;
+import static org.moreunit.core.util.Strings.emptyIfNull;
+
 import java.text.Collator;
 import java.util.List;
 
@@ -7,9 +10,6 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlElementRefs;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import static java.util.Collections.emptyList;
-import static org.moreunit.core.util.Strings.emptyIfNull;
 
 @XmlRootElement(name = "mocking-template")
 public class MockingTemplate implements Comparable<MockingTemplate>
@@ -100,11 +100,7 @@ public class MockingTemplate implements Comparable<MockingTemplate>
         {
             return true;
         }
-        if(obj == null)
-        {
-            return false;
-        }
-        if(getClass() != obj.getClass())
+        if((obj == null) || (getClass() != obj.getClass()))
         {
             return false;
         }
@@ -123,6 +119,7 @@ public class MockingTemplate implements Comparable<MockingTemplate>
         return true;
     }
 
+    @Override
     public int compareTo(MockingTemplate otherTemplate)
     {
         return Collator.getInstance().compare(emptyIfNull(name), emptyIfNull(otherTemplate.name));

@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.IType;
 import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Project;
-
 import org.moreunit.test.workspace.TypeHandler;
 
 public class SearchToolsTest extends ContextTestCase

@@ -9,7 +9,7 @@ import org.eclipse.search.core.text.TextSearchRequestor;
 
 public abstract class FileMatchCollector extends TextSearchRequestor
 {
-    private final Set<IFile> results = new LinkedHashSet<IFile>();
+    private final Set<IFile> results = new LinkedHashSet<>();
 
     private final SourceFolderPath correspondingSrcFolder;
     private final boolean checkFolder;

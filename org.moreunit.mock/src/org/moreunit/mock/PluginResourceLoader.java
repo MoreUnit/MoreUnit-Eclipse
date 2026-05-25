@@ -28,7 +28,7 @@ public class PluginResourceLoader
 
     public Collection<URL> findBundleResources(String searchRoot, String filePattern)
     {
-        Set<URL> resources = new LinkedHashSet<URL>();
+        Set<URL> resources = new LinkedHashSet<>();
         Enumeration<URL> bundleEntries = plugin.getBundle().findEntries(searchRoot, filePattern, true);
         if(bundleEntries == null)
         {
@@ -45,7 +45,7 @@ public class PluginResourceLoader
 
     public Collection<URL> findWorkspaceStateResources(String searchRoot, String filePattern)
     {
-        Set<URL> resources = new LinkedHashSet<URL>();
+        Set<URL> resources = new LinkedHashSet<>();
         File templateDirectory = plugin.getStateLocation().append(searchRoot).toFile();
         for (File f : templateDirectory.listFiles(new WildcardFileFilter(filePattern)))
         {

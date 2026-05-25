@@ -89,7 +89,7 @@ public class TestmethodCreator
 
     public List<IMethod> createTestMethods(List<IMethod> methodsUnderTest)
     {
-        List<IMethod> createdMethods = new ArrayList<IMethod>(methodsUnderTest.size());
+        List<IMethod> createdMethods = new ArrayList<>(methodsUnderTest.size());
         List<IMethod> overloadedMethods = getOverloadedMethods();
 
         for (IMethod methodUnderTest : methodsUnderTest)
@@ -107,7 +107,7 @@ public class TestmethodCreator
     // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
     private List<IMethod> getOverloadedMethods()
     {
-        List<IMethod> allMethods = new ArrayList<IMethod>();
+        List<IMethod> allMethods = new ArrayList<>();
         try
         {
             addAll(allMethods, compilationUnit.findPrimaryType().getMethods());
@@ -118,7 +118,7 @@ public class TestmethodCreator
             return allMethods;
         }
 
-        List<IMethod> overloadedMethods = new ArrayList<IMethod>();
+        List<IMethod> overloadedMethods = new ArrayList<>();
         for (int i = 0; i < allMethods.size(); i++)
         {
             IMethod current = allMethods.get(i);

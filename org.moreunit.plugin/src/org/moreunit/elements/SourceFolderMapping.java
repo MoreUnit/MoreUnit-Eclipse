@@ -15,7 +15,7 @@ import org.moreunit.util.PluginTools;
 public class SourceFolderMapping
 {
     private IJavaProject javaProject;
-    private List<IPackageFragmentRoot> sourceFolderList = new ArrayList<IPackageFragmentRoot>();
+    private List<IPackageFragmentRoot> sourceFolderList = new ArrayList<>();
     private IPackageFragmentRoot testFolder;
 
     public SourceFolderMapping(IJavaProject javaProject, IPackageFragmentRoot sourceFolder, IPackageFragmentRoot testFolder)
@@ -55,7 +55,7 @@ public class SourceFolderMapping
     @Override
     public String toString()
     {
-        List<String> toStringParts = new ArrayList<String>();
+        List<String> toStringParts = new ArrayList<>();
         toStringParts.add(SourceFolderMapping.class.getSimpleName());
         for (IPackageFragmentRoot sourceFolder : sourceFolderList)
         {

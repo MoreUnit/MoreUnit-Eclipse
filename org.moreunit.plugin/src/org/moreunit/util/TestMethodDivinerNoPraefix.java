@@ -3,11 +3,13 @@ package org.moreunit.util;
 public class TestMethodDivinerNoPraefix implements TestMethodDiviner
 {
 
+    @Override
     public String getTestMethodNameFromMethodName(String methodName)
     {
         return methodName;
     }
 
+    @Override
     public String getTestMethodNameAfterRename(String methodNameBeforeRename, String methodNameAfterRename, String testMethodName)
     {
         // Performance optimization: Replaced regex-based replaceFirst with
@@ -19,6 +21,7 @@ public class TestMethodDivinerNoPraefix implements TestMethodDiviner
         return testMethodName;
     }
 
+    @Override
     public String getMethodNameFromTestMethodName(String testMethodName)
     {
         return testMethodName;

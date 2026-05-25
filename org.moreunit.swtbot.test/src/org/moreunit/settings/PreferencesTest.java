@@ -3,24 +3,23 @@ package org.moreunit.settings;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.test.context.Context;
 
 @Context(mainCls = "org:HelloWorld")
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
     private void openPreferencesAndSelectMoreUnitPage()
     {
         getShortcutStrategy().openPreferences();
-        bot.waitUntil(Conditions.shellIsActive("Preferences"), 20000);
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Preferences"), 20000);
         bot.shell("Preferences").activate();
         bot.shell("Preferences").setFocus();
         bot.tree().expandNode("MoreUnit").select("Java");

@@ -25,6 +25,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 import org.moreunit.elements.ClassTypeFacade;
+import org.moreunit.elements.TypeFacade;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
 
@@ -45,7 +46,7 @@ public class MoveClassParticipant extends MoveParticipant
         compilationUnit = (ICompilationUnit) element;
         javaFileFacade = new ClassTypeFacade(compilationUnit);
 
-        return !ClassTypeFacade.isTestCase(compilationUnit);
+        return !TypeFacade.isTestCase(compilationUnit);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class MoveClassParticipant extends MoveParticipant
 
             RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
 
-            List<Change> changes = new ArrayList<Change>();
+            List<Change> changes = new ArrayList<>();
             IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
             String importString = "%s.%s".formatted(packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
 

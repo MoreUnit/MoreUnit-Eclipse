@@ -7,12 +7,12 @@ Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.moreunit.test.dependencies,
- org.junit.jupiter.api,
- org.junit.jupiter.engine,
- org.junit.jupiter.params,
  org.glassfish.hk2.osgi-resource-locator,
  org.assertj,
  org.mockito.mockito-core,
- org.mockito.junit.jupiter
+ junit-jupiter-api,
+ junit-jupiter-engine,
+ junit-jupiter-params,
+ org.mockito.junit-jupiter
 Bundle-ClassPath: .
 Automatic-Module-Name: org.moreunit.mock.test

@@ -96,6 +96,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
         return Preferences.forProject(projectWithPrefs);
     }
 
+    @Override
     public void selectionChanged(final IAction action, final ISelection selection)
     {
         this.selection = selection;

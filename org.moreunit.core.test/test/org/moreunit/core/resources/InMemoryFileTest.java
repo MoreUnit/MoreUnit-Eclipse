@@ -2,7 +2,7 @@ package org.moreunit.core.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class InMemoryFileTest {
 

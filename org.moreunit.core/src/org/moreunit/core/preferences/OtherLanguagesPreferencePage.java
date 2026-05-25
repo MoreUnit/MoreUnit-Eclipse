@@ -65,6 +65,7 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
         creationButton.setText("Create Configuration");
         creationButton.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 if(! extensionField.isValid())

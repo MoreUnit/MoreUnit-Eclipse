@@ -22,6 +22,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
+    @Override
     public void partActivated(IWorkbenchPart part)
     {
         if(part instanceof ITextEditor editor)
@@ -30,6 +31,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
         }
     }
 
+    @Override
     public void partBroughtToTop(IWorkbenchPart part)
     {
         if(part instanceof ITextEditor editor)
@@ -38,6 +40,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
         }
     }
 
+    @Override
     public void partClosed(IWorkbenchPart part)
     {
         if(part instanceof ITextEditor editor)
@@ -46,10 +49,12 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
         }
     }
 
+    @Override
     public void partDeactivated(IWorkbenchPart part)
     {
     }
 
+    @Override
     public void partOpened(IWorkbenchPart part)
     {
         if(part instanceof ITextEditor editor)
@@ -63,6 +68,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
 
+    @Override
     public void resourceChanged(IResourceChangeEvent event)
     {
         IEditorPart openEditorPart = PluginTools.getOpenEditorPart();

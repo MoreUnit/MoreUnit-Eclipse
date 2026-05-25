@@ -85,7 +85,7 @@ public class PluginTools
 
     public static List<IJavaProject> getJavaProjectsFromWorkspace()
     {
-        List<IJavaProject> result = new ArrayList<IJavaProject>();
+        List<IJavaProject> result = new ArrayList<>();
         IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
         for (IProject aProject : projects)
         {
@@ -118,7 +118,7 @@ public class PluginTools
 
     public static List<IPackageFragmentRoot> getAllSourceFolderFromProject(IJavaProject javaProject)
     {
-        List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> resultList = new ArrayList<>();
         try
         {
             for (IPackageFragmentRoot root : javaProject.getPackageFragmentRoots())
@@ -139,7 +139,7 @@ public class PluginTools
 
     public static List<IPackageFragmentRoot> findJavaSourceFoldersFor(IJavaProject project)
     {
-        List<IPackageFragmentRoot> javaSrcFolders = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> javaSrcFolders = new ArrayList<>();
 
         for (IPackageFragmentRoot sourceFolder : getAllSourceFolderFromProject(project))
         {

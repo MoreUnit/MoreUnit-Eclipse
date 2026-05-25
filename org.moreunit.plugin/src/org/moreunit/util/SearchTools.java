@@ -1,7 +1,10 @@
 package org.moreunit.util;
 
-import static org.eclipse.jdt.core.search.IJavaSearchConstants.*;
-import static org.eclipse.jdt.core.search.SearchPattern.*;
+import static org.eclipse.jdt.core.search.IJavaSearchConstants.DECLARATIONS;
+import static org.eclipse.jdt.core.search.IJavaSearchConstants.TYPE;
+import static org.eclipse.jdt.core.search.SearchPattern.R_PATTERN_MATCH;
+import static org.eclipse.jdt.core.search.SearchPattern.createOrPattern;
+import static org.eclipse.jdt.core.search.SearchPattern.createPattern;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -93,6 +96,7 @@ public class SearchTools
     {
         private final Set<IType> matches = new TreeSet<>(new TypeComparator());
 
+        @Override
         public void acceptSearchMatch(SearchMatch match)
         {
             matches.add((IType) match.getElement());

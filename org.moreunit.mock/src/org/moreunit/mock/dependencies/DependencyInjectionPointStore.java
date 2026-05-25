@@ -11,9 +11,9 @@ import org.moreunit.core.log.Logger;
 
 public class DependencyInjectionPointStore
 {
-    private final Collection<IMethod> constructors = new HashSet<IMethod>();
-    private final Collection<IMethod> setters = new HashSet<IMethod>();
-    private final Collection<IField> fields = new HashSet<IField>();
+    private final Collection<IMethod> constructors = new HashSet<>();
+    private final Collection<IMethod> setters = new HashSet<>();
+    private final Collection<IField> fields = new HashSet<>();
 
     private final Logger logger;
 

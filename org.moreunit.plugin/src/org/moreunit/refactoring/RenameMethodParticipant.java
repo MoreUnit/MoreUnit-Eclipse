@@ -28,6 +28,7 @@ public class RenameMethodParticipant extends RenameParticipant
     TestMethodDivinerFactory testMethodDivinerFactory;
     TestMethodDiviner testMethodDiviner;
 
+    @Override
     protected boolean initialize(Object element)
     {
         setMethod(element);
@@ -45,23 +46,26 @@ public class RenameMethodParticipant extends RenameParticipant
         renamedMethod = (IMethod) element;
     }
 
+    @Override
     public String getName()
     {
         return "MoreUnit Rename Method";
     }
 
+    @Override
     public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
     {
         return new RefactoringStatus();
     }
 
+    @Override
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
         if(! getArguments().getUpdateReferences())
         {
             return null;
         }
-        List<Change> changes = new ArrayList<Change>();
+        List<Change> changes = new ArrayList<>();
 
         List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(renamedMethod);
         if(allTestMethods == null)

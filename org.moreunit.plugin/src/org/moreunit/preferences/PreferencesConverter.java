@@ -29,7 +29,7 @@ public class PreferencesConverter
      */
     public static String convertSourceMappingsToString(List<SourceFolderMapping> mappingList)
     {
-        List<String> mappingStrings = new ArrayList<String>();
+        List<String> mappingStrings = new ArrayList<>();
         for (SourceFolderMapping mapping : mappingList)
         {
             mappingStrings.add(PreferencesConverter.createStringFromSourceMapping(mapping));
@@ -40,7 +40,7 @@ public class PreferencesConverter
 
     public static String createStringFromSourceMapping(SourceFolderMapping mapping)
     {
-        List<String> resultList = new ArrayList<String>();
+        List<String> resultList = new ArrayList<>();
 
         new StringBuffer();
 
@@ -76,7 +76,7 @@ public class PreferencesConverter
 
     public static List<SourceFolderMapping> convertStringToSourceMappingList(String sourceMappingString)
     {
-        List<SourceFolderMapping> resultList = new ArrayList<SourceFolderMapping>();
+        List<SourceFolderMapping> resultList = new ArrayList<>();
 
         if(Strings.isBlank(sourceMappingString))
             return resultList;

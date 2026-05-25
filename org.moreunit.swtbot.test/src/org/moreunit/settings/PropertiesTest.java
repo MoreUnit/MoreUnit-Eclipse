@@ -5,16 +5,15 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.waitForShell;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
@@ -22,7 +21,7 @@ import org.moreunit.test.context.Project;
 
 @Project(mainCls = "org:HelloWorld", mainSrcFolder = "src", testSrcFolder = "test")
 @org.moreunit.test.context.Preferences(testSrcFolder = "junit")
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class PropertiesTest extends JavaProjectSWTBotTestHelper
 {
     private void openProjectPropertiesAndSelectMoreUnitPage()
@@ -34,7 +33,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.waitUntil(waitForShell);
         setShellInFocus(waitForShell.get(0));
 
-        bot.waitUntil(Conditions.shellIsActive("Properties for "+projectItem.getText()));
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Properties for "+projectItem.getText()));
 
         bot.tree().expandNode("MoreUnit").select("Java");
     }
@@ -43,6 +42,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     {
         UIThreadRunnable.syncExec(new VoidResult()
         {
+            @Override
             public void run()
             {
                     shell.forceFocus();
@@ -63,10 +63,10 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         SWTBotShell addFolderDialog = bot.activeShell();
         projectItem.getNode("test").select().check();
         bot.button("Finish").click();
-        bot.waitUntil(Conditions.shellCloses(addFolderDialog));
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(addFolderDialog));
         propertiesDialogShell.setFocus();
         propertiesDialogShell.activate();
-        bot.waitUntil(Conditions.shellIsActive(propertiesDialogShell.getText()));
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive(propertiesDialogShell.getText()));
         saveAndCloseProps();
         assertThat(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext())).isTrue();
     }
@@ -78,10 +78,10 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         String realLabel = "PreferencesDialog.okButtonLabel".equals(label)? "OK" : label;
         SWTBotShell shellToClose = bot.activeShell();
         bot.button(realLabel).click();
-        bot.waitUntil(Conditions.shellCloses(shellToClose));
+        bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(shellToClose));
     }
 
-    @Before
+    @BeforeEach
     public void before()
     {
         initProjectSpecificSettings();

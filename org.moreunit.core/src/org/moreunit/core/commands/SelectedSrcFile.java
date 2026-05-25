@@ -45,7 +45,9 @@ public class SelectedSrcFile
     public IJumpContext createJumpContext()
     {
         if(file == null)
+        {
             throw new IllegalStateException("A jump context should not be created without a file");
+        }
         return new JumpContext(context, file.getUnderlyingPlatformFile(), editorPart);
     }
 }

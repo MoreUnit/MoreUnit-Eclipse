@@ -58,7 +58,7 @@ public class PreferencesConverterTest extends ContextTestCase
         SourceFolderMapping mapping1 = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, unit2SourceFolder);
         SourceFolderMapping mapping2 = new SourceFolderMapping(context.getProjectHandler().get(), unit2SourceFolder, unit3SourceFolder);
 
-        List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
+        List<SourceFolderMapping> mappingList = new ArrayList<>();
         mappingList.add(mapping1);
         mappingList.add(mapping2);
 
@@ -75,7 +75,7 @@ public class PreferencesConverterTest extends ContextTestCase
     {
         SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, unit3SourceFolder);
 
-        List<IPackageFragmentRoot> asList = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> asList = new ArrayList<>();
         asList.add(unit1SourceFolder);
         asList.add(unit2SourceFolder);
         mapping.setSourceFolderList(asList);
@@ -93,7 +93,7 @@ public class PreferencesConverterTest extends ContextTestCase
     {
         SourceFolderMapping mapping1 = new SourceFolderMapping(context.getProjectHandler().get(), unit1SourceFolder, testUnitSourceFolder);
 
-        List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
+        List<SourceFolderMapping> mappingList = new ArrayList<>();
         mappingList.add(mapping1);
 
         String expected = "%s:%s:%s:%s".formatted(unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName()
@@ -104,7 +104,7 @@ public class PreferencesConverterTest extends ContextTestCase
     @Test
     public void convertSourceMappingsToString_should_convert_empty_mapping_to_empty_string()
     {
-        assertThat(PreferencesConverter.convertSourceMappingsToString(new ArrayList<SourceFolderMapping>())).isEqualTo("");
+        assertThat(PreferencesConverter.convertSourceMappingsToString(new ArrayList<>())).isEqualTo("");
     }
 
     @Test

@@ -58,6 +58,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
 
         otherMoreunitPropertiesBlock.addModifyListener(new ModifyListener()
         {
+            @Override
             public void modifyText(ModifyEvent e)
             {
                 validate();
@@ -119,6 +120,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
         });
     }
 
+    @Override
     public void init(IWorkbench workbench)
     {
         setPreferenceStore(MoreUnitPlugin.getDefault().getPreferenceStore());
@@ -130,6 +132,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
         return MoreUnitPlugin.getDefault().getPreferenceStore();
     }
 
+    @Override
     public boolean performOk()
     {
         Preferences.getInstance().setJunitDirectory(testSourceFolderField.getText());

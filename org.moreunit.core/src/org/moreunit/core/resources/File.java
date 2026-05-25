@@ -9,8 +9,10 @@ public interface File extends ProjectResource
 
     String getExtension();
 
+    @Override
     Project getProject();
 
+    @Override
     ProjectPreferences getProjectPreferences();
 
     IFile getUnderlyingPlatformFile();

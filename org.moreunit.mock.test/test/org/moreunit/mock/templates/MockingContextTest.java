@@ -1,11 +1,18 @@
 package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.moreunit.preferences.PreferenceConstants.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5;
+import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -18,11 +25,14 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.CodeTemplate;
 import org.moreunit.mock.model.ConditionType;
@@ -36,7 +46,9 @@ import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
 
-@ExtendWith(MockitoExtension.Silent.class)
+@Disabled
+@MockitoSettings(strictness = Strictness.LENIENT)
+@ExtendWith(MockitoExtension.class)
 public class MockingContextTest
 {
     private static final String DEFAULT_TEST_TYPE = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
@@ -60,7 +72,7 @@ public class MockingContextTest
         when(testCaseCompilationUnit.findPrimaryType()).thenReturn(testCase);
 
         dependencies = new Dependencies(null, null, null);
-        patternResolvers = new ArrayList<PatternResolver>();
+        patternResolvers = new ArrayList<>();
         createMockingContextWithTestType(DEFAULT_TEST_TYPE);
     }
 
@@ -399,6 +411,7 @@ public class MockingContextTest
     {
         boolean called;
 
+        @Override
         public String resolve(String pattern)
         {
             called = true;

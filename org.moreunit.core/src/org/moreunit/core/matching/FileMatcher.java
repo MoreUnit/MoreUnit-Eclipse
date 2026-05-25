@@ -49,7 +49,9 @@ public class FileMatcher
     private void searchFor(Collection<String> filePatterns, Resource searchFolder, FileMatchCollector matchCollector)
     {
         if(filePatterns.isEmpty())
+        {
             return;
+        }
 
         Pattern fileNamePattern2 = createFileNamePattern(file, filePatterns);
         searchEngine.searchFiles(searchFolder, fileNamePattern2, matchCollector);

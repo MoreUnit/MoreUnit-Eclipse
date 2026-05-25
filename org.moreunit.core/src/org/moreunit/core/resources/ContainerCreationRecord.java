@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class ContainerCreationRecord
 {
-    private final Deque<ResourceContainer> createdContainers = new LinkedList<ResourceContainer>();
+    private final Deque<ResourceContainer> createdContainers = new LinkedList<>();
 
     public void addCreatedContainer(ResourceContainer container)
     {
@@ -15,7 +15,9 @@ public class ContainerCreationRecord
     public void cancelCreation()
     {
         if(! createdContainers.isEmpty())
+        {
             createdContainers.getLast().delete();
+        }
     }
 
     public void cancelCreationOfFoldersThatAreNotAncestorsOf(Resource resource)
@@ -23,7 +25,9 @@ public class ContainerCreationRecord
         ResourceContainer ancestor = findGreatestNonAncestorOf(resource);
 
         if(ancestor != null)
+        {
             ancestor.delete();
+        }
     }
 
     private ResourceContainer findGreatestNonAncestorOf(Resource resource)

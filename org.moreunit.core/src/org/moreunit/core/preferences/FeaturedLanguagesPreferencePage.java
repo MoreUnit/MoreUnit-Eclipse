@@ -45,6 +45,7 @@ public class FeaturedLanguagesPreferencePage extends PropertyPage implements IWo
         wrappingLabel("All settings may be overridden at the project level.", WIDTH_HINT, composite);
     }
 
+    @Override
     public final void init(IWorkbench wb)
     {
     }

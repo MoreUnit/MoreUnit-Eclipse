@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IExecutableExtensionFactory;
  * extension "someFileExtension", with the description
  * "Description of the page":
  * </p>
- * 
+ *
  * <pre>
  * &lt;extension point="org.eclipse.ui.propertyPages"&gt;
  *       &lt;page id="org.moreunit.core.properties.otherLanguagesPage"
@@ -31,6 +31,7 @@ public class PropertyPageFactory implements IExecutableExtension, IExecutableExt
     private String languageId;
     private String description;
 
+    @Override
     public Object create() throws CoreException
     {
         return languageId == null ? null : createPage(languageId, description);
@@ -41,6 +42,7 @@ public class PropertyPageFactory implements IExecutableExtension, IExecutableExt
         return new GenericPropertyPage(langId, desc);
     }
 
+    @Override
     public void setInitializationData(IConfigurationElement cfg, String name, Object data) throws CoreException
     {
         if(data instanceof String string)

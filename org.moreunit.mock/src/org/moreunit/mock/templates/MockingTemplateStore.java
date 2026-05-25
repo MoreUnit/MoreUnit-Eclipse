@@ -13,9 +13,9 @@ import org.moreunit.mock.model.MockingTemplates;
 
 public class MockingTemplateStore implements Service
 {
-    private final Map<String, Category> categories = new HashMap<String, Category>();
-    private final Map<String, MockingTemplate> templates = new HashMap<String, MockingTemplate>();
-    private final Map<String, Set<MockingTemplate>> templatesByCategory = new HashMap<String, Set<MockingTemplate>>();
+    private final Map<String, Category> categories = new HashMap<>();
+    private final Map<String, MockingTemplate> templates = new HashMap<>();
+    private final Map<String, Set<MockingTemplate>> templatesByCategory = new HashMap<>();
 
     public void store(MockingTemplates mockingTemplates) throws TemplateAlreadyDefinedException
     {
@@ -43,7 +43,7 @@ public class MockingTemplateStore implements Service
         Set<MockingTemplate> categoryTemplates = templatesByCategory.get(template.categoryId());
         if(categoryTemplates == null)
         {
-            categoryTemplates = new HashSet<MockingTemplate>();
+            categoryTemplates = new HashSet<>();
             templatesByCategory.put(template.categoryId(), categoryTemplates);
         }
         categoryTemplates.add(template);

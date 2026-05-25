@@ -5,13 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Preferences;
@@ -22,7 +21,7 @@ import org.moreunit.test.context.TestType;
              testSrcFolder="test",
              testMethodPrefix=true,
              testType=TestType.JUNIT4)
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
@@ -40,11 +39,11 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 27);
 		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethodSignature));
 		getShortcutStrategy().pressMoveShortcut();
-		bot.waitUntil(Conditions.shellIsActive("Move Static Members"));
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Move Static Members"));
 		bot.comboBox().setText("testing.TheMoon");
 		SWTBotShell moveDialog = bot.activeShell();
 		bot.button("OK").click();
-		bot.waitUntil(Conditions.shellCloses(moveDialog), 10000);
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(moveDialog), 10000);
 
 		// assert that testmethod moved from TheWorldTest to TheMoonTest
 		final ICompilationUnit testBeforeMove = context.getCompilationUnit("testing.TheWorldTest");

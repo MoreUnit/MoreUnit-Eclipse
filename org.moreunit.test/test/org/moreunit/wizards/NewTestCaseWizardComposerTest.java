@@ -1,8 +1,8 @@
 package org.moreunit.wizards;
 
 import static java.util.Arrays.asList;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.moreunit.extensionpoints.NewTestCaseWizardPagePosition.after;
 import static org.moreunit.extensionpoints.NewTestCaseWizardPagePosition.before;
 
@@ -14,7 +14,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +32,6 @@ public class NewTestCaseWizardComposerTest
     @BeforeEach
     public void createBasePages() throws Exception
     {
-        MockitoAnnotations.initMocks(this);
         composer.registerBasePage("page ZZ", basePageZz);
         composer.registerBasePage("page x", basePageX);
     }

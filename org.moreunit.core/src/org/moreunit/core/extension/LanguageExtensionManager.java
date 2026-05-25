@@ -47,7 +47,7 @@ public class LanguageExtensionManager
 
     private Collection<Language> getLanguages()
     {
-        Collection<Language> languages = new HashSet<Language>();
+        Collection<Language> languages = new HashSet<>();
 
         for (IConfigurationElement cfg : Platform.getExtensionRegistry().getConfigurationElementsFor(ExtensionPoints.LANGUAGES))
         {
@@ -77,11 +77,7 @@ public class LanguageExtensionManager
 
         for (IConfigurationElement condition : conditionElements)
         {
-            if(! DEPENDENCY_COND_TYPE.equals(condition.getAttribute(TYPE_ATTR)))
-            {
-                return false; // condition type is unknown
-            }
-            if(! isDependencyPresent(condition.getAttribute(VALUE_ATTR)))
+            if(! DEPENDENCY_COND_TYPE.equals(condition.getAttribute(TYPE_ATTR)) || ! isDependencyPresent(condition.getAttribute(VALUE_ATTR)))
             {
                 return false;
             }
@@ -93,9 +89,8 @@ public class LanguageExtensionManager
     private boolean isDependencyPresent(String bundleId)
     {
         Bundle[] bundles = bundleContext.getBundles();
-        for (int i = 0; i < bundles.length; i++)
+        for (Bundle bundle : bundles)
         {
-            Bundle bundle = bundles[i];
             if(bundleId.equals(bundle.getSymbolicName()))
             {
                 return true;
@@ -127,6 +122,7 @@ public class LanguageExtensionManager
             this.it = it;
         }
 
+        @Override
         public Iterator<IJumper> iterator()
         {
             return it;
@@ -320,6 +316,7 @@ public class LanguageExtensionManager
         protected T current;
         private Boolean hasNext;
 
+        @Override
         public final boolean hasNext()
         {
             if(hasNext != null)
@@ -337,6 +334,7 @@ public class LanguageExtensionManager
             this.current = current;
         }
 
+        @Override
         public final T next()
         {
             if(! hasNext())
@@ -352,6 +350,7 @@ public class LanguageExtensionManager
             return current;
         }
 
+        @Override
         public void remove()
         {
             throw new UnsupportedOperationException();

@@ -35,6 +35,7 @@ public class WildcardFileFilter implements FileFilter
         return "\\Q" + result + "\\E"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    @Override
     public boolean accept(File pathname)
     {
         return wildcardPattern.matcher(pathname.getName()).matches();

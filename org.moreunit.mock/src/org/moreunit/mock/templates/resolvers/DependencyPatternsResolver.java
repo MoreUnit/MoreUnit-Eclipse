@@ -19,6 +19,7 @@ public class DependencyPatternsResolver implements PatternResolver
         this.context = context;
     }
 
+    @Override
     public String resolve(String codePattern)
     {
         if(codePattern.indexOf("${dependencyType}") == - 1 && codePattern.indexOf("${dependency}") == - 1)

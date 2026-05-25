@@ -18,6 +18,7 @@ public class JumpContext implements IJumpContext
         this.fileEditor = fileEditor;
     }
 
+    @Override
     public ExecutionEvent getExecutionEvent()
     {
         return context.getEvent();
@@ -29,6 +30,7 @@ public class JumpContext implements IJumpContext
         return fileEditor;
     }
 
+    @Override
     public IFile getSelectedFile()
     {
         return selectedFile;

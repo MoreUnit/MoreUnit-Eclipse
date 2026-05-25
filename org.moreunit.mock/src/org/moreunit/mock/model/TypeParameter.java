@@ -1,10 +1,10 @@
 package org.moreunit.mock.model;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 public class TypeParameter extends TypeUse<TypeParameter>
 {
@@ -13,7 +13,7 @@ public class TypeParameter extends TypeUse<TypeParameter>
         REGULAR, WILDARD_UNBOUNDED, WILDCARD_EXTENDS, WILDCARD_SUPER
     }
 
-    public final List<TypeAnnotation> baseTypeAnnotations = new ArrayList<TypeAnnotation>();
+    public final List<TypeAnnotation> baseTypeAnnotations = new ArrayList<>();
     private String wildcardExpression = "";
 
     public static TypeParameter extending(String fullyQualifiedClassName)

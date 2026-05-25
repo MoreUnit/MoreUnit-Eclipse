@@ -1,7 +1,12 @@
 package org.moreunit.mock.actions;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
@@ -9,9 +14,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.ClassTypeFacade.CorrespondingTestCase;
 import org.moreunit.elements.CorrespondingMemberRequest;
@@ -20,9 +24,12 @@ import org.moreunit.mock.elements.TypeFacadeFactory;
 import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 
-@ExtendWith(MockitoExtension.Silent.class)
 public class MockDependenciesActionTest
 {
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Mock
     private MockDependenciesPageManager pageManager;

@@ -1,6 +1,8 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.NoSuchElementException;
 
@@ -11,16 +13,16 @@ public class TestFileNamePatternParserTest
     private final NameTokenizer camelCaseTokenizer = new CamelCaseNameTokenizer();
     private final NameTokenizer underscoreTokenizer = new SeparatorNameTokenizer("_");
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void should_complain_when_given_pattern_is_null() throws Exception
     {
-        new TestFileNamePatternParser(null, underscoreTokenizer);
+        assertThrows(NullPointerException.class, () -> new TestFileNamePatternParser(null, underscoreTokenizer));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void should_complain_when_given_tokenizer_is_null() throws Exception
     {
-        new TestFileNamePatternParser("${srcFile}Test", null);
+        assertThrows(NullPointerException.class, () -> new TestFileNamePatternParser("${srcFile}Test", null));
     }
 
     @Test

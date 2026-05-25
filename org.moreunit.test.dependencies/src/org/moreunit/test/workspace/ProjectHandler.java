@@ -26,6 +26,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         this.prefix = prefix;
     }
 
+    @Override
     public IJavaProject get()
     {
         if(project == null)
@@ -47,11 +48,13 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         return project.getElementName();
     }
 
+    @Override
     public WorkspaceHandler getWorkspaceHandler()
     {
         return workspaceHandler;
     }
 
+    @Override
     public ProjectAssertions assertThat()
     {
         return new ProjectAssertions(this);

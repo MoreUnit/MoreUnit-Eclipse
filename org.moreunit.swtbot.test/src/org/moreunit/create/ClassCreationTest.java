@@ -7,18 +7,18 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
 
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class ClassCreationTest extends JavaProjectSWTBotTestHelper
 {
     private static final int FLAG_DEFAULT_PACKAGE = 0;

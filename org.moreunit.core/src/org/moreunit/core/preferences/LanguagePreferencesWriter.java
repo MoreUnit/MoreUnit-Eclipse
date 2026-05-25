@@ -31,6 +31,7 @@ public class LanguagePreferencesWriter extends LanguagePreferences implements Te
         return getString(LanguagePreferences.TEST_FOLDER_PATH_TEMPLATE);
     }
 
+    @Override
     public void setTestFileNameTemplate(String template, String separator)
     {
         setValue(TEST_FILE_NAME_TEMPLATE, template);

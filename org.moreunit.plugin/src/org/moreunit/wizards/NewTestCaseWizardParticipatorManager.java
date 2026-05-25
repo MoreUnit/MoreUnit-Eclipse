@@ -43,11 +43,13 @@ public class NewTestCaseWizardParticipatorManager
     {
         runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
+            @Override
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".getPages()", throwable);
             }
 
+            @Override
             public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".getPages()");
@@ -59,7 +61,7 @@ public class NewTestCaseWizardParticipatorManager
 
     private Collection<INewTestCaseWizardParticipator> getParticipators()
     {
-        TreeMap<String, INewTestCaseWizardParticipator> participatorsOrderedById = new TreeMap<String, INewTestCaseWizardParticipator>();
+        TreeMap<String, INewTestCaseWizardParticipator> participatorsOrderedById = new TreeMap<>();
 
         for (IConfigurationElement configuration : Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID))
         {
@@ -96,11 +98,13 @@ public class NewTestCaseWizardParticipatorManager
     {
         runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
+            @Override
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".testCaseCreationCanceled()", throwable);
             }
 
+            @Override
             public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".testCaseCreationCanceled()");
@@ -120,11 +124,13 @@ public class NewTestCaseWizardParticipatorManager
     {
         runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
+            @Override
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".testCaseCreated()", throwable);
             }
 
+            @Override
             public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".testCaseCreated()");
@@ -143,11 +149,13 @@ public class NewTestCaseWizardParticipatorManager
     {
         runner.applyTo(participators, new GenericRunnable<INewTestCaseWizardParticipator, Void>()
         {
+            @Override
             public void handleException(Throwable throwable, INewTestCaseWizardParticipator participator)
             {
                 logger.handleExceptionLog("Error calling extension: " + participator.getClass().getName() + ".testCaseCreationAborted()", throwable);
             }
 
+            @Override
             public Void run(INewTestCaseWizardParticipator participator) throws Exception
             {
                 logger.handleInfoLog("Calling extension: " + participator.getClass().getName() + ".testCaseCreationAborted()");

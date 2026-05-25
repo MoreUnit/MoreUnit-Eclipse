@@ -18,6 +18,7 @@ public class DialogFactory
     {
         return new Dialog()
         {
+            @Override
             public void open()
             {
                 MessageDialog.openInformation(activeShell, TITLE, message);
@@ -29,6 +30,7 @@ public class DialogFactory
     {
         return new Dialog()
         {
+            @Override
             public void open()
             {
                 MessageDialog.openError(activeShell, TITLE, message);

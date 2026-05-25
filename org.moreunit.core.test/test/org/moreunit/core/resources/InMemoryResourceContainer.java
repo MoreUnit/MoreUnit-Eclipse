@@ -11,8 +11,8 @@ import java.util.TreeMap;
 
 abstract class InMemoryResourceContainer extends InMemoryResource implements ResourceContainer
 {
-    private final Map<String, InMemoryFile> files = new TreeMap<String, InMemoryFile>();
-    private final Map<String, InMemoryFolder> folders = new TreeMap<String, InMemoryFolder>();
+    private final Map<String, InMemoryFile> files = new TreeMap<>();
+    private final Map<String, InMemoryFolder> folders = new TreeMap<>();
 
     protected InMemoryResourceContainer(InMemoryPath path, InMemoryResourceContainer parent)
     {
@@ -47,7 +47,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     private Iterable<Resource> children()
     {
-        Collection<Resource> children = new HashSet<Resource>();
+        Collection<Resource> children = new HashSet<>();
         children.addAll(files.values());
         children.addAll(folders.values());
         return children;
@@ -178,7 +178,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     protected final <T extends Resource> List< ? extends T> keepIfExists(Collection<T> resources)
     {
-        List<T> result = new ArrayList<T>(resources.size());
+        List<T> result = new ArrayList<>(resources.size());
         for (T resource : resources)
         {
             if(resource.exists())

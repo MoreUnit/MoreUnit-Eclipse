@@ -2,6 +2,7 @@ package org.moreunit.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,10 +19,10 @@ public class PreconditionsTest
         assertThat(Preconditions.checkNotNull(ref)).isSameAs(ref);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void checkNotNull_should_throw_exception_when_null()
     {
-        Preconditions.checkNotNull(null);
+        assertThrows(NullPointerException.class, () -> Preconditions.checkNotNull(null));
     }
 
     @Test
@@ -51,10 +52,10 @@ public class PreconditionsTest
         Preconditions.checkArgument(true);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void checkArgument_should_throw_exception_when_false()
     {
-        Preconditions.checkArgument(false);
+        assertThrows(IllegalArgumentException.class, () -> Preconditions.checkArgument(false));
     }
 
     @Test
@@ -104,16 +105,16 @@ public class PreconditionsTest
         assertThat(Preconditions.checkNotNullOrEmpty(list)).isSameAs(list);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void checkNotNullOrEmpty_should_throw_NPE_when_null()
     {
-        Preconditions.checkNotNullOrEmpty(null);
+        assertThrows(NullPointerException.class, () -> Preconditions.checkNotNullOrEmpty(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void checkNotNullOrEmpty_should_throw_IAE_when_empty()
     {
-        Preconditions.checkNotNullOrEmpty(new ArrayList<String>());
+        assertThrows(IllegalArgumentException.class, () -> Preconditions.checkNotNullOrEmpty(new ArrayList<String>()));
     }
 
     @Test

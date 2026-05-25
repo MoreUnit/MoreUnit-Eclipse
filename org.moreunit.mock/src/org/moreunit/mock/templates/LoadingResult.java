@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class LoadingResult
 {
-    private Map<URL, String> invalidTemplates = new TreeMap<URL, String>(new Comparator<URL>()
+    private Map<URL, String> invalidTemplates = new TreeMap<>(new Comparator<URL>()
     {
         @Override
         public int compare(URL url1, URL url2)

@@ -23,6 +23,7 @@ public class MockDependenciesWizard extends Wizard implements INewWizard
         setDefaultPageImageDescriptor(new MoreUnitResources().getMediumLogoDescriptor());
     }
 
+    @Override
     public void init(IWorkbench workbench, IStructuredSelection selection)
     {
         this.shell = workbench.getActiveWorkbenchWindow().getShell();

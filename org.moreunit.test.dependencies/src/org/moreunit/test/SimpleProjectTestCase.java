@@ -60,7 +60,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     @BeforeEach
     public void setUpTestCase()
     {
-        typesToClean = new HashSet<IType>();
+        typesToClean = new HashSet<>();
     }
 
     @AfterEach
@@ -73,7 +73,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
     {
         Preferences preferences = new DummyPreferencesForTesting();
         preferences.setHasProjectSpecificSettings(workspaceTestProject, true);
-        List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
+        List<SourceFolderMapping> mappingList = new ArrayList<>();
         mappingList.add(new SourceFolderMapping(workspaceTestProject, sourcesFolder, testFolder));
         preferences.setMappingList(workspaceTestProject, mappingList);
         preferences.getProjectView(workspaceTestProject).setTestClassNameTemplate("${srcFile}Test");

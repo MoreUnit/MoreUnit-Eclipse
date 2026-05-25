@@ -1,7 +1,9 @@
 package org.moreunit.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.moreunit.util.PluginTools.*;
+import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
+import static org.moreunit.util.PluginTools.guessSourceFolderCorrespondingToTestFolder;
+import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +19,7 @@ import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class PluginToolsTest
 {
-    private Set<IProject> projectsToDeleteAfterTest = new HashSet<IProject>();
+    private Set<IProject> projectsToDeleteAfterTest = new HashSet<>();
 
     @AfterEach
     public void deleteCreatedProjects() throws Exception

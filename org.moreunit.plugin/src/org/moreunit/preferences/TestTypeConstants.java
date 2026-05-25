@@ -5,15 +5,15 @@ import java.util.Map;
 
 public class TestTypeConstants
 {
-    public static final Map<String, String> BEFORE_CLASS_METHOD_ANNOTATION = new HashMap<String, String>();
-    public static final Map<String, String> BEFORE_METHOD_ANNOTATION = new HashMap<String, String>();
+    public static final Map<String, String> BEFORE_CLASS_METHOD_ANNOTATION = new HashMap<>();
+    public static final Map<String, String> BEFORE_METHOD_ANNOTATION = new HashMap<>();
 
-    public static final Map<String, String> TEARDOWN_METHOD_ANNOTATION = new HashMap<String, String>();
-    public static final Map<String, String> AFTER_CLASS_METHOD_ANNOTATION = new HashMap<String, String>();
+    public static final Map<String, String> TEARDOWN_METHOD_ANNOTATION = new HashMap<>();
+    public static final Map<String, String> AFTER_CLASS_METHOD_ANNOTATION = new HashMap<>();
 
-    public static final Map<String, String> TEST_ANNOTATION = new HashMap<String, String>();
+    public static final Map<String, String> TEST_ANNOTATION = new HashMap<>();
 
-    public static final Map<String, String> STATIC_IMPORT_BASE_CLASS = new HashMap<String, String>();
+    public static final Map<String, String> STATIC_IMPORT_BASE_CLASS = new HashMap<>();
 
     static
     {

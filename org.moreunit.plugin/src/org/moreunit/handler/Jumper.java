@@ -8,6 +8,7 @@ public class Jumper implements IJumper
 {
     private final JumpActionExecutor actionExecutor = JumpActionExecutor.getInstance();
 
+    @Override
     public JumpResult jump(IJumpContext context)
     {
         if(context.isFileOpenInEditor())

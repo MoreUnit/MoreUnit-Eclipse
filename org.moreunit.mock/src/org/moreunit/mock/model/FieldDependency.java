@@ -9,7 +9,7 @@ public class FieldDependency extends Dependency
 
     public FieldDependency(String fullyQualifiedClassName, String fieldName, String name)
     {
-        this(fullyQualifiedClassName, fieldName, name, new ArrayList<TypeParameter>());
+        this(fullyQualifiedClassName, fieldName, name, new ArrayList<>());
     }
 
     public FieldDependency(String fullyQualifiedClassName, String fieldName, String name, List<TypeParameter> typeParameters)

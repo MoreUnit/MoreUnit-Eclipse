@@ -40,13 +40,17 @@ public class TestedFileDecorator extends LabelProvider implements ILightweightLa
         try
         {
             if(file.hasDefaultSupport() && ! file.isTestFile() && file.hasCorrespondingFiles())
+            {
                 decoration.addOverlay(imageRegistry.getTestedFileIndicator(), IDecoration.TOP_RIGHT);
+            }
         }
         catch (DoesNotMatchConfigurationException e)
         {
             // ignored: we don't want a pop-up to open for every file in error
             if(logger.debugEnabled())
+            {
                 logger.info(e.getPath() + " does not match source folder preferences");
+            }
         }
         catch (Exception e)
         {

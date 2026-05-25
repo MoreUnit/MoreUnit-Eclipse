@@ -1,10 +1,13 @@
 package org.moreunit.preferences;
 
 import static java.util.Arrays.asList;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.moreunit.preferences.PreferenceConstants.PREFERENCES_VERSION;
 
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public class PreferencesMigratorTest
 {
-    List<StepTargetingVersion> calledSteps = new ArrayList<StepTargetingVersion>();
+    List<StepTargetingVersion> calledSteps = new ArrayList<>();
 
     IPreferenceStore store = mock(IPreferenceStore.class);
 
@@ -119,11 +122,13 @@ public class PreferencesMigratorTest
             this.targetVersion = targetVersion;
         }
 
+        @Override
         public int targetVersion()
         {
             return targetVersion;
         }
 
+        @Override
         public void apply(IPreferenceStore store)
         {
             calledSteps.add(this);

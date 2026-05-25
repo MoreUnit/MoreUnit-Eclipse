@@ -21,25 +21,30 @@ public class RenameMethodChange extends Change
         this.newName = newName;
     }
 
+    @Override
     public Object getModifiedElement()
     {
         return methodToRename;
     }
 
+    @Override
     public String getName()
     {
         return "Rename method " + methodToRename.getElementName() + " in " + methodToRename.getDeclaringType().getElementName() + " to " + newName;
     }
 
+    @Override
     public void initializeValidationData(IProgressMonitor pm)
     {
     }
 
+    @Override
     public RefactoringStatus isValid(IProgressMonitor pm) throws OperationCanceledException
     {
         return new RefactoringStatus();
     }
 
+    @Override
     public Change perform(IProgressMonitor pm) throws CoreException
     {
         String oldName = methodToRename.getElementName();

@@ -31,11 +31,11 @@ import org.eclipse.jdt.internal.junit.Messages;
 import org.eclipse.jdt.internal.junit.buildpath.BuildPathSupport;
 import org.eclipse.jdt.internal.junit.ui.IJUnitHelpContextIds;
 import org.eclipse.jdt.internal.junit.ui.JUnitPlugin;
+import org.eclipse.jdt.internal.junit.util.CoreTestSearchEngine;
 import org.eclipse.jdt.internal.junit.util.JUnitStatus;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility.GenStubSettings;
 import org.eclipse.jdt.internal.junit.util.LayoutUtil;
-import org.eclipse.jdt.internal.junit.util.TestSearchEngine;
 import org.eclipse.jdt.internal.junit.wizards.MethodStubsSelectionButtonGroup;
 import org.eclipse.jdt.internal.junit.wizards.WizardMessages;
 import org.eclipse.jdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
@@ -244,7 +244,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             {
                 try
                 {
-                    if(! TestSearchEngine.isTestImplementor(classToTest))
+                    if(! CoreTestSearchEngine.isTestImplementor(classToTest))
                     {
                         setClassUnderTest(classToTest.getFullyQualifiedName('.'));
                     }
@@ -321,6 +321,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * org.eclipse.jdt.ui.wizards.NewContainerWizardPage#handleFieldChanged(
      * String)
      */
+    @Override
     protected void handleFieldChanged(String fieldName)
     {
         super.handleFieldChanged(fieldName);
@@ -381,6 +382,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
      * .Composite)
      */
+    @Override
     public void createControl(Composite parent)
     {
         initializeDialogUnits(parent);
@@ -459,6 +461,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fClassUnderTestControl.setText(fClassUnderTestText);
         fClassUnderTestControl.addModifyListener(new ModifyListener()
         {
+            @Override
             public void modifyText(ModifyEvent e)
             {
                 internalSetClassUnderText(((Text) e.widget).getText());
@@ -475,11 +478,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fClassUnderTestButton.setEnabled(true);
         fClassUnderTestButton.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
                 classToTestButtonPressed();
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 classToTestButtonPressed();
@@ -537,6 +542,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         SelectionAdapter listener = new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 testTypeSelectionChanged();
@@ -637,6 +643,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fLink.setText("\n\n"); //$NON-NLS-1$
         fLink.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 performBuildpathConfiguration(e.text);
@@ -659,7 +666,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         if("a3".equals(data)) { // add and configure JUnit 3 //$NON-NLS-1$
             String id = BUILD_PATH_PAGE_ID;
-            Map<Object, Object> input = new HashMap<Object, Object>();
+            Map<Object, Object> input = new HashMap<>();
             IClasspathEntry newEntry = BuildPathSupport.getJUnit3ClasspathEntry();
             input.put(BUILD_PATH_KEY_ADD_ENTRY, newEntry);
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
@@ -667,7 +674,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else if("a4".equals(data)) { // add and configure JUnit 4 //$NON-NLS-1$
             String id = BUILD_PATH_PAGE_ID;
-            Map<Object, Object> input = new HashMap<Object, Object>();
+            Map<Object, Object> input = new HashMap<>();
             IClasspathEntry newEntry = BuildPathSupport.getJUnit4ClasspathEntry();
             input.put(BUILD_PATH_KEY_ADD_ENTRY, newEntry);
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
@@ -675,14 +682,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         else if("b".equals(data)) { // open build path //$NON-NLS-1$
             String id = BUILD_PATH_PAGE_ID;
-            Map<Object, Object> input = new HashMap<Object, Object>();
+            Map<Object, Object> input = new HashMap<>();
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, id, new String[] { id }, input).open();
         }
         else if("c".equals(data)) { // open compliance //$NON-NLS-1$
             String buildPath = BUILD_PATH_PAGE_ID;
             String complianceId = COMPLIANCE_PAGE_ID;
-            Map<Object, Object> input = new HashMap<Object, Object>();
+            Map<Object, Object> input = new HashMap<>();
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             input.put(KEY_NO_LINK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, complianceId, new String[] { buildPath, complianceId }, data).open();
@@ -706,11 +713,6 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         fLink.setVisible(message != null);
         fImage.setVisible(message != null);
-
-        if(message != null)
-        {
-            fLink.setText(message);
-        }
     }
 
     private void classToTestButtonPressed()
@@ -754,6 +756,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * (non-Javadoc)
      * @see org.eclipse.jdt.ui.wizards.NewTypeWizardPage#packageChanged()
      */
+    @Override
     protected IStatus packageChanged()
     {
         IStatus status = super.packageChanged();
@@ -873,6 +876,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * org.eclipse.jdt.ui.wizards.NewTypeWizardPage.ImportsManager,
      * org.eclipse.core.runtime.IProgressMonitor)
      */
+    @Override
     protected void createTypeMembers(IType type, ImportsManager imports, IProgressMonitor monitor) throws CoreException
     {
         if(fMethodStubsButtons.isEnabled(IDX_CONSTRUCTOR) && fMethodStubsButtons.isSelected(IDX_CONSTRUCTOR))
@@ -1112,6 +1116,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
      */
+    @Override
     public void setVisible(boolean visible)
     {
         super.setVisible(visible);
@@ -1170,6 +1175,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * (non-Javadoc)
      * @see org.eclipse.jdt.ui.wizards.NewTypeWizardPage#superClassChanged()
      */
+    @Override
     protected IStatus superClassChanged()
     {
         // replaces the super class validation of of the normal type wizard
@@ -1216,7 +1222,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     status.setError(WizardMessages.NewTestCaseWizardPageOne_error_superclass_is_interface);
                     return status;
                 }
-                if(! TestSearchEngine.isTestImplementor(type))
+                if(! CoreTestSearchEngine.isTestImplementor(type))
                 {
                     status.setError(Messages.format(WizardMessages.NewTestCaseWizardPageOne_error_superclass_not_implementing_test_interface, BasicElementLabels.getJavaElementName(JUnitCorePlugin.TEST_INTERFACE_NAME)));
                     return status;
@@ -1234,6 +1240,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      * (non-Javadoc)
      * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
      */
+    @Override
     public boolean canFlipToNextPage()
     {
         return super.canFlipToNextPage() && getClassUnderTest() != null;

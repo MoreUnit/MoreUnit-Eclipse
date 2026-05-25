@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.moreunit.core.resources.Path;
-import org.moreunit.core.util.LRUCache;
 import org.moreunit.core.util.Strings;
 
 public class TestFolderPathPattern
@@ -29,7 +28,7 @@ public class TestFolderPathPattern
      * 📊 Impact: O(1) lock-free regex caching matching across multiple concurrent file matches.
      * 🔬 Measurement: Reduced blocking threads inside `resolveGroups`.
      */
-    private static final Map<String, Pattern> PATTERN_CACHE = new java.util.concurrent.ConcurrentHashMap<String, Pattern>();
+    private static final Map<String, Pattern> PATTERN_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
 
     public static final String SRC_PROJECT_VARIABLE = "${srcProject}";
 
@@ -106,11 +105,7 @@ public class TestFolderPathPattern
 
     public static boolean isValid(String srcPathTemplate, String testPathTemplate)
     {
-        if(Strings.isBlank(srcPathTemplate) || Strings.isBlank(testPathTemplate))
-        {
-            return false;
-        }
-        if(! (SRC_PATH_VALIDATOR.matcher(srcPathTemplate).matches() && TEST_PATH_VALIDATOR.matcher(testPathTemplate).matches()))
+        if(Strings.isBlank(srcPathTemplate) || Strings.isBlank(testPathTemplate) || ! (SRC_PATH_VALIDATOR.matcher(srcPathTemplate).matches() && TEST_PATH_VALIDATOR.matcher(testPathTemplate).matches()))
         {
             return false;
         }
@@ -136,7 +131,7 @@ public class TestFolderPathPattern
 
     private static List<GroupRef> getGroupRefs(String template)
     {
-        List<GroupRef> refs = new ArrayList<GroupRef>();
+        List<GroupRef> refs = new ArrayList<>();
 
         boolean backslashEscaped = false;
         int refStart = - 1;
@@ -226,10 +221,8 @@ public class TestFolderPathPattern
             reverse(groupRefs);
 
             StringBuilder resultBuilder = new StringBuilder(result);
-            for (int i = 0; i < groupRefs.size(); i++)
+            for (GroupRef ref : groupRefs)
             {
-                GroupRef ref = groupRefs.get(i);
-
                 final String groupContent;
                 if(matcher.groupCount() >= ref.num)
                 {
@@ -287,7 +280,7 @@ public class TestFolderPathPattern
             return template;
         }
 
-        Map<Integer, Integer> refIndices = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> refIndices = new HashMap<>();
         int idx = 1;
         for (GroupRef ref : groupRefs)
         {

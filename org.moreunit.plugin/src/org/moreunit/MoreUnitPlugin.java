@@ -13,9 +13,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.annotation.AnnotationUpdateListener;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
-import org.moreunit.decorator.UnitDecorator;
 import org.moreunit.core.log.DefaultLogger;
 import org.moreunit.core.log.Logger;
+import org.moreunit.decorator.UnitDecorator;
 import org.moreunit.log.LogHandler;
 import org.moreunit.util.FeatureDetector;
 import org.moreunit.util.MoreUnitContants;
@@ -54,6 +54,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     /**
      * This method is called upon plug-in activation
      */
+    @Override
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
@@ -107,6 +108,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     /**
      * This method is called when the plug-in is stopped
      */
+    @Override
     public void stop(BundleContext context) throws Exception
     {
         super.stop(context);

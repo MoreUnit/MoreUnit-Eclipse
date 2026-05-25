@@ -1,5 +1,9 @@
 package org.moreunit.mock.wizard;
 
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.ALL;
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
+import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_ONLY;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,10 +45,6 @@ import org.moreunit.mock.preferences.Preferences;
 import org.moreunit.mock.preferences.TemplateStyleSelector;
 import org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields;
 
-import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.ALL;
-import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE;
-import static org.moreunit.mock.wizard.DependenciesTreeContentProvider.VisibleFields.VISIBLE_TO_TEST_CASE_ONLY;
-
 /**
  * Mostly copied from org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo.
  */
@@ -80,21 +80,25 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         setDescription(DESCRIPTION);
     }
 
+    @Override
     public String getId()
     {
         return PAGE_ID;
     }
 
+    @Override
     public IWizardPage getPage()
     {
         return this;
     }
 
+    @Override
     public NewTestCaseWizardPagePosition getPosition()
     {
         return NewTestCaseWizardPagePosition.after(INewTestCaseWizardPage.TEST_CASE_PAGE);
     }
 
+    @Override
     public void createControl(Composite parent)
     {
         Composite container = createContainer(parent);
@@ -184,6 +188,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         dependenciesTree.setAutoExpandLevel(2);
         dependenciesTree.addCheckStateListener(new ICheckStateListener()
         {
+            @Override
             public void checkStateChanged(CheckStateChangedEvent event)
             {
                 doCheckedStateChanged();
@@ -213,7 +218,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     private List<IMember> getCheckedInjectionPoints()
     {
         Object[] checked = dependenciesTree.getCheckedElements();
-        List<IMember> members = new ArrayList<IMember>(checked.length);
+        List<IMember> members = new ArrayList<>(checked.length);
 
         for (Object checkedElement : checked)
         {
@@ -298,6 +303,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
         createSideButton(buttonContainer, "Select All", new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 checkAllElements();
@@ -306,6 +312,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
         createSideButton(buttonContainer, "Deselect All", new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 uncheckAllElements();
@@ -351,6 +358,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         emptyLabel.setLayoutData(gd);
     }
 
+    @Override
     public void setVisible(boolean visible)
     {
         super.setVisible(visible);

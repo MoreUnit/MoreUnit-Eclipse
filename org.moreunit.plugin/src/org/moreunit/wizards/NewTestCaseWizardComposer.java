@@ -14,9 +14,9 @@ import org.moreunit.extensionpoints.INewTestCaseWizardPage;
 
 public class NewTestCaseWizardComposer
 {
-    private final Map<String, IWizardPage> pagesById = new HashMap<String, IWizardPage>();
-    private final List<INewTestCaseWizardPage> extensionPages = new ArrayList<INewTestCaseWizardPage>();
-    private final List<String> orderedPageIds = new LinkedList<String>();
+    private final Map<String, IWizardPage> pagesById = new HashMap<>();
+    private final List<INewTestCaseWizardPage> extensionPages = new ArrayList<>();
+    private final List<String> orderedPageIds = new LinkedList<>();
 
     public void registerExtensionPages(Collection<INewTestCaseWizardPage> pagesToAdd)
     {

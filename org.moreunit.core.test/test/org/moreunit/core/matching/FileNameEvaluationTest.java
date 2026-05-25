@@ -1,7 +1,6 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class FileNameEvaluationTest
 {
-    private static final Collection<String> NO_PATTERNS = new ArrayList<String>();
+    private static final Collection<String> NO_PATTERNS = new ArrayList<>();
 
     @Test
     public void should_return_all_corresponding_file_patterns__preferred_first() throws Exception

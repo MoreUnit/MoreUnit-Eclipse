@@ -31,8 +31,8 @@ public class TemplateStyleSelector implements SelectionListener
     private final Preferences preferences;
     private final MockingTemplateStore templateStore;
     private final Logger logger;
-    private final List<Category> categories = new ArrayList<Category>();
-    private final List<MockingTemplate> categoryTemplates = new ArrayList<MockingTemplate>();
+    private final List<Category> categories = new ArrayList<>();
+    private final List<MockingTemplate> categoryTemplates = new ArrayList<>();
 
     private IJavaProject project;
     private Combo categoryCombo;
@@ -80,6 +80,7 @@ public class TemplateStyleSelector implements SelectionListener
 
         categoryCombo.addModifyListener(new ModifyListener()
         {
+            @Override
             public void modifyText(ModifyEvent event)
             {
                 int categoryIdx = categoryCombo.getSelectionIndex();
@@ -231,11 +232,13 @@ public class TemplateStyleSelector implements SelectionListener
         return categoryTemplates.get(selectionIndex);
     }
 
+    @Override
     public void widgetDefaultSelected(SelectionEvent event)
     {
         // nothing to do
     }
 
+    @Override
     public void widgetSelected(SelectionEvent event)
     {
         // nothing to do

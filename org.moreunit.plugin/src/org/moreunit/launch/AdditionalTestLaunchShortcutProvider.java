@@ -12,8 +12,8 @@ import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jdt.core.IJavaElement;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.extensionpoints.ITestLaunchSupport;
-import org.moreunit.extensionpoints.TestType;
 import org.moreunit.extensionpoints.ITestLaunchSupport.Cardinality;
+import org.moreunit.extensionpoints.TestType;
 import org.moreunit.log.LogHandler;
 
 public class AdditionalTestLaunchShortcutProvider
@@ -53,7 +53,7 @@ public class AdditionalTestLaunchShortcutProvider
     {
         Set<ITestLaunchSupport> supports = getTestLaunchSupports();
 
-        final Set<ILaunchShortcut> container = new HashSet<ILaunchShortcut>(1);
+        final Set<ILaunchShortcut> container = new HashSet<>(1);
 
         for (final ITestLaunchSupport support : supports)
         {
@@ -64,11 +64,13 @@ public class AdditionalTestLaunchShortcutProvider
 
             SafeRunner.run(new ISafeRunnable()
             {
+                @Override
                 public void handleException(Throwable throwable)
                 {
                     LogHandler.getInstance().handleExceptionLog("Error running extension: " + support.getClass(), throwable);
                 }
 
+                @Override
                 public void run() throws Exception
                 {
                     LogHandler.getInstance().handleInfoLog("Running extension: " + support.getClass() + ".getShortcut()");
@@ -87,7 +89,7 @@ public class AdditionalTestLaunchShortcutProvider
     {
         IConfigurationElement[] configurations = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
 
-        Set<ITestLaunchSupport> supports = new HashSet<ITestLaunchSupport>();
+        Set<ITestLaunchSupport> supports = new HashSet<>();
         for (IConfigurationElement configuration : configurations)
         {
             Object extension = null;

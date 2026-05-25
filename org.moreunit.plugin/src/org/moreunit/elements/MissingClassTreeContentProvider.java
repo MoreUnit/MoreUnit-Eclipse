@@ -20,6 +20,7 @@ import org.moreunit.util.PluginTools;
 public class MissingClassTreeContentProvider implements ITreeContentProvider
 {
 
+    @Override
     public Object[] getChildren(Object parent)
     {
         if(parent instanceof IPackageFragment packageFragment)
@@ -48,6 +49,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
         return null;
     }
 
+    @Override
     public Object getParent(Object child)
     {
         if(child instanceof ICompilationUnit unit)
@@ -57,11 +59,13 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
         return null;
     }
 
+    @Override
     public boolean hasChildren(Object parent)
     {
         return ! (parent instanceof ICompilationUnit);
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         Set<IPackageFragment> packages = new HashSet<>();
@@ -103,10 +107,12 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
         return packages.stream().sorted(Comparator.comparing(Object::toString, String.CASE_INSENSITIVE_ORDER)).toArray(IJavaElement[]::new);
     }
 
+    @Override
     public void inputChanged(Viewer arg0, Object arg1, Object arg2)
     {
     }
 
+    @Override
     public void dispose()
     {
     }

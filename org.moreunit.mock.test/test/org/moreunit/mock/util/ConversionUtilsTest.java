@@ -10,14 +10,14 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ConversionUtilsTest
 {
     private ConversionUtils conversionUtils;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         conversionUtils = new ConversionUtils();

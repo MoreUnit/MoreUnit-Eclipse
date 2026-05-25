@@ -27,7 +27,7 @@ abstract class Preference<T>
         }
         else
         {
-            this.possibleValues = Collections.unmodifiableSet(new HashSet<T>(asList(possibleValues)));
+            this.possibleValues = Collections.unmodifiableSet(new HashSet<>(asList(possibleValues)));
             if(this.defaultValue != null && ! this.possibleValues.contains(this.defaultValue))
             {
                 throw new IllegalArgumentException("Invalid default value");

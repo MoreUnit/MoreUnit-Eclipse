@@ -19,7 +19,7 @@ public class AddUnitSourceFolderWizard extends Wizard
     private AddUnitSourceFolderWizardPage page;
     private IJavaProject javaProject;
 
-    private List<IPackageFragmentRoot> selectedSourceFolder = new ArrayList<IPackageFragmentRoot>();
+    private List<IPackageFragmentRoot> selectedSourceFolder = new ArrayList<>();
 
     private UnitSourceFolderBlock unitSourceFolderBlock;
 
@@ -35,7 +35,7 @@ public class AddUnitSourceFolderWizard extends Wizard
     public boolean performFinish()
     {
         selectedSourceFolder = page.getSelectedSourceFolder();
-        List<SourceFolderMapping> mappingList = new ArrayList<SourceFolderMapping>();
+        List<SourceFolderMapping> mappingList = new ArrayList<>();
         for (IPackageFragmentRoot sourceFolder : selectedSourceFolder)
         {
             SourceFolderMapping mapping = new SourceFolderMapping(javaProject, sourceFolder);

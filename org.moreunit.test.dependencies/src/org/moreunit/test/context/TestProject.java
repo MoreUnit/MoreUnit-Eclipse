@@ -10,7 +10,7 @@ public @interface TestProject
      * Another class annotated with @TestProject.
      */
     Class< ? > value() default Undefined.class;
-    
+
     /**
      * (Optional) This project's name.
      */

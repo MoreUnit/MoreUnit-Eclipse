@@ -2,8 +2,8 @@ package org.moreunit.test.context;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 public class TestContextRuleWithSuperClassAnnotationTest extends AnnotatedSuperClass
 {

@@ -178,11 +178,7 @@ public class CorrespondingTypeSearcher
     {
         for (IMethod method : type.getMethods())
         {
-            if(Flags.isDefaultMethod(method.getFlags()))
-            {
-                return true;
-            }
-            if(! Flags.isAbstract(method.getFlags()) && ! type.isInterface())
+            if(Flags.isDefaultMethod(method.getFlags()) || (! Flags.isAbstract(method.getFlags()) && ! type.isInterface()))
             {
                 return true;
             }

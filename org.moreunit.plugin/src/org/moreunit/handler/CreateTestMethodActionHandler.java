@@ -15,6 +15,7 @@ import org.moreunit.util.PluginTools;
 public class CreateTestMethodActionHandler extends AbstractHandler
 {
 
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         LogHandler.getInstance().handleInfoLog("CreateTestMethodActionHandler.execute()");

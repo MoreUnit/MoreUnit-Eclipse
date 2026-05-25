@@ -19,19 +19,22 @@ public class NewTestCaseWizardContext implements INewTestCaseWizardContext
     {
         this.classUnderTest = classUnderTest;
         this.pageOne = pageOne;
-        this.clientValues = new HashMap<String, Object>();
+        this.clientValues = new HashMap<>();
     }
 
+    @Override
     public IType getClassUnderTest()
     {
         return classUnderTest;
     }
 
+    @Override
     public IType getCreatedTestCase()
     {
         return createdTestCase;
     }
 
+    @Override
     public IPackageFragment getTestCasePackage()
     {
         return pageOne.getTestCasePackage();
@@ -48,11 +51,13 @@ public class NewTestCaseWizardContext implements INewTestCaseWizardContext
         this.createdTestCase = createdTestCase;
     }
 
+    @Override
     public void put(String key, Object value)
     {
         clientValues.put(key, value);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key)
     {

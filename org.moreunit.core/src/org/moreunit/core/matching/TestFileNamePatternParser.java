@@ -126,7 +126,7 @@ public class TestFileNamePatternParser
         private String quotedSeparator;
         private final char[] separatorChars;
         private int currentCharIdx;
-        private final List<String> alternatives = new ArrayList<String>();
+        private final List<String> alternatives = new ArrayList<>();
         private final String firstAlternative;
         public Failure failure;
         private boolean wildcardBefore;
@@ -178,7 +178,9 @@ public class TestFileNamePatternParser
         private void parseCurrentChar()
         {
             if(parseEscapeChar())
+            {
                 return;
+            }
 
             if(parseSeparator())
             {
@@ -189,16 +191,22 @@ public class TestFileNamePatternParser
             if(parseWildcard())
             {
                 if(alternatives.isEmpty())
+                {
                     wildcardBefore = true;
+                }
                 else
+                {
                     wildcardAfter = true;
+                }
 
                 addToBeforeOrAfterBuffer(".*");
                 return;
             }
 
             if(parseAlternatives())
+            {
                 return;
+            }
 
             moveToNextChar();
         }
@@ -206,9 +214,13 @@ public class TestFileNamePatternParser
         private void addToBeforeOrAfterBuffer(String string)
         {
             if(alternatives.isEmpty())
+            {
                 before.append(string);
+            }
             else
+            {
                 after.append(string);
+            }
         }
 
         private boolean parseEscapeChar()
@@ -232,7 +244,9 @@ public class TestFileNamePatternParser
             currentCharIdx += offset;
 
             if(! parseEscapeChar())
+            {
                 escapementOn = false;
+            }
         }
 
         private boolean parseAlternatives()
@@ -290,12 +304,16 @@ public class TestFileNamePatternParser
         private boolean currentCharsEqual(char[] otherChars)
         {
             if(otherChars.length == 0)
+            {
                 return false;
+            }
 
             for (int i = 0; i < otherChars.length && currentCharIdx + i < chars.length; i++)
             {
                 if(otherChars[i] != chars[currentCharIdx + i])
+                {
                     return false;
+                }
             }
             return true;
         }

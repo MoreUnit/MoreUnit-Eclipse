@@ -61,7 +61,10 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
                 Class<?> testClass = context.getTestClass().orElse(null);
-                if (testClass == null) return null;
+                if (testClass == null)
+                {
+                    return null;
+                }
 
                 T annotation = null;
                 Class<?> cls = testClass;

@@ -1,5 +1,8 @@
 package org.moreunit.mock.actions;
 
+import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
+import static org.moreunit.mock.config.MockModule.$;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -20,9 +23,6 @@ import org.moreunit.mock.util.ConversionUtils;
 import org.moreunit.mock.wizard.MockDependenciesPageManager;
 import org.moreunit.util.PluginTools;
 
-import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
-import static org.moreunit.mock.config.MockModule.$;
-
 public class MockDependenciesAction extends AbstractHandler implements IEditorActionDelegate
 {
     private final MockDependenciesPageManager pageManager;
@@ -42,11 +42,13 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         this.facadeFactory = facadeFactory;
     }
 
+    @Override
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
         compilationUnit = targetEditor == null ? null : conversionUtils.getCompilationUnit(targetEditor);
     }
 
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
@@ -67,6 +69,7 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         return null;
     }
 
+    @Override
     public void run(IAction action)
     {
         execute();
@@ -130,6 +133,7 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         }
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection)
     {
         // nothing to do

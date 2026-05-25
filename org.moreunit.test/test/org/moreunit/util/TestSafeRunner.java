@@ -4,6 +4,7 @@ import org.moreunit.core.util.ExtendedSafeRunner;
 
 public class TestSafeRunner extends ExtendedSafeRunner
 {
+    @Override
     public <E, R> R applyTo(E element, ExtendedSafeRunner.GenericRunnable<E, R> code)
     {
         try

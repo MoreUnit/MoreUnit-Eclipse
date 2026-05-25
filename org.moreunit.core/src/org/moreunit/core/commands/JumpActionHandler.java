@@ -8,6 +8,7 @@ import org.eclipse.core.commands.ExecutionException;
 
 public class JumpActionHandler extends AbstractHandler
 {
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         // For easier testing: wraps execution event and delegates to

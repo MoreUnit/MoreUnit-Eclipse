@@ -3,34 +3,33 @@
 <target name="eclipse-latest" sequenceNumber="9">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.sdk.ide"/>
-			<repository location="https://download.eclipse.org/eclipse/updates/latest"/>
-		</location>
+				<unit id="org.eclipse.sdk.ide"/>
+				<repository location="https://download.eclipse.org/eclipse/updates/latest"/>
+			</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://testng.org/testng-eclipse-update-site"/>
-			<unit id="org.testng.eclipse.feature.group"/>
-		</location>
+				<repository location="https://testng.org/testng-eclipse-update-site"/>
+				<unit id="org.testng.eclipse.feature.group"/>
+			</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/technology/swtbot/releases/latest/"/>
+				<repository location="https://download.eclipse.org/technology/swtbot/releases/latest/"/>
 			<unit id="org.eclipse.swtbot.eclipse.feature.group"/>
 			<unit id="org.eclipse.swtbot.feature.group"/>
-			<unit id="org.eclipse.swtbot.swt.finder.junit5"/>
+			<unit id="org.eclipse.swtbot.junit5.feature.group"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository"/>
-			<unit id="org.glassfish.hk2.osgi-resource-locator"/>
-		</location>
+				<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230531010532/repository"/>
+				<unit id="org.glassfish.hk2.osgi-resource-locator"/>
+			</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-	    	<repository location="https://download.eclipse.org/oomph/simrel-orbit/release/latest/"/>
-	    	<unit id="org.assertj"/>
-	    	<unit id="org.mockito.mockito-core"/>
-	    	<unit id="org.mockito.junit.jupiter"/>
-	    	<unit id="org.junit.jupiter.api"/>
-	    	<unit id="org.junit.jupiter.engine"/>
-	    	<unit id="org.junit.jupiter.params"/>
-	    	<unit id="org.junit.platform.commons"/>
-	    	<unit id="org.junit.platform.engine"/>
-	  	</location>
+		    	<repository location="https://download.eclipse.org/oomph/simrel-orbit/release/latest/"/>
+		    	<unit id="org.assertj"/>
+		    	<unit id="org.mockito.mockito-core"/>
+		    	<unit id="org.mockito.junit-jupiter"/>
+		  	</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/oomph/simrel-maven-bnd/nightly/N202305011301"/>
+			<unit id="org.eclipse.oomph.maven.bnd.all.feature.group"/>
+		</location>
 	</locations>
 	<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21"/>
 </target>

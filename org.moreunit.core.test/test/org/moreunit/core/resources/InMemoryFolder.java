@@ -21,7 +21,7 @@ public class InMemoryFolder extends InMemoryResourceContainer implements Folder
         InMemoryResourceContainer parent = getParent();
         while (! (parent instanceof InMemoryProject))
         {
-            parent = getParent();
+            parent = parent.getParent();
         }
         return (InMemoryProject) parent;
     }

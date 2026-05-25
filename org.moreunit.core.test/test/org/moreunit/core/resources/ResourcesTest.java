@@ -1,6 +1,8 @@
 package org.moreunit.core.resources;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -291,22 +293,22 @@ abstract class ResourcesTest
         // then, no exception = success
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void project_names_should_contain_no_file_separator() throws Exception
     {
-        workspace.getProject("/project1");
+        assertThrows(IllegalArgumentException.class, () -> workspace.getProject("/project1"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void workspace_should_complain_when_requested_file_path_has_only_one_segment() throws Exception
     {
-        workspace.getFile("/some-file");
+        assertThrows(IllegalArgumentException.class, () -> workspace.getFile("/some-file"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void workspace_should_complain_when_requested_folder_path_has_only_one_segment() throws Exception
     {
-        workspace.getFolder("/some-folder");
+        assertThrows(IllegalArgumentException.class, () -> workspace.getFolder("/some-folder"));
     }
 
     @Test
@@ -426,7 +428,7 @@ abstract class ResourcesTest
 
     private Condition<Object> nameEqualTo(final String expectedName)
     {
-        return new Condition<Object>()
+        return new Condition<>()
         {
             {
                 as("name equal to " + expectedName);

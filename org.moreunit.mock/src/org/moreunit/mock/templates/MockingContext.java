@@ -37,7 +37,7 @@ public class MockingContext
     private final List<PatternResolver> patternResolvers;
     private final Dependencies dependencies;
     private final String testType;
-    private final Set<InjectionType> injectionTypesUsed = new HashSet<InjectionType>();
+    private final Set<InjectionType> injectionTypesUsed = new HashSet<>();
 
     private IMethod beforeInstanceMethod;
     private String beforeInstanceMethodName;
@@ -159,7 +159,7 @@ public class MockingContext
 
     private boolean hasBeforeAnnotationIfRequired(IMethod method)
     {
-        String beforeAnnotation = (String) TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
+        String beforeAnnotation = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         if(beforeAnnotation == null)
         {
             return true;
@@ -180,7 +180,7 @@ public class MockingContext
     {
         String methodName = incrementMethodNameIfRequired(methodBaseName);
 
-        String annotationClass = (String) TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
+        String annotationClass = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         String beforeMethodSource = "";
 
         if(annotationClass != null)

@@ -37,7 +37,7 @@ public class SourceFolderContext
 
     public void initContextForWorkspace()
     {
-        folderToLookupMap = new HashMap<IPackageFragmentRoot, List<IPackageFragmentRoot>>();
+        folderToLookupMap = new HashMap<>();
 
         List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
         for (IJavaProject project : javaProjectsFromWorkspace)
@@ -54,7 +54,7 @@ public class SourceFolderContext
     {
         for (IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
         {
-            List<IPackageFragmentRoot> list = new ArrayList<IPackageFragmentRoot>();
+            List<IPackageFragmentRoot> list = new ArrayList<>();
             list.add(mapping.getTestFolder());
             updateMap(sourceFolder, list);
         }
@@ -71,7 +71,7 @@ public class SourceFolderContext
         }
         else
         {
-            List<IPackageFragmentRoot> list = new ArrayList<IPackageFragmentRoot>();
+            List<IPackageFragmentRoot> list = new ArrayList<>();
             list.addAll(value);
             folderToLookupMap.put(key, list);
         }
@@ -87,7 +87,7 @@ public class SourceFolderContext
         // you can not take the source folder for test because this method is
         // used
         // to jump from the test to the CUT as well
-        List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> resultList = new ArrayList<>();
         try
         {
             for (IPackageFragmentRoot fragmentRoot : baseFolder.getJavaProject().getPackageFragmentRoots())

@@ -15,6 +15,7 @@ public class ExtensionFieldTest
 
     private ExtensionField field = new ExtensionField(mock(Composite.class, Mockito.RETURNS_DEEP_STUBS), 0)
     {
+        @Override
         public Text getField()
         {
             return textField;

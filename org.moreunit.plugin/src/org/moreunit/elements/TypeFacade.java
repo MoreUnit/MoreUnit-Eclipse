@@ -258,6 +258,7 @@ public abstract class TypeFacade
             this.member = member;
         }
 
+        @Override
         public IMember getCorrespondingMember()
         {
             return member;
@@ -284,6 +285,7 @@ public abstract class TypeFacade
             this.perfectMatches = perfectMatches;
         }
 
+        @Override
         public IMember getCorrespondingMember()
         {
             return openDialog(request, proposedClasses, proposedMethods, perfectMatches);
@@ -318,6 +320,7 @@ public abstract class TypeFacade
 
     private class OpenNewClassWizard implements OneCorrespondingMemberAction
     {
+        @Override
         public IMember getCorrespondingMember()
         {
             return Display.getDefault().syncCall(() -> newCorrespondingClassWizard(getType()).open());

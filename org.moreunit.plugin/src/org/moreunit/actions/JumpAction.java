@@ -17,16 +17,19 @@ public class JumpAction implements IEditorActionDelegate
 
     private IEditorPart editorPart;
 
+    @Override
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
         editorPart = targetEditor;
     }
 
+    @Override
     public void run(IAction action)
     {
         JumpActionExecutor.getInstance().executeJumpAction(editorPart);
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection)
     {
     }

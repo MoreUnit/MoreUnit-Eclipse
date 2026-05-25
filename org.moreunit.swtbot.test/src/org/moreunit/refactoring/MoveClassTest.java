@@ -3,12 +3,12 @@ package org.moreunit.refactoring;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
@@ -18,7 +18,7 @@ import org.moreunit.test.workspace.WorkspaceHelper;
 @Preferences(testClassNameTemplate = "${srcFile}Test",
              testSrcFolder = "test",
              testType = TestType.JUNIT4)
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class MoveClassTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(

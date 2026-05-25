@@ -1,23 +1,24 @@
 package org.moreunit.mock.templates.resolvers;
 
 import static java.util.Arrays.asList;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.TypeParameter;
 import org.moreunit.mock.templates.MockingContext;
 
-@ExtendWith(MockitoExtension.class)
 public class DependencyPatternsResolverTest
 {
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
     @Mock
     private MockingContext context;
 

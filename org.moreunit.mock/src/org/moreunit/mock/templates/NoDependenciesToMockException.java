@@ -2,7 +2,6 @@ package org.moreunit.mock.templates;
 
 import java.io.Serial;
 
-
 import org.eclipse.jdt.core.IType;
 
 public class NoDependenciesToMockException extends MockingTemplateException

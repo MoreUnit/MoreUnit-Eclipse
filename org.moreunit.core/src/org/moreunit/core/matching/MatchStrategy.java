@@ -34,6 +34,7 @@ public enum MatchStrategy
                     return oneMatchFound;
                 }
 
+                @Override
                 protected void matchFound(IFile file)
                 {
                     oneMatchFound = true;

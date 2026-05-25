@@ -36,11 +36,13 @@ public class CompilationUnitHandler implements ElementHandler<ICompilationUnit, 
         return source.getSource();
     }
 
+    @Override
     public ICompilationUnit get()
     {
         return compilationUnit;
     }
 
+    @Override
     public WorkspaceHandler getWorkspaceHandler()
     {
         return sourceFolderHandler.getWorkspaceHandler();
@@ -73,6 +75,7 @@ public class CompilationUnitHandler implements ElementHandler<ICompilationUnit, 
         return new TypeHandler(this, compilationUnit.findPrimaryType());
     }
 
+    @Override
     public CompilationUnitAssertions assertThat()
     {
         return new CompilationUnitAssertions(this);

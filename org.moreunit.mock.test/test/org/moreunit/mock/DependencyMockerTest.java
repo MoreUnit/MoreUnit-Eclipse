@@ -1,14 +1,16 @@
 package org.moreunit.mock;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.preferences.Preferences;
@@ -16,9 +18,12 @@ import org.moreunit.mock.templates.MockingTemplateStore;
 import org.moreunit.mock.templates.TemplateProcessor;
 import org.moreunit.preferences.PreferenceConstants;
 
-@ExtendWith(MockitoExtension.Silent.class)
 public class DependencyMockerTest
 {
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
     private static final String SOME_TEST_TYPE = PreferenceConstants.DEFAULT_TEST_TYPE;
 
     @Mock

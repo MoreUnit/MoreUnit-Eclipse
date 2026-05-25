@@ -3,13 +3,13 @@ package org.moreunit.mock.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.moreunit.mock.templates.MockingContext;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlElementRefs;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import org.moreunit.mock.templates.MockingContext;
 
 @XmlRootElement(name = "code-template")
 public class CodeTemplate
@@ -34,7 +34,7 @@ public class CodeTemplate
 
     public CodeTemplate(String id, Part part, String pattern)
     {
-        this(id, part, pattern, new HashSet<InclusionCondition>());
+        this(id, part, pattern, new HashSet<>());
     }
 
     public CodeTemplate(String id, Part part, String pattern, Set<InclusionCondition> inclusionConditions)
@@ -71,22 +71,14 @@ public class CodeTemplate
         {
             if(condition instanceof ExcludeIf)
             {
-                if(condition.type() == ConditionType.INJECTION_TYPE && context.usesInjectionType(condition.valueAs(InjectionType.class)))
-                {
-                    return false;
-                }
-                if(condition.type() == ConditionType.TEST_TYPE && context.isTestType(condition.value()))
+                if((condition.type() == ConditionType.INJECTION_TYPE && context.usesInjectionType(condition.valueAs(InjectionType.class))) || (condition.type() == ConditionType.TEST_TYPE && context.isTestType(condition.value())))
                 {
                     return false;
                 }
             }
             else
             {
-                if(condition.type() == ConditionType.INJECTION_TYPE && ! context.usesInjectionType(condition.valueAs(InjectionType.class)))
-                {
-                    return false;
-                }
-                if(condition.type() == ConditionType.TEST_TYPE && ! context.isTestType(condition.value()))
+                if((condition.type() == ConditionType.INJECTION_TYPE && ! context.usesInjectionType(condition.valueAs(InjectionType.class))) || (condition.type() == ConditionType.TEST_TYPE && ! context.isTestType(condition.value())))
                 {
                     return false;
                 }
@@ -118,11 +110,7 @@ public class CodeTemplate
         {
             return true;
         }
-        if(obj == null)
-        {
-            return false;
-        }
-        if(getClass() != obj.getClass())
+        if((obj == null) || (getClass() != obj.getClass()))
         {
             return false;
         }

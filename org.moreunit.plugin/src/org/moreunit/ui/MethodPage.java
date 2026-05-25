@@ -190,6 +190,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         }
     }
 
+    @Override
     public void elementChanged(ElementChangedEvent event)
     {
         int type = event.getDelta().getElement().getElementType();
@@ -208,6 +209,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
     {
         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
         {
+            @Override
             public void run()
             {
                 updateUI();
@@ -222,6 +224,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         super.dispose();
     }
 
+    @Override
     public void doubleClick(DoubleClickEvent event)
     {
         ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();

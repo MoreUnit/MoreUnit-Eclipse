@@ -16,17 +16,20 @@ public class CreateTestMethodEditorAction implements IEditorActionDelegate
 
     private IEditorPart editorPart;
 
+    @Override
     public void setActiveEditor(IAction action, IEditorPart targetEditor)
     {
         editorPart = targetEditor;
     }
 
+    @Override
     public void run(IAction action)
     {
         LogHandler.getInstance().handleInfoLog("CreateTestMethodEditorAction.run()");
         CreateTestMethodActionExecutor.getInstance().executeCreateTestMethodAction(editorPart);
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection)
     {
     }

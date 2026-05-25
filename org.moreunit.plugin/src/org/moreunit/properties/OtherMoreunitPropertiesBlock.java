@@ -178,16 +178,19 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
         testCaseNamePatternArea = TestFileNamePatternGroup.forCamelCasePattern(parent, container, new TestFileNamePatternPreferencesWriter()
         {
+            @Override
             public void setTestFileNameTemplate(String template, String separator)
             {
                 projectPreferences.setTestClassNameTemplate(template);
             }
 
+            @Override
             public String getTestFileNameTemplate()
             {
                 return projectPreferences.getTestClassNameTemplate();
             }
 
+            @Override
             public String getFileWordSeparator()
             {
                 return "";
@@ -426,6 +429,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
      * Interface SelectionListener
      */
 
+    @Override
     public void widgetDefaultSelected(SelectionEvent e)
     {
     }
@@ -434,6 +438,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
      * One of the test type buttons was clicked by the user. Now it is necessary
      * to check if the test method prefix checkbox should be hidden.
      */
+    @Override
     public void widgetSelected(SelectionEvent e)
     {
         checkStateOfMethodPrefixButton();

@@ -14,6 +14,7 @@ public abstract class SimplePatternResolver implements PatternResolver
         this.prefix = prefix;
     }
 
+    @Override
     public String resolve(String codePattern)
     {
         int startIdx = codePattern.indexOf(prefix);

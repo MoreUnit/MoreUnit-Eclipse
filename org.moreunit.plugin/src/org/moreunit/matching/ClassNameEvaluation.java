@@ -35,7 +35,7 @@ public class ClassNameEvaluation
     {
         String packageName = getPackageName();
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (String p : patterns)
         {
             result.add(packageName + "." + p);

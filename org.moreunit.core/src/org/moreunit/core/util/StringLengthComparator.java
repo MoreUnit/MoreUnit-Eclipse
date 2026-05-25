@@ -9,6 +9,7 @@ public class StringLengthComparator implements Comparator<String>, Serializable
     @Serial
     private static final long serialVersionUID = 1462228841996373439L;
 
+    @Override
     public int compare(String aString, String bString)
     {
         return aString.length() - bString.length();

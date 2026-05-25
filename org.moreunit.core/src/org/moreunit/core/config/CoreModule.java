@@ -145,6 +145,7 @@ public class CoreModule extends Module<CoreModule>
         return languageRepository;
     }
 
+    @Override
     public Logger getLogger()
     {
         return logger;

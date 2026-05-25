@@ -13,6 +13,7 @@ import org.moreunit.util.PluginTools;
 public class RunTestsOfSelectedMemberActionHandler extends AbstractHandler
 {
 
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(PluginTools.getOpenEditorPart(), ILaunchManager.RUN_MODE);

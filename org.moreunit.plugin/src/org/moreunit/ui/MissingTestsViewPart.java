@@ -70,10 +70,12 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
     {
     }
 
+    @Override
     public void widgetDefaultSelected(SelectionEvent e)
     {
     }
 
+    @Override
     public void widgetSelected(SelectionEvent e)
     {
         String projectName = ((Combo) e.getSource()).getText();
@@ -88,6 +90,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         return selectedJavaProject;
     }
 
+    @Override
     public void doubleClick(DoubleClickEvent event)
     {
         ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
@@ -111,6 +114,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
     }
 
+    @Override
     public void resourceChanged(IResourceChangeEvent event)
     {
         if(event.getType() == IResourceChangeEvent.PRE_DELETE)
@@ -119,10 +123,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             return;
         }
 
-        if(event.getType() != IResourceChangeEvent.POST_CHANGE)
-            return;
-
-        if(selectedJavaProject == null)
+        if((event.getType() != IResourceChangeEvent.POST_CHANGE) || (selectedJavaProject == null))
             return;
 
         IResourceDelta delta = event.getDelta();
@@ -133,9 +134,10 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             return;
         }
 
-        final ArrayList<IResource> addedOrRemovedResource = new ArrayList<IResource>();
+        final ArrayList<IResource> addedOrRemovedResource = new ArrayList<>();
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
         {
+            @Override
             public boolean visit(IResourceDelta delta) throws CoreException
             {
                 if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)
@@ -163,6 +165,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
             PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
             {
 
+                @Override
                 public void run()
                 {
                     treeViewer.refresh();
@@ -173,9 +176,10 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
 
     private void checkNewProject(IResourceDelta delta)
     {
-        final ArrayList<IResource> addedProjects = new ArrayList<IResource>();
+        final ArrayList<IResource> addedProjects = new ArrayList<>();
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
         {
+            @Override
             public boolean visit(IResourceDelta delta) throws CoreException
             {
                 if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)
@@ -208,6 +212,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
     {
         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
         {
+            @Override
             public void run()
             {
                 projectComboBox.setItems(getNamesOfJavaProjects());

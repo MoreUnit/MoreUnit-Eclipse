@@ -8,7 +8,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class Preferences
 {
-    private static final Set<Preference< ? >> ALL_PREFERENCES = new HashSet<Preference< ? >>();
+    private static final Set<Preference< ? >> ALL_PREFERENCES = new HashSet<>();
 
     public static final Preference<String> MOCKING_TEMPLATE = reg(new StringPreference("mocking_template", "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9"));
 

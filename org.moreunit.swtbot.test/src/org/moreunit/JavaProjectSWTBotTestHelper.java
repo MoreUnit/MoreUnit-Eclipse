@@ -36,10 +36,10 @@ import org.eclipse.ui.IViewReference;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.moreunit.test.context.TestContextRule;
 
 /**
@@ -49,13 +49,13 @@ public class JavaProjectSWTBotTestHelper
 {
     static ShortcutStrategy shortcutStrategy = ShortcutStrategy.createShortcutStrategy();
 
-    @Rule
+    @RegisterExtension
     public final TestContextRule context = new TestContextRule();
 
     protected static SWTWorkbenchBot bot;
     private static boolean isWorkspacePrepared;
 
-    @BeforeClass
+    @BeforeAll
     public static void initialize()
     {
         bot = new SWTWorkbenchBot();
@@ -86,8 +86,8 @@ public class JavaProjectSWTBotTestHelper
      * Weird behavior occurs, when editor do not get closed before and after
      * each test, e.g. methods are missing from a class...
      */
-    @Before
-    @After
+    @BeforeEach
+    @AfterEach
     public void afterAndAfter()
     {
         for (SWTBotEditor editor : bot.editors())
@@ -244,7 +244,7 @@ public class JavaProjectSWTBotTestHelper
 
     protected Matcher<Shell> shellWithTextStartingWith(final String textStart)
     {
-        return new BaseMatcher<Shell>()
+        return new BaseMatcher<>()
         {
             @Override
             public void describeTo(Description description)
@@ -258,6 +258,7 @@ public class JavaProjectSWTBotTestHelper
                 final Shell shell = (Shell) item;
                 String text = UIThreadRunnable.syncExec(shell.getDisplay(), new Result<String>()
                 {
+                    @Override
                     public String run()
                     {
                         return shell.getText();

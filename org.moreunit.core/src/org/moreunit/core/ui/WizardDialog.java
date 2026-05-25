@@ -13,6 +13,7 @@ public class WizardDialog<W extends IWizard> implements Dialog
         this.wizard = wizard;
     }
 
+    @Override
     public void open()
     {
         wizardDialog.open();

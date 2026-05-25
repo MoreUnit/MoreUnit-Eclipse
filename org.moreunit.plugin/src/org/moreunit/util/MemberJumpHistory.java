@@ -23,7 +23,7 @@ public class MemberJumpHistory
 
     public MemberJumpHistory()
     {
-        jumps = new LRUCache<IMember, IMember>(HISTORY_SIZE);
+        jumps = new LRUCache<>(HISTORY_SIZE);
     }
 
     public static MemberJumpHistory getInstance()

@@ -12,6 +12,7 @@ public class PropertyPageFactoryTest
 
     private PropertyPageFactory factory = new PropertyPageFactory()
     {
+        @Override
         protected GenericPropertyPage createPage(String langId, String desc)
         {
             pageCreated = true;

@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.IJavaProject;
 
 public class JavaProjectOptions
 {
-    private static Map<String, String> OPTS = new HashMap<String, String>();
+    private static Map<String, String> OPTS = new HashMap<>();
     static
     {
         OPTS.put("org.eclipse.jdt.core.builder.cleanOutputFolder", "clean");

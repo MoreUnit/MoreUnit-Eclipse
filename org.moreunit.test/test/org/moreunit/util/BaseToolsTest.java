@@ -130,7 +130,7 @@ public class BaseToolsTest
     @Test
     public void getListOfUnqualifiedTypeNames_should_return_list_sorted_by_raw_length() throws Exception
     {
-        ArrayList<String> testedClasses = new ArrayList<String>();
+        ArrayList<String> testedClasses = new ArrayList<>();
         testedClasses.add("EinsZweiDrei");
         testedClasses.add("OneTwoThree");
         List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);

@@ -55,7 +55,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
-        List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
+        List<IMethod> expectedTestedMethods = new ArrayList<>();
         expectedTestedMethods.add(testedMethod.get());
         assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get())).isEqualTo(expectedTestedMethods);
     }
@@ -77,7 +77,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
-        List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
+        List<IMethod> expectedTestedMethods = new ArrayList<>();
         expectedTestedMethods.add(possiblyTestedMethod.get());
         expectedTestedMethods.add(possiblyTestedMethod2.get());
         assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get())).isEqualTo(expectedTestedMethods);
@@ -94,7 +94,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
-        List<IMethod> expectedTestedMethods = new ArrayList<IMethod>();
+        List<IMethod> expectedTestedMethods = new ArrayList<>();
         expectedTestedMethods.add(perfectMatch.get());
         assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get())).isEqualTo(expectedTestedMethods);
 
@@ -111,7 +111,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
 
-        Set<IType> classesUnderTest = new LinkedHashSet<IType>(Arrays.asList(cutTypeHandler.get(), cutType2.get()));
+        Set<IType> classesUnderTest = new LinkedHashSet<>(Arrays.asList(cutTypeHandler.get(), cutType2.get()));
         List<IMethod> correspondingTestMethods = testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), classesUnderTest);
         assertThat(correspondingTestMethods).containsOnly(testedMethod1.get(), testedMethod2.get());
         cutType2.getCompilationUnit().delete(true, null);

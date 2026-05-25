@@ -16,7 +16,7 @@ import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 public class ExpandableCompositeContainer extends Composite
 {
     private final ScrolledComposite scrolledComposite;
-    private final Set<ExpandableComposite> expandableComposites = new HashSet<ExpandableComposite>();
+    private final Set<ExpandableComposite> expandableComposites = new HashSet<>();
 
     public ExpandableCompositeContainer(Composite parent)
     {

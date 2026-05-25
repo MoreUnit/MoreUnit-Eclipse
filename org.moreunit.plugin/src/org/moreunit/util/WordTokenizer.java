@@ -10,13 +10,13 @@ import java.util.List;
 public class WordTokenizer implements Enumeration<String>
 {
 
-    private List<String> tokens = new ArrayList<String>();
+    private List<String> tokens = new ArrayList<>();
     private int position = 0;
 
     public WordTokenizer(String string)
     {
         if(string == null || string.length() == 0)
-            tokens = new ArrayList<String>();
+            tokens = new ArrayList<>();
         else
         {
             char[] charArray = string.toCharArray();
@@ -41,11 +41,13 @@ public class WordTokenizer implements Enumeration<String>
             tokens.add(token);
     }
 
+    @Override
     public boolean hasMoreElements()
     {
         return position < tokens.size();
     }
 
+    @Override
     public String nextElement()
     {
         return tokens.get(position++);

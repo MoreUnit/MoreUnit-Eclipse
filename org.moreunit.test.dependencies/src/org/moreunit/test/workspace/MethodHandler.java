@@ -13,16 +13,19 @@ public class MethodHandler implements ElementHandler<IMethod, MethodAssertions>
         this.method = method;
     }
 
+    @Override
     public IMethod get()
     {
         return method;
     }
 
+    @Override
     public WorkspaceHandler getWorkspaceHandler()
     {
         return typeHandler.getWorkspaceHandler();
     }
 
+    @Override
     public MethodAssertions assertThat()
     {
         return new MethodAssertions(this);

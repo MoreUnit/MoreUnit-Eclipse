@@ -16,8 +16,8 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
     private static final String LANGUAGES = BASE + "languages";
     private static final String PROPERTIES_ACTIVE = ".active";
 
-    private final Map<String, LanguagePreferencesReader> languagePrefReaders = new HashMap<String, LanguagePreferencesReader>();
-    private final Map<String, LanguagePreferencesWriter> languagePrefWriters = new HashMap<String, LanguagePreferencesWriter>();
+    private final Map<String, LanguagePreferencesReader> languagePrefReaders = new HashMap<>();
+    private final Map<String, LanguagePreferencesWriter> languagePrefWriters = new HashMap<>();
     private final IProject project;
     private final ScopedPreferenceStore store;
     private final Preferences wsPrefs;
@@ -38,6 +38,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         return writerForLanguage(LanguagePreferences.ANY_LANGUAGE);
     }
 
+    @Override
     public LanguagePreferencesWriter writerForLanguage(String language)
     {
         if(languagePrefWriters.containsKey(language))
@@ -51,6 +52,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         return writer;
     }
 
+    @Override
     public LanguagePreferencesReader readerForLanguage(String language)
     {
         if(languagePrefReaders.containsKey(language))
@@ -78,6 +80,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         return defaults;
     }
 
+    @Override
     public boolean hasPreferencesForLanguage(String language)
     {
         if(LanguagePreferences.ANY_LANGUAGE.equals(language))
@@ -87,6 +90,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         return orDefault(store.getString(LANGUAGES), "").matches(".*\\b%s\\b.*".formatted(language));
     }
 
+    @Override
     public void activatePreferencesForLanguage(String language, boolean active)
     {
         if(hasPreferencesForLanguage(language) == active)
@@ -118,11 +122,13 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         languagePrefReaders.clear();
     }
 
+    @Override
     public ScopedPreferenceStore getStore()
     {
         return store;
     }
 
+    @Override
     public void save()
     {
         try

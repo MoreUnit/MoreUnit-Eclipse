@@ -31,6 +31,7 @@ public class Language implements Comparable<Language>
         return label;
     }
 
+    @Override
     public int compareTo(Language o)
     {
         return label.compareTo(o.label);

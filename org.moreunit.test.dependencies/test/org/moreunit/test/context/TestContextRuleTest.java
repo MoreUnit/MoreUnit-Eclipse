@@ -19,18 +19,21 @@ public class TestContextRuleTest
     {
         List< ? extends Runnable> runnables = asList(new Runnable()
         {
+            @Override
             public void run()
             {
                 context.getCompilationUnit("irrelevant");
             }
         }, new Runnable()
         {
+            @Override
             public void run()
             {
                 context.assertCompilationUnit("irrelevant");
             }
         }, new Runnable()
         {
+            @Override
             public void run()
             {
                 context.assertCompilationUnit("irrelevant");

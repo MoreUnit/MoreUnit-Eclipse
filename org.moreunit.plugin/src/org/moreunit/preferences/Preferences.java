@@ -33,13 +33,13 @@ public class Preferences
      * It is OK to clear it entirely every time a preference changes ; that way
      * we can guarantee that entries won't be kept in memory without reason.
      */
-    private static final Map<String, TestClassNamePattern> CLASS_NAME_PATTERN_CACHE = new HashMap<String, TestClassNamePattern>();
+    private static final Map<String, TestClassNamePattern> CLASS_NAME_PATTERN_CACHE = new HashMap<>();
     private static final Object CACHE_LOCK = new Object();
 
     private static Preferences instance = new Preferences();
 
     private final Logger logger = MoreUnitPlugin.getDefault().getLogger();
-    private final Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<IJavaProject, IPreferenceStore>();
+    private final Map<IJavaProject, IPreferenceStore> preferenceMap = new HashMap<>();
 
     protected Preferences()
     {
@@ -127,7 +127,7 @@ public class Preferences
 
     private List<SourceFolderMapping> getWorkspaceSpecificSourceMappingList(IJavaProject javaProject)
     {
-        List<SourceFolderMapping> mappings = new ArrayList<SourceFolderMapping>();
+        List<SourceFolderMapping> mappings = new ArrayList<>();
 
         List<IPackageFragmentRoot> javaSourceFolders = PluginTools.findJavaSourceFoldersFor(javaProject);
 
@@ -165,7 +165,7 @@ public class Preferences
 
     private List<IPackageFragmentRoot> findPossibleMainSourceFolders(List<IPackageFragmentRoot> javaSourceFolders)
     {
-        List<IPackageFragmentRoot> possibleMainSrcFolders = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> possibleMainSrcFolders = new ArrayList<>();
 
         String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
 

@@ -14,6 +14,7 @@ import org.moreunit.util.PluginTools;
 public class JumpActionHandler extends AbstractHandler
 {
 
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         JumpActionExecutor.getInstance().executeJumpAction(PluginTools.getOpenEditorPart());

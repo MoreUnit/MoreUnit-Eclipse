@@ -60,11 +60,13 @@ public class MainPropertyPage extends PropertyPage
 
         specificSettingsCheckbox.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
                 // nothing to do
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 specificSettingsChecboxChanged();

@@ -24,6 +24,7 @@ public class FeaturedLanguagesPropertyPage extends FeaturedLanguagesPreferencePa
     {
         return Composites.link(parent, text, new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 final String id = PreferencePages.OTHER_LANGUAGES;

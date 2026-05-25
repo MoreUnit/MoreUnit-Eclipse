@@ -109,6 +109,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public ICompilationUnit getTestClass()
     {
         return testClassCompilationUnit;
@@ -117,6 +118,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public IMethod getTestMethod()
     {
         return testMethod;
@@ -125,6 +127,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setTestMethod(IMethod testMethod)
     {
         this.testMethod = testMethod;
@@ -133,6 +136,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public ICompilationUnit getClassUnderTest()
     {
         return classUnderTestCompilationUnit;
@@ -141,6 +145,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public IMethod getMethodUnderTest()
     {
         return methodUnderTest;
@@ -149,6 +154,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isNewTestClassCreated()
     {
         return newTestClassCreated;
@@ -157,6 +163,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public Preferences getPreferences()
     {
         return preferences;
@@ -165,6 +172,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setPreferences(Preferences preferences)
     {
         this.preferences = preferences;

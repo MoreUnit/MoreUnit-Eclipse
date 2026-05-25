@@ -7,8 +7,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: 
  MoreUnit.org
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Require-Bundle: org.eclipse.swtbot.go,
- org.eclipse.jdt.core,
+Require-Bundle: org.eclipse.jdt.core,
  org.moreunit.test.dependencies,
  org.moreunit,
  org.eclipse.ltk.ui.refactoring,
@@ -16,6 +15,10 @@ Require-Bundle: org.eclipse.swtbot.go,
  org.eclipse.ui.ide,
  org.eclipse.platform,
  org.assertj,
- org.junit
+ junit-jupiter-api,
+ junit-jupiter-engine,
+ junit-jupiter-params,
+ org.eclipse.swtbot.go,
+ org.eclipse.swtbot.junit5_x
 Import-Package: org.eclipse.jdt.ui
 Automatic-Module-Name: org.moreunit.swtbot.test

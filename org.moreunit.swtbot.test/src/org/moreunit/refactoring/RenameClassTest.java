@@ -2,13 +2,12 @@ package org.moreunit.refactoring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
@@ -18,7 +17,7 @@ import org.moreunit.test.context.TestType;
 @Preferences(testClassNameTemplate="${srcFile}Test",
              testSrcFolder="test",
              testType=TestType.JUNIT4)
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class RenameClassTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
@@ -98,7 +97,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		bot.textWithLabel("New name:").setText("AnyClass");
 		bot.button("Finish").click();
 		SWTBotShell renameDialog = bot.activeShell();
-		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(renameDialog), 20000);
 	}
 
 	private void renameOtherClassToAnyClassAndWaitUntilFinished()
@@ -125,7 +124,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		bot.textWithLabel("New name:").setText("AnyClass");
 		bot.button("Finish").click();
 		SWTBotShell renameDialog = bot.activeShell();
-		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(renameDialog), 20000);
 	}
 
 }

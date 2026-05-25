@@ -35,9 +35,13 @@ abstract class EclipseResource implements Resource
     public final boolean equals(Object other)
     {
         if(other == this)
+        {
             return true;
+        }
         if(other == null || other.getClass() != getClass())
+        {
             return false;
+        }
         return other.toString().equals(toString());
     }
 

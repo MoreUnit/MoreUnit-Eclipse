@@ -66,10 +66,12 @@ public class MoreUnitPropertyPage extends PropertyPage
 
         projectSpecificSettingsCheckbox.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 handleCheckboxSelectionChanged();
@@ -99,6 +101,7 @@ public class MoreUnitPropertyPage extends PropertyPage
 
         secondTabOtherProperties.addModifyListener(new ModifyListener()
         {
+            @Override
             public void modifyText(ModifyEvent e)
             {
                 updateValidState();

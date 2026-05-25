@@ -31,9 +31,9 @@ public class Dependencies extends ArrayList<Dependency>
     private final NamingRules namingRules;
     private final IType classUnderTest;
     private final DependencyInjectionPointStore injectionPointProvider;
-    private final List<Dependency> constructorDependencies = new ArrayList<Dependency>();
-    private final List<SetterDependency> setterDependencies = new ArrayList<SetterDependency>();
-    private final List<FieldDependency> fieldDependencies = new ArrayList<FieldDependency>();
+    private final List<Dependency> constructorDependencies = new ArrayList<>();
+    private final List<SetterDependency> setterDependencies = new ArrayList<>();
+    private final List<FieldDependency> fieldDependencies = new ArrayList<>();
 
     public Dependencies(IType classUnderTest, DependencyInjectionPointStore injectionPointProvider, NamingRules namingRules)
     {
@@ -172,14 +172,14 @@ public class Dependencies extends ArrayList<Dependency>
         {
             return resolveTypeParameters(signature.toCharArray(), new CharIterator(signature, indexOfAngleBracket + 1));
         }
-        return new ArrayList<TypeParameter>();
+        return new ArrayList<>();
     }
 
     private List<TypeParameter> resolveTypeParameters(char[] signatureBuffer, CharIterator iterator) throws JavaModelException
     {
-        List<TypeParameter> parameters = new ArrayList<TypeParameter>();
-        List<String> annotations = new ArrayList<String>();
-        List<String> wildcardAnnotations = new ArrayList<String>();
+        List<TypeParameter> parameters = new ArrayList<>();
+        List<String> annotations = new ArrayList<>();
+        List<String> wildcardAnnotations = new ArrayList<>();
 
         TypeParameter.Kind parameterKind = Kind.REGULAR;
 

@@ -18,7 +18,7 @@ public class PreferenceStoreManager
 
     private final IPreferenceStore workspaceStore;
     private final Logger logger;
-    private final Map<IJavaProject, IPreferenceStore> projectStores = new HashMap<IJavaProject, IPreferenceStore>();
+    private final Map<IJavaProject, IPreferenceStore> projectStores = new HashMap<>();
 
     public PreferenceStoreManager(IPreferenceStore workspacePreferenceStore, Logger logger)
     {

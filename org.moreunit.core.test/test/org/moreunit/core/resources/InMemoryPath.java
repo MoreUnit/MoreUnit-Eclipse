@@ -1,7 +1,6 @@
 package org.moreunit.core.resources;
 
 import static java.util.Collections.unmodifiableList;
-
 import static org.moreunit.core.util.Preconditions.checkArgument;
 import static org.moreunit.core.util.Strings.splitAsList;
 

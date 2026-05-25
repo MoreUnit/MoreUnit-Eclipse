@@ -63,7 +63,7 @@ public class BaseTools
 
         String typeName = testType.getSimpleName();
 
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         if(suffixes != null)
         {
             for (String suffix : suffixes)
@@ -132,8 +132,8 @@ public class BaseTools
      */
     public static List<String> getListOfUnqualifiedTypeNames(String testedClassString)
     {
-        List<String> results = new ArrayList<String>();
-        List<String> typeNames = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
+        List<String> typeNames = new ArrayList<>();
 
         JavaType testedType = new JavaType(testedClassString);
 
@@ -150,7 +150,7 @@ public class BaseTools
 
     public static List<String> getListOfUnqualifiedTypeNames(List<String> testedClasses)
     {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (String clazz : testedClasses)
         {
             result.addAll(getListOfUnqualifiedTypeNames(clazz));

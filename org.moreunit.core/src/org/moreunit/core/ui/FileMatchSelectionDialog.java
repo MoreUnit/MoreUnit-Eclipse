@@ -71,15 +71,19 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         final Tree tree = treeViewer.getTree();
         tree.addKeyListener(new KeyAdapter()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 if(e.character == SWT.ESC)
+                {
                     close();
+                }
             }
         });
 
         tree.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
                 handleElementSelected();
@@ -90,6 +94,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         {
             TreeItem fLastItem = null;
 
+            @Override
             public void mouseMove(MouseEvent e)
             {
                 if(tree.equals(e.getSource()))
@@ -128,16 +133,18 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
 
         tree.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseUp(MouseEvent e)
             {
                 if(! tree.equals(e.getSource()))
+                {
                     close();
+                }
 
-                if(tree.getSelectionCount() < 1)
+                if((tree.getSelectionCount() < 1) || (e.button != 1))
+                {
                     return;
-
-                if(e.button != 1)
-                    return;
+                }
 
                 if(tree.equals(e.getSource()))
                 {
@@ -158,7 +165,9 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
     public Object getSelectedElement()
     {
         if(treeViewer == null)
+        {
             return null;
+        }
 
         return ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
     }
@@ -188,6 +197,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         getShell().addDisposeListener(listener);
     }
 
+    @Override
     public void widgetDisposed(DisposeEvent e)
     {
         treeViewer = null;

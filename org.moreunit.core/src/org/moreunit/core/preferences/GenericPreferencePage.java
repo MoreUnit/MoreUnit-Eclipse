@@ -34,6 +34,7 @@ public class GenericPreferencePage extends PreferencePageBase
         button.setText("Delete Configuration");
         button.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 if(MessageDialog.openConfirm(getShell(), "MoreUnit", "This action is definitive. Please confirm that you want to delete the configuration for " + lang.getLabel() + "."))

@@ -1,15 +1,16 @@
 package org.moreunit.core.matching;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
 public class WordScannerTest
 {
-    @Test(expected = NullPointerException.class)
+    @Test
     public void should_reject_null_string() throws Exception
     {
-        new WordScanner(null);
+        assertThrows(NullPointerException.class, () -> new WordScanner(null));
     }
 
     @Test
@@ -25,11 +26,11 @@ public class WordScannerTest
         assertThat(scanner.hasPrevious(2)).isFalse();
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void index_should_not_be_initialized_at_construction() throws Exception
     {
         // start index is -1
-        new WordScanner("some text").current();
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").current());
     }
 
     @Test
@@ -93,54 +94,54 @@ public class WordScannerTest
         assertThat(scanner.previous(3)).isEqualTo('s');
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_index_is_after_upper_bound__without_offset() throws Exception
     {
-        new WordScanner("some text").forward(9).forward();
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").forward(9).forward());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_index_is_after_upper_bound__with_offset() throws Exception
     {
-        new WordScanner("some text").forward(10);
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").forward(10));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_index_is_before_lower_bound__without_offset() throws Exception
     {
-        new WordScanner("some text").backward();
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").backward());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_index_is_before_lower_bound__with_offset() throws Exception
     {
         // start index is -1
-        new WordScanner("some text").forward(3).backward(3);
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").forward(3).backward(3));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_char_is_after_upper_bound__without_offset() throws Exception
     {
-        new WordScanner("some text").forward(9).next();
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").forward(9).next());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_char_is_after_upper_bound__with_offset() throws Exception
     {
-        new WordScanner("some text").next(10);
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").next(10));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_char_is_before_lower_bound__without_offset() throws Exception
     {
-        new WordScanner("some text").previous();
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").previous());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_complain_when_requested_char_is_before_lower_bound__with_offset() throws Exception
     {
         // start index is -1
-        new WordScanner("some text").forward(3).previous(3);
+        assertThrows(IndexOutOfBoundsException.class, () -> new WordScanner("some text").forward(3).previous(3));
     }
 
     @Test
@@ -165,7 +166,7 @@ public class WordScannerTest
         assertThat(scanner.getCurrentWord()).isEqualTo("xt");
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void should_reject_invalid_word_bounds() throws Exception
     {
         // given
@@ -179,6 +180,6 @@ public class WordScannerTest
         // when
         scanner.backward(4);
         // then: exception expected
-        scanner.getCurrentWord();
+        assertThrows(IndexOutOfBoundsException.class, () -> scanner.getCurrentWord());
     }
 }

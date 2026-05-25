@@ -34,7 +34,7 @@ public class InMemoryFile extends InMemoryResource implements File
         InMemoryResourceContainer parent = getParent();
         while (! (parent instanceof InMemoryProject))
         {
-            parent = getParent();
+            parent = parent.getParent();
         }
         return (InMemoryProject) parent;
     }

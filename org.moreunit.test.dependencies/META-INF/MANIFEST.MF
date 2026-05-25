@@ -25,11 +25,11 @@ Require-Bundle: org.eclipse.core.resources,
  junit-jupiter-engine,
  junit-jupiter-migrationsupport,
  junit-jupiter-params,
- junit-vintage-engine,
  org.apiguardian.api,
+ junit-platform-launcher,
+ junit-platform-engine,
  junit-platform-suite-commons,
- junit-platform-suite-engine,
- junit-platform-runner
+ junit-platform-suite-engine
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: org.eclipse.jdt.junit,
  org.moreunit.core.util

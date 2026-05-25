@@ -12,6 +12,7 @@ public class ObjectUnderTestPatternsResolver implements PatternResolver
         this.context = context;
     }
 
+    @Override
     public String resolve(String codePattern)
     {
         if(codePattern.indexOf("${objectUnderTestType}") == - 1 && codePattern.indexOf("${objectUnderTest}") == - 1)

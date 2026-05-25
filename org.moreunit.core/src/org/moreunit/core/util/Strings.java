@@ -70,7 +70,7 @@ public class Strings
 
     public static List<String> splitAsList(String str, String regex)
     {
-        List<String> parts = new ArrayList<String>();
+        List<String> parts = new ArrayList<>();
         for (String part : str.split(regex))
         {
             String trimmed = part.trim();
@@ -112,7 +112,7 @@ public class Strings
     {
         for (Iterator<String> it = strings.iterator(); it.hasNext();)
         {
-            String str = (String) it.next();
+            String str = it.next();
             sb.append(str);
             if(it.hasNext())
             {

@@ -28,18 +28,19 @@ public class MarkCorrespondingFileAsTestedIfRequired implements FileCreationList
     @Override
     public void fileCreated(SrcFile maybeTestFile)
     {
-        if(decorator == null)
-            return;
-
         // if not a test file, the new file will be automatically decorated
-        if(! maybeTestFile.isTestFile())
+        if((decorator == null) || ! maybeTestFile.isTestFile())
+        {
             return;
+        }
 
         try
         {
             MatchingFile matchingFile = maybeTestFile.findUniqueMatch();
             if(matchingFile.isFound())
+            {
                 decorator.refreshIndicatorFor(matchingFile.get());
+            }
         }
         catch (DoesNotMatchConfigurationException e)
         {

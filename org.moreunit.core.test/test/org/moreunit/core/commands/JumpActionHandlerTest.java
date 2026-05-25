@@ -11,9 +11,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.moreunit.core.CoreTestModule;
 import org.moreunit.core.extension.jump.IJumpContext;
 import org.moreunit.core.extension.jump.IJumper;
@@ -21,6 +22,7 @@ import org.moreunit.core.extension.jump.JumpResult;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.matching.FileMatchSelector;
 import org.moreunit.core.matching.MatchSelection;
+import org.moreunit.core.preferences.LanguagePreferences;
 import org.moreunit.core.preferences.LanguagePreferencesWriter;
 import org.moreunit.core.preferences.Preferences;
 import org.moreunit.core.ui.DrivableWizardDialog;
@@ -61,7 +63,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
             preferences.remove(l);
         }
 
-        preferences.get(project).activatePreferencesForLanguage(LanguagePreferencesWriter.ANY_LANGUAGE, false);
+        preferences.get(project).activatePreferencesForLanguage(LanguagePreferences.ANY_LANGUAGE, false);
         preferences.get(project).save();
     }
 
@@ -453,9 +455,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     public void should_support_regex_symbols_in_file_name_separator() throws Exception
     {
-        Assumptions.assumeFalse("This test contains characters in files that are not supported on Windows.", System.getProperty("os.name").contains("Win"));
         // given
         preferences.add(new Language("nde", "NDE"));
 
@@ -508,6 +510,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         IFile fileToReturn;
         Collection<IFile> files;
 
+        @Override
         public MatchSelection select(Collection<IFile> files, IFile preferredFile)
         {
             this.files = files;
@@ -525,6 +528,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
     public static class TestJumper implements IJumper
     {
+        @Override
         public JumpResult jump(IJumpContext context)
         {
             try

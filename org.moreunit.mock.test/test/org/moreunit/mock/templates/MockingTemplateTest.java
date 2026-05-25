@@ -12,7 +12,7 @@ import org.moreunit.mock.model.MockingTemplates;
 
 public class MockingTemplateTest
 {
-    private MockingTemplates mockingTemplates = new MockingTemplates(new ArrayList<Category>(),
+    private MockingTemplates mockingTemplates = new MockingTemplates(new ArrayList<>(),
                                                                      asList(new MockingTemplate("a template"), new MockingTemplate("another template")));
 
     @Test

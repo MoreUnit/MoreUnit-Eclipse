@@ -29,7 +29,9 @@ public class Selection
         {
             IFile file = toFile(adaptable);
             if(file != null)
+            {
                 return SelectedSrcFile.fromSelection(toSrcFile(file), executionContext);
+            }
         }
 
         IEditorPart activeEditorPart = executionContext.getActiveEditorPart();
@@ -37,7 +39,9 @@ public class Selection
         {
             IFile file = toFile(activeEditorPart.getEditorInput());
             if(file != null)
+            {
                 return SelectedSrcFile.fromEditor(toSrcFile(file), activeEditorPart, executionContext);
+            }
         }
 
         return SelectedSrcFile.none();
@@ -52,11 +56,15 @@ public class Selection
     {
         IEvaluationContext context = executionContext.getApplicationContext();
         if(context == null)
+        {
             return null;
+        }
 
         Collection< ? > selectedElements = (Collection< ? >) context.getDefaultVariable();
         if(selectedElements == null || selectedElements.size() != 1)
+        {
             return null;
+        }
 
         return selectedElements.iterator().next();
     }

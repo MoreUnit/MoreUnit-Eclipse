@@ -7,7 +7,7 @@ public class ConfigItem<T>
 
     public static <T> ConfigItem<T> useDefault()
     {
-        return new ConfigItem<T>();
+        return new ConfigItem<>();
     }
 
     private ConfigItem()

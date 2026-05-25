@@ -27,10 +27,10 @@ import org.moreunit.util.MoreUnitContants;
 public class FilterMethodVisitor extends ASTVisitor
 {
 
-    private List<MethodDeclaration> privateMethods = new ArrayList<MethodDeclaration>();
-    private List<FieldDeclaration> fieldDeclarations = new ArrayList<FieldDeclaration>();
-    private List<MethodDeclaration> getterMethods = new ArrayList<MethodDeclaration>();
-    private List<MethodDeclaration> setterMethods = new ArrayList<MethodDeclaration>();
+    private List<MethodDeclaration> privateMethods = new ArrayList<>();
+    private List<FieldDeclaration> fieldDeclarations = new ArrayList<>();
+    private List<MethodDeclaration> getterMethods = new ArrayList<>();
+    private List<MethodDeclaration> setterMethods = new ArrayList<>();
 
     public FilterMethodVisitor(IType classType)
     {

@@ -2,6 +2,7 @@ package org.moreunit.test.context;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.annotation.Annotation;
 
@@ -12,10 +13,10 @@ public class AnnotationConfigExtractorTest
 {
     private AnnotationConfigExtractor configExtractor = new AnnotationConfigExtractor();
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void should_reject_null_annotated_element() throws Exception
     {
-        configExtractor.extractFrom(null, new ElementWithoutAnnotation());
+        assertThrows(NullPointerException.class, () -> configExtractor.extractFrom(null, new ElementWithoutAnnotation()));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class AnnotationConfigExtractorTest
         assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SomeProductionType");
     }
 
-    @Test(expected = IllegalConfigurationException.class)
+    @Test
     public void should_complain_when_both_context_and_project_are_defined_for_annotated_element() throws Exception
     {
         // given
@@ -90,11 +91,11 @@ public class AnnotationConfigExtractorTest
         @Project
         class AnnotationHolder {}
 
-        // when
-        configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        // when/then
+        assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
     }
 
-    @Test(expected = IllegalConfigurationException.class)
+    @Test
     public void should_complain_when_both_context_and_project_are_defined_for_default_annotated_element() throws Exception
     {
         // given
@@ -102,11 +103,11 @@ public class AnnotationConfigExtractorTest
         @Project
         class DefaultAnnotationHolder {}
 
-        // when
-        configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class));
+        // when/then
+        assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class)));
     }
 
-    @Test(expected = IllegalConfigurationException.class)
+    @Test
     public void should_complain_when_both_context_and_preferences_are_defined_for_annotated_element() throws Exception
     {
         // given
@@ -114,11 +115,11 @@ public class AnnotationConfigExtractorTest
         @Preferences
         class AnnotationHolder {}
 
-        // when
-        configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        // when/then
+        assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
     }
 
-    @Test(expected = IllegalConfigurationException.class)
+    @Test
     public void should_complain_when_both_context_and_preferences_are_defined_for_default_annotated_element() throws Exception
     {
         // given
@@ -126,8 +127,8 @@ public class AnnotationConfigExtractorTest
         @Preferences
         class DefaultAnnotationHolder {}
 
-        // when
-        configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class));
+        // when/then
+        assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class)));
     }
 
     @Test
@@ -309,26 +310,26 @@ public class AnnotationConfigExtractorTest
         assertThat(testProjectConfig.getSourceFolder()).isEqualTo("src-folder");
     }
 
-    @Test(expected = IllegalConfigurationException.class)
+    @Test
     public void should_complain_when_both_testProject_and_testSrc_are_defined() throws Exception
     {
         // given
         @Project(testSrc = "SomeFile", testProject = @TestProject(name = "test-project-name"))
         class AnnotationHolder {}
 
-        // when
-        configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        // when/then
+        assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
     }
 
-    @Test(expected = IllegalConfigurationException.class)
+    @Test
     public void should_complain_when_both_testProject_and_testCls_are_defined() throws Exception
     {
         // given
         @Project(testCls = "SomeFile", testProject = @TestProject(name = "test-project-name"))
         class AnnotationHolder {}
 
-        // when
-        configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        // when/then
+        assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
     }
 
     @Test
@@ -553,6 +554,7 @@ public class AnnotationConfigExtractorTest
     {
         return new AnnotatedElement()
         {
+            @Override
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
                 return clazz.getAnnotation(annotationClass);
@@ -562,6 +564,7 @@ public class AnnotationConfigExtractorTest
 
     private static class ElementWithoutAnnotation implements AnnotatedElement
     {
+        @Override
         public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
         {
             return null;

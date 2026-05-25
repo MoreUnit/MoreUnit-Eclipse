@@ -32,6 +32,7 @@ public class RenameClassParticipant extends RenameParticipant
     private ICompilationUnit compilationUnit;
     private ClassTypeFacade javaFileFacade;
 
+    @Override
     protected boolean initialize(Object element)
     {
         compilationUnit = (ICompilationUnit) element;
@@ -42,17 +43,20 @@ public class RenameClassParticipant extends RenameParticipant
         return true;
     }
 
+    @Override
     public String getName()
     {
         return "MoreUnit Rename Class";
     }
 
+    @Override
     public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context) throws OperationCanceledException
     {
         LogHandler.getInstance().handleInfoLog("RenameClassParticipant.checkConditions");
         return new RefactoringStatus();
     }
 
+    @Override
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
         if(! getArguments().getUpdateReferences())
@@ -62,7 +66,7 @@ public class RenameClassParticipant extends RenameParticipant
 
         try
         {
-            List<Change> changes = new ArrayList<Change>();
+            List<Change> changes = new ArrayList<>();
             RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
             for (IType typeToRename : javaFileFacade.getCorrespondingTestCases())
             {

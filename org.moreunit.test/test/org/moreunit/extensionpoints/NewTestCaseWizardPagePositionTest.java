@@ -2,6 +2,7 @@ package org.moreunit.extensionpoints;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,39 +30,39 @@ public class NewTestCaseWizardPagePositionTest
         assertThat(pagePosition.isBefore("another page")).isFalse();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void should_reject_null_page_id_when_creating_after_position() throws Exception
     {
-        NewTestCaseWizardPagePosition.after(null);
+        assertThrows(NullPointerException.class, () -> NewTestCaseWizardPagePosition.after(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_empty_page_id_when_creating_after_position() throws Exception
     {
-        NewTestCaseWizardPagePosition.after("");
+        assertThrows(IllegalArgumentException.class, () -> NewTestCaseWizardPagePosition.after(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_blank_page_id_when_creating_after_position() throws Exception
     {
-        NewTestCaseWizardPagePosition.after("      ");
+        assertThrows(IllegalArgumentException.class, () -> NewTestCaseWizardPagePosition.after("      "));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void should_reject_null_page_id_when_creating_before_position() throws Exception
     {
-        NewTestCaseWizardPagePosition.before(null);
+        assertThrows(NullPointerException.class, () -> NewTestCaseWizardPagePosition.before(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_empty_page_id_when_creating_before_position() throws Exception
     {
-        NewTestCaseWizardPagePosition.before("");
+        assertThrows(IllegalArgumentException.class, () -> NewTestCaseWizardPagePosition.before(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_blank_page_id_when_creating_before_position() throws Exception
     {
-        NewTestCaseWizardPagePosition.before("      ");
+        assertThrows(IllegalArgumentException.class, () -> NewTestCaseWizardPagePosition.before("      "));
     }
 }

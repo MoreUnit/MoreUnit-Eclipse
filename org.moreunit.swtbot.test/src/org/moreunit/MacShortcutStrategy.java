@@ -1,7 +1,6 @@
 package org.moreunit;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.moreunit.log.LogHandler;
@@ -25,7 +24,7 @@ public class MacShortcutStrategy extends ShortcutStrategy
 	{
 		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
 		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.COMMAND | SWT.ALT, 'r');
-		bot.waitUntil(Conditions.shellIsActive("Rename Method"));
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Rename Method"));
 	}
 
 	@Override

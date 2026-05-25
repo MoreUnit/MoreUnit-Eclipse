@@ -21,7 +21,7 @@ public class WizardFactory
     public WizardDialog<NewFileWizard> createNewFileWizard(SourceFolderPath selectedFolder, String fileName)
     {
         NewFileWizard wizard = new NewFileWizard(workbench, $().getWorkspace(), selectedFolder, fileName);
-        return new WizardDialog<NewFileWizard>(createWizardDialog(wizard), wizard);
+        return new WizardDialog<>(createWizardDialog(wizard), wizard);
     }
 
     protected org.eclipse.jface.wizard.WizardDialog createWizardDialog(IWizard wizard)

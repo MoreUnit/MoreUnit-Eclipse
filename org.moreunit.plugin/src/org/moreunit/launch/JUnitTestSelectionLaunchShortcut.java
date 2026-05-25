@@ -129,7 +129,7 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
         ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(configType);
         String[] attributeToCompare = getAttributeNamesToCompare();
 
-        ArrayList<ILaunchConfiguration> candidateConfigs = new ArrayList<ILaunchConfiguration>(configs.length);
+        ArrayList<ILaunchConfiguration> candidateConfigs = new ArrayList<>(configs.length);
         for (ILaunchConfiguration config : configs)
         {
             if(hasSameAttributes(config, temporary, attributeToCompare))

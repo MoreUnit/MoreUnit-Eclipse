@@ -2,7 +2,6 @@ package org.moreunit.core.resources;
 
 import java.io.Serial;
 
-
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 

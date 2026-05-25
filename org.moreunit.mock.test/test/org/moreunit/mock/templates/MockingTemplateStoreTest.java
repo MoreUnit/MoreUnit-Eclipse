@@ -79,7 +79,7 @@ public class MockingTemplateStoreTest
     public void should_keep_existing_templates_when_adding_new_ones() throws Exception
     {
         // when
-        templateStore.store(new MockingTemplates(new ArrayList<Category>(),
+        templateStore.store(new MockingTemplates(new ArrayList<>(),
                                                  asList(new MockingTemplate("templateA", "category1"), new MockingTemplate("templateB", "category1"))));
 
         // then
@@ -92,7 +92,7 @@ public class MockingTemplateStoreTest
     public void should_store_categories() throws Exception
     {
         // when
-        templateStore.store(new MockingTemplates(asList(category2), new ArrayList<MockingTemplate>()));
+        templateStore.store(new MockingTemplates(asList(category2), new ArrayList<>()));
 
         // then
         assertThat(new HashSet<>(templateStore.getCategories())).isEqualTo(Set.of(category1, category2));
@@ -122,7 +122,7 @@ public class MockingTemplateStoreTest
         Category category1bis = new Category("category1", "New name for category 1");
 
         // when
-        templateStore.store(new MockingTemplates(asList(category1bis), new ArrayList<MockingTemplate>()));
+        templateStore.store(new MockingTemplates(asList(category1bis), new ArrayList<>()));
 
         // then
         assertThat(templateStore.getCategory("category1").name()).isEqualTo("Category 1");
@@ -133,7 +133,7 @@ public class MockingTemplateStoreTest
     {
         MockingTemplate template1bis = new MockingTemplate("template1", "category1");
 
-        assertThatThrownBy(() -> templateStore.store(new MockingTemplates(new ArrayList<Category>(), asList(template1bis))))
+        assertThatThrownBy(() -> templateStore.store(new MockingTemplates(new ArrayList<>(), asList(template1bis))))
         .isInstanceOf(TemplateAlreadyDefinedException.class)
         .extracting(e -> ((TemplateAlreadyDefinedException)e).getTemplateId())
         .isEqualTo(template1bis.id());

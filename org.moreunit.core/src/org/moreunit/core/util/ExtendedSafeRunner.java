@@ -24,13 +24,13 @@ public class ExtendedSafeRunner
 
     public <E, R> R applyTo(E element, GenericRunnable<E, R> code)
     {
-        run(new SafeRunnable<E, R>(code, element));
+        run(new SafeRunnable<>(code, element));
         return code.result;
     }
 
     public <E, R> Iterable<R> applyTo(Iterable<E> elements, GenericRunnable<E, R> code)
     {
-        List<R> results = new ArrayList<R>();
+        List<R> results = new ArrayList<>();
         for (E element : elements)
         {
             results.add(applyTo(element, code));
@@ -54,11 +54,13 @@ public class ExtendedSafeRunner
             this.element = element;
         }
 
+        @Override
         public void handleException(Throwable throwable)
         {
             internalRunnable.handleException(throwable, element);
         }
 
+        @Override
         public void run() throws Exception
         {
             internalRunnable.doRun(element);

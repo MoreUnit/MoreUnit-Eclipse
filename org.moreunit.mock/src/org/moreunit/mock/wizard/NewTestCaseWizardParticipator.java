@@ -18,7 +18,7 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
 {
     // maps a TestType to a preference value (the value internal to TestType
     // should not be made public in order not to expose it to other extensions)
-    private static final Map<TestType, String> MOREUNIT_TEST_TYPES = new HashMap<TestType, String>();
+    private static final Map<TestType, String> MOREUNIT_TEST_TYPES = new HashMap<>();
     static
     {
         MOREUNIT_TEST_TYPES.put(TestType.JUNIT_3, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);

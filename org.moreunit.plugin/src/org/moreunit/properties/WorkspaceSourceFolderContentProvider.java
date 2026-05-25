@@ -21,7 +21,7 @@ import org.moreunit.log.LogHandler;
 public class WorkspaceSourceFolderContentProvider implements ITreeContentProvider
 {
 
-    private List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences = new ArrayList<IPackageFragmentRoot>();
+    private List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences = new ArrayList<>();
 
     public WorkspaceSourceFolderContentProvider(List<SourceFolderMapping> selectedUnitSourceFolderFromPreferences)
     {
@@ -31,6 +31,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
         }
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         if(inputElement instanceof IJavaProject)
@@ -39,15 +40,18 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
         return getRelevantJavaProjectsInWorkspace().toArray();
     }
 
+    @Override
     public void dispose()
     {
 
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
     }
 
+    @Override
     public Object[] getChildren(Object parentElement)
     {
         if(parentElement instanceof IJavaProject project)
@@ -56,6 +60,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
         return new Object[0];
     }
 
+    @Override
     public Object getParent(Object element)
     {
         if(element instanceof IPackageFragmentRoot root)
@@ -64,6 +69,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
         return null;
     }
 
+    @Override
     public boolean hasChildren(Object element)
     {
         if(element instanceof IJavaProject project)
@@ -78,7 +84,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
      */
     private List<IJavaProject> getRelevantJavaProjectsInWorkspace()
     {
-        List<IJavaProject> allJavaProjectsInWorkspace = new ArrayList<IJavaProject>();
+        List<IJavaProject> allJavaProjectsInWorkspace = new ArrayList<>();
 
         IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
         for (IProject aProject : projects)
@@ -108,7 +114,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
      */
     private List<IPackageFragmentRoot> getRelevantSourceFolderForProject(IJavaProject javaProject)
     {
-        List<IPackageFragmentRoot> resultList = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> resultList = new ArrayList<>();
 
         if(javaProject == null)
             return resultList;

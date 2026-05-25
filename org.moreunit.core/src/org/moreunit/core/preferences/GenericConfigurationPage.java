@@ -112,6 +112,7 @@ class GenericConfigurationPage
 
         container.newExpandableComposite(parent, "More explanations...", false, new ExpandableContent()
         {
+            @Override
             public Control createBody(ExpandableComposite expandableComposite)
             {
                 Composite inner = new Composite(expandableComposite, SWT.NONE);
@@ -234,6 +235,7 @@ class GenericConfigurationPage
 
     private class PageValidator implements ModifyListener
     {
+        @Override
         public void modifyText(ModifyEvent event)
         {
             validate();

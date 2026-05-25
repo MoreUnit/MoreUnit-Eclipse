@@ -1,9 +1,9 @@
 package org.moreunit.mock;
 
+import static org.moreunit.mock.config.MockModule.$;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
-import static org.moreunit.mock.config.MockModule.$;
 
 public class MoreUnitMockPlugin extends AbstractUIPlugin
 {

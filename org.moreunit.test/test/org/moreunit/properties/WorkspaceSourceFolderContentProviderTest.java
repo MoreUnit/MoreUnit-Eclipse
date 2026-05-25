@@ -1,7 +1,8 @@
 package org.moreunit.properties;
 
 import static org.mockito.ArgumentMatchers.notNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class WorkspaceSourceFolderContentProviderTest extends ContextTestCase
     {
         closeProjectAndPrepareMockedLoggerToThrowExcpetionWhenErrorGetsLogged();
 
-        ArrayList<SourceFolderMapping> list = new ArrayList<SourceFolderMapping>(0);
+        ArrayList<SourceFolderMapping> list = new ArrayList<>(0);
         WorkspaceSourceFolderContentProvider provider = new WorkspaceSourceFolderContentProvider(list);
         provider.getElements(null);
     }
@@ -45,7 +46,7 @@ public class WorkspaceSourceFolderContentProviderTest extends ContextTestCase
         loggerField.setAccessible(true);
 
         Logger mockedLogger = mock(Logger.class);
-        doThrow(new RuntimeException("error must not get thrown on closed projects")).when(mockedLogger).error(notNull(Throwable.class));
+        doThrow(new RuntimeException("error must not get thrown on closed projects")).when(mockedLogger).error(notNull());
         loggerField.set(LogHandler.getInstance(), mockedLogger);
     }
 }

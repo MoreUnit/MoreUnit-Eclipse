@@ -7,12 +7,11 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.ltk.internal.ui.refactoring.RefactoringUIMessages;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEclipseEditor;
-import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.moreunit.ConditionCursorLine;
 import org.moreunit.JavaProjectSWTBotTestHelper;
 import org.moreunit.SWTBotHelper;
@@ -24,7 +23,7 @@ import org.moreunit.test.context.TestType;
              testSrcFolder = "test",
              testType = TestType.JUNIT4,
              testMethodPrefix = true)
-@RunWith(SWTBotJunit4ClassRunner.class)
+@ExtendWith(SWTBotJunit5Extension.class)
 public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 {
 	@Project(
@@ -56,7 +55,7 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 
 		SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
 
-		bot.waitUntil(Conditions.shellIsActive(RefactoringMessages.RenameMethodWizard_defaultPageTitle));
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive(RefactoringMessages.RenameMethodWizard_defaultPageTitle));
 	}
 
 	protected void renameMethodAndWaitUntilFinished()
@@ -64,7 +63,6 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		bot.textWithLabel(RefactoringUIMessages.RenameResourceWizard_name_field_label).setText("getNumberOne");
 		SWTBotShell renameDialog = bot.activeShell();
 		bot.button(IDialogConstants.OK_LABEL).click();
-		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
-		bot.sleep(3000); // Wait for background refactoring job to update Java Model
+		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(renameDialog), 20000);
 	}
 }

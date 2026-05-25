@@ -29,7 +29,7 @@ public class TestLauncher
     private static final Map<String, String> EXTENSIONS_BY_TEST_TYPE;
     static
     {
-        EXTENSIONS_BY_TEST_TYPE = new HashMap<String, String>();
+        EXTENSIONS_BY_TEST_TYPE = new HashMap<>();
         EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, JUNIT_EXTENSION_NAMESPACE_ID);
         EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, JUNIT_EXTENSION_NAMESPACE_ID);
         EXTENSIONS_BY_TEST_TYPE.put(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, JUNIT_EXTENSION_NAMESPACE_ID);
@@ -135,7 +135,7 @@ public class TestLauncher
 
     protected final IStructuredSelection createSelection(Collection< ? extends IMember> members)
     {
-        return new StructuredSelection(new ArrayList<IMember>(members));
+        return new StructuredSelection(new ArrayList<>(members));
     }
 
 }

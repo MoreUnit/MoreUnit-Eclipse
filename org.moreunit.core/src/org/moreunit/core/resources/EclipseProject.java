@@ -19,9 +19,13 @@ public class EclipseProject extends EclipseResourceContainer implements Project
         try
         {
             if(! project.exists())
+            {
                 project.create(null);
+            }
             if(! project.isOpen())
+            {
                 project.open(null);
+            }
         }
         catch (CoreException e)
         {

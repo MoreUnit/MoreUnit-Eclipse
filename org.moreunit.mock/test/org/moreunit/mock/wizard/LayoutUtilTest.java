@@ -10,23 +10,23 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class LayoutUtilTest
 {
     private Display display;
     private Shell shell;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         display = Display.getDefault();
         shell = new Shell(display);
     }
 
-    @After
+    @AfterEach
     public void tearDown()
     {
         if (shell != null && !shell.isDisposed()) {

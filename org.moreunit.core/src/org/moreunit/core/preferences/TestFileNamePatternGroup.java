@@ -106,6 +106,7 @@ public class TestFileNamePatternGroup
 
         container.newExpandableComposite(parent, "More explanations...", false, new ExpandableContent()
         {
+            @Override
             public Control createBody(ExpandableComposite expandableComposite)
             {
                 Composite inner = new Composite(expandableComposite, SWT.NONE);
@@ -147,6 +148,7 @@ public class TestFileNamePatternGroup
 
         wordSeparatorField.addModifyListener(new ModifyListener()
         {
+            @Override
             public void modifyText(ModifyEvent e)
             {
                 demo.patternChanged();
@@ -155,6 +157,7 @@ public class TestFileNamePatternGroup
 
         container.newExpandableComposite(parent, "Demonstration", false, new ExpandableContent()
         {
+            @Override
             public Control createBody(ExpandableComposite expandableComposite)
             {
                 Composite inner = new Composite(expandableComposite, SWT.NONE);

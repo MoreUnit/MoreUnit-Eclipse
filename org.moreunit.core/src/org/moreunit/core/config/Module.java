@@ -17,7 +17,7 @@ import org.osgi.framework.BundleContext;
  */
 public abstract class Module<M extends Module<M>>
 {
-    private final List<Service> services = new ArrayList<Service>();
+    private final List<Service> services = new ArrayList<>();
     private BundleContext context;
 
     protected Module(boolean override)

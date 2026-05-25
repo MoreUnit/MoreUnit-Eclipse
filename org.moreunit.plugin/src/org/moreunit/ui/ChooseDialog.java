@@ -72,12 +72,14 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         final Tree tree = treeViewer.getTree();
         tree.addKeyListener(new KeyListener()
         {
+            @Override
             public void keyPressed(KeyEvent e)
             {
                 if(e.character == SWT.ESC)
                     close();
             }
 
+            @Override
             public void keyReleased(KeyEvent e)
             {
                 // do nothing
@@ -86,11 +88,13 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
         tree.addSelectionListener(new SelectionListener()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 // do nothing
             }
 
+            @Override
             public void widgetDefaultSelected(SelectionEvent e)
             {
                 handleElementSelected();
@@ -101,6 +105,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         {
             TreeItem fLastItem = null;
 
+            @Override
             public void mouseMove(MouseEvent e)
             {
                 if(tree.equals(e.getSource()))
@@ -143,15 +148,13 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
         tree.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseUp(MouseEvent e)
             {
                 if(! tree.equals(e.getSource()))
                     close();
 
-                if(tree.getSelectionCount() < 1)
-                    return;
-
-                if(e.button != 1)
+                if((tree.getSelectionCount() < 1) || (e.button != 1))
                     return;
 
                 if(tree.equals(e.getSource()))
@@ -203,6 +206,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         getShell().addDisposeListener(listener);
     }
 
+    @Override
     public void widgetDisposed(DisposeEvent e)
     {
         treeViewer = null;

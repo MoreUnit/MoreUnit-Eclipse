@@ -24,15 +24,18 @@ public class UnitSourcesContentProvider implements ITreeContentProvider
         contentList = getListOfSourceFoldersFromPreferences();
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         return contentList.toArray();
     }
 
+    @Override
     public void dispose()
     {
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
         if(newInput == null)
@@ -46,6 +49,7 @@ public class UnitSourcesContentProvider implements ITreeContentProvider
         return Preferences.getInstance().getSourceMappingList(javaProjectInput);
     }
 
+    @Override
     public Object[] getChildren(Object parentElement)
     {
         if(parentElement instanceof SourceFolderMapping mapping)
@@ -55,6 +59,7 @@ public class UnitSourcesContentProvider implements ITreeContentProvider
         return getListOfSourceFoldersFromPreferences().toArray();
     }
 
+    @Override
     public Object getParent(Object element)
     {
         // if(element instanceof IPackageFragmentRoot)
@@ -64,6 +69,7 @@ public class UnitSourcesContentProvider implements ITreeContentProvider
         return null;
     }
 
+    @Override
     public boolean hasChildren(Object element)
     {
         return element instanceof SourceFolderMapping;

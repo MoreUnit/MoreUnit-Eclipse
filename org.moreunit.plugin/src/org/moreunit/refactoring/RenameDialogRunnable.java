@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
@@ -34,6 +35,7 @@ public class RenameDialogRunnable implements Runnable
         testMethodDiviner = testMethodDivinerFactory.create();
     }
 
+    @Override
     public void run()
     {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getShell();
@@ -46,7 +48,7 @@ public class RenameDialogRunnable implements Runnable
         listDialog.setContentProvider(new MethodContentProvider(corrspondingTests));
         listDialog.setInput(this);
 
-        if(listDialog.open() == ListDialog.OK)
+        if(listDialog.open() == Window.OK)
         {
             for (int i = 0; i < corrspondingTests.size(); i++)
             {

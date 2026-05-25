@@ -2,18 +2,18 @@ package org.moreunit.util;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.jdt.core.IType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TypeComparatorTest
 {
     private TypeComparator typeComparator;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         typeComparator = new TypeComparator();

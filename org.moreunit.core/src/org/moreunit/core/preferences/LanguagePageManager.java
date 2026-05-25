@@ -45,6 +45,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
         this.logger = logger;
     }
 
+    @Override
     public void start()
     {
         for (Language lang : preferences.getLanguages())
@@ -116,6 +117,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
         return sb.toString();
     }
 
+    @Override
     public void stop()
     {
         for (Language lang : preferences.getLanguages())
@@ -159,12 +161,14 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
         logger.debug("Removed property page for language " + lang + " with result: " + result);
     }
 
+    @Override
     public void languageConfigurationAdded(Language lang)
     {
         addPages(lang);
         refreshTreeAndOpenPage(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
     }
 
+    @Override
     public void languageConfigurationRemoved(Language lang)
     {
         removePages(lang);

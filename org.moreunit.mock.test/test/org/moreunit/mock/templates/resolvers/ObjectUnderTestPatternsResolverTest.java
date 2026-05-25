@@ -10,11 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.templates.MockingContext;
 import org.moreunit.mock.templates.PatternResolver;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 public class ObjectUnderTestPatternsResolverTest
 {
@@ -32,7 +35,7 @@ public class ObjectUnderTestPatternsResolverTest
         when(classUnderTest.getElementName()).thenReturn("SomeThing");
 
         dependencies = new Dependencies(null, null, null);
-        context = new MockingContext(dependencies, classUnderTest, null, null, new ArrayList<PatternResolver>());
+        context = new MockingContext(dependencies, classUnderTest, null, null, new ArrayList<>());
         resolver = new ObjectUnderTestPatternsResolver(context);
     }
 

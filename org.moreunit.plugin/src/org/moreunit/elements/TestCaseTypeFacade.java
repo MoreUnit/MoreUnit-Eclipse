@@ -40,7 +40,7 @@ public class TestCaseTypeFacade extends TypeFacade
 
     public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Collection<IType> classesUnderTest)
     {
-        List<IMethod> result = new ArrayList<IMethod>();
+        List<IMethod> result = new ArrayList<>();
 
         for (IType classUnderTest : classesUnderTest)
         {
@@ -52,7 +52,7 @@ public class TestCaseTypeFacade extends TypeFacade
 
     public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, IType classUnderTest)
     {
-        List<IMethod> testedMethods = new ArrayList<IMethod>();
+        List<IMethod> testedMethods = new ArrayList<>();
         try
         {
             String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());

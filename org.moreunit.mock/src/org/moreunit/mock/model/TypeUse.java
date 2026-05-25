@@ -1,15 +1,15 @@
 package org.moreunit.mock.model;
 
+import static java.util.Arrays.asList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
 public class TypeUse<T extends TypeUse<T>> extends TypeRef<TypeUse<T>>
 {
-    public final List<TypeAnnotation> annotations = new ArrayList<TypeAnnotation>();
-    public final List<TypeParameter> typeParameters = new ArrayList<TypeParameter>();
+    public final List<TypeAnnotation> annotations = new ArrayList<>();
+    public final List<TypeParameter> typeParameters = new ArrayList<>();
 
     public TypeUse(String fullyQualifiedClassName)
     {

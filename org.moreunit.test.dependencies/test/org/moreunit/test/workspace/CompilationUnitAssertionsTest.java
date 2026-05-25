@@ -4,11 +4,9 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 
-@ExtendWith(MockitoJUnitRunner.class)
 public class CompilationUnitAssertionsTest
 {
     private static final String NL = System.getProperty("line.separator");
@@ -21,6 +19,7 @@ public class CompilationUnitAssertionsTest
     @BeforeEach
     public void setUp() throws Exception
     {
+        MockitoAnnotations.openMocks(this);
         assertions = new TestAssertions(actualCu);
     }
 

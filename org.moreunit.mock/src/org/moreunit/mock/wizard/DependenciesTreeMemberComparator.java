@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.JavaModelException;
 
 public class DependenciesTreeMemberComparator implements Comparator<IMember>
 {
+    @Override
     public int compare(IMember m1, IMember m2)
     {
         int result = compareMemberTypes(m1, m2);

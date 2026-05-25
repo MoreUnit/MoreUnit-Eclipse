@@ -19,6 +19,7 @@ public class MoreUnitCore extends AbstractUIPlugin
         return instance;
     }
 
+    @Override
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
@@ -27,6 +28,7 @@ public class MoreUnitCore extends AbstractUIPlugin
         $().start(context);
     }
 
+    @Override
     public void stop(BundleContext context) throws Exception
     {
         $().stop();

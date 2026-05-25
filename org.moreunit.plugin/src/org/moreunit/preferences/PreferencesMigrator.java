@@ -11,8 +11,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class PreferencesMigrator
 {
-    private static final Comparator<MigrationStep> BY_TARGET_VERSION = new Comparator<MigrationStep>()
+    private static final Comparator<MigrationStep> BY_TARGET_VERSION = new Comparator<>()
     {
+        @Override
         public int compare(MigrationStep s1, MigrationStep s2)
         {
             int v1 = s1.targetVersion();

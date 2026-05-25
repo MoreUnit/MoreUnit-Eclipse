@@ -1,7 +1,8 @@
 package org.moreunit.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;

@@ -1,13 +1,15 @@
 package org.moreunit.preferences;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.moreunit.preferences.PreferenceConstants.*;
+import static org.moreunit.preferences.PreferenceConstants.PREFERENCES_VERSION;
+import static org.moreunit.preferences.PreferenceConstants.TEST_CLASS_NAME_TEMPLATE;
+import static org.moreunit.preferences.PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.moreunit.preferences.PreferenceConstants.Deprecated;
 import org.moreunit.test.DummyPreferencesForTesting;
 import org.moreunit.test.context.Project;

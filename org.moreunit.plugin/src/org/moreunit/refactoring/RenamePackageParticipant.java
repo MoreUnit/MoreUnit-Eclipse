@@ -80,7 +80,7 @@ public class RenamePackageParticipant extends RenameParticipant
         String cutPackageName = packageFragment.getElementName();
         ProjectPreferences prefs = Preferences.forProject(packageFragment.getJavaProject());
 
-        List<Change> changes = new ArrayList<Change>();
+        List<Change> changes = new ArrayList<>();
 
 
         for (IPackageFragmentRoot packageRoot : correspondingPackageFragmentRoots)
@@ -109,7 +109,7 @@ public class RenamePackageParticipant extends RenameParticipant
 
     private List<IPackageFragmentRoot> getSourceFolderFromContext()
     {
-        List<IPackageFragmentRoot> result = new ArrayList<IPackageFragmentRoot>();
+        List<IPackageFragmentRoot> result = new ArrayList<>();
         for (IPackageFragmentRoot folder : SourceFolderContext.getInstance().getSourceFolderToSearch(packageFragmentRoot))
         {
             // this case may happens if tests are in the same source folder as

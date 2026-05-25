@@ -1,6 +1,7 @@
 package org.moreunit.util;
 
-import static org.moreunit.core.util.Preconditions.*;
+import static org.moreunit.core.util.Preconditions.checkNotNull;
+import static org.moreunit.core.util.Preconditions.checkNotNullOrEmpty;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -40,7 +41,7 @@ public abstract class MethodCallFinder
         {
             callHierarchy.setSearchScope(searchScope);
 
-            Set<IMethod> testCallers = new LinkedHashSet<IMethod>();
+            Set<IMethod> testCallers = new LinkedHashSet<>();
             MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
             for (int i = 0; i < calls.length; i++)
             {

@@ -56,6 +56,7 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
     {
     }
 
+    @Override
     public boolean performFinish()
     {
         try
@@ -70,11 +71,13 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
         return true;
     }
 
+    @Override
     public IDialogSettings getDialogSettings()
     {
         return MoreUnitPlugin.getDefault().getDialogSettings();
     }
 
+    @Override
     public void init(IWorkbench workbench, IStructuredSelection selection)
     {
     }

@@ -22,7 +22,7 @@ public abstract class LanguagePreferences
      * It is OK to clear it entirely every time a preference changes ; that way
      * we can guarantee that entries won't be kept in memory without reason.
      */
-    private static final Map<String, TestFileNamePattern> FILE_NAME_PATTERN_CACHE = new HashMap<String, TestFileNamePattern>();
+    private static final Map<String, TestFileNamePattern> FILE_NAME_PATTERN_CACHE = new HashMap<>();
     private static final Object CACHE_LOCK = new Object();
 
     protected String languageId;

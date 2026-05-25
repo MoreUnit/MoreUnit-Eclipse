@@ -1,9 +1,12 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.sort;
 import static java.util.regex.Matcher.quoteReplacement;
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -143,7 +146,7 @@ public final class TestFileNamePattern
 
     /* /end Various patterns */
 
-    private static final Comparator<String> byDescendingLength = new Comparator<String>()
+    private static final Comparator<String> byDescendingLength = new Comparator<>()
     {
         @Override
         public int compare(String s1, String s2)
@@ -257,12 +260,16 @@ public final class TestFileNamePattern
     private static String toPrefixPattern(UserDefinedPart part)
     {
         if(! part.hasAlternatives())
+        {
             return "";
+        }
 
         StringBuilder buffer = new StringBuilder();
 
         if(part.hasWildcardBefore())
+        {
             buffer.append(".*");
+        }
 
         appendAlternatives(buffer, part);
 
@@ -272,16 +279,22 @@ public final class TestFileNamePattern
     private static String toSuffixPattern(UserDefinedPart part)
     {
         if("*".equals(part.raw()))
+        {
             return ".*";
+        }
         if(! part.hasAlternatives())
+        {
             return "";
+        }
 
         StringBuilder buffer = new StringBuilder();
 
         appendAlternatives(buffer, part);
 
         if(part.hasWildcardAfter())
+        {
             buffer.append(".*");
+        }
 
         return buffer.toString();
     }
@@ -289,7 +302,9 @@ public final class TestFileNamePattern
     private static void appendAlternatives(StringBuilder buffer, UserDefinedPart part)
     {
         if(! part.hasAlternatives())
+        {
             return;
+        }
 
         buffer.append('(');
 
@@ -297,9 +312,13 @@ public final class TestFileNamePattern
         for (String s : part.alternatives())
         {
             if(first)
+            {
                 first = false;
+            }
             else
+            {
                 buffer.append('|');
+            }
 
             buffer.append(quote(s));
         }
@@ -310,19 +329,25 @@ public final class TestFileNamePattern
     private static String toPattern(UserDefinedPart part, String alternative)
     {
         if(! part.hasAlternatives())
+        {
             return "";
+        }
 
         StringBuilder buffer = new StringBuilder();
 
         String beforeAlt = part.before();
         if(! beforeAlt.isEmpty())
+        {
             buffer.append(beforeAlt);
+        }
 
         buffer.append(quote(alternative));
 
         String afterAlt = part.after();
         if(! afterAlt.isEmpty())
+        {
             buffer.append(afterAlt);
+        }
 
         return buffer.toString();
     }
@@ -330,7 +355,9 @@ public final class TestFileNamePattern
     private static String toOptionalPattern(UserDefinedPart part)
     {
         if(! part.hasAlternatives())
+        {
             return "";
+        }
 
         StringBuilder buffer = new StringBuilder();
 
@@ -343,26 +370,32 @@ public final class TestFileNamePattern
     private static String toPattern(UserDefinedPart part)
     {
         if(! part.hasAlternatives())
+        {
             return "";
+        }
 
         StringBuilder buffer = new StringBuilder();
 
         String beforeAlt = part.before();
         if(! beforeAlt.isEmpty())
+        {
             buffer.append(beforeAlt);
+        }
 
         appendAlternatives(buffer, part);
 
         String afterAlt = part.after();
         if(! afterAlt.isEmpty())
+        {
             buffer.append(afterAlt);
+        }
 
         return buffer.toString();
     }
 
     private List<Group> createGroups()
     {
-        List<Group> result = new ArrayList<Group>(2);
+        List<Group> result = new ArrayList<>(2);
         if(parserResult.prefix().hasAlternatives())
         {
             result.add(new Group(parserResult.prefix().alternatives()));
@@ -401,7 +434,7 @@ public final class TestFileNamePattern
             return emptySet();
         }
 
-        Collection<Pattern> result = new ArrayList<Pattern>(2);
+        Collection<Pattern> result = new ArrayList<>(2);
         if(groups.size() < 2)
         {
             /*
@@ -492,7 +525,7 @@ public final class TestFileNamePattern
 
         TokenizationResult result = tokenizer.tokenize(preferredName);
 
-        List<String> patterns = new ArrayList<String>();
+        List<String> patterns = new ArrayList<>();
         if(wildCardBeforeVariable)
         {
             for (String c : result.getCombinationsFromEnd())
@@ -576,7 +609,7 @@ public final class TestFileNamePattern
      */
     private List<String> buildPreferredTestFilePatterns(String quotedSrcFileName)
     {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         UserDefinedPart prefixPart = parserResult.prefix();
         UserDefinedPart suffixPart = parserResult.suffix();
 
@@ -627,7 +660,7 @@ public final class TestFileNamePattern
         String beforeVar = wildCardBeforeVariable ? ".*" : "";
         String afterVar = wildCardAfterVariable ? ".*" : "";
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (String preAlt : parserResult.prefix().alternatives())
         {

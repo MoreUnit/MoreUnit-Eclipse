@@ -25,9 +25,9 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
     static final String BASE = "org.moreunit.core.";
     private static final String LANGUAGES = BASE + "languages";
 
-    private final Map<IProject, ScopedPreferenceStore> projectStores = new HashMap<IProject, ScopedPreferenceStore>();
-    private final Map<String, LanguagePreferencesReader> languagePrefReaders = new HashMap<String, LanguagePreferencesReader>();
-    private final Map<String, LanguagePreferencesWriter> languagePrefWriters = new HashMap<String, LanguagePreferencesWriter>();
+    private final Map<IProject, ScopedPreferenceStore> projectStores = new HashMap<>();
+    private final Map<String, LanguagePreferencesReader> languagePrefReaders = new HashMap<>();
+    private final Map<String, LanguagePreferencesWriter> languagePrefWriters = new HashMap<>();
     private final IPreferenceStore store;
     private final LanguagePreferencesReader anyLanguagePrefReader;
     private final LanguagePreferencesWriter anyLanguagePrefWriter;
@@ -55,6 +55,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         return anyLanguagePrefWriter;
     }
 
+    @Override
     public LanguagePreferencesWriter writerForLanguage(String language)
     {
         if(languagePrefWriters.containsKey(language))
@@ -73,6 +74,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         return anyLanguagePrefReader;
     }
 
+    @Override
     public LanguagePreferencesReader readerForLanguage(String language)
     {
         if(! hasPreferencesForLanguage(language))
@@ -91,16 +93,19 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         return reader;
     }
 
+    @Override
     public boolean contains(String language)
     {
         return hasPreferencesForLanguage(language);
     }
 
+    @Override
     public boolean hasPreferencesForLanguage(String language)
     {
         return getLanguages().contains(new Language(language));
     }
 
+    @Override
     public void activatePreferencesForLanguage(String language, boolean active)
     {
         // nothing to do
@@ -110,7 +115,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
     {
         String str = orDefault(store.getString(LANGUAGES), "");
 
-        List<Language> result = new ArrayList<Language>();
+        List<Language> result = new ArrayList<>();
         for (String s : str.split(","))
         {
             if(s.length() > 2)
@@ -126,6 +131,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         return result;
     }
 
+    @Override
     public void add(Language language)
     {
         List<Language> languages = getLanguages();
@@ -149,6 +155,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         store.setValue(LANGUAGES, sb.toString());
     }
 
+    @Override
     public void remove(Language language)
     {
         List<Language> languages = getLanguages();
@@ -171,11 +178,13 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
         return store;
     }
 
+    @Override
     public IPreferenceStore getStore()
     {
         return store;
     }
 
+    @Override
     public void save()
     {
         // nothing to do

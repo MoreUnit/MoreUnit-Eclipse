@@ -1,18 +1,22 @@
 package org.moreunit.mock.preferences;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.moreunit.core.log.Logger;
 
-@ExtendWith(MockitoExtension.Silent.class)
 public class MainPropertyPageTest
 {
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
     @Mock
     private Preferences preferences;
     @Mock
@@ -29,11 +33,13 @@ public class MainPropertyPageTest
     {
         propertyPage = new MainPropertyPage(preferences, templateStyleSelector, logger)
         {
+            @Override
             protected void checkSpecificSettingsCheckbox(boolean checked)
             {
                 specificSettingsChecked = checked;
             }
 
+            @Override
             protected boolean specificSettingsChecked()
             {
                 return specificSettingsChecked;

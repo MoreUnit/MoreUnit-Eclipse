@@ -7,6 +7,7 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
 {
     public static final String TEST_METHOD_PRAEFIX = "test";
 
+    @Override
     public String getTestMethodNameFromMethodName(String methodName)
     {
         if(methodName == null || methodName.length() == 0)
@@ -19,6 +20,7 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
         return TEST_METHOD_PRAEFIX + getStringWithFirstCharToUpperCase(methodName);
     }
 
+    @Override
     public String getTestMethodNameAfterRename(String methodNameBeforeRename, String methodNameAfterRename, String testMethodName)
     {
         String old = getStringWithFirstCharToUpperCase(methodNameBeforeRename);
@@ -52,6 +54,7 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
      * org.moreunit.util.TestMethodDiviner#getMethodNameFromTestMethodName(java
      * .lang.String)
      */
+    @Override
     public String getMethodNameFromTestMethodName(String testMethodName)
     {
         if(testMethodName == null || ! testMethodName.startsWith(TEST_METHOD_PRAEFIX) || testMethodName.length() <= 4)

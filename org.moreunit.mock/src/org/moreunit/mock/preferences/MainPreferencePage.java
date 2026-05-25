@@ -1,5 +1,8 @@
 package org.moreunit.mock.preferences;
 
+import static org.moreunit.core.util.StringConstants.NEWLINE;
+import static org.moreunit.mock.config.MockModule.$;
+
 import java.net.URL;
 import java.util.Map.Entry;
 
@@ -20,9 +23,6 @@ import org.moreunit.mock.MoreUnitMockPlugin;
 import org.moreunit.mock.templates.LoadingResult;
 import org.moreunit.mock.templates.MockingTemplateLoader;
 
-import static org.moreunit.core.util.StringConstants.NEWLINE;
-import static org.moreunit.mock.config.MockModule.$;
-
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
     private final TemplateStyleSelector templateStyleSelector;
@@ -39,6 +39,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
         this.templateLoader = templateLoader;
     }
 
+    @Override
     public void init(IWorkbench workbench)
     {
         setPreferenceStore(MoreUnitMockPlugin.getDefault().getPreferenceStore());
@@ -75,6 +76,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
         reloadTemplatesBtn.setText("Reload templates");
         reloadTemplatesBtn.addSelectionListener(new SelectionAdapter()
         {
+            @Override
             public void widgetSelected(SelectionEvent e)
             {
                 LoadingResult templateLoadingResult = templateLoader.loadTemplates();

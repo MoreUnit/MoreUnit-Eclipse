@@ -96,7 +96,7 @@ abstract class EclipseResourceContainer extends EclipseResource implements Resou
             Constructor<U> outputTypeConstructor = outputType.getConstructor(resourceType);
 
             IResource[] members = container.members();
-            List<T> result = new ArrayList<T>(members.length);
+            List<T> result = new ArrayList<>(members.length);
 
             for (IResource m : members)
             {

@@ -18,34 +18,41 @@ public class FileContentProvider implements ITreeContentAndDefaultSelectionProvi
         this.defaultSelection = new StructuredSelection(defaultSelection != null ? defaultSelection : files.iterator().next());
     }
 
+    @Override
     public Object[] getChildren(Object element)
     {
         return null;
     }
 
+    @Override
     public Object[] getElements(Object inputElement)
     {
         return elements;
     }
 
+    @Override
     public Object getParent(Object element)
     {
         return null;
     }
 
+    @Override
     public boolean hasChildren(Object arg0)
     {
         return false;
     }
 
+    @Override
     public void dispose()
     {
     }
 
+    @Override
     public void inputChanged(Viewer arg0, Object arg1, Object arg2)
     {
     }
 
+    @Override
     public ISelection getDefaultSelection()
     {
         return defaultSelection;

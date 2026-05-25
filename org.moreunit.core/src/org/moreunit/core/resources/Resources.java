@@ -1,12 +1,12 @@
 package org.moreunit.core.resources;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,7 +33,7 @@ public class Resources
             return new CreatedFolder(srcFolder);
         }
 
-        List<IFolder> foldersToCreate = new ArrayList<IFolder>();
+        List<IFolder> foldersToCreate = new ArrayList<>();
         IFolder current = srcFolder;
 
         while (!current.exists())

@@ -25,11 +25,13 @@ public class ChangeTestClassNamePrefixesAndSuffixesIntoPattern implements Migrat
         this.logger = logger;
     }
 
+    @Override
     public int targetVersion()
     {
         return 2;
     }
 
+    @Override
     public void apply(IPreferenceStore store)
     {
         String currentTemplate = store.getString(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE);

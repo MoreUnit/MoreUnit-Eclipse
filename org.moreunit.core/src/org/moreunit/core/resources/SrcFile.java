@@ -14,8 +14,10 @@ public interface SrcFile extends File
 
     MatchingFile findUniqueMatch() throws DoesNotMatchConfigurationException;
 
+    @Override
     String getExtension();
 
+    @Override
     IFile getUnderlyingPlatformFile();
 
     boolean hasCorrespondingFiles() throws DoesNotMatchConfigurationException;

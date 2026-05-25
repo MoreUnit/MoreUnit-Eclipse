@@ -13,6 +13,7 @@ import org.moreunit.util.PluginTools;
 public class DebugTestActionHandler extends AbstractHandler
 {
 
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         RunTestsActionExecutor.getInstance().executeRunTestAction(PluginTools.getOpenEditorPart(), ILaunchManager.DEBUG_MODE);

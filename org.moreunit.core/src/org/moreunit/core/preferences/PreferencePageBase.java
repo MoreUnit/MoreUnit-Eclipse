@@ -25,6 +25,7 @@ abstract class PreferencePageBase extends PreferencePage implements IWorkbenchPr
         delegate = new GenericConfigurationPage(this, prefWriter);
     }
 
+    @Override
     public void init(IWorkbench workbench)
     {
     }

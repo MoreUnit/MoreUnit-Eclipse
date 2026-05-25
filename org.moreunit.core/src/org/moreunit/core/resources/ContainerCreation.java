@@ -19,13 +19,17 @@ public class ContainerCreation
     private void createContainerAndRecord(ResourceContainer container, ContainerCreationRecord record)
     {
         if(container.exists())
+        {
             return;
+        }
 
         record.addCreatedContainer(container);
 
         ResourceContainer parentContainer = container.getParent();
         if(! parentContainer.exists())
+        {
             createContainerAndRecord(parentContainer, record);
+        }
 
         container.create();
     }

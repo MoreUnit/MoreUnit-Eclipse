@@ -1,6 +1,7 @@
 package org.moreunit.core.matching;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
@@ -9,16 +10,16 @@ public class SeparatorNameTokenizerTest
 {
     private SeparatorNameTokenizer tokenizer = new SeparatorNameTokenizer("_");
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_complain_when_separator_is_empty() throws Exception
     {
-        new SeparatorNameTokenizer("");
+        assertThrows(IllegalArgumentException.class, () -> new SeparatorNameTokenizer(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_complain_when_separator_is_null() throws Exception
     {
-        new SeparatorNameTokenizer(null);
+        assertThrows(IllegalArgumentException.class, () -> new SeparatorNameTokenizer(null));
     }
 
     @Test

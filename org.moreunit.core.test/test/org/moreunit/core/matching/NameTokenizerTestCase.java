@@ -1,38 +1,40 @@
 package org.moreunit.core.matching;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 public abstract class NameTokenizerTestCase
 {
     protected abstract NameTokenizer getTokenizer();
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_null_name() throws Exception
     {
-        getTokenizer().tokenize(null);
+        assertThrows(IllegalArgumentException.class, () -> getTokenizer().tokenize(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_empty_name() throws Exception
     {
-        getTokenizer().tokenize("");
+        assertThrows(IllegalArgumentException.class, () -> getTokenizer().tokenize(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_blank_name() throws Exception
     {
-        getTokenizer().tokenize("  ");
+        assertThrows(IllegalArgumentException.class, () -> getTokenizer().tokenize("  "));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_name_starting_with_space() throws Exception
     {
-        getTokenizer().tokenize(" name");
+        assertThrows(IllegalArgumentException.class, () -> getTokenizer().tokenize(" name"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void should_reject_name_ending_with_space() throws Exception
     {
-        getTokenizer().tokenize("name ");
+        assertThrows(IllegalArgumentException.class, () -> getTokenizer().tokenize("name "));
     }
 }

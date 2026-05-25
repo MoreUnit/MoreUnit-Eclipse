@@ -83,7 +83,7 @@ public class EclipseWorkspace extends EclipseResourceContainer implements Worksp
     public List<Project> listProjects()
     {
         IProject[] projects = workspaceRoot.getProjects();
-        List<Project> result = new ArrayList<Project>(projects.length);
+        List<Project> result = new ArrayList<>(projects.length);
         for (IProject p : projects)
         {
             result.add(new EclipseProject(p));
