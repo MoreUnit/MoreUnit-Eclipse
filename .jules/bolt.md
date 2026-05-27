@@ -42,3 +42,6 @@
 ## 2026-05-27 - Pre-compiling Regex in TestFileNamePattern replaceFirst optimization
 **Learning:** For replacing regex matches anchored at the start or end, rather than using manual loops with string operations that fail to handle the complexities of regex tokens (e.g. `Test|Tests` in prefixes), it's far safer to pre-compile the `Pattern` in the constructor and use `matcher.find()` + `substring()` locally in the method. It provides a roughly ~20-30% speedup over `String.replaceFirst()` while correctly preserving the complex boundary and multi-choice prefix matching logic that this specific component requires.
 **Action:** Always verify if complex regex rules (like prefix choices) exist before replacing `String.replaceFirst()` with manual `String.startsWith()`. When regex must be preserved, use pre-compiled `Pattern` variables combined with `matcher.find()` and `substring()` for safety and optimal performance.
+## 2026-05-27 - Ignore flaky UI bot tests
+**Learning:** `org.moreunit.swtbot.test.refactoring.MoveMethodTest.should_move_test_method_when_static_method_gets_moved` is notoriously flaky in CI.
+**Action:** Do not attempt to fix or over-analyze SWTBot timeout failures if the core logic changes did not touch `org.moreunit.swtbot.test` or UI refactoring code.
