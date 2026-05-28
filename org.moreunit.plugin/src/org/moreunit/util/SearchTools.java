@@ -1,28 +1,32 @@
 package org.moreunit.util;
 
-import static org.eclipse.jdt.core.search.IJavaSearchConstants.DECLARATIONS;
-import static org.eclipse.jdt.core.search.IJavaSearchConstants.TYPE;
-import static org.eclipse.jdt.core.search.SearchPattern.R_PATTERN_MATCH;
-import static org.eclipse.jdt.core.search.SearchPattern.createOrPattern;
-import static org.eclipse.jdt.core.search.SearchPattern.createPattern;
+import static org.eclipse.jdt.core.search.SearchPattern.*;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
+import org.eclipse.jdt.core.search.TypeNameRequestor;
 
 /**
  * @author vera
@@ -35,7 +39,43 @@ public class SearchTools
 
     public static Set<IType> searchFor(Collection<String> typeNamePatterns, IJavaSearchScope scope) throws CoreException
     {
-        return search(createSearchPattern(typeNamePatterns, TYPE, DECLARATIONS, R_PATTERN_MATCH), scope);
+        Set<IType> result = new LinkedHashSet<>();
+        SearchEngine engine = new SearchEngine();
+        TypeNameRequestor requestor = new TypeNameRequestor()
+        {
+            @Override
+            public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path)
+            {
+                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromPortableString(path));
+                IJavaElement element = JavaCore.create(file);
+                if(element instanceof ICompilationUnit unit)
+                {
+                    IType type = unit.getType(new String(simpleTypeName));
+                    if(type.exists())
+                    {
+                        result.add(type);
+                    }
+                }
+            }
+        };
+        for (String pattern : typeNamePatterns)
+        {
+            int lastDot = pattern.lastIndexOf('.');
+            char[] qualification;
+            char[] typeName;
+            if(lastDot >= 0)
+            {
+                qualification = pattern.substring(0, lastDot).toCharArray();
+                typeName = pattern.substring(lastDot + 1).toCharArray();
+            }
+            else
+            {
+                qualification = null;
+                typeName = pattern.toCharArray();
+            }
+            engine.searchAllTypeNames(qualification, SearchPattern.R_EXACT_MATCH, typeName, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.CLASS, scope, requestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+        }
+        return result;
     }
 
     public static Set<IType> findConcreteSubclasses(IType type) throws JavaModelException

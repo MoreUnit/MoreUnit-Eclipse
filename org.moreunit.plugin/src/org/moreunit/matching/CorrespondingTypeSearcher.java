@@ -97,17 +97,18 @@ public class CorrespondingTypeSearcher
         {
             try
             {
-                ITypeHierarchy hierarchy = type.newTypeHierarchy(new NullProgressMonitor());
+                boolean interfaceOfAbstract = type.isInterface() || Flags.isAbstract(type.getFlags());
+                ITypeHierarchy hierarchy = interfaceOfAbstract ? type.newTypeHierarchy(new NullProgressMonitor()) : type.newSupertypeHierarchy(new NullProgressMonitor());
                 for (IType superType : hierarchy.getAllSupertypes(type))
                 {
-                    if(! superType.getFullyQualifiedName().startsWith("java.lang."))
+                    if(! (superType.getFullyQualifiedName().startsWith("java.lang.") || superType.getFullyQualifiedName().startsWith("java.io.")))
                     {
                         ClassNameEvaluation superEval = preferences.getTestClassNamePattern().evaluate(superType);
                         patterns.addAll(superEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
                     }
                 }
 
-                if(type.isInterface() || Flags.isAbstract(type.getFlags()))
+                if(interfaceOfAbstract)
                 {
                     IType[] subtypes = hierarchy.getAllSubtypes(type);
                     for (IType subType : subtypes)
