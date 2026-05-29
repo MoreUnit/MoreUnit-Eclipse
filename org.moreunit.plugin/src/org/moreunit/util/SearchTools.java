@@ -73,7 +73,7 @@ public class SearchTools
                 qualification = null;
                 typeName = pattern.toCharArray();
             }
-            engine.searchAllTypeNames(qualification, SearchPattern.R_EXACT_MATCH, typeName, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.CLASS, scope, requestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+            engine.searchAllTypeNames(qualification, SearchPattern.R_EXACT_MATCH, typeName, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE, IJavaSearchConstants.TYPE, scope, requestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
         }
         return result;
     }
