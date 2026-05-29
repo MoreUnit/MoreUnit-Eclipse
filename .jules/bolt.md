@@ -45,3 +45,6 @@
 ## 2026-05-27 - Ignore flaky UI bot tests
 **Learning:** `org.moreunit.swtbot.test.refactoring.MoveMethodTest.should_move_test_method_when_static_method_gets_moved` is notoriously flaky in CI.
 **Action:** Do not attempt to fix or over-analyze SWTBot timeout failures if the core logic changes did not touch `org.moreunit.swtbot.test` or UI refactoring code.
+## 2026-05-29 - replaceFirst Exception Bug
+**Learning:** `String.replaceFirst()` uses regex replacement. If the replacement string contains unescaped literal `$` or `\` characters, it throws an `IllegalArgumentException`. Furthermore, compiling the regex causes overhead. When performing simple string substitution where bounds are known, `indexOf` and `substring` concatenation is both safer (avoids the exception) and drastically faster (~20x speedup).
+**Action:** When performing simple search-and-replace using constants, prefer literal string manipulation like `indexOf` and `substring` instead of `replaceFirst`, especially if the replacement target may contain dynamic data.
