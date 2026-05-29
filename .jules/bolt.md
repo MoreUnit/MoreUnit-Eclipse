@@ -48,3 +48,6 @@
 ## 2026-05-29 - replaceFirst Exception Bug
 **Learning:** `String.replaceFirst()` uses regex replacement. If the replacement string contains unescaped literal `$` or `\` characters, it throws an `IllegalArgumentException`. Furthermore, compiling the regex causes overhead. When performing simple string substitution where bounds are known, `indexOf` and `substring` concatenation is both safer (avoids the exception) and drastically faster (~20x speedup).
 **Action:** When performing simple search-and-replace using constants, prefer literal string manipulation like `indexOf` and `substring` instead of `replaceFirst`, especially if the replacement target may contain dynamic data.
+## 2026-05-29 - Regex Un-escaping Bug
+**Learning:** When refactoring code away from `replaceFirst` or `replaceAll` to use manual string manipulation (`indexOf` + `substring`), you must thoroughly check the call sites for explicit `Matcher.quoteReplacement()` calls. When `quoteReplacement()` is no longer fed into a regex engine, the escape slashes `\` it generates are interpreted literally and baked directly into the output string, which causes path resolution failures in downstream logic.
+**Action:** Whenever removing a regex engine evaluation, audit all callers of that specific method to remove manual `Matcher.quoteReplacement()` or similar manual regex escape operations.

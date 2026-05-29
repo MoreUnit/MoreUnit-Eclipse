@@ -197,7 +197,7 @@ public class TestFolderPathPattern
         String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
         String projectName = getProjectName(cleanSrcPath);
 
-        String srcPathTpl = getSrcPathTemplateForSrcProject(quoteReplacement(quote(projectName)));
+        String srcPathTpl = getSrcPathTemplateForSrcProject(quote(projectName));
         String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
