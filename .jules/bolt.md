@@ -45,6 +45,3 @@
 ## 2026-05-27 - Ignore flaky UI bot tests
 **Learning:** `org.moreunit.swtbot.test.refactoring.MoveMethodTest.should_move_test_method_when_static_method_gets_moved` is notoriously flaky in CI.
 **Action:** Do not attempt to fix or over-analyze SWTBot timeout failures if the core logic changes did not touch `org.moreunit.swtbot.test` or UI refactoring code.
-## 2026-05-15 - String.replace > String.replaceFirst for literal string substitution
-**Learning:** When replacing fixed template variables (like `${srcProject}`), using `String.replace()` correctly preserves backslashes (like `\\E(.*)\\Q`) and is vastly faster than `String.replaceFirst()`, which incurs regex compilation and parsing overhead. Also, removing temporary files created during experimentation is crucial before PR submission to avoid polluting the codebase.
-**Action:** Always prefer `String.replace` over `String.replaceFirst` or `String.replaceAll` when dealing with literal strings, taking care to appropriately adjust any regex-specific escaping (`\\\\E` -> `\\E`) to literal equivalents.
