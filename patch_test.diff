@@ -1,56 +1,27 @@
---- org.moreunit.swtbot.test/src/org/moreunit/refactoring/RenameClassTest.java
-+++ org.moreunit.swtbot.test/src/org/moreunit/refactoring/RenameClassTest.java
-@@ -62,7 +62,7 @@
-	}
+<<<<<<< SEARCH
+    @Test
+    public void should_not_collect_methods_which_name_does_not_match_setter_pattern() throws Exception
+    {
+        // given
+        IMethod notASetter = method("notASetter", 1, Flags.AccPublic, false);
+        IMethod alsoNotASetter = method("set", 1, Flags.AccPublic, false);
+        classUnderTestHierarchyHasMethods(notASetter, alsoNotASetter);
 
-	@Project(
--            mainCls = "org:SomeClass",
-+            mainCls = "org:OtherClass",
-             testCls = "org:OtherClassTest",
-             mainSrcFolder = "src",
-             testSrcFolder = "test")
-@@ -70,9 +70,9 @@
-	public void should_rename_test_using_regex_fallback_when_cut_gets_renamed()
-	{
--		renameSomeClassToAnyClassAndWaitUntilFinished();
-+		renameOtherClassToAnyClassAndWaitUntilFinished();
+        // then
+        assertThat(collector.getSetters()).isEmpty();
+    }
+=======
+    @Test
+    public void should_not_collect_methods_which_name_does_not_match_setter_pattern() throws Exception
+    {
+        // given
+        IMethod notASetter = method("notASetter", 1, Flags.AccPublic, false);
+        IMethod alsoNotASetter = method("set", 1, Flags.AccPublic, false);
+        IMethod alsoNotASetter2 = method("seta", 1, Flags.AccPublic, false);
+        IMethod alsoNotASetter3 = method("setup", 1, Flags.AccPublic, false);
+        classUnderTestHierarchyHasMethods(notASetter, alsoNotASetter, alsoNotASetter2, alsoNotASetter3);
 
--		assertThat(context.getCompilationUnit("org.AnyClassTest")).isNotNull();
-+		assertThat(context.getCompilationUnit("org.AnyClassTest")).isNotNull();
-	}
-
-	private void renameSomeClassToAnyClassAndWaitUntilFinished()
-@@ -99,5 +99,32 @@
-		bot.button("Finish").click();
-		SWTBotShell renameDialog = bot.activeShell();
-		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
-	}
-+
-+	private void renameOtherClassToAnyClassAndWaitUntilFinished()
-+	{
-+		final SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
-+		packageItem.expand();
-+		packageItem.getNode("OtherClass.java").select();
-+		bot.waitUntil(new DefaultCondition()
-+        {
-+
-+            @Override
-+            public boolean test() throws Exception
-+            {
-+                return packageItem.getNode("OtherClass.java").isSelected();
-+            }
-+
-+            @Override
-+            public String getFailureMessage()
-+            {
-+                return "Node OtherClass.java not selected";
-+            }
-+        });
-+		getShortcutStrategy().pressRenameShortcut();
-+		bot.textWithLabel("New name:").setText("AnyClass");
-+		bot.button("Finish").click();
-+		SWTBotShell renameDialog = bot.activeShell();
-+		bot.waitUntil(Conditions.shellCloses(renameDialog), 20000);
-+	}
-
- }
+        // then
+        assertThat(collector.getSetters()).isEmpty();
+    }
+>>>>>>> REPLACE

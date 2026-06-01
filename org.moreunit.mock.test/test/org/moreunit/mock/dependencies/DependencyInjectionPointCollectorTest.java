@@ -173,7 +173,10 @@ public class DependencyInjectionPointCollectorTest
     {
         // given
         IMethod notASetter = method("notASetter", 1, Flags.AccPublic, false);
-        classUnderTestHierarchyHasMethods(notASetter);
+        IMethod alsoNotASetter = method("set", 1, Flags.AccPublic, false);
+        IMethod alsoNotASetter2 = method("seta", 1, Flags.AccPublic, false);
+        IMethod alsoNotASetter3 = method("setup", 1, Flags.AccPublic, false);
+        classUnderTestHierarchyHasMethods(notASetter, alsoNotASetter, alsoNotASetter2, alsoNotASetter3);
 
         // then
         assertThat(collector.getSetters()).isEmpty();
