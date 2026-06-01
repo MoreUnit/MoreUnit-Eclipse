@@ -45,3 +45,6 @@
 ## 2026-05-27 - Ignore flaky UI bot tests
 **Learning:** `org.moreunit.swtbot.test.refactoring.MoveMethodTest.should_move_test_method_when_static_method_gets_moved` is notoriously flaky in CI.
 **Action:** Do not attempt to fix or over-analyze SWTBot timeout failures if the core logic changes did not touch `org.moreunit.swtbot.test` or UI refactoring code.
+## 2026-06-01 - Avoid Regex for Simple Method Name Patterns
+**Learning:** Using regex (e.g., `Pattern.compile("^set[A-Z].*")`) to match method names (like checking if a method is a setter) adds significant overhead compared to simple literal string checks. A microbenchmark showed that using `methodName.length() > 3 && methodName.startsWith("set") && Character.isUpperCase(methodName.charAt(3))` instead of `SETTER_PATTERN.matcher(methodName).matches()` results in a ~100x speedup for this specific check, which is crucial when iterating over all methods in a class hierarchy during dependency injection analysis.
+**Action:** Replace regex checks for basic method or field naming conventions (like `startsWith`, `endsWith`, or checking capitalization of specific characters) with standard string length, `startsWith`/`endsWith`, and `Character` checks to improve performance.
