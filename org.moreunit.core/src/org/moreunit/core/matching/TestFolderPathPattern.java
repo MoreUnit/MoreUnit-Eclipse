@@ -200,7 +200,9 @@ public class TestFolderPathPattern
         String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
         String projectName = getProjectName(cleanSrcPath);
 
-        String srcPathTpl = getSrcPathTemplateForSrcProject(quoteReplacement(quote(projectName)));
+        // We use quote() but NOT quoteReplacement() anymore because we replaced
+        // String.replaceFirst (which needed regex escaping) with String.replace (which doesn't).
+        String srcPathTpl = getSrcPathTemplateForSrcProject(quote(projectName));
         String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
