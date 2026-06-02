@@ -24,15 +24,7 @@ public class InMemoryPath implements Path
         }
         else
         {
-            /*
-             * ⚡ Bolt Performance Optimization
-             *
-             * 💡 What: Replaced regex String.replaceFirst with literal endsWith and substring.
-             * 🎯 Why: Avoids regex compilation overhead for simple suffix removal.
-             * 📊 Impact: ~18x speedup (from 534ms to 29ms for 1M iterations).
-             * 🔬 Measurement: Benchmarked against regex replaceFirst using a 1M loop.
-             */
-            this.path = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
+            this.path = path.replaceFirst("/$", "");
         }
         segments = unmodifiableList(splitAsList(path, "/"));
     }
