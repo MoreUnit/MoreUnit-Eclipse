@@ -200,21 +200,8 @@ public class TestFolderPathPattern
         String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
         String projectName = getProjectName(cleanSrcPath);
 
-        // We use quote() but NOT quoteReplacement() anymore because we replaced
-        // String.replaceFirst (which needed regex escaping) with String.replace (which doesn't).
-        String srcPathTpl = getSrcPathTemplateForSrcProject(quote(projectName));
-        /*
-         * ⚡ Bolt Performance Optimization
-         *
-         * 💡 What: Replaced regex String.replaceFirst with literal startsWith and substring.
-         * 🎯 Why: Avoids regex compilation overhead for simple prefix removal.
-         * 📊 Impact: ~25x speedup for this specific operation in microbenchmarks.
-         * 🔬 Measurement: Benchmarked against regex replaceFirst using a 1M loop.
-         */
-        String codePathWithinSrcFolder = cleanSrcPath;
-        if(cleanSrcPath.startsWith(srcPathTpl)) {
-            codePathWithinSrcFolder = cleanSrcPath.substring(srcPathTpl.length());
-        }
+        String srcPathTpl = getSrcPathTemplateForSrcProject(quoteReplacement(quote(projectName)));
+        String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
         srcPathTpl += quote(codePathWithinSrcFolder);
@@ -282,18 +269,7 @@ public class TestFolderPathPattern
         String srcPathTpl = getSrcPathTemplateForSrcProject(srcProjectName);
         srcPathTpl = replaceGroupsWithRefs(srcPathTpl, groupRefs);
 
-        /*
-         * ⚡ Bolt Performance Optimization
-         *
-         * 💡 What: Replaced regex String.replaceFirst with literal startsWith and substring.
-         * 🎯 Why: Avoids regex compilation overhead for simple prefix removal.
-         * 📊 Impact: ~25x speedup for this specific operation in microbenchmarks.
-         * 🔬 Measurement: Benchmarked against regex replaceFirst using a 1M loop.
-         */
-        String codePathWithinSrcFolder = cleanTestPath;
-        if(cleanTestPath.startsWith(tstPathTpl)) {
-            codePathWithinSrcFolder = cleanTestPath.substring(tstPathTpl.length());
-        }
+        String codePathWithinSrcFolder = cleanTestPath.replaceFirst(tstPathTpl, "");
         if(codePathWithinSrcFolder.length() != 0 && ! codePathWithinSrcFolder.startsWith(tstProjectName))
         {
             srcPathTpl += codePathWithinSrcFolder;
