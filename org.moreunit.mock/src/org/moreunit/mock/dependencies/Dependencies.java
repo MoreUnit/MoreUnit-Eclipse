@@ -339,15 +339,13 @@ public class Dependencies extends ArrayList<Dependency>
 
         String stringFromNextIdx()
         {
+            if (current + 1 >= limit) return "";
             return new String(chars, current + 1, limit - current - 1);
         }
 
         CharIterator increment(int offset)
         {
-            while (offset-- > 0)
-            {
-                next();
-            }
+            current += offset;
             return this;
         }
 
