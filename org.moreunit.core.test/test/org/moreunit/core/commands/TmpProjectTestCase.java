@@ -68,7 +68,9 @@ public abstract class TmpProjectTestCase
             Resources.createFolder(project, fullPath.removeFirstSegments(1).removeLastSegments(1));
         }
 
-        file.create(new ByteArrayInputStream("".getBytes()), IResource.NONE, null);
+        if(!file.exists()) {
+            file.create(new ByteArrayInputStream("".getBytes()), IResource.NONE, null);
+        }
         return file;
     }
 

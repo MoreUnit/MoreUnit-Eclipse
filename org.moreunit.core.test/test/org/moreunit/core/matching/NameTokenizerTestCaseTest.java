@@ -2,7 +2,7 @@ package org.moreunit.core.matching;
 
 import org.junit.jupiter.api.Test;
 
-public class NameTokenizerTestCaseTest {
+public class NameTokenizerTestCaseTest extends NameTokenizerTestCase {
 
     private final NameTokenizer dummyTokenizer = new NameTokenizer() {
         @Override
@@ -11,21 +11,8 @@ public class NameTokenizerTestCaseTest {
         }
     };
 
-    @Test
-    public void testNameTokenizerTestCase() throws Exception {
-        assertThrowsIllegalArgument(() -> dummyTokenizer.tokenize(null));
-        assertThrowsIllegalArgument(() -> dummyTokenizer.tokenize(""));
-        assertThrowsIllegalArgument(() -> dummyTokenizer.tokenize("  "));
-        assertThrowsIllegalArgument(() -> dummyTokenizer.tokenize(" name"));
-        assertThrowsIllegalArgument(() -> dummyTokenizer.tokenize("name "));
-    }
-
-    private void assertThrowsIllegalArgument(Runnable r) {
-        try {
-            r.run();
-        } catch (IllegalArgumentException e) {
-            return;
-        }
-        throw new AssertionError("Expected IllegalArgumentException");
+    @Override
+    protected NameTokenizer getTokenizer() {
+        return dummyTokenizer;
     }
 }

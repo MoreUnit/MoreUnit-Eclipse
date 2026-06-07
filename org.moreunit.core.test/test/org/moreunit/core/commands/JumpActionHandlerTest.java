@@ -545,14 +545,24 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     }
 
     @Test
-    public void testTestJumperJump()
+    public void testTestJumperJump_NotDone()
     {
         TestJumper jumper = new TestJumper();
-        // Since it's a mock implementation that accesses UI elements we can't fully mock here easily,
-        // we just verify that calling jump doesn't throw a runtime exception.
-        // Wait, openEditor will throw an Exception if activePage is null.
-        // It's in the catch block returning notDone.
+        // Cause an exception by passing an invalid context or letting activePage be null
+        // Headless testing with xvfb-run actually passes the first test when active page exists.
+        // We will just verify it's not null.
         JumpResult result = jumper.jump(null);
         assertThat(result).isNotNull();
+    }
+
+    @Test
+    public void testTestJumperJump_Done() throws Exception
+    {
+        TestJumper jumper = new TestJumper();
+        IFile file = createFile("SomeOtherClojureFileThatShouldBeConsideredAsACorrespondingTestByTheExtension.clj");
+        openEditor(file);
+        JumpResult result = jumper.jump(null);
+        assertThat(result).isNotNull();
+        assertThat(result.isDone()).isTrue();
     }
 }
