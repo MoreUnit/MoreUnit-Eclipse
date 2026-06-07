@@ -52,3 +52,6 @@
 ## 2023-10-27 - Precompiled Regex Pattern Cache Misses
 **Learning:** When optimizing `String.matches()` by precompiling known regex patterns into a `Map<String, Pattern>`, replacing the inline regex compiler with a `Map.get()` lookup introduces a functional regression if the input string does not exist in the map (a cache miss). The subsequent check will evaluate to `null`, silently skipping loops or throwing `NullPointerException`.
 **Action:** Always implement a fallback (e.g., dynamically compiling the pattern with `Pattern.compile()` when `map.get()` returns `null`) to maintain exact functional parity with the original `String.matches()` behavior while still achieving speedups for the cached inputs.
+## 2026-06-07 - Stop when no suitable optimization found
+**Learning:** Exploring string replacements (e.g. replaceFirst) revealed that remaining uses either represent cold paths (UI configurations), risk regex correctness regressions, or reside in test utility classes where micro-optimizations lack measurable impact.
+**Action:** Adhere strictly to the directive to stop and not create a PR if no robust, measurable production hot-path optimization is found.
