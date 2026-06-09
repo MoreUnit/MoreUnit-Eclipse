@@ -55,3 +55,6 @@
 ## 2026-06-07 - Stop when no suitable optimization found
 **Learning:** Exploring string replacements (e.g. replaceFirst) revealed that remaining uses either represent cold paths (UI configurations), risk regex correctness regressions, or reside in test utility classes where micro-optimizations lack measurable impact.
 **Action:** Adhere strictly to the directive to stop and not create a PR if no robust, measurable production hot-path optimization is found.
+## 2025-02-04 - Extension Field Performance Bug
+**Learning:** Using `String.replaceFirst(regex, "")` without boundary anchors (like `^`) to remove a prefix can cause subtle bugs by stripping the first matching sequence anywhere in the string (e.g., `replaceFirst("\\*?\\.", "")` altering `tar.gz` to `targz`).
+**Action:** Refactor to explicit `startsWith()` and `substring()` checks, which resolves this correctness issue while avoiding regex compilation overhead for significant performance gains.
