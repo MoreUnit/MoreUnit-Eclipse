@@ -85,6 +85,13 @@ public class ProjectPreferencesTest {
     }
 
     @Test
+    public void testActivatePreferencesForLanguageEmpty() {
+        when(store.getString(Preferences.BASE + "languages")).thenReturn("");
+        prefs.activatePreferencesForLanguage("java", true);
+        verify(store).setValue(Preferences.BASE + "languages", "java");
+    }
+
+    @Test
     public void testActivatePreferencesForLanguageAlreadyActive() {
         when(store.getString(Preferences.BASE + "languages")).thenReturn("java,python");
 

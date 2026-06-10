@@ -128,7 +128,11 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
             String activeLanguages = orDefault(store.getString(LANGUAGES), "");
             if(active)
             {
-                activeLanguages = activeLanguages + "," + language;
+                if (activeLanguages.isEmpty()) {
+                    activeLanguages = language;
+                } else {
+                    activeLanguages = activeLanguages + "," + language;
+                }
             }
             else
             {
