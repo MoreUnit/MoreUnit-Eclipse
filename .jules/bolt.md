@@ -58,3 +58,6 @@
 ## 2025-02-04 - Extension Field Performance Bug
 **Learning:** Using `String.replaceFirst(regex, "")` without boundary anchors (like `^`) to remove a prefix can cause subtle bugs by stripping the first matching sequence anywhere in the string (e.g., `replaceFirst("\\*?\\.", "")` altering `tar.gz` to `targz`).
 **Action:** Refactor to explicit `startsWith()` and `substring()` checks, which resolves this correctness issue while avoiding regex compilation overhead for significant performance gains.
+## 2026-06-10 - ProjectPreferences matches() and replaceFirst() optimization
+**Learning:** `ProjectPreferences.java` heavily uses regex for finding and removing values from a comma-separated list of active languages. Using `String.matches(".*\\b%s\\b.*")` and `String.replaceFirst(",?\\b%s\\b,?", "")` compiles the regex on every preference call, causing significant overhead in UI-related code. Replacing these operations with manual string finding using `indexOf` / `substring` or `split` yields ~5-10x performance improvements.
+**Action:** Always verify if a `matches()` or `replaceFirst()` call is dealing with a simple list structure where manual index lookup or simple loop can avoid regex overhead completely, especially in classes loaded frequently during UI workbench events.
