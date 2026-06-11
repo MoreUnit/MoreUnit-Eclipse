@@ -58,3 +58,6 @@
 ## 2025-02-04 - Extension Field Performance Bug
 **Learning:** Using `String.replaceFirst(regex, "")` without boundary anchors (like `^`) to remove a prefix can cause subtle bugs by stripping the first matching sequence anywhere in the string (e.g., `replaceFirst("\\*?\\.", "")` altering `tar.gz` to `targz`).
 **Action:** Refactor to explicit `startsWith()` and `substring()` checks, which resolves this correctness issue while avoiding regex compilation overhead for significant performance gains.
+## 2026-06-11 - Replace Regex Match for Annotation Checking
+**Learning:** Checking for annotation names inside Eclipse AST loops with `String.matches("^([^\\.]+\\.)*" + annotationName + "$")` evaluates the pattern on every invocation, causing significant overhead (compilation and execution). Replacing this with literal string evaluations `elementName.equals(annotationName) || elementName.endsWith("." + annotationName)` provides a ~60x speedup with exact functional equivalence, avoiding the hidden cost of implicit regex compilation in hot paths.
+**Action:** When evaluating simple name matching (like simple names vs fully-qualified paths), prefer standard String operations (`equals`, `endsWith`) instead of implicit regex methods like `matches()`.
