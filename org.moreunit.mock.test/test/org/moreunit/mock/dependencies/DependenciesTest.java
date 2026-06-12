@@ -23,7 +23,6 @@ import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.model.TypeParameter;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 public class DependenciesTest
 {
