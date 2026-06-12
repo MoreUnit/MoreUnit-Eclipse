@@ -128,8 +128,9 @@ public class DependenciesTest
     @Test
     public void resolveTypeParameters_should_handle_wildcards() throws Exception
     {
-        when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
-        when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("")).thenReturn(null);
 
         assertThat(dependencies.resolveTypeParameters("Callable<?>")).containsOnly(TypeParameter.wildcard());
         assertThat(dependencies.resolveTypeParameters("Callable<? extends Set<String>")).containsOnly(TypeParameter.extending("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")));
@@ -139,9 +140,10 @@ public class DependenciesTest
     @Test
     public void resolveTypeParameters_should_handle_type_annotations() throws Exception
     {
-        when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
-        when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
-        when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });
+        org.mockito.Mockito.lenient().when(classUnderTest.resolveType("NonNull")).thenReturn(null);
 
         assertThat(dependencies.resolveTypeParameters("Callable<@Interned Set<@NonNull @ReadOnly ? extends @English java.lang.String>"))
                 .containsOnly(new TypeParameter("java.util.Set")
