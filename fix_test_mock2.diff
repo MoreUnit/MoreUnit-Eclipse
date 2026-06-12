@@ -1,0 +1,34 @@
+<<<<<<< SEARCH
+    @Test
+    public void resolveTypeParameters_should_handle_type_annotations() throws Exception
+    {
+        when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
+        when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
+        when(classUnderTest.resolveType("NonNull")).thenReturn(null);
+        when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });
+
+        assertThat(dependencies.resolveTypeParameters("Callable<@Interned Set<@NonNull @ReadOnly ? extends @English java.lang.String>"))
+                .containsOnly(new TypeParameter("java.util.Set")
+                        .withAnnotations("checkers.interning.quals.Interned")
+                        .withTypeParameters(TypeParameter.extending("java.lang.String")
+                                .withBaseTypeAnnotations("English")
+                                .withAnnotations("NonNull", "checkers.interning.quals.ReadOnly")
+                        ));
+    }
+=======
+    @Test
+    public void resolveTypeParameters_should_handle_type_annotations() throws Exception
+    {
+        when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
+        when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
+        when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });
+
+        assertThat(dependencies.resolveTypeParameters("Callable<@Interned Set<@NonNull @ReadOnly ? extends @English java.lang.String>"))
+                .containsOnly(new TypeParameter("java.util.Set")
+                        .withAnnotations("checkers.interning.quals.Interned")
+                        .withTypeParameters(TypeParameter.extending("java.lang.String")
+                                .withBaseTypeAnnotations("English")
+                                .withAnnotations("NonNull", "checkers.interning.quals.ReadOnly")
+                        ));
+    }
+>>>>>>> REPLACE
