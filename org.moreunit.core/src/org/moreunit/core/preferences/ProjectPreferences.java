@@ -117,7 +117,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         }
     }
 
-    static String removeLanguage(String languages, String language)
+    public static String removeLanguage(String languages, String language)
     {
         int idx = languages.indexOf(language);
         while (idx != -1)
