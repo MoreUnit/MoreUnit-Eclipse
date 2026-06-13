@@ -111,10 +111,39 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
             }
             else
             {
-                activeLanguages = activeLanguages.replaceFirst(",?\\b%s\\b,?".formatted(language), "");
+                activeLanguages = removeLanguage(activeLanguages, language);
             }
             store.setValue(LANGUAGES, activeLanguages);
         }
+    }
+
+    public static String removeLanguage(String languages, String language)
+    {
+        int idx = languages.indexOf(language);
+        while (idx != -1)
+        {
+            boolean startBoundary = (idx == 0 || languages.charAt(idx - 1) == ',');
+            boolean endBoundary = (idx + language.length() == languages.length() || languages.charAt(idx + language.length()) == ',');
+
+            if (startBoundary && endBoundary)
+            {
+                int startRemove = idx;
+                int endRemove = idx + language.length();
+
+                if (startRemove > 0 && languages.charAt(startRemove - 1) == ',')
+                {
+                    startRemove--;
+                }
+                else if (endRemove < languages.length() && languages.charAt(endRemove) == ',')
+                {
+                    endRemove++;
+                }
+
+                return languages.substring(0, startRemove) + languages.substring(endRemove);
+            }
+            idx = languages.indexOf(language, idx + 1);
+        }
+        return languages;
     }
 
     public void clearCache()
