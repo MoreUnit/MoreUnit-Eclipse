@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.IMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,15 @@ public class MemberJumpHistoryTest
     public void setUp()
     {
         history = new MemberJumpHistory();
+    }
+
+    @Test
+    public void getInstance_should_return_same_instance() {
+        MemberJumpHistory instance1 = MemberJumpHistory.getInstance();
+        MemberJumpHistory instance2 = MemberJumpHistory.getInstance();
+
+        assertThat(instance1).isNotNull();
+        assertThat(instance1).isSameAs(instance2);
     }
 
     @Test
