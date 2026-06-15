@@ -90,7 +90,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         return hasLanguage(orDefault(store.getString(LANGUAGES), ""), language);
     }
 
-    static boolean hasLanguage(String languages, String language)
+    public static boolean hasLanguage(String languages, String language)
     {
         /*
          * ⚡ Bolt Performance Optimization
