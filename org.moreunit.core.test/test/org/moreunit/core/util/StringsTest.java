@@ -159,4 +159,31 @@ public class StringsTest
     {
         assertThat(Strings.emptyArray()).isEmpty();
     }
+
+    @Test
+    public void join_should_handle_collection_with_null_elements() throws Exception
+    {
+        assertThat(Strings.join(",", java.util.Arrays.asList("1", null, "3"))).isEqualTo("1,null,3");
+    }
+
+    @Test
+    public void join_should_handle_array_with_null_elements() throws Exception
+    {
+        assertThat(Strings.join(",", new String[]{"1", null, "3"})).isEqualTo("1,null,3");
+    }
+
+    @Test
+    public void testCountOccurrences_withOverlappingPattern() {
+        assertThat(Strings.countOccurrences("aaaa", "aa")).isEqualTo(2);
+    }
+
+    @Test
+    public void testCountOccurrences_withPatternLongerThanString() {
+        assertThat(Strings.countOccurrences("a", "aa")).isEqualTo(0);
+    }
+
+    @Test
+    public void testSplitAsList() {
+        assertThat(Strings.splitAsList("a,b,,c,", ",")).containsExactly("a", "b", "c");
+    }
 }
