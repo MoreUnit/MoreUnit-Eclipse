@@ -46,7 +46,7 @@ public class NewTestCaseWizardContext implements INewTestCaseWizardContext
         return pageOne.getTestType();
     }
 
-    void setCreatedTestCase(IType createdTestCase)
+    public void setCreatedTestCase(IType createdTestCase)
     {
         this.createdTestCase = createdTestCase;
     }
