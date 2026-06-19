@@ -44,7 +44,7 @@
    <extension point="org.eclipse.ui.bindings">
        <!-- redefines this binding at a more specific level than org.eclipse.ui.textEditorScope,
           otherwise other commands may silently win the battle in org.eclipse.jdt.ui.javaEditorScope -->
-	   <key sequence="CTRL+J"
+	   <key sequence="CTRL+SHIFT+J"
           commandId="org.moreunit.core.commands.jumpCommand"
           contextId="org.eclipse.jdt.ui.javaEditorScope"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
