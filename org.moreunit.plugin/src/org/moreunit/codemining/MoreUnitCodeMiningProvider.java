@@ -84,7 +84,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             }
             // support methods, classes
             boolean addMining = false;
-            if(element instanceof IType type)
+            if(element instanceof IType type && preferences.shouldEnableJumpToClassCodeMining(unit.getJavaProject()))
             {
                 if(type.isClass() || type.isEnum() || type.isInterface() || type.isRecord() || type.isAnnotation())
                 {

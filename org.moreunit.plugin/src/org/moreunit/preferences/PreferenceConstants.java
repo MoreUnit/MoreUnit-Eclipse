@@ -27,6 +27,7 @@ public interface PreferenceConstants
     String GENERATE_COMMENTS_FOR_TEST_METHOD = "org.moreunit.generateCommentsForTestMethod";
     String ENABLE_MOREUNIT_CODE_MINING = "org.moreunit.enableMoreUnitCodeMining";
     String ENABLE_JUMP_TO_METHOD_CODE_MINING = "org.moreunit.enableJumpToMethodCodeMining";
+    String ENABLE_JUMP_TO_CLASS_CODE_MINING = "org.moreunit.enableJumpToClassCodeMining";
 
     String TEST_TYPE = "org.moreunit.test_type";
     String TEST_TYPE_VALUE_JUNIT_3 = "junit3";
@@ -49,6 +50,7 @@ public interface PreferenceConstants
     String DEFAULT_TEST_ANNOTATION_MODE = "OFF";
     boolean DEFAULT_ENABLE_MOREUNIT_CODEMINING = true;
     boolean DEFAULT_ENABLE_JUMP_TO_METHOD_CODE_MINING = true;
+    boolean DEFAULT_ENABLE_JUMP_TO_CLASS_CODE_MINING = true;
 
     String TEXT_GENERAL_SETTINGS = "General settings for your unit tests (they can then be refined for each project):";
     String TEXT_TEST_SUPERCLASS = "Test superclass:";
@@ -68,6 +70,7 @@ public interface PreferenceConstants
     String TEXT_GENERATE_COMMENTS_FOR_TEST_METHOD = "Generate comments for test methods";
     String TEXT_ENABLE_MOREUNIT_CODEMINING = "Enable MoreUnit Code Mining";
     String TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING = "Enable \"Jump to method\" Code Mining (on the right side of the editor)";
+    String TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING = "Enable \"Jump to class\" Code Mining (on the right side of the editor)";
     String TEXT_ANNOTATION_MODE = "Annotate tested methods";
     String TEST_ANNOTATION_MODE_DISABLED = "Disabled";
     String TEST_ANNOTATION_MODE_BY_NAME = "Search by method name";
@@ -83,6 +86,7 @@ public interface PreferenceConstants
     String TOOLTIP_TEST_ANNOTATION_EXTENDED_SEARCH = "This option will cause conflicts if other parts of Eclipse are searching for method method calls at the same time, which occurs often. Only activate if you know what you are doing.";
     String TOOLTIP_ENABLE_MOREUNIT_CODEMINING = "Code Mining adds information and links directly in the editor.";
     String TOOLTIP_ENABLE_JUMP_TO_METHOD_CODE_MINING = "Shows a \"Jump to test/tested method\" link at the end of method declarations.";
+    String TOOLTIP_ENABLE_JUMP_TO_CLASS_CODE_MINING = "Shows a \"Jump to test/tested class\" link at the end of class declarations.";
 
     String TEST_METHOD_TYPE = "org.moreunit.test_methodType";
     String TEST_METHOD_TYPE_JUNIT3 = "testMethodTypeJunit3";
