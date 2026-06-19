@@ -43,6 +43,6 @@ public abstract class ShortcutStrategy
 	
 	public void pressJumpShortcut() 
 	{
-		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.CTRL, 'j');
+		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.CTRL | SWT.SHIFT, 'j');
 	}
 }
