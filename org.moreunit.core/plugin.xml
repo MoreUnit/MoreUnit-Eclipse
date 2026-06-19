@@ -18,12 +18,12 @@
    </extension>
 
    <extension point="org.eclipse.ui.bindings">
-      <key sequence="CTRL+J"
+      <key sequence="CTRL+SHIFT+J"
          commandId="org.moreunit.core.commands.jumpCommand"
          contextId="org.eclipse.ui.textEditorScope"
          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <!-- this one is for convenience when the cursor is not in the editor anymore -->
-      <key sequence="CTRL+J"
+      <key sequence="CTRL+SHIFT+J"
          commandId="org.moreunit.core.commands.jumpCommand"
          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
    </extension>
