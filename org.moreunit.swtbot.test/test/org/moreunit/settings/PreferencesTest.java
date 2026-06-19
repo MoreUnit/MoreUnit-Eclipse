@@ -160,4 +160,24 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isFalse();
         assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
     }
+
+    @Test
+    public void should_update_code_mining_preferences_when_preferences_change()
+    {
+        openPreferencesAndSelectMoreUnitPage();
+        bot.checkBox(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING).select();
+        bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING).deselect();
+        bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING).deselect();
+        saveAndClosePrefs();
+        assertThat(Preferences.getInstance().shouldEnableMoreUnitCodeMining(getJavaProjectFromContext())).isTrue();
+        assertThat(Preferences.getInstance().shouldEnableJumpToMethodCodeMining(getJavaProjectFromContext())).isFalse();
+        assertThat(Preferences.getInstance().shouldEnableJumpToClassCodeMining(getJavaProjectFromContext())).isFalse();
+
+        openPreferencesAndSelectMoreUnitPage();
+        bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING).select();
+        bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING).select();
+        saveAndClosePrefs();
+        assertThat(Preferences.getInstance().shouldEnableJumpToMethodCodeMining(getJavaProjectFromContext())).isTrue();
+        assertThat(Preferences.getInstance().shouldEnableJumpToClassCodeMining(getJavaProjectFromContext())).isTrue();
+    }
 }
