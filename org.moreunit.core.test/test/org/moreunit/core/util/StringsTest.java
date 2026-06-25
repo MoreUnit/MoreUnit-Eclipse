@@ -1,5 +1,6 @@
 package org.moreunit.core.util;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -100,13 +101,13 @@ public class StringsTest
     @Test
     public void split_should_ignore_blank_parts() throws Exception
     {
-        assertEquals(Strings.split(",a4,,b,   ,cD, ", ","), new String[] { "a4", "b", "cD" });
+        assertArrayEquals(Strings.split(",a4,,b,   ,cD, ", ","), new String[] { "a4", "b", "cD" });
     }
 
     @Test
     public void split_should_trim_parts() throws Exception
     {
-        assertEquals(Strings.split("  aa ; b;c  ", ";"), new String[] { "aa", "b", "c" });
+        assertArrayEquals(Strings.split("  aa ; b;c  ", ";"), new String[] { "aa", "b", "c" });
     }
 
     @Test

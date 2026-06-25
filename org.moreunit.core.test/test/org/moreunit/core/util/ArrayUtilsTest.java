@@ -28,9 +28,9 @@ public class ArrayUtilsTest
     public void array_should_handle_null_arguments()
     {
         Object[] objects = ArrayUtils.array((Object) null);
-        assertEquals(Arrays.asList((Object) null), objects);
+        assertArrayEquals(new Object[] { null }, objects);
 
         String[] strings = ArrayUtils.array("a", null, "c");
-        assertEquals(Arrays.asList("a", null, "c"), strings);
+        assertArrayEquals(new String[] { "a", null, "c" }, strings);
     }
 }
