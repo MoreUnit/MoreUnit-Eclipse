@@ -4,6 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.when;
 
 import java.util.regex.Pattern;
@@ -37,7 +39,7 @@ public class SearchEngineTest
         Pattern pattern = Pattern.compile("test");
 
         IStatus errorStatus = new Status(IStatus.ERROR, "pluginId", "Search error");
-        when(textSearchEngine.search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), eq(null))).thenReturn(errorStatus);
+        when(textSearchEngine.search(nullable(TextSearchScope.class), eq(requestor), nullable(Pattern.class), isNull())).thenReturn(errorStatus);
 
         // when
         searchEngine.searchFiles(rootResource, pattern, requestor);
@@ -83,13 +85,13 @@ public class SearchEngineTest
         Pattern pattern = Pattern.compile("test");
 
         IStatus okStatus = Status.OK_STATUS;
-        when(textSearchEngine.search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), eq(null))).thenReturn(okStatus);
+        when(textSearchEngine.search(nullable(TextSearchScope.class), eq(requestor), nullable(Pattern.class), isNull())).thenReturn(okStatus);
 
         // when
         searchEngine.searchFiles(rootResource, pattern, requestor);
 
         // then
         // no warnings or errors should be logged
-        verify(textSearchEngine).search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), any());
+        verify(textSearchEngine).search(nullable(TextSearchScope.class), eq(requestor), nullable(Pattern.class), isNull());
     }
 }
