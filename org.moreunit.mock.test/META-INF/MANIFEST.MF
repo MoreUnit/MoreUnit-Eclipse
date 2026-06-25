@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Mocking Support Tests
 Bundle-SymbolicName: org.moreunit.mock.test
 Bundle-Version: 4.0.2.qualifier
-Fragment-Host: org.moreunit.mock;bundle-version="2.4.6"
+Fragment-Host: org.moreunit.mock
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: MoreUnit.org
 Require-Bundle: org.mockito.mockito-core,
