@@ -37,13 +37,13 @@ public class SearchEngineTest
         Pattern pattern = Pattern.compile("test");
 
         IStatus errorStatus = new Status(IStatus.ERROR, "pluginId", "Search error");
-        when(textSearchEngine.search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), any())).thenReturn(errorStatus);
+        when(textSearchEngine.search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), eq(null))).thenReturn(errorStatus);
 
         // when
         searchEngine.searchFiles(rootResource, pattern, requestor);
 
         // then
-        verify(logger).warn(eq("Search failed with status: " + errorStatus));
+        verify(logger).warn("Search failed with status: " + errorStatus);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class SearchEngineTest
         Pattern pattern = Pattern.compile("test");
 
         IStatus okStatus = Status.OK_STATUS;
-        when(textSearchEngine.search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), any())).thenReturn(okStatus);
+        when(textSearchEngine.search(any(TextSearchScope.class), eq(requestor), any(Pattern.class), eq(null))).thenReturn(okStatus);
 
         // when
         searchEngine.searchFiles(rootResource, pattern, requestor);

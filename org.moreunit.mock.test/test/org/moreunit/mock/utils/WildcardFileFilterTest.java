@@ -2,6 +2,8 @@ package org.moreunit.mock.utils;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 
@@ -69,7 +71,9 @@ public class WildcardFileFilterTest
     public void should_handle_backslash_in_pattern()
     {
         WildcardFileFilter filter = new WildcardFileFilter("path\\*.txt");
-        assertTrue(filter.accept(new File("path\\file.txt")));
+        File mockFile = mock(File.class);
+        when(mockFile.getName()).thenReturn("path\\file.txt");
+        assertTrue(filter.accept(mockFile));
     }
 
     @Test
