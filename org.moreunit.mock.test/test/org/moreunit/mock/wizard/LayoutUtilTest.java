@@ -1,10 +1,8 @@
 package org.moreunit.mock.wizard;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.layout.PixelConverter;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -59,7 +57,7 @@ public class LayoutUtilTest
 
                 int hint = LayoutUtil.getButtonWidthHint(button);
 
-                assertThat(hint).isGreaterThan(0);
+                assertTrue(hint > 0);
             }
         });
     }
@@ -80,8 +78,8 @@ public class LayoutUtilTest
                 LayoutUtil.setButtonDimensionHint(button);
 
                 int expectedHint = LayoutUtil.getButtonWidthHint(button);
-                assertThat(layoutData.widthHint).isEqualTo(expectedHint);
-                assertThat(layoutData.horizontalAlignment).isEqualTo(GridData.FILL);
+                assertEquals(layoutData.widthHint, expectedHint);
+                assertEquals(layoutData.horizontalAlignment, GridData.FILL);
             }
         });
     }

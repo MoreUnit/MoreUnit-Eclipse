@@ -1,6 +1,6 @@
 package org.moreunit.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class PreferencesConverterTest extends ContextTestCase
         , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
         , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
 
-        assertThat(PreferencesConverter.convertSourceMappingsToString(mappingList)).isEqualTo(expected);
+        assertEquals(PreferencesConverter.convertSourceMappingsToString(mappingList), expected);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class PreferencesConverterTest extends ContextTestCase
         , unit2SourceFolder.getJavaProject().getElementName(), unit2SourceFolder.getElementName()
         , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
 
-        assertThat(PreferencesConverter.createStringFromSourceMapping(mapping)).isEqualTo(expected);
+        assertEquals(PreferencesConverter.createStringFromSourceMapping(mapping), expected);
     }
 
     @Test
@@ -98,13 +98,13 @@ public class PreferencesConverterTest extends ContextTestCase
 
         String expected = "%s:%s:%s:%s".formatted(unit1SourceFolder.getJavaProject().getElementName(), unit1SourceFolder.getElementName()
         , testUnitSourceFolder.getJavaProject().getElementName(), SOURCEFOLDER_NAME_TEST_UNIT);
-        assertThat(PreferencesConverter.convertSourceMappingsToString(mappingList)).isEqualTo(expected);
+        assertEquals(PreferencesConverter.convertSourceMappingsToString(mappingList), expected);
     }
 
     @Test
     public void convertSourceMappingsToString_should_convert_empty_mapping_to_empty_string()
     {
-        assertThat(PreferencesConverter.convertSourceMappingsToString(new ArrayList<>())).isEqualTo("");
+        assertEquals(PreferencesConverter.convertSourceMappingsToString(new ArrayList<>()), "");
     }
 
     @Test
@@ -116,17 +116,17 @@ public class PreferencesConverterTest extends ContextTestCase
         , unit3SourceFolder.getJavaProject().getElementName(), unit3SourceFolder.getElementName());
 
         List<SourceFolderMapping> mappingList = PreferencesConverter.convertStringToSourceMappingList(mappingString);
-        assertThat(mappingList).hasSize(2);
+        assertEquals(2, mappingList.size());
 
         SourceFolderMapping firstMapping = mappingList.getFirst();
-        assertThat(firstMapping.getJavaProject()).isEqualTo(context.getProjectHandler().get());
-        assertThat(firstMapping.getSourceFolderList().get(0)).isEqualTo(unit1SourceFolder);
-        assertThat(firstMapping.getTestFolder()).isEqualTo(unit2SourceFolder);
+        assertEquals(firstMapping.getJavaProject(), context.getProjectHandler().get());
+        assertEquals(firstMapping.getSourceFolderList().get(0), unit1SourceFolder);
+        assertEquals(firstMapping.getTestFolder(), unit2SourceFolder);
 
         SourceFolderMapping secondMapping = mappingList.get(1);
-        assertThat(secondMapping.getJavaProject()).isEqualTo(context.getProjectHandler().get());
-        assertThat(secondMapping.getSourceFolderList().get(0)).isEqualTo(unit2SourceFolder);
-        assertThat(secondMapping.getTestFolder()).isEqualTo(unit3SourceFolder);
+        assertEquals(secondMapping.getJavaProject(), context.getProjectHandler().get());
+        assertEquals(secondMapping.getSourceFolderList().get(0), unit2SourceFolder);
+        assertEquals(secondMapping.getTestFolder(), unit3SourceFolder);
     }
 
     @Test
@@ -135,18 +135,18 @@ public class PreferencesConverterTest extends ContextTestCase
         String mappingString = unit1SourceFolder.getJavaProject().getElementName() + ":" + unit1SourceFolder.getElementName() + ":" + testUnitSourceFolder.getJavaProject().getElementName() + ":" + SOURCEFOLDER_NAME_TEST_UNIT;
 
         List<SourceFolderMapping> mappingList = PreferencesConverter.convertStringToSourceMappingList(mappingString);
-        assertThat(mappingList).hasSize(1);
+        assertEquals(1, mappingList.size());
 
         SourceFolderMapping firstMapping = mappingList.getFirst();
-        assertThat(firstMapping.getJavaProject()).isEqualTo(context.getProjectHandler().get());
-        assertThat(firstMapping.getSourceFolderList().get(0)).isEqualTo(unit1SourceFolder);
-        assertThat(firstMapping.getTestFolder()).isEqualTo(testUnitSourceFolder);
+        assertEquals(firstMapping.getJavaProject(), context.getProjectHandler().get());
+        assertEquals(firstMapping.getSourceFolderList().get(0), unit1SourceFolder);
+        assertEquals(firstMapping.getTestFolder(), testUnitSourceFolder);
     }
 
     @Test
         public void convertArrayToStringWithListValueDelimiter_array_with_two_elements()
         {
-            assertThat(PreferencesConverter.convertArrayToStringWithListValueDelimiter(new String[] { "token1", "token2" })).isEqualTo("token1,token2");
+            assertEquals(PreferencesConverter.convertArrayToStringWithListValueDelimiter(new String[] { "token1", "token2" }), "token1,token2");
         }
 
 }

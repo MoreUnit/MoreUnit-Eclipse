@@ -1,7 +1,7 @@
 package org.moreunit.refactoring;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
@@ -32,7 +32,7 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 	@Test
 	public void should_not_throw_exception_when_renaming_package_while_using_package_prefix_and_suffix() throws Exception
 	{
-		assertThatCode(() ->
+		assertDoesNotThrow(() ->
 		{
 			selectAndReturnPackageWithName("org");
 
@@ -41,15 +41,15 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 
 			// fill dialog to rename package
 			SWTBotText textWithLabel = bot.textWithLabel("New name:");
-			assertThat(textWithLabel).isNotNull();
+			assertNotNull(textWithLabel);
 			textWithLabel.setText("some.name");
 			bot.shell("Rename Package").activate();
 
 			// start rename refactoring
 			SWTBotButton okButton = bot.button("OK");
-			assertThat(okButton).isNotNull();
+			assertNotNull(okButton);
 			okButton.click();
-		}).doesNotThrowAnyException();
+		});
 	}
 
 	@Project(mainCls="some:First,some:Second",
@@ -67,7 +67,7 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 
 		// fill dialog to rename package
 		SWTBotText textWithLabel = bot.textWithLabel("New name:");
-		assertThat(textWithLabel).isNotNull();
+		assertNotNull(textWithLabel);
 		textWithLabel.setText("any");
 		bot.shell("Rename Package").activate();
 
@@ -91,6 +91,6 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 		});
 
 		ICompilationUnit testcase = context.getCompilationUnit("any.SecondTest");
-		assertThat(testcase).isNotNull();
+		assertNotNull(testcase);
 	}
 }

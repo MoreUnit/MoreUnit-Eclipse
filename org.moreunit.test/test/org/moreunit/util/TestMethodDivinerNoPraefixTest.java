@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,28 +11,28 @@ public class TestMethodDivinerNoPraefixTest
     public void getTestMethodNameFromMethodName() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertThat(testMethodDivinerNoPraefix.getTestMethodNameFromMethodName("getFoo")).isEqualTo("getFoo");
+        assertEquals(testMethodDivinerNoPraefix.getTestMethodNameFromMethodName("getFoo"), "getFoo");
     }
 
     @Test
     public void testGetTestMethodNameAfterRename() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertThat(testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "getFoo_getterWorks")).isEqualTo("get2Foo_getterWorks");
+        assertEquals(testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "getFoo_getterWorks"), "get2Foo_getterWorks");
     }
 
     @Test
     public void testGetTestMethodNameAfterRename_noMatch() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertThat(testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "somethingElse")).isEqualTo("somethingElse");
+        assertEquals(testMethodDivinerNoPraefix.getTestMethodNameAfterRename("getFoo", "get2Foo", "somethingElse"), "somethingElse");
     }
 
     @Test
     public void getMethodNameFromTestMethodName() throws Exception
     {
         TestMethodDivinerNoPraefix testMethodDivinerNoPraefix = new TestMethodDivinerNoPraefix();
-        assertThat(testMethodDivinerNoPraefix.getMethodNameFromTestMethodName("getFoo")).isEqualTo("getFoo");
+        assertEquals(testMethodDivinerNoPraefix.getMethodNameFromTestMethodName("getFoo"), "getFoo");
     }
 
 }

@@ -1,6 +1,8 @@
 package org.moreunit.test.context;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.jupiter.api.Test;
@@ -13,10 +15,10 @@ public class ContextTest extends ContextTestCase
     public void should_use_properties_when_annotated_with_properties()
     {
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
-        assertThat(prefs.hasProjectSpecificSettings(context.getProjectHandler().get())).isTrue();
+        assertTrue(prefs.hasProjectSpecificSettings(context.getProjectHandler().get()));
 
         String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
-        assertThat(prefix).isEqualTo("tseT");
+        assertEquals(prefix, "tseT");
     }
 
     @Project(mainCls="SomeClass")
@@ -24,10 +26,10 @@ public class ContextTest extends ContextTestCase
     public void should_use_preferences_when_not_annotated_with_properties()
     {
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
-        assertThat(prefs.hasProjectSpecificSettings(context.getProjectHandler().get())).isFalse();
+        assertFalse(prefs.hasProjectSpecificSettings(context.getProjectHandler().get()));
 
         String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
-        assertThat(prefix).isEqualTo("Test");
+        assertEquals(prefix, "Test");
     }
 
     @Project(mainCls="SomeClass")
@@ -45,15 +47,15 @@ public class ContextTest extends ContextTestCase
     {
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         IJavaProject javaProject = context.getProjectHandler().get();
-        assertThat(prefs.getMethodSearchMode(javaProject).searchByCall).isTrue();
-        assertThat(prefs.getMethodSearchMode(javaProject).searchByName).isFalse();
-        assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("${srcFile}Mest");
-        assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
-        assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
-        assertThat(prefs.getJunitDirectoryFromPreferences(javaProject)).isEqualTo("testsrc");
-        assertThat(prefs.getTestSuperClass(javaProject)).isEqualTo("my.SuperClass");
-        assertThat(prefs.getTestType(javaProject)).isEqualToIgnoringCase(TestType.TESTNG.toString());
+        assertTrue(prefs.getMethodSearchMode(javaProject).searchByCall);
+        assertFalse(prefs.getMethodSearchMode(javaProject).searchByName);
+        assertEquals(prefs.getTestMethodType(javaProject), "testMethodTypeJunit3");
+        assertEquals(prefs.getProjectView(javaProject).getTestClassNameTemplate(), "${srcFile}Mest");
+        assertEquals(prefs.getTestPackagePrefix(javaProject), "pre");
+        assertEquals(prefs.getTestPackageSuffix(javaProject), "post");
+        assertEquals(prefs.getJunitDirectoryFromPreferences(javaProject), "testsrc");
+        assertEquals(prefs.getTestSuperClass(javaProject), "my.SuperClass");
+        assertEquals(TestType.TESTNG.toString().toLowerCase(), prefs.getTestType(javaProject).toLowerCase());
     }
 
     @Project(mainCls="SomeClass",
@@ -70,13 +72,13 @@ public class ContextTest extends ContextTestCase
     {
         org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         IJavaProject javaProject = context.getProjectHandler().get();
-        assertThat(prefs.getMethodSearchMode(javaProject).searchByCall).isTrue();
-        assertThat(prefs.getMethodSearchMode(javaProject).searchByName).isFalse();
-        assertThat(prefs.getTestMethodType(javaProject)).isEqualTo("testMethodTypeJunit3");
-        assertThat(prefs.getProjectView(javaProject).getTestClassNameTemplate()).isEqualTo("${srcFile}Dest");
-        assertThat(prefs.getTestPackagePrefix(javaProject)).isEqualTo("pre");
-        assertThat(prefs.getTestPackageSuffix(javaProject)).isEqualTo("post");
-        assertThat(prefs.getTestSuperClass(javaProject)).isEqualTo("my.SuperClass");
-        assertThat(prefs.getTestType(javaProject)).isEqualToIgnoringCase(TestType.TESTNG.toString());
+        assertTrue(prefs.getMethodSearchMode(javaProject).searchByCall);
+        assertFalse(prefs.getMethodSearchMode(javaProject).searchByName);
+        assertEquals(prefs.getTestMethodType(javaProject), "testMethodTypeJunit3");
+        assertEquals(prefs.getProjectView(javaProject).getTestClassNameTemplate(), "${srcFile}Dest");
+        assertEquals(prefs.getTestPackagePrefix(javaProject), "pre");
+        assertEquals(prefs.getTestPackageSuffix(javaProject), "post");
+        assertEquals(prefs.getTestSuperClass(javaProject), "my.SuperClass");
+        assertEquals(TestType.TESTNG.toString().toLowerCase(), prefs.getTestType(javaProject).toLowerCase());
     }
 }

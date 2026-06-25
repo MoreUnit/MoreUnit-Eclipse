@@ -1,6 +1,9 @@
 package org.moreunit.core.config;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.doThrow;
@@ -40,8 +43,8 @@ public class ModuleTest
 
         module.start(context);
 
-        assertThat(module.prepareCalled).isTrue();
-        assertThat(module.getContext()).isEqualTo(context);
+        assertTrue(module.prepareCalled);
+        assertEquals(module.getContext(), context);
 
         InOrder inOrder = inOrder(service1, service2);
         inOrder.verify(service1).start();
@@ -60,8 +63,8 @@ public class ModuleTest
         module.start(context);
         module.stop();
 
-        assertThat(module.cleanCalled).isTrue();
-        assertThat(module.getContext()).isNull();
+        assertTrue(module.cleanCalled);
+        assertNull(module.getContext());
 
         InOrder inOrder = inOrder(service1, service2);
         inOrder.verify(service2).stop();
@@ -114,13 +117,13 @@ public class ModuleTest
 
         TestModule newModule = new TestModule(true, logger);
 
-        assertThat(module.cleanCalled).isTrue();
+        assertTrue(module.cleanCalled);
         verify(service).stop();
 
-        assertThat(newModule.getContext()).isEqualTo(context);
-        assertThat(newModule.prepareCalled).isTrue();
+        assertEquals(newModule.getContext(), context);
+        assertTrue(newModule.prepareCalled);
 
-        assertThat(TestModule.instance).isEqualTo(newModule);
+        assertEquals(TestModule.instance, newModule);
     }
 
     @Test
@@ -128,8 +131,8 @@ public class ModuleTest
     {
         TestModule newModule = new TestModule(false, logger);
 
-        assertThat(module.cleanCalled).isFalse();
-        assertThat(TestModule.instance).isEqualTo(module);
+        assertFalse(module.cleanCalled);
+        assertEquals(TestModule.instance, module);
     }
 
     private static class TestModule extends Module<TestModule>

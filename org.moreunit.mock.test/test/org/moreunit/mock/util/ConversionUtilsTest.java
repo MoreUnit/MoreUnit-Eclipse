@@ -1,6 +1,6 @@
 package org.moreunit.mock.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +32,7 @@ public class ConversionUtilsTest
 
         String result = conversionUtils.adapt(adaptable, String.class);
 
-        assertThat(result).isEqualTo(expectedAdapter);
+        assertEquals(result, expectedAdapter);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ConversionUtilsTest
 
         IFile result = conversionUtils.getFile(editorPart);
 
-        assertThat(result).isEqualTo(expectedFile);
+        assertEquals(result, expectedFile);
     }
 
     @Test
@@ -59,6 +59,6 @@ public class ConversionUtilsTest
 
         IType result = conversionUtils.getPrimaryType(cu);
 
-        assertThat(result).isEqualTo(expectedType);
+        assertEquals(result, expectedType);
     }
 }

@@ -1,7 +1,10 @@
 package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -86,9 +89,9 @@ public class MockingContextTest
         mockingContext = createMockingContext();
 
         // then
-        assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
-        assertThat(mockingContext.usesInjectionType(InjectionType.field)).isFalse();
-        assertThat(mockingContext.usesInjectionType(InjectionType.setter)).isFalse();
+        assertTrue(mockingContext.usesInjectionType(InjectionType.constructor));
+        assertFalse(mockingContext.usesInjectionType(InjectionType.field));
+        assertFalse(mockingContext.usesInjectionType(InjectionType.setter));
     }
 
     @Test
@@ -101,9 +104,9 @@ public class MockingContextTest
         mockingContext = createMockingContext();
 
         // then
-        assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isFalse();
-        assertThat(mockingContext.usesInjectionType(InjectionType.field)).isFalse();
-        assertThat(mockingContext.usesInjectionType(InjectionType.setter)).isTrue();
+        assertFalse(mockingContext.usesInjectionType(InjectionType.constructor));
+        assertFalse(mockingContext.usesInjectionType(InjectionType.field));
+        assertTrue(mockingContext.usesInjectionType(InjectionType.setter));
     }
 
     @Test
@@ -116,9 +119,9 @@ public class MockingContextTest
         mockingContext = createMockingContext();
 
         // then
-        assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isFalse();
-        assertThat(mockingContext.usesInjectionType(InjectionType.field)).isTrue();
-        assertThat(mockingContext.usesInjectionType(InjectionType.setter)).isFalse();
+        assertFalse(mockingContext.usesInjectionType(InjectionType.constructor));
+        assertTrue(mockingContext.usesInjectionType(InjectionType.field));
+        assertFalse(mockingContext.usesInjectionType(InjectionType.setter));
     }
 
     @Test
@@ -132,9 +135,9 @@ public class MockingContextTest
         mockingContext = createMockingContext();
 
         // then
-        assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
-        assertThat(mockingContext.usesInjectionType(InjectionType.field)).isFalse();
-        assertThat(mockingContext.usesInjectionType(InjectionType.setter)).isTrue();
+        assertTrue(mockingContext.usesInjectionType(InjectionType.constructor));
+        assertFalse(mockingContext.usesInjectionType(InjectionType.field));
+        assertTrue(mockingContext.usesInjectionType(InjectionType.setter));
     }
 
     @Test
@@ -149,9 +152,9 @@ public class MockingContextTest
         mockingContext = createMockingContext();
 
         // then
-        assertThat(mockingContext.usesInjectionType(InjectionType.constructor)).isTrue();
-        assertThat(mockingContext.usesInjectionType(InjectionType.field)).isTrue();
-        assertThat(mockingContext.usesInjectionType(InjectionType.setter)).isTrue();
+        assertTrue(mockingContext.usesInjectionType(InjectionType.constructor));
+        assertTrue(mockingContext.usesInjectionType(InjectionType.field));
+        assertTrue(mockingContext.usesInjectionType(InjectionType.setter));
     }
 
     @Test
@@ -170,7 +173,7 @@ public class MockingContextTest
 
         // then
         verifyNoInteractions(templateProcessor);
-        assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("setUp");
+        assertEquals(mockingContext.beforeInstanceMethod().getElementName(), "setUp");
     }
 
     @Test
@@ -189,7 +192,7 @@ public class MockingContextTest
 
         // then
         verifyNoInteractions(templateProcessor);
-        assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("createSomething");
+        assertEquals(mockingContext.beforeInstanceMethod().getElementName(), "createSomething");
     }
 
     @Test
@@ -208,7 +211,7 @@ public class MockingContextTest
 
         // then
         verifyNoInteractions(templateProcessor);
-        assertThat(mockingContext.beforeInstanceMethod().getElementName()).isEqualTo("createSomething");
+        assertEquals(mockingContext.beforeInstanceMethod().getElementName(), "createSomething");
     }
 
     @Test
@@ -227,7 +230,7 @@ public class MockingContextTest
 
         verifyThatBeforeInstanceMethodHasBeenCreated();
 
-        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("setUp");
+        assertEquals(mockingContext.getBeforeInstanceMethodName(), "setUp");
     }
 
     @Test
@@ -247,7 +250,7 @@ public class MockingContextTest
         // then
         verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.junit.Before");
 
-        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
+        assertEquals(mockingContext.getBeforeInstanceMethodName(), "createSomething");
     }
 
     @Test
@@ -267,7 +270,7 @@ public class MockingContextTest
         // then
         verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.junit.jupiter.api.BeforeEach");
 
-        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
+        assertEquals(mockingContext.getBeforeInstanceMethodName(), "createSomething");
     }
 
     @Test
@@ -286,7 +289,7 @@ public class MockingContextTest
 
         verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining("org.testng.annotations.BeforeMethod");
 
-        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething");
+        assertEquals(mockingContext.getBeforeInstanceMethodName(), "createSomething");
     }
 
     @Test
@@ -303,7 +306,7 @@ public class MockingContextTest
 
         verifyThatBeforeInstanceMethodHasBeenCreated();
 
-        assertThat(mockingContext.getBeforeInstanceMethodName()).isEqualTo("createSomething2");
+        assertEquals(mockingContext.getBeforeInstanceMethodName(), "createSomething2");
     }
 
     @Test
@@ -326,7 +329,7 @@ public class MockingContextTest
         CodeTemplate codeTemplate = new CodeTemplate(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, null, null);
         verify(templateProcessor, never()).applyTemplate(codeTemplate, mockingContext);
 
-        assertThat(mockingContext.getBeforeInstanceMethodName()).isNull();
+        assertNull(mockingContext.getBeforeInstanceMethodName());
     }
 
     @Test
@@ -340,12 +343,12 @@ public class MockingContextTest
         EclipseTemplate eclipseTemplate = mockingContext.preEvaluate(new CodeTemplate("a template", Part.TEST_CLASS_FIELDS, "pattern contents"));
 
         // then
-        assertThat(eclipseTemplate.template().getPattern()).isEqualTo("pattern contents");
-        assertThat(eclipseTemplate.part()).isEqualTo(Part.TEST_CLASS_FIELDS);
+        assertEquals(eclipseTemplate.template().getPattern(), "pattern contents");
+        assertEquals(eclipseTemplate.part(), Part.TEST_CLASS_FIELDS);
 
         for (PatternResolver resolver : patternResolvers)
         {
-            assertThat(((TestResolver) resolver).called).isTrue();
+            assertTrue(((TestResolver) resolver).called);
         }
     }
 
@@ -394,7 +397,7 @@ public class MockingContextTest
     private void verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining(String expectedPatternContent) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
     {
         ArgumentCaptor<CodeTemplate> codeTemplate = verifyThatBeforeInstanceMethodHasBeenCreated();
-        assertThat(codeTemplate.getValue().pattern()).contains(expectedPatternContent);
+        assertTrue((codeTemplate.getValue().pattern()).contains(expectedPatternContent));
     }
 
     private ArgumentCaptor<CodeTemplate> verifyThatBeforeInstanceMethodHasBeenCreated() throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
@@ -402,8 +405,8 @@ public class MockingContextTest
         ArgumentCaptor<CodeTemplate> codeTemplate = ArgumentCaptor.forClass(CodeTemplate.class);
         verify(templateProcessor).applyTemplate(codeTemplate.capture(), eq(mockingContext));
 
-        assertThat(codeTemplate.getValue().id()).isEqualTo(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID);
-        assertThat(codeTemplate.getValue().part()).isEqualTo(Part.BEFORE_INSTANCE_METHOD_DEFINITION);
+        assertEquals(codeTemplate.getValue().id(), MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID);
+        assertEquals(codeTemplate.getValue().part(), Part.BEFORE_INSTANCE_METHOD_DEFINITION);
         return codeTemplate;
     }
 

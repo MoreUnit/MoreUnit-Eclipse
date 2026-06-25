@@ -1,10 +1,12 @@
 package org.moreunit.test.context;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.moreunit.test.workspace.JavaType;
@@ -24,7 +26,9 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context(mainSrc = "SampleProductionType")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
@@ -35,7 +39,7 @@ public class AnnotationConfigExtractorTest
     @Test
     public void should_return_null_when_no_annotations() throws Exception
     {
-        assertThat(configExtractor.extractFrom(new ElementWithoutAnnotation(), null)).isNull();
+        assertNull(configExtractor.extractFrom(new ElementWithoutAnnotation(), null));
     }
 
     @Test
@@ -43,13 +47,15 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context(mainSrc = "SomeProductionType")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SomeProductionType");
+        assertEquals(new java.util.HashSet<>(Arrays.asList("SomeProductionType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
     }
 
     @Test
@@ -57,13 +63,15 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context(mainSrc = "DefaultProductionType")
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("DefaultProductionType");
+        assertEquals(new java.util.HashSet<>(Arrays.asList("DefaultProductionType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
     }
 
     @Test
@@ -71,16 +79,20 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context(mainSrc = "SomeProductionType")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         @Context(mainSrc = "DefaultProductionType")
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SomeProductionType");
+        assertEquals(new java.util.HashSet<>(Arrays.asList("SomeProductionType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
     }
 
     @Test
@@ -89,7 +101,9 @@ public class AnnotationConfigExtractorTest
         // given
         @Context
         @Project
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when/then
         assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
@@ -101,7 +115,9 @@ public class AnnotationConfigExtractorTest
         // given
         @Context
         @Project
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when/then
         assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class)));
@@ -113,7 +129,9 @@ public class AnnotationConfigExtractorTest
         // given
         @Context
         @Preferences
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when/then
         assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
@@ -125,7 +143,9 @@ public class AnnotationConfigExtractorTest
         // given
         @Context
         @Preferences
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when/then
         assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class)));
@@ -137,14 +157,16 @@ public class AnnotationConfigExtractorTest
         // given
         @Preferences(testClassNameTemplate = "${srcFile}Suf")
         @Project(mainSrc = "SampleType")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SampleType");
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suf");
+        assertEquals(new java.util.HashSet<>(Arrays.asList("SampleType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suf");
     }
 
     @Test
@@ -152,17 +174,21 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Project(mainSrc = "SampleType")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SampleType");
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
+        assertEquals(new java.util.HashSet<>(Arrays.asList("SampleType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suffix");
     }
 
     @Test
@@ -170,17 +196,21 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Preferences(testClassNameTemplate = "${srcFile}Suf")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         @Project(mainSrcFolder = "sources")
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSourceFolder()).isEqualTo("sources");
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suf");
+        assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getMainSourceFolder(), "sources");
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suf");
     }
 
     @Test
@@ -188,13 +218,15 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context(preferences = @Preferences(testClassNameTemplate = "${srcFile}Pre"))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Pre");
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Pre");
     }
 
     @Test
@@ -202,13 +234,15 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig()).isNull();
+        assertNull(config.getPreferencesConfig());
     }
 
     @Test
@@ -216,13 +250,15 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Context
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME)).isNotNull();
+        assertNotNull(config.getProject(DEFAULT_PROJECT_NAME));
     }
 
     @Test
@@ -230,17 +266,21 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
-        class PreferencesDefinition {}
+        class PreferencesDefinition
+        {
+        }
 
         @Preferences(PreferencesDefinition.class)
         @Project
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suffix");
     }
 
     @Test
@@ -248,13 +288,15 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Project(properties = @Properties(testClassNameTemplate = "${srcFile}Prefix"))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Prefix");
+        assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestClassNameTemplate(), "${srcFile}Prefix");
     }
 
     @Test
@@ -262,16 +304,20 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Properties(testSuperClass = "SuperClass")
-        class PropertiesDefinition {}
+        class PropertiesDefinition
+        {
+        }
 
         @Project(properties = @Properties(PropertiesDefinition.class))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestSuperClass()).isEqualTo("SuperClass");
+        assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestSuperClass(), "SuperClass");
     }
 
     @Test
@@ -279,35 +325,35 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Project
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig()).isNull();
+        assertNull(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig());
     }
 
     @Test
     public void should_load_test_project_from_project_annotation() throws Exception
     {
         // given
-        @Project(testProject = @TestProject(
-                    name = "test-project-name",
-                    cls = "net: Foo, enum Baz",
-                    src = "Bar.txt, qux.txt",
-                    srcFolder = "src-folder"))
-        class AnnotationHolder {}
+        @Project(testProject = @TestProject(name = "test-project-name", cls = "net: Foo, enum Baz", src = "Bar.txt, qux.txt", srcFolder = "src-folder"))
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         TestProjectConfiguration testProjectConfig = config.getProject(DEFAULT_PROJECT_NAME).getTestProjectConfig();
-        assertThat(testProjectConfig.getProjectName()).isEqualTo("test-project-name");
-        assertThat(testProjectConfig.getTypes()).containsOnly(JavaType.newClass("net", "Foo"), JavaType.newEnum("net", "Baz"));
-        assertThat(testProjectConfig.getSources()).containsOnly("Bar.txt", "qux.txt");
-        assertThat(testProjectConfig.getSourceFolder()).isEqualTo("src-folder");
+        assertEquals(testProjectConfig.getProjectName(), "test-project-name");
+        assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("net", "Foo"), JavaType.newEnum("net", "Baz"))), new java.util.HashSet<>((testProjectConfig.getTypes())));
+        assertEquals(new java.util.HashSet<>(Arrays.asList("Bar.txt", "qux.txt")), new java.util.HashSet<>((testProjectConfig.getSources())));
+        assertEquals(testProjectConfig.getSourceFolder(), "src-folder");
     }
 
     @Test
@@ -315,7 +361,9 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Project(testSrc = "SomeFile", testProject = @TestProject(name = "test-project-name"))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when/then
         assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
@@ -326,7 +374,9 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Project(testCls = "SomeFile", testProject = @TestProject(name = "test-project-name"))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when/then
         assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
@@ -337,20 +387,26 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Preferences(testClassNameTemplate = "Pfx${srcFile}")
-        class PreferencesDefinition1 {}
+        class PreferencesDefinition1
+        {
+        }
 
         @Preferences(PreferencesDefinition1.class)
-        class PreferencesDefinition2 {}
+        class PreferencesDefinition2
+        {
+        }
 
         @Preferences(PreferencesDefinition2.class)
         @Project
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("Pfx${srcFile}");
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "Pfx${srcFile}");
     }
 
     @Test
@@ -360,23 +416,31 @@ public class AnnotationConfigExtractorTest
         configExtractor.setMaximimDefinitionDepth(2);
 
         @Preferences(testClassNameTemplate = "Pfx${srcFile}")
-        class PreferencesDefinition1 {}
+        class PreferencesDefinition1
+        {
+        }
 
         @Preferences(PreferencesDefinition1.class)
-        class PreferencesDefinition2 {}
+        class PreferencesDefinition2
+        {
+        }
 
         @Preferences(PreferencesDefinition2.class)
         @Project
-        class PreferencesDefinition3 {}
+        class PreferencesDefinition3
+        {
+        }
 
         @Preferences(PreferencesDefinition3.class)
         @Project
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
-        assertThatThrownBy(() ->
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
-        .isInstanceOf(IllegalConfigurationException.class)
-        .hasMessage("Too much recursion in @Preferences definitions");
+        {
+            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            assertEquals("Too much recursion in @Preferences definitions", e.getMessage());
+        }
     }
 
     @Test
@@ -384,40 +448,52 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Properties(testType = TestType.TESTNG)
-        class PropertiesDefinition1 {}
+        class PropertiesDefinition1
+        {
+        }
 
         @Properties(PropertiesDefinition1.class)
-        class PropertiesDefinition2 {}
+        class PropertiesDefinition2
+        {
+        }
 
         @Project(properties = @Properties(PropertiesDefinition2.class))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestType()).isEqualTo(TestType.TESTNG);
+        assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestType(), TestType.TESTNG);
     }
 
     @Test
-    public void should_prevent_too_much_recursion_when_loading_properties_from_annotation_value () throws Exception
+    public void should_prevent_too_much_recursion_when_loading_properties_from_annotation_value() throws Exception
     {
         // given
         configExtractor.setMaximimDefinitionDepth(1);
 
         @Properties(testType = TestType.TESTNG)
-        class PropertiesDefinition1 {}
+        class PropertiesDefinition1
+        {
+        }
 
         @Properties(PropertiesDefinition1.class)
-        class PropertiesDefinition2 {}
+        class PropertiesDefinition2
+        {
+        }
 
         @Project(properties = @Properties(PropertiesDefinition2.class))
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
-        assertThatThrownBy(() ->
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
-        .isInstanceOf(IllegalConfigurationException.class)
-        .hasMessage("Too much recursion in @Properties definitions");
+        {
+            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            assertEquals("Too much recursion in @Properties definitions", e.getMessage());
+        }
     }
 
     @Test
@@ -425,22 +501,30 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Project(testSrcFolder = "tests")
-        class ProjectDefinition {}
+        class ProjectDefinition
+        {
+        }
 
         @Project(ProjectDefinition.class)
-        class ProjectDefinition1 {}
+        class ProjectDefinition1
+        {
+        }
 
         @Project(ProjectDefinition1.class)
-        class ProjectDefinition2 {}
+        class ProjectDefinition2
+        {
+        }
 
         @Project(ProjectDefinition2.class)
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getTestSourceFolder()).isEqualTo("tests");
+        assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getTestSourceFolder(), "tests");
     }
 
     @Test
@@ -450,21 +534,29 @@ public class AnnotationConfigExtractorTest
         configExtractor.setMaximimDefinitionDepth(2);
 
         @Project(mainSrc = "SomeConcept")
-        class ProjectDefinition {}
+        class ProjectDefinition
+        {
+        }
 
         @Project(ProjectDefinition.class)
-        class ProjectDefinition1 {}
+        class ProjectDefinition1
+        {
+        }
 
         @Project(ProjectDefinition1.class)
-        class ProjectDefinition2 {}
+        class ProjectDefinition2
+        {
+        }
 
         @Project(ProjectDefinition2.class)
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
-        assertThatThrownBy(() ->
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
-        .isInstanceOf(IllegalConfigurationException.class)
-        .hasMessage("Too much recursion in @Project definitions");
+        {
+            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            assertEquals("Too much recursion in @Project definitions", e.getMessage());
+        }
     }
 
     @Test
@@ -472,26 +564,36 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
-        class PreferencesDefinition {}
+        class PreferencesDefinition
+        {
+        }
         @Project(mainSrc = "SomeConcept")
-        class ProjectDefinition {}
+        class ProjectDefinition
+        {
+        }
 
         @Preferences(PreferencesDefinition.class)
         @Project(ProjectDefinition.class)
-        class ContextDefinition1 {}
+        class ContextDefinition1
+        {
+        }
 
         @Context(ContextDefinition1.class)
-        class ContextDefinition2 {}
+        class ContextDefinition2
+        {
+        }
 
         @Context(ContextDefinition2.class)
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("${srcFile}Suffix");
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainSources()).containsOnly("SomeConcept");
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suffix");
+        assertEquals(new java.util.HashSet<>(Arrays.asList("SomeConcept")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
     }
 
     @Test
@@ -502,50 +604,56 @@ public class AnnotationConfigExtractorTest
 
         @Preferences(testClassNameTemplate = "${srcFile}Suffix")
         @Project(mainSrc = "SomeConcept")
-        class ContextDefinition1 {}
+        class ContextDefinition1
+        {
+        }
 
         @Context(ContextDefinition1.class)
-        class ContextDefinition2 {}
+        class ContextDefinition2
+        {
+        }
 
         @Context(ContextDefinition2.class)
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
-        assertThatThrownBy(() ->
-            configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null))
-        .isInstanceOf(IllegalConfigurationException.class)
-        .hasMessage("Too much recursion in @Context definitions");
+        {
+            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            assertEquals("Too much recursion in @Context definitions", e.getMessage());
+        }
     }
 
     @Test
     public void should_extract_type_defs_from_project_annotation() throws Exception
     {
-         @Project(mainCls="org.example:SomeClass,enum SomeEnum; AnotherClass", testCls="class ClassTest; net: AType")
-         class AnnotationHolder {}
-
-         // when
-         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
-
-         // then
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainTypes())
-                .containsOnly(JavaType.newClass("org.example", "SomeClass"), JavaType.newEnum("org.example", "SomeEnum"), JavaType.newClass("", "AnotherClass"));
-        assertThat(config.getProject(DEFAULT_PROJECT_NAME).getTestTypes())
-                .containsOnly(JavaType.newClass("", "ClassTest"), JavaType.newClass("net", "AType"));
-    }
-
-    @Test
-    public void should_extract_type_defs_from_context_annotation() throws Exception
-    {
-        @Context(mainCls="org.example:SomeClass,enum SomeEnum; AnotherClass", testCls="class ClassTest; net: AType")
-        class AnnotationHolder {}
+        @Project(mainCls = "org.example:SomeClass,enum SomeEnum; AnotherClass", testCls = "class ClassTest; net: AType")
+        class AnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-       assertThat(config.getProject(DEFAULT_PROJECT_NAME).getMainTypes())
-               .containsOnly(JavaType.newClass("org.example", "SomeClass"), JavaType.newEnum("org.example", "SomeEnum"), JavaType.newClass("", "AnotherClass"));
-       assertThat(config.getProject(DEFAULT_PROJECT_NAME).getTestTypes())
-               .containsOnly(JavaType.newClass("", "ClassTest"), JavaType.newClass("net", "AType"));
+        assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("org.example", "SomeClass"), JavaType.newEnum("org.example", "SomeEnum"), JavaType.newClass("", "AnotherClass"))), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainTypes())));
+        assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("", "ClassTest"), JavaType.newClass("net", "AType"))), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getTestTypes())));
+    }
+
+    @Test
+    public void should_extract_type_defs_from_context_annotation() throws Exception
+    {
+        @Context(mainCls = "org.example:SomeClass,enum SomeEnum; AnotherClass", testCls = "class ClassTest; net: AType")
+        class AnnotationHolder
+        {
+        }
+
+        // when
+        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+
+        // then
+        assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("org.example", "SomeClass"), JavaType.newEnum("org.example", "SomeEnum"), JavaType.newClass("", "AnotherClass"))), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainTypes())));
+        assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("", "ClassTest"), JavaType.newClass("net", "AType"))), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getTestTypes())));
     }
 
     private static final String DEFAULT_PROJECT_NAME = Defaults.PROJECT_NAME;
@@ -582,15 +690,19 @@ public class AnnotationConfigExtractorTest
     {
         // given
         @Preferences(testClassNameTemplate = "{srcFile}Mest")
-        class AnnotationHolder {}
+        class AnnotationHolder
+        {
+        }
 
         @Project(mainSrcFolder = "sources")
-        class DefaultAnnotationHolder {}
+        class DefaultAnnotationHolder
+        {
+        }
 
         // when
         WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
-        assertThat(config.getPreferencesConfig().getTestClassNameTemplate()).isEqualTo("{srcFile}Mest");
+        assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "{srcFile}Mest");
     }
 }

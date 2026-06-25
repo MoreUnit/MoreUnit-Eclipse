@@ -1,7 +1,16 @@
 package org.moreunit.test.workspace;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
 
@@ -19,7 +28,7 @@ public class CompilationUnitAssertions
         SourceFolderHandler srcFolderHandler = cuHandler.getSourceFolderHandler();
         String actualSource = cuHandler.getActualSource();
         String expectedSource = getSource(srcFolderHandler, expectedSourceFile);
-        assertThat(normalizeSpaces(ignoreJdkDependentImports(actualSource))).isEqualTo(normalizeSpaces(expectedSource));
+        assertEquals(normalizeSpaces(ignoreJdkDependentImports(actualSource)), normalizeSpaces(expectedSource));
         return this;
     }
 
@@ -50,19 +59,19 @@ public class CompilationUnitAssertions
 
     public CompilationUnitAssertions isEqualTo(ICompilationUnit expectedCompilationUnit)
     {
-        assertThat(cuHandler.get()).isEqualTo(expectedCompilationUnit);
+        assertEquals(cuHandler.get(), expectedCompilationUnit);
         return this;
     }
 
     public CompilationUnitAssertions isInSourceFolder(String sourceFolderName)
     {
-        assertThat(cuHandler.getSourceFolderHandler().getName()).isEqualTo(sourceFolderName);
+        assertEquals(cuHandler.getSourceFolderHandler().getName(), sourceFolderName);
         return this;
     }
 
     public CompilationUnitAssertions isInProject(ProjectHandler project)
     {
-        assertThat(cuHandler.getSourceFolderHandler().getProjectHandler()).isEqualTo(project);
+        assertEquals(cuHandler.getSourceFolderHandler().getProjectHandler(), project);
         return this;
     }
 }

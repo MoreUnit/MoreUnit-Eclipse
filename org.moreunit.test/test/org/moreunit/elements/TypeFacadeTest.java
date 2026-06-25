@@ -1,12 +1,7 @@
 package org.moreunit.elements;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- * @author vera
- *
- * 23.05.2006 21:09:05
- */
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.JavaModelException;
@@ -23,7 +18,7 @@ public class TypeFacadeTest extends ContextTestCase
     @Test
     public void isTestCase_should_return_false_when_regular_class() throws CoreException
     {
-        assertThat(TypeFacade.isTestCase(context.getCompilationUnit("Hello"))).isFalse();
+        assertFalse(TypeFacade.isTestCase(context.getCompilationUnit("Hello")));
     }
 
     @Project(mainCls="HelloTest")
@@ -31,7 +26,7 @@ public class TypeFacadeTest extends ContextTestCase
     @Test
     public void isTestCase_should_return_true_when_class_has_test_suffix() throws JavaModelException
     {
-        assertThat(TypeFacade.isTestCase(context.getCompilationUnit("HelloTest"))).isTrue();
+        assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("HelloTest")));
     }
 
     @Project(mainCls="TestHello")
@@ -39,6 +34,6 @@ public class TypeFacadeTest extends ContextTestCase
     @Test
     public void isTestCase_should_return_true_when_class_has_test_prefix() throws JavaModelException
     {
-        assertThat(TypeFacade.isTestCase(context.getCompilationUnit("TestHello"))).isTrue();
+        assertTrue(TypeFacade.isTestCase(context.getCompilationUnit("TestHello")));
     }
 }

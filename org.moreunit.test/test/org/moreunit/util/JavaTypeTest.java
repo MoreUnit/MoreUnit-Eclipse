@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,10 +11,10 @@ public class JavaTypeTest
     {
         JavaType javaType = new JavaType("org.example.SomeClass");
 
-        assertThat(javaType.getQualifiedName()).isEqualTo("org.example.SomeClass");
-        assertThat(javaType.getSimpleName()).isEqualTo("SomeClass");
-        assertThat(javaType.getQualifier()).isEqualTo("org.example");
-        assertThat(javaType.getQualifierWithFinalDot()).isEqualTo("org.example.");
+        assertEquals(javaType.getQualifiedName(), "org.example.SomeClass");
+        assertEquals(javaType.getSimpleName(), "SomeClass");
+        assertEquals(javaType.getQualifier(), "org.example");
+        assertEquals(javaType.getQualifierWithFinalDot(), "org.example.");
     }
 
     @Test
@@ -22,10 +22,10 @@ public class JavaTypeTest
     {
         JavaType javaType = new JavaType("SomeClass");
 
-        assertThat(javaType.getQualifiedName()).isEqualTo("SomeClass");
-        assertThat(javaType.getSimpleName()).isEqualTo("SomeClass");
-        assertThat(javaType.getQualifier()).isEqualTo("");
-        assertThat(javaType.getQualifierWithFinalDot()).isEqualTo("");
+        assertEquals(javaType.getQualifiedName(), "SomeClass");
+        assertEquals(javaType.getSimpleName(), "SomeClass");
+        assertEquals(javaType.getQualifier(), "");
+        assertEquals(javaType.getQualifierWithFinalDot(), "");
     }
 
     @Test
@@ -33,10 +33,10 @@ public class JavaTypeTest
     {
         JavaType javaType = new JavaType("SomeClass", "org.example");
 
-        assertThat(javaType.getQualifiedName()).isEqualTo("org.example.SomeClass");
-        assertThat(javaType.getSimpleName()).isEqualTo("SomeClass");
-        assertThat(javaType.getQualifier()).isEqualTo("org.example");
-        assertThat(javaType.getQualifierWithFinalDot()).isEqualTo("org.example.");
+        assertEquals(javaType.getQualifiedName(), "org.example.SomeClass");
+        assertEquals(javaType.getSimpleName(), "SomeClass");
+        assertEquals(javaType.getQualifier(), "org.example");
+        assertEquals(javaType.getQualifierWithFinalDot(), "org.example.");
     }
 
     @Test
@@ -44,9 +44,9 @@ public class JavaTypeTest
     {
         JavaType javaType = new JavaType("SomeClass", "");
 
-        assertThat(javaType.getQualifiedName()).isEqualTo(".SomeClass");
-        assertThat(javaType.getSimpleName()).isEqualTo("SomeClass");
-        assertThat(javaType.getQualifier()).isEqualTo("");
-        assertThat(javaType.getQualifierWithFinalDot()).isEqualTo("");
+        assertEquals(javaType.getQualifiedName(), ".SomeClass");
+        assertEquals(javaType.getSimpleName(), "SomeClass");
+        assertEquals(javaType.getQualifier(), "");
+        assertEquals(javaType.getQualifierWithFinalDot(), "");
     }
 }

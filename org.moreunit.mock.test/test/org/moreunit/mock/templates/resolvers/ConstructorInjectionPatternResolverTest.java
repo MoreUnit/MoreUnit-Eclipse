@@ -1,6 +1,6 @@
 package org.moreunit.mock.templates.resolvers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ public class ConstructorInjectionPatternResolverTest
     @Test
     public void should_return_unmodified_pattern_when_does_not_match() throws Exception
     {
-        assertThat(resolver.resolve("does not match")).isEqualTo("does not match");
+        assertEquals(resolver.resolve("does not match"), "does not match");
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ConstructorInjectionPatternResolverTest
         String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre new ${objectUnderTestType}() post");
+        assertEquals(resolvedPattern, "pre new ${objectUnderTestType}() post");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ConstructorInjectionPatternResolverTest
         String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre new ${objectUnderTestType}(foo) post");
+        assertEquals(resolvedPattern, "pre new ${objectUnderTestType}(foo) post");
     }
 
     @Test
@@ -73,6 +73,6 @@ public class ConstructorInjectionPatternResolverTest
         String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre new ${objectUnderTestType}(foo,bar,aBlob) post");
+        assertEquals(resolvedPattern, "pre new ${objectUnderTestType}(foo,bar,aBlob) post");
     }
 }

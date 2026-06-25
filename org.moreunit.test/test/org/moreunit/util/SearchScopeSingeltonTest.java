@@ -1,6 +1,7 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +12,8 @@ public class SearchScopeSingeltonTest {
         SearchScopeSingelton instance1 = SearchScopeSingelton.getInstance();
         SearchScopeSingelton instance2 = SearchScopeSingelton.getInstance();
 
-        assertThat(instance1).isNotNull();
-        assertThat(instance1).isSameAs(instance2);
+        assertNotNull(instance1);
+        assertSame(instance1, instance2);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.moreunit.core.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,7 +27,7 @@ public class WizardDriverTest
         WizardDriver driver = new WizardDriver() {};
         DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
 
-        assertThat(driver.onOpen(dialog)).isEqualTo(Window.OK);
+        assertEquals(driver.onOpen(dialog), Window.OK);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class WizardDriverTest
         IWizard wizard = mock(IWizard.class);
         when(dialog.getWizard()).thenReturn(wizard);
 
-        assertThat(driver.userValidatesCreation(dialog)).isEqualTo(Window.OK);
+        assertEquals(driver.userValidatesCreation(dialog), Window.OK);
         verify(wizard).performFinish();
     }
 
@@ -50,7 +50,7 @@ public class WizardDriverTest
         IWizard wizard = mock(IWizard.class);
         when(dialog.getWizard()).thenReturn(wizard);
 
-        assertThat(driver.userCancelsCreation(dialog)).isEqualTo(Window.CANCEL);
+        assertEquals(driver.userCancelsCreation(dialog), Window.CANCEL);
         verify(wizard).performCancel();
     }
 }

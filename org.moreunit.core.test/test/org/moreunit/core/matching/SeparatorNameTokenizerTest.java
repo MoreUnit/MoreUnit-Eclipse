@@ -1,7 +1,10 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
@@ -25,50 +28,50 @@ public class SeparatorNameTokenizerTest
     @Test
     public void should_return_whole_name_when_only_one_word() throws Exception
     {
-        assertThat(tokenizer.tokenize("name").getTokens()).containsExactly("name");
+        assertEquals(Arrays.asList("name"), tokenizer.tokenize("name").getTokens());
     }
 
     @Test
     public void should_return_split_words() throws Exception
     {
-        assertThat(tokenizer.tokenize("name_with_several_parts").getTokens()).containsExactly("name", "with", "several", "parts");
+        assertEquals(Arrays.asList("name", "with", "several", "parts"), tokenizer.tokenize("name_with_several_parts").getTokens());
     }
 
     @Test
     public void should_handle_separator_in_first_position() throws Exception
     {
-        assertThat(tokenizer.tokenize("_name").getTokens()).containsExactly("name");
+        assertEquals(Arrays.asList("name"), tokenizer.tokenize("_name").getTokens());
     }
 
     @Test
     public void should_handle_separator_in_last_position() throws Exception
     {
-        assertThat(tokenizer.tokenize("name_").getTokens()).containsExactly("name");
+        assertEquals(Arrays.asList("name"), tokenizer.tokenize("name_").getTokens());
     }
 
     @Test
     public void should_handle_white_space_separator() throws Exception
     {
-        assertThat(new SeparatorNameTokenizer(" ").tokenize("two words").getTokens()).containsExactly("two", "words");
+        assertEquals(Arrays.asList("two", "words"), new SeparatorNameTokenizer(" ").tokenize("two words").getTokens());
     }
 
     @Test
     public void should_handle_multi_char_separator() throws Exception
     {
-        assertThat(new SeparatorNameTokenizer("__").tokenize("two__words").getTokens()).containsExactly("two", "words");
+        assertEquals(Arrays.asList("two", "words"), new SeparatorNameTokenizer("__").tokenize("two__words").getTokens());
     }
 
     @Test
     public void should_handle_double_separator() throws Exception
     {
-        assertThat(tokenizer.tokenize("two__words").getTokens()).containsExactly("two", "words");
+        assertEquals(Arrays.asList("two", "words"), tokenizer.tokenize("two__words").getTokens());
     }
 
     @Test
     public void should_handle_regex_symbol_as_separator() throws Exception
     {
-        assertThat(new SeparatorNameTokenizer("$").tokenize("one$two$three").getTokens()).containsExactly("one","two", "three");
-        assertThat(new SeparatorNameTokenizer("*").tokenize("one*two*three").getTokens()).containsExactly("one","two", "three");
+        assertEquals(Arrays.asList("one","two", "three"), new SeparatorNameTokenizer("$").tokenize("one$two$three").getTokens());
+        assertEquals(Arrays.asList("one","two", "three"), new SeparatorNameTokenizer("*").tokenize("one*two*three").getTokens());
     }
 
     @Test
@@ -78,14 +81,14 @@ public class SeparatorNameTokenizerTest
         TokenizationResult result = tokenizer.tokenize("name");
 
         // then
-        assertThat(result.getCombinationsFromStart()).isEmpty();
-        assertThat(result.getCombinationsFromEnd()).isEmpty();
+        assertTrue(result.getCombinationsFromStart().isEmpty());
+        assertTrue(result.getCombinationsFromEnd().isEmpty());
 
         // when
         result = tokenizer.tokenize("name_with_several_parts");
 
         // then
-        assertThat(result.getCombinationsFromStart()).containsExactly("name", "name_with", "name_with_several");
-        assertThat(result.getCombinationsFromEnd()).containsExactly("with_several_parts", "several_parts", "parts");
+        assertEquals(Arrays.asList("name", "name_with", "name_with_several"), result.getCombinationsFromStart());
+        assertEquals(Arrays.asList("with_several_parts", "several_parts", "parts"), result.getCombinationsFromEnd());
     }
 }

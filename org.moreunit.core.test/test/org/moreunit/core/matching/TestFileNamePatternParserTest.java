@@ -1,9 +1,11 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
@@ -35,8 +37,8 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.success()).isFalse();
-        assertThat(result).isEqualTo(TestFileNamePatternParser.Failure.MISSING_SRC_FILE_VARIABLE);
+        assertFalse(result.success());
+        assertEquals(result, TestFileNamePatternParser.Failure.MISSING_SRC_FILE_VARIABLE);
     }
 
     @Test
@@ -49,8 +51,8 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.success()).isFalse();
-        assertThat(result).isEqualTo(TestFileNamePatternParser.Failure.TEST_FILE_NAME_IS_EQUAL_TO_SRC_FILE_NAME);
+        assertFalse(result.success());
+        assertEquals(result, TestFileNamePatternParser.Failure.TEST_FILE_NAME_IS_EQUAL_TO_SRC_FILE_NAME);
     }
 
     @Test
@@ -63,11 +65,11 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.success()).isTrue();
-        assertThat(result.get().separator()).isEqualTo(underscoreTokenizer.separator());
-        assertThat(result.get().prefix().hasAlternatives()).isFalse();
-        assertThat(result.get().suffix().alternatives()).containsExactly("suf");
-        assertThat(result.get().suffix().raw()).isEqualTo("suf");
+        assertTrue(result.success());
+        assertEquals(result.get().separator(), underscoreTokenizer.separator());
+        assertFalse(result.get().prefix().hasAlternatives());
+        assertEquals(Arrays.asList("suf"), result.get().suffix().alternatives());
+        assertEquals(result.get().suffix().raw(), "suf");
 
         // given
         parser = new TestFileNamePatternParser("${srcFile}_suf", underscoreTokenizer);
@@ -76,11 +78,11 @@ public class TestFileNamePatternParserTest
         result = parser.parse();
 
         // then
-        assertThat(result.success()).isTrue();
-        assertThat(result.get().separator()).isEqualTo(underscoreTokenizer.separator());
-        assertThat(result.get().prefix().hasAlternatives()).isFalse();
-        assertThat(result.get().suffix().alternatives()).containsExactly("suf");
-        assertThat(result.get().suffix().raw()).isEqualTo("_suf");
+        assertTrue(result.success());
+        assertEquals(result.get().separator(), underscoreTokenizer.separator());
+        assertFalse(result.get().prefix().hasAlternatives());
+        assertEquals(Arrays.asList("suf"), result.get().suffix().alternatives());
+        assertEquals(result.get().suffix().raw(), "_suf");
     }
 
     @Test
@@ -93,11 +95,11 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.success()).isTrue();
-        assertThat(result.get().separator()).isEqualTo(underscoreTokenizer.separator());
-        assertThat(result.get().prefix().alternatives()).containsExactly("pre");
-        assertThat(result.get().prefix().raw()).isEqualTo("pre");
-        assertThat(result.get().suffix().hasAlternatives()).isFalse();
+        assertTrue(result.success());
+        assertEquals(result.get().separator(), underscoreTokenizer.separator());
+        assertEquals(Arrays.asList("pre"), result.get().prefix().alternatives());
+        assertEquals(result.get().prefix().raw(), "pre");
+        assertFalse(result.get().suffix().hasAlternatives());
 
         // given
         parser = new TestFileNamePatternParser("pre_${srcFile}", underscoreTokenizer);
@@ -106,11 +108,11 @@ public class TestFileNamePatternParserTest
         result = parser.parse();
 
         // then
-        assertThat(result.success()).isTrue();
-        assertThat(result.get().separator()).isEqualTo(underscoreTokenizer.separator());
-        assertThat(result.get().prefix().alternatives()).containsExactly("pre");
-        assertThat(result.get().prefix().raw()).isEqualTo("pre_");
-        assertThat(result.get().suffix().hasAlternatives()).isFalse();
+        assertTrue(result.success());
+        assertEquals(result.get().separator(), underscoreTokenizer.separator());
+        assertEquals(Arrays.asList("pre"), result.get().prefix().alternatives());
+        assertEquals(result.get().prefix().raw(), "pre_");
+        assertFalse(result.get().suffix().hasAlternatives());
     }
 
     @Test
@@ -123,10 +125,10 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.success()).isTrue();
-        assertThat(result.get().separator()).isEmpty();
-        assertThat(result.get().prefix().alternatives()).containsExactly("Pre");
-        assertThat(result.get().suffix().alternatives()).containsExactly("Suf");
+        assertTrue(result.success());
+        assertTrue(result.get().separator().isEmpty());
+        assertEquals(Arrays.asList("Pre"), result.get().prefix().alternatives());
+        assertEquals(Arrays.asList("Suf"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -139,8 +141,8 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().prefix().hasWildcardBefore()).isTrue();
-        assertThat(result.get().prefix().hasWildcardAfter()).isFalse();
+        assertTrue(result.get().prefix().hasWildcardBefore());
+        assertFalse(result.get().prefix().hasWildcardAfter());
 
         // given
         parser = new TestFileNamePatternParser("${srcFile}*alt", underscoreTokenizer);
@@ -149,8 +151,8 @@ public class TestFileNamePatternParserTest
         result = parser.parse();
 
         // then
-        assertThat(result.get().suffix().hasWildcardBefore()).isTrue();
-        assertThat(result.get().suffix().hasWildcardAfter()).isFalse();
+        assertTrue(result.get().suffix().hasWildcardBefore());
+        assertFalse(result.get().suffix().hasWildcardAfter());
     }
 
     @Test
@@ -163,8 +165,8 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().prefix().hasWildcardBefore()).isFalse();
-        assertThat(result.get().prefix().hasWildcardAfter()).isTrue();
+        assertFalse(result.get().prefix().hasWildcardBefore());
+        assertTrue(result.get().prefix().hasWildcardAfter());
 
         // given
         parser = new TestFileNamePatternParser("${srcFile}alt*", underscoreTokenizer);
@@ -173,8 +175,8 @@ public class TestFileNamePatternParserTest
         result = parser.parse();
 
         // then
-        assertThat(result.get().suffix().hasWildcardBefore()).isFalse();
-        assertThat(result.get().suffix().hasWildcardAfter()).isTrue();
+        assertFalse(result.get().suffix().hasWildcardBefore());
+        assertTrue(result.get().suffix().hasWildcardAfter());
     }
 
     @Test
@@ -187,7 +189,7 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().suffix().alternatives()).containsExactly("suf1", "suf2", "suf3");
+        assertEquals(Arrays.asList("suf1", "suf2", "suf3"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -200,7 +202,7 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().prefix().alternatives()).containsExactly("pre1", "pre2", "pre3");
+        assertEquals(Arrays.asList("pre1", "pre2", "pre3"), result.get().prefix().alternatives());
     }
 
     @Test
@@ -213,7 +215,7 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().suffix().alternatives()).containsExactly("\\test");
+        assertEquals(Arrays.asList("\\test"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -226,13 +228,13 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().prefix().hasWildcardBefore()).isFalse();
-        assertThat(result.get().prefix().hasWildcardAfter()).isFalse();
-        assertThat(result.get().prefix().alternatives()).containsExactly("*pre*");
+        assertFalse(result.get().prefix().hasWildcardBefore());
+        assertFalse(result.get().prefix().hasWildcardAfter());
+        assertEquals(Arrays.asList("*pre*"), result.get().prefix().alternatives());
 
-        assertThat(result.get().suffix().hasWildcardBefore()).isFalse();
-        assertThat(result.get().suffix().hasWildcardAfter()).isFalse();
-        assertThat(result.get().suffix().alternatives()).containsExactly("*suf*");
+        assertFalse(result.get().suffix().hasWildcardBefore());
+        assertFalse(result.get().suffix().hasWildcardAfter());
+        assertEquals(Arrays.asList("*suf*"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -245,9 +247,9 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().suffix().hasWildcardBefore()).isTrue();
-        assertThat(result.get().suffix().hasWildcardAfter()).isFalse();
-        assertThat(result.get().suffix().alternatives()).containsExactly("*suf");
+        assertTrue(result.get().suffix().hasWildcardBefore());
+        assertFalse(result.get().suffix().hasWildcardAfter());
+        assertEquals(Arrays.asList("*suf"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -260,8 +262,8 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().prefix().alternatives()).containsExactly("(pr|e)fix");
-        assertThat(result.get().suffix().alternatives()).containsExactly("|suf(ix");
+        assertEquals(Arrays.asList("(pr|e)fix"), result.get().prefix().alternatives());
+        assertEquals(Arrays.asList("|suf(ix"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -274,7 +276,7 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().suffix().alternatives()).containsExactly("Tests", "Test");
+        assertEquals(Arrays.asList("Tests", "Test"), result.get().suffix().alternatives());
     }
 
     @Test
@@ -287,8 +289,8 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
-        assertThat(result.get().prefix().firstAlternative()).isEqualTo("Sh");
-        assertThat(result.get().suffix().firstAlternative()).isEqualTo("Test");
+        assertEquals(result.get().prefix().firstAlternative(), "Sh");
+        assertEquals(result.get().suffix().firstAlternative(), "Test");
     }
 
     @Test
@@ -298,6 +300,6 @@ public class TestFileNamePatternParserTest
         TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}Test", camelCaseTokenizer);
         TestFileNamePatternParser.Result result = parser.parse();
 
-        assertThatThrownBy(() -> result.get().prefix().firstAlternative()).isInstanceOf(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class, () -> result.get().prefix().firstAlternative());
     }
 }

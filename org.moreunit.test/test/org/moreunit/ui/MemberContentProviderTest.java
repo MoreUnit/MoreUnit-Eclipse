@@ -1,6 +1,7 @@
 package org.moreunit.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.moreunit.test.model.Types.type;
@@ -30,7 +31,7 @@ public class MemberContentProviderTest
     public void getElements_should_return_empty_list_when_no_type_nor_method_is_provided()
     {
         Object[] elements = new MemberContentProvider(types, methods, null).getElements(null);
-        assertThat(elements).isEmpty();
+        assertTrue(elements.length == 0);
     }
 
     @Test
@@ -43,7 +44,7 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type1", "type2", "type3");
+        assertEquals(Arrays.asList("type1", "type2", "type3"), namesOf(elements));
     }
 
     @Test
@@ -62,13 +63,13 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type1", "type2");
+        assertEquals(Arrays.asList("type1", "type2"), namesOf(elements));
 
         Object[] children1 = contentProvider.getChildren(elements[0]);
-        assertThat(Arrays.asList(children1)).extracting("elementName").containsExactly("method1A", "method1B");
+        assertEquals(Arrays.asList("method1A", "method1B"), namesOf(children1));
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertThat(children2).extracting("elementName").containsOnly("method2A");
+        assertEquals(Arrays.asList("method2A"), namesOf(children2));
     }
 
     @Test
@@ -83,10 +84,10 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type1", "type2");
+        assertEquals(Arrays.asList("type1", "type2"), namesOf(elements));
 
         Object[] children2 = contentProvider.getChildren(elements[1]);
-        assertThat(children2).extracting("elementName").containsOnly("method2A");
+        assertEquals(Arrays.asList("method2A"), namesOf(children2));
     }
 
     @Test
@@ -105,13 +106,22 @@ public class MemberContentProviderTest
         MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
 
         Object[] elements = contentProvider.getElements(null);
-        assertThat(Arrays.asList(elements)).extracting("elementName").containsExactly("type2", "type1", "type3");
+        assertEquals(Arrays.asList("type2", "type1", "type3"), namesOf(elements));
 
         Object[] children1 = contentProvider.getChildren(elements[1]);
-        assertThat(Arrays.asList(children1)).extracting("elementName").containsExactly("method1A", "method1B");
+        assertEquals(Arrays.asList("method1A", "method1B"), namesOf(children1));
 
         Object[] children3 = contentProvider.getChildren(elements[2]);
-        assertThat(children3).extracting("elementName").containsOnly("method3A");
+        assertEquals(Arrays.asList("method3A"), namesOf(children3));
+    }
+
+    private static java.util.List<String> namesOf(Object[] elements)
+    {
+        java.util.List<String> names = new java.util.ArrayList<>(elements.length);
+        for (Object element : elements) {
+            names.add(((org.eclipse.jdt.core.IMember) element).getElementName());
+        }
+        return names;
     }
 
     private IMethod mockMethod(IType declaringType, String methodName)

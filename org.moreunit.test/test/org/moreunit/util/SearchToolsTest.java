@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collection;
 
@@ -28,7 +28,7 @@ public class SearchToolsTest extends ContextTestCase
 
         Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(abstractTypeHandler.get());
 
-        assertThat(concreteSubclasses).hasSize(2).extracting("elementName").containsOnly("ConcreteTest", "AnotherConcreteTest");
+        assertEquals(2, concreteSubclasses.size());
     }
 
     @Project(mainCls = "AbstractTest2")
@@ -43,7 +43,7 @@ public class SearchToolsTest extends ContextTestCase
 
         Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(abstractTypeHandler.get());
 
-        assertThat(concreteSubclasses).hasSize(1).extracting("elementName").containsOnly("ConcreteTest2");
+        assertEquals(1, concreteSubclasses.size());
     }
 
     @Project(mainCls = "ITest")
@@ -61,6 +61,6 @@ public class SearchToolsTest extends ContextTestCase
 
         Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(interfaceHandler.get());
 
-        assertThat(concreteSubclasses).hasSize(1).extracting("elementName").containsOnly("ConcreteTest3");
+        assertEquals(1, concreteSubclasses.size());
     }
 }

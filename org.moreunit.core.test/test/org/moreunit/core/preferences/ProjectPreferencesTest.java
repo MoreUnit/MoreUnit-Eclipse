@@ -1,6 +1,8 @@
 package org.moreunit.core.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,25 +15,25 @@ public class ProjectPreferencesTest
         // Test edge cases for replacing replaceFirst(",?\\b%s\\b,?")
 
         // Remove from middle (the bug in the original regex)
-        assertThat(ProjectPreferences.removeLanguage("java,python,cpp", "python")).isEqualTo("java,cpp");
+        assertEquals(ProjectPreferences.removeLanguage("java,python,cpp", "python"), "java,cpp");
 
         // Remove from start
-        assertThat(ProjectPreferences.removeLanguage("python,java", "python")).isEqualTo("java");
+        assertEquals(ProjectPreferences.removeLanguage("python,java", "python"), "java");
 
         // Remove from end
-        assertThat(ProjectPreferences.removeLanguage("java,python", "python")).isEqualTo("java");
+        assertEquals(ProjectPreferences.removeLanguage("java,python", "python"), "java");
 
         // Remove exact match
-        assertThat(ProjectPreferences.removeLanguage("python", "python")).isEqualTo("");
+        assertEquals(ProjectPreferences.removeLanguage("python", "python"), "");
 
         // Remove multiple matches (should only remove first to mimic replaceFirst)
-        assertThat(ProjectPreferences.removeLanguage("java,python,python,cpp", "python")).isEqualTo("java,python,cpp");
+        assertEquals(ProjectPreferences.removeLanguage("java,python,python,cpp", "python"), "java,python,cpp");
 
         // Remove when substring but not bounded
-        assertThat(ProjectPreferences.removeLanguage("java,python3,cpp", "python")).isEqualTo("java,python3,cpp");
+        assertEquals(ProjectPreferences.removeLanguage("java,python3,cpp", "python"), "java,python3,cpp");
 
         // Remove non-existent
-        assertThat(ProjectPreferences.removeLanguage("java,cpp", "python")).isEqualTo("java,cpp");
+        assertEquals(ProjectPreferences.removeLanguage("java,cpp", "python"), "java,cpp");
     }
 
     @Test
@@ -41,30 +43,30 @@ public class ProjectPreferencesTest
         // Test edge cases for replacing String.matches(".*\\b%s\\b.*")
 
         // Match from middle
-        assertThat(ProjectPreferences.hasLanguage("java,python,cpp", "python")).isTrue();
+        assertTrue(ProjectPreferences.hasLanguage("java,python,cpp", "python"));
 
         // Match from start
-        assertThat(ProjectPreferences.hasLanguage("python,java", "python")).isTrue();
+        assertTrue(ProjectPreferences.hasLanguage("python,java", "python"));
 
         // Match from end
-        assertThat(ProjectPreferences.hasLanguage("java,python", "python")).isTrue();
+        assertTrue(ProjectPreferences.hasLanguage("java,python", "python"));
 
         // Match exact match
-        assertThat(ProjectPreferences.hasLanguage("python", "python")).isTrue();
+        assertTrue(ProjectPreferences.hasLanguage("python", "python"));
 
         // Reject when substring but not bounded (end)
-        assertThat(ProjectPreferences.hasLanguage("java,python3,cpp", "python")).isFalse();
+        assertFalse(ProjectPreferences.hasLanguage("java,python3,cpp", "python"));
 
         // Reject when substring but not bounded (start)
-        assertThat(ProjectPreferences.hasLanguage("java,cpython,cpp", "python")).isFalse();
+        assertFalse(ProjectPreferences.hasLanguage("java,cpython,cpp", "python"));
 
         // Reject non-existent
-        assertThat(ProjectPreferences.hasLanguage("java,cpp", "python")).isFalse();
+        assertFalse(ProjectPreferences.hasLanguage("java,cpp", "python"));
 
         // Handle null/empty
-        assertThat(ProjectPreferences.hasLanguage("", "python")).isFalse();
-        assertThat(ProjectPreferences.hasLanguage(null, "python")).isFalse();
-        assertThat(ProjectPreferences.hasLanguage("python", null)).isFalse();
-        assertThat(ProjectPreferences.hasLanguage("python", "")).isFalse();
+        assertFalse(ProjectPreferences.hasLanguage("", "python"));
+        assertFalse(ProjectPreferences.hasLanguage(null, "python"));
+        assertFalse(ProjectPreferences.hasLanguage("python", null));
+        assertFalse(ProjectPreferences.hasLanguage("python", ""));
     }
 }

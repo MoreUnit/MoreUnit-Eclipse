@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
@@ -63,8 +63,10 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
                 return "Method not deleted from original class";
             }
         });
-		assertThat(testBeforeMove.findPrimaryType().getMethods()).isEmpty();
+		assertEquals(0, testBeforeMove.findPrimaryType().getMethods().length);
 		ICompilationUnit testAfterMove = context.getCompilationUnit("testing.TheMoonTest");
-		assertThat(testAfterMove.findPrimaryType().getMethods()).extracting("elementName").containsOnly("testGetNumber1");
+		IMethod[] movedMethods = testAfterMove.findPrimaryType().getMethods();
+		assertEquals(1, movedMethods.length);
+		assertEquals("testGetNumber1", movedMethods[0].getElementName());
 	}
 }

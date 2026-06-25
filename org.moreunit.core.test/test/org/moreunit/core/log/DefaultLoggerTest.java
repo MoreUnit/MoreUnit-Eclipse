@@ -1,6 +1,8 @@
 package org.moreunit.core.log;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,11 +39,11 @@ public class DefaultLoggerTest
     {
         DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
-        assertThat(logger.traceEnabled()).isFalse();
-        assertThat(logger.debugEnabled()).isFalse();
-        assertThat(logger.infoEnabled()).isTrue();
-        assertThat(logger.warnEnabled()).isTrue();
-        assertThat(logger.errorEnabled()).isTrue();
+        assertFalse(logger.traceEnabled());
+        assertFalse(logger.debugEnabled());
+        assertTrue(logger.infoEnabled());
+        assertTrue(logger.warnEnabled());
+        assertTrue(logger.errorEnabled());
     }
 
     @Test
@@ -50,8 +52,8 @@ public class DefaultLoggerTest
         System.setProperty(LOG_LEVEL_PROPERTY, "trace");
         DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
-        assertThat(logger.traceEnabled()).isTrue();
-        assertThat(logger.debugEnabled()).isTrue();
+        assertTrue(logger.traceEnabled());
+        assertTrue(logger.debugEnabled());
 
         logger.trace("trace message");
         logger.debug("debug message");
@@ -59,10 +61,10 @@ public class DefaultLoggerTest
         ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog, org.mockito.Mockito.times(2)).log(statusCaptor.capture());
 
-        assertThat(statusCaptor.getAllValues().get(0).getMessage()).isEqualTo("[TRACE] trace message");
-        assertThat(statusCaptor.getAllValues().get(0).getSeverity()).isEqualTo(IStatus.INFO);
-        assertThat(statusCaptor.getAllValues().get(1).getMessage()).isEqualTo("[DEBUG] debug message");
-        assertThat(statusCaptor.getAllValues().get(1).getSeverity()).isEqualTo(IStatus.INFO);
+        assertEquals(statusCaptor.getAllValues().get(0).getMessage(), "[TRACE] trace message");
+        assertEquals(statusCaptor.getAllValues().get(0).getSeverity(), IStatus.INFO);
+        assertEquals(statusCaptor.getAllValues().get(1).getMessage(), "[DEBUG] debug message");
+        assertEquals(statusCaptor.getAllValues().get(1).getSeverity(), IStatus.INFO);
     }
 
     @Test
@@ -71,8 +73,8 @@ public class DefaultLoggerTest
         System.setProperty(LOG_LEVEL_PROPERTY, "WARNING");
         DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
-        assertThat(logger.infoEnabled()).isFalse();
-        assertThat(logger.warnEnabled()).isTrue();
+        assertFalse(logger.infoEnabled());
+        assertTrue(logger.warnEnabled());
 
         logger.info("info message");
         verify(mockLog, never()).log(any(IStatus.class));
@@ -81,8 +83,8 @@ public class DefaultLoggerTest
         ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
-        assertThat(statusCaptor.getValue().getMessage()).isEqualTo("warn message");
-        assertThat(statusCaptor.getValue().getSeverity()).isEqualTo(IStatus.WARNING);
+        assertEquals(statusCaptor.getValue().getMessage(), "warn message");
+        assertEquals(statusCaptor.getValue().getSeverity(), IStatus.WARNING);
     }
 
     @Test
@@ -91,8 +93,8 @@ public class DefaultLoggerTest
         System.setProperty(LOG_LEVEL_PROPERTY, "ERROR");
         DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
-        assertThat(logger.warnEnabled()).isFalse();
-        assertThat(logger.errorEnabled()).isTrue();
+        assertFalse(logger.warnEnabled());
+        assertTrue(logger.errorEnabled());
 
         Throwable exception = new RuntimeException("Test exception");
         logger.error("error message", exception);
@@ -100,9 +102,9 @@ public class DefaultLoggerTest
         ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
-        assertThat(statusCaptor.getValue().getMessage()).isEqualTo("error message");
-        assertThat(statusCaptor.getValue().getSeverity()).isEqualTo(IStatus.ERROR);
-        assertThat(statusCaptor.getValue().getException()).isEqualTo(exception);
+        assertEquals(statusCaptor.getValue().getMessage(), "error message");
+        assertEquals(statusCaptor.getValue().getSeverity(), IStatus.ERROR);
+        assertEquals(statusCaptor.getValue().getException(), exception);
     }
 
     @Test
@@ -117,8 +119,8 @@ public class DefaultLoggerTest
         ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
-        assertThat(statusCaptor.getValue().getMessage()).contains("java.lang.RuntimeException: Test exception");
-        assertThat(statusCaptor.getValue().getSeverity()).isEqualTo(IStatus.ERROR);
+        assertTrue((statusCaptor.getValue().getMessage()).contains("java.lang.RuntimeException: Test exception"));
+        assertEquals(statusCaptor.getValue().getSeverity(), IStatus.ERROR);
     }
 
     @Test
@@ -133,8 +135,8 @@ public class DefaultLoggerTest
         ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
-        assertThat(statusCaptor.getValue().getMessage()).isEqualTo("warn message");
-        assertThat(statusCaptor.getValue().getSeverity()).isEqualTo(IStatus.WARNING);
-        assertThat(statusCaptor.getValue().getException()).isEqualTo(exception);
+        assertEquals(statusCaptor.getValue().getMessage(), "warn message");
+        assertEquals(statusCaptor.getValue().getSeverity(), IStatus.WARNING);
+        assertEquals(statusCaptor.getValue().getException(), exception);
     }
 }

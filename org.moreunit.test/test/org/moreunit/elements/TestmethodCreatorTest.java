@@ -1,10 +1,16 @@
 package org.moreunit.elements;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4;
 import static org.moreunit.preferences.PreferenceConstants.TEST_TYPE_VALUE_TESTNG;
+
+import java.util.Arrays;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMethod;
@@ -45,112 +51,94 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_create_junit3_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_3)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
-        assertThat(result.methodCreated()).isTrue();
-        assertThat(result.methodAlreadyExists()).isFalse();
+        assertTrue(result.methodCreated());
+        assertFalse(result.methodAlreadyExists());
 
         IMethod createTestMethod = result.getMethod();
-        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
-        assertThat(createTestMethod.getSource()).doesNotContain("@Test").contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "testGetNumberOne");
+        assertFalse((createTestMethod.getSource()).contains("@Test"));
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).containsOnly(createTestMethod);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_junit4_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
-        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
-        assertThat(createTestMethod.getSource()).startsWith("@Test");
-        assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "getNumberOne");
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).containsOnly(createTestMethod);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_junit5_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
-        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
-        assertThat(createTestMethod.getSource()).startsWith("@Test");
-        assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "getNumberOne");
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).containsOnly(createTestMethod);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = true)
     public void createTestMethod_should_create_junit4_testmethod_with_prefix() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
-        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
-        assertThat(createTestMethod.getSource()).startsWith("@Test");
-        assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "testGetNumberOne");
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).containsOnly(createTestMethod);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_testng_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_TESTNG)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_TESTNG).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
-        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOne");
-        assertThat(createTestMethod.getSource()).startsWith("@Test");
-        assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "getNumberOne");
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).containsOnly(createTestMethod);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = true)
     public void createTestMethod_should_create_testng_testmethod_with_prefix() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_TESTNG)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_TESTNG).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
-        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOne");
-        assertThat(createTestMethod.getSource()).startsWith("@Test");
-        assertThat(createTestMethod.getSource()).contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "testGetNumberOne");
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
+        assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).containsOnly(createTestMethod);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
@@ -158,17 +146,14 @@ public class TestmethodCreatorTest extends ContextTestCase
     {
         MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(testcaseType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_3)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
-        assertThat(createTestMethod.getElementName()).isEqualTo("testGetNumberOneSuffix");
-        assertThat(createTestMethod.getSource()).doesNotContain("@Test").contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "testGetNumberOneSuffix");
+        assertFalse((createTestMethod.getSource()).contains("@Test"));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).hasSize(2);
+        assertEquals(2, methods.length);
     }
 
     @Test
@@ -176,31 +161,23 @@ public class TestmethodCreatorTest extends ContextTestCase
     {
         MethodHandler existingTestMethod = testcaseType.addMethod("public void getNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(testcaseType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
-        assertThat(createTestMethod.getElementName()).isEqualTo("getNumberOneSuffix");
-        assertThat(createTestMethod.getSource()).startsWith("@Test").contains(SOME_TEST_CODE);
+        assertEquals(createTestMethod.getElementName(), "getNumberOneSuffix");
+        assertTrue(createTestMethod.getSource().startsWith("@Test"));
 
         IMethod[] methods = testcaseType.get().getMethods();
-        assertThat(methods).hasSize(2);
+        assertEquals(2, methods.length);
     }
 
     @Test
     public void createTestMethod_should_create_final_method_when_selected() throws Exception
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent(SOME_TEST_CODE)
-                .createFinalMethod(true)
-                .createTasks(false));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
-        assertThat(createTestMethod.getSource()).contains("public final void");
+        assertTrue((createTestMethod.getSource()).contains("public final void"));
     }
 
     @Test
@@ -212,12 +189,7 @@ public class TestmethodCreatorTest extends ContextTestCase
         MethodHandler doSomethingWithInteger = cutType.addMethod("public void doSomething(Integer i, Double d)", "");
         MethodHandler doSomethingElseWithString = cutType.addMethod("public void doSomethingElse(String str)", "");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent(SOME_TEST_CODE)
-                .createFinalMethod(true)
-                .createTasks(false));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
 
         // when
         testmethodCreator.createTestMethod(doSomethingWithoutArg.get());
@@ -226,13 +198,7 @@ public class TestmethodCreatorTest extends ContextTestCase
         testmethodCreator.createTestMethod(doSomethingElseWithString.get());
 
         // then
-        assertThat(testcaseType.get().getMethods()).hasSize(4).extracting("elementName")
-            // overloaded method: no parameter
-            .contains("doSomething")
-            // overloaded method: parameter types are used
-            .contains("doSomethingString", "doSomethingIntegerDouble")
-            // not overloaded: parameter types are not used
-            .contains("doSomethingElse");
+        assertEquals(4, testcaseType.get().getMethods().length);
     }
 
     @Test
@@ -242,22 +208,13 @@ public class TestmethodCreatorTest extends ContextTestCase
         MethodHandler doSomethingWithoutArg = cutType.addMethod("public void doSomething()", "");
         MethodHandler doSomethingWithStringArray = cutType.addMethod("public void doSomething(String[] str)", "");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent(SOME_TEST_CODE)
-                .createFinalMethod(true)
-                .createTasks(false));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
 
         // when
         testmethodCreator.createTestMethods(asList(doSomethingWithoutArg.get(), doSomethingWithStringArray.get()));
 
         // then
-        assertThat(testcaseType.get().getMethods()).hasSize(2).extracting("elementName")
-            // overloaded method: no parameter
-            .contains("doSomething")
-            // overloaded method: parameter types are used
-            .contains("doSomethingStringArray");
+        assertEquals(2, testcaseType.get().getMethods().length);
     }
 
     @Test
@@ -265,72 +222,50 @@ public class TestmethodCreatorTest extends ContextTestCase
     {
         MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_3)
-                .defaultTestMethodContent(SOME_TEST_CODE));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
-        assertThat(result.methodAlreadyExists()).isTrue();
-        assertThat(result.methodCreated()).isFalse();
-        assertThat(result.getMethod()).isEqualTo(existingTestMethod.get());
+        assertTrue(result.methodAlreadyExists());
+        assertFalse(result.methodCreated());
+        assertEquals(result.getMethod(), existingTestMethod.get());
     }
 
     @Test
-    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType=TestType.JUNIT4)
+    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_not_add_comments_for_the_new_test_method_when_not_requested() throws Exception
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .generateComments(false));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).generateComments(false));
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
-        assertThat(result.methodCreated()).isTrue();
-        assertThat(result.getMethod().getJavadocRange()).isNull();
+        assertTrue(result.methodCreated());
+        assertNull(result.getMethod().getJavadocRange());
     }
 
     @Test
-    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType=TestType.JUNIT4)
+    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_generate_comments_for_the_new_test_method_when_called_with_method_under_test() throws Exception
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(cutType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent("")
-                .generateComments(true));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent("").generateComments(true));
 
         MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
-        assertThat(result.methodCreated()).isTrue();
-        assertThat(result.getMethod().getJavadocRange()).isNotNull();
-        assertThat(result.getMethod().getSource().replaceAll("\\s+", " "))
-                .isEqualTo("/**" +
-                           " * Test method for {@link testing.Hello#getNumberOne()}." +
-                           " */" +
-                           " @Test" +
-                           " public void getNumberOne() { }");
+        assertTrue(result.methodCreated());
+        assertNotNull(result.getMethod().getJavadocRange());
+        assertEquals(result.getMethod().getSource().replaceAll("\\s+", " "), "/**" + " * Test method for {@link testing.Hello#getNumberOne()}." + " */" + " @Test" + " public void getNumberOne() { }");
     }
 
     @Test
-    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType=TestType.JUNIT4)
+    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_copy_comments_from_the_existing_test_method_when_called_with_that_test_method() throws Exception
     {
         MethodHandler existingTestMethod = testcaseType.addMethod("/** Some test comments. */ @Test public void getNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
-                .compilationUnit(testcaseType.getCompilationUnit())
-                .testType(TEST_TYPE_VALUE_JUNIT_4)
-                .defaultTestMethodContent("")
-                .generateComments(true));
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent("").generateComments(true));
 
         IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
-        assertThat(createTestMethod.getJavadocRange()).isNotNull();
-        assertThat(createTestMethod.getSource().replaceAll("\\s+", " "))
-                .isEqualTo("/** Some test comments. */" +
-                           " @Test" +
-                           " public void getNumberOneSuffix() { }");
+        assertNotNull(createTestMethod.getJavadocRange());
+        assertEquals(createTestMethod.getSource().replaceAll("\\s+", " "), "/** Some test comments. */" + " @Test" + " public void getNumberOneSuffix() { }");
     }
 }

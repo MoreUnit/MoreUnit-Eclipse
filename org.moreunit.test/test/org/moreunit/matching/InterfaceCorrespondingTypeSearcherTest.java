@@ -1,6 +1,7 @@
 package org.moreunit.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 
@@ -21,7 +22,8 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = searcher.getMatches(false);
 
-        assertThat(matches).extracting("elementName").containsExactly("FooTest");
+        assertEquals(1, matches.size());
+        assertEquals("FooTest", matches.iterator().next().getElementName());
     }
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
@@ -33,7 +35,8 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = searcher.getMatches(false);
 
-        assertThat(matches).extracting("elementName").containsExactly("FooTest");
+        assertEquals(1, matches.size());
+        assertEquals("FooTest", matches.iterator().next().getElementName());
     }
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
@@ -46,7 +49,8 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
         Collection<IType> matches = searcher.getMatches(false);
 
         // Should return FooImpl and EXCLUDE Foo because Foo is a pure interface
-        assertThat(matches).extracting("elementName").containsExactly("FooImpl");
+        assertEquals(1, matches.size());
+        assertEquals("FooImpl", matches.iterator().next().getElementName());
     }
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
@@ -58,7 +62,14 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("FooImpl"), getPreferences());
         Collection<IType> matches = searcher.getMatches(false);
 
-        assertThat(matches).extracting("elementName").contains("FooTest");
+        boolean found = false;
+        for (IType t : matches) {
+            if ("FooTest".equals(t.getElementName())) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found, "expected FooTest to be in matches");
     }
 
     @Project(mainCls = "interface Foo")
@@ -71,7 +82,8 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("FooImplTest"), getPreferences());
         Collection<IType> matches = searcher.getMatches(false);
 
-        assertThat(matches).extracting("elementName").containsExactly("FooImpl");
+        assertEquals(1, matches.size());
+        assertEquals("FooImpl", matches.iterator().next().getElementName());
     }
 
     @Project(mainCls = "interface Foo", testCls = "FooTest")
@@ -86,6 +98,10 @@ public class InterfaceCorrespondingTypeSearcherTest extends ContextTestCase
         Collection<IType> matches = searcher.getMatches(false);
 
         // Should return both Foo and FooImpl because Foo has a default method
-        assertThat(matches).extracting("elementName").containsExactlyInAnyOrder("Foo", "FooImpl");
+        java.util.Set<String> names = new java.util.HashSet<>();
+        for (IType t : matches) {
+            names.add(t.getElementName());
+        }
+        assertEquals(java.util.Arrays.asList("Foo", "FooImpl"), new java.util.ArrayList<>(names));
     }
 }

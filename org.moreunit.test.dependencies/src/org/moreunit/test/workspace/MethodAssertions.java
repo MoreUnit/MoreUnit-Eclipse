@@ -1,6 +1,6 @@
 package org.moreunit.test.workspace;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.jdt.core.IMember;
 
@@ -15,7 +15,7 @@ public class MethodAssertions
 
     public MethodAssertions isEqualTo(IMember expectedMethod)
     {
-        assertThat(methodHandler.get()).isEqualTo(expectedMethod);
+        assertEquals(methodHandler.get(), expectedMethod);
         return this;
     }
 }

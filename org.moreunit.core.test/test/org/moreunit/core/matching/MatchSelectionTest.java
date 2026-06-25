@@ -1,6 +1,9 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.core.resources.IFile;
@@ -13,8 +16,8 @@ public class MatchSelectionTest
     {
         MatchSelection selection = MatchSelection.none();
 
-        assertThat(selection.exists()).isFalse();
-        assertThat(selection.get()).isNull();
+        assertFalse(selection.exists());
+        assertNull(selection.get());
     }
 
     @Test
@@ -23,7 +26,7 @@ public class MatchSelectionTest
         IFile mockFile = mock(IFile.class);
         MatchSelection selection = MatchSelection.file(mockFile);
 
-        assertThat(selection.exists()).isTrue();
-        assertThat(selection.get()).isSameAs(mockFile);
+        assertTrue(selection.exists());
+        assertSame(selection.get(), mockFile);
     }
 }

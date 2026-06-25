@@ -1,6 +1,10 @@
 package org.moreunit.wizards;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.core.runtime.IStatus;
 import org.junit.jupiter.api.Test;
@@ -13,10 +17,10 @@ public class MoreUnitStatusTest
     {
         MoreUnitStatus status = new MoreUnitStatus();
 
-        assertThat(status.isOK()).isTrue();
-        assertThat(status.getSeverity()).isEqualTo(IStatus.OK);
-        assertThat(status.getCode()).isEqualTo(IStatus.OK);
-        assertThat(status.getMessage()).isNull();
+        assertTrue(status.isOK());
+        assertEquals(IStatus.OK, status.getSeverity());
+        assertEquals(IStatus.OK, status.getCode());
+        assertNull(status.getMessage());
     }
 
     @Test
@@ -24,46 +28,46 @@ public class MoreUnitStatusTest
     {
         MoreUnitStatus status = new MoreUnitStatus(IStatus.ERROR, "An error occurred");
 
-        assertThat(status.isOK()).isFalse();
-        assertThat(status.getSeverity()).isEqualTo(IStatus.ERROR);
-        assertThat(status.getCode()).isEqualTo(IStatus.ERROR);
-        assertThat(status.getMessage()).isEqualTo("An error occurred");
+        assertFalse(status.isOK());
+        assertEquals(IStatus.ERROR, status.getSeverity());
+        assertEquals(IStatus.ERROR, status.getCode());
+        assertEquals("An error occurred", status.getMessage());
     }
 
     @Test
     public void getChildren_should_return_empty_array()
     {
         MoreUnitStatus status = new MoreUnitStatus();
-        assertThat(status.getChildren()).isEmpty();
+        assertArrayEquals(new IStatus[0], status.getChildren());
     }
 
     @Test
     public void getException_should_return_null()
     {
         MoreUnitStatus status = new MoreUnitStatus();
-        assertThat(status.getException()).isNull();
+        assertNull(status.getException());
     }
 
     @Test
     public void getPlugin_should_return_moreunit_plugin_id()
     {
         MoreUnitStatus status = new MoreUnitStatus();
-        assertThat(status.getPlugin()).isEqualTo(MoreUnitPlugin.PLUGIN_ID);
+        assertEquals(MoreUnitPlugin.PLUGIN_ID, status.getPlugin());
     }
 
     @Test
     public void isMultiStatus_should_return_false()
     {
         MoreUnitStatus status = new MoreUnitStatus();
-        assertThat(status.isMultiStatus()).isFalse();
+        assertFalse(status.isMultiStatus());
     }
 
     @Test
     public void matches_should_return_true_if_severity_matches()
     {
         MoreUnitStatus status = new MoreUnitStatus(IStatus.ERROR, "Error");
-        assertThat(status.matches(IStatus.ERROR)).isTrue();
-        assertThat(status.matches(IStatus.ERROR | IStatus.WARNING)).isTrue();
-        assertThat(status.matches(IStatus.WARNING)).isFalse();
+        assertTrue(status.matches(IStatus.ERROR));
+        assertTrue(status.matches(IStatus.ERROR | IStatus.WARNING));
+        assertFalse(status.matches(IStatus.WARNING));
     }
 }

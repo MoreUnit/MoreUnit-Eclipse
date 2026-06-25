@@ -1,6 +1,10 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,12 +21,12 @@ public class MatchingFileTest
 
         MatchingFile matchingFile = MatchingFile.found(file);
 
-        assertThat(matchingFile.isFound()).isTrue();
-        assertThat(matchingFile.isSearchCancelled()).isFalse();
-        assertThat(matchingFile.get()).isSameAs(file);
-        assertThat(matchingFile.getSrcFolderToCreate()).isNull();
-        assertThat(matchingFile.getFileToCreate()).isNull();
-        assertThat(matchingFile.toString()).isEqualTo("MatchingFile(found: L/mock/file)");
+        assertTrue(matchingFile.isFound());
+        assertFalse(matchingFile.isSearchCancelled());
+        assertSame(matchingFile.get(), file);
+        assertNull(matchingFile.getSrcFolderToCreate());
+        assertNull(matchingFile.getFileToCreate());
+        assertEquals(matchingFile.toString(), "MatchingFile(found: L/mock/file)");
     }
 
     @Test
@@ -34,12 +38,12 @@ public class MatchingFileTest
 
         MatchingFile matchingFile = MatchingFile.notFound(srcFolder, fileToCreate);
 
-        assertThat(matchingFile.isFound()).isFalse();
-        assertThat(matchingFile.isSearchCancelled()).isFalse();
-        assertThat(matchingFile.get()).isNull();
-        assertThat(matchingFile.getSrcFolderToCreate()).isSameAs(srcFolder);
-        assertThat(matchingFile.getFileToCreate()).isEqualTo(fileToCreate);
-        assertThat(matchingFile.toString()).isEqualTo("MatchingFile(to create: src/folder/NewFile.java)");
+        assertFalse(matchingFile.isFound());
+        assertFalse(matchingFile.isSearchCancelled());
+        assertNull(matchingFile.get());
+        assertSame(matchingFile.getSrcFolderToCreate(), srcFolder);
+        assertEquals(matchingFile.getFileToCreate(), fileToCreate);
+        assertEquals(matchingFile.toString(), "MatchingFile(to create: src/folder/NewFile.java)");
     }
 
     @Test
@@ -47,11 +51,11 @@ public class MatchingFileTest
     {
         MatchingFile matchingFile = MatchingFile.searchCancelled();
 
-        assertThat(matchingFile.isFound()).isFalse();
-        assertThat(matchingFile.isSearchCancelled()).isTrue();
-        assertThat(matchingFile.get()).isNull();
-        assertThat(matchingFile.getSrcFolderToCreate()).isNull();
-        assertThat(matchingFile.getFileToCreate()).isNull();
-        assertThat(matchingFile.toString()).isEqualTo("MatchingFile(search cancelled)");
+        assertFalse(matchingFile.isFound());
+        assertTrue(matchingFile.isSearchCancelled());
+        assertNull(matchingFile.get());
+        assertNull(matchingFile.getSrcFolderToCreate());
+        assertNull(matchingFile.getFileToCreate());
+        assertEquals(matchingFile.toString(), "MatchingFile(search cancelled)");
     }
 }

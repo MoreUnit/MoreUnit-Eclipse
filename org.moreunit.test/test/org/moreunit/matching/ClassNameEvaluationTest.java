@@ -1,6 +1,6 @@
 package org.moreunit.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +18,7 @@ public class ClassNameEvaluationTest {
 
         ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", null, "com.test.example");
         JavaType javaType = eval.getPreferredCorrespondingClass();
-        assertThat(javaType.getQualifier()).isEqualTo("example");
+        assertEquals(javaType.getQualifier(), "example");
     }
 
     @Test
@@ -29,7 +29,7 @@ public class ClassNameEvaluationTest {
 
         ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", null, "org.example");
         JavaType javaType = eval.getPreferredCorrespondingClass();
-        assertThat(javaType.getQualifier()).isEqualTo("org.example");
+        assertEquals(javaType.getQualifier(), "org.example");
     }
 
     @Test
@@ -40,7 +40,7 @@ public class ClassNameEvaluationTest {
 
         ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, null, "test", "org.example.test");
         JavaType javaType = eval.getPreferredCorrespondingClass();
-        assertThat(javaType.getQualifier()).isEqualTo("org.example");
+        assertEquals(javaType.getQualifier(), "org.example");
     }
 
     @Test
@@ -51,7 +51,7 @@ public class ClassNameEvaluationTest {
 
         ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, null, "test", "org.example.dev");
         JavaType javaType = eval.getPreferredCorrespondingClass();
-        assertThat(javaType.getQualifier()).isEqualTo("org.example.dev");
+        assertEquals(javaType.getQualifier(), "org.example.dev");
     }
 
     @Test
@@ -62,6 +62,6 @@ public class ClassNameEvaluationTest {
 
         ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", "integration", "org.example");
         JavaType javaType = eval.getPreferredCorrespondingClass();
-        assertThat(javaType.getQualifier()).isEqualTo("com.test.org.example.integration");
+        assertEquals(javaType.getQualifier(), "com.test.org.example.integration");
     }
 }

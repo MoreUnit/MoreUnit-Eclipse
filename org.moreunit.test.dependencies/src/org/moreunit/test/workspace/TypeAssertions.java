@@ -1,6 +1,6 @@
 package org.moreunit.test.workspace;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.jdt.core.IMember;
 
@@ -15,7 +15,7 @@ public class TypeAssertions
 
     public TypeAssertions isEqualTo(IMember expectedType)
     {
-        assertThat(typeHandler.get()).isEqualTo(expectedType);
+        assertEquals(typeHandler.get(), expectedType);
         return this;
     }
 }

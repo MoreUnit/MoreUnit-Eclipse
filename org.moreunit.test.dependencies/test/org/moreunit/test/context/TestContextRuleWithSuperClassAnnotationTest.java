@@ -1,6 +1,6 @@
 package org.moreunit.test.context;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -13,7 +13,7 @@ public class TestContextRuleWithSuperClassAnnotationTest extends AnnotatedSuperC
     @Test
     public void should_load_superclass_context_when_class_context() throws Exception
     {
-        assertThat(context.getCompilationUnitHandler("ClassUnderTestFromSuperclass").getInitialSource()).isEqualTo("Content of ClassUnderTestFromSuperclass.txt");
-        assertThat(context.getCompilationUnitHandler("TestCaseFromSuperclass").getInitialSource()).isEqualTo("Content of TestCaseFromSuperclass.txt");
+        assertEquals(context.getCompilationUnitHandler("ClassUnderTestFromSuperclass").getInitialSource(), "Content of ClassUnderTestFromSuperclass.txt");
+        assertEquals(context.getCompilationUnitHandler("TestCaseFromSuperclass").getInitialSource(), "Content of TestCaseFromSuperclass.txt");
     }
 }

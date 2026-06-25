@@ -1,6 +1,8 @@
 package org.moreunit.elements;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
@@ -29,10 +31,10 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_true_when_for_testng_method_and_testng_pref() throws JavaModelException
     {
         MethodHandler method = typeHandler.addMethod("public void testIt()");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@Test public void testIt2()");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Preferences(testType = TestType.JUNIT5)
@@ -40,19 +42,19 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_true_when_junit5_method_and_junit5_pref() throws JavaModelException
     {
         MethodHandler method = typeHandler.addMethod("public void testIt()");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@Test public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@ParameterizedTest public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@RepeatedTest public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@TestFactory public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Preferences(testType = TestType.JUNIT5)
@@ -60,10 +62,10 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_true_when_rerunner_junit5_method_and_junit5_pref() throws JavaModelException
     {
         MethodHandler method = typeHandler.addMethod("@RepeatedIfExceptionsTest public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@ParameterizedRepeatedIfExceptionsTest public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Preferences(testType = TestType.JUNIT4)
@@ -71,10 +73,10 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_true_when_junit4_method_and_junit4_pref() throws JavaModelException
     {
         MethodHandler method = typeHandler.addMethod("public void testIt()");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
 
         method = typeHandler.addMethod("@Test public void testIt2()", "");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
 
@@ -83,7 +85,7 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_false_when_method_protected()
     {
         MethodHandler method = typeHandler.addMethod("protected void testIt()");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Preferences(testType = TestType.JUNIT3)
@@ -91,7 +93,7 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_false_when_method_signature_has_return_type()
     {
         MethodHandler method = typeHandler.addMethod("public int testIt2()", "return 1;");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Preferences(testType = TestType.JUNIT3)
@@ -99,7 +101,7 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_false_when_method_is_annotated_with_test_and_junit3_prefs()
     {
         MethodHandler method = typeHandler.addMethod("@Test void testIt3()", "return 1;");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Preferences(testType = TestType.JUNIT3)
@@ -107,7 +109,7 @@ public class MethodFacadeTest extends ContextTestCase
     public void isTestMethod_should_return_true_for_simple_testmethod_and_junit3_prefs()
     {
         MethodHandler method = typeHandler.addMethod("public void testIt4()");
-        assertThat(new MethodFacade(method.get()).isTestMethod()).isTrue();
+        assertTrue(new MethodFacade(method.get()).isTestMethod());
     }
 
     @Test
@@ -115,7 +117,7 @@ public class MethodFacadeTest extends ContextTestCase
     {
         MethodHandler method = typeHandler.addMethod("void methodUsingAnonymousType()"
                                                      ,"Object o = new Object() {public String toString(){return \"\";}};");
-        assertThat(new MethodFacade(method.get()).isAnonymous()).isFalse();
+        assertFalse(new MethodFacade(method.get()).isAnonymous());
     }
 
     @Test
@@ -125,7 +127,7 @@ public class MethodFacadeTest extends ContextTestCase
                                                      ,"Object o = new Object() {public String toString(){return \"\";}};");
         int offsetInOverriddenToStringMethod = method.get().getSourceRange().getOffset() + 60;
         IMethod overriddenToStringMethod = (IMethod) typeHandler.getCompilationUnit().getElementAt(offsetInOverriddenToStringMethod);
-        assertThat(new MethodFacade(overriddenToStringMethod).isAnonymous()).isTrue();
+        assertTrue(new MethodFacade(overriddenToStringMethod).isAnonymous());
     }
 
     @Test
@@ -133,7 +135,7 @@ public class MethodFacadeTest extends ContextTestCase
     {
         MethodHandler method = typeHandler.addMethod("void methodUsingAnonymousType()"
                                                     ,"Object o = new Object() {public String toString(){return \"\";}};");
-        assertThat(new MethodFacade(method.get()).getFirstNonAnonymousMethodCallingThisMethod()).isEqualTo(method.get());
+        assertEquals(new MethodFacade(method.get()).getFirstNonAnonymousMethodCallingThisMethod(), method.get());
     }
 
     @Test
@@ -144,6 +146,6 @@ public class MethodFacadeTest extends ContextTestCase
 
         int offsetInOverriddenToStringMethod = method.get().getSourceRange().getOffset() + 60;
         IMethod overriddenToStringMethod = (IMethod) typeHandler.getCompilationUnit().getElementAt(offsetInOverriddenToStringMethod);
-        assertThat(new MethodFacade(overriddenToStringMethod).getFirstNonAnonymousMethodCallingThisMethod()).isEqualTo(method.get());
+        assertEquals(new MethodFacade(overriddenToStringMethod).getFirstNonAnonymousMethodCallingThisMethod(), method.get());
     }
 }

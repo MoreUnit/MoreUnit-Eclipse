@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.sort;
-import static java.util.regex.Matcher.quoteReplacement;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
 

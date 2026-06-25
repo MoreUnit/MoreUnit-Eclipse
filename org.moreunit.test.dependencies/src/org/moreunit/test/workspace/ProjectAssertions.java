@@ -1,7 +1,8 @@
 package org.moreunit.test.workspace;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 
 public class ProjectAssertions
@@ -17,7 +18,15 @@ public class ProjectAssertions
     {
         try
         {
-            assertThat(projectHandler.get().getPackageFragmentRoots()).extracting("elementName").contains(srcFolder);
+            IPackageFragmentRoot[] roots = projectHandler.get().getPackageFragmentRoots();
+            boolean found = false;
+            for (IPackageFragmentRoot root : roots) {
+                if (srcFolder.equals(root.getElementName())) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found, "expected source folder: " + srcFolder);
         }
         catch (JavaModelException e)
         {

@@ -1,6 +1,8 @@
 package org.moreunit.mock.dependencies;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,7 +45,7 @@ public class DependencyInjectionPointCollectorTest
         when(aMember.getFlags()).thenReturn(Flags.AccPrivate);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isFalse();
+        assertFalse(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -53,7 +55,7 @@ public class DependencyInjectionPointCollectorTest
         when(aMember.getFlags()).thenReturn(Flags.AccDefault);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isFalse();
+        assertFalse(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -63,7 +65,7 @@ public class DependencyInjectionPointCollectorTest
         when(aMember.getFlags()).thenReturn(Flags.AccProtected);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isFalse();
+        assertFalse(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -74,7 +76,7 @@ public class DependencyInjectionPointCollectorTest
         when(aMember.getFlags()).thenReturn(Flags.AccPublic & Flags.AccSynthetic);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isFalse();
+        assertFalse(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -84,7 +86,7 @@ public class DependencyInjectionPointCollectorTest
         when(aMember.getFlags()).thenReturn(Flags.AccPublic);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isTrue();
+        assertTrue(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -95,7 +97,7 @@ public class DependencyInjectionPointCollectorTest
         when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isTrue();
+        assertTrue(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -106,7 +108,7 @@ public class DependencyInjectionPointCollectorTest
         when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         // then
-        assertThat(collector.isVisibleToTestCase(aMember)).isTrue();
+        assertTrue(collector.isVisibleToTestCase(aMember));
     }
 
     @Test
@@ -117,7 +119,7 @@ public class DependencyInjectionPointCollectorTest
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { notAConstructor });
 
         // then
-        assertThat(collector.getConstructors()).isEmpty();
+        assertTrue(collector.getConstructors().isEmpty());
     }
 
     private IMethod method(String name, int argNum, int flags, boolean constructor) throws JavaModelException
@@ -138,7 +140,7 @@ public class DependencyInjectionPointCollectorTest
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { noArgConstructor });
 
         // then
-        assertThat(collector.getConstructors()).isEmpty();
+        assertTrue(collector.getConstructors().isEmpty());
     }
 
     @Test
@@ -150,7 +152,7 @@ public class DependencyInjectionPointCollectorTest
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { packagePrivateConstructor });
 
         // then
-        assertThat(collector.getConstructors()).isEmpty();
+        assertTrue(collector.getConstructors().isEmpty());
     }
 
     @Test
@@ -165,7 +167,7 @@ public class DependencyInjectionPointCollectorTest
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { publicConstructor, packagePrivateConstructor });
 
         // then
-        assertThat(collector.getConstructors()).hasSize(2);
+        assertEquals(2, collector.getConstructors().size());
     }
 
     @Test
@@ -179,7 +181,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasMethods(notASetter, alsoNotASetter, alsoNotASetter2, alsoNotASetter3);
 
         // then
-        assertThat(collector.getSetters()).isEmpty();
+        assertTrue(collector.getSetters().isEmpty());
     }
 
     /**
@@ -211,7 +213,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasMethods(notASetter);
 
         // then
-        assertThat(collector.getSetters()).isEmpty();
+        assertTrue(collector.getSetters().isEmpty());
     }
 
     @Test
@@ -222,7 +224,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasMethods(notASetter);
 
         // then
-        assertThat(collector.getSetters()).isEmpty();
+        assertTrue(collector.getSetters().isEmpty());
     }
 
     @Test
@@ -234,7 +236,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasMethods(packagePrivateSetter);
 
         // then
-        assertThat(collector.getSetters()).isEmpty();
+        assertTrue(collector.getSetters().isEmpty());
     }
 
     @Test
@@ -249,7 +251,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasMethods(publicSetter, packagePrivateSetter);
 
         // then
-        assertThat(collector.getSetters()).hasSize(2);
+        assertEquals(2, collector.getSetters().size());
     }
 
     @Test
@@ -261,7 +263,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasFields(packagePrivateField);
 
         // then
-        assertThat(collector.getFields()).hasSize(1);
+        assertEquals(1, collector.getFields().size());
     }
 
     private IField field(String name, int flags) throws JavaModelException
@@ -294,7 +296,7 @@ public class DependencyInjectionPointCollectorTest
         classUnderTestHierarchyHasFields(publicField, packagePrivateField);
 
         // then
-        assertThat(collector.getFields()).hasSize(2);
+        assertEquals(2, collector.getFields().size());
     }
 
     private IType mockType()

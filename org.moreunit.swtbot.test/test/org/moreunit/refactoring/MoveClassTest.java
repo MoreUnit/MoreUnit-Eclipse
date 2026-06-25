@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
@@ -30,7 +30,7 @@ public class MoveClassTest extends JavaProjectSWTBotTestHelper
 	public void should_move_test_when_cut_gets_moved() throws JavaModelException
 	{
 		moveSomeClassFromOrgtoComPackageAndWaitUntilFinished();
-		assertThat(context.getCompilationUnit("com.SomeClassTest")).isNotNull();
+		assertNotNull(context.getCompilationUnit("com.SomeClassTest"));
 	}
 
 	protected void moveSomeClassFromOrgtoComPackageAndWaitUntilFinished() throws JavaModelException
@@ -57,6 +57,6 @@ public class MoveClassTest extends JavaProjectSWTBotTestHelper
 	public void should_move_prefect_match_only_when_cut_gets_moved() throws JavaModelException
 	{
 		moveSomeClassFromOrgtoComPackageAndWaitUntilFinished();
-		assertThat(context.getCompilationUnit("de.SomeClassTest")).isNotNull();
+		assertNotNull(context.getCompilationUnit("de.SomeClassTest"));
 	}
 }

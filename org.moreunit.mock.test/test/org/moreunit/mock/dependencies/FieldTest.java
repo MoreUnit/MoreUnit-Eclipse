@@ -1,6 +1,7 @@
 package org.moreunit.mock.dependencies;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +43,7 @@ public class FieldTest
         when(eclipseField.getFlags()).thenReturn(Flags.AccFinal);
 
         // then
-        assertThat(field.isAssignable()).isFalse();
+        assertFalse(field.isAssignable());
     }
 
     @Test
@@ -52,7 +53,7 @@ public class FieldTest
         when(eclipseField.getFlags()).thenReturn(Flags.AccDefault);
 
         // then
-        assertThat(field.isAssignable()).isTrue();
+        assertTrue(field.isAssignable());
     }
 
     @Test
@@ -62,7 +63,7 @@ public class FieldTest
         when(eclipseField.getAnnotations()).thenReturn(NO_ANNOTATIONS);
 
         // then
-        assertThat(field.isInjectable()).isFalse();
+        assertFalse(field.isInjectable());
     }
 
     @Test
@@ -72,7 +73,7 @@ public class FieldTest
         when(eclipseField.getAnnotations()).thenReturn(new IAnnotation[] { injectAnnotation });
 
         // then
-        assertThat(field.isInjectable()).isTrue();
+        assertTrue(field.isInjectable());
     }
 
     @Test
@@ -82,7 +83,7 @@ public class FieldTest
         when(eclipseField.getAnnotations()).thenReturn(new IAnnotation[] { resourceAnnotation });
 
         // then
-        assertThat(field.isInjectable()).isTrue();
+        assertTrue(field.isInjectable());
     }
 
     @Test
@@ -92,6 +93,6 @@ public class FieldTest
         when(eclipseField.getAnnotations()).thenReturn(new IAnnotation[] { autowiredAnnotation });
 
         // then
-        assertThat(field.isInjectable()).isTrue();
+        assertTrue(field.isInjectable());
     }
 }

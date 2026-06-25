@@ -3,10 +3,10 @@
  */
 package org.moreunit;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory.withPartName;
 import static org.eclipse.swtbot.eclipse.finder.waits.Conditions.waitForView;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
 
@@ -197,7 +197,7 @@ public class JavaProjectSWTBotTestHelper
         SWTBotView packageExplorerView = bot.viewByTitle("Package Explorer");
 
         List<Tree> findControls = new ChildrenControlFinder(packageExplorerView.getWidget()).findControls(WidgetOfType.widgetOfType(Tree.class));
-        assertThat(findControls).isNotEmpty();
+        assertFalse(findControls.isEmpty());
 
         SWTBotTree tree = new SWTBotTree(findControls.getFirst());
 

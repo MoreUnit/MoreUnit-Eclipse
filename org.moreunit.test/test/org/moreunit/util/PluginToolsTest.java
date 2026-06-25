@@ -1,6 +1,6 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
 import static org.moreunit.util.PluginTools.guessSourceFolderCorrespondingToTestFolder;
 import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;
@@ -39,7 +39,7 @@ public class PluginToolsTest
         List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
 
         // then
-        assertThat(javaProjectsFromWorkspace).hasSize(2);
+        assertEquals(2, javaProjectsFromWorkspace.size());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(testSrcFolder);
+        assertEquals(mainSrcFolder, testSrcFolder);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("src/main/java"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("src/main/java"));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("src/main/java"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("src/main/java"));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("src/main/java"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("src/main/java"));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("src"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("src"));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("source/folder"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("source/folder"));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("src"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("src"));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("two"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("two"));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class PluginToolsTest
         IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
-        assertThat(mainSrcFolder).isEqualTo(project.getSourceFolder("two"));
+        assertEquals(mainSrcFolder, project.getSourceFolder("two"));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(mainSrcFolder);
+        assertEquals(testSrcFolder, mainSrcFolder);
     }
 
     @Test
@@ -193,7 +193,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("src/test/java"));
+        assertEquals(testSrcFolder, project.getSourceFolder("src/test/java"));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("src/test/groovy"));
+        assertEquals(testSrcFolder, project.getSourceFolder("src/test/groovy"));
     }
 
     @Test
@@ -221,7 +221,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("src/test/groovy"));
+        assertEquals(testSrcFolder, project.getSourceFolder("src/test/groovy"));
     }
 
     @Test
@@ -235,7 +235,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("test"));
+        assertEquals(testSrcFolder, project.getSourceFolder("test"));
     }
 
     @Test
@@ -249,7 +249,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("two"));
+        assertEquals(testSrcFolder, project.getSourceFolder("two"));
     }
 
     @Test
@@ -263,7 +263,7 @@ public class PluginToolsTest
         IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
-        assertThat(testSrcFolder).isEqualTo(project.getSourceFolder("two"));
+        assertEquals(testSrcFolder, project.getSourceFolder("two"));
     }
 
     private IJavaProject createProject(String name) throws Exception

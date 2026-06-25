@@ -1,6 +1,6 @@
 package org.moreunit.mock.wizard;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.PixelConverter;
@@ -29,7 +29,8 @@ public class LayoutUtilTest
     @AfterEach
     public void tearDown()
     {
-        if (shell != null && !shell.isDisposed()) {
+        if(shell != null && ! shell.isDisposed())
+        {
             shell.dispose();
         }
     }
@@ -47,7 +48,7 @@ public class LayoutUtilTest
         int expectedHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
         expectedHint = Math.max(expectedHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 
-        assertThat(hint).isEqualTo(expectedHint);
+        assertEquals(expectedHint, hint);
     }
 
     @Test
@@ -61,8 +62,8 @@ public class LayoutUtilTest
         LayoutUtil.setButtonDimensionHint(button);
 
         int expectedHint = LayoutUtil.getButtonWidthHint(button);
-        assertThat(layoutData.widthHint).isEqualTo(expectedHint);
-        assertThat(layoutData.horizontalAlignment).isEqualTo(GridData.FILL);
+        assertEquals(expectedHint, layoutData.widthHint);
+        assertEquals(GridData.FILL, layoutData.horizontalAlignment);
     }
 
     @Test

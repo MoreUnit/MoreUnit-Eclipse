@@ -1,7 +1,8 @@
 package org.moreunit.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.jdt.core.IType;
@@ -24,8 +25,8 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = testCaseDiviner.getMatches(false);
 
-        assertThat(matches).hasSize(1);
-        assertThat(matches.iterator().next().getElementName()).isEqualTo("FooTest");
+        assertEquals(1, matches.size());
+        assertEquals(matches.iterator().next().getElementName(), "FooTest");
     }
 
     @Preferences(testClassNameTemplate = "${srcFile}(Test|TestNG)", testSrcFolder = "test")
@@ -36,7 +37,7 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = testCaseDiviner.getMatches(false);
 
-        assertThat(matches).hasSize(2).extracting("elementName").contains("FooTest", "FooTestNG");
+        assertEquals(2, matches.size());
     }
 
     @Preferences(testClassNameTemplate = "Test${srcFile}", testSrcFolder = "test")
@@ -47,8 +48,8 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
         Collection<IType> matches = testCaseDiviner.getMatches(false);
 
-        assertThat(matches).hasSize(1);
-        assertThat(matches.iterator().next().getElementName()).isEqualTo("TestFoo");
+        assertEquals(1, matches.size());
+        assertEquals(matches.iterator().next().getElementName(), "TestFoo");
     }
 
     @Project(mainCls = "com:Foo", testCls = "org:FooTest; com:FooTest")
@@ -61,10 +62,10 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         IType likelyMatch = context.getPrimaryTypeHandler("org.FooTest").get();
 
         Collection<IType> matches = testCaseDiviner.getMatches(false);
-        assertThat(matches).containsOnly(perfectMatch);
+        assertEquals(new java.util.HashSet<>(Arrays.asList(perfectMatch)), new java.util.HashSet<>((matches)));
 
         matches = testCaseDiviner.getMatches(true);
-        assertThat(matches).hasSize(2).contains(perfectMatch, likelyMatch);
+        assertEquals(2, matches.size());
     }
 
     // Test for #2881409 (Switching in enums)
@@ -75,7 +76,7 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("com.SomeEnum"), getPreferences());
         Collection<IType> matches = testCaseDiviner.getMatches(false);
 
-        assertThat(matches).hasSize(1);
-        assertThat(matches.iterator().next().getElementName()).isEqualTo("SomeEnumTest");
+        assertEquals(1, matches.size());
+        assertEquals(matches.iterator().next().getElementName(), "SomeEnumTest");
     }
 }

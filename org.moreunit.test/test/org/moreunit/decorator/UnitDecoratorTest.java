@@ -1,6 +1,7 @@
 package org.moreunit.decorator;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -21,21 +22,21 @@ public class UnitDecoratorTest extends ContextTestCase
     public void getCompilationUnitIfIsTypeUnderTest_should_return_null_when_not_file()
     {
         IPackageFragmentRoot packageFragmentRoot = context.getProjectHandler().getMainSrcFolderHandler().get();
-        assertThat(unitDecorator.getCompilationUnitIfIsTypeUnderTest(packageFragmentRoot.getResource(), logBuilder)).isNull();
+        assertNull(unitDecorator.getCompilationUnitIfIsTypeUnderTest(packageFragmentRoot.getResource(), logBuilder));
     }
 
     @Test
     public void getCompilationUnitIfIsTypeUnderTest_should_return_null_when_testcase() throws JavaModelException
     {
         IResource testCaseResource = context.getCompilationUnit("org.SomeClassTest").getResource();
-        assertThat(unitDecorator.getCompilationUnitIfIsTypeUnderTest(testCaseResource, logBuilder)).isNull();
+        assertNull(unitDecorator.getCompilationUnitIfIsTypeUnderTest(testCaseResource, logBuilder));
     }
 
     @Test
     public void getCompilationUnitIfIsTypeUnderTest_should_not_return_null_when_not_testcase() throws JavaModelException
     {
         IResource classResource = context.getCompilationUnit("org.SomeClass").getResource();
-        assertThat(unitDecorator.getCompilationUnitIfIsTypeUnderTest(classResource, logBuilder)).isNotNull();
+        assertNotNull(unitDecorator.getCompilationUnitIfIsTypeUnderTest(classResource, logBuilder));
     }
 
     @Test
@@ -43,6 +44,6 @@ public class UnitDecoratorTest extends ContextTestCase
     {
         CompilationUnitHandler cu = context.getProjectHandler().getMainSrcFolderHandler().createCompilationUnit("package-info", "blah");
         IResource resource = cu.get().getResource();
-        assertThat(unitDecorator.getCompilationUnitIfIsTypeUnderTest(resource, logBuilder)).isNull();
+        assertNull(unitDecorator.getCompilationUnitIfIsTypeUnderTest(resource, logBuilder));
     }
 }

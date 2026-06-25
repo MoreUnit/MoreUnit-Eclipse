@@ -1,8 +1,9 @@
 package org.moreunit.extensionpoints;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,22 +13,22 @@ public class NewTestCaseWizardPagePositionTest
     public void after()
     {
         NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.after("a page");
-        assertThat(pagePosition.isAfter("a page")).isTrue();
-        assertThat(pagePosition.isBefore("a page")).isFalse();
+        assertTrue(pagePosition.isAfter("a page"));
+        assertFalse(pagePosition.isBefore("a page"));
 
-        assertThat(pagePosition.isAfter("another page")).isFalse();
-        assertThat(pagePosition.isBefore("another page")).isFalse();
+        assertFalse(pagePosition.isAfter("another page"));
+        assertFalse(pagePosition.isBefore("another page"));
     }
 
     @Test
     public void before()
     {
         NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.before("a page");
-        assertThat(pagePosition.isAfter("a page")).isFalse();
-        assertThat(pagePosition.isBefore("a page")).isTrue();
+        assertFalse(pagePosition.isAfter("a page"));
+        assertTrue(pagePosition.isBefore("a page"));
 
-        assertThat(pagePosition.isAfter("another page")).isFalse();
-        assertThat(pagePosition.isBefore("another page")).isFalse();
+        assertFalse(pagePosition.isAfter("another page"));
+        assertFalse(pagePosition.isBefore("another page"));
     }
 
     @Test

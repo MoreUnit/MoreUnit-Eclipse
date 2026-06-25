@@ -1,6 +1,7 @@
 package org.moreunit.util;
 
-import static org.eclipse.jdt.core.search.SearchPattern.*;
+import static org.eclipse.jdt.core.search.SearchPattern.createOrPattern;
+import static org.eclipse.jdt.core.search.SearchPattern.createPattern;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;

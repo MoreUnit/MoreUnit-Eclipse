@@ -1,6 +1,6 @@
 package org.moreunit.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.moreunit.preferences.PreferenceConstants.PREFERENCES_VERSION;
 import static org.moreunit.preferences.PreferenceConstants.TEST_CLASS_NAME_TEMPLATE;
 import static org.moreunit.preferences.PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS;
@@ -47,7 +47,7 @@ public class PreferencesMigrationTest
         prefs.forceWorkspacePreferencesMigration();
 
         // then
-        assertThat(prefs.getWorkspaceView().getTestClassNameTemplate()).isEqualTo("(Pre1|Pre2)*${srcFile}*(Suf1|Suf2)");
+        assertEquals(prefs.getWorkspaceView().getTestClassNameTemplate(), "(Pre1|Pre2)*${srcFile}*(Suf1|Suf2)");
     }
 
     @Test
@@ -73,6 +73,6 @@ public class PreferencesMigrationTest
         prefs.forceProjectPreferencesMigration(project);
 
         // then
-        assertThat(prefs.getProjectView(project).getTestClassNameTemplate()).isEqualTo("(Prefix1|Prefix2)${srcFile}Suffix");
+        assertEquals(prefs.getProjectView(project).getTestClassNameTemplate(), "(Prefix1|Prefix2)${srcFile}Suffix");
     }
 }

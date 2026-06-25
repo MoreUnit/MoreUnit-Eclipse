@@ -1,7 +1,9 @@
 package org.moreunit.settings;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.swtbot.swt.finder.waits.Conditions.waitForShell;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
@@ -68,7 +70,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         propertiesDialogShell.activate();
         bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive(propertiesDialogShell.getText()));
         saveAndCloseProps();
-        assertThat(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext())).isTrue();
+        assertTrue(Preferences.getInstance().hasProjectSpecificSettings(getJavaProjectFromContext()));
     }
 
     private void saveAndCloseProps()
@@ -94,31 +96,31 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.radio(PreferenceConstants.TEXT_JUNIT_3_8).click();
         saveAndCloseProps();
         String testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, testType);
 
         openPropertiesAndActivateOtherTab();
         bot.radio(PreferenceConstants.TEXT_JUNIT_4).click();
         saveAndCloseProps();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, testType);
 
         openPropertiesAndActivateOtherTab();
         bot.radio(PreferenceConstants.TEXT_JUNIT_5).click();
         saveAndCloseProps();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, testType);
 
         openPropertiesAndActivateOtherTab();
         bot.radio(PreferenceConstants.TEXT_SPOCK).click();
         saveAndCloseProps();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_SPOCK);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_SPOCK, testType);
 
         openPropertiesAndActivateOtherTab();
         bot.radio(PreferenceConstants.TEXT_TEST_NG).click();
         saveAndCloseProps();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, testType);
     }
 
     @Test
@@ -129,13 +131,13 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.checkBox(PreferenceConstants.TEXT_TEST_METHOD_TYPE).select();
         saveAndCloseProps();
         String testMethodType = Preferences.getInstance().getTestMethodType(getJavaProjectFromContext());
-        assertThat(testMethodType).isEqualTo(PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
+        assertEquals(PreferenceConstants.TEST_METHOD_TYPE_JUNIT3, testMethodType);
 
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_TEST_METHOD_TYPE).deselect();
         saveAndCloseProps();
         testMethodType = Preferences.getInstance().getTestMethodType(getJavaProjectFromContext());
-        assertThat(testMethodType).isEqualTo(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX);
+        assertEquals(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX, testMethodType);
     }
 
     @Test
@@ -145,7 +147,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_TEST_METHOD_CONTENT).setText("blubberContent");
         saveAndCloseProps();
         String testMethodDefaultContent = Preferences.getInstance().getTestMethodDefaultContent(getJavaProjectFromContext());
-        assertThat(testMethodDefaultContent).isEqualTo("blubberContent");
+        assertEquals("blubberContent", testMethodDefaultContent);
     }
 
     @Test
@@ -155,7 +157,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel("Pattern:").setText("${srcFile}(Dest|ITDest)");
         saveAndCloseProps();
         String template = Preferences.forProject(getJavaProjectFromContext()).getTestClassNameTemplate();
-        assertThat(template).isEqualTo("${srcFile}(Dest|ITDest)");
+        assertEquals("${srcFile}(Dest|ITDest)", template);
     }
 
     @Test
@@ -165,7 +167,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_PREFIX).setText("pckgpref");
         saveAndCloseProps();
         String testPackagePrefix = Preferences.getInstance().getTestPackagePrefix(getJavaProjectFromContext());
-        assertThat(testPackagePrefix).isEqualTo("pckgpref");
+        assertEquals("pckgpref", testPackagePrefix);
     }
 
     @Test
@@ -175,7 +177,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_SUFFIX).setText("pckgsuff");
         saveAndCloseProps();
         String testPackageSuffix = Preferences.getInstance().getTestPackageSuffix(getJavaProjectFromContext());
-        assertThat(testPackageSuffix).isEqualTo("pckgsuff");
+        assertEquals("pckgsuff", testPackageSuffix);
     }
 
     @Test
@@ -185,7 +187,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_TEST_SUPERCLASS).setText("org.moreunit.SuperKlass");
         saveAndCloseProps();
         String testSuperClass = Preferences.getInstance().getTestSuperClass(getJavaProjectFromContext());
-        assertThat(testSuperClass).isEqualTo("org.moreunit.SuperKlass");
+        assertEquals("org.moreunit.SuperKlass", testSuperClass);
     }
 
     @Test
@@ -194,14 +196,14 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).select();
         saveAndCloseProps();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isTrue();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
 
         openPropertiesAndActivateOtherTab();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).deselect();
         saveAndCloseProps();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isFalse();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
+        assertFalse(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
     }
 
     protected void openPropertiesAndActivateOtherTab()
@@ -216,23 +218,23 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     {
         openProjectPropertiesAndSelectMoreUnitPage();
 
-        assertThat(bot.button("Add").isEnabled()).isTrue();
-        assertThat(bot.button("Remove").isEnabled()).isFalse();
-        assertThat(bot.button("Remap").isEnabled()).isFalse();
-        assertThat(bot.tree(1).isEnabled()).isTrue();
+        assertTrue(bot.button("Add").isEnabled());
+        assertFalse(bot.button("Remove").isEnabled());
+        assertFalse(bot.button("Remap").isEnabled());
+        assertTrue(bot.tree(1).isEnabled());
 
         bot.checkBox("Use project specific settings").deselect();
-        assertThat(bot.button("Add").isEnabled()).isFalse();
-        assertThat(bot.button("Remove").isEnabled()).isFalse();
-        assertThat(bot.button("Remap").isEnabled()).isFalse();
-        assertThat(bot.tree(1).isEnabled()).isFalse();
+        assertFalse(bot.button("Add").isEnabled());
+        assertFalse(bot.button("Remove").isEnabled());
+        assertFalse(bot.button("Remap").isEnabled());
+        assertFalse(bot.tree(1).isEnabled());
 
         bot.checkBox("Use project specific settings").select();
         bot.tree(1).select(0);
-        assertThat(bot.button("Add").isEnabled()).isTrue();
-        assertThat(bot.button("Remove").isEnabled()).isTrue();
-        assertThat(bot.button("Remap").isEnabled()).isTrue();
-        assertThat(bot.tree(1).isEnabled()).isTrue();
+        assertTrue(bot.button("Add").isEnabled());
+        assertTrue(bot.button("Remove").isEnabled());
+        assertTrue(bot.button("Remap").isEnabled());
+        assertTrue(bot.tree(1).isEnabled());
 
         saveAndCloseProps();
     }

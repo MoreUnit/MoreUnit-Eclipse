@@ -223,7 +223,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-surefire-plugin</artifactId>
         <configuration>
-          <providerHint>junit6</providerHint>
+          <providerHint>junit5</providerHint>
         </configuration>
       </plugin>
       <plugin>

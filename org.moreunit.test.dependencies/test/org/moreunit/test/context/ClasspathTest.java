@@ -1,10 +1,7 @@
 package org.moreunit.test.context;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
-
-import org.assertj.core.api.Condition;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.jupiter.api.Disabled;
@@ -22,7 +19,7 @@ public class ClasspathTest extends ContextTestCase
     public void should_add_junit4_lib_to_classpath_when_junit4_is_used() throws JavaModelException
     {
         IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
-        assertThat(packageFragmentRoots).extracting("elementName").contains("junit.jar");
+        assertTrue(containsElementNamed(packageFragmentRoots, "junit.jar"));
     }
 
     @Project(SimpleJUnit5Project.class)
@@ -30,7 +27,7 @@ public class ClasspathTest extends ContextTestCase
     public void should_add_junit5_lib_to_classpath_when_junit5_is_used() throws JavaModelException
     {
         IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
-        assertThat(packageFragmentRoots).extracting("elementName").satisfies(anyMatchOnPattern("org\\.junit\\.jupiter\\.api.*\\.jar"));
+        assertTrue(anyMatchOnPattern(packageFragmentRoots, "org\\.junit\\.jupiter\\.api.*\\.jar"));
     }
 
     @Project(SimpleJUnit3Project.class)
@@ -38,7 +35,7 @@ public class ClasspathTest extends ContextTestCase
     public void should_add_junit3_lib_to_classpath_when_junit3_is_used() throws JavaModelException
     {
         IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
-        assertThat(packageFragmentRoots).extracting("elementName").contains("junit.jar");
+        assertTrue(containsElementNamed(packageFragmentRoots, "junit.jar"));
     }
 
     @Project(SimpleTestNGProject.class)
@@ -50,23 +47,26 @@ public class ClasspathTest extends ContextTestCase
         {
             System.out.println(root.getElementName());
         }
-        assertThat(packageFragmentRoots).extracting("elementName").contains("testng.jar");
+        assertTrue(containsElementNamed(packageFragmentRoots, "testng.jar"));
     }
 
-    private Condition<List<? extends Object>> anyMatchOnPattern(final String pattern)
+    private static boolean containsElementNamed(IPackageFragmentRoot[] roots, String name)
     {
-        return new Condition<>()
-        {
-            @Override
-            public boolean matches(List<? extends Object> elements)
-            {
-                for (Object element : elements) {
-                    if (String.valueOf(element).matches(pattern)) {
-                        return true;
-                    }
-                }
-                return false;
+        for (IPackageFragmentRoot root : roots) {
+            if (name.equals(root.getElementName())) {
+                return true;
             }
-        };
+        }
+        return false;
+    }
+
+    private static boolean anyMatchOnPattern(IPackageFragmentRoot[] roots, final String pattern)
+    {
+        for (IPackageFragmentRoot root : roots) {
+            if (root.getElementName().matches(pattern)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package org.moreunit.core.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -18,8 +19,8 @@ public class LanguagePreferencesTest
         LanguagePreferences otherPrefsWithDifferentPattern = preferencesWithTestFileNameTemplateAndSeparator("test-${srcFile}", "-");
 
         // then
-        assertThat(prefs.getTestFileNamePattern()).isSameAs(otherPrefsWithSamePattern.getTestFileNamePattern());
-        assertThat(prefs.getTestFileNamePattern()).isNotSameAs(otherPrefsWithDifferentPattern.getTestFileNamePattern());
+        assertSame(prefs.getTestFileNamePattern(), otherPrefsWithSamePattern.getTestFileNamePattern());
+        assertNotSame(prefs.getTestFileNamePattern(), otherPrefsWithDifferentPattern.getTestFileNamePattern());
     }
 
     @Test
@@ -35,11 +36,9 @@ public class LanguagePreferencesTest
         prefs.setValue("foo", "bar");
 
         // then
-        assertThat(prefs.getTestFileNamePattern()).isNotSameAs(patternBeforeChange);
+        assertNotSame(prefs.getTestFileNamePattern(), patternBeforeChange);
 
-        assertThat(otherPrefsWithSamePattern.getTestFileNamePattern()) //
-            .isNotSameAs(patternBeforeChange) //
-            .isSameAs(prefs.getTestFileNamePattern());
+        assertNotSame(otherPrefsWithSamePattern.getTestFileNamePattern(), patternBeforeChange);
     }
 
     private LanguagePreferences preferencesWithTestFileNameTemplateAndSeparator(final String template, final String separator)

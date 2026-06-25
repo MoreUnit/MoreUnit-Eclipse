@@ -1,6 +1,7 @@
 package org.moreunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ public class InMemoryFolderTest {
         InMemoryProject project = workspace.getProject("project");
         InMemoryFolder folder = project.getFolder("folder/subfolder");
 
-        assertThat(folder.getProject()).isSameAs(project);
+        assertSame(folder.getProject(), project);
     }
 
     @Test
@@ -21,6 +22,6 @@ public class InMemoryFolderTest {
         InMemoryProject project = workspace.getProject("project");
         InMemoryFolder folder = project.getFolder("folder/subfolder");
 
-        assertThat(folder.getProjectPreferences()).isNull();
+        assertNull(folder.getProjectPreferences());
     }
 }

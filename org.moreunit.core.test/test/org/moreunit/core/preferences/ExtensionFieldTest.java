@@ -1,6 +1,7 @@
 package org.moreunit.core.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,38 +27,38 @@ public class ExtensionFieldTest
     public void should_reject_empty_extension() throws Exception
     {
         when(textField.getText()).thenReturn("");
-        assertThat(field.isValid()).isFalse();
+        assertFalse(field.isValid());
 
         when(textField.getText()).thenReturn(".");
-        assertThat(field.isValid()).isFalse();
+        assertFalse(field.isValid());
 
         when(textField.getText()).thenReturn("*.");
-        assertThat(field.isValid()).isFalse();
+        assertFalse(field.isValid());
     }
 
     @Test
     public void should_reject_non_alphanum_extension() throws Exception
     {
         when(textField.getText()).thenReturn("a*bc");
-        assertThat(field.isValid()).isFalse();
+        assertFalse(field.isValid());
 
         when(textField.getText()).thenReturn("a_bc");
-        assertThat(field.isValid()).isFalse();
+        assertFalse(field.isValid());
     }
 
     @Test
     public void should_return_clean_extension() throws Exception
     {
         when(textField.getText()).thenReturn("rb");
-        assertThat(field.getExtension()).isEqualTo("rb");
+        assertEquals(field.getExtension(), "rb");
 
         when(textField.getText()).thenReturn("RB");
-        assertThat(field.getExtension()).isEqualTo("rb");
+        assertEquals(field.getExtension(), "rb");
 
         when(textField.getText()).thenReturn(".rb");
-        assertThat(field.getExtension()).isEqualTo("rb");
+        assertEquals(field.getExtension(), "rb");
 
         when(textField.getText()).thenReturn("*.rb");
-        assertThat(field.getExtension()).isEqualTo("rb");
+        assertEquals(field.getExtension(), "rb");
     }
 }

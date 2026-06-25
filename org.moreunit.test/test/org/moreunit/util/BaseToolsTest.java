@@ -1,7 +1,8 @@
 package org.moreunit.util;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class BaseToolsTest
     {
         String className = "Eins";
         String[] prefixes = { "Test" };
-        assertThat(BaseTools.getTestedClass(className, prefixes, new String[0], null, null)).isEmpty();
+        assertTrue(BaseTools.getTestedClass(className, prefixes, new String[0], null, null).isEmpty());
     }
 
     @Test
@@ -26,32 +27,32 @@ public class BaseToolsTest
         String className = "EinsTest";
         String[] suffixes = { "Test" };
 
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("Eins");
+        assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
 
         className = "TestCaseDivinerTest";
         suffixes = new String[] { "Test" };
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("TestCaseDiviner");
+        assertEquals(Arrays.asList("TestCaseDiviner"), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
     }
 
     @Test
     public void getTestedClass_should_return_empty_list_when_called_with_null_as_classname()
     {
         String className = null;
-        assertThat(BaseTools.getTestedClass(className, new String[0], new String[0], null, null)).isEmpty();
+        assertTrue(BaseTools.getTestedClass(className, new String[0], new String[0], null, null).isEmpty());
     }
 
     @Test
     public void getTestedClass_should_return_empty_list_when_called_with_empty_prefix_and_suffix_lists()
     {
         String className = "ABC";
-        assertThat(BaseTools.getTestedClass(className, new String[0], new String[0], null, null)).isEmpty();
+        assertTrue(BaseTools.getTestedClass(className, new String[0], new String[0], null, null).isEmpty());
     }
 
     @Test
     public void getTestedClass_should_return_empty_list_when_called_with_null_as_prefix_and_suffix_lists()
     {
         String className = "ABC";
-        assertThat(BaseTools.getTestedClass(className, null, null, null, null)).isEmpty();
+        assertTrue(BaseTools.getTestedClass(className, null, null, null, null).isEmpty());
     }
 
     @Test
@@ -59,9 +60,9 @@ public class BaseToolsTest
     {
         String[] suffixes = { "SystemTest", "Test" };
         String className = "EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("Eins");
+        assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
         className = "EinsSystemTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, null)).containsExactly("Eins", "EinsSystem");
+        assertEquals(Arrays.asList("Eins", "EinsSystem"), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
     }
 
     @Test
@@ -70,16 +71,16 @@ public class BaseToolsTest
         String className = "test.EinsTest";
         String[] suffixes = { "Test" };
         String packagePrefix = "test";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null)).containsExactly("Eins");
+        assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
 
         className = "EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null)).containsExactly("Eins");
+        assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
 
         className = "test.pack.EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null)).containsExactly("pack.Eins");
+        assertEquals(Arrays.asList("pack.Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
 
         className = "testpack.EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null)).containsExactly("testpack.Eins");
+        assertEquals(Arrays.asList("testpack.Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
     }
 
     @Test
@@ -88,19 +89,19 @@ public class BaseToolsTest
         String className = "test.EinsTest";
         String[] suffixes = { "Test" };
         String packageSuffix = "test";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("Eins");
+        assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
 
         className = "EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("Eins");
+        assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
 
         className = "pack.test.EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("pack.Eins");
+        assertEquals(Arrays.asList("pack.Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
 
         className = "packtest.EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("packtest.Eins");
+        assertEquals(Arrays.asList("packtest.Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
 
         className = "test.test.EinsTest";
-        assertThat(BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix)).containsExactly("test.Eins");
+        assertEquals(Arrays.asList("test.Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
     }
 
     @Test
@@ -108,23 +109,23 @@ public class BaseToolsTest
     {
         String testString = "One";
         List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertThat(result).containsExactly("One");
+        assertEquals(Arrays.asList("One"), result);
 
         testString = "OneTwo";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertThat(result).isEqualTo(Arrays.asList("One", "OneTwo"));
+        assertEquals(result, Arrays.asList("One", "OneTwo"));
 
         testString = "OneTwoThree";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertThat(result).isEqualTo(Arrays.asList("One", "OneTwo", "OneTwoThree"));
+        assertEquals(result, Arrays.asList("One", "OneTwo", "OneTwoThree"));
 
         testString = "oneTwo";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertThat(result).isEqualTo(Arrays.asList("one", "oneTwo"));
+        assertEquals(result, Arrays.asList("one", "oneTwo"));
 
         testString = "pack.age.OneTwoThree";
         result = BaseTools.getListOfUnqualifiedTypeNames(testString);
-        assertThat(result).isEqualTo(Arrays.asList("pack.age.One", "pack.age.OneTwo", "pack.age.OneTwoThree"));
+        assertEquals(result, Arrays.asList("pack.age.One", "pack.age.OneTwo", "pack.age.OneTwoThree"));
     }
 
     @Test
@@ -134,7 +135,8 @@ public class BaseToolsTest
         testedClasses.add("EinsZweiDrei");
         testedClasses.add("OneTwoThree");
         List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
-        assertThat(result).startsWith("EinsZweiDrei", "OneTwoThree");
-        assertThat(result).endsWith("One");
+        assertEquals(result.get(0), "EinsZweiDrei");
+        assertEquals(result.get(1), "OneTwoThree");
+        assertEquals(result.get(5), "One");
     }
 }

@@ -1,6 +1,6 @@
 package org.moreunit.core.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.CamelCaseNameTokenizer;
@@ -16,7 +16,7 @@ public class FileNamePatternDemoTest
         TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
 
         // then
-        assertThat(FileNamePatternDemo.generateSourceFileName(pattern)).isEqualTo("FooBar");
+        assertEquals(FileNamePatternDemo.generateSourceFileName(pattern), "FooBar");
     }
 
     @Test
@@ -26,7 +26,7 @@ public class FileNamePatternDemoTest
         TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_test", new SeparatorNameTokenizer("_"));
 
         // then
-        assertThat(FileNamePatternDemo.generateSourceFileName(pattern)).isEqualTo("foo_bar");
+        assertEquals(FileNamePatternDemo.generateSourceFileName(pattern), "foo_bar");
     }
 
     @Test
@@ -36,6 +36,6 @@ public class FileNamePatternDemoTest
         TestFileNamePattern pattern = new TestFileNamePattern("(bla|bli)*${srcFile}-*(plop|plip)*", new SeparatorNameTokenizer("-"));
 
         // then
-        assertThat(FileNamePatternDemo.generateSourceFileName(pattern)).isEqualTo("foo-bar");
+        assertEquals(FileNamePatternDemo.generateSourceFileName(pattern), "foo-bar");
     }
 }

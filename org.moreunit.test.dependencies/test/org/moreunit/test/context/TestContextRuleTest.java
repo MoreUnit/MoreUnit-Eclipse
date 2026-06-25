@@ -1,8 +1,8 @@
 package org.moreunit.test.context;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -42,9 +42,10 @@ public class TestContextRuleTest
 
         for (Runnable runnable : runnables)
         {
-            assertThatThrownBy(() -> runnable.run())
-            .isInstanceOf(IllegalStateException.class)
-            .hasMessage("No context defined. Are you accessing this extension from outside a test method? or from one that has no Context annotation?");
+            {
+                IllegalStateException e = assertThrows(IllegalStateException.class, () -> runnable.run());
+                assertEquals("No context defined. Are you accessing this extension from outside a test method? or from one that has no Context annotation?", e.getMessage());
+            }
         }
     }
 
@@ -52,23 +53,25 @@ public class TestContextRuleTest
     @Context(mainSrc = "", testSrc = "")
     public void should_complain_when_source_is_undefined() throws Exception
     {
-        assertThatThrownBy(() -> context.getCompilationUnit("AClass"))
-        .hasMessage("No compilation unit defined with name: AClass");
+        {
+            Exception e = assertThrows(Exception.class, () -> context.getCompilationUnit("AClass"));
+            assertEquals("No compilation unit defined with name: AClass", e.getMessage());
+        }
     }
 
     @Test
     @Context(mainSrc = "ClassUnderTest.txt, ClassUnderTest2.txt")
     public void should_create_production_sources() throws Exception
     {
-        assertThat(context.getCompilationUnitHandler("ClassUnderTest").getInitialSource()).isEqualTo("Content of ClassUnderTest.txt");
-        assertThat(context.getCompilationUnitHandler("ClassUnderTest2").getInitialSource()).isEqualTo("Content of ClassUnderTest2.txt");
+        assertEquals(context.getCompilationUnitHandler("ClassUnderTest").getInitialSource(), "Content of ClassUnderTest.txt");
+        assertEquals(context.getCompilationUnitHandler("ClassUnderTest2").getInitialSource(), "Content of ClassUnderTest2.txt");
     }
 
     @Test
     @Context(mainSrc = "TestCase.txt, TestCase2.txt")
     public void should_create_test_sources() throws Exception
     {
-        assertThat(context.getCompilationUnitHandler("TestCase").getInitialSource()).isEqualTo("Content of TestCase.txt");
-        assertThat(context.getCompilationUnitHandler("TestCase2").getInitialSource()).isEqualTo("Content of TestCase2.txt");
+        assertEquals(context.getCompilationUnitHandler("TestCase").getInitialSource(), "Content of TestCase.txt");
+        assertEquals(context.getCompilationUnitHandler("TestCase2").getInitialSource(), "Content of TestCase2.txt");
     }
 }

@@ -1,7 +1,9 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,10 +22,10 @@ public class WordScannerTest
         WordScanner scanner = new WordScanner("");
 
         // then
-        assertThat(scanner.hasNext()).isFalse();
-        assertThat(scanner.hasNext(2)).isFalse();
-        assertThat(scanner.hasPrevious()).isFalse();
-        assertThat(scanner.hasPrevious(2)).isFalse();
+        assertFalse(scanner.hasNext());
+        assertFalse(scanner.hasNext(2));
+        assertFalse(scanner.hasPrevious());
+        assertFalse(scanner.hasPrevious(2));
     }
 
     @Test
@@ -40,58 +42,58 @@ public class WordScannerTest
         WordScanner scanner = new WordScanner("some text");
 
         // then (start index is -1)
-        assertThat(scanner.hasNext()).isTrue();
-        assertThat(scanner.hasNext(2)).isTrue();
-        assertThat(scanner.hasPrevious()).isFalse();
-        assertThat(scanner.hasPrevious(2)).isFalse();
-        assertThat(scanner.next()).isEqualTo('s');
-        assertThat(scanner.next(2)).isEqualTo('o');
+        assertTrue(scanner.hasNext());
+        assertTrue(scanner.hasNext(2));
+        assertFalse(scanner.hasPrevious());
+        assertFalse(scanner.hasPrevious(2));
+        assertEquals(scanner.next(), 's');
+        assertEquals(scanner.next(2), 'o');
 
         // when
         scanner.forward();
 
         // then
-        assertThat(scanner.hasNext()).isTrue();
-        assertThat(scanner.hasNext(2)).isTrue();
-        assertThat(scanner.hasPrevious()).isFalse();
-        assertThat(scanner.hasPrevious(2)).isFalse();
-        assertThat(scanner.current()).isEqualTo('s');
-        assertThat(scanner.next()).isEqualTo('o');
-        assertThat(scanner.next(2)).isEqualTo('m');
+        assertTrue(scanner.hasNext());
+        assertTrue(scanner.hasNext(2));
+        assertFalse(scanner.hasPrevious());
+        assertFalse(scanner.hasPrevious(2));
+        assertEquals(scanner.current(), 's');
+        assertEquals(scanner.next(), 'o');
+        assertEquals(scanner.next(2), 'm');
 
         // when
         scanner.forward(8);
 
         // then
-        assertThat(scanner.hasNext()).isFalse();
-        assertThat(scanner.hasNext(2)).isFalse();
-        assertThat(scanner.hasPrevious()).isTrue();
-        assertThat(scanner.hasPrevious(2)).isTrue();
-        assertThat(scanner.current()).isEqualTo('t');
-        assertThat(scanner.previous()).isEqualTo('x');
-        assertThat(scanner.previous(2)).isEqualTo('e');
+        assertFalse(scanner.hasNext());
+        assertFalse(scanner.hasNext(2));
+        assertTrue(scanner.hasPrevious());
+        assertTrue(scanner.hasPrevious(2));
+        assertEquals(scanner.current(), 't');
+        assertEquals(scanner.previous(), 'x');
+        assertEquals(scanner.previous(2), 'e');
 
         // when
         scanner.backward(4);
 
         // then
-        assertThat(scanner.hasNext()).isTrue();
-        assertThat(scanner.hasNext(3)).isTrue();
-        assertThat(scanner.hasPrevious()).isTrue();
-        assertThat(scanner.hasPrevious(3)).isTrue();
-        assertThat(scanner.current()).isEqualTo(' ');
-        assertThat(scanner.next()).isEqualTo('t');
-        assertThat(scanner.next(2)).isEqualTo('e');
-        assertThat(scanner.previous()).isEqualTo('e');
-        assertThat(scanner.previous(2)).isEqualTo('m');
+        assertTrue(scanner.hasNext());
+        assertTrue(scanner.hasNext(3));
+        assertTrue(scanner.hasPrevious());
+        assertTrue(scanner.hasPrevious(3));
+        assertEquals(scanner.current(), ' ');
+        assertEquals(scanner.next(), 't');
+        assertEquals(scanner.next(2), 'e');
+        assertEquals(scanner.previous(), 'e');
+        assertEquals(scanner.previous(2), 'm');
 
         // when
         scanner.backward();
 
         // then
-        assertThat(scanner.current()).isEqualTo('e');
-        assertThat(scanner.next(4)).isEqualTo('x');
-        assertThat(scanner.previous(3)).isEqualTo('s');
+        assertEquals(scanner.current(), 'e');
+        assertEquals(scanner.next(4), 'x');
+        assertEquals(scanner.previous(3), 's');
     }
 
     @Test
@@ -153,17 +155,17 @@ public class WordScannerTest
         // when
         scanner.forward(3);
         // then
-        assertThat(scanner.getCurrentWord()).isEqualTo("som");
+        assertEquals(scanner.getCurrentWord(), "som");
 
         // when
         scanner.forward(4);
         // then
-        assertThat(scanner.getCurrentWord()).isEqualTo("e te");
+        assertEquals(scanner.getCurrentWord(), "e te");
 
         // when
         scanner.forward(2);
         // then
-        assertThat(scanner.getCurrentWord()).isEqualTo("xt");
+        assertEquals(scanner.getCurrentWord(), "xt");
     }
 
     @Test
@@ -175,7 +177,7 @@ public class WordScannerTest
         // when
         scanner.forward(7);
         // then
-        assertThat(scanner.getCurrentWord()).isEqualTo("some te");
+        assertEquals(scanner.getCurrentWord(), "some te");
 
         // when
         scanner.backward(4);

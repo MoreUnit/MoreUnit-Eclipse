@@ -1,6 +1,6 @@
 package org.moreunit.test.context;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -17,15 +17,15 @@ public class TestContextRuleWithClassAnnotationTest extends AnnotatedSuperClass
             testSrc = "TestCase.txt")
     public void should_load_method_context_when_present() throws Exception
     {
-        assertThat(context.getCompilationUnitHandler("ClassUnderTest").getInitialSource()).isEqualTo("Content of ClassUnderTest.txt");
-        assertThat(context.getCompilationUnitHandler("TestCase").getInitialSource()).isEqualTo("Content of TestCase.txt");
+        assertEquals(context.getCompilationUnitHandler("ClassUnderTest").getInitialSource(), "Content of ClassUnderTest.txt");
+        assertEquals(context.getCompilationUnitHandler("TestCase").getInitialSource(), "Content of TestCase.txt");
     }
 
     @Test
     // (also verifies that superclass context is not used)
     public void should_load_class_context_when_no_method_context() throws Exception
     {
-        assertThat(context.getCompilationUnitHandler("DefaultClassUnderTest").getInitialSource()).isEqualTo("Content of DefaultClassUnderTest.txt");
-        assertThat(context.getCompilationUnitHandler("DefaultTestCase").getInitialSource()).isEqualTo("Content of DefaultTestCase.txt");
+        assertEquals(context.getCompilationUnitHandler("DefaultClassUnderTest").getInitialSource(), "Content of DefaultClassUnderTest.txt");
+        assertEquals(context.getCompilationUnitHandler("DefaultTestCase").getInitialSource(), "Content of DefaultTestCase.txt");
     }
 }

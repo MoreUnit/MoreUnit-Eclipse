@@ -12,7 +12,6 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.forms,
- org.eclipse.ui.editors,
  org.eclipse.jdt.core
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy

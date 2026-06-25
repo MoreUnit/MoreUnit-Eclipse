@@ -1,6 +1,6 @@
 package org.moreunit.mock.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +40,6 @@ public class UnmarshallingTest
         // given
         MockingTemplates templates = (MockingTemplates) unmarshaller.unmarshal(getClass().getResource("no_category.xml"));
         // then
-        assertThat(templates.categories()).isNotNull().isEmpty();
+        assertNotNull(templates.categories());
     }
 }

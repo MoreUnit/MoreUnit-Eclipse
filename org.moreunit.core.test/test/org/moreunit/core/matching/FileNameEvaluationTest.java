@@ -1,9 +1,10 @@
 package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class FileNameEvaluationTest
         FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), asList("other1", "other2"));
 
         // when
-        assertThat(eval.getAllCorrespondingFilePatterns()).isEqualTo(asList("preferred1", "preferred2", "other1", "other2"));
+        assertEquals(eval.getAllCorrespondingFilePatterns(), asList("preferred1", "preferred2", "other1", "other2"));
     }
 
     @Test
@@ -29,7 +30,7 @@ public class FileNameEvaluationTest
         FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), NO_PATTERNS);
 
         // when
-        assertThat(eval.getAllCorrespondingFilePatterns()).isEqualTo(asList("preferred1", "preferred2"));
+        assertEquals(eval.getAllCorrespondingFilePatterns(), asList("preferred1", "preferred2"));
     }
 
     @Test
@@ -39,6 +40,6 @@ public class FileNameEvaluationTest
         FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "PreFileSuf", asList("\\QPre\\E.*\\QFile\\E.*\\QSuf\\E"), asList("\\QPre\\E.*\\QFile\\E", "\\QFile\\E.*\\QSuf\\E"));
 
         // then
-        assertThat(eval.getAllCorrespondingFileEclipsePatterns()).containsExactly("Pre*File*Suf", "Pre*File", "File*Suf");
+        assertEquals(Arrays.asList("Pre*File*Suf", "Pre*File", "File*Suf"), eval.getAllCorrespondingFileEclipsePatterns());
     }
 }

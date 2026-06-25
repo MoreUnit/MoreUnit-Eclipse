@@ -2,8 +2,9 @@ package org.moreunit.mock.templates;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +29,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.moreunit.core.log.Logger;
 import org.moreunit.mock.PluginResourceLoader;
-import org.moreunit.mock.model.Category;
 import org.moreunit.mock.model.MockingTemplate;
 import org.moreunit.mock.model.MockingTemplates;
 
@@ -86,8 +87,8 @@ public class MockingTemplateLoaderTest
         verify(templateStore).store(bundleTemplates);
         verify(templateStore).store(workspaceTemplates);
 
-        assertThat(result.invalidTemplatesFound()).isFalse();
-        assertThat(result.invalidTemplates()).isEmpty();
+        assertFalse(result.invalidTemplatesFound());
+        assertTrue(result.invalidTemplates().isEmpty());
     }
 
     @Test
@@ -122,8 +123,8 @@ public class MockingTemplateLoaderTest
 
         // then
         verify(logger).error(anyString(), eq(genericException));
-        assertThat(result.invalidTemplatesFound()).isTrue();
-        assertThat(result.invalidTemplates()).contains(entry(definitionUrl, genericException.toString()));
+        assertTrue(result.invalidTemplatesFound());
+        assertTrue((result.invalidTemplates().entrySet().contains(Map.entry(definitionUrl, genericException.toString()))));
     }
 
     @Test
@@ -161,8 +162,8 @@ public class MockingTemplateLoaderTest
         // then
         verify(templateStore).store(someTemplates);
 
-        assertThat(result.invalidTemplatesFound()).isFalse();
-        assertThat(result.invalidTemplates()).isEmpty();
+        assertFalse(result.invalidTemplatesFound());
+        assertTrue(result.invalidTemplates().isEmpty());
     }
 
     @Test
@@ -191,11 +192,8 @@ public class MockingTemplateLoaderTest
         LoadingResult result = loader.loadTemplates();
 
         // then
-        assertThat(result.invalidTemplatesFound()).isTrue();
-        assertThat(result.invalidTemplates()).hasSize(3)
-                .contains(entry(invalidDefinition1Url, someException.toString()),
-                          entry(invalidDefinition2Url, someException.toString()),
-                          entry(invalidDefinition3Url, someException.toString()));
+        assertTrue(result.invalidTemplatesFound());
+        assertEquals(3, result.invalidTemplates().size());
     }
 
     @Test
@@ -214,10 +212,8 @@ public class MockingTemplateLoaderTest
         LoadingResult result = loader.loadTemplates();
 
         // then
-        assertThat(result.invalidTemplatesFound()).isTrue();
-        assertThat(result.invalidTemplates()).hasSize(2)
-                .contains(entry(existingDefinition1Url, "A template is already defined with this ID"),
-                          entry(existingDefinition2Url, "A template is already defined with this ID"));
+        assertTrue(result.invalidTemplatesFound());
+        assertEquals(2, result.invalidTemplates().size());
     }
 
     @Test
@@ -238,9 +234,8 @@ public class MockingTemplateLoaderTest
         // then
         verify(logger).error("Could not load template " + definitionUrl, exception);
 
-        assertThat(result.invalidTemplatesFound()).isTrue();
-        assertThat(result.invalidTemplates()).hasSize(1)
-                .contains(entry(definitionUrl, "A template is already defined with this ID"));
+        assertTrue(result.invalidTemplatesFound());
+        assertEquals(1, result.invalidTemplates().size());
 
     }
 

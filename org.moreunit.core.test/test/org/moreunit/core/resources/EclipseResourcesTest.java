@@ -1,6 +1,6 @@
 package org.moreunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +40,6 @@ public class EclipseResourcesTest extends ResourcesTest
     {
         List<String> expectedFolders = new ArrayList<>(namesOf(container.listFolders()));
         expectedFolders.removeIf(".settings"::equals);
-        assertThat(expectedFolders).containsExactly(folderNames);
+        assertEquals(Arrays.asList(folderNames), expectedFolders);
     }
 }

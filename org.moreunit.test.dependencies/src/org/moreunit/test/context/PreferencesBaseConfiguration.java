@@ -1,6 +1,5 @@
 package org.moreunit.test.context;
 
-
 class PreferencesBaseConfiguration
 {
     private String testPackagePrefix;

@@ -1,6 +1,7 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class JavaElementUtilsTest
     public void toArray_should_return_empty_array_for_empty_collection()
     {
         IJavaElement[] result = JavaElementUtils.toArray(Collections.emptyList());
-        assertThat(result).isEmpty();
+        assertEquals(0, result.length);
     }
 
     @Test
@@ -28,6 +29,6 @@ public class JavaElementUtilsTest
 
         IJavaElement[] result = JavaElementUtils.toArray(elements);
 
-        assertThat(result).containsExactly(element1, element2);
+        assertArrayEquals(new IJavaElement[] { element1, element2 }, result);
     }
 }

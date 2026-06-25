@@ -1,12 +1,15 @@
 package org.moreunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,14 +53,14 @@ abstract class ResourcesTest
     public void workspace_should_be_traversable_from_top_to_bottom_ignoring_resources_that_do_not_exist() throws Exception
     {
         List<Project> projects = workspace.listProjects();
-        assertThat(namesOf(projects)).containsExactly("project1", "project2");
+        assertEquals(Arrays.asList("project1", "project2"), namesOf(projects));
 
         assertContainsFolders(projects.get(0), "folderA", "folderB", "folderC", "folderD");
         assertContainsFiles(projects.get(0), none());
         assertContainsFolders(projects.getFirst().getFolder("folderA"), "subfolderA1", "subfolderA2");
         assertContainsFiles(projects.getFirst().getFolder("folderA").getFolder("subfolderA2").getFolder("subsubfolderA"), "fileA2A");
-        assertThat(projects.getFirst().getFolder("folderB").listFiles()).isEmpty();
-        assertThat(projects.getFirst().getFolder("folderB").listFolders()).isEmpty();
+        assertTrue(projects.getFirst().getFolder("folderB").listFiles().isEmpty());
+        assertTrue(projects.getFirst().getFolder("folderB").listFolders().isEmpty());
 
         assertContainsFolders(projects.get(1), "folderZ");
         assertContainsFiles(projects.get(1), "fileAtProjectRoot");
@@ -69,11 +72,11 @@ abstract class ResourcesTest
     {
         File fileA2A = workspace.getFile("/project1/folderA/subfolderA2/subsubfolderA/fileA2A");
 
-        assertThat(fileA2A.getParent()).isInstanceOf(Folder.class).satisfies(nameEqualTo("subsubfolderA"));
-        assertThat(fileA2A.getParent().getParent().getParent()).isInstanceOf(Folder.class).satisfies(nameEqualTo("folderA"));
-        assertThat(fileA2A.getParent().getParent().getParent().getParent()).isInstanceOf(Project.class).satisfies(nameEqualTo("project1"));
-        assertThat(fileA2A.getParent().getParent().getParent().getParent().getParent()).isInstanceOf(Workspace.class).satisfies(nameEqualTo("/"));
-        assertThat(fileA2A.getParent().getParent().getParent().getParent().getParent().getParent()).isInstanceOf(Workspace.class).satisfies(nameEqualTo("/"));
+        assertInstanceOf(Folder.class, fileA2A.getParent());
+        assertInstanceOf(Folder.class, fileA2A.getParent().getParent().getParent());
+        assertInstanceOf(Project.class, fileA2A.getParent().getParent().getParent().getParent());
+        assertInstanceOf(Workspace.class, fileA2A.getParent().getParent().getParent().getParent().getParent());
+        assertInstanceOf(Workspace.class, fileA2A.getParent().getParent().getParent().getParent().getParent().getParent());
     }
 
     @Test
@@ -81,9 +84,9 @@ abstract class ResourcesTest
     {
         File fileD3 = workspace.getFile("/project1/folderD/fileD3");
 
-        assertThat(fileD3.exists()).isFalse();
-        assertThat(fileD3.getParent()).isInstanceOf(Folder.class).satisfies(nameEqualTo("folderD"));
-        assertThat(fileD3.getParent().getParent()).isInstanceOf(Project.class).satisfies(nameEqualTo("project1"));
+        assertFalse(fileD3.exists());
+        assertInstanceOf(Folder.class, fileD3.getParent());
+        assertInstanceOf(Project.class, fileD3.getParent().getParent());
     }
 
     @Test
@@ -91,107 +94,107 @@ abstract class ResourcesTest
     {
         File fileC = workspace.getFile("/project1/folderC/subfolderC/fileC");
 
-        assertThat(fileC.getPath().toString()).isEqualTo("/project1/folderC/subfolderC/fileC");
-        assertThat(fileC.getParent().getPath().toString()).isEqualTo("/project1/folderC/subfolderC");
-        assertThat(fileC.getParent().getParent().getPath().toString()).isEqualTo("/project1/folderC");
-        assertThat(fileC.getParent().getParent().getParent().getPath().toString()).isEqualTo("/project1");
-        assertThat(fileC.getParent().getParent().getParent().getParent().getPath().toString()).isEqualTo("/");
-        assertThat(fileC.getParent().getParent().getParent().getParent().getParent().getPath().toString()).isEqualTo("/");
+        assertEquals(fileC.getPath().toString(), "/project1/folderC/subfolderC/fileC");
+        assertEquals(fileC.getParent().getPath().toString(), "/project1/folderC/subfolderC");
+        assertEquals(fileC.getParent().getParent().getPath().toString(), "/project1/folderC");
+        assertEquals(fileC.getParent().getParent().getParent().getPath().toString(), "/project1");
+        assertEquals(fileC.getParent().getParent().getParent().getParent().getPath().toString(), "/");
+        assertEquals(fileC.getParent().getParent().getParent().getParent().getParent().getPath().toString(), "/");
     }
 
     @Test
     public void projects_should_allow_for_multiple_calls_to_create() throws Exception
     {
-        assertThat(workspace.getProject("project3").exists()).isFalse();
+        assertFalse(workspace.getProject("project3").exists());
 
         workspace.getProject("project3").create();
         workspace.getProject("project3").create();
 
-        assertThat(workspace.getProject("project3").exists()).isTrue();
+        assertTrue(workspace.getProject("project3").exists());
     }
 
     @Test
     public void folders_should_allow_for_multiple_calls_to_create() throws Exception
     {
-        assertThat(workspace.getFolder("/project1/folderF").exists()).isFalse();
+        assertFalse(workspace.getFolder("/project1/folderF").exists());
 
         workspace.getFolder("/project1/folderF").create();
         workspace.getFolder("/project1/folderF").create();
 
-        assertThat(workspace.getFolder("/project1/folderF").exists()).isTrue();
+        assertTrue(workspace.getFolder("/project1/folderF").exists());
     }
 
     @Test
     public void files_should_allow_for_multiple_calls_to_create() throws Exception
     {
-        assertThat(workspace.getFile("/project1/folderD/fileD3").exists()).isFalse();
+        assertFalse(workspace.getFile("/project1/folderD/fileD3").exists());
 
         workspace.getFile("/project1/folderD/fileD3").create();
         workspace.getFile("/project1/folderD/fileD3").create();
 
-        assertThat(workspace.getFile("/project1/folderD/fileD3").exists()).isTrue();
+        assertTrue(workspace.getFile("/project1/folderD/fileD3").exists());
     }
 
     @Test
     public void projects_should_allow_for_multiple_calls_to_delete() throws Exception
     {
-        assertThat(workspace.getProject("project1").exists()).isTrue();
+        assertTrue(workspace.getProject("project1").exists());
 
         workspace.getProject("project1").delete();
         workspace.getProject("project1").delete();
 
-        assertThat(workspace.getProject("project1").exists()).isFalse();
+        assertFalse(workspace.getProject("project1").exists());
     }
 
     @Test
     public void folders_should_allow_for_multiple_calls_to_delete() throws Exception
     {
-        assertThat(workspace.getFolder("/project1/folderD").exists()).isTrue();
+        assertTrue(workspace.getFolder("/project1/folderD").exists());
 
         workspace.getFolder("/project1/folderD").delete();
         workspace.getFolder("/project1/folderD").delete();
 
-        assertThat(workspace.getFolder("/project1/folderD").exists()).isFalse();
+        assertFalse(workspace.getFolder("/project1/folderD").exists());
     }
 
     @Test
     public void files_should_allow_for_multiple_calls_to_delete() throws Exception
     {
-        assertThat(workspace.getFile("/project1/folderD/fileD1").exists()).isTrue();
+        assertTrue(workspace.getFile("/project1/folderD/fileD1").exists());
 
         workspace.getFile("/project1/folderD/fileD1").delete();
         workspace.getFile("/project1/folderD/fileD1").delete();
 
-        assertThat(workspace.getFile("/project1/folderD/fileD1").exists()).isFalse();
+        assertFalse(workspace.getFile("/project1/folderD/fileD1").exists());
     }
 
     @Test
     public void folder_creation_should_be_cancellable() throws Exception
     {
         // given
-        assertThat(workspace.getFolder("/project1/folderA").exists()).isTrue();
-        assertThat(workspace.getFolder("/project1/folderA/subfolder").exists()).isFalse();
-        assertThat(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists()).isFalse();
+        assertTrue(workspace.getFolder("/project1/folderA").exists());
+        assertFalse(workspace.getFolder("/project1/folderA/subfolder").exists());
+        assertFalse(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists());
 
         // when
         ContainerCreationRecord record = workspace.getFolder("/project1/folderA/subfolder/subsubfolder").createWithRecord();
 
         // then
-        assertThat(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists()).isTrue();
+        assertTrue(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists());
 
         // when
         record.cancelCreation();
 
         // then
-        assertThat(workspace.getFolder("/project1/folderA").exists()).isTrue();
-        assertThat(workspace.getFolder("/project1/folderA/subfolder").exists()).isFalse();
-        assertThat(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists()).isFalse();
+        assertTrue(workspace.getFolder("/project1/folderA").exists());
+        assertFalse(workspace.getFolder("/project1/folderA/subfolder").exists());
+        assertFalse(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists());
     }
 
     @Test
     public void workspace_should_always_exist_and_should_ignore_creation_or_deletion_requests() throws Exception
     {
-        assertThat(workspace.exists()).isTrue();
+        assertTrue(workspace.exists());
 
         workspace.create();
         // no exception
@@ -199,7 +202,7 @@ abstract class ResourcesTest
         workspace.delete();
         // no exception
 
-        assertThat(workspace.exists()).isTrue();
+        assertTrue(workspace.exists());
     }
 
     @Test
@@ -317,30 +320,30 @@ abstract class ResourcesTest
         Path childPath = workspace.path("/some/path/with/lots/of/segments");
         Path parentPath = workspace.path("/some/path/");
 
-        assertThat(parentPath.isPrefixOf(childPath)).isTrue();
-        assertThat(childPath.isPrefixOf(parentPath)).isFalse();
+        assertTrue(parentPath.isPrefixOf(childPath));
+        assertFalse(childPath.isPrefixOf(parentPath));
 
         Path someOtherPath = workspace.path("/some/other/path");
-        assertThat(parentPath.isPrefixOf(someOtherPath)).isFalse();
+        assertFalse(parentPath.isPrefixOf(someOtherPath));
     }
 
     @Test
     public void paths_should_return_themselves_without_the_last_segment() throws Exception
     {
         Path longPath = workspace.path("/some/path/with/lots/of/segments");
-        assertThat(longPath.withoutLastSegment().toString()).isEqualTo("/some/path/with/lots/of");
+        assertEquals(longPath.withoutLastSegment().toString(), "/some/path/with/lots/of");
 
         Path absolutePathWithSingleSegment = workspace.path("/path");
-        assertThat(absolutePathWithSingleSegment.withoutLastSegment().toString()).isEqualTo("/");
+        assertEquals(absolutePathWithSingleSegment.withoutLastSegment().toString(), "/");
 
         Path relativePathWithSingleSegment = workspace.path("path");
-        assertThat(relativePathWithSingleSegment.withoutLastSegment().toString()).isEqualTo("");
+        assertEquals(relativePathWithSingleSegment.withoutLastSegment().toString(), "");
 
         Path emptyPath = workspace.path("");
-        assertThat(emptyPath.withoutLastSegment().toString()).isEqualTo("");
+        assertEquals(emptyPath.withoutLastSegment().toString(), "");
 
         Path rootPath = workspace.path("/");
-        assertThat(rootPath.withoutLastSegment().toString()).isEqualTo("/");
+        assertEquals(rootPath.withoutLastSegment().toString(), "/");
     }
 
     @Test
@@ -348,11 +351,11 @@ abstract class ResourcesTest
     {
         Path absolutePath = workspace.path("/some/path/with/lots/of/segments");
 
-        assertThat(absolutePath.uptoSegment(0).toString()).isEqualTo("/");
-        assertThat(absolutePath.uptoSegment(1).toString()).isEqualTo("/some");
-        assertThat(absolutePath.uptoSegment(4).toString()).isEqualTo("/some/path/with/lots");
+        assertEquals(absolutePath.uptoSegment(0).toString(), "/");
+        assertEquals(absolutePath.uptoSegment(1).toString(), "/some");
+        assertEquals(absolutePath.uptoSegment(4).toString(), "/some/path/with/lots");
 
-        assertThatThrownBy(() -> absolutePath.uptoSegment(99)).isInstanceOf(IndexOutOfBoundsException.class);
+        assertThrows(IndexOutOfBoundsException.class, () -> absolutePath.uptoSegment(99));
     }
 
     @Test
@@ -360,11 +363,11 @@ abstract class ResourcesTest
     {
         Path relativePath = workspace.path("some/path/with/lots/of/segments");
 
-        assertThat(relativePath.uptoSegment(0).toString()).isEqualTo("");
-        assertThat(relativePath.uptoSegment(1).toString()).isEqualTo("some");
-        assertThat(relativePath.uptoSegment(4).toString()).isEqualTo("some/path/with/lots");
+        assertEquals(relativePath.uptoSegment(0).toString(), "");
+        assertEquals(relativePath.uptoSegment(1).toString(), "some");
+        assertEquals(relativePath.uptoSegment(4).toString(), "some/path/with/lots");
 
-        assertThatThrownBy(() -> relativePath.uptoSegment(99)).isInstanceOf(IndexOutOfBoundsException.class);
+        assertThrows(IndexOutOfBoundsException.class, () -> relativePath.uptoSegment(99));
     }
 
     @Test
@@ -373,10 +376,10 @@ abstract class ResourcesTest
         File childFile = workspace.getFile("/some/path/with/lots/of/segments");
         Folder parentFolder = workspace.getFolder("/some/path/");
 
-        assertThat(parentFolder.isParentOf(childFile)).isTrue();
+        assertTrue(parentFolder.isParentOf(childFile));
 
         Folder someOtherFolder = workspace.getFolder("/some/other/path");
-        assertThat(parentFolder.isParentOf(someOtherFolder)).isFalse();
+        assertFalse(parentFolder.isParentOf(someOtherFolder));
     }
 
     @Test
@@ -384,11 +387,11 @@ abstract class ResourcesTest
     {
         File fileWithoutExtension = workspace.getFile("/some-project/some-file-without-extension");
 
-        assertThat(fileWithoutExtension.hasExtension()).isFalse();
-        assertThat(fileWithoutExtension.getPath().hasExtension()).isFalse();
+        assertFalse(fileWithoutExtension.hasExtension());
+        assertFalse(fileWithoutExtension.getPath().hasExtension());
 
-        assertThat(fileWithoutExtension.getExtension()).isNotNull().isEmpty();
-        assertThat(fileWithoutExtension.getPath().getExtension()).isNotNull().isEmpty();
+        assertNotNull(fileWithoutExtension.getExtension());
+        assertNotNull(fileWithoutExtension.getPath().getExtension());
     }
 
     protected void assertContainsFiles(Project project, String... fileNames)
@@ -398,55 +401,37 @@ abstract class ResourcesTest
 
     private void assertContainsFiles(ResourceContainer container, String... fileNames)
     {
-        assertThat(namesOf(container.listFiles())).containsExactly(fileNames);
+        assertEquals(Arrays.asList(fileNames), namesOf(container.listFiles()));
     }
 
     protected void assertContainsFolders(ResourceContainer container, String... folderNames)
     {
-        assertThat(namesOf(container.listFolders())).containsExactly(folderNames);
+        assertEquals(Arrays.asList(folderNames), namesOf(container.listFolders()));
     }
 
     private void assertIllegalFileAccess(ResourceContainer container, String filePath)
     {
-        assertThatThrownBy(() -> container.getFile(filePath)).isInstanceOf(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> container.getFile(filePath));
     }
 
     private void assertIllegalFolderAccess(ResourceContainer container, String folderPath)
     {
-        assertThatThrownBy(() -> container.getFolder(folderPath)).isInstanceOf(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> container.getFolder(folderPath));
     }
 
     private void assertFileAccessFailure(ResourceContainer container, String filePath)
     {
-        assertThatThrownBy(() -> container.getFile(filePath)).isInstanceOf(ResourceException.class);
+        assertThrows(ResourceException.class, () -> container.getFile(filePath));
     }
 
     private void assertFolderAccessFailure(ResourceContainer container, String folderPath)
     {
-        assertThatThrownBy(() -> container.getFolder(folderPath)).isInstanceOf(ResourceException.class);
-    }
-
-    private Condition<Object> nameEqualTo(final String expectedName)
-    {
-        return new Condition<>()
-        {
-            {
-                as("name equal to " + expectedName);
-            }
-
-            @Override
-            public boolean matches(Object r)
-            {
-                return r instanceof Resource && ((Resource) r).getName().equals(expectedName);
-            }
-        };
+        assertThrows(ResourceException.class, () -> container.getFolder(folderPath));
     }
 
     protected List<String> namesOf(List< ? extends Resource> resources)
     {
-        return resources.stream()
-                .map(Resource::getName)
-                .toList();
+        return resources.stream().map(Resource::getName).toList();
     }
 
     private String[] none()

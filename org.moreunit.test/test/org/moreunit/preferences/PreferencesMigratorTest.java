@@ -1,7 +1,8 @@
 package org.moreunit.preferences;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.when;
 import static org.moreunit.preferences.PreferenceConstants.PREFERENCES_VERSION;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -41,7 +43,7 @@ public class PreferencesMigratorTest
         migrator.migrate();
 
         // then
-        assertThat(calledSteps).containsExactly(stepTargetingV3, stepTargetingV5, stepTargetingV7);
+        assertEquals(Arrays.asList(stepTargetingV3, stepTargetingV5, stepTargetingV7), calledSteps);
     }
 
     @Test
@@ -57,7 +59,7 @@ public class PreferencesMigratorTest
         migrator.migrate();
 
         // then
-        assertThat(calledSteps).containsExactly(stepTargetingV5, stepTargetingV7);
+        assertEquals(Arrays.asList(stepTargetingV5, stepTargetingV7), calledSteps);
     }
 
     @Test
@@ -73,7 +75,7 @@ public class PreferencesMigratorTest
         migrator.migrate();
 
         // then
-        assertThat(calledSteps).isEmpty();
+        assertTrue(calledSteps.isEmpty());
     }
 
     @Test

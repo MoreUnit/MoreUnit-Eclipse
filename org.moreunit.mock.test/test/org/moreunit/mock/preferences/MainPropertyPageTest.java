@@ -1,6 +1,7 @@
 package org.moreunit.mock.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -123,7 +124,7 @@ public class MainPropertyPageTest
         propertyPage.initValues();
 
         // then
-        assertThat(specificSettingsChecked).isTrue();
+        assertTrue(specificSettingsChecked);
     }
 
     @Test
@@ -136,6 +137,6 @@ public class MainPropertyPageTest
         propertyPage.initValues();
 
         // then
-        assertThat(specificSettingsChecked).isFalse();
+        assertFalse(specificSettingsChecked);
     }
 }

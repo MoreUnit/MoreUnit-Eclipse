@@ -1,6 +1,9 @@
 package org.moreunit.core.commands;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.moreunit.core.config.CoreModule.$;
 
 import java.util.Collection;
@@ -80,7 +83,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -96,7 +99,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     @Test
@@ -112,7 +115,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -133,7 +136,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then: still in source file
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
 
         // given
         IFile testFile = createFile("test/SomeConceptTest.lg");
@@ -142,7 +145,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -164,7 +167,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then: still in test file
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
 
         // given
         IFile sourceFile = createFile("src/SomeConcept.lg");
@@ -173,7 +176,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     @Test
@@ -193,7 +196,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -215,7 +218,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -243,7 +246,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -266,8 +269,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile2);
-        assertThat(capturingSelector.files).hasSize(2).contains(testFile1, testFile2);
+        assertEquals(getFileInActiveEditor(), testFile2);
+        assertEquals(2, capturingSelector.files.size());
     }
 
     @Test
@@ -290,7 +293,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then no exception, and:
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     @Test
@@ -311,7 +314,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         // then
         IFile testFile = getFile("test/SomeConceptTest.thing");
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
     }
 
     @Test
@@ -332,7 +335,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         // then
         IFile sourceFile = getFile("src/SomeConcept2.thing");
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     @Test
@@ -353,7 +356,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
             @Override
             protected int onOpen(DrivableWizardDialog dialog)
             {
-                assertThat(getFolder("test/folder/having/many/parts").exists()).withFailMessage("preferred test folder should exist").isTrue();
+                assertTrue(getFolder("test/folder/having/many/parts").exists());
                 return userCancelsCreation(dialog);
             }
         };
@@ -362,9 +365,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFolder("test/folder/having").exists()).withFailMessage("partial path to preferred test folder should still exist").isTrue();
-        assertThat(getFolder("test/folder/having/many/parts").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (1)").isFalse();
-        assertThat(getFolder("test/folder/having/many").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (2)").isFalse();
+        assertTrue(getFolder("test/folder/having").exists());
+        assertFalse(getFolder("test/folder/having/many/parts").exists());
+        assertFalse(getFolder("test/folder/having/many").exists());
     }
 
     @Test
@@ -394,12 +397,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        assertThat(getFolder("test/some").exists()).withFailMessage("partial path to preferred test folder should still exist").isTrue();
-        assertThat(getFolder("test/some/path").exists()).withFailMessage("chosen folder should exist").isTrue();
-        assertThat(getFolder("test/some/path/to/file").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (1)").isFalse();
-        assertThat(getFolder("test/some/path/to").exists()).withFailMessage("unneeded segments of path to preferred test folder should no longer exist (2)").isFalse();
+        assertTrue(getFolder("test/some").exists());
+        assertTrue(getFolder("test/some/path").exists());
+        assertFalse(getFolder("test/some/path/to/file").exists());
+        assertFalse(getFolder("test/some/path/to").exists());
 
-        assertThat(getFileInActiveEditor()).isEqualTo(getFile("test/some/path/SomeConcept4Test.thing"));
+        assertEquals(getFileInActiveEditor(), getFile("test/some/path/SomeConcept4Test.thing"));
     }
 
     @Test
@@ -420,12 +423,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // when
         executeCommand(JUMP_COMMAND);
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
 
         // when
         executeCommand(JUMP_COMMAND);
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     @Test
@@ -446,12 +449,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // when
         executeCommand(JUMP_COMMAND);
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
 
         // when
         executeCommand(JUMP_COMMAND);
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     @Test
@@ -473,12 +476,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // when
         executeCommand(JUMP_COMMAND);
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(testFile);
+        assertEquals(getFileInActiveEditor(), testFile);
 
         // when
         executeCommand(JUMP_COMMAND);
         // then
-        assertThat(getFileInActiveEditor()).isEqualTo(sourceFile);
+        assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
     private void userSelectsTestFolder(DrivableWizardDialog dialog, IFolder folder)
@@ -552,7 +555,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // Headless testing with xvfb-run actually passes the first test when active page exists.
         // We will just verify it's not null.
         JumpResult result = jumper.jump(null);
-        assertThat(result).isNotNull();
+        assertNotNull(result);
     }
 
     @Test
@@ -562,7 +565,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         IFile file = createFile("SomeOtherClojureFileThatShouldBeConsideredAsACorrespondingTestByTheExtension.clj");
         openEditor(file);
         JumpResult result = jumper.jump(null);
-        assertThat(result).isNotNull();
-        assertThat(result.isDone()).isTrue();
+        assertNotNull(result);
+        assertTrue(result.isDone());
     }
 }

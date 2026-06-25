@@ -1,6 +1,6 @@
 package org.moreunit.mock.templates.resolvers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,13 +34,13 @@ public class FieldInjectionPatternResolverTest
     @Test
     public void should_return_unmodified_pattern_when_does_not_match() throws Exception
     {
-        assertThat(resolver.resolve("does not match")).isEqualTo("does not match");
+        assertEquals(resolver.resolve("does not match"), "does not match");
     }
 
     @Test
     public void should_return_empty_string_when_there_are_no_dependencies_to_inject_by_field() throws Exception
     {
-        assertThat(resolver.resolve("a ${:assignDependency(objectUnderTest, dependency)} c")).isEqualTo("");
+        assertEquals(resolver.resolve("a ${:assignDependency(objectUnderTest, dependency)} c"), "");
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FieldInjectionPatternResolverTest
         String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre ${objectUnderTest}.mFoo = foo post");
+        assertEquals(resolvedPattern, "pre ${objectUnderTest}.mFoo = foo post");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class FieldInjectionPatternResolverTest
         String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
 
         // then
-        assertThat(resolvedPattern).isEqualTo("pre ${objectUnderTest}.m_foo = foo post" +
+        assertEquals(resolvedPattern, "pre ${objectUnderTest}.m_foo = foo post" +
                                               "pre ${objectUnderTest}.fBar = bar post" +
                                               "pre ${objectUnderTest}.aBlob = aBlob post");
     }

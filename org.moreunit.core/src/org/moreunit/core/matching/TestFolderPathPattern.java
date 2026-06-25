@@ -2,7 +2,6 @@ package org.moreunit.core.matching;
 
 import static java.util.Collections.reverse;
 import static java.util.Collections.sort;
-import static java.util.regex.Matcher.quoteReplacement;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
 import static org.moreunit.core.util.Preconditions.checkArgument;

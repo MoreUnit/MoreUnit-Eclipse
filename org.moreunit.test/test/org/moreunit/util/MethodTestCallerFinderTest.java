@@ -1,7 +1,9 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -35,7 +37,7 @@ public class MethodTestCallerFinderTest extends ContextTestCase
     public void getMatches_should_return_empty_list_when_no_testmethod_exists() throws JavaModelException
     {
         Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
-        assertThat(matches).isEmpty();
+        assertTrue(matches.isEmpty());
     }
 
     @Test
@@ -44,7 +46,7 @@ public class MethodTestCallerFinderTest extends ContextTestCase
         MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
 
         Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
-        assertThat(matches).contains(giveMe1TestMethod.get());
+        assertTrue((matches).contains(giveMe1TestMethod.get()));
     }
 
     @Test
@@ -55,6 +57,6 @@ public class MethodTestCallerFinderTest extends ContextTestCase
         MethodHandler getNumber1TestMethod = testcaseType.addMethod("public void testGetNumber1()", "new Hello().getNumberOne();");
 
         Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
-        assertThat(matches).containsOnly(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get());
+        assertEquals(new java.util.HashSet<>(Arrays.asList(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get())), new java.util.HashSet<>((matches)));
     }
 }

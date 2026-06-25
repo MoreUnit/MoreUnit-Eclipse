@@ -1,6 +1,7 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +48,8 @@ public class TestMethodDivinerFactoryTest
         TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
         TestMethodDiviner diviner = factory.create();
 
-        assertThat(diviner).isInstanceOf(TestMethodDivinerNoPraefix.class);
+        assertNotNull(diviner);
+        assertInstanceOf(TestMethodDivinerNoPraefix.class, diviner);
     }
 
     @Test
@@ -58,7 +60,8 @@ public class TestMethodDivinerFactoryTest
         TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
         TestMethodDiviner diviner = factory.create();
 
-        assertThat(diviner).isInstanceOf(TestMethodDivinerJunit3Praefix.class);
+        assertNotNull(diviner);
+        assertInstanceOf(TestMethodDivinerJunit3Praefix.class, diviner);
     }
 
     @Test
@@ -67,7 +70,8 @@ public class TestMethodDivinerFactoryTest
         TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
         TestMethodDiviner diviner = factory.create(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
 
-        assertThat(diviner).isInstanceOf(TestMethodDivinerJunit3Praefix.class);
+        assertNotNull(diviner);
+        assertInstanceOf(TestMethodDivinerJunit3Praefix.class, diviner);
     }
 
     @Test
@@ -78,6 +82,7 @@ public class TestMethodDivinerFactoryTest
         TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
         TestMethodDiviner diviner = factory.create(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
 
-        assertThat(diviner).isInstanceOf(TestMethodDivinerNoPraefix.class);
+        assertNotNull(diviner);
+        assertInstanceOf(TestMethodDivinerNoPraefix.class, diviner);
     }
 }

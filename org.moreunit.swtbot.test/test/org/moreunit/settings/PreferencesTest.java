@@ -1,6 +1,8 @@
 package org.moreunit.settings;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
@@ -34,7 +36,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         saveAndClosePrefs();
 
         String junitDirectoryFromPreferences = Preferences.getInstance().getJunitDirectoryFromPreferences(getJavaProjectFromContext());
-        assertThat(junitDirectoryFromPreferences).isEqualTo("unittest");
+        assertEquals("unittest", junitDirectoryFromPreferences);
     }
 
     private void saveAndClosePrefs()
@@ -51,31 +53,31 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.radio(PreferenceConstants.TEXT_JUNIT_3_8).click();
         saveAndClosePrefs();
         String testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3, testType);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.radio(PreferenceConstants.TEXT_JUNIT_4).click();
         saveAndClosePrefs();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, testType);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.radio(PreferenceConstants.TEXT_JUNIT_5).click();
         saveAndClosePrefs();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, testType);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.radio(PreferenceConstants.TEXT_SPOCK).click();
         saveAndClosePrefs();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_SPOCK);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_SPOCK, testType);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.radio(PreferenceConstants.TEXT_TEST_NG).click();
         saveAndClosePrefs();
         testType = Preferences.getInstance().getTestType(getJavaProjectFromContext());
-        assertThat(testType).isEqualTo(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
+        assertEquals(PreferenceConstants.TEST_TYPE_VALUE_TESTNG, testType);
     }
 
     @Test
@@ -86,13 +88,13 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.checkBox(PreferenceConstants.TEXT_TEST_METHOD_TYPE).select();
         saveAndClosePrefs();
         String testMethodType = Preferences.getInstance().getTestMethodType(getJavaProjectFromContext());
-        assertThat(testMethodType).isEqualTo(PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
+        assertEquals(PreferenceConstants.TEST_METHOD_TYPE_JUNIT3, testMethodType);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.checkBox(PreferenceConstants.TEXT_TEST_METHOD_TYPE).deselect();
         saveAndClosePrefs();
         testMethodType = Preferences.getInstance().getTestMethodType(getJavaProjectFromContext());
-        assertThat(testMethodType).isEqualTo(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX);
+        assertEquals(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX, testMethodType);
     }
 
     @Test
@@ -102,7 +104,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_TEST_METHOD_CONTENT).setText("blubbContent");
         saveAndClosePrefs();
         String testMethodDefaultContent = Preferences.getInstance().getTestMethodDefaultContent(getJavaProjectFromContext());
-        assertThat(testMethodDefaultContent).isEqualTo("blubbContent");
+        assertEquals("blubbContent", testMethodDefaultContent);
     }
 
     @Test
@@ -112,7 +114,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel("Pattern:").setText("${srcFile}(Test|ITTest)");
         saveAndClosePrefs();
         String template = Preferences.forProject(getJavaProjectFromContext()).getTestClassNameTemplate();
-        assertThat(template).isEqualTo("${srcFile}(Test|ITTest)");
+        assertEquals("${srcFile}(Test|ITTest)", template);
     }
 
     @Test
@@ -122,7 +124,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_PREFIX).setText("pckgprefix");
         saveAndClosePrefs();
         String testPackagePrefix = Preferences.getInstance().getTestPackagePrefix(getJavaProjectFromContext());
-        assertThat(testPackagePrefix).isEqualTo("pckgprefix");
+        assertEquals("pckgprefix", testPackagePrefix);
     }
 
     @Test
@@ -132,7 +134,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_SUFFIX).setText("pckgsuffix");
         saveAndClosePrefs();
         String testPackageSuffix = Preferences.getInstance().getTestPackageSuffix(getJavaProjectFromContext());
-        assertThat(testPackageSuffix).isEqualTo("pckgsuffix");
+        assertEquals("pckgsuffix", testPackageSuffix);
     }
 
     @Test
@@ -142,7 +144,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel(PreferenceConstants.TEXT_TEST_SUPERCLASS).setText("org.moreunit.SuperClass");
         saveAndClosePrefs();
         String testSuperClass = Preferences.getInstance().getTestSuperClass(getJavaProjectFromContext());
-        assertThat(testSuperClass).isEqualTo("org.moreunit.SuperClass");
+        assertEquals("org.moreunit.SuperClass", testSuperClass);
     }
 
     @Test
@@ -151,14 +153,14 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         openPreferencesAndSelectMoreUnitPage();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).select();
         saveAndClosePrefs();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isTrue();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
 
         openPreferencesAndSelectMoreUnitPage();
         bot.checkBox(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).deselect();
         saveAndClosePrefs();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall).isFalse();
-        assertThat(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName).isTrue();
+        assertFalse(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
+        assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByName);
     }
 
     @Test
@@ -169,15 +171,15 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING).deselect();
         bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING).deselect();
         saveAndClosePrefs();
-        assertThat(Preferences.getInstance().shouldEnableMoreUnitCodeMining(getJavaProjectFromContext())).isTrue();
-        assertThat(Preferences.getInstance().shouldEnableJumpToMethodCodeMining(getJavaProjectFromContext())).isFalse();
-        assertThat(Preferences.getInstance().shouldEnableJumpToClassCodeMining(getJavaProjectFromContext())).isFalse();
+        assertTrue(Preferences.getInstance().shouldEnableMoreUnitCodeMining(getJavaProjectFromContext()));
+        assertFalse(Preferences.getInstance().shouldEnableJumpToMethodCodeMining(getJavaProjectFromContext()));
+        assertFalse(Preferences.getInstance().shouldEnableJumpToClassCodeMining(getJavaProjectFromContext()));
 
         openPreferencesAndSelectMoreUnitPage();
         bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING).select();
         bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING).select();
         saveAndClosePrefs();
-        assertThat(Preferences.getInstance().shouldEnableJumpToMethodCodeMining(getJavaProjectFromContext())).isTrue();
-        assertThat(Preferences.getInstance().shouldEnableJumpToClassCodeMining(getJavaProjectFromContext())).isTrue();
+        assertTrue(Preferences.getInstance().shouldEnableJumpToMethodCodeMining(getJavaProjectFromContext()));
+        assertTrue(Preferences.getInstance().shouldEnableJumpToClassCodeMining(getJavaProjectFromContext()));
     }
 }

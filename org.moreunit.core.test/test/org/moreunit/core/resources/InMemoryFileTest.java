@@ -1,6 +1,10 @@
 package org.moreunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,30 +14,30 @@ public class InMemoryFileTest {
     public void testGetBaseNameWithoutExtension() {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
         InMemoryFile file = workspace.getProject("project").getFile("folder/file.txt");
-        assertThat(file.getBaseNameWithoutExtension()).isEqualTo("file");
+        assertEquals(file.getBaseNameWithoutExtension(), "file");
 
         InMemoryFile fileNoExt = workspace.getProject("project").getFile("folder/file");
-        assertThat(fileNoExt.getBaseNameWithoutExtension()).isEqualTo("file");
+        assertEquals(fileNoExt.getBaseNameWithoutExtension(), "file");
     }
 
     @Test
     public void testGetExtension() {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
         InMemoryFile file = workspace.getProject("project").getFile("folder/file.txt");
-        assertThat(file.getExtension()).isEqualTo("txt");
+        assertEquals(file.getExtension(), "txt");
 
         InMemoryFile fileNoExt = workspace.getProject("project").getFile("folder/file");
-        assertThat(fileNoExt.getExtension()).isEqualTo("");
+        assertEquals(fileNoExt.getExtension(), "");
     }
 
     @Test
     public void testHasExtension() {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
         InMemoryFile file = workspace.getProject("project").getFile("folder/file.txt");
-        assertThat(file.hasExtension()).isTrue();
+        assertTrue(file.hasExtension());
 
         InMemoryFile fileNoExt = workspace.getProject("project").getFile("folder/file");
-        assertThat(fileNoExt.hasExtension()).isFalse();
+        assertFalse(fileNoExt.hasExtension());
     }
 
     @Test
@@ -42,20 +46,20 @@ public class InMemoryFileTest {
         InMemoryProject project = workspace.getProject("project");
         InMemoryFile file = project.getFile("folder/file.txt");
 
-        assertThat(file.getProject()).isSameAs(project);
+        assertSame(file.getProject(), project);
     }
 
     @Test
     public void testGetProjectPreferences() {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
         InMemoryFile file = workspace.getProject("project").getFile("folder/file.txt");
-        assertThat(file.getProjectPreferences()).isNull();
+        assertNull(file.getProjectPreferences());
     }
 
     @Test
     public void testGetUnderlyingPlatformFile() {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
         InMemoryFile file = workspace.getProject("project").getFile("folder/file.txt");
-        assertThat(file.getUnderlyingPlatformFile()).isNull();
+        assertNull(file.getUnderlyingPlatformFile());
     }
 }

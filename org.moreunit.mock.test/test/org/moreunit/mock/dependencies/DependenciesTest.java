@@ -1,11 +1,14 @@
 package org.moreunit.mock.dependencies;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;
@@ -47,7 +50,7 @@ public class DependenciesTest
     {
         when(classUnderTest.resolveType("Comparator")).thenReturn(new String[][] { { "java.util", "Comparator" } });
 
-        assertThat(dependencies.resolveTypeSignature("Comparator<String>")).isEqualTo("java.util.Comparator");
+        assertEquals(dependencies.resolveTypeSignature("Comparator<String>"), "java.util.Comparator");
     }
 
     @Test
@@ -55,7 +58,7 @@ public class DependenciesTest
     {
         when(classUnderTest.resolveType("Callable")).thenReturn(null);
 
-        assertThat(dependencies.resolveTypeSignature("Callable<String>")).isEqualTo("Callable");
+        assertEquals(dependencies.resolveTypeSignature("Callable<String>"), "Callable");
     }
 
     @Test
@@ -63,7 +66,7 @@ public class DependenciesTest
     {
         when(classUnderTest.resolveType("Callable")).thenReturn(null);
 
-        assertThat(dependencies.resolveTypeSignature("Callable<Map<String, List<Integer>>>")).isEqualTo("Callable");
+        assertEquals(dependencies.resolveTypeSignature("Callable<Map<String, List<Integer>>>"), "Callable");
     }
 
     // rationale: @NonNull etc. should probably not be put on test case fields
@@ -72,7 +75,7 @@ public class DependenciesTest
     {
         when(classUnderTest.resolveType("Comparator")).thenReturn(new String[][] { { "java.util", "Comparator" } });
 
-        assertThat(dependencies.resolveTypeSignature("@NonNull Comparator<String>")).isEqualTo("java.util.Comparator");
+        assertEquals(dependencies.resolveTypeSignature("@NonNull Comparator<String>"), "java.util.Comparator");
     }
 
     // TODO see what to do with array types (should not be mockable...)
@@ -80,7 +83,7 @@ public class DependenciesTest
     @Test
     public void resolveTypeParameters_should_return_an_empty_list_when_there_are_no_type_parameters() throws Exception
     {
-        assertThat(dependencies.resolveTypeParameters("String")).isEmpty();
+        assertTrue(dependencies.resolveTypeParameters("String").isEmpty());
     }
 
     @Test
@@ -88,7 +91,7 @@ public class DependenciesTest
     {
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
 
-        assertThat(dependencies.resolveTypeParameters("Callable<String>")).isEqualTo(asList(new TypeParameter("java.lang.String")));
+        assertEquals(dependencies.resolveTypeParameters("Callable<String>"), asList(new TypeParameter("java.lang.String")));
     }
 
     @Test
@@ -97,8 +100,7 @@ public class DependenciesTest
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
         when(classUnderTest.resolveType("Integer")).thenReturn(new String[][] { { "java.lang", "Integer" } });
 
-        assertThat(dependencies.resolveTypeParameters("Map<String, Integer>"))
-                .isEqualTo(asList(new TypeParameter("java.lang.String"), new TypeParameter("java.lang.Integer")));
+        assertEquals(dependencies.resolveTypeParameters("Map<String, Integer>"), asList(new TypeParameter("java.lang.String"), new TypeParameter("java.lang.Integer")));
     }
 
     @Test
@@ -108,8 +110,7 @@ public class DependenciesTest
         when(classUnderTest.resolveType("List")).thenReturn(new String[][] { { "java.util", "List" } });
         when(classUnderTest.resolveType("Integer")).thenReturn(new String[][] { { "java.lang", "Integer" } });
 
-        assertThat(dependencies.resolveTypeParameters("Map<String, List<Integer>>"))
-                .isEqualTo(asList(new TypeParameter("java.lang.String"),
+        assertEquals(dependencies.resolveTypeParameters("Map<String, List<Integer>>"), asList(new TypeParameter("java.lang.String"),
                                   new TypeParameter("java.util.List").withTypeParameters(new TypeParameter("java.lang.Integer"))));
     }
 
@@ -121,8 +122,7 @@ public class DependenciesTest
         when(classUnderTest.resolveType("List")).thenReturn(new String[][] { { "java.util", "List" } });
         when(classUnderTest.resolveType("Integer")).thenReturn(new String[][] { { "java.lang", "Integer" } });
 
-        assertThat(dependencies.resolveTypeParameters("Map<Set<String>, List<Integer>>"))
-                .isEqualTo(asList(new TypeParameter("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")),
+        assertEquals(dependencies.resolveTypeParameters("Map<Set<String>, List<Integer>>"), asList(new TypeParameter("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")),
                                   new TypeParameter("java.util.List").withTypeParameters(new TypeParameter("java.lang.Integer"))));
     }
 
@@ -132,9 +132,9 @@ public class DependenciesTest
         when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
 
-        assertThat(dependencies.resolveTypeParameters("Callable<?>")).containsOnly(TypeParameter.wildcard());
-        assertThat(dependencies.resolveTypeParameters("Callable<? extends Set<String>")).containsOnly(TypeParameter.extending("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")));
-        assertThat(dependencies.resolveTypeParameters("Callable<Set<? super String>")).containsOnly(new TypeParameter("java.util.Set").withTypeParameters(TypeParameter.superOf("java.lang.String")));
+        assertEquals(new HashSet<>(Arrays.asList(TypeParameter.wildcard())), new HashSet<>((dependencies.resolveTypeParameters("Callable<?>"))));
+        assertEquals(new HashSet<>(Arrays.asList(TypeParameter.extending("java.util.Set").withTypeParameters(new TypeParameter("java.lang.String")))), new HashSet<>((dependencies.resolveTypeParameters("Callable<? extends Set<String>"))));
+        assertEquals(new HashSet<>(Arrays.asList(new TypeParameter("java.util.Set").withTypeParameters(TypeParameter.superOf("java.lang.String")))), new HashSet<>((dependencies.resolveTypeParameters("Callable<Set<? super String>"))));
     }
 
     @Test
@@ -144,13 +144,12 @@ public class DependenciesTest
         when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
         when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });
 
-        assertThat(dependencies.resolveTypeParameters("Callable<@Interned Set<@NonNull @ReadOnly ? extends @English java.lang.String>"))
-                .containsOnly(new TypeParameter("java.util.Set")
+        assertEquals(new HashSet<>(Arrays.asList(new TypeParameter("java.util.Set")
                         .withAnnotations("checkers.interning.quals.Interned")
                         .withTypeParameters(TypeParameter.extending("java.lang.String")
                                 .withBaseTypeAnnotations("English")
                                 .withAnnotations("NonNull", "checkers.interning.quals.ReadOnly")
-                        ));
+                        ))), new HashSet<>((dependencies.resolveTypeParameters("Callable<@Interned Set<@NonNull @ReadOnly ? extends @English java.lang.String>"))));
     }
 
     @Test
@@ -164,7 +163,7 @@ public class DependenciesTest
         dependencies.init();
 
         // then
-        assertThat(dependencies.injectableByConstructor()).isEqualTo(asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
+        assertEquals(dependencies.injectableByConstructor(), asList(new Dependency("x", "zzz"), new Dependency("x", "aaa"), new Dependency("x", "GGG")));
     }
 
     private void mockMethodsAndFieldsRetrieval(IType type) throws JavaModelException
@@ -185,7 +184,7 @@ public class DependenciesTest
         dependencies.init();
 
         // then
-        assertThat(dependencies.injectableByField()).isEqualTo(asList(new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG"), new FieldDependency("x", "zzz", "zzz")));
+        assertEquals(dependencies.injectableByField(), asList(new FieldDependency("x", "mAaa", "aaa"), new FieldDependency("x", "fGGG", "GGG"), new FieldDependency("x", "zzz", "zzz")));
     }
 
     @Test
@@ -199,7 +198,7 @@ public class DependenciesTest
         dependencies.init();
 
         // then
-        assertThat(dependencies.injectableBySetter()).isEqualTo(asList(new SetterDependency("x", "setAaa"), new SetterDependency("x", "setGGG"), new SetterDependency("x", "setZzz")));
+        assertEquals(dependencies.injectableBySetter(), asList(new SetterDependency("x", "setAaa"), new SetterDependency("x", "setGGG"), new SetterDependency("x", "setZzz")));
     }
 
     @Test
@@ -215,7 +214,7 @@ public class DependenciesTest
         dependencies.init();
 
         // then
-        assertThat(new ArrayList<>(dependencies)).isEqualTo(asList(new Dependency("x", "aaa"), new SetterDependency("x", "setBbb"), new Dependency("x", "eee"),
+        assertEquals(new ArrayList<>(dependencies), asList(new Dependency("x", "aaa"), new SetterDependency("x", "setBbb"), new Dependency("x", "eee"),
                                                                              new Dependency("x", "GGG"), new Dependency("x", "HHH"), new SetterDependency("x", "setLLL"),
                                                                              new SetterDependency("x", "setOoo"), new Dependency("x", "yyy"), new Dependency("x", "zzz")));
     }

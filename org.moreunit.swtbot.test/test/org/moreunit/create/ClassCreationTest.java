@@ -1,7 +1,8 @@
 package org.moreunit.create;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
@@ -61,8 +62,8 @@ public class ClassCreationTest extends JavaProjectSWTBotTestHelper
             }
         }, 20000);
         ICompilationUnit compilationUnitOfTest = context.getCompilationUnit("testing.TheWorldTest");
-        assertThat(compilationUnitOfTest.findPrimaryType().getFlags()).isEqualTo(FLAG_DEFAULT_PACKAGE);
-        assertThat(compilationUnitOfTest.getImport("org.junit.jupiter.api.Test").exists()).isTrue();
+        assertEquals(FLAG_DEFAULT_PACKAGE, compilationUnitOfTest.findPrimaryType().getFlags());
+        assertTrue(compilationUnitOfTest.getImport("org.junit.jupiter.api.Test").exists());
     }
 
     private void moveCursorToMethod()

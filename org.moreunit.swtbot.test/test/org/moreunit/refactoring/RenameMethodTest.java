@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
@@ -45,7 +45,8 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 		renameMethodAndWaitUntilFinished();
 
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
-		assertThat(methods).extracting("elementName").containsOnly("testGetNumberOne");
+		assertEquals(1, methods.length);
+		assertEquals("testGetNumberOne", methods[0].getElementName());
 	}
 
 	private void pressRenameShortcutTwiceAndWaitForDialog()

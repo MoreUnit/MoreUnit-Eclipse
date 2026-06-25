@@ -1,6 +1,7 @@
 package org.moreunit.wizards;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +28,7 @@ public class NewTestCaseWizardContextTest
     @Test
     public void should_return_class_under_test()
     {
-        assertThat(context.getClassUnderTest()).isEqualTo(classUnderTest);
+        assertEquals(classUnderTest, context.getClassUnderTest());
     }
 
     @Test
@@ -36,7 +37,7 @@ public class NewTestCaseWizardContextTest
         IType testCase = mock(IType.class);
         context.setCreatedTestCase(testCase);
 
-        assertThat(context.getCreatedTestCase()).isEqualTo(testCase);
+        assertEquals(testCase, context.getCreatedTestCase());
     }
 
     @Test
@@ -45,7 +46,7 @@ public class NewTestCaseWizardContextTest
         IPackageFragment packageFragment = mock(IPackageFragment.class);
         when(pageOne.getTestCasePackage()).thenReturn(packageFragment);
 
-        assertThat(context.getTestCasePackage()).isEqualTo(packageFragment);
+        assertEquals(packageFragment, context.getTestCasePackage());
     }
 
     @Test
@@ -54,7 +55,7 @@ public class NewTestCaseWizardContextTest
         TestType testType = mock(TestType.class);
         when(pageOne.getTestType()).thenReturn(testType);
 
-        assertThat(context.getTestType()).isEqualTo(testType);
+        assertEquals(testType, context.getTestType());
     }
 
     @Test
@@ -66,8 +67,8 @@ public class NewTestCaseWizardContextTest
         String val1 = context.get("key1");
         Integer val2 = context.get("key2");
 
-        assertThat(val1).isEqualTo("value1");
-        assertThat(val2).isEqualTo(42);
-        assertThat((Object) context.get("unknown_key")).isNull();
+        assertEquals("value1", val1);
+        assertEquals(Integer.valueOf(42), val2);
+        assertNull(context.get("unknown_key"));
     }
 }

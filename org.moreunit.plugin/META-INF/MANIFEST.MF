@@ -10,15 +10,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.core.manipulation,
  org.eclipse.jdt.junit,
- org.eclipse.jdt.launching,
  org.eclipse.jdt.ui,
  org.eclipse.jface.text,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.moreunit.core,
- org.eclipse.ui.ide,
- org.eclipse.ui.editors
+ org.eclipse.ui.ide
 xxEclipse-AutoStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

@@ -1,6 +1,7 @@
 package org.moreunit.mock.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public class CodeTemplateTest
         when(context.usesInjectionType(InjectionType.constructor)).thenReturn(true);
 
         // when
-        assertThat(codeTemplate.isIncluded(context)).isFalse();
+        assertFalse(codeTemplate.isIncluded(context));
     }
 
     @Test
@@ -45,7 +46,7 @@ public class CodeTemplateTest
         when(context.usesInjectionType(InjectionType.setter)).thenReturn(false);
 
         // when
-        assertThat(codeTemplate.isIncluded(context)).isFalse();
+        assertFalse(codeTemplate.isIncluded(context));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class CodeTemplateTest
         when(context.usesInjectionType(InjectionType.constructor)).thenReturn(true);
 
         // when
-        assertThat(codeTemplate.isIncluded(context)).isFalse();
+        assertFalse(codeTemplate.isIncluded(context));
     }
 
     @Test
@@ -72,7 +73,7 @@ public class CodeTemplateTest
         when(context.usesInjectionType(InjectionType.setter)).thenReturn(true);
 
         // when
-        assertThat(codeTemplate.isIncluded(context)).isFalse();
+        assertFalse(codeTemplate.isIncluded(context));
     }
 
     @Test
@@ -88,6 +89,6 @@ public class CodeTemplateTest
         when(context.usesInjectionType(InjectionType.field)).thenReturn(true);
 
         // when
-        assertThat(codeTemplate.isIncluded(context)).isTrue();
+        assertTrue(codeTemplate.isIncluded(context));
     }
 }

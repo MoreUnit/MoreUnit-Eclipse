@@ -1,6 +1,6 @@
 package org.moreunit.elements;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +17,7 @@ public class LanguageTypeTest
         when(path.getFileExtension()).thenReturn("java");
 
         // then
-        assertThat(LanguageType.forPath(path)).isEqualTo(LanguageType.JAVA);
+        assertEquals(LanguageType.forPath(path), LanguageType.JAVA);
     }
 
     @Test
@@ -28,7 +28,7 @@ public class LanguageTypeTest
         when(path.getFileExtension()).thenReturn("groovy");
 
         // then
-        assertThat(LanguageType.forPath(path)).isEqualTo(LanguageType.GROOVY);
+        assertEquals(LanguageType.forPath(path), LanguageType.GROOVY);
     }
 
     @Test
@@ -39,6 +39,6 @@ public class LanguageTypeTest
         when(path.getFileExtension()).thenReturn("cpp");
 
         // then
-        assertThat(LanguageType.forPath(path)).isEqualTo(LanguageType.UNKNOWN);
+        assertEquals(LanguageType.forPath(path), LanguageType.UNKNOWN);
     }
 }

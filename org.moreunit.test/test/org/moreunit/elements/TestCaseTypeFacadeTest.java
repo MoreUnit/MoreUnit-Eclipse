@@ -1,13 +1,13 @@
 package org.moreunit.elements;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * @author vera
  *
  * 23.05.2006 21:13:50
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         List<IMethod> expectedTestedMethods = new ArrayList<>();
         expectedTestedMethods.add(testedMethod.get());
-        assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get())).isEqualTo(expectedTestedMethods);
+        assertEquals(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get()), expectedTestedMethods);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
     {
         MethodHandler testMethodWithNoCorrespondingTestedMethod = testcaseTypeHandler.addMethod("public void testAnything()");
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testcaseTypeHandler.getCompilationUnit());
-        assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get())).isEmpty();
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get()).isEmpty());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         List<IMethod> expectedTestedMethods = new ArrayList<>();
         expectedTestedMethods.add(possiblyTestedMethod.get());
         expectedTestedMethods.add(possiblyTestedMethod2.get());
-        assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get())).isEqualTo(expectedTestedMethods);
+        assertEquals(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get()), expectedTestedMethods);
     }
 
     @Test
@@ -96,9 +96,9 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         List<IMethod> expectedTestedMethods = new ArrayList<>();
         expectedTestedMethods.add(perfectMatch.get());
-        assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get())).isEqualTo(expectedTestedMethods);
+        assertEquals(testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), cutTypeHandler.get()), expectedTestedMethods);
 
-        assertThat(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get())).isEmpty();
+        assertTrue(testCaseTypeFacade.getCorrespondingTestedMethods(testMethodWithNoCorrespondingTestedMethod.get(), cutTypeHandler.get()).isEmpty());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         Set<IType> classesUnderTest = new LinkedHashSet<>(Arrays.asList(cutTypeHandler.get(), cutType2.get()));
         List<IMethod> correspondingTestMethods = testCaseTypeFacade.getCorrespondingTestedMethods(testMethod.get(), classesUnderTest);
-        assertThat(correspondingTestMethods).containsOnly(testedMethod1.get(), testedMethod2.get());
+        assertEquals(new java.util.HashSet<>(Arrays.asList(testedMethod1.get(), testedMethod2.get())), new java.util.HashSet<>((correspondingTestMethods)));
         cutType2.getCompilationUnit().delete(true, null);
     }
 
@@ -126,7 +126,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(cutTypeHandler.get());
+        assertEquals(oneCorrespondingMemberUnderTest, cutTypeHandler.get());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(getNumberOneMethod.get());
+        assertEquals(oneCorrespondingMemberUnderTest, getNumberOneMethod.get());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(cutTypeHandler.get());
+        assertEquals(oneCorrespondingMemberUnderTest, cutTypeHandler.get());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingMemberUnderTest = testCaseTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingMemberUnderTest).isEqualTo(getNumberOneMethod.get());
+        assertEquals(oneCorrespondingMemberUnderTest, getNumberOneMethod.get());
     }
 
     @Preferences(testClassNameTemplate="${srcFile}*Test", testSrcFolder="test")
@@ -197,7 +197,7 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
 
         Collection<IType> classes = testCaseTypeFacade.getCorrespondingClasses(false);
-        assertThat(classes).hasSize(2).extracting("elementName").contains("OneTwo", "One");
+        assertEquals(2, classes.size());
 
         class1.getCompilationUnit().delete(true, null);
         class2.getCompilationUnit().delete(true, null);
@@ -215,8 +215,8 @@ public class TestCaseTypeFacadeTest extends ContextTestCase
         TestCaseTypeFacade testCaseTypeFacade = new TestCaseTypeFacade(testClass.getCompilationUnit());
 
         Collection<IType> classes = testCaseTypeFacade.getCorrespondingClasses(false);
-        assertThat(classes).hasSize(1);
-        assertThat(classes.iterator().next().getElementName()).isEqualTo("OneTwo");
+        assertEquals(1, classes.size());
+        assertEquals(classes.iterator().next().getElementName(), "OneTwo");
 
         class1.getCompilationUnit().delete(true, null);
         class2.getCompilationUnit().delete(true, null);

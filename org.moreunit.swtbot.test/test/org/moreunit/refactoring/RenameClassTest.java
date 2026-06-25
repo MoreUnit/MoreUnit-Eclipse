@@ -1,6 +1,6 @@
 package org.moreunit.refactoring;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
@@ -29,7 +29,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 	public void should_rename_test_when_cut_gets_renamed()
 	{
 		renameSomeClassToAnyClassAndWaitUntilFinished();
-		assertThat(context.getCompilationUnit("org.AnyClassTest")).isNotNull();
+		assertNotNull(context.getCompilationUnit("org.AnyClassTest"));
 	}
 
 
@@ -42,7 +42,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 	public void should_rename_only_perfect_match_test_when_cut_gets_renamed()
 	{
 		renameSomeClassToAnyClassAndWaitUntilFinished();
-		assertThat(context.getCompilationUnit("com.SomeClassTest")).isNotNull();
+		assertNotNull(context.getCompilationUnit("com.SomeClassTest"));
 	}
 
 	@Project(
@@ -57,7 +57,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 
 		// Ensure SomeTest wasn't renamed because "SomeClass" isn't in its name.
 		// (The "index == -1" condition in RenameClassParticipant).
-		assertThat(context.getCompilationUnit("org.SomeTest")).isNotNull();
+		assertNotNull(context.getCompilationUnit("org.SomeTest"));
 	}
 
 	@Project(
@@ -70,7 +70,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 	{
 		renameOtherClassToAnyClassAndWaitUntilFinished();
 
-		assertThat(context.getCompilationUnit("org.AnyClassTest")).isNotNull();
+		assertNotNull(context.getCompilationUnit("org.AnyClassTest"));
 	}
 
 	private void renameSomeClassToAnyClassAndWaitUntilFinished()

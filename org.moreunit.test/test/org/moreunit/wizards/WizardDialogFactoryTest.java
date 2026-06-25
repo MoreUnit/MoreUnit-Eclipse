@@ -1,6 +1,6 @@
 package org.moreunit.wizards;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 import org.eclipse.jface.wizard.WizardDialog;
@@ -18,6 +18,6 @@ public class WizardDialogFactoryTest
 
         WizardDialog dialog = factory.createWizardDialog(shell, wizard);
 
-        assertThat(dialog).isNotNull();
+        assertNotNull(dialog);
     }
 }

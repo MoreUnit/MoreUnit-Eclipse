@@ -8,26 +8,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.jdt.core,
- org.eclipse.jdt.ui,
- org.eclipse.jface.text,
- org.eclipse.ui.editors,
- org.eclipse.jdt.launching,
- org.eclipse.ltk.core.refactoring,
- org.eclipse.ltk.ui.refactoring,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.jdt.junit,
- org.eclipse.jdt.core.manipulation,
  org.moreunit.core,
  org.moreunit,
  org.moreunit.test.dependencies,
- org.testng.eclipse,
- org.assertj,
  junit-jupiter-api,
- junit-jupiter-engine,
- junit-jupiter-params,
- org.mockito.junit-jupiter,
  org.mockito.mockito-core,
- org.mockito.mockito-inline
+ org.mockito.junit-jupiter
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: MoreUnit.org
 Automatic-Module-Name: org.moreunit.test

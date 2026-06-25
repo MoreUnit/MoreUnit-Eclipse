@@ -1,6 +1,7 @@
 package org.moreunit.create;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
@@ -54,7 +55,8 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
             }
         }, 20000);
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
-		assertThat(methods).extracting("elementName").containsOnly("testGetNumber1");
+		assertEquals(1, methods.length);
+		assertEquals("testGetNumber1", methods[0].getElementName());
 	}
 
 	@Project(mainSrc = "MethodCreation_class_with_method.txt",
@@ -93,7 +95,14 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		testcaseEditor.save();
 
 		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
-		assertThat(methods).hasSize(2).extracting("elementName").contains("testGetNumber1Suffix");
+		boolean found = false;
+		for (IMethod m : methods) {
+			if ("testGetNumber1Suffix".equals(m.getElementName())) {
+				found = true;
+				break;
+			}
+		}
+		assertTrue(found, "expected method testGetNumber1Suffix to be present");
 	}
 
 }

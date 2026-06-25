@@ -1,6 +1,6 @@
 package org.moreunit.mock;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -64,7 +64,7 @@ public class PluginResourceLoaderTest {
        when(mockFile.mkdirs()).thenReturn(false);
 
        boolean result = loader.ensureStateExists("test");
-       assertThat(result).isFalse();
+       assertFalse(result);
        verify(logger).error(anyString());
     }
 }

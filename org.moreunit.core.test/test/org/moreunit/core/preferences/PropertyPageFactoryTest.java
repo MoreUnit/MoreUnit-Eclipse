@@ -1,6 +1,9 @@
 package org.moreunit.core.preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +35,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertThat(pageCreated).isFalse();
+        assertFalse(pageCreated);
     }
 
     @Test
@@ -45,7 +48,7 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertThat(pageCreated).isFalse();
+        assertFalse(pageCreated);
     }
 
     @Test
@@ -58,9 +61,9 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertThat(pageCreated).isTrue();
-        assertThat(languageId).isEqualTo("py");
-        assertThat(description).isNull();
+        assertTrue(pageCreated);
+        assertEquals(languageId, "py");
+        assertNull(description);
     }
 
     @Test
@@ -73,9 +76,9 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertThat(pageCreated).isTrue();
-        assertThat(languageId).isEqualTo("rb");
-        assertThat(description).isEqualTo("Page for Ruby");
+        assertTrue(pageCreated);
+        assertEquals(languageId, "rb");
+        assertEquals(description, "Page for Ruby");
     }
 
     @Test
@@ -88,8 +91,8 @@ public class PropertyPageFactoryTest
         factory.create();
 
         // then
-        assertThat(pageCreated).isTrue();
-        assertThat(languageId).isEqualTo("clj");
-        assertThat(description).isNull();
+        assertTrue(pageCreated);
+        assertEquals(languageId, "clj");
+        assertNull(description);
     }
 }

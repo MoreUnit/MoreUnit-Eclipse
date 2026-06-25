@@ -1,6 +1,9 @@
 package org.moreunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,20 +18,20 @@ public class InMemoryWorkspaceTest {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
 
         // Exists is always true
-        assertThat(workspace.exists()).isTrue();
+        assertTrue(workspace.exists());
 
         // These don't change exists status
         workspace.create();
-        assertThat(workspace.exists()).isTrue();
+        assertTrue(workspace.exists());
 
         workspace.delete();
-        assertThat(workspace.exists()).isTrue();
+        assertTrue(workspace.exists());
     }
 
     @Test
     public void testGetPreferences() {
         InMemoryWorkspace workspace = new InMemoryWorkspace();
-        assertThat(workspace.getPreferences()).isNull();
+        assertNull(workspace.getPreferences());
     }
 
     @Test
@@ -43,8 +46,8 @@ public class InMemoryWorkspaceTest {
 
         File file = workspace.toFile(mockPlatformFile);
 
-        assertThat(file).isNotNull();
-        assertThat(file.getPath().toString()).isEqualTo("/project/folder/file.txt");
+        assertNotNull(file);
+        assertEquals(file.getPath().toString(), "/project/folder/file.txt");
     }
 
     @Test
@@ -59,7 +62,7 @@ public class InMemoryWorkspaceTest {
 
         SrcFile srcFile = workspace.toSrcFile(mockPlatformFile);
 
-        assertThat(srcFile).isNotNull();
-        assertThat(srcFile.getPath().toString()).isEqualTo("/project/folder/file.txt");
+        assertNotNull(srcFile);
+        assertEquals(srcFile.getPath().toString(), "/project/folder/file.txt");
     }
 }

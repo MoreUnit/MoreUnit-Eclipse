@@ -12,13 +12,7 @@ Require-Bundle: org.eclipse.jdt.core,
  org.moreunit,
  org.eclipse.ltk.ui.refactoring,
  org.eclipse.jdt.ui,
- org.eclipse.ui.ide,
- org.eclipse.platform,
- org.assertj,
  junit-jupiter-api,
- junit-jupiter-engine,
- junit-jupiter-params,
  org.eclipse.swtbot.go,
  org.eclipse.swtbot.junit5_x
-Import-Package: org.eclipse.jdt.ui
 Automatic-Module-Name: org.moreunit.swtbot.test

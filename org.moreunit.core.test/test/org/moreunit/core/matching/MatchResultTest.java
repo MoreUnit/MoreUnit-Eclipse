@@ -1,6 +1,10 @@
 package org.moreunit.core.matching;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -39,10 +43,10 @@ public class MatchResultTest
         MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
         MatchingFile matchingFile = result.getUniqueMatchingFile();
 
-        assertThat(matchingFile.isFound()).isFalse();
-        assertThat(matchingFile.isSearchCancelled()).isFalse();
-        assertThat(matchingFile.getSrcFolderToCreate()).isSameAs(correspondingSrcFolder);
-        assertThat(matchingFile.getFileToCreate()).isEqualTo(preferredFileName);
+        assertFalse(matchingFile.isFound());
+        assertFalse(matchingFile.isSearchCancelled());
+        assertSame(matchingFile.getSrcFolderToCreate(), correspondingSrcFolder);
+        assertEquals(matchingFile.getFileToCreate(), preferredFileName);
     }
 
     @Test
@@ -54,9 +58,9 @@ public class MatchResultTest
         MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
         MatchingFile matchingFile = result.getUniqueMatchingFile();
 
-        assertThat(matchingFile.isFound()).isTrue();
-        assertThat(matchingFile.isSearchCancelled()).isFalse();
-        assertThat(matchingFile.get()).isSameAs(file);
+        assertTrue(matchingFile.isFound());
+        assertFalse(matchingFile.isSearchCancelled());
+        assertSame(matchingFile.get(), file);
     }
 
     @Test
@@ -73,9 +77,9 @@ public class MatchResultTest
         MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
         MatchingFile matchingFile = result.getUniqueMatchingFile();
 
-        assertThat(matchingFile.isFound()).isTrue();
-        assertThat(matchingFile.isSearchCancelled()).isFalse();
-        assertThat(matchingFile.get()).isSameAs(selectedFile);
+        assertTrue(matchingFile.isFound());
+        assertFalse(matchingFile.isSearchCancelled());
+        assertSame(matchingFile.get(), selectedFile);
     }
 
     @Test
@@ -91,9 +95,9 @@ public class MatchResultTest
         MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
         MatchingFile matchingFile = result.getUniqueMatchingFile();
 
-        assertThat(matchingFile.isFound()).isFalse();
-        assertThat(matchingFile.isSearchCancelled()).isTrue();
-        assertThat(matchingFile.get()).isNull();
+        assertFalse(matchingFile.isFound());
+        assertTrue(matchingFile.isSearchCancelled());
+        assertNull(matchingFile.get());
     }
 
     @Test
@@ -103,7 +107,7 @@ public class MatchResultTest
 
         MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
 
-        assertThat(result.matchFound()).isFalse();
+        assertFalse(result.matchFound());
     }
 
     @Test
@@ -114,6 +118,6 @@ public class MatchResultTest
 
         MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
 
-        assertThat(result.matchFound()).isTrue();
+        assertTrue(result.matchFound());
     }
 }

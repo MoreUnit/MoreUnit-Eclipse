@@ -1,15 +1,18 @@
 package org.moreunit.elements;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * @author vera
  *
  * 23.05.2006 21:22:53
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -46,7 +49,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     public void getOneCorrespondingTestCase_should_return_test_for_enum() throws Exception
     {
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(context.getCompilationUnit("com.SomeEnum"));
-        assertThat(classTypeFacade.getCorrespondingTestCases()).isEmpty();
+        assertTrue(classTypeFacade.getCorrespondingTestCases().isEmpty());
     }
 
     @Test
@@ -57,7 +60,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         IMethod correspondingTestMethod = classTypeFacade.getCorrespondingTestMethod(getNumberOneMethod, testCaseHandler().get());
-        assertThat(getNumberOneTestMethod).isEqualTo(correspondingTestMethod);
+        assertEquals(getNumberOneTestMethod, correspondingTestMethod);
     }
 
     @Test
@@ -67,7 +70,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
             testCaseHandler().addMethod("public void testGetNumberOne()");
 
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-            assertThat(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_NAME)).isNotEmpty();
+            assertFalse(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_NAME).isEmpty());
         }
 
     @Test
@@ -76,7 +79,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
             IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
 
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-            assertThat(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_NAME)).isEmpty();
+            assertTrue(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_NAME).isEmpty());
         }
 
     @Test
@@ -86,7 +89,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
             testCaseHandler().addMethod("public void testWhichNameDoesNotMatchTestedMethodName()", "new SomeClass().getNumberOne();");
 
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-            assertThat(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_CALL)).isNotEmpty();
+            assertFalse(classTypeFacade.getCorrespondingTestMethods(getNumberOneMethod, MethodSearchMode.BY_CALL).isEmpty());
         }
 
     @Test
@@ -95,7 +98,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
             IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
 
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-            assertThat(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_CALL)).isEmpty();
+            assertTrue(classTypeFacade.getCorrespondingTestMethods(methodWithoutCorrespondingTestMethod, MethodSearchMode.BY_CALL).isEmpty());
         }
 
     @Test
@@ -104,7 +107,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
         IMethod methodWithoutCorrespondingTestMethod = cutHandler().addMethod("public int getNumberTwo()", "return 2;").get();
 
         ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
-        assertThat(classTypeFacade.getCorrespondingTestMethod(methodWithoutCorrespondingTestMethod, testCaseHandler().get())).isNull();
+        assertNull(classTypeFacade.getCorrespondingTestMethod(methodWithoutCorrespondingTestMethod, testCaseHandler().get()));
     }
 
     @Test
@@ -116,7 +119,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
             ClassTypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
             List<IMethod> correspondingTestMethods = classTypeFacade.getCorrespondingTestMethodsByName(getNumberOneMethod);
-            assertThat(correspondingTestMethods).containsExactly(getNumberOneTestMethod, getNumberOneTestMethod2);
+            assertEquals(Arrays.asList(getNumberOneTestMethod, getNumberOneTestMethod2), correspondingTestMethods);
         }
 
     @Test
@@ -149,7 +152,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(getNumberOneTestMethod).isEqualTo(oneCorrespondingTestMember);
+        assertEquals(getNumberOneTestMethod, oneCorrespondingTestMember);
     }
 
     @Test
@@ -168,7 +171,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(giveMe1TestMethod).isEqualTo(oneCorrespondingTestMember);
+        assertEquals(giveMe1TestMethod, oneCorrespondingTestMember);
     }
 
     @Test
@@ -187,7 +190,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(getNumberOneTestMethod).isEqualTo(oneCorrespondingTestMember);
+        assertEquals(getNumberOneTestMethod, oneCorrespondingTestMember);
     }
 
     @Test
@@ -232,7 +235,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingTestMember).isEqualTo(getNumberOneTestMethod);
+        assertEquals(oneCorrespondingTestMember, getNumberOneTestMethod);
     }
 
     @Test
@@ -251,7 +254,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         IMember oneCorrespondingTestMember = classTypeFacade.getOneCorrespondingMember(request);
 
-        assertThat(oneCorrespondingTestMember).isEqualTo(getNumberOneTestMethod);
+        assertEquals(oneCorrespondingTestMember, getNumberOneTestMethod);
     }
 
     private TypeHandler cutHandler()

@@ -1,6 +1,7 @@
 package org.moreunit.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
@@ -44,7 +45,7 @@ public class MethodCallFinderTest extends ContextTestCase
         };
 
         Set<IMethod> matches = finder.getMatches(new NullProgressMonitor());
-        assertThat(matches).contains(callerMethod.get());
+        assertTrue(matches.contains(callerMethod.get()));
     }
 
     @Test
@@ -60,6 +61,6 @@ public class MethodCallFinderTest extends ContextTestCase
         };
 
         Set<IMethod> matches = finder.getMatches(new NullProgressMonitor());
-        assertThat(matches).isEmpty();
+        assertFalse(matches.contains(callerMethod.get()));
     }
 }

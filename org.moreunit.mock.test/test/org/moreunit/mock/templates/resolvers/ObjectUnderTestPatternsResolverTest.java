@@ -1,6 +1,6 @@
 package org.moreunit.mock.templates.resolvers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.moreunit.mock.dependencies.Dependencies;
 import org.moreunit.mock.templates.MockingContext;
-import org.moreunit.mock.templates.PatternResolver;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -42,27 +41,24 @@ public class ObjectUnderTestPatternsResolverTest
     @Test
     public void should_return_unmodified_pattern_when_does_not_match() throws Exception
     {
-        assertThat(resolver.resolve("does not match")).isEqualTo("does not match");
+        assertEquals(resolver.resolve("does not match"), "does not match");
     }
 
     @Test
     public void should_resolve_objectUnderTest() throws Exception
     {
-        assertThat(resolver.resolve("pre ${objectUnderTest} between ${objectUnderTest} post"))
-                .isEqualTo("pre someThing between someThing post");
+        assertEquals(resolver.resolve("pre ${objectUnderTest} between ${objectUnderTest} post"), "pre someThing between someThing post");
     }
 
     @Test
     public void should_resolve_objectUnderTestType() throws Exception
     {
-        assertThat(resolver.resolve("pre ${objectUnderTestType} between ${objectUnderTestType} post"))
-                .isEqualTo("pre ${classUnderTest:newType(some.pack.age.SomeThing)} between ${classUnderTest:newType(some.pack.age.SomeThing)} post");
+        assertEquals(resolver.resolve("pre ${objectUnderTestType} between ${objectUnderTestType} post"), "pre ${classUnderTest:newType(some.pack.age.SomeThing)} between ${classUnderTest:newType(some.pack.age.SomeThing)} post");
     }
 
     @Test
     public void should_resolve_objectUnderTest_and_objectUnderTestType() throws Exception
     {
-        assertThat(resolver.resolve("a ${objectUnderTestType} b ${objectUnderTest} c ${objectUnderTestType} d ${objectUnderTest} e"))
-                .isEqualTo("a ${classUnderTest:newType(some.pack.age.SomeThing)} b someThing c ${classUnderTest:newType(some.pack.age.SomeThing)} d someThing e");
+        assertEquals(resolver.resolve("a ${objectUnderTestType} b ${objectUnderTest} c ${objectUnderTestType} d ${objectUnderTest} e"), "a ${classUnderTest:newType(some.pack.age.SomeThing)} b someThing c ${classUnderTest:newType(some.pack.age.SomeThing)} d someThing e");
     }
 }

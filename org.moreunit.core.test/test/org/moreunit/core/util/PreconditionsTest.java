@@ -1,8 +1,9 @@
 package org.moreunit.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class PreconditionsTest
     public void checkNotNull_should_return_reference_when_not_null()
     {
         String ref = "abc";
-        assertThat(Preconditions.checkNotNull(ref)).isSameAs(ref);
+        assertSame(Preconditions.checkNotNull(ref), ref);
     }
 
     @Test
@@ -29,7 +30,7 @@ public class PreconditionsTest
     public void checkNotNull_with_message_should_return_reference_when_not_null()
     {
         String ref = "abc";
-        assertThat(Preconditions.checkNotNull(ref, "error")).isSameAs(ref);
+        assertSame(Preconditions.checkNotNull(ref, "error"), ref);
     }
 
     @Test
@@ -42,7 +43,7 @@ public class PreconditionsTest
         }
         catch (NullPointerException e)
         {
-            assertThat(e.getMessage()).isEqualTo("custom error");
+            assertEquals(e.getMessage(), "custom error");
         }
     }
 
@@ -74,7 +75,7 @@ public class PreconditionsTest
         }
         catch (IllegalArgumentException e)
         {
-            assertThat(e.getMessage()).isEqualTo("custom error");
+            assertEquals(e.getMessage(), "custom error");
         }
     }
 
@@ -94,7 +95,7 @@ public class PreconditionsTest
         }
         catch (IllegalStateException e)
         {
-            assertThat(e.getMessage()).isEqualTo("custom error");
+            assertEquals(e.getMessage(), "custom error");
         }
     }
 
@@ -102,7 +103,7 @@ public class PreconditionsTest
     public void checkNotNullOrEmpty_should_return_collection_when_not_null_nor_empty()
     {
         List<String> list = Arrays.asList("a");
-        assertThat(Preconditions.checkNotNullOrEmpty(list)).isSameAs(list);
+        assertSame(Preconditions.checkNotNullOrEmpty(list), list);
     }
 
     @Test
@@ -121,7 +122,7 @@ public class PreconditionsTest
     public void checkNotNullOrEmpty_with_message_should_return_collection_when_not_null_nor_empty()
     {
         List<String> list = Arrays.asList("a");
-        assertThat(Preconditions.checkNotNullOrEmpty(list, "error")).isSameAs(list);
+        assertSame(Preconditions.checkNotNullOrEmpty(list, "error"), list);
     }
 
     @Test
@@ -134,7 +135,7 @@ public class PreconditionsTest
         }
         catch (NullPointerException e)
         {
-            assertThat(e.getMessage()).isEqualTo("custom error");
+            assertEquals(e.getMessage(), "custom error");
         }
     }
 
@@ -148,7 +149,7 @@ public class PreconditionsTest
         }
         catch (IllegalArgumentException e)
         {
-            assertThat(e.getMessage()).isEqualTo("custom error");
+            assertEquals(e.getMessage(), "custom error");
         }
     }
 }

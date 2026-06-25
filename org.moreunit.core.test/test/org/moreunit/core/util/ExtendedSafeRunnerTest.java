@@ -1,6 +1,7 @@
 package org.moreunit.core.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
@@ -27,7 +28,7 @@ public class ExtendedSafeRunnerTest
             }
         });
 
-        assertThat(result).isEqualTo("INPUT");
+        assertEquals(result, "INPUT");
     }
 
     @Test
@@ -48,7 +49,7 @@ public class ExtendedSafeRunnerTest
             }
         });
 
-        assertThat(results).containsExactly("A", "B");
+        assertEquals(Arrays.asList("A", "B"), results);
     }
 
     @Test
@@ -69,11 +70,11 @@ public class ExtendedSafeRunnerTest
             public void handleException(Throwable throwable, String element)
             {
                 exceptionHandled[0] = true;
-                assertThat(element).isEqualTo("input");
-                assertThat(throwable.getMessage()).isEqualTo("failed");
+                assertEquals(element, "input");
+                assertEquals(throwable.getMessage(), "failed");
             }
         });
 
-        assertThat(exceptionHandled[0]).isTrue();
+        assertTrue(exceptionHandled[0]);
     }
 }

@@ -1,6 +1,7 @@
 package org.moreunit.core.languages;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +34,7 @@ public class MainLanguageRepositoryTest
         when(userDefinedLanguagesRepo.contains("vb")).thenReturn(true);
 
         // then
-        assertThat(mainRepo.contains("vb")).isTrue();
+        assertTrue(mainRepo.contains("vb"));
     }
 
     @Test
@@ -44,7 +45,7 @@ public class MainLanguageRepositoryTest
         when(extensionManager.extensionExistsForLanguage("pl")).thenReturn(true);
 
         // then
-        assertThat(mainRepo.contains("pl")).isTrue();
+        assertTrue(mainRepo.contains("pl"));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class MainLanguageRepositoryTest
         when(extensionManager.extensionExistsForLanguage("cpp")).thenReturn(false);
 
         // then
-        assertThat(mainRepo.contains("cpp")).isFalse();
+        assertFalse(mainRepo.contains("cpp"));
     }
 
     @Test
