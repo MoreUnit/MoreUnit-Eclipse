@@ -83,4 +83,12 @@ public class LanguageTest
         org.junit.jupiter.api.Assertions.assertTrue(lang2.compareTo(lang1) > 0);
         org.junit.jupiter.api.Assertions.assertEquals(0, lang1.compareTo(lang1));
     }
+
+    @Test
+    public void should_create_language_with_extension_only()
+    {
+        Language lang = new Language("groovy");
+        org.junit.jupiter.api.Assertions.assertEquals("groovy", lang.getExtension());
+        org.junit.jupiter.api.Assertions.assertEquals("groovy", lang.getLabel());
+    }
 }
