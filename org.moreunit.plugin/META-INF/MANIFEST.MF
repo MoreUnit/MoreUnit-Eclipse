@@ -34,7 +34,7 @@ Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreuni
  nit.handler;x-friends:="org.moreunit.test"; uses:="org.eclipse.jdt.co
  re,  org.eclipse.core.commands,  org.eclipse.ui",org.moreunit.images;
  x-friends:="org.moreunit";uses:="org.eclipse.jface.resource",org.more
- unit.log;x-friends:="org.moreunit.test,org.moreunit.extension",org.mo
+ unit.launch;x-friends:="org.moreunit.test",org.moreunit.log;x-friends:="org.moreunit.test,org.moreunit.extension",org.mo
  reunit.matching;x-friends:="org.moreunit.test",org.moreunit.preferenc
  es; x-friends:="org.moreunit.test,  org.moreunit.extension,  org.more
  unit.test.dependencies,  org.moreunit.swtbot.test,  org.moreunit.mock

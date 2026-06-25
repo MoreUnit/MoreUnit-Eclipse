@@ -15,17 +15,17 @@ import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationDelegate;
  * JUnitLaunchConfigurationDelegate can only run all tests of a project, without
  * any chance to choose which ones).
  */
-class JUnitTestSelectionLaunchConfigurationDelegate extends JUnitLaunchConfigurationDelegate
+public class JUnitTestSelectionLaunchConfigurationDelegate extends JUnitLaunchConfigurationDelegate
 {
     private final Collection<IMember> testMembersToRun;
 
-    JUnitTestSelectionLaunchConfigurationDelegate(Collection< ? extends IMember> testsToRun)
+    public JUnitTestSelectionLaunchConfigurationDelegate(Collection< ? extends IMember> testsToRun)
     {
         testMembersToRun = new LinkedHashSet<>(testsToRun);
     }
 
     @Override
-    protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException
+    public IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException
     {
         return testMembersToRun.toArray(new IMember[0]);
     }

@@ -26,7 +26,7 @@ public class AdditionalTestLaunchShortcutProvider
     }
 
     // for testing only
-    AdditionalTestLaunchShortcutProvider()
+    public AdditionalTestLaunchShortcutProvider()
     {
     }
 
