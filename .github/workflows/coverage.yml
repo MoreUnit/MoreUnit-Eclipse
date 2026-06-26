@@ -30,7 +30,7 @@ jobs:
           maven-version: 3.9.9
 
       - name: Build with Coverage
-        run: mvn -file org.moreunit.build/pom.xml clean install -Pcoverage "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn" -T 8C
+        run: mvn -file org.moreunit.build/pom.xml clean install -Pcoverage "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
