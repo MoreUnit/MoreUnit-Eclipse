@@ -38,7 +38,7 @@ public class SearchEngineTest
         TextSearchRequestor requestor = mock(TextSearchRequestor.class);
         Pattern pattern = Pattern.compile("test");
 
-        IStatus errorStatus = new Status(IStatus.ERROR, "pluginId", "Search error");
+        IStatus errorStatus = new Status(IStatus.ERROR, "pluginId", IStatus.ERROR, "Search error", null);
         when(textSearchEngine.search(nullable(TextSearchScope.class), eq(requestor), nullable(Pattern.class), isNull())).thenReturn(errorStatus);
 
         // when
