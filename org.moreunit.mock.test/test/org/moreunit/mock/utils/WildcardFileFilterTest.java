@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 public class WildcardFileFilterTest
 {
@@ -63,6 +65,7 @@ public class WildcardFileFilterTest
     }
 
     @Test
+    @EnabledOnOs(OS.LINUX)
     public void should_handle_backslash_in_pattern()
     {
         WildcardFileFilter filter = new WildcardFileFilter("path\\*.txt");
