@@ -1,0 +1,14 @@
+package testing;
+
+public class MyClassWithMethods
+{
+    public int methodOne()
+    {
+        return 1;
+    }
+
+    public String methodTwo()
+    {
+        return "two";
+    }
+}
