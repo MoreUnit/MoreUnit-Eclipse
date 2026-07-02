@@ -1,0 +1,13 @@
+package testing;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class MyClassWithMethodsTest
+{
+    @Test
+    public void testMethodOne()
+    {
+        assertEquals(1, new MyClassWithMethods().methodOne());
+    }
+}
