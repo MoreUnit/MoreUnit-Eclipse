@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.jdt.core,
  org.moreunit,
  org.eclipse.ltk.ui.refactoring,
  org.eclipse.jdt.ui,
+ org.eclipse.debug.core,
  junit-jupiter-api,
  org.eclipse.swtbot.go,
  org.eclipse.swtbot.junit5_x
