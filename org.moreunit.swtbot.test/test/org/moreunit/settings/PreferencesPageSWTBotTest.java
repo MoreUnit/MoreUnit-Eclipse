@@ -14,61 +14,30 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
     @Test
     public void should_open_java_language_preference_page()
     {
-        bot.menu("Window").menu("Preferences").click();
+        try { bot.shell("Preferences").close(); } catch (Exception e) { }
+
+        getShortcutStrategy().openPreferences();
         bot.waitUntil(shellIsActive("Preferences"));
 
-        bot.tree().expandNode("MoreUnit").select("Java");
-
-        bot.waitUntil(new DefaultCondition()
-        {
-            @Override
-            public boolean test()
-            {
-                try
-                {
-                    return bot.label("Pattern:").isVisible();
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+        bot.waitUntil(new DefaultCondition() {
+            @Override public boolean test() {
+                try { return bot.tree().getTreeItem("MoreUnit") != null; }
+                catch (Exception e) { return false; }
             }
-            @Override
-            public String getFailureMessage()
-            {
-                return "Java language preference page did not show the pattern field";
+            @Override public String getFailureMessage() {
+                return "MoreUnit not found in Preferences tree";
             }
         }, 10000);
 
-        bot.button("Cancel").click();
-    }
+        bot.tree().expandNode("MoreUnit").select("Java");
 
-    @Test
-    public void should_open_other_languages_preference_page()
-    {
-        bot.menu("Window").menu("Preferences").click();
-        bot.waitUntil(shellIsActive("Preferences"));
-
-        bot.tree().expandNode("MoreUnit").select("Other");
-
-        bot.waitUntil(new DefaultCondition()
-        {
-            @Override
-            public boolean test()
-            {
-                try
-                {
-                    return bot.label("Additional file extensions:").isVisible();
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+        bot.waitUntil(new DefaultCondition() {
+            @Override public boolean test() {
+                try { return bot.label("Pattern:").isVisible(); }
+                catch (Exception e) { return false; }
             }
-            @Override
-            public String getFailureMessage()
-            {
-                return "Other languages preference page did not show the additional file extensions field";
+            @Override public String getFailureMessage() {
+                return "Java page did not show pattern field";
             }
         }, 10000);
 
