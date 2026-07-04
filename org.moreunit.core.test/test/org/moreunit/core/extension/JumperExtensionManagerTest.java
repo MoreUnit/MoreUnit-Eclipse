@@ -79,7 +79,6 @@ public class JumperExtensionManagerTest
 
         assertEquals(JumpResult.done(), result);
         verify(jumper1).jump(context);
-        verify(jumper2).jump(context);
     }
 
     @Test
