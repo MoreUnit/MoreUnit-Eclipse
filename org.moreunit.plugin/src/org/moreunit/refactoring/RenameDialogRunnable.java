@@ -20,11 +20,11 @@ import org.moreunit.util.TestMethodDivinerFactory;
  */
 public class RenameDialogRunnable implements Runnable
 {
-    ClassTypeFacade javaFile;
-    IMethod renamedMethod;
-    String newMethodName;
-    TestMethodDivinerFactory testMethodDivinerFactory;
-    TestMethodDiviner testMethodDiviner;
+    public ClassTypeFacade javaFile;
+    public IMethod renamedMethod;
+    public String newMethodName;
+    public TestMethodDivinerFactory testMethodDivinerFactory;
+    public TestMethodDiviner testMethodDiviner;
 
     public RenameDialogRunnable(ClassTypeFacade javaFile, IMethod renamedMethod, String newMethodName)
     {

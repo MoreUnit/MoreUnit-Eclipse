@@ -30,4 +30,21 @@ public final class JumpResult
     {
         return done;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return Boolean.hashCode(done);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(this == obj)
+            return true;
+        if(obj == null || getClass() != obj.getClass())
+            return false;
+        JumpResult other = (JumpResult) obj;
+        return done == other.done;
+    }
 }

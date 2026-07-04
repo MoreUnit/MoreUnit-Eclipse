@@ -77,7 +77,7 @@ public class LanguageExtensionManager
 
         for (IConfigurationElement condition : conditionElements)
         {
-            if(! DEPENDENCY_COND_TYPE.equals(condition.getAttribute(TYPE_ATTR)) || ! isDependencyPresent(condition.getAttribute(VALUE_ATTR)))
+            if(DEPENDENCY_COND_TYPE.equals(condition.getAttribute(TYPE_ATTR)) && ! isDependencyPresent(condition.getAttribute(VALUE_ATTR)))
             {
                 return false;
             }
