@@ -22,8 +22,8 @@
             <groupId>org.eclipse.tycho</groupId>
             <artifactId>tycho-surefire-plugin</artifactId>
             <configuration>
-              <useUIHarness>true</useUIHarness>
-              <useUIThread>false</useUIThread>
+              <useUIHarness>${tests.use.ui}</useUIHarness>
+              <useUIThread>${tests.use.ui}</useUIThread>
               <product>org.eclipse.platform.ide</product>
               <application>org.eclipse.ui.ide.workbench</application>
             </configuration>
