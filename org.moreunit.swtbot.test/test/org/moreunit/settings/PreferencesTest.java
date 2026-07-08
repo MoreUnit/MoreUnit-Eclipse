@@ -20,6 +20,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
     private void openPreferencesAndSelectMoreUnitPage()
     {
+        try { bot.shell("Preferences").close(); } catch (Exception e) { }
         getShortcutStrategy().openPreferences();
         bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Preferences"), 20000);
         bot.shell("Preferences").activate();
