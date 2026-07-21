@@ -35,7 +35,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
         with:
-          files: ./org.moreunit.build/target/site/jacoco-aggregate/jacoco.xml
+          files: ./org.moreunit.report/target/site/jacoco-aggregate/jacoco.xml
           verbose: true
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
