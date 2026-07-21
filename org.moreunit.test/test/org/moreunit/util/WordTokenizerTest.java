@@ -10,6 +10,16 @@ public class WordTokenizerTest
 {
 
     @Test
+    public void should_handle_null_and_empty_string()
+    {
+        WordTokenizer wordTokenizer = new WordTokenizer(null);
+        assertFalse(wordTokenizer.hasMoreElements());
+
+        wordTokenizer = new WordTokenizer("");
+        assertFalse(wordTokenizer.hasMoreElements());
+    }
+
+    @Test
     public void should_split_token_into_words_split_by_upper_case_chars()
     {
         WordTokenizer wordTokenizer = new WordTokenizer("Oa");
