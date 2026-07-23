@@ -1,6 +1,8 @@
 package org.moreunit.core.util;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -10,38 +12,38 @@ import org.junit.jupiter.api.Test;
 class IOUtilsTest {
 
     @Test
-    void testCloseQuietlyWithNullArray() {
+    void testCloseQuietly_withNullArray() {
         IOUtils.closeQuietly((Closeable[]) null);
-        // Should not throw an exception
     }
 
     @Test
-    void testCloseQuietlyWithNullElement() {
-        IOUtils.closeQuietly(new Closeable[] { null });
-        // Should not throw an exception
+    void testCloseQuietly_withNullElements() {
+        IOUtils.closeQuietly(null, null);
     }
 
     @Test
-    void testCloseQuietlySuccess() throws IOException {
-        Closeable mockCloseable1 = mock(Closeable.class);
-        Closeable mockCloseable2 = mock(Closeable.class);
+    void testCloseQuietly_withValidElements() throws IOException {
+        Closeable c1 = mock(Closeable.class);
+        Closeable c2 = mock(Closeable.class);
 
-        IOUtils.closeQuietly(mockCloseable1, mockCloseable2);
+        IOUtils.closeQuietly(c1, c2);
 
-        verify(mockCloseable1).close();
-        verify(mockCloseable2).close();
+        verify(c1).close();
+        verify(c2).close();
     }
 
     @Test
-    void testCloseQuietlyWithException() throws IOException {
-        Closeable mockCloseable1 = mock(Closeable.class);
-        Closeable mockCloseable2 = mock(Closeable.class);
+    void testCloseQuietly_withExceptionOnClose() throws IOException {
+        Closeable c1 = mock(Closeable.class);
+        Closeable c2 = mock(Closeable.class);
+        Closeable c3 = mock(Closeable.class);
 
-        doThrow(new IOException("Test exception")).when(mockCloseable1).close();
+        doThrow(new IOException("test")).when(c2).close();
 
-        IOUtils.closeQuietly(mockCloseable1, mockCloseable2);
+        IOUtils.closeQuietly(c1, c2, c3);
 
-        verify(mockCloseable1).close();
-        verify(mockCloseable2).close(); // Should still be called even if the first one throws
+        verify(c1).close();
+        verify(c2).close();
+        verify(c3).close();
     }
 }
