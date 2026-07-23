@@ -33,4 +33,20 @@ public class ObjectsTest
         assertFalse(Objects.equal("abc", "aBc"));
         assertFalse(Objects.equal(95, 94));
     }
+
+    @Test
+    public void testHash() {
+        org.junit.jupiter.api.Assertions.assertEquals(
+            java.util.Arrays.hashCode(new Object[]{"a", "b"}),
+            Objects.hash("a", "b")
+        );
+        org.junit.jupiter.api.Assertions.assertEquals(
+            java.util.Arrays.hashCode(new Object[]{null, "b"}),
+            Objects.hash(null, "b")
+        );
+        org.junit.jupiter.api.Assertions.assertEquals(
+            java.util.Arrays.hashCode(new Object[]{}),
+            Objects.hash()
+        );
+    }
 }
