@@ -52,4 +52,41 @@ public class IOUtilsTest
 
         // then: no exception = success
     }
+
+    @Test
+    public void closeQuietly_should_ignore_null_array() throws Exception
+    {
+        // when
+        closeQuietly((Closeable[]) null);
+
+        // then: no exception = success
+    }
+
+    @Test
+    public void closeQuietly_should_ignore_null_varargs_elements() throws Exception
+    {
+        // when
+        closeQuietly(null, null);
+
+        // then: no exception = success
+    }
+
+    @Test
+    public void closeQuietly_should_continue_closing_remaining_resources_on_exception() throws Exception
+    {
+        // given
+        Closeable c1 = mock(Closeable.class);
+        Closeable c2 = mock(Closeable.class);
+        Closeable c3 = mock(Closeable.class);
+
+        doThrow(new IOException()).when(c2).close();
+
+        // when
+        closeQuietly(c1, c2, c3);
+
+        // then
+        verify(c1, times(1)).close();
+        verify(c2, times(1)).close();
+        verify(c3, times(1)).close();
+    }
 }
