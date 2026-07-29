@@ -3,6 +3,7 @@ package org.moreunit.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,5 +139,41 @@ public class BaseToolsTest
         assertEquals(result.get(0), "EinsZweiDrei");
         assertEquals(result.get(1), "OneTwoThree");
         assertEquals(result.get(5), "One");
+    }
+
+    @Test
+    public void getFirstMethodWithSameNamePrefix_should_return_null_when_methodName_is_null() {
+        org.eclipse.jdt.core.IMethod[] methods = new org.eclipse.jdt.core.IMethod[0];
+        assertNull(BaseTools.getFirstMethodWithSameNamePrefix(methods, null));
+    }
+
+    @Test
+    public void getFirstMethodWithSameNamePrefix_should_return_null_when_no_method_matches() {
+        org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
+        org.mockito.Mockito.when(method1.getElementName()).thenReturn("foo");
+        org.mockito.Mockito.when(method1.exists()).thenReturn(true);
+
+        org.eclipse.jdt.core.IMethod[] methods = { method1 };
+        assertNull(BaseTools.getFirstMethodWithSameNamePrefix(methods, "bar"));
+    }
+
+    @Test
+    public void getFirstMethodWithSameNamePrefix_should_return_matching_method() {
+        org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
+        org.mockito.Mockito.when(method1.getElementName()).thenReturn("foo");
+        org.mockito.Mockito.when(method1.exists()).thenReturn(true);
+
+        org.eclipse.jdt.core.IMethod[] methods = { method1 };
+        assertEquals(method1, BaseTools.getFirstMethodWithSameNamePrefix(methods, "fooBar"));
+    }
+
+    @Test
+    public void getFirstMethodWithSameNamePrefix_should_not_return_method_that_does_not_exist() {
+        org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
+        org.mockito.Mockito.when(method1.getElementName()).thenReturn("foo");
+        org.mockito.Mockito.when(method1.exists()).thenReturn(false);
+
+        org.eclipse.jdt.core.IMethod[] methods = { method1 };
+        assertNull(BaseTools.getFirstMethodWithSameNamePrefix(methods, "fooBar"));
     }
 }
