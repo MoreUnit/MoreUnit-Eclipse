@@ -20,6 +20,28 @@ public class WordTokenizerTest
     }
 
     @Test
+    public void should_handle_all_lower_case_string()
+    {
+        WordTokenizer wordTokenizer = new WordTokenizer("abcdef");
+        assertTrue(wordTokenizer.hasMoreElements());
+        assertEquals("abcdef", wordTokenizer.nextElement());
+        assertFalse(wordTokenizer.hasMoreElements());
+    }
+
+    @Test
+    public void should_handle_all_upper_case_string()
+    {
+        WordTokenizer wordTokenizer = new WordTokenizer("ABC");
+        assertTrue(wordTokenizer.hasMoreElements());
+        assertEquals("A", wordTokenizer.nextElement());
+        assertTrue(wordTokenizer.hasMoreElements());
+        assertEquals("B", wordTokenizer.nextElement());
+        assertTrue(wordTokenizer.hasMoreElements());
+        assertEquals("C", wordTokenizer.nextElement());
+        assertFalse(wordTokenizer.hasMoreElements());
+    }
+
+    @Test
     public void should_split_token_into_words_split_by_upper_case_chars()
     {
         WordTokenizer wordTokenizer = new WordTokenizer("Oa");
