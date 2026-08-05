@@ -2,38 +2,36 @@ package org.moreunit.util;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.moreunit.test.context.Project;
+import org.moreunit.test.context.TestContextRule;
+import org.moreunit.test.workspace.ProjectHandler;
 
 public class SearchScopeSingeltonTest {
+
+    @RegisterExtension
+    public TestContextRule context = new TestContextRule();
 
     @BeforeEach
     public void setUp() {
         SearchScopeSingelton.getInstance().resetCachedSearchScopes();
     }
 
+    @Project(mainSrcFolder = "src/main/java", testSrcFolder = "src/test/java")
     @Test
     public void getSearchScope_should_cache_and_return_scope() throws CoreException {
         SearchScopeSingelton instance = SearchScopeSingelton.getInstance();
 
-        IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
-        IJavaProject project = mock(IJavaProject.class);
-        when(sourceFolder.getJavaProject()).thenReturn(project);
-        when(project.getPackageFragmentRoots()).thenReturn(new IPackageFragmentRoot[] { sourceFolder });
-        when(sourceFolder.isArchive()).thenReturn(false);
+        ProjectHandler testProject = context.getProjectHandler();
+        IPackageFragmentRoot sourceFolder = testProject.getMainSrcFolderHandler().get();
+        IPackageFragmentRoot sourceFolder2 = testProject.getTestSrcFolderHandler().get();
 
         // First call should create scope and cache it (goes through else branch)
         IJavaSearchScope scope1 = instance.getSearchScope(sourceFolder);
@@ -45,10 +43,6 @@ public class SearchScopeSingeltonTest {
         assertSame(scope1, scope2);
 
         // A different folder should get a new scope
-        IPackageFragmentRoot sourceFolder2 = mock(IPackageFragmentRoot.class);
-        when(sourceFolder2.getJavaProject()).thenReturn(project);
-        when(sourceFolder2.isArchive()).thenReturn(false);
-
         IJavaSearchScope scope3 = instance.getSearchScope(sourceFolder2);
         assertNotNull(scope3);
         assertNotSame(scope1, scope3);
