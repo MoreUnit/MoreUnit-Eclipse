@@ -1,0 +1,97 @@
+package org.moreunit.core.resources;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class InMemoryResourceContainerTest {
+
+    @Test
+    public void testGetFileAndFolder() {
+        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        InMemoryProject project = workspace.getProject("project");
+
+        File file = project.getFile("folder/file.txt");
+        assertNotNull(file);
+        assertEquals("file.txt", file.getName());
+        assertEquals("/project/folder/file.txt", file.getPath().toString());
+
+        Folder folder = project.getFolder("folder/subfolder");
+        assertNotNull(folder);
+        assertEquals("subfolder", folder.getName());
+        assertEquals("/project/folder/subfolder", folder.getPath().toString());
+    }
+
+    @Test
+    public void testDelete() {
+        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        InMemoryProject project = workspace.getProject("project");
+
+        File file = project.getFile("folder/file.txt");
+        Folder folder = project.getFolder("folder/subfolder");
+
+        file.create();
+        folder.create();
+
+        assertTrue(file.exists());
+        assertTrue(folder.exists());
+
+        project.delete();
+
+        assertFalse(file.exists());
+        assertFalse(folder.exists());
+    }
+
+    @Test
+    public void testListFilesAndFolders() {
+        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        InMemoryProject project = workspace.getProject("project");
+
+        File file1 = project.getFile("file1.txt");
+        file1.create();
+        File file2 = project.getFile("file2.txt");
+        // file2 not created
+
+        Folder folder1 = project.getFolder("folder1");
+        folder1.create();
+        Folder folder2 = project.getFolder("folder2");
+        // folder2 not created
+
+        List<File> files = project.listFiles();
+        assertEquals(1, files.size());
+        assertTrue(files.contains(file1));
+
+        List<Folder> folders = project.listFolders();
+        assertEquals(1, folders.size());
+        assertTrue(folders.contains(folder1));
+    }
+
+    @Test
+    public void testIsParentOf() {
+        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        InMemoryProject project = workspace.getProject("project");
+
+        File file = project.getFile("folder/file.txt");
+
+        assertTrue(project.isParentOf(file));
+
+        InMemoryProject otherProject = workspace.getProject("otherProject");
+        assertFalse(otherProject.isParentOf(file));
+    }
+
+    @Test
+    public void testCreateWithRecord() {
+        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        InMemoryProject project = workspace.getProject("project");
+        Folder folder = project.getFolder("folder1/folder2");
+
+        ContainerCreationRecord record = folder.createWithRecord();
+        assertTrue(folder.exists());
+        assertNotNull(record);
+    }
+}
