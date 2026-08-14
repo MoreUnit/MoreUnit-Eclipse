@@ -129,4 +129,26 @@ public class InMemoryPathTest {
             assertEquals(e.getMessage(), "not a relative path");
         }
     }
+
+    @Test
+    public void testIsAbsoluteAndRelative() {
+        InMemoryPath absolutePath = new InMemoryPath("/project/folder");
+        assertTrue(absolutePath.isAbsolute());
+        assertFalse(absolutePath.isRelative());
+
+        InMemoryPath relativePath = new InMemoryPath("folder/file.txt");
+        assertFalse(relativePath.isAbsolute());
+        assertTrue(relativePath.isRelative());
+    }
+
+    @Test
+    public void testIsPrefixOf() {
+        InMemoryPath path1 = new InMemoryPath("/project/folder");
+        InMemoryPath path2 = new InMemoryPath("/project/folder/file.txt");
+        InMemoryPath path3 = new InMemoryPath("/other/folder");
+
+        assertTrue(path1.isPrefixOf(path2));
+        assertTrue(path1.isPrefixOf(path1));
+        assertFalse(path1.isPrefixOf(path3));
+    }
 }
