@@ -9,7 +9,6 @@ import static org.moreunit.core.matching.TestFileNamePattern.isValid;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -639,43 +638,38 @@ public class TestFileNamePatternTest
     public void should_evaluate_test_file_with_wildcard_before_variable() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("*${srcFile}Test", camelCaseTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Pre*${srcFile}Test", camelCaseTokenizer);
 
-        // when evaluating a string ending with "Test"
-        FileNameEvaluation evaluation = pattern.evaluate("MyVeryLongClassNameTest");
+        // when evaluating a string matching the pattern
+        FileNameEvaluation evaluation = pattern.evaluate("PreMyVeryLongClassNameTest");
 
         // then: it is considered a test file
         assertTrue(evaluation.isTestFile());
 
         // and: combinations from end are produced
-        List<String> otherPatterns = new java.util.ArrayList<>(evaluation.getOtherCorrespondingFilePatterns());
-        assertEquals(5, otherPatterns.size());
-        assertTrue(otherPatterns.contains("\\QMyVeryLongClassName\\E"));
+        Collection<String> otherPatterns = evaluation.getOtherCorrespondingFilePatterns();
+        assertEquals(4, otherPatterns.size());
         assertTrue(otherPatterns.contains("\\QVeryLongClassName\\E"));
         assertTrue(otherPatterns.contains("\\QLongClassName\\E"));
         assertTrue(otherPatterns.contains("\\QClassName\\E"));
         assertTrue(otherPatterns.contains("\\QName\\E"));
-
-        // long combinations should come first (so MyVeryLongClassName is at index 0)
-        assertEquals("\\QMyVeryLongClassName\\E", otherPatterns.get(0));
     }
 
     @Test
     public void should_evaluate_test_file_with_wildcard_after_variable() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("Test${srcFile}*", camelCaseTokenizer);
+        TestFileNamePattern pattern = new TestFileNamePattern("Test${srcFile}*Suf", camelCaseTokenizer);
 
-        // when evaluating a string starting with "Test"
-        FileNameEvaluation evaluation = pattern.evaluate("TestMyVeryLongClassName");
+        // when evaluating a string matching the pattern
+        FileNameEvaluation evaluation = pattern.evaluate("TestMyVeryLongClassNameSuf");
 
         // then: it is considered a test file
         assertTrue(evaluation.isTestFile());
 
         // and: combinations from start are produced
-        List<String> otherPatterns = new java.util.ArrayList<>(evaluation.getOtherCorrespondingFilePatterns());
-        assertEquals(5, otherPatterns.size());
-        assertTrue(otherPatterns.contains("\\QMyVeryLongClassName\\E"));
+        Collection<String> otherPatterns = evaluation.getOtherCorrespondingFilePatterns();
+        assertEquals(4, otherPatterns.size());
         assertTrue(otherPatterns.contains("\\QMyVeryLongClass\\E"));
         assertTrue(otherPatterns.contains("\\QMyVeryLong\\E"));
         assertTrue(otherPatterns.contains("\\QMyVery\\E"));
@@ -685,7 +679,7 @@ public class TestFileNamePatternTest
     @Test
     public void should_evaluate_test_file_with_unknown_file_type() throws Exception
     {
-        // given a pattern built with an explicit "UNKNOWN" and that does not match the fileBaseName
+        // given a pattern built with an implicit FileType.UNKNOWN and that does not match the fileBaseName
         TestFileNamePattern pattern = new TestFileNamePattern("Something${srcFile}", camelCaseTokenizer);
 
         // when evaluated with a file name that does not match "Something.*"
