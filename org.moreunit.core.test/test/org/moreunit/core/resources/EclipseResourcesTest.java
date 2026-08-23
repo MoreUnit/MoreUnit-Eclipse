@@ -1,6 +1,8 @@
 package org.moreunit.core.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.List;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 public class EclipseResourcesTest extends ResourcesTest
 {
@@ -41,5 +44,21 @@ public class EclipseResourcesTest extends ResourcesTest
         List<String> expectedFolders = new ArrayList<>(namesOf(container.listFolders()));
         expectedFolders.removeIf(".settings"::equals);
         assertEquals(Arrays.asList(folderNames), expectedFolders);
+    }
+
+    @Test
+    public void createFolder_using_string_path_should_create_folder() throws Exception
+    {
+        String path = "/project1/createFolderStringPathTest";
+        Resources.CreatedFolder created = Resources.createFolder(path);
+        assertTrue(created.get().exists());
+    }
+
+    @Test
+    public void createFolder_should_throw_FolderCreationException_when_core_exception_occurs() throws Exception
+    {
+        // Try creating a folder where a file already exists
+        workspaceRoot.getProject("project1").getFile("existingFile").create(new java.io.ByteArrayInputStream(new byte[0]), true, null);
+        assertThrows(FolderCreationException.class, () -> Resources.createFolder("/project1/existingFile"));
     }
 }
