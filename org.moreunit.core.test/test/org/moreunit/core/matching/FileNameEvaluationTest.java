@@ -2,6 +2,8 @@ package org.moreunit.core.matching;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +33,28 @@ public class FileNameEvaluationTest
 
         // when
         assertEquals(eval.getAllCorrespondingFilePatterns(), asList("preferred1", "preferred2"));
+    }
+
+    @Test
+    public void should_return_is_test_file() throws Exception
+    {
+        // given
+        FileNameEvaluation eval1 = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1"), NO_PATTERNS);
+        FileNameEvaluation eval2 = new FileNameEvaluation("Irrelevant", true, "preferred1", asList("preferred1"), NO_PATTERNS);
+
+        // then
+        assertFalse(eval1.isTestFile());
+        assertTrue(eval2.isTestFile());
+    }
+
+    @Test
+    public void should_return_to_string() throws Exception
+    {
+        // given
+        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1"), NO_PATTERNS);
+
+        // then
+        assertTrue(eval.toString().contains("FileNameEvaluation("));
     }
 
     @Test

@@ -10,6 +10,26 @@ import org.junit.jupiter.api.Test;
 public class WordScannerTest
 {
     @Test
+    public void should_return_false_when_checking_has_next_with_large_offset() throws Exception
+    {
+        // given
+        WordScanner scanner = new WordScanner("a");
+
+        // then
+        assertFalse(scanner.hasNext(10));
+    }
+
+    @Test
+    public void should_return_false_when_checking_has_previous_with_large_offset() throws Exception
+    {
+        // given
+        WordScanner scanner = new WordScanner("a");
+
+        // then
+        assertFalse(scanner.hasPrevious(10));
+    }
+
+    @Test
     public void should_reject_null_string() throws Exception
     {
         assertThrows(NullPointerException.class, () -> new WordScanner(null));

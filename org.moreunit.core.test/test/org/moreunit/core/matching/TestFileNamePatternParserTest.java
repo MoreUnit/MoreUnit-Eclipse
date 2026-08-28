@@ -116,6 +116,62 @@ public class TestFileNamePatternParserTest
     }
 
     @Test
+    public void should_parse_empty_alternatives() throws Exception
+    {
+        // given
+        TestFileNamePatternParser parser = new TestFileNamePatternParser("()${srcFile}", underscoreTokenizer);
+
+        // when
+        TestFileNamePatternParser.Result result = parser.parse();
+
+        // then
+        assertTrue(result.success());
+        assertFalse(result.get().prefix().hasAlternatives());
+    }
+
+    @Test
+    public void should_return_false_when_has_alternatives_is_called_on_no_alternatives() throws Exception
+    {
+        // given
+        TestFileNamePatternParser parser = new TestFileNamePatternParser("prefix_${srcFile}", underscoreTokenizer);
+
+        // when
+        TestFileNamePatternParser.Result result = parser.parse();
+
+        // then
+        assertTrue(result.success());
+        assertFalse(result.get().prefix().hasAlternatives());
+    }
+
+    @Test
+    public void should_parse_unclosed_alternative_group() throws Exception
+    {
+        // given
+        TestFileNamePatternParser parser = new TestFileNamePatternParser("(a|b${srcFile}", underscoreTokenizer);
+
+        // when
+        TestFileNamePatternParser.Result result = parser.parse();
+
+        // then
+        assertTrue(result.success());
+        assertEquals(Arrays.asList("a", "b"), result.get().prefix().alternatives());
+    }
+
+    @Test
+    public void should_parse_escaped_character_correctly_without_alternatives() throws Exception
+    {
+        // given
+        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\prefix${srcFile}", underscoreTokenizer);
+
+        // when
+        TestFileNamePatternParser.Result result = parser.parse();
+
+        // then
+        assertTrue(result.success());
+        assertEquals("prefix", result.get().prefix().before());
+    }
+
+    @Test
     public void should_handle_empty_separator() throws Exception
     {
         // given

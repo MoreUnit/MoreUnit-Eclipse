@@ -39,6 +39,12 @@ public class CamelCaseNameTokenizerTest extends NameTokenizerTestCase
     }
 
     @Test
+    public void should_handle_underscore_and_digit_boundaries() throws Exception
+    {
+        assertEquals(Arrays.asList("name_", "With", "123", "Numbers"), tokenizer.tokenize("name_With123Numbers").getTokens());
+    }
+
+    @Test
     public void should_return_token_combinations() throws Exception
     {
         // when
