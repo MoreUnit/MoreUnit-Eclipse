@@ -161,14 +161,14 @@ public class TestFileNamePatternParserTest
     public void should_parse_escaped_character_correctly_without_alternatives() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\prefix${srcFile}", underscoreTokenizer);
+        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\\\prefix${srcFile}", underscoreTokenizer);
 
         // when
         TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.success());
-        assertEquals("prefix", result.get().prefix().before());
+        assertEquals("\\prefix", result.get().prefix().before());
     }
 
     @Test
