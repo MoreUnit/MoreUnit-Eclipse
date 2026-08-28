@@ -157,6 +157,19 @@ public class TestFileNamePatternParserTest
         assertEquals(Arrays.asList("a", "b"), result.get().prefix().alternatives());
     }
 
+    @Test
+    public void should_parse_escaped_character_correctly_without_alternatives() throws Exception
+    {
+        // given
+        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\\\prefix${srcFile}", underscoreTokenizer);
+
+        // when
+        TestFileNamePatternParser.Result result = parser.parse();
+
+        // then
+        assertTrue(result.success());
+        assertEquals("\\prefix", result.get().prefix().before());
+    }
 
     @Test
     public void should_handle_empty_separator() throws Exception
