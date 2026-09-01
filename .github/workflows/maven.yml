@@ -9,6 +9,11 @@ on:
 
 permissions: write-all
 
+env:
+  # Common flags for every mvn invocation (no internal quotes: the value is
+  # expanded unquoted into the shell command line)
+  MVN_ARGS: --batch-mode --strict-checksums --update-snapshots -Dtarget.platform.classifier=eclipse-latest -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
 jobs:
   # Unit tests + packaging + release. The SWTBot tests run in a parallel job
   # (swtbot-tests) to shorten the critical path.
@@ -23,25 +28,12 @@ jobs:
 
     steps:
 
-      - name: Checkout 🛎
-        uses: actions/checkout@v7
-
-      - name: Set up Java ☕️
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
-
-      - name: Setup Maven
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.9.9
+      - uses: ./.github/actions/setup-build-env
 
       # The SWTBot tests are excluded from this build and run in the
-      # parallel swtbot-tests job (see the job below).
+      # parallel swtbot-tests job.
       - name: Build and verify
-        run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-latest" -pl "!org.moreunit.plugins:org.moreunit.swtbot.test" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+        run: mvn -file org.moreunit.build/pom.xml clean install ${{ env.MVN_ARGS }} -pl "!org.moreunit.plugins:org.moreunit.swtbot.test" --fail-at-end
 
       - name: Run PMD and CPD checks
         run: mvn -file org.moreunit.build/pom.xml pmd:check pmd:cpd-check
@@ -91,31 +83,18 @@ jobs:
 
     steps:
 
-      - name: Checkout 🛎
-        uses: actions/checkout@v7
-
-      - name: Set up Java ☕️
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
-
-      - name: Setup Maven
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.9.9
+      - uses: ./.github/actions/setup-build-env
 
       # Install only the product bundles required by org.moreunit.swtbot.test
       # (org.moreunit.core, org.moreunit plugin, org.moreunit.test.dependencies).
       # -DskipTests also skips test.dependencies' own tests (covered by the build job).
       - name: Install required product bundles
-        run: mvn -file org.moreunit.build/pom.xml install -DskipTests -pl org.moreunit:org.moreunit.core,org.moreunit.plugins:org.moreunit,org.moreunit.plugins:org.moreunit.test.dependencies "-Dtarget.platform.classifier=eclipse-latest" --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+        run: mvn -file org.moreunit.build/pom.xml install -DskipTests -pl org.moreunit:org.moreunit.core,org.moreunit.plugins:org.moreunit,org.moreunit.plugins:org.moreunit.test.dependencies ${{ env.MVN_ARGS }}
 
       # tycho-surefire is bound to the integration-test phase: use verify (mvn
       # test would silently run nothing).
       - name: Run SWTBot tests
-        run: mvn -file org.moreunit.build/pom.xml verify -pl org.moreunit.plugins:org.moreunit.swtbot.test "-Dtarget.platform.classifier=eclipse-latest" --batch-mode --strict-checksums "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+        run: mvn -file org.moreunit.build/pom.xml verify -pl org.moreunit.plugins:org.moreunit.swtbot.test ${{ env.MVN_ARGS }}
 
       - name: Publish SWTBot Test Results 🖨
         if: ${{ always() }}
