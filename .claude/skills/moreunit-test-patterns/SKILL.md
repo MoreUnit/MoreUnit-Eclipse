@@ -77,8 +77,17 @@ order.verify(container).create();
 
 ## SWTBot test patterns
 
-### Base class
+### SWTBot performance rules (CI cost, measured 2026-09)
 
+SWTBot tests dominate CI time (~10 min of a ~15 min build before optimization). Key facts:
+
+- `TestContextRule` creates **a full Java project per test method** (`beforeEach` → `initWorkspace`, `afterEach` → `clearWorkspace`): every `@Test` method pays project creation + JDT build. Fewer test methods = less overhead.
+- Opening the Eclipse **Preferences** dialog costs ~19 s per opening on Windows CI (it loads every preference page of the IDE). The project-scoped **Properties** dialog is ~1 s.
+- Therefore: **group preference changes into as few dialog sessions as possible** (see `PreferencesTest`: one session per theme of assertions, radios kept separate since each radio change needs save+reopen). Never write one test = one dialog opening.
+- On Eclipse 4.x Windows, preference-page validation messages are often **not discoverable SWT widgets** — validation checks must be *best-effort* (search `label` then `clabel`, catch, never fail the test) with short timeouts (5 s), because a full timeout is pure waste when the message isn't rendered.
+- Full-module SWTBot runs are unstable (workbench can die mid-run); when diagnosing, run single classes (`-Dtest=...`).
+
+### Base class
 All SWTBot tests extend `JavaProjectSWTBotTestHelper` (in `org.moreunit.swtbot.test/test/org/moreunit/`), which provides:
 - `bot` (static `SWTWorkbenchBot`) — the SWTBot API entry point
 - `context` (`@RegisterExtension TestContextRule`) — manages the workspace
