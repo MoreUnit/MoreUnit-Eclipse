@@ -11,6 +11,12 @@ import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
 import org.moreunit.test.context.TestType;
 
+/**
+ * The Preferences dialog is expensive to open (it loads every preference page
+ * of the IDE, which takes several seconds on CI runners). The validation
+ * scenarios therefore run within a single dialog session instead of one
+ * session per test.
+ */
 @Project(mainCls = "org:Dummy")
 @ExtendWith(SWTBotJunit5Extension.class)
 public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
@@ -27,6 +33,7 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
         {
         }
     }
+
     @Test
     public void should_validate_pattern_field()
     {
@@ -47,37 +54,11 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
         bot.textWithLabel("Pattern:").setText("${srcFile}Test");
         waitForValidationCleared();
 
-        bot.button("Cancel").click();
-    }
-
-    @Test
-    public void should_detect_empty_pattern()
-    {
-        getShortcutStrategy().openPreferences();
-        bot.waitUntil(shellIsActive("Preferences"));
-
-        waitForMoreUnitInTree();
-        bot.tree().expandNode("MoreUnit").select("Java");
-        waitForPageField();
-
         // Empty pattern should show validation error
         bot.textWithLabel("Pattern:").setText("");
         waitForValidationError("You must enter a rule for naming test files");
 
-        bot.button("Cancel").click();
-    }
-
-    @Test
-    public void should_warn_on_multiple_wildcards()
-    {
-        getShortcutStrategy().openPreferences();
-        bot.waitUntil(shellIsActive("Preferences"));
-
-        waitForMoreUnitInTree();
-        bot.tree().expandNode("MoreUnit").select("Java");
-        waitForPageField();
-
-        // Multiple wildcards should generate a warning
+        // A valid pattern with several wildcards should generate a warning
         bot.textWithLabel("Pattern:").setText("${srcFile}*_*_Test");
         waitForWarningVisible();
 
