@@ -125,6 +125,29 @@ Share the rest (e.g. common Maven flags) via a workflow-level `env:` (like
 into the shell command line, and bash/pwsh do not re-parse quotes inside
 expanded variables.
 
+### Windows runners: pwsh splits unquoted -D arguments at the dot
+
+On `windows-latest`, `run:` defaults to **PowerShell (pwsh)**, which splits an
+unquoted argument at the first `.`:
+
+```
+-Dtarget.platform.classifier=eclipse-latest
+  → passed to Maven as:  -Dtarget   .platform.classifier=eclipse-latest
+  → "Unknown lifecycle phase .platform.classifier=eclipse-latest"
+```
+
+Fix: set the workflow default shell to bash (preinstalled on Windows runners):
+
+```yaml
+defaults:
+  run:
+    shell: bash
+```
+
+Then unquoted expansions (like `MVN_ARGS`) work without quoting each `-D`
+flag individually. (The historical workflow quoted every -D flag for exactly
+this reason.)
+
 
 Measured on master builds (useful when optimizing CI time):
 
