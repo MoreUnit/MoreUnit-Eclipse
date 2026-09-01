@@ -28,6 +28,9 @@ jobs:
 
     steps:
 
+      - name: Checkout 🛎
+        uses: actions/checkout@v7
+
       - uses: ./.github/actions/setup-build-env
 
       # The SWTBot tests are excluded from this build and run in the
@@ -82,6 +85,9 @@ jobs:
       pull-requests: write
 
     steps:
+
+      - name: Checkout 🛎
+        uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-build-env
 
