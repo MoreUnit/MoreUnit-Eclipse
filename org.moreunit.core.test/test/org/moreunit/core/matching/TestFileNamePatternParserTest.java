@@ -126,13 +126,14 @@ public class TestFileNamePatternParserTest
 
         // then
         assertTrue(result.success());
-        assertFalse(result.get().prefix().hasAlternatives());
+        assertTrue(result.get().prefix().hasAlternatives());
+        assertEquals(Arrays.asList(""), result.get().prefix().alternatives());
     }
 
     @Test
-    public void should_return_false_when_has_alternatives_is_called_on_no_alternatives() throws Exception
+    public void should_treat_plain_text_prefix_as_single_alternative() throws Exception
     {
-        // given
+        // given: plain text (without parentheses) is parsed as a single alternative
         TestFileNamePatternParser parser = new TestFileNamePatternParser("prefix_${srcFile}", underscoreTokenizer);
 
         // when
@@ -140,7 +141,9 @@ public class TestFileNamePatternParserTest
 
         // then
         assertTrue(result.success());
-        assertFalse(result.get().prefix().hasAlternatives());
+        assertTrue(result.get().prefix().hasAlternatives());
+        assertEquals(Arrays.asList("prefix"), result.get().prefix().alternatives());
+        assertEquals("", result.get().prefix().before());
     }
 
     @Test
@@ -158,9 +161,9 @@ public class TestFileNamePatternParserTest
     }
 
     @Test
-    public void should_parse_escaped_character_correctly_without_alternatives() throws Exception
+    public void should_parse_escaped_character() throws Exception
     {
-        // given
+        // given: escaped text (without parentheses) is parsed as a single alternative
         TestFileNamePatternParser parser = new TestFileNamePatternParser("\\\\prefix${srcFile}", underscoreTokenizer);
 
         // when
@@ -168,7 +171,8 @@ public class TestFileNamePatternParserTest
 
         // then
         assertTrue(result.success());
-        assertEquals("\\prefix", result.get().prefix().before());
+        assertEquals(Arrays.asList("\\prefix"), result.get().prefix().alternatives());
+        assertEquals("", result.get().prefix().before());
     }
 
     @Test
