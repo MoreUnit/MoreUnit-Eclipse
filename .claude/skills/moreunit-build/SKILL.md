@@ -107,6 +107,25 @@ mvn -o -pl ../org.moreunit.swtbot.test verify -Dtest='PreferencesTest' -Dmaven.t
 
 ## CI performance knowledge (GitHub Actions, windows-latest runners)
 
+### Composite actions: checkout comes first
+
+A **local composite action cannot contain the checkout step** — the repo must
+already be checked out for the action to be found (`Can't find 'action.yml'
+... Did you forget to run actions/checkout before running your local action?`).
+Pattern that works:
+
+```yaml
+- name: Checkout 🛎
+  uses: actions/checkout@v7      # explicit step, cannot be factored out
+- uses: ./.github/actions/setup-build-env   # composite: JDK + Maven only
+```
+
+Share the rest (e.g. common Maven flags) via a workflow-level `env:` (like
+`MVN_ARGS`) — keep the value free of internal quotes: it is expanded unquoted
+into the shell command line, and bash/pwsh do not re-parse quotes inside
+expanded variables.
+
+
 Measured on master builds (useful when optimizing CI time):
 
 - Full build ≈ 15 min Maven; `org.moreunit.swtbot.test` ≈ **10:30 (≈ 2/3 of the build)**.
