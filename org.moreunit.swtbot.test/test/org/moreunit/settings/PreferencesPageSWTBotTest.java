@@ -121,7 +121,7 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
 
     private void waitForValidationError(String expectedMessage)
     {
-        wasMessageVisible(expectedMessage, 20000);
+        wasMessageVisible(expectedMessage, 5000);
     }
 
     private void waitForValidationCleared()
@@ -132,6 +132,6 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
 
     private void waitForWarningVisible()
     {
-        wasMessageVisible("Using too many wildcards may degrade search performance and results!", 20000);
+        wasMessageVisible("Using too many wildcards may degrade search performance and results!", 5000);
     }
 }
