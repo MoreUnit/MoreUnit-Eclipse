@@ -9,6 +9,14 @@ on:
 
 permissions: write-all
 
+# bash instead of the default pwsh on Windows runners: pwsh splits unquoted
+# arguments at the first dot (-Dtarget.platform.classifier=... becomes
+# "-Dtarget" + ".platform.classifier=...", which Maven reads as a lifecycle
+# phase).
+defaults:
+  run:
+    shell: bash
+
 env:
   # Common flags for every mvn invocation (no internal quotes: the value is
   # expanded unquoted into the shell command line)
