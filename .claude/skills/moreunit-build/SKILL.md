@@ -52,6 +52,69 @@ mvn -o -pl ../org.moreunit.swtbot.test -am verify -Dtest=RunTestSWTBotTest -fae
 
 The `-Dtest=` filter applies Tycho-surefire's `test` parameter. Upstream modules with no matching class gracefully skip (0 tests).
 
+## Tycho 5 gotchas (verified experimentally, 2026-09)
+
+### Surefire binds to `integration-test`, not `test`
+
+With Tycho 5, `tycho-surefire:test` is bound to the **`integration-test` phase**:
+
+```bash
+mvn -o test -pl ../org.moreunit.swtbot.test   # ⚠️ BUILD SUCCESS but NO tests run (silent!)
+mvn -o verify -pl ../org.moreunit.swtbot.test # ✅ runs the tests
+```
+
+A `mvn test` that succeeds in a few seconds without any `Tests run:` line is a red flag: the tests were silently skipped.
+
+### `-pl` selectors must use the right groupId
+
+Test/product modules use **two different groupIds** — a wrong groupId fails with `Could not find the selected project in the reactor`:
+
+- `org.moreunit` → `org.moreunit.core`, `org.moreunit.core.test`, `org.moreunit.test.dependencies`? no → **`org.moreunit` group only for core + core.test + the aggregator**
+- `org.moreunit.plugins` → `org.moreunit` (plugin, dir `org.moreunit.plugin`), `org.moreunit.mock`, `org.moreunit.mock.test`, `org.moreunit.mock.it`, `org.moreunit.test`, `org.moreunit.test.dependencies`, `org.moreunit.swtbot.test`
+
+Example: `mvn -pl org.moreunit.plugins:org.moreunit.swtbot.test verify`
+
+### Tycho resolves `Require-Bundle` from the target platform, not from Maven reactor deps
+
+`-am` for a test module pulls **almost nothing**: `mvn -pl org.moreunit.plugins:org.moreunit.swtbot.test -am validate` = parent + swtbot.test only. To run a single test module in isolation, the product bundles it requires must already be **installed in the local repo**:
+
+```bash
+# 1. install the product bundles required by the test module (tests skipped)
+mvn -o install -DskipTests -pl org.moreunit:org.moreunit.core,org.moreunit.plugins:org.moreunit,org.moreunit.plugins:org.moreunit.test.dependencies
+# 2. run the test module alone (Tycho resolves Require-Bundle from installed local artifacts)
+mvn -o verify -pl org.moreunit.plugins:org.moreunit.swtbot.test -Dtarget.platform.classifier=eclipse-latest
+```
+
+- Tycho includes locally installed artifacts (`~/.m2/repository/...`) in the target platform by default (verified: step 2 works in offline mode after step 1).
+- `-DskipTests` **is** respected by tycho-surefire (verified) — useful for the step 1 above.
+
+### Running a single module while excluding test modules from a full reactor
+
+Exclusions are useful to skip unwanted test modules in one pass (Maven ≥3.2 syntax):
+
+```bash
+mvn clean install -pl '!org.moreunit.plugins:org.moreunit.swtbot.test'        # everything but swtbot
+mvn clean install -pl '!org.moreunit:org.moreunit.core.test,!org.moreunit:org.moreunit.test,!org.moreunit.plugins:org.moreunit.mock.test,!org.moreunit.plugins:org.moreunit.mock.it'  # product + swtbot only
+```
+
+### Run a single SWTBot test class in isolation (validation recipe)
+
+Full-module SWTBot runs are unstable on a shared desktop display (workbench dies mid-run → cascading `activeShell is null` / `Workspace is already closed` errors, even on unmodified code). For A/B test validation, run **one class at a time**:
+
+```bash
+mvn -o -pl ../org.moreunit.swtbot.test verify -Dtest='PreferencesTest' -Dmaven.test.failure.ignore=true
+```
+
+## CI performance knowledge (GitHub Actions, windows-latest runners)
+
+Measured on master builds (useful when optimizing CI time):
+
+- Full build ≈ 15 min Maven; `org.moreunit.swtbot.test` ≈ **10:30 (≈ 2/3 of the build)**.
+- SWTBot cost breakdown: opening the Eclipse **Preferences dialog ≈ 19 s per opening** on Windows CI (it loads every preference page of the IDE). `PreferencesTest`/`PreferencesPageSWTBotTest` were the worst offenders — group preference changes into few dialog sessions (see PR #370: swtbot 10:30 → 6:45).
+- The Preferences **Properties** dialog (project-scoped) is much cheaper (~1 s/opening).
+- Module timings are in the job log under `Reactor Summary` (`SUCCESS [XX s]` lines) and per-test `Time elapsed`; parse the job log with `gh api repos/<org>/<repo>/actions/jobs/<job-id>/logs`.
+- Full SWTBot module runs are flaky on CI too; prefer class-level runs for diagnosis.
+
 ## UI / headless execution matrix
 
 | Module | Needs display? | Needs Workbench? | Default UI harness | How to run |
