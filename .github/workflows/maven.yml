@@ -10,6 +10,8 @@ on:
 permissions: write-all
 
 jobs:
+  # Unit tests + packaging + release. The SWTBot tests run in a parallel job
+  # (swtbot-tests) to shorten the critical path.
   build:
 
     runs-on: windows-latest
@@ -20,24 +22,33 @@ jobs:
       pull-requests: write
 
     steps:
+
       - name: Checkout 🛎
         uses: actions/checkout@v7
-        
+
       - name: Set up Java ☕️
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.9
+
+      # The SWTBot tests are excluded from this build and run in the
+      # parallel swtbot-tests job (see the job below).
       - name: Build and verify
-        run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+        run: mvn -file org.moreunit.build/pom.xml clean install "-Dtarget.platform.classifier=eclipse-latest" -pl "!org.moreunit.plugins:org.moreunit.swtbot.test" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Run PMD and CPD checks
         run: mvn -file org.moreunit.build/pom.xml pmd:check pmd:cpd-check
 
       - name: Publish Surefire Test Results for  🖨
         if: ${{ always() }}
-        uses: ScalableCapital/action-surefire-report@v2
+        uses: ScaCap/action-surefire-report@v1
         with:
           check_name: test results
 
@@ -64,4 +75,50 @@ jobs:
         with:
           files: |
             ./org.moreunit.updatesite/target/org.moreunit.updatesite-*.zip
-            ./org.moreunit.updatesite/target/flat-repository/*        
+            ./org.moreunit.updatesite/target/flat-repository/*
+
+  # SWTBot (UI) tests only, in parallel with the build job. The product
+  # bundles required by the SWTBot module are installed first (tests skipped)
+  # because Tycho resolves Require-Bundle from the installed local artifacts,
+  # not from the Maven reactor.
+  swtbot-tests:
+
+    runs-on: windows-latest
+
+    permissions:
+      checks: write
+      pull-requests: write
+
+    steps:
+
+      - name: Checkout 🛎
+        uses: actions/checkout@v7
+
+      - name: Set up Java ☕️
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.9
+
+      # Install only the product bundles required by org.moreunit.swtbot.test
+      # (org.moreunit.core, org.moreunit plugin, org.moreunit.test.dependencies).
+      # -DskipTests also skips test.dependencies' own tests (covered by the build job).
+      - name: Install required product bundles
+        run: mvn -file org.moreunit.build/pom.xml install -DskipTests -pl org.moreunit:org.moreunit.core,org.moreunit.plugins:org.moreunit,org.moreunit.plugins:org.moreunit.test.dependencies "-Dtarget.platform.classifier=eclipse-latest" --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+
+      # tycho-surefire is bound to the integration-test phase: use verify (mvn
+      # test would silently run nothing).
+      - name: Run SWTBot tests
+        run: mvn -file org.moreunit.build/pom.xml verify -pl org.moreunit.plugins:org.moreunit.swtbot.test "-Dtarget.platform.classifier=eclipse-latest" --batch-mode --strict-checksums "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+
+      - name: Publish SWTBot Test Results 🖨
+        if: ${{ always() }}
+        uses: ScaCap/action-surefire-report@v1
+        with:
+          check_name: test results (swtbot)
