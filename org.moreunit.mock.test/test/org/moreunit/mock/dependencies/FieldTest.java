@@ -1,5 +1,6 @@
 package org.moreunit.mock.dependencies;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -94,5 +95,42 @@ public class FieldTest
 
         // then
         assertTrue(field.isInjectable());
+    }
+
+    @Test
+    public void field_should_be_equal_to_field_wrapping_same_eclipse_field()
+    {
+        // given
+        IField eclipseField2 = mock(IField.class);
+
+        // then
+        assertTrue(field.equals(field));
+        assertTrue(field.equals(new Field(eclipseField, false)));
+        assertTrue(field.equals(new Field(eclipseField, true)));
+        assertFalse(field.equals(new Field(eclipseField2, false)));
+        assertFalse(field.equals(null));
+        assertFalse(field.equals(new Object()));
+        assertFalse(new Field(eclipseField2, false).equals(field));
+    }
+
+    @Test
+    public void field_should_have_consistent_hash_code()
+    {
+        // given
+        IField eclipseField2 = mock(IField.class);
+
+        // then
+        assertEquals(field.hashCode(), new Field(eclipseField, true).hashCode());
+        org.junit.jupiter.api.Assertions.assertNotEquals(field.hashCode(), new Field(eclipseField2, false).hashCode());
+    }
+
+    @Test
+    public void field_should_delegate_to_string_to_eclipse_field()
+    {
+        // given
+        when(eclipseField.toString()).thenReturn("someField");
+
+        // then
+        assertEquals("someField", field.toString());
     }
 }

@@ -1,9 +1,11 @@
 package org.moreunit.mock.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -76,5 +78,26 @@ public class TypeRefTest
         String str = ref.toString();
         assertNotNull(str);
         assert(str.contains("com.example.Foo"));
+    }
+
+    @Test
+    public void should_be_equal_to_itself()
+    {
+        TypeRef<?> ref = new TypeRef<>("com.example.Foo");
+        assertTrue(ref.equals(ref));
+    }
+
+    @Test
+    public void should_not_be_equal_to_null_even_when_compared_directly()
+    {
+        TypeRef<?> ref = new TypeRef<>("com.example.Foo");
+        assertFalse(ref.equals(null));
+    }
+
+    @Test
+    public void should_not_be_equal_to_object_of_different_class_even_when_compared_directly()
+    {
+        TypeRef<?> ref = new TypeRef<>("com.example.Foo");
+        assertFalse(ref.equals(new Object()));
     }
 }

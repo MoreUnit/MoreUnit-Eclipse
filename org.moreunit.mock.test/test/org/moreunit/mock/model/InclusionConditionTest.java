@@ -87,4 +87,81 @@ public class InclusionConditionTest
         assertNotNull(str);
         assertTrue(str.contains("IncludeIf") || str.contains("junit5"));
     }
+
+    @Test
+    public void should_be_equal_to_itself()
+    {
+        IncludeIf c = new IncludeIf(ConditionType.TEST_TYPE, "junit5");
+        assertTrue(c.equals(c));
+    }
+
+    @Test
+    public void should_compute_hash_code_even_when_type_and_value_are_null()
+    {
+        assertEquals(new IncludeIf(null, null).hashCode(), new ExcludeIf(null, null).hashCode());
+    }
+
+    @Test
+    public void should_compute_hash_code_with_null_type_and_non_null_value()
+    {
+        IncludeIf c = new IncludeIf(null, "someValue");
+        assertNotNull(c.hashCode());
+    }
+
+    @Test
+    public void should_compute_hash_code_with_non_null_type_and_null_value()
+    {
+        IncludeIf c = new IncludeIf(ConditionType.TEST_TYPE, null);
+        assertNotNull(c.hashCode());
+    }
+
+    @Test
+    public void should_not_be_equal_when_value_is_null_and_other_value_is_not()
+    {
+        IncludeIf c1 = new IncludeIf(ConditionType.TEST_TYPE, null);
+        IncludeIf c2 = new IncludeIf(ConditionType.TEST_TYPE, "junit5");
+
+        assertFalse(c1.equals(c2));
+        assertFalse(c2.equals(c1));
+    }
+
+    @Test
+    public void should_be_equal_when_both_values_are_null()
+    {
+        IncludeIf c1 = new IncludeIf(ConditionType.TEST_TYPE, null);
+        IncludeIf c2 = new IncludeIf(ConditionType.TEST_TYPE, null);
+
+        assertTrue(c1.equals(c2));
+        assertEquals(c1.hashCode(), c2.hashCode());
+    }
+
+    @Test
+    public void should_convert_value_to_enum_case_sensitively()
+    {
+        IncludeIf c = new IncludeIf(ConditionType.INJECTION_TYPE, "Constructor");
+        assertNull(c.valueAs(InjectionType.class));
+    }
+
+    @Test
+    public void should_not_be_valid_when_type_is_null()
+    {
+        IncludeIf c = new IncludeIf(null, "junit5");
+        assertFalse(c.isValid());
+    }
+
+    @Test
+    public void should_not_be_valid_when_value_is_null()
+    {
+        IncludeIf c = new IncludeIf(ConditionType.TEST_TYPE, null);
+        assertFalse(c.isValid());
+    }
+
+    @Test
+    public void should_include_type_and_value_in_to_string_even_when_null()
+    {
+        IncludeIf c = new IncludeIf(null, null);
+        String str = c.toString();
+        assertNotNull(str);
+        assertTrue(str.contains("IncludeIf"));
+    }
 }

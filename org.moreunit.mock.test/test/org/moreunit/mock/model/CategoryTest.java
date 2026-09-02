@@ -3,6 +3,7 @@ package org.moreunit.mock.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -70,5 +71,41 @@ public class CategoryTest
         String str = c.toString();
         assertNotNull(str);
         assert(str.contains("mock"));
+    }
+
+    @Test
+    public void should_compute_hash_code_even_when_id_is_null()
+    {
+        assertEquals(31, new Category(null, "Mocking").hashCode());
+    }
+
+    @Test
+    public void should_not_be_equal_when_id_is_null_and_other_id_is_not()
+    {
+        Category c1 = new Category(null, "Mocking");
+        Category c2 = new Category("mock", "Mocking");
+
+        assertNotEquals(c1, c2);
+        assertNotEquals(c2, c1);
+    }
+
+    @Test
+    public void should_be_equal_when_both_ids_are_null()
+    {
+        Category c1 = new Category(null, "Mocking");
+        Category c2 = new Category(null, "Other");
+
+        assertEquals(c1, c2);
+        assertEquals(c1.hashCode(), c2.hashCode());
+    }
+
+    @Test
+    public void should_compare_names_case_insensitively()
+    {
+        Category c1 = new Category("a", "beta");
+        Category c2 = new Category("b", "ALPHA");
+
+        assertTrue(c1.compareTo(c2) > 0);
+        assertTrue(c2.compareTo(c1) < 0);
     }
 }
