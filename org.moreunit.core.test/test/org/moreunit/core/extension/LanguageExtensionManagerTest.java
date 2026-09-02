@@ -8,13 +8,22 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -22,6 +31,7 @@ import org.mockito.Mockito;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import org.moreunit.core.extension.jump.IJumper;
 import org.moreunit.core.languages.Language;
 import org.moreunit.core.log.Logger;
 
@@ -207,6 +217,237 @@ public class LanguageExtensionManagerTest
 
             assertFalse(manager.extensionExistsForLanguage("java"));
             verify(logger).warn(anyString());
+        }
+    }
+
+    private IConfigurationElement languageExtension(String fileExtension, IConfigurationElement... jumperElements)
+    {
+        IConfigurationElement configElement = mock(IConfigurationElement.class);
+        when(configElement.getAttribute("fileExtension")).thenReturn(fileExtension);
+        when(configElement.getAttribute("name")).thenReturn(fileExtension.toUpperCase());
+        when(configElement.getChildren("condition")).thenReturn(new IConfigurationElement[0]);
+        when(configElement.getChildren("jumper")).thenReturn(jumperElements);
+        when(configElement.getContributor()).thenReturn(mock(org.eclipse.core.runtime.IContributor.class));
+        return configElement;
+    }
+
+    private IConfigurationElement jumperElement(Object executable)
+    {
+        IConfigurationElement jumperElement = mock(IConfigurationElement.class);
+        when(jumperElement.getName()).thenReturn("jumper");
+        try
+        {
+            when(jumperElement.createExecutableExtension("class")).thenReturn(executable);
+        }
+        catch (CoreException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        when(jumperElement.getContributor()).thenReturn(mock(org.eclipse.core.runtime.IContributor.class));
+        return jumperElement;
+    }
+
+    private IConfigurationElement failingJumperElement()
+    {
+        IConfigurationElement jumperElement = mock(IConfigurationElement.class);
+        when(jumperElement.getName()).thenReturn("jumper");
+        try
+        {
+            when(jumperElement.createExecutableExtension("class")).thenThrow(new CoreException(new Status(Status.ERROR, "some.bundle", "class not found")));
+        }
+        catch (CoreException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        when(jumperElement.getContributor()).thenReturn(mock(org.eclipse.core.runtime.IContributor.class));
+        return jumperElement;
+    }
+
+    private List<IJumper> collectJumpers(LanguageExtensionManager mgr, String extension)
+    {
+        List<IJumper> jumpers = new ArrayList<>();
+        for (IJumper jumper : mgr.getJumpersFor(extension))
+        {
+            jumpers.add(jumper);
+        }
+        return jumpers;
+    }
+
+    @Test
+    public void getJumpersFor_should_return_jumper_defined_by_matching_extension()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper = mock(IJumper.class);
+            IConfigurationElement extension = languageExtension("java", jumperElement(jumper));
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "java");
+
+            assertEquals(1, jumpers.size());
+            assertEquals(jumper, jumpers.get(0));
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_return_all_jumpers_of_an_extension()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper1 = mock(IJumper.class);
+            IJumper jumper2 = mock(IJumper.class);
+            IConfigurationElement extension = languageExtension("py", jumperElement(jumper1), jumperElement(jumper2));
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "py");
+
+            assertEquals(2, jumpers.size());
+            assertEquals(jumper1, jumpers.get(0));
+            assertEquals(jumper2, jumpers.get(1));
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_not_return_jumper_for_other_language()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper = mock(IJumper.class);
+            IConfigurationElement extension = languageExtension("py", jumperElement(jumper));
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "java");
+
+            assertTrue(jumpers.isEmpty());
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_ignore_jumper_whose_class_is_not_an_IJumper()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper = mock(IJumper.class);
+            IConfigurationElement notAJumper = jumperElement("not a jumper");
+            IConfigurationElement extension = languageExtension("rb", notAJumper, jumperElement(jumper));
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "rb");
+
+            assertEquals(1, jumpers.size());
+            assertEquals(jumper, jumpers.get(0));
+            verify(logger).warn(anyString());
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_ignore_jumper_whose_class_cannot_be_created()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper = mock(IJumper.class);
+            IConfigurationElement extension = languageExtension("rb", failingJumperElement(), jumperElement(jumper));
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "rb");
+
+            assertEquals(1, jumpers.size());
+            assertEquals(jumper, jumpers.get(0));
+            verify(logger).warn(anyString());
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_return_no_jumper_when_extension_has_no_jumper_element()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IConfigurationElement extension = languageExtension("go");
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "go");
+
+            assertTrue(jumpers.isEmpty());
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_return_no_jumper_when_registry_has_no_language_extension()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[0]);
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            List<IJumper> jumpers = collectJumpers(manager, "java");
+
+            assertTrue(jumpers.isEmpty());
+        }
+    }
+
+    @Test
+    public void getJumpersFor_should_throw_exception_when_asking_next_after_last_jumper()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper = mock(IJumper.class);
+            IConfigurationElement extension = languageExtension("java", jumperElement(jumper));
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            Iterator<IJumper> it = manager.getJumpersFor("java").iterator();
+
+            assertEquals(jumper, it.next());
+            assertFalse(it.hasNext());
+            assertThrows(NoSuchElementException.class, () -> it.next());
+        }
+    }
+
+    @Test
+    public void getJumpersFor_iterator_should_not_support_remove()
+    {
+        try (MockedStatic<Platform> platformMock = Mockito.mockStatic(Platform.class))
+        {
+            IJumper jumper = mock(IJumper.class);
+            IConfigurationElement extension = languageExtension("java", jumperElement(jumper));
+
+            when(extensionRegistry.getConfigurationElementsFor(ExtensionPoints.LANGUAGES)).thenReturn(new IConfigurationElement[] { extension });
+            platformMock.when(Platform::getExtensionRegistry).thenReturn(extensionRegistry);
+
+            manager = new LanguageExtensionManager(bundleContext, logger);
+
+            Iterator<IJumper> it = manager.getJumpersFor("java").iterator();
+
+            assertTrue(it.hasNext());
+            assertThrows(UnsupportedOperationException.class, () -> it.remove());
         }
     }
 }

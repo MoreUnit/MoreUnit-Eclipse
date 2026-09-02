@@ -50,6 +50,13 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     Preferences preferences;
 
     @BeforeEach
+    public void abortWhenWorkbenchIsNotRunning()
+    {
+        // these tests open editors in the workbench and thus require the UI harness
+        org.junit.jupiter.api.Assumptions.assumeTrue(org.eclipse.ui.PlatformUI.isWorkbenchRunning(), "Workbench is not running");
+    }
+
+    @BeforeEach
     public void setUp() throws Exception
     {
         preferences = $().getPreferences();
