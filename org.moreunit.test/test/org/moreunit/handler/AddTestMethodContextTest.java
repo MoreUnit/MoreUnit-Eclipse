@@ -63,4 +63,68 @@ public class AddTestMethodContextTest
         ctx.setPreferences(prefs);
         assertEquals(prefs, ctx.getPreferences());
     }
+
+    @Test
+    public void four_arg_constructor_should_store_compilation_units_and_methods()
+    {
+        IMethod testMethod = mock(IMethod.class);
+        IMethod methodUnderTest = mock(IMethod.class);
+        ICompilationUnit testCu = mock(ICompilationUnit.class);
+        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+
+        AddTestMethodContext ctx = new AddTestMethodContext(testCu, testMethod, cutCu, methodUnderTest);
+
+        assertEquals(testCu, ctx.getTestClass());
+        assertEquals(testMethod, ctx.getTestMethod());
+        assertEquals(cutCu, ctx.getClassUnderTest());
+        assertEquals(methodUnderTest, ctx.getMethodUnderTest());
+        assertFalse(ctx.isNewTestClassCreated());
+    }
+
+    @Test
+    public void setTestMethod_should_replace_the_test_method()
+    {
+        IMethod testMethod = mock(IMethod.class);
+        IMethod methodUnderTest = mock(IMethod.class);
+        ICompilationUnit testCu = mock(ICompilationUnit.class);
+        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        when(testMethod.getCompilationUnit()).thenReturn(testCu);
+        when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
+
+        AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
+        assertEquals(testMethod, ctx.getTestMethod());
+
+        IMethod newTestMethod = mock(IMethod.class);
+        ctx.setTestMethod(newTestMethod);
+
+        assertEquals(newTestMethod, ctx.getTestMethod());
+        assertEquals(methodUnderTest, ctx.getMethodUnderTest());
+    }
+
+    @Test
+    public void toString_should_describe_all_members()
+    {
+        IMethod testMethod = mock(IMethod.class);
+        IMethod methodUnderTest = mock(IMethod.class);
+        ICompilationUnit testCu = mock(ICompilationUnit.class);
+        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        when(testMethod.getCompilationUnit()).thenReturn(testCu);
+        when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
+        when(testMethod.getElementName()).thenReturn("testFoo");
+        when(methodUnderTest.getElementName()).thenReturn("foo");
+        when(testCu.getElementName()).thenReturn("FooTest.java");
+        when(cutCu.getElementName()).thenReturn("Foo.java");
+
+        AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest, true);
+
+        String s = ctx.toString();
+
+        assertTrue(s.startsWith("AddTestMethodContext ["));
+        assertTrue(s.contains("classUnderTestCompilationUnit=Foo.java"));
+        assertTrue(s.contains("methodUnderTest=foo"));
+        assertTrue(s.contains("testMethod=testFoo"));
+        assertTrue(s.contains("testClassCompilationUnit=FooTest.java"));
+        assertTrue(s.contains("isNewTestClassCreated=true"));
+        assertTrue(s.endsWith("]"));
+    }
 }

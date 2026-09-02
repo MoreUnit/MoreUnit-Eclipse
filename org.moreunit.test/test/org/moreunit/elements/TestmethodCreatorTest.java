@@ -232,6 +232,18 @@ public class TestmethodCreatorTest extends ContextTestCase
     }
 
     @Test
+    public void createTestMethod_should_not_create_anything_when_called_with_null_method() throws CoreException
+    {
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+
+        MethodCreationResult result = testmethodCreator.createTestMethod(null);
+
+        assertFalse(result.methodCreated());
+        assertNull(result.getMethod());
+        assertEquals(0, testcaseType.get().getMethods().length);
+    }
+
+    @Test
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_not_add_comments_for_the_new_test_method_when_not_requested() throws Exception
     {
@@ -267,5 +279,69 @@ public class TestmethodCreatorTest extends ContextTestCase
         IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
         assertNotNull(createTestMethod.getJavadocRange());
         assertEquals(createTestMethod.getSource().replaceAll("\\s+", " "), "/** Some test comments. */" + " @Test" + " public void getNumberOneSuffix() { }");
+    }
+
+    @Test
+    public void createTestMethod_should_insert_another_test_method_directly_below_the_existing_one_when_it_is_not_the_last_method() throws CoreException
+    {
+        MethodHandler existingTestMethod = testcaseType.addMethod("public void getNumberOne()");
+        testcaseType.addMethod("public void someOtherTest()");
+
+        // pass the IMethod handle coming from the test case type so that the
+        // sibling lookup (which uses reference equality) finds the method
+        IMethod existingHandle = Arrays.stream(testcaseType.get().getMethods()) //
+                .filter(m -> "getNumberOne".equals(m.getElementName())) //
+                .findFirst().orElseThrow();
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+
+        IMethod created = testmethodCreator.createTestMethod(existingHandle).getMethod();
+
+        assertEquals("getNumberOneSuffix", created.getElementName());
+        IMethod[] methods = testcaseType.get().getMethods();
+        assertEquals(3, methods.length);
+        // the new method must be inserted above the method that followed the existing test method
+        assertEquals("getNumberOneSuffix", methods[1].getElementName());
+        assertEquals("someOtherTest", methods[2].getElementName());
+    }
+
+    @Test
+    public void createTestMethod_should_add_todo_task_when_requested() throws CoreException
+    {
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createTasks(true));
+
+        IMethod created = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+
+        assertTrue(created.getSource().contains("// TODO"));
+    }
+
+    @Test
+    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
+    public void createTestMethod_should_mention_parameter_types_in_generated_comment() throws CoreException
+    {
+        MethodHandler addWithoutParams = cutType.addMethod("public int add(int a)", "return 0");
+        MethodHandler methodWithParams = cutType.addMethod("public int add(int a, String b)", "return 0");
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));
+
+        IMethod created = testmethodCreator.createTestMethod(methodWithParams.get()).getMethod();
+
+        assertEquals("addIntString", created.getElementName());
+        String comment = created.getSource().replaceAll("\\s+", " ");
+        assertTrue(comment.contains("{@link testing.Hello#add(int, java.lang.String)}"), comment);
+    }
+
+    @Test
+    @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
+    public void createTestMethod_should_not_copy_comments_when_existing_test_method_has_no_javadoc() throws CoreException
+    {
+        MethodHandler existingTestMethod = testcaseType.addMethod("@Test public void getNumberOne()");
+
+        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));
+
+        IMethod created = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
+
+        assertEquals("getNumberOneSuffix", created.getElementName());
+        assertNull(created.getJavadocRange());
     }
 }

@@ -1,6 +1,9 @@
 package org.moreunit.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,6 +15,7 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -130,5 +134,125 @@ public class MemberContentProviderTest
         when(mock.getElementName()).thenReturn(methodName);
         when(mock.getDeclaringType()).thenReturn(declaringType);
         return mock;
+    }
+
+    @Test
+    public void constructor_with_proposed_type_should_propose_that_type_for_selection()
+    {
+        IType type1 = type("type1");
+        IType type2 = type("type2");
+
+        MemberContentProvider contentProvider = new MemberContentProvider(Arrays.asList(type2, type1), type2);
+
+        assertEquals(Arrays.asList("type1", "type2"), namesOf(contentProvider.getElements(null)));
+        assertFalse(contentProvider.getDefaultSelection().isEmpty());
+        assertEquals(type2, ((StructuredSelection) contentProvider.getDefaultSelection()).getFirstElement());
+    }
+
+    @Test
+    public void getDefaultSelection_should_return_null_when_no_member_and_no_type_are_given()
+    {
+        assertNull(new MemberContentProvider(types, methods, null).getDefaultSelection());
+        assertNull(new MemberContentProvider(types, (IType) null).getDefaultSelection());
+    }
+
+    @Test
+    public void getDefaultSelection_should_return_first_element_when_no_member_is_proposed()
+    {
+        IType type1 = type("type1");
+        IType type2 = type("type2");
+        types.add(type2);
+        types.add(type1);
+
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
+
+        assertEquals(type1, ((StructuredSelection) contentProvider.getDefaultSelection()).getFirstElement());
+    }
+
+    @Test
+    public void getDefaultSelection_should_return_first_method_of_first_type_when_it_has_one()
+    {
+        IType type1 = type("type1");
+        IType type2 = type("type2");
+        types.add(type2);
+        types.add(type1);
+        methods.add(mockMethod(type2, "method2A"));
+        IMethod method1A = mockMethod(type1, "method1A");
+        methods.add(method1A);
+        methods.add(mockMethod(type1, "method1B"));
+
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
+
+        assertEquals(method1A, ((StructuredSelection) contentProvider.getDefaultSelection()).getFirstElement());
+    }
+
+    @Test
+    public void getParent_should_return_null_for_type_and_declaring_type_for_method()
+    {
+        IType type1 = type("type1");
+        IMethod method = mockMethod(type1, "method1A");
+
+        MemberContentProvider contentProvider = new MemberContentProvider(Arrays.asList(type1), Arrays.asList(method), method);
+
+        assertNull(contentProvider.getParent(type1));
+        assertEquals(type1, contentProvider.getParent(method));
+    }
+
+    @Test
+    public void hasChildren_should_return_true_only_for_types_having_methods()
+    {
+        IType typeWithMethods = type("type1");
+        IType typeWithoutMethods = type("type2");
+        IMethod method = mockMethod(typeWithMethods, "method1A");
+
+        MemberContentProvider contentProvider = new MemberContentProvider(Arrays.asList(typeWithMethods, typeWithoutMethods), Arrays.asList(method), null);
+
+        assertTrue(contentProvider.hasChildren(typeWithMethods));
+        assertFalse(contentProvider.hasChildren(typeWithoutMethods));
+        assertFalse(contentProvider.hasChildren(method));
+    }
+
+    @Test
+    public void dispose_and_inputChanged_should_do_nothing()
+    {
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
+
+        contentProvider.dispose();
+        contentProvider.inputChanged(null, null, null);
+    }
+
+    @Test
+    public void withAction_should_append_separator_and_action_to_elements()
+    {
+        IType type1 = type("type1");
+        types.add(type1);
+
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
+        TreeActionElement<?> action = mock(TreeActionElement.class);
+        MemberContentProvider returned = contentProvider.withAction(action);
+
+        assertSame(contentProvider, returned);
+
+        Object[] elements = contentProvider.getElements(null);
+        assertEquals(3, elements.length);
+        assertEquals(type1, elements[0]);
+        assertTrue(elements[1] instanceof SeparatorElement);
+        assertSame(action, elements[2]);
+    }
+
+    @Test
+    public void withAction_should_not_add_two_separators_when_called_twice()
+    {
+        MemberContentProvider contentProvider = new MemberContentProvider(types, methods, null);
+
+        TreeActionElement<?> action1 = mock(TreeActionElement.class);
+        TreeActionElement<?> action2 = mock(TreeActionElement.class);
+        contentProvider.withAction(action1).withAction(action2);
+
+        Object[] elements = contentProvider.getElements(null);
+        assertEquals(3, elements.length);
+        assertSame(action1, elements[0]);
+        assertTrue(elements[1] instanceof SeparatorElement);
+        assertSame(action2, elements[2]);
     }
 }

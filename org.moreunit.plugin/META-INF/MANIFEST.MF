@@ -22,7 +22,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-Vendor: MoreUnit.org
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Export-Package: org.moreunit;x-friends:="org.moreunit.test,org.moreuni
+Export-Package: org.moreunit.codemining;x-friends:="org.moreunit.test",org.moreunit;x-friends:="org.moreunit.test,org.moreuni
  t.mock",org.moreunit.actions;x-friends:="org.moreunit.test",org.moreu
  nit.annotation;x-friends:="org.moreunit.test",org.moreunit.decorator;
  x-friends:="org.moreunit.test";uses:="org.eclipse.jface.viewers",org.

@@ -8,7 +8,9 @@ package org.moreunit.elements;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
 
@@ -17,12 +19,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IMember;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.junit.jupiter.api.Test;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
 import org.moreunit.test.context.Context;
+import org.moreunit.test.support.DialogHelper;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Project;
 import org.moreunit.test.context.Properties;
@@ -30,6 +36,9 @@ import org.moreunit.test.context.TestType;
 import org.moreunit.test.context.configs.SimpleJUnit3Project;
 import org.moreunit.test.workspace.MethodHandler;
 import org.moreunit.test.workspace.TypeHandler;
+import org.moreunit.util.MemberJumpHistory;
+import org.moreunit.wizards.NewClassyWizard;
+import org.moreunit.wizards.NewTestCaseWizard;
 
 @Context(SimpleJUnit3Project.class)
 public class ClassTypeFacadeTest extends ContextTestCase
@@ -257,6 +266,44 @@ public class ClassTypeFacadeTest extends ContextTestCase
         assertEquals(oneCorrespondingTestMember, getNumberOneTestMethod);
     }
 
+    @Test
+    public void getOneCorrespondingTestCase_should_return_not_found_result_when_no_test_case_exists() throws Exception
+    {
+        TypeHandler typeWithoutTest = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.ClassWithoutTest");
+
+        ClassTypeFacade classTypeFacade = new ClassTypeFacade(typeWithoutTest.getCompilationUnit());
+        ClassTypeFacade.CorrespondingTestCase result = classTypeFacade.getOneCorrespondingTestCase(false);
+
+        assertFalse(result.found());
+        assertNull(result.get());
+        assertFalse(result.hasJustBeenCreated());
+    }
+
+    private static class TestableClassTypeFacade extends ClassTypeFacade
+    {
+        TestableClassTypeFacade(org.eclipse.jdt.core.ICompilationUnit compilationUnit)
+        {
+            super(compilationUnit);
+        }
+
+        @Override
+        protected NewClassyWizard newCorrespondingClassWizard(IType fromType)
+        {
+            return super.newCorrespondingClassWizard(fromType);
+        }
+    }
+
+    @Test
+    public void newCorrespondingClassWizard_should_return_new_test_case_wizard() throws Exception
+    {
+        TestableClassTypeFacade classTypeFacade = new TestableClassTypeFacade(cutHandler().getCompilationUnit());
+
+        NewClassyWizard wizard = classTypeFacade.newCorrespondingClassWizard(cutHandler().get());
+
+        assertNotNull(wizard);
+        assertTrue(wizard instanceof NewTestCaseWizard);
+    }
+
     private TypeHandler cutHandler()
     {
         return context.getPrimaryTypeHandler("org.SomeClass");
@@ -265,5 +312,48 @@ public class ClassTypeFacadeTest extends ContextTestCase
     private TypeHandler testCaseHandler()
     {
         return context.getPrimaryTypeHandler("org.SomeClassTest");
+    }
+
+    @Test
+    @Project(mainCls = "com:Foo", testCls = "com:FooTest; com:FooTestNG", properties = @Properties(testType = TestType.JUNIT4, testClassNameTemplate = "${srcFile}(Test|TestNG)"))
+    public void getOneCorrespondingTestCase_should_open_dialog_when_several_test_cases_exist() throws Exception
+    {
+        Display display = Display.getDefault();
+        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "FooTest"), 2000));
+
+        ClassTypeFacade classTypeFacade = new ClassTypeFacade(context.getCompilationUnit("com.Foo"));
+        ClassTypeFacade.CorrespondingTestCase result = classTypeFacade.getOneCorrespondingTestCase(false, "Please choose a test case...");
+
+        assertTrue(result.found());
+        assertFalse(result.hasJustBeenCreated());
+        assertEquals("FooTest", result.get().getElementName());
+    }
+
+    @Test
+    public void getOneCorrespondingMember_should_open_dialog_when_several_test_methods_match() throws Exception
+    {
+        IMethod getNumberOneMethod = cutHandler().addMethod("public int getNumberOne()", "return 1;").get();
+        testCaseHandler().addMethod("public void testGetNumberOne()", "new SomeClass().getNumberOne();").get();
+        IMethod callerTestMethod = testCaseHandler().addMethod("public void testGiveMe1()", "new SomeClass().getNumberOne();").get();
+
+        // the jump history provides the default selection of the dialog
+        MemberJumpHistory.getInstance().registerJump(getNumberOneMethod, callerTestMethod);
+
+        Display display = Display.getDefault();
+        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "testGiveMe1"), 2000));
+
+        TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
+        CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
+                .withCurrentMethod(getNumberOneMethod) //
+                .methodSearchMode(MethodSearchMode.BY_CALL_AND_BY_NAME) //
+                .build();
+
+        IMember member = classTypeFacade.getOneCorrespondingMember(request);
+
+        assertEquals("testGiveMe1", member.getElementName());
+        assertEquals(callerTestMethod.getDeclaringType(), member.getDeclaringType());
     }
 }
