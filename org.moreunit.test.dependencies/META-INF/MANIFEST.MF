@@ -19,7 +19,12 @@ Require-Bundle: org.eclipse.core.resources,
  org.testng.eclipse,
  org.mockito.mockito-core,
  junit-jupiter-api,
- junit-jupiter-engine
+ junit-jupiter-engine,
+ org.apiguardian.api,
+ junit-jupiter-params,
+ junit-jupiter-migrationsupport,
+ junit-platform-runner,
+ junit-vintage-engine
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: org.eclipse.jdt.junit,
  org.moreunit.core.util
