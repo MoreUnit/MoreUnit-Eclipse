@@ -1,6 +1,10 @@
 package org.moreunit.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
 import static org.moreunit.util.PluginTools.guessSourceFolderCorrespondingToTestFolder;
 import static org.moreunit.util.PluginTools.guessTestFolderCorrespondingToMainSrcFolder;
@@ -264,6 +268,58 @@ public class PluginToolsTest
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("two"));
+    }
+
+    @Test
+    public void getTestPackageName_should_return_unchanged_package_when_no_prefix_nor_suffix_is_configured()
+    {
+        assertEquals("com.foo", PluginTools.getTestPackageName("com.foo", projectPreferences(null, null)));
+    }
+
+    @Test
+    public void getTestPackageName_should_add_prefix_when_configured()
+    {
+        assertEquals("test.com.foo", PluginTools.getTestPackageName("com.foo", projectPreferences("test", null)));
+    }
+
+    @Test
+    public void getTestPackageName_should_add_suffix_when_configured()
+    {
+        assertEquals("com.foo.it", PluginTools.getTestPackageName("com.foo", projectPreferences(null, "it")));
+    }
+
+    @Test
+    public void getTestPackageName_should_add_prefix_and_suffix_when_both_are_configured()
+    {
+        assertEquals("test.com.foo.it", PluginTools.getTestPackageName("com.foo", projectPreferences("test", "it")));
+    }
+
+    private org.moreunit.preferences.Preferences.ProjectPreferences projectPreferences(String prefix, String suffix)
+    {
+        org.moreunit.preferences.Preferences.ProjectPreferences prefs = mock(org.moreunit.preferences.Preferences.ProjectPreferences.class);
+        when(prefs.getPackagePrefix()).thenReturn(prefix);
+        when(prefs.getPackageSuffix()).thenReturn(suffix);
+        return prefs;
+    }
+
+    @Test
+    public void createPackageFragmentRoot_should_return_existing_source_folder() throws Exception
+    {
+        IJavaProject project = createProject("CreatePFRProject");
+        WorkspaceHelper.createSourceFolderInProject(project, "src/test/java");
+
+        IPackageFragmentRoot root = PluginTools.createPackageFragmentRoot("CreatePFRProject", "src/test/java");
+
+        assertNotNull(root);
+        assertEquals("src/test/java", getPathStringWithoutProjectName(root));
+    }
+
+    @Test
+    public void createPackageFragmentRoot_should_return_null_when_source_folder_does_not_exist() throws Exception
+    {
+        createProject("CreatePFRProject2");
+
+        assertNull(PluginTools.createPackageFragmentRoot("CreatePFRProject2", "src/doesNotExist"));
     }
 
     private IJavaProject createProject(String name) throws Exception

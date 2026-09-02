@@ -1,10 +1,24 @@
 package org.moreunit.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.core.search.SearchPattern;
 import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Project;
@@ -62,5 +76,37 @@ public class SearchToolsTest extends ContextTestCase
         Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(interfaceHandler.get());
 
         assertEquals(1, concreteSubclasses.size());
+    }
+
+    @Project(mainCls = "SearchTarget", testCls = "SearchTargetTest")
+    @Test
+    public void search_should_return_the_types_matching_the_given_pattern() throws Exception
+    {
+        IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new org.eclipse.jdt.core.IJavaElement[] { context.getProjectHandler().get() });
+
+        SearchPattern pattern = SearchPattern.createPattern("SearchTarget*", IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH);
+
+        Collection<IType> matches = SearchTools.search(pattern, scope);
+
+        assertEquals(2, matches.size());
+        assertTrue(matches.stream().anyMatch(t -> "SearchTarget".equals(t.getElementName())));
+        assertTrue(matches.stream().anyMatch(t -> "SearchTargetTest".equals(t.getElementName())));
+    }
+
+    @Project(mainCls = "OrTarget")
+    @Test
+    public void createSearchPattern_should_combine_patterns_with_or() throws Exception
+    {
+        Method method = SearchTools.class.getDeclaredMethod("createSearchPattern", Collection.class, int.class, int.class, int.class);
+        method.setAccessible(true);
+
+        SearchPattern pattern = (SearchPattern) method.invoke(null, java.util.List.of("OrTarget", "DoesNotExist"), IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
+
+        assertNotNull(pattern);
+
+        IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new org.eclipse.jdt.core.IJavaElement[] { context.getProjectHandler().get() });
+        Collection<IType> matches = SearchTools.search(pattern, scope);
+        assertEquals(1, matches.size());
+        assertEquals("OrTarget", matches.iterator().next().getElementName());
     }
 }
