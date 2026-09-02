@@ -28,7 +28,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -49,7 +48,6 @@ import org.moreunit.mock.model.Part;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.preferences.PreferenceConstants;
 
-@Disabled
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 public class MockingContextTest
@@ -155,6 +153,30 @@ public class MockingContextTest
         assertTrue(mockingContext.usesInjectionType(InjectionType.constructor));
         assertTrue(mockingContext.usesInjectionType(InjectionType.field));
         assertTrue(mockingContext.usesInjectionType(InjectionType.setter));
+    }
+
+    @Test
+    public void should_not_report_dependencies_to_mock_when_none_was_injected() throws Exception
+    {
+        // when
+        mockingContext = createMockingContext();
+
+        // then
+        assertFalse(mockingContext.hasDependenciesToMock());
+        assertEquals(dependencies, mockingContext.dependenciesToMock());
+    }
+
+    @Test
+    public void should_report_dependencies_to_mock_when_at_least_one_was_injected() throws Exception
+    {
+        // given
+        dependencies.add(new Dependency("pack.age.Type", "aType"));
+
+        // when
+        mockingContext = createMockingContext();
+
+        // then
+        assertTrue(mockingContext.hasDependenciesToMock());
     }
 
     @Test

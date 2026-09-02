@@ -1,6 +1,7 @@
 package org.moreunit.mock.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -133,5 +134,77 @@ public class TypeUseTest
 
         assertEquals(2, use.annotations.size());
         assertEquals(2, use.typeParameters.size());
+    }
+
+    @Test
+    public void should_compute_hash_code_even_when_annotations_and_type_parameters_are_null() throws Exception
+    {
+        // defensive branches: the fields are always initialized in production,
+        // but the null-guarded hash code must still be computed correctly
+        TypeUse<?> use = new TypeUse<>("java.util.List");
+        setField(use, "typeParameters", null);
+        setField(use, "annotations", null);
+
+        int expected = 31 * (31 * (31 + "java.util.List".hashCode()));
+        assertEquals(expected, use.hashCode());
+    }
+
+    @Test
+    public void should_not_be_equal_when_null_type_parameters_are_compared_with_non_null_ones() throws Exception
+    {
+        TypeUse<?> useWithNulls = new TypeUse<>("java.util.List");
+        setField(useWithNulls, "typeParameters", null);
+        setField(useWithNulls, "annotations", null);
+
+        TypeUse<?> use = new TypeUse<>("java.util.List").withTypeParameters(new TypeParameter("java.lang.String"));
+
+        assertFalse(useWithNulls.equals(use));
+        assertFalse(use.equals(useWithNulls));
+    }
+
+    @Test
+    public void should_not_be_equal_when_null_annotations_are_compared_with_non_null_ones() throws Exception
+    {
+        TypeUse<?> useWithNullAnnotations = new TypeUse<>("com.example.Foo");
+        setField(useWithNullAnnotations, "annotations", null);
+
+        TypeUse<?> use = new TypeUse<>("com.example.Foo").withAnnotations("a.B");
+
+        assertFalse(useWithNullAnnotations.equals(use));
+        assertFalse(use.equals(useWithNullAnnotations));
+    }
+
+    @Test
+    public void should_be_equal_when_both_annotations_and_type_parameters_are_null() throws Exception
+    {
+        TypeUse<?> use1 = new TypeUse<>("java.util.List");
+        setField(use1, "typeParameters", null);
+        setField(use1, "annotations", null);
+
+        TypeUse<?> use2 = new TypeUse<>("java.util.List");
+        setField(use2, "typeParameters", null);
+        setField(use2, "annotations", null);
+
+        assertTrue(use1.equals(use2));
+    }
+
+    private static void setField(Object target, String fieldName, Object value) throws Exception
+    {
+        Class<?> type = target.getClass();
+        while (type != null)
+        {
+            try
+            {
+                java.lang.reflect.Field field = type.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(target, value);
+                return;
+            }
+            catch (NoSuchFieldException e)
+            {
+                type = type.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
     }
 }

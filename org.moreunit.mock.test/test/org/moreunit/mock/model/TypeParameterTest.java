@@ -135,4 +135,78 @@ public class TypeParameterTest
         assert(str.contains("? extends "));
         assert(str.contains("java.util.Set"));
     }
+
+    @Test
+    public void should_compute_hash_code_even_when_wildcard_expression_and_base_type_annotations_are_null() throws Exception
+    {
+        // defensive branches: the fields are never null in production, but the
+        // null-guarded hash code must still be computed correctly
+        TypeParameter p1 = new TypeParameter("java.lang.String");
+        setField(p1, "wildcardExpression", null);
+        setField(p1, "baseTypeAnnotations", null);
+
+        TypeParameter p2 = new TypeParameter("java.lang.String");
+        setField(p2, "wildcardExpression", null);
+        setField(p2, "baseTypeAnnotations", null);
+
+        assertEquals(p1.hashCode(), p2.hashCode());
+    }
+
+    @Test
+    public void should_not_be_equal_when_null_wildcard_expression_is_compared_with_non_null_one() throws Exception
+    {
+        TypeParameter p1 = new TypeParameter("java.util.Set");
+        setField(p1, "wildcardExpression", null);
+
+        TypeParameter p2 = TypeParameter.extending("java.util.Set");
+
+        assertFalse(p1.equals(p2));
+        assertFalse(p2.equals(p1));
+    }
+
+    @Test
+    public void should_not_be_equal_when_null_base_type_annotations_are_compared_with_non_null_ones() throws Exception
+    {
+        TypeParameter p1 = new TypeParameter("java.lang.String");
+        setField(p1, "baseTypeAnnotations", null);
+
+        TypeParameter p2 = new TypeParameter("java.lang.String").withBaseTypeAnnotations("com.foo.A");
+
+        assertFalse(p1.equals(p2));
+        assertFalse(p2.equals(p1));
+    }
+
+    @Test
+    public void should_be_equal_when_both_wildcard_expression_and_base_type_annotations_are_null() throws Exception
+    {
+        TypeParameter p1 = new TypeParameter("java.util.Set");
+        setField(p1, "wildcardExpression", null);
+        setField(p1, "baseTypeAnnotations", null);
+
+        TypeParameter p2 = new TypeParameter("java.util.Set");
+        setField(p2, "wildcardExpression", null);
+        setField(p2, "baseTypeAnnotations", null);
+
+        assertTrue(p1.equals(p2));
+    }
+
+    private static void setField(Object target, String fieldName, Object value) throws Exception
+    {
+        Class<?> type = target.getClass();
+        while (type != null)
+        {
+            try
+            {
+                java.lang.reflect.Field field = type.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(target, value);
+                return;
+            }
+            catch (NoSuchFieldException e)
+            {
+                type = type.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
 }

@@ -3,6 +3,8 @@ package org.moreunit.mock.dependencies;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -15,18 +17,18 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.moreunit.mock.elements.NamingRules;
 import org.moreunit.mock.model.Dependency;
 import org.moreunit.mock.model.FieldDependency;
 import org.moreunit.mock.model.SetterDependency;
 import org.moreunit.mock.model.TypeParameter;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 public class DependenciesTest
 {
@@ -129,6 +131,7 @@ public class DependenciesTest
     @Test
     public void resolveTypeParameters_should_handle_wildcards() throws Exception
     {
+        lenient().when(classUnderTest.resolveType(anyString())).thenReturn(null);
         when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
         when(classUnderTest.resolveType("String")).thenReturn(new String[][] { { "java.lang", "String" } });
 
@@ -140,6 +143,7 @@ public class DependenciesTest
     @Test
     public void resolveTypeParameters_should_handle_type_annotations() throws Exception
     {
+        lenient().when(classUnderTest.resolveType(anyString())).thenReturn(null);
         when(classUnderTest.resolveType("Set")).thenReturn(new String[][] { { "java.util", "Set" } });
         when(classUnderTest.resolveType("Interned")).thenReturn(new String[][] { { "checkers.interning.quals", "Interned" } });
         when(classUnderTest.resolveType("ReadOnly")).thenReturn(new String[][] { { "checkers.interning.quals", "ReadOnly" } });

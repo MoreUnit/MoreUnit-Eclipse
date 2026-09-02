@@ -65,6 +65,19 @@ public class MockingTemplateLoaderTest
     }
 
     @Test
+    public void should_return_workspace_templates_location_from_resource_loader() throws Exception
+    {
+        // given
+        when(resourceLoader.getWorkspaceResourceLocation(TEMPLATE_DIRECTORY)).thenReturn("/workspace/state/path");
+
+        // when
+        String location = loader.getWorkspaceTemplatesLocation();
+
+        // then
+        assertEquals("/workspace/state/path", location);
+    }
+
+    @Test
     public void should_load_from_both_bundle_and_workspace_state() throws Exception
     {
         // given
