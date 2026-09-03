@@ -13,10 +13,10 @@ public class FolderCreationExceptionTest
     @Test
     public void should_wrap_core_exception_and_expose_folder()
     {
-        CoreException cause = mock(CoreException.class);
-        IFolder folder = mock(IFolder.class);
+        final CoreException cause = mock(CoreException.class);
+        final IFolder folder = mock(IFolder.class);
 
-        FolderCreationException exception = new FolderCreationException(cause, folder);
+        final FolderCreationException exception = new FolderCreationException(cause, folder);
 
         assertSame(folder, exception.getFolder());
         assertNotNull(exception.getCause());
@@ -25,9 +25,9 @@ public class FolderCreationExceptionTest
     @Test
     public void should_create_exception_without_folder()
     {
-        CoreException cause = mock(CoreException.class);
+        final CoreException cause = mock(CoreException.class);
 
-        FolderCreationException exception = new FolderCreationException(cause, null);
+        final FolderCreationException exception = new FolderCreationException(cause, null);
 
         assertNotNull(exception);
     }

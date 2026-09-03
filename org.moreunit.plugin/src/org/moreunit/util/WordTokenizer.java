@@ -19,10 +19,10 @@ public class WordTokenizer implements Enumeration<String>
             tokens = new ArrayList<>();
         else
         {
-            char[] charArray = string.toCharArray();
+            final char[] charArray = string.toCharArray();
             StringBuilder token = new StringBuilder();
 
-            for (char singleChar : charArray)
+            for (final char singleChar : charArray)
             {
                 if(Character.isUpperCase(singleChar))
                 {

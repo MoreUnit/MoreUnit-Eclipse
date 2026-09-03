@@ -12,7 +12,7 @@ public class NewTestCaseWizardPagePositionTest
     @Test
     public void after()
     {
-        NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.after("a page");
+        final NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.after("a page");
         assertTrue(pagePosition.isAfter("a page"));
         assertFalse(pagePosition.isBefore("a page"));
 
@@ -23,7 +23,7 @@ public class NewTestCaseWizardPagePositionTest
     @Test
     public void before()
     {
-        NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.before("a page");
+        final NewTestCaseWizardPagePosition pagePosition = NewTestCaseWizardPagePosition.before("a page");
         assertFalse(pagePosition.isAfter("a page"));
         assertTrue(pagePosition.isBefore("a page"));
 

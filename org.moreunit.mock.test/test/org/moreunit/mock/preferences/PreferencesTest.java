@@ -38,7 +38,7 @@ public class PreferencesTest {
 
     @Test
     public void setMockingTemplate_should_save_value_to_project_store() {
-        Preferences preferences = new Preferences(storeManager);
+        final Preferences preferences = new Preferences(storeManager);
         when(storeManager.getStore(project, true)).thenReturn(projectStore);
 
         preferences.setMockingTemplate(project, "customTemplate");
@@ -49,18 +49,18 @@ public class PreferencesTest {
 
     @Test
     public void getMockingTemplate_should_return_value_from_store() {
-        Preferences preferences = new Preferences(storeManager);
+        final Preferences preferences = new Preferences(storeManager);
         when(storeManager.getStore(project, false)).thenReturn(projectStore);
         when(projectStore.getString("org.moreunit.mock.mocking_template")).thenReturn("customTemplate");
 
-        String result = preferences.getMockingTemplate(project);
+        final String result = preferences.getMockingTemplate(project);
 
         assertEquals("customTemplate", result);
     }
 
     @Test
     public void setSpecificSettings_should_delegate_to_store_manager() {
-        Preferences preferences = new Preferences(storeManager);
+        final Preferences preferences = new Preferences(storeManager);
 
         preferences.setSpecificSettings(project, true);
 
@@ -69,10 +69,10 @@ public class PreferencesTest {
 
     @Test
     public void hasSpecificSettings_should_delegate_to_store_manager() {
-        Preferences preferences = new Preferences(storeManager);
+        final Preferences preferences = new Preferences(storeManager);
         when(storeManager.hasSpecificSettings(project)).thenReturn(true);
 
-        boolean result = preferences.hasSpecificSettings(project);
+        final boolean result = preferences.hasSpecificSettings(project);
 
         assertTrue(result);
     }

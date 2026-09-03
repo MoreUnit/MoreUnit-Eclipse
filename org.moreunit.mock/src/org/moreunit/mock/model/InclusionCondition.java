@@ -33,7 +33,7 @@ public abstract class InclusionCondition
 
     public <E extends Enum<E>> Enum<E> valueAs(Class< ? extends Enum<E>> enumClass)
     {
-        for (Enum<E> e : enumClass.getEnumConstants())
+        for (final Enum<E> e : enumClass.getEnumConstants())
         {
             if(e.name().equals(value))
             {
@@ -69,7 +69,7 @@ public abstract class InclusionCondition
         {
             return false;
         }
-        InclusionCondition other = (InclusionCondition) obj;
+        final InclusionCondition other = (InclusionCondition) obj;
         if(type != other.type)
         {
             return false;

@@ -22,7 +22,7 @@ public class Jobs
 
     public static <T> void waitForIndexExecuteAndRunInUI(String jobName, Supplier<T> backgroundJob, Consumer<T> uiJob)
     {
-        Job job = new Job(jobName)
+        final Job job = new Job(jobName)
         {
 
             @Override
@@ -33,7 +33,7 @@ public class Jobs
                 {
                     return Status.CANCEL_STATUS;
                 }
-                T result = backgroundJob.get();
+                final T result = backgroundJob.get();
                 if(progressmonitor.isCanceled())
                 {
                     return Status.CANCEL_STATUS;

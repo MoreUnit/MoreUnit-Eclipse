@@ -80,17 +80,17 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
 
     private TreeViewer spyTreeView()
     {
-        TreeViewer original = (TreeViewer) getField(view, "treeViewer");
-        TreeViewer spy = spy(original);
+        final TreeViewer original = (TreeViewer) getField(view, "treeViewer");
+        final TreeViewer spy = spy(original);
         setField(view, "treeViewer", spy);
         return spy;
     }
 
     private void selectProject()
     {
-        Combo comboBox = projectComboBox();
+        final Combo comboBox = projectComboBox();
         comboBox.setText(context.getProjectHandler().get().getElementName());
-        Event event = new Event();
+        final Event event = new Event();
         event.widget = comboBox;
         view.widgetSelected(new SelectionEvent(event));
     }
@@ -100,16 +100,16 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     {
         createViewControl();
 
-        Combo comboBox = projectComboBox();
+        final Combo comboBox = projectComboBox();
         assertNotNull(comboBox);
         boolean containsProject = false;
-        for (String item : comboBox.getItems())
+        for (final String item : comboBox.getItems())
         {
             containsProject |= item.equals(context.getProjectHandler().get().getElementName());
         }
         assertTrue(containsProject);
 
-        TreeViewer treeViewer = (TreeViewer) getField(view, "treeViewer");
+        final TreeViewer treeViewer = (TreeViewer) getField(view, "treeViewer");
         assertNotNull(treeViewer.getContentProvider());
     }
 
@@ -138,7 +138,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         flushDisplayEvents();
 
         boolean containsProject = false;
-        for (String item : projectComboBox().getItems())
+        for (final String item : projectComboBox().getItems())
         {
             containsProject |= item.equals(context.getProjectHandler().get().getElementName());
         }
@@ -150,7 +150,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     {
         createViewControl();
 
-        TreeViewer treeViewer = spyTreeView();
+        final TreeViewer treeViewer = spyTreeView();
         view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, mock(IResourceDelta.class)));
         flushDisplayEvents();
 
@@ -162,10 +162,10 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     {
         createViewControl();
         selectProject();
-        TreeViewer treeViewer = spyTreeView();
+        final TreeViewer treeViewer = spyTreeView();
 
-        IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.ADDED, resource(IResource.FILE, "java")));
-        IResourceDelta rootDelta = mock(IResourceDelta.class);
+        final IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.ADDED, resource(IResource.FILE, "java")));
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
         when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(projectDelta);
 
         view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, rootDelta));
@@ -179,10 +179,10 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     {
         createViewControl();
         selectProject();
-        TreeViewer treeViewer = spyTreeView();
+        final TreeViewer treeViewer = spyTreeView();
 
-        IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.ADDED, resource(IResource.FILE, "txt")));
-        IResourceDelta rootDelta = mock(IResourceDelta.class);
+        final IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.ADDED, resource(IResource.FILE, "txt")));
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
         when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(projectDelta);
 
         view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, rootDelta));
@@ -196,10 +196,10 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     {
         createViewControl();
         selectProject();
-        TreeViewer treeViewer = spyTreeView();
+        final TreeViewer treeViewer = spyTreeView();
 
-        IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.CHANGED, resource(IResource.FILE, "java")));
-        IResourceDelta rootDelta = mock(IResourceDelta.class);
+        final IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.CHANGED, resource(IResource.FILE, "java")));
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
         when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(projectDelta);
 
         view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, rootDelta));
@@ -214,15 +214,15 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         createViewControl();
         selectProject();
 
-        IResourceDelta rootDelta = mock(IResourceDelta.class);
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
         when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(null);
-        Answer<Object> answer = invocation -> {
-            IResourceDeltaVisitor visitor = (IResourceDeltaVisitor) invocation.getArgument(0);
+        final Answer<Object> answer = invocation -> {
+            final IResourceDeltaVisitor visitor = (IResourceDeltaVisitor) invocation.getArgument(0);
             try
             {
                 visitor.visit(delta(IResourceDelta.ADDED, resource(IResource.PROJECT, null)));
             }
-            catch (org.eclipse.core.runtime.CoreException e)
+            catch (final org.eclipse.core.runtime.CoreException e)
             {
                 throw new RuntimeException(e);
             }
@@ -232,7 +232,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         {
             doAnswer(answer).when(rootDelta).accept(any(IResourceDeltaVisitor.class));
         }
-        catch (org.eclipse.core.runtime.CoreException e)
+        catch (final org.eclipse.core.runtime.CoreException e)
         {
             throw new RuntimeException(e);
         }
@@ -241,7 +241,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         flushDisplayEvents();
 
         boolean containsProject = false;
-        for (String item : projectComboBox().getItems())
+        for (final String item : projectComboBox().getItems())
         {
             containsProject |= item.equals(context.getProjectHandler().get().getElementName());
         }
@@ -253,10 +253,10 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     {
         createViewControl();
         selectProject();
-        TreeViewer treeViewer = spyTreeView();
+        final TreeViewer treeViewer = spyTreeView();
 
-        IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.ADDED, resource(IResource.PROJECT, "java")));
-        IResourceDelta rootDelta = mock(IResourceDelta.class);
+        final IResourceDelta projectDelta = deltaVisiting(delta(IResourceDelta.ADDED, resource(IResource.PROJECT, "java")));
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
         when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(projectDelta);
 
         view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, rootDelta));
@@ -271,16 +271,16 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         createViewControl();
         selectProject();
 
-        IResourceDelta rootDelta = mock(IResourceDelta.class);
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
         when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(null);
-        Answer<Object> answer = invocation -> {
-            IResourceDeltaVisitor visitor = (IResourceDeltaVisitor) invocation.getArgument(0);
+        final Answer<Object> answer = invocation -> {
+            final IResourceDeltaVisitor visitor = (IResourceDeltaVisitor) invocation.getArgument(0);
             try
             {
                 visitor.visit(delta(IResourceDelta.ADDED, resource(IResource.FILE, "java")));
                 visitor.visit(delta(IResourceDelta.CHANGED, resource(IResource.PROJECT, null)));
             }
-            catch (org.eclipse.core.runtime.CoreException e)
+            catch (final org.eclipse.core.runtime.CoreException e)
             {
                 throw new RuntimeException(e);
             }
@@ -290,7 +290,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         {
             doAnswer(answer).when(rootDelta).accept(any(IResourceDeltaVisitor.class));
         }
-        catch (org.eclipse.core.runtime.CoreException e)
+        catch (final org.eclipse.core.runtime.CoreException e)
         {
             throw new RuntimeException(e);
         }
@@ -303,7 +303,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
 
     private IResource resource(int type, String extension)
     {
-        IResource resource = mock(IResource.class);
+        final IResource resource = mock(IResource.class);
         when(resource.getType()).thenReturn(type);
         when(resource.getFileExtension()).thenReturn(extension);
         return resource;
@@ -311,7 +311,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
 
     private IResourceDelta delta(int kind, IResource resource)
     {
-        IResourceDelta delta = mock(IResourceDelta.class);
+        final IResourceDelta delta = mock(IResourceDelta.class);
         when(delta.getKind()).thenReturn(kind);
         when(delta.getResource()).thenReturn(resource);
         return delta;
@@ -319,17 +319,17 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
 
     private IResourceDelta deltaVisiting(IResourceDelta... deltas)
     {
-        IResourceDelta delta = mock(IResourceDelta.class);
-        Answer<Object> answer = invocation -> {
-            IResourceDeltaVisitor visitor = (IResourceDeltaVisitor) invocation.getArgument(0);
+        final IResourceDelta delta = mock(IResourceDelta.class);
+        final Answer<Object> answer = invocation -> {
+            final IResourceDeltaVisitor visitor = (IResourceDeltaVisitor) invocation.getArgument(0);
             try
             {
-                for (IResourceDelta child : deltas)
+                for (final IResourceDelta child : deltas)
                 {
                     visitor.visit(child);
                 }
             }
-            catch (org.eclipse.core.runtime.CoreException e)
+            catch (final org.eclipse.core.runtime.CoreException e)
             {
                 throw new RuntimeException(e);
             }
@@ -339,7 +339,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         {
             doAnswer(answer).when(delta).accept(any(IResourceDeltaVisitor.class));
         }
-        catch (org.eclipse.core.runtime.CoreException e)
+        catch (final org.eclipse.core.runtime.CoreException e)
         {
             throw new RuntimeException(e);
         }
@@ -348,7 +348,7 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
 
     private IResourceChangeEvent event(int type, IResourceDelta delta)
     {
-        IResourceChangeEvent event = mock(IResourceChangeEvent.class);
+        final IResourceChangeEvent event = mock(IResourceChangeEvent.class);
         when(event.getType()).thenReturn(type);
         when(event.getDelta()).thenReturn(delta);
         return event;

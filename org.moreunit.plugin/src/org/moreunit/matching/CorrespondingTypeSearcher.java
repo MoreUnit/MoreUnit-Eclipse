@@ -46,7 +46,7 @@ public class CorrespondingTypeSearcher
         this.type = compilationUnit.findPrimaryType();
         this.preferences = preferences.getProjectView(compilationUnit.getJavaProject());
         nameEvaluation = this.preferences.getTestClassNamePattern().evaluate(this.type);
-        IPackageFragmentRoot sourceFolder = nameEvaluation.isTestCase()
+        final IPackageFragmentRoot sourceFolder = nameEvaluation.isTestCase()
             ? preferences.getTestSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit))
             : this.preferences.getMainSourceFolder(PluginTools.getSourceFolder(compilationUnit));
         searchScope = SearchScopeSingelton.getInstance().getSearchScope(sourceFolder);
@@ -73,7 +73,7 @@ public class CorrespondingTypeSearcher
                 return this.perfectMatches;
             }
         }
-        catch (CoreException exc)
+        catch (final CoreException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
@@ -83,8 +83,8 @@ public class CorrespondingTypeSearcher
 
     private Collection<IType> findPotentialTargets(boolean withLikelyMatches) throws CoreException
     {
-        boolean qualifyWithPackage = ! withLikelyMatches;
-        Set<String> patterns = new LinkedHashSet<>(nameEvaluation.getAllCorrespondingClassPatterns(qualifyWithPackage));
+        final boolean qualifyWithPackage = ! withLikelyMatches;
+        final Set<String> patterns = new LinkedHashSet<>(nameEvaluation.getAllCorrespondingClassPatterns(qualifyWithPackage));
 
         Set<IType> matches = SearchTools.searchFor(patterns, searchScope);
 
@@ -97,31 +97,31 @@ public class CorrespondingTypeSearcher
         {
             try
             {
-                boolean interfaceOfAbstract = type.isInterface() || Flags.isAbstract(type.getFlags());
-                ITypeHierarchy hierarchy = interfaceOfAbstract ? type.newTypeHierarchy(new NullProgressMonitor()) : type.newSupertypeHierarchy(new NullProgressMonitor());
-                for (IType superType : hierarchy.getAllSupertypes(type))
+                final boolean interfaceOfAbstract = type.isInterface() || Flags.isAbstract(type.getFlags());
+                final ITypeHierarchy hierarchy = interfaceOfAbstract ? type.newTypeHierarchy(new NullProgressMonitor()) : type.newSupertypeHierarchy(new NullProgressMonitor());
+                for (final IType superType : hierarchy.getAllSupertypes(type))
                 {
                     if(! (superType.getFullyQualifiedName().startsWith("java.lang.") || superType.getFullyQualifiedName().startsWith("java.io.")))
                     {
-                        ClassNameEvaluation superEval = preferences.getTestClassNamePattern().evaluate(superType);
+                        final ClassNameEvaluation superEval = preferences.getTestClassNamePattern().evaluate(superType);
                         patterns.addAll(superEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
                     }
                 }
 
                 if(interfaceOfAbstract)
                 {
-                    IType[] subtypes = hierarchy.getAllSubtypes(type);
-                    for (IType subType : subtypes)
+                    final IType[] subtypes = hierarchy.getAllSubtypes(type);
+                    for (final IType subType : subtypes)
                     {
                         if(! Flags.isAbstract(subType.getFlags()) && ! subType.isInterface())
                         {
-                            ClassNameEvaluation subEval = preferences.getTestClassNamePattern().evaluate(subType);
+                            final ClassNameEvaluation subEval = preferences.getTestClassNamePattern().evaluate(subType);
                             patterns.addAll(subEval.getAllCorrespondingClassPatterns(qualifyWithPackage));
                         }
                     }
                 }
             }
-            catch (JavaModelException e)
+            catch (final JavaModelException e)
             {
                 LogHandler.getInstance().handleExceptionLog(e);
             }
@@ -131,9 +131,9 @@ public class CorrespondingTypeSearcher
 
         if(nameEvaluation.isTestCase())
         {
-            Set<IType> allMatches = new LinkedHashSet<>(matches);
-            Set<IType> concreteImplementations = new LinkedHashSet<>();
-            for (IType match : matches)
+            final Set<IType> allMatches = new LinkedHashSet<>(matches);
+            final Set<IType> concreteImplementations = new LinkedHashSet<>();
+            for (final IType match : matches)
             {
                 try
                 {
@@ -142,7 +142,7 @@ public class CorrespondingTypeSearcher
                         concreteImplementations.addAll(SearchTools.findConcreteSubclasses(match));
                     }
                 }
-                catch (JavaModelException e)
+                catch (final JavaModelException e)
                 {
                     // ignore
                 }
@@ -152,9 +152,9 @@ public class CorrespondingTypeSearcher
             {
                 allMatches.addAll(concreteImplementations);
 
-                for (Iterator<IType> it = allMatches.iterator(); it.hasNext();)
+                for (final Iterator<IType> it = allMatches.iterator(); it.hasNext();)
                 {
-                    IType match = it.next();
+                    final IType match = it.next();
                     try
                     {
                         if((match.isInterface() || Flags.isAbstract(match.getFlags())) && ! hasImplementation(match))
@@ -162,7 +162,7 @@ public class CorrespondingTypeSearcher
                             it.remove();
                         }
                     }
-                    catch (JavaModelException e)
+                    catch (final JavaModelException e)
                     {
                         // ignore
                     }
@@ -177,7 +177,7 @@ public class CorrespondingTypeSearcher
 
     private boolean hasImplementation(IType type) throws JavaModelException
     {
-        for (IMethod method : type.getMethods())
+        for (final IMethod method : type.getMethods())
         {
             if(Flags.isDefaultMethod(method.getFlags()) || (! Flags.isAbstract(method.getFlags()) && ! type.isInterface()))
             {

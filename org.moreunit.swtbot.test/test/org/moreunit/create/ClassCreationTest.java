@@ -50,7 +50,7 @@ public class ClassCreationTest extends JavaProjectSWTBotTestHelper
             {
                 try {
                     return context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods().length > 0;
-                } catch (IllegalArgumentException ex) {
+                } catch (final IllegalArgumentException ex) {
                 }
                 return false;
             }
@@ -61,15 +61,15 @@ public class ClassCreationTest extends JavaProjectSWTBotTestHelper
                 return "Test not created testing.TheWorldTest";
             }
         }, 20000);
-        ICompilationUnit compilationUnitOfTest = context.getCompilationUnit("testing.TheWorldTest");
+        final ICompilationUnit compilationUnitOfTest = context.getCompilationUnit("testing.TheWorldTest");
         assertEquals(FLAG_DEFAULT_PACKAGE, compilationUnitOfTest.findPrimaryType().getFlags());
         assertTrue(compilationUnitOfTest.getImport("org.junit.jupiter.api.Test").exists());
     }
 
     private void moveCursorToMethod()
     {
-        SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
-        int lineNumberOfMethod = 6;
+        final SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
+        final int lineNumberOfMethod = 6;
         cutEditor.navigateTo(lineNumberOfMethod, 9);
         bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethod));
     }

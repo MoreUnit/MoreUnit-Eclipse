@@ -20,7 +20,7 @@ public class MissingViewsSWTBotTest extends JavaProjectSWTBotTestHelper
     @BeforeEach
     public void closeEditors()
     {
-        for (var editor : bot.editors())
+        for (final var editor : bot.editors())
             editor.close();
     }
 
@@ -65,7 +65,7 @@ public class MissingViewsSWTBotTest extends JavaProjectSWTBotTestHelper
                     ((org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot)bot).viewByTitle("Missing Tests per Project");
                     return true;
                 }
-                catch (WidgetNotFoundException e)
+                catch (final WidgetNotFoundException e)
                 {
                     return false;
                 }
@@ -120,7 +120,7 @@ public class MissingViewsSWTBotTest extends JavaProjectSWTBotTestHelper
                     ((org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot)bot).viewByTitle("Missing Test Methods");
                     return true;
                 }
-                catch (WidgetNotFoundException e)
+                catch (final WidgetNotFoundException e)
                 {
                     return false;
                 }

@@ -14,7 +14,7 @@ public class MatchSelectionTest
     @Test
     public void none_should_return_non_existing_selection_with_null_file()
     {
-        MatchSelection selection = MatchSelection.none();
+        final MatchSelection selection = MatchSelection.none();
 
         assertFalse(selection.exists());
         assertNull(selection.get());
@@ -23,8 +23,8 @@ public class MatchSelectionTest
     @Test
     public void file_should_return_existing_selection_with_given_file()
     {
-        IFile mockFile = mock(IFile.class);
-        MatchSelection selection = MatchSelection.file(mockFile);
+        final IFile mockFile = mock(IFile.class);
+        final MatchSelection selection = MatchSelection.file(mockFile);
 
         assertTrue(selection.exists());
         assertSame(selection.get(), mockFile);

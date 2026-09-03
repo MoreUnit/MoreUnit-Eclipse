@@ -18,21 +18,21 @@ public class TypeParameter extends TypeUse<TypeParameter>
 
     public static TypeParameter extending(String fullyQualifiedClassName)
     {
-        TypeParameter p = new TypeParameter(fullyQualifiedClassName);
+        final TypeParameter p = new TypeParameter(fullyQualifiedClassName);
         p.wildcardExpression = "? extends ";
         return p;
     }
 
     public static TypeParameter superOf(String fullyQualifiedClassName)
     {
-        TypeParameter p = new TypeParameter(fullyQualifiedClassName);
+        final TypeParameter p = new TypeParameter(fullyQualifiedClassName);
         p.wildcardExpression = "? super ";
         return p;
     }
 
     public static TypeParameter wildcard()
     {
-        TypeParameter p = new TypeParameter("");
+        final TypeParameter p = new TypeParameter("");
         p.wildcardExpression = "?";
         return p;
     }
@@ -66,7 +66,7 @@ public class TypeParameter extends TypeUse<TypeParameter>
 
     public TypeParameter withBaseTypeAnnotations(Collection<String> annotations)
     {
-        for (String a : annotations)
+        for (final String a : annotations)
         {
             this.baseTypeAnnotations.add(new TypeAnnotation(a));
         }
@@ -91,7 +91,7 @@ public class TypeParameter extends TypeUse<TypeParameter>
         {
             return false;
         }
-        TypeParameter other = (TypeParameter) obj;
+        final TypeParameter other = (TypeParameter) obj;
         if(wildcardExpression == null)
         {
             if(other.wildcardExpression != null)

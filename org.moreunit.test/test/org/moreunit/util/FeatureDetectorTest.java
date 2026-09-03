@@ -26,7 +26,7 @@ public class FeatureDetectorTest
 
     private FeatureDetector detectorWithBundles(Bundle... bundles)
     {
-        BundleContext bundleContext = mock(BundleContext.class);
+        final BundleContext bundleContext = mock(BundleContext.class);
         when(bundleContext.getBundles()).thenReturn(bundles);
         FeatureDetector.setBundleContext(bundleContext);
         return new FeatureDetector(mock(Preferences.class), mock(AdditionalTestLaunchShortcutProvider.class));
@@ -34,7 +34,7 @@ public class FeatureDetectorTest
 
     private Bundle bundle(String symbolicName, String version, int state)
     {
-        Bundle bundle = mock(Bundle.class);
+        final Bundle bundle = mock(Bundle.class);
         when(bundle.getSymbolicName()).thenReturn(symbolicName);
         when(bundle.getVersion()).thenReturn(new Version(version));
         when(bundle.getState()).thenReturn(state);
@@ -57,11 +57,11 @@ public class FeatureDetectorTest
         FeatureDetector.setBundleContext(null);
         try
         {
-            FeatureDetector featureDetector = new FeatureDetector(null, null);
+            final FeatureDetector featureDetector = new FeatureDetector(null, null);
 
             // This method ultimately calls getBundle, which should return null
             // safely when bundleContext is null
-            Version version = featureDetector.getTestNgPluginVersion();
+            final Version version = featureDetector.getTestNgPluginVersion();
 
             assertNull(version);
         }
@@ -76,7 +76,7 @@ public class FeatureDetectorTest
     @Test
     public void isGreaterOrEqual()
     {
-        FeatureDetector featureDetector = new FeatureDetector(null, null);
+        final FeatureDetector featureDetector = new FeatureDetector(null, null);
         assertFalse(featureDetector.isGreaterOrEqual(null, new Version("5.14.2.8")));
         assertFalse(featureDetector.isGreaterOrEqual(new Version(0, 0, 0), new Version("5.14.2.8")));
         assertFalse(featureDetector.isGreaterOrEqual(new Version("5.14.1.3"), new Version("5.14.2.8")));
@@ -90,7 +90,7 @@ public class FeatureDetectorTest
     @Test
     public void getTestNgPluginVersion_should_return_null_when_bundle_is_not_present()
     {
-        FeatureDetector featureDetector = detectorWithBundles(bundle("org.eclipse.ui", "1.0.0", Bundle.ACTIVE));
+        final FeatureDetector featureDetector = detectorWithBundles(bundle("org.eclipse.ui", "1.0.0", Bundle.ACTIVE));
 
         assertNull(featureDetector.getTestNgPluginVersion());
     }
@@ -98,8 +98,8 @@ public class FeatureDetectorTest
     @Test
     public void getTestNgPluginVersion_should_return_version_when_bundle_is_present()
     {
-        Bundle testNgBundle = bundle("org.testng.eclipse", "5.14.2.8", Bundle.ACTIVE);
-        FeatureDetector featureDetector = detectorWithBundles(bundle("org.eclipse.ui", "1.0.0", Bundle.ACTIVE), testNgBundle);
+        final Bundle testNgBundle = bundle("org.testng.eclipse", "5.14.2.8", Bundle.ACTIVE);
+        final FeatureDetector featureDetector = detectorWithBundles(bundle("org.eclipse.ui", "1.0.0", Bundle.ACTIVE), testNgBundle);
 
         assertEquals(new Version("5.14.2.8"), featureDetector.getTestNgPluginVersion());
     }
@@ -108,7 +108,7 @@ public class FeatureDetectorTest
     public void isTestSelectionRunSupported_should_return_true_when_project_does_not_use_testng()
     {
         FeatureDetector featureDetector = detectorWithBundles();
-        Preferences preferences = mock(Preferences.class);
+        final Preferences preferences = mock(Preferences.class);
         when(preferences.getTestType(any(IJavaProject.class))).thenReturn(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
         featureDetector = new FeatureDetector(preferences, mock(AdditionalTestLaunchShortcutProvider.class));
 
@@ -119,7 +119,7 @@ public class FeatureDetectorTest
     public void isTestSelectionRunSupported_should_return_true_when_testng_plugin_version_is_sufficient()
     {
         FeatureDetector featureDetector = detectorWithBundles(bundle("org.testng.eclipse", "5.14.2.10", Bundle.ACTIVE));
-        Preferences preferences = mock(Preferences.class);
+        final Preferences preferences = mock(Preferences.class);
         when(preferences.getTestType(any(IJavaProject.class))).thenReturn(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
         featureDetector = new FeatureDetector(preferences, mock(AdditionalTestLaunchShortcutProvider.class));
 
@@ -132,9 +132,9 @@ public class FeatureDetectorTest
         // note: OSGi Version qualifiers are compared as strings, so use an
         // unambiguously lower version here
         FeatureDetector featureDetector = detectorWithBundles(bundle("org.testng.eclipse", "5.13.0.0", Bundle.ACTIVE));
-        Preferences preferences = mock(Preferences.class);
+        final Preferences preferences = mock(Preferences.class);
         when(preferences.getTestType(any(IJavaProject.class))).thenReturn(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
-        AdditionalTestLaunchShortcutProvider provider = mock(AdditionalTestLaunchShortcutProvider.class);
+        final AdditionalTestLaunchShortcutProvider provider = mock(AdditionalTestLaunchShortcutProvider.class);
         when(provider.isShortcutFor(Mockito.anyString(), any(), any())).thenReturn(false);
         featureDetector = new FeatureDetector(preferences, provider);
 
@@ -145,9 +145,9 @@ public class FeatureDetectorTest
     public void isTestSelectionRunSupported_should_return_true_when_additional_shortcut_supports_testng()
     {
         FeatureDetector featureDetector = detectorWithBundles(bundle("org.testng.eclipse", "5.14.2.8", Bundle.ACTIVE));
-        Preferences preferences = mock(Preferences.class);
+        final Preferences preferences = mock(Preferences.class);
         when(preferences.getTestType(any(IJavaProject.class))).thenReturn(PreferenceConstants.TEST_TYPE_VALUE_TESTNG);
-        AdditionalTestLaunchShortcutProvider provider = mock(AdditionalTestLaunchShortcutProvider.class);
+        final AdditionalTestLaunchShortcutProvider provider = mock(AdditionalTestLaunchShortcutProvider.class);
         when(provider.isShortcutFor(Mockito.anyString(), any(), any())).thenReturn(true);
         featureDetector = new FeatureDetector(preferences, provider);
 
@@ -157,7 +157,7 @@ public class FeatureDetectorTest
     @Test
     public void createNewGroovyClassWizardPageIfPossible_should_return_null_when_groovy_bundle_is_not_installed()
     {
-        FeatureDetector featureDetector = detectorWithBundles(bundle("org.eclipse.ui", "1.0.0", Bundle.ACTIVE));
+        final FeatureDetector featureDetector = detectorWithBundles(bundle("org.eclipse.ui", "1.0.0", Bundle.ACTIVE));
 
         assertNull(featureDetector.createNewGroovyClassWizardPageIfPossible());
     }
@@ -165,9 +165,9 @@ public class FeatureDetectorTest
     @Test
     public void createNewGroovyClassWizardPageIfPossible_should_return_null_when_groovy_bundle_cannot_be_started() throws BundleException
     {
-        Bundle groovyBundle = bundle("org.codehaus.groovy.eclipse.ui", "1.0.0", Bundle.INSTALLED);
+        final Bundle groovyBundle = bundle("org.codehaus.groovy.eclipse.ui", "1.0.0", Bundle.INSTALLED);
         Mockito.doThrow(new BundleException("no way")).when(groovyBundle).start();
-        FeatureDetector featureDetector = detectorWithBundles(groovyBundle);
+        final FeatureDetector featureDetector = detectorWithBundles(groovyBundle);
 
         assertNull(featureDetector.createNewGroovyClassWizardPageIfPossible());
         Mockito.verify(groovyBundle).start();
@@ -176,9 +176,9 @@ public class FeatureDetectorTest
     @Test
     public void createNewGroovyClassWizardPageIfPossible_should_return_null_when_groovy_class_cannot_be_loaded() throws ClassNotFoundException
     {
-        Bundle groovyBundle = bundle("org.codehaus.groovy.eclipse.ui", "1.0.0", Bundle.ACTIVE);
+        final Bundle groovyBundle = bundle("org.codehaus.groovy.eclipse.ui", "1.0.0", Bundle.ACTIVE);
         when(groovyBundle.loadClass("org.codehaus.groovy.eclipse.wizards.NewClassWizardPage")).thenThrow(new ClassNotFoundException("nope"));
-        FeatureDetector featureDetector = detectorWithBundles(groovyBundle);
+        final FeatureDetector featureDetector = detectorWithBundles(groovyBundle);
 
         assertNull(featureDetector.createNewGroovyClassWizardPageIfPossible());
     }
@@ -186,9 +186,9 @@ public class FeatureDetectorTest
     @Test
     public void createNewGroovyClassWizardPageIfPossible_should_start_resolved_bundle_and_return_null_when_class_not_found() throws Exception
     {
-        Bundle groovyBundle = bundle("org.codehaus.groovy.eclipse.ui", "1.0.0", Bundle.RESOLVED);
+        final Bundle groovyBundle = bundle("org.codehaus.groovy.eclipse.ui", "1.0.0", Bundle.RESOLVED);
         when(groovyBundle.loadClass("org.codehaus.groovy.eclipse.wizards.NewClassWizardPage")).thenReturn(null);
-        FeatureDetector featureDetector = detectorWithBundles(groovyBundle);
+        final FeatureDetector featureDetector = detectorWithBundles(groovyBundle);
 
         assertNull(featureDetector.createNewGroovyClassWizardPageIfPossible());
         Mockito.verify(groovyBundle).start();

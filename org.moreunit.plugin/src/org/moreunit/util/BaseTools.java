@@ -33,14 +33,14 @@ public class BaseTools
         if(testCaseClass == null || testCaseClass.length() <= 1)
             return Collections.emptyList();
 
-        JavaType testType = new JavaType(testCaseClass);
+        final JavaType testType = new JavaType(testCaseClass);
 
         String packagePath = testType.getQualifierWithFinalDot();
         if(packagePath.length() != 0)
         {
             if(packagePrefix != null && packagePrefix.length() > 0)
             {
-                String prefixWithDot = packagePrefix + ".";
+                final String prefixWithDot = packagePrefix + ".";
                 if(packagePath.startsWith(prefixWithDot))
                 {
                     packagePath = packagePath.substring(prefixWithDot.length());
@@ -48,7 +48,7 @@ public class BaseTools
             }
             if(packageSuffix != null && packageSuffix.length() > 0)
             {
-                String dotWithSuffixWithDot = "." + packageSuffix + ".";
+                final String dotWithSuffixWithDot = "." + packageSuffix + ".";
                 if(packagePath.endsWith(dotWithSuffixWithDot))
                 {
                     packagePath = packagePath.substring(0, packagePath.length() - dotWithSuffixWithDot.length() + 1);
@@ -60,12 +60,12 @@ public class BaseTools
             }
         }
 
-        String typeName = testType.getSimpleName();
+        final String typeName = testType.getSimpleName();
 
-        List<String> results = new ArrayList<>();
+        final List<String> results = new ArrayList<>();
         if(suffixes != null)
         {
-            for (String suffix : suffixes)
+            for (final String suffix : suffixes)
             {
                 if(typeName.endsWith(suffix))
                 {
@@ -76,7 +76,7 @@ public class BaseTools
 
         if(prefixes != null)
         {
-            for (String prefix : prefixes)
+            for (final String prefix : prefixes)
             {
                 if(typeName.startsWith(prefix))
                 {
@@ -106,7 +106,7 @@ public class BaseTools
     {
         if(methodName != null)
         {
-            for (IMethod method : methods)
+            for (final IMethod method : methods)
             {
                 if(methodName.startsWith(method.getElementName()) && method.exists())
                 {
@@ -131,15 +131,15 @@ public class BaseTools
      */
     public static List<String> getListOfUnqualifiedTypeNames(String testedClassString)
     {
-        List<String> results = new ArrayList<>();
-        List<String> typeNames = new ArrayList<>();
+        final List<String> results = new ArrayList<>();
+        final List<String> typeNames = new ArrayList<>();
 
-        JavaType testedType = new JavaType(testedClassString);
+        final JavaType testedType = new JavaType(testedClassString);
 
-        WordTokenizer wordTokenizer = new WordTokenizer(testedType.getSimpleName());
+        final WordTokenizer wordTokenizer = new WordTokenizer(testedType.getSimpleName());
         while (wordTokenizer.hasMoreElements())
         {
-            String newTypeName = getNewWord(typeNames, wordTokenizer.nextElement());
+            final String newTypeName = getNewWord(typeNames, wordTokenizer.nextElement());
             typeNames.add(newTypeName);
             results.add(testedType.getQualifierWithFinalDot() + newTypeName);
         }
@@ -149,8 +149,8 @@ public class BaseTools
 
     public static List<String> getListOfUnqualifiedTypeNames(List<String> testedClasses)
     {
-        List<String> result = new ArrayList<>();
-        for (String clazz : testedClasses)
+        final List<String> result = new ArrayList<>();
+        for (final String clazz : testedClasses)
         {
             result.addAll(getListOfUnqualifiedTypeNames(clazz));
         }
@@ -168,7 +168,7 @@ public class BaseTools
      */
     private static String getNewWord(List<String> wordList, String word)
     {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         if(wordList.size() > 0)
             stringBuilder.append(wordList.getLast());
         stringBuilder.append(word);

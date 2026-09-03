@@ -39,11 +39,11 @@ public class SourceFolderContext
     {
         folderToLookupMap = new HashMap<>();
 
-        List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
-        for (IJavaProject project : javaProjectsFromWorkspace)
+        final List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
+        for (final IJavaProject project : javaProjectsFromWorkspace)
         {
-            List<SourceFolderMapping> testSourceFolder = Preferences.getInstance().getSourceMappingList(project);
-            for (SourceFolderMapping mapping : testSourceFolder)
+            final List<SourceFolderMapping> testSourceFolder = Preferences.getInstance().getSourceMappingList(project);
+            for (final SourceFolderMapping mapping : testSourceFolder)
             {
                 updateMap(mapping);
             }
@@ -52,9 +52,9 @@ public class SourceFolderContext
 
     private void updateMap(SourceFolderMapping mapping)
     {
-        for (IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
+        for (final IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
         {
-            List<IPackageFragmentRoot> list = new ArrayList<>();
+            final List<IPackageFragmentRoot> list = new ArrayList<>();
             list.add(mapping.getTestFolder());
             updateMap(sourceFolder, list);
         }
@@ -66,12 +66,12 @@ public class SourceFolderContext
     {
         if(folderToLookupMap.containsKey(key))
         {
-            List<IPackageFragmentRoot> list = folderToLookupMap.get(key);
+            final List<IPackageFragmentRoot> list = folderToLookupMap.get(key);
             list.addAll(value);
         }
         else
         {
-            List<IPackageFragmentRoot> list = new ArrayList<>();
+            final List<IPackageFragmentRoot> list = new ArrayList<>();
             list.addAll(value);
             folderToLookupMap.put(key, list);
         }
@@ -87,16 +87,16 @@ public class SourceFolderContext
         // you can not take the source folder for test because this method is
         // used
         // to jump from the test to the CUT as well
-        List<IPackageFragmentRoot> resultList = new ArrayList<>();
+        final List<IPackageFragmentRoot> resultList = new ArrayList<>();
         try
         {
-            for (IPackageFragmentRoot fragmentRoot : baseFolder.getJavaProject().getPackageFragmentRoots())
+            for (final IPackageFragmentRoot fragmentRoot : baseFolder.getJavaProject().getPackageFragmentRoots())
             {
                 if(! fragmentRoot.isArchive())
                     resultList.add(fragmentRoot);
             }
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }

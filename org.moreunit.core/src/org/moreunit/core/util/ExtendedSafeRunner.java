@@ -30,8 +30,8 @@ public class ExtendedSafeRunner
 
     public <E, R> Iterable<R> applyTo(Iterable<E> elements, GenericRunnable<E, R> code)
     {
-        List<R> results = new ArrayList<>();
-        for (E element : elements)
+        final List<R> results = new ArrayList<>();
+        for (final E element : elements)
         {
             results.add(applyTo(element, code));
         }

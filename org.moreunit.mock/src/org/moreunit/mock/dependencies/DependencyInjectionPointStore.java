@@ -30,13 +30,13 @@ public class DependencyInjectionPointStore
 
         try
         {
-            for (IMember member : members)
+            for (final IMember member : members)
             {
-                if(member instanceof IField field)
+                if(member instanceof final IField field)
                 {
                     fields.add(field);
                 }
-                else if(member instanceof IMethod method)
+                else if(member instanceof final IMethod method)
                 {
                     if(method.isConstructor())
                     {
@@ -49,7 +49,7 @@ public class DependencyInjectionPointStore
                 }
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             logger.error("Error while feeding injection points' store", e);
         }

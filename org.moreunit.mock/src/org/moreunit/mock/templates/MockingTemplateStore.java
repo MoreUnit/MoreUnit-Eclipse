@@ -19,7 +19,7 @@ public class MockingTemplateStore implements Service
 
     public void store(MockingTemplates mockingTemplates) throws TemplateAlreadyDefinedException
     {
-        for (Category category : mockingTemplates.categories())
+        for (final Category category : mockingTemplates.categories())
         {
             if(! categories.containsKey(category.id()))
             {
@@ -27,7 +27,7 @@ public class MockingTemplateStore implements Service
             }
         }
 
-        for (MockingTemplate template : mockingTemplates)
+        for (final MockingTemplate template : mockingTemplates)
         {
             store(template);
         }

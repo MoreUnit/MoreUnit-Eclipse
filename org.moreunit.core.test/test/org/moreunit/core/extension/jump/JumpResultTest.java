@@ -10,7 +10,7 @@ public class JumpResultTest
     @Test
     public void done_should_return_done_result()
     {
-        JumpResult result = JumpResult.done();
+        final JumpResult result = JumpResult.done();
 
         assertTrue(result.isDone());
     }
@@ -18,7 +18,7 @@ public class JumpResultTest
     @Test
     public void notDone_should_return_not_done_result()
     {
-        JumpResult result = JumpResult.notDone();
+        final JumpResult result = JumpResult.notDone();
 
         assertFalse(result.isDone());
     }
@@ -26,7 +26,7 @@ public class JumpResultTest
     @Test
     public void isDone_should_return_true_for_done_result()
     {
-        JumpResult result = JumpResult.done();
+        final JumpResult result = JumpResult.done();
 
         assertTrue(result.isDone());
     }
@@ -34,7 +34,7 @@ public class JumpResultTest
     @Test
     public void isDone_should_return_false_for_not_done_result()
     {
-        JumpResult result = JumpResult.notDone();
+        final JumpResult result = JumpResult.notDone();
 
         assertFalse(result.isDone());
     }

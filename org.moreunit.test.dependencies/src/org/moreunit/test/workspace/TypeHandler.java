@@ -32,7 +32,7 @@ public class TypeHandler implements ElementHandler<IType, TypeAssertions>
         {
             return new MethodHandler(this, WorkspaceHelper.createMethodInJavaType(type, signature, content));
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             throw new RuntimeException(e);
         }

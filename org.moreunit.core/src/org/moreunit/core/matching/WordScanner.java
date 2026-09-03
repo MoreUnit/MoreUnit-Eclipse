@@ -101,8 +101,8 @@ public class WordScanner
 
     public String getCurrentWord()
     {
-        int end = currentWordEnd != - 1 ? currentWordEnd : index;
-        String currentWord = new String(name, currentWordStart, end - currentWordStart + 1);
+        final int end = currentWordEnd != - 1 ? currentWordEnd : index;
+        final String currentWord = new String(name, currentWordStart, end - currentWordStart + 1);
         currentWordStart = end + 1;
         currentWordEnd = - 1;
         return currentWord;

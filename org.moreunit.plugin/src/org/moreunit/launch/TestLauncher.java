@@ -51,7 +51,7 @@ public class TestLauncher
 
     public void launch(String testType, Collection< ? extends IMember> testMembers, String launchMode)
     {
-        ILaunchShortcut launchShortcut = getLaunchShortcut(testType, testMembers);
+        final ILaunchShortcut launchShortcut = getLaunchShortcut(testType, testMembers);
         if(launchShortcut == null)
         {
             LogHandler.getInstance().handleWarnLog("No launch shortcut found for: (" + testType + ", " + testMembers + ")");
@@ -64,13 +64,13 @@ public class TestLauncher
 
     private ILaunchShortcut getLaunchShortcut(String testType, Collection< ? extends IMember> testMembers)
     {
-        ILaunchShortcut shortcut = getAdditionalShortcutFromPluginExtension(testType, testMembers);
+        final ILaunchShortcut shortcut = getAdditionalShortcutFromPluginExtension(testType, testMembers);
         if(shortcut != null)
         {
             return shortcut;
         }
 
-        String testExtensionNamespaceId = EXTENSIONS_BY_TEST_TYPE.get(testType);
+        final String testExtensionNamespaceId = EXTENSIONS_BY_TEST_TYPE.get(testType);
 
         // returns our own launch shortcut, capable of running a test selection
         if(testMembers.size() > 1 && JUNIT_EXTENSION_NAMESPACE_ID.equals(testExtensionNamespaceId))
@@ -83,20 +83,20 @@ public class TestLauncher
 
     private ILaunchShortcut getAdditionalShortcutFromPluginExtension(String testType, Collection< ? extends IMember> testMembers)
     {
-        Class< ? extends IMember> memberClass = testMembers.iterator().next().getClass();
+        final Class< ? extends IMember> memberClass = testMembers.iterator().next().getClass();
         return additionalShortcutProvider.getShorcutFor(testType, memberClass, Cardinality.fromElementCount(testMembers.size()));
     }
 
     private ILaunchShortcut getShortcutFromDedicatedTestExtension(String testExtensionNamespaceId)
     {
-        IExtension testExtension = getTestExtension(testExtensionNamespaceId);
+        final IExtension testExtension = getTestExtension(testExtensionNamespaceId);
         if(testExtension == null)
         {
             LogHandler.getInstance().handleWarnLog("Extension not found: " + testExtensionNamespaceId);
             return null;
         }
 
-        IConfigurationElement[] configurationElements = testExtension.getConfigurationElements();
+        final IConfigurationElement[] configurationElements = testExtension.getConfigurationElements();
         if(configurationElements.length == 0)
         {
             return null;
@@ -106,7 +106,7 @@ public class TestLauncher
         {
             return (ILaunchShortcut) configurationElements[0].createExecutableExtension(CONFIG_PROPERTY_CLASS);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
             return null;
@@ -115,16 +115,15 @@ public class TestLauncher
 
     private IExtension getTestExtension(String testExtensionNamespaceId)
     {
-        IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(IDebugUIConstants.PLUGIN_ID, IDebugUIConstants.EXTENSION_POINT_LAUNCH_SHORTCUTS);
+        final IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(IDebugUIConstants.PLUGIN_ID, IDebugUIConstants.EXTENSION_POINT_LAUNCH_SHORTCUTS);
         if(extensionPoint == null)
         {
             return null;
         }
 
-        IExtension[] extensions = extensionPoint.getExtensions();
-        for (int i = 0; i < extensions.length; i++)
+        final IExtension[] extensions = extensionPoint.getExtensions();
+        for (final IExtension currentExtension : extensions)
         {
-            IExtension currentExtension = extensions[i];
             if(testExtensionNamespaceId.equals(currentExtension.getNamespaceIdentifier()))
             {
                 return currentExtension;

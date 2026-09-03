@@ -21,7 +21,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
 	@BeforeEach
 	public void before()
 	{
-		for(SWTBotEditor editor : bot.editors())
+		for(final SWTBotEditor editor : bot.editors())
 		{
 			editor.close();
 		}
@@ -80,9 +80,9 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
     public void should_jump_from_method_to_test_method()
     {
     	openResource("HelloWorld.java");
-    	SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
+    	final SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
     	// move cursor to method
-    	int lineNumberOfMethod = 6;
+    	final int lineNumberOfMethod = 6;
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
 		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethod));
     	getShortcutStrategy().pressJumpShortcut();
@@ -94,7 +94,7 @@ public class BasicJumpTest extends JavaProjectSWTBotTestHelper
             @Override
             public boolean test() throws Exception
             {
-                SWTBotEclipseEditor textEditor = JavaProjectSWTBotTestHelper.bot.activeEditor().toTextEditor();
+                final SWTBotEclipseEditor textEditor = JavaProjectSWTBotTestHelper.bot.activeEditor().toTextEditor();
                 return textEditor.cursorPosition().line == lineNumberOfTestMethod;
             }
             

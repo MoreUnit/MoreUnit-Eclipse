@@ -7,7 +7,7 @@ public class TestClassNameTemplateBuilder
 {
     public String buildFromSettings(String[] prefixes, String[] suffixes, boolean flexibleNaming)
     {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         if(prefixes.length != 0)
         {

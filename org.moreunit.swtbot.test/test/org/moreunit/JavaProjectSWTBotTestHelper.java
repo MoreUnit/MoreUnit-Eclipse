@@ -73,7 +73,7 @@ public class JavaProjectSWTBotTestHelper
             {
                 KeyboardLayout.getDefaultKeyboardLayout();
             }
-            catch(IllegalArgumentException exc)
+            catch(final IllegalArgumentException exc)
             {
                 SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
             }
@@ -90,7 +90,7 @@ public class JavaProjectSWTBotTestHelper
     @AfterEach
     public void afterAndAfter()
     {
-        for (SWTBotEditor editor : bot.editors())
+        for (final SWTBotEditor editor : bot.editors())
         {
             editor.close();
         }
@@ -110,13 +110,13 @@ public class JavaProjectSWTBotTestHelper
     {
         try
         {
-            SWTBotView welcomeView = bot.viewByTitle("Welcome");
+            final SWTBotView welcomeView = bot.viewByTitle("Welcome");
             if(welcomeView.isActive())
             {
                 welcomeView.close();
             }
         }
-        catch (WidgetNotFoundException e)
+        catch (final WidgetNotFoundException e)
         {
             // ignored
         }
@@ -132,7 +132,7 @@ public class JavaProjectSWTBotTestHelper
         bot.menu("Navigate").menu("Open Resource...").click();
         SWTBotHelper.forceSWTBotShellsRecomputeNameCache(bot);
         bot.waitUntil(Conditions.shellIsActive("Open Resource"));
-        SWTBotText searchField = new SWTBotText(bot.widget(widgetOfType(Text.class)));
+        final SWTBotText searchField = new SWTBotText(bot.widget(widgetOfType(Text.class)));
         searchField.setText(resourceName);
 
         bot.waitUntil(new DefaultCondition()
@@ -194,14 +194,14 @@ public class JavaProjectSWTBotTestHelper
 
     protected SWTBotTreeItem selectAndReturnJavaProjectFromPackageExplorer()
     {
-        SWTBotView packageExplorerView = bot.viewByTitle("Package Explorer");
+        final SWTBotView packageExplorerView = bot.viewByTitle("Package Explorer");
 
-        List<Tree> findControls = new ChildrenControlFinder(packageExplorerView.getWidget()).findControls(WidgetOfType.widgetOfType(Tree.class));
+        final List<Tree> findControls = new ChildrenControlFinder(packageExplorerView.getWidget()).findControls(WidgetOfType.widgetOfType(Tree.class));
         assertFalse(findControls.isEmpty());
 
-        SWTBotTree tree = new SWTBotTree(findControls.getFirst());
+        final SWTBotTree tree = new SWTBotTree(findControls.getFirst());
 
-        SWTBotTreeItem projectNode = tree.expandNode(getProjectNameFromContext());
+        final SWTBotTreeItem projectNode = tree.expandNode(getProjectNameFromContext());
         tree.select(projectNode);
 
         return projectNode;
@@ -214,13 +214,13 @@ public class JavaProjectSWTBotTestHelper
 
     protected SWTBotTreeItem selectAndReturnPackageWithName(String packageName)
     {
-        SWTBotTreeItem projectNode = selectAndReturnJavaProjectFromPackageExplorer();
+        final SWTBotTreeItem projectNode = selectAndReturnJavaProjectFromPackageExplorer();
 
-        SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
+        final SWTBotTreeItem sourcesFolder = projectNode.getNode("src");
         sourcesFolder.select();
         sourcesFolder.expand();
 
-        SWTBotTreeItem orgPackage = sourcesFolder.getNode(packageName);
+        final SWTBotTreeItem orgPackage = sourcesFolder.getNode(packageName);
         orgPackage.select();
 
         return orgPackage;
@@ -238,7 +238,7 @@ public class JavaProjectSWTBotTestHelper
 
     protected static boolean isRunningOnLinuxOrWindows()
     {
-        String osName = System.getProperty("os.name");
+        final String osName = System.getProperty("os.name");
         return osName.contains("Linux") || osName.contains("Win");
     }
 
@@ -256,14 +256,7 @@ public class JavaProjectSWTBotTestHelper
             public boolean matches(Object item)
             {
                 final Shell shell = (Shell) item;
-                String text = UIThreadRunnable.syncExec(shell.getDisplay(), new Result<String>()
-                {
-                    @Override
-                    public String run()
-                    {
-                        return shell.getText();
-                    }
-                });
+                final String text = UIThreadRunnable.syncExec(shell.getDisplay(), (Result<String>) () -> shell.getText());
                 return text.startsWith(textStart);
             }
         };

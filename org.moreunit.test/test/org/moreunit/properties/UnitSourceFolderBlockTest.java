@@ -52,7 +52,7 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
     @Test
     public void should_display_mappings_from_preferences()
     {
-        List<SourceFolderMapping> mappings = block.getListOfUnitSourceFolder();
+        final List<SourceFolderMapping> mappings = block.getListOfUnitSourceFolder();
 
         assertEquals(1, mappings.size());
         assertEquals(context.getProjectHandler().getTestSrcFolderHandler().get(), mappings.get(0).getTestFolder());
@@ -65,11 +65,11 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
         Preferences.getInstance().setMappingList(javaProject, new ArrayList<>());
         try
         {
-            MoreUnitPropertyPage pageWithoutMappings = new MoreUnitPropertyPage();
+            final MoreUnitPropertyPage pageWithoutMappings = new MoreUnitPropertyPage();
             pageWithoutMappings.setElement(javaProject);
             createContents(pageWithoutMappings, shell);
 
-            UnitSourceFolderBlock emptyBlock = (UnitSourceFolderBlock) getField(pageWithoutMappings, "firstTabUnitSourceFolder");
+            final UnitSourceFolderBlock emptyBlock = (UnitSourceFolderBlock) getField(pageWithoutMappings, "firstTabUnitSourceFolder");
 
             assertEquals("Choose at least one test folder!", emptyBlock.getError());
             assertEquals("Choose at least one test folder!", pageWithoutMappings.getErrorMessage());
@@ -83,8 +83,8 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
     @Test
     public void should_enable_remove_and_remap_buttons_when_a_mapping_is_selected()
     {
-        Button removeButton = findButton(shell, "Remove");
-        Button mappingButton = findButton(shell, "Remap");
+        final Button removeButton = findButton(shell, "Remove");
+        final Button mappingButton = findButton(shell, "Remap");
 
         assertFalse(removeButton.getEnabled());
         assertFalse(mappingButton.getEnabled());
@@ -114,7 +114,7 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
     @Test
     public void should_add_mappings_when_wizard_perform_finish_is_reported()
     {
-        SourceFolderMapping newMapping = new SourceFolderMapping(javaProject, context.getProjectHandler().getMainSrcFolderHandler().get(),
+        final SourceFolderMapping newMapping = new SourceFolderMapping(javaProject, context.getProjectHandler().getMainSrcFolderHandler().get(),
                 context.getProjectHandler().getTestSrcFolderHandler().get());
 
         block.handlePerformFinishFromAddUnitSourceFolderWizard(List.of(newMapping));
@@ -126,7 +126,7 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
     @Test
     public void should_ignore_empty_mapping_list_on_wizard_perform_finish()
     {
-        int initialSize = block.getListOfUnitSourceFolder().size();
+        final int initialSize = block.getListOfUnitSourceFolder().size();
 
         block.handlePerformFinishFromAddUnitSourceFolderWizard(List.of());
 
@@ -136,7 +136,7 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
     @Test
     public void should_update_source_folders_of_selected_mapping()
     {
-        List<IPackageFragmentRoot> newSourceFolders = List.of(context.getProjectHandler().getMainSrcFolderHandler().get());
+        final List<IPackageFragmentRoot> newSourceFolders = List.of(context.getProjectHandler().getMainSrcFolderHandler().get());
 
         block.handleSourceDialogMappingFinished(mapping, newSourceFolders);
 
@@ -152,7 +152,7 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
             block.saveProperties();
 
             assertEquals(1, Preferences.getInstance().getSourceMappingList(javaProject).size());
-            String storedMappings = Preferences.getInstance().getProjectStore(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+            final String storedMappings = Preferences.getInstance().getProjectStore(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
             assertNotNull(storedMappings);
             assertFalse(storedMappings.isEmpty());
         }
@@ -186,7 +186,7 @@ public class UnitSourceFolderBlockTest extends SwtPageTestCase
 
     private void createDefaultButtonsSelectionEvents()
     {
-        for (String buttonText : List.of("Add", "Remove", "Remap"))
+        for (final String buttonText : List.of("Add", "Remove", "Remap"))
         {
             findButton(shell, buttonText).notifyListeners(SWT.DefaultSelection, new Event());
         }

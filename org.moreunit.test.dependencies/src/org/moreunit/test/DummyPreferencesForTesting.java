@@ -15,10 +15,10 @@ public final class DummyPreferencesForTesting extends Preferences
     {
         Preferences.setInstance(this);
 
-        IPreferenceStore workbenchStore = getWorkbenchStore();
+        final IPreferenceStore workbenchStore = getWorkbenchStore();
 
         // reset
-        for (String p : asList(PreferenceConstants.PREF_JUNIT_PATH, //
+        for (final String p : asList(PreferenceConstants.PREF_JUNIT_PATH, //
                                PreferenceConstants.TEST_TYPE, //
                                PreferenceConstants.SHOW_REFACTORING_DIALOG, //
                                PreferenceConstants.SWITCH_TO_MATCHING_METHOD, //
@@ -39,7 +39,7 @@ public final class DummyPreferencesForTesting extends Preferences
 
     public void forceProjectPreferencesMigration(IJavaProject project)
     {
-        IPreferenceStore store = getProjectStore(project);
+        final IPreferenceStore store = getProjectStore(project);
         migratePrefsIfRequired(store);
     }
 

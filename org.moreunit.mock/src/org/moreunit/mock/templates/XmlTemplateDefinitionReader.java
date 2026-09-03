@@ -23,20 +23,20 @@ public class XmlTemplateDefinitionReader
     {
         try
         {
-            JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
+            final JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
             unmarshaller = jc.createUnmarshaller();
         }
-        catch (JAXBException e)
+        catch (final JAXBException e)
         {
             throw new RuntimeException("Could not create unmarshaller", e);
         }
 
         try
         {
-            SchemaFactory schemaFactoy = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final SchemaFactory schemaFactoy = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             unmarshaller.setSchema(schemaFactoy.newSchema(xsd));
         }
-        catch (SAXException e)
+        catch (final SAXException e)
         {
             // ignored, XML won't be validated
         }
@@ -50,7 +50,7 @@ public class XmlTemplateDefinitionReader
             is = url.openStream();
             return read(is);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new MockingTemplateException("Could not open XML definition URL", e);
         }
@@ -66,7 +66,7 @@ public class XmlTemplateDefinitionReader
         {
             return (MockingTemplates) unmarshaller.unmarshal(is);
         }
-        catch (JAXBException e)
+        catch (final JAXBException e)
         {
             throw new MockingTemplateException("Could not read XML definition", e);
         }

@@ -51,13 +51,13 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
+        final IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
         if(openEditorPart == null)
         {
             return null;
         }
 
-        IFile openFile = conversionUtils.getFile(openEditorPart);
+        final IFile openFile = conversionUtils.getFile(openEditorPart);
         if(openFile == null)
         {
             return null;
@@ -82,14 +82,14 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
             return;
         }
 
-        boolean compilationUnitIsTestCase = facadeFactory.isTestCase(compilationUnit);
-        IType classUnderTest = getClassUnderTest(compilationUnit, compilationUnitIsTestCase);
+        final boolean compilationUnitIsTestCase = facadeFactory.isTestCase(compilationUnit);
+        final IType classUnderTest = getClassUnderTest(compilationUnit, compilationUnitIsTestCase);
         if(classUnderTest == null) // selection canceled by user
         {
             return;
         }
 
-        IType testCase = getTestCaseType(compilationUnit, compilationUnitIsTestCase);
+        final IType testCase = getTestCaseType(compilationUnit, compilationUnitIsTestCase);
 
         // selection canceled by user, or test case created during the call (in
         // which case the user could use the "New Test Case" wizard's page
@@ -106,7 +106,7 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
     {
         if(compilationUnitIsTestCase)
         {
-            CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+            final CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
             .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
             .createClassIfNoResult("Class under test...") //
             .build();
@@ -127,8 +127,8 @@ public class MockDependenciesAction extends AbstractHandler implements IEditorAc
         }
         else
         {
-            ClassTypeFacade classFacade = facadeFactory.createClassFacade(editedCompilationUnit);
-            CorrespondingTestCase testCase = classFacade.getOneCorrespondingTestCase(true, "Mock dependencies in...");
+            final ClassTypeFacade classFacade = facadeFactory.createClassFacade(editedCompilationUnit);
+            final CorrespondingTestCase testCase = classFacade.getOneCorrespondingTestCase(true, "Mock dependencies in...");
             return testCase.hasJustBeenCreated() ? null : testCase.get();
         }
     }

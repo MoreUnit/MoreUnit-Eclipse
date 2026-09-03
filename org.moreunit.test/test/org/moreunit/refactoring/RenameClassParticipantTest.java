@@ -41,10 +41,10 @@ public class RenameClassParticipantTest extends ContextTestCase
     @Test
     public void checkConditions_should_return_ok_status()
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new RenameArguments("NewFoo", true));
 
-        RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
+        final RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
 
         assertNotNull(status);
         assertTrue(status.isOK());
@@ -53,7 +53,7 @@ public class RenameClassParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_return_null_when_references_should_not_be_updated() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new RenameArguments("NewFoo", false));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -62,11 +62,11 @@ public class RenameClassParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_rename_corresponding_test_case() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new RenameArguments("NewFoo", true));
         awaitSearchResult(() -> new org.moreunit.elements.ClassTypeFacade(context.getCompilationUnit("com.Foo")).getCorrespondingTestCases());
 
-        Change change = participant.createChange(new NullProgressMonitor());
+        final Change change = participant.createChange(new NullProgressMonitor());
 
         assertNotNull(change);
     }
@@ -74,11 +74,11 @@ public class RenameClassParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_keep_test_name_prefix_or_suffix_around_new_name() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new RenameArguments("NewFoo", true));
         awaitSearchResult(() -> new org.moreunit.elements.ClassTypeFacade(context.getCompilationUnit("com.Foo")).getCorrespondingTestCases());
 
-        Change change = participant.createChange(new NullProgressMonitor());
+        final Change change = participant.createChange(new NullProgressMonitor());
 
         // FooTest should become NewFooTest: the change must not be named after
         // a failed refactoring (a non-null change means conditions were met)
@@ -93,8 +93,8 @@ public class RenameClassParticipantTest extends ContextTestCase
      */
     private void awaitSearchResult(java.util.function.Supplier<java.util.Collection< ? >> search) throws Exception
     {
-        org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
-        long deadline = System.currentTimeMillis() + 20_000;
+        final org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 20_000;
         while (System.currentTimeMillis() < deadline)
         {
             if(! search.get().isEmpty())

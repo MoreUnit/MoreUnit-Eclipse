@@ -35,7 +35,7 @@ public abstract class SwtPageTestCase extends ContextTestCase
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -59,11 +59,11 @@ public abstract class SwtPageTestCase extends ContextTestCase
     {
         try
         {
-            Field field = findField(target.getClass(), fieldName);
+            final Field field = findField(target.getClass(), fieldName);
             field.setAccessible(true);
             return field.get(target);
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
             throw new RuntimeException(e);
         }
@@ -73,11 +73,11 @@ public abstract class SwtPageTestCase extends ContextTestCase
     {
         try
         {
-            Field field = findField(target.getClass(), fieldName);
+            final Field field = findField(target.getClass(), fieldName);
             field.setAccessible(true);
             field.set(target, value);
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
             throw new RuntimeException(e);
         }
@@ -91,7 +91,7 @@ public abstract class SwtPageTestCase extends ContextTestCase
             {
                 return current.getDeclaredField(name);
             }
-            catch (NoSuchFieldException e)
+            catch (final NoSuchFieldException e)
             {
                 // continue with superclass
             }
@@ -103,13 +103,13 @@ public abstract class SwtPageTestCase extends ContextTestCase
     {
         try
         {
-            Method method = findMethod(target.getClass(), methodName, args);
+            final Method method = findMethod(target.getClass(), methodName, args);
             method.setAccessible(true);
             return method.invoke(target, args);
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
-            if(e.getCause() instanceof RuntimeException re)
+            if(e.getCause() instanceof final RuntimeException re)
                 throw re;
             throw new RuntimeException(e);
         }
@@ -119,7 +119,7 @@ public abstract class SwtPageTestCase extends ContextTestCase
     {
         for (Class<?> current = c; current != null; current = current.getSuperclass())
         {
-            for (Method method : current.getDeclaredMethods())
+            for (final Method method : current.getDeclaredMethods())
             {
                 if(method.getName().equals(name) && method.getParameterCount() == args.length)
                 {
@@ -142,15 +142,15 @@ public abstract class SwtPageTestCase extends ContextTestCase
 
     protected static Button findButton(Composite composite, String text)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
-            if(control instanceof Button button && text.equals(button.getText()))
+            if(control instanceof final Button button && text.equals(button.getText()))
             {
                 return button;
             }
-            if(control instanceof Composite child)
+            if(control instanceof final Composite child)
             {
-                Button button = findButton(child, text);
+                final Button button = findButton(child, text);
                 if(button != null)
                 {
                     return button;
@@ -171,12 +171,11 @@ public abstract class SwtPageTestCase extends ContextTestCase
      */
     protected static Text findTextByLabel(Composite composite, String labelText)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
-            if(control instanceof Label && labelText.equals(((Label) control).getText()))
+            if(control instanceof final Label label && labelText.equals(label.getText()))
             {
-                Label label = (Label) control;
-                Control[] siblings = label.getParent().getChildren();
+                final Control[] siblings = label.getParent().getChildren();
                 for (int i = indexOf(siblings, label); i < siblings.length - 1; i++)
                 {
                     if(siblings[i + 1] instanceof Text)
@@ -185,9 +184,9 @@ public abstract class SwtPageTestCase extends ContextTestCase
                     }
                 }
             }
-            if(control instanceof Composite child)
+            if(control instanceof final Composite child)
             {
-                Text text = findTextByLabel(child, labelText);
+                final Text text = findTextByLabel(child, labelText);
                 if(text != null)
                 {
                     return text;
@@ -211,15 +210,15 @@ public abstract class SwtPageTestCase extends ContextTestCase
 
     protected static Text findTextWithTooltip(Composite composite, String tooltip)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
-            if(control instanceof Text text && tooltip.equals(text.getToolTipText()))
+            if(control instanceof final Text text && tooltip.equals(text.getToolTipText()))
             {
                 return text;
             }
-            if(control instanceof Composite child)
+            if(control instanceof final Composite child)
             {
-                Text text = findTextWithTooltip(child, tooltip);
+                final Text text = findTextWithTooltip(child, tooltip);
                 if(text != null)
                 {
                     return text;
@@ -231,7 +230,7 @@ public abstract class SwtPageTestCase extends ContextTestCase
 
     protected static List<Widget> allWidgets(Composite composite)
     {
-        List<Widget> widgets = new ArrayList<>();
+        final List<Widget> widgets = new ArrayList<>();
         collectWidgets(composite, widgets);
         return widgets;
     }
@@ -239,10 +238,10 @@ public abstract class SwtPageTestCase extends ContextTestCase
     private static void collectWidgets(Composite composite, List<Widget> widgets)
     {
         widgets.add(composite);
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
             widgets.add(control);
-            if(control instanceof Composite child)
+            if(control instanceof final Composite child)
             {
                 collectWidgets(child, widgets);
             }

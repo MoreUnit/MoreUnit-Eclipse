@@ -35,7 +35,7 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
     @Override
     public void createControl(Composite parent)
     {
-        GridLayout gridLayout = new GridLayout();
+        final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 1;
         parent.setLayout(gridLayout);
 
@@ -58,22 +58,22 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
     @Override
     public void checkStateChanged(CheckStateChangedEvent event)
     {
-        Object element = event.getElement();
-        boolean isChecked = event.getChecked();
+        final Object element = event.getElement();
+        final boolean isChecked = event.getChecked();
 
         if(element instanceof IJavaProject)
         {
             checkboxTreeViewer.setGrayed(element, false);
-            Object[] children = workspaceSourceFolderContentProvider.getChildren(element);
+            final Object[] children = workspaceSourceFolderContentProvider.getChildren(element);
 
-            for (Object sourceFolder : children)
+            for (final Object sourceFolder : children)
             {
                 checkboxTreeViewer.setChecked(sourceFolder, isChecked);
             }
         }
         else if(element instanceof IPackageFragmentRoot)
         {
-            Object javaProject = workspaceSourceFolderContentProvider.getParent(element);
+            final Object javaProject = workspaceSourceFolderContentProvider.getParent(element);
             if(isChecked && areAllSourceFolderInProjectSelected(javaProject))
             {
                 checkboxTreeViewer.setGrayed(javaProject, false);
@@ -92,8 +92,8 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 
     private boolean areAllSourceFolderInProjectSelected(Object javaProjectElement)
     {
-        Object[] children = workspaceSourceFolderContentProvider.getChildren(javaProjectElement);
-        for (Object child : children)
+        final Object[] children = workspaceSourceFolderContentProvider.getChildren(javaProjectElement);
+        for (final Object child : children)
         {
             if(! checkboxTreeViewer.getChecked(child))
                 return false;
@@ -104,8 +104,8 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 
     private boolean isNoSourceFolderInProjectSelected(Object javaProjectElement)
     {
-        Object[] children = workspaceSourceFolderContentProvider.getChildren(javaProjectElement);
-        for (Object child : children)
+        final Object[] children = workspaceSourceFolderContentProvider.getChildren(javaProjectElement);
+        for (final Object child : children)
         {
             if(checkboxTreeViewer.getChecked(child))
                 return false;
@@ -116,12 +116,12 @@ public class AddUnitSourceFolderWizardPage extends WizardPage implements ICheckS
 
     protected List<IPackageFragmentRoot> getSelectedSourceFolder()
     {
-        List<IPackageFragmentRoot> selectedFolders = new ArrayList<>();
-        Object[] checkedElements = checkboxTreeViewer.getCheckedElements();
+        final List<IPackageFragmentRoot> selectedFolders = new ArrayList<>();
+        final Object[] checkedElements = checkboxTreeViewer.getCheckedElements();
 
-        for (Object checkedElement : checkedElements)
+        for (final Object checkedElement : checkedElements)
         {
-            if(checkedElement instanceof IPackageFragmentRoot root)
+            if(checkedElement instanceof final IPackageFragmentRoot root)
                 selectedFolders.add(root);
         }
 

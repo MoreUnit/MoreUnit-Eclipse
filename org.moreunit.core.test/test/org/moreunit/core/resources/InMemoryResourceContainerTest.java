@@ -13,15 +13,15 @@ public class InMemoryResourceContainerTest {
 
     @Test
     public void testGetFileAndFolder() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
 
-        File file = project.getFile("folder/file.txt");
+        final File file = project.getFile("folder/file.txt");
         assertNotNull(file);
         assertEquals("file.txt", file.getName());
         assertEquals("/project/folder/file.txt", file.getPath().toString());
 
-        Folder folder = project.getFolder("folder/subfolder");
+        final Folder folder = project.getFolder("folder/subfolder");
         assertNotNull(folder);
         assertEquals("subfolder", folder.getName());
         assertEquals("/project/folder/subfolder", folder.getPath().toString());
@@ -29,11 +29,11 @@ public class InMemoryResourceContainerTest {
 
     @Test
     public void testDelete() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
 
-        File file = project.getFile("folder/file.txt");
-        Folder folder = project.getFolder("folder/subfolder");
+        final File file = project.getFile("folder/file.txt");
+        final Folder folder = project.getFolder("folder/subfolder");
 
         file.create();
         folder.create();
@@ -49,48 +49,48 @@ public class InMemoryResourceContainerTest {
 
     @Test
     public void testListFilesAndFolders() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
 
-        File file1 = project.getFile("file1.txt");
+        final File file1 = project.getFile("file1.txt");
         file1.create();
         project.getFile("file2.txt");
         // file2 not created
 
-        Folder folder1 = project.getFolder("folder1");
+        final Folder folder1 = project.getFolder("folder1");
         folder1.create();
         project.getFolder("folder2");
         // folder2 not created
 
-        List<File> files = project.listFiles();
+        final List<File> files = project.listFiles();
         assertEquals(1, files.size());
         assertTrue(files.contains(file1));
 
-        List<Folder> folders = project.listFolders();
+        final List<Folder> folders = project.listFolders();
         assertEquals(1, folders.size());
         assertTrue(folders.contains(folder1));
     }
 
     @Test
     public void testIsParentOf() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
 
-        File file = project.getFile("folder/file.txt");
+        final File file = project.getFile("folder/file.txt");
 
         assertTrue(project.isParentOf(file));
 
-        InMemoryProject otherProject = workspace.getProject("otherProject");
+        final InMemoryProject otherProject = workspace.getProject("otherProject");
         assertFalse(otherProject.isParentOf(file));
     }
 
     @Test
     public void testCreateWithRecord() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
-        Folder folder = project.getFolder("folder1/folder2");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
+        final Folder folder = project.getFolder("folder1/folder2");
 
-        ContainerCreationRecord record = folder.createWithRecord();
+        final ContainerCreationRecord record = folder.createWithRecord();
         assertTrue(folder.exists());
         assertNotNull(record);
     }

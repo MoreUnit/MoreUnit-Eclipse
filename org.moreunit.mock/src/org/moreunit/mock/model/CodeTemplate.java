@@ -67,7 +67,7 @@ public class CodeTemplate
             return true;
         }
 
-        for (InclusionCondition condition : inclusionConditions)
+        for (final InclusionCondition condition : inclusionConditions)
         {
             if(condition instanceof ExcludeIf)
             {
@@ -114,7 +114,7 @@ public class CodeTemplate
         {
             return false;
         }
-        CodeTemplate other = (CodeTemplate) obj;
+        final CodeTemplate other = (CodeTemplate) obj;
         if(id == null)
         {
             if(other.id != null)

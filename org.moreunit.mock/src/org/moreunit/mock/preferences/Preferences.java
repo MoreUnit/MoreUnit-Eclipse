@@ -28,8 +28,8 @@ public class Preferences
 
     private void registerDefaultValues()
     {
-        IPreferenceStore workspaceStore = storeManager.getWorkspaceStore();
-        for (Preference< ? > preference : ALL_PREFERENCES)
+        final IPreferenceStore workspaceStore = storeManager.getWorkspaceStore();
+        for (final Preference< ? > preference : ALL_PREFERENCES)
         {
             preference.registerDefaultValue(workspaceStore);
         }
@@ -42,7 +42,7 @@ public class Preferences
 
     public void setMockingTemplate(IJavaProject project, String templateId)
     {
-        IPreferenceStore store = store(project, true);
+        final IPreferenceStore store = store(project, true);
         store.setValue(MOCKING_TEMPLATE.name, templateId);
         storeManager.save(project, store);
     }

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class EclipseResourcesTest extends ResourcesTest
 {
-    private IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    private final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
     @AfterEach
     public void cleanWorkspace() throws Exception
@@ -32,7 +32,7 @@ public class EclipseResourcesTest extends ResourcesTest
     @Override
     protected void assertContainsFiles(Project project, String... fileNames)
     {
-        var names = new ArrayList<>();
+        final var names = new ArrayList<>();
         names.add(".project");
         names.addAll(Arrays.asList(fileNames));
         super.assertContainsFiles(project, names.toArray(new String[0]));
@@ -41,7 +41,7 @@ public class EclipseResourcesTest extends ResourcesTest
     @Override
     protected void assertContainsFolders(ResourceContainer container, String... folderNames)
     {
-        List<String> expectedFolders = new ArrayList<>(namesOf(container.listFolders()));
+        final List<String> expectedFolders = new ArrayList<>(namesOf(container.listFolders()));
         expectedFolders.removeIf(".settings"::equals);
         assertEquals(Arrays.asList(folderNames), expectedFolders);
     }
@@ -49,8 +49,8 @@ public class EclipseResourcesTest extends ResourcesTest
     @Test
     public void createFolder_using_string_path_should_create_folder() throws Exception
     {
-        String path = "/project1/createFolderStringPathTest";
-        Resources.CreatedFolder created = Resources.createFolder(path);
+        final String path = "/project1/createFolderStringPathTest";
+        final Resources.CreatedFolder created = Resources.createFolder(path);
         assertTrue(created.get().exists());
     }
 

@@ -48,8 +48,8 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     {
         methodsByType = groupMethodsByType(methods);
 
-        List<IType> sortedTypes = sortTypes(types);
-        Set<IType> allTypes = new LinkedHashSet<>(sortedTypes);
+        final List<IType> sortedTypes = sortTypes(types);
+        final Set<IType> allTypes = new LinkedHashSet<>(sortedTypes);
         allTypes.addAll(sortTypes(methodsByType.keySet()));
         this.elements = allTypes.toArray();
 
@@ -67,7 +67,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     {
         methodsByType = new HashMap<>();
 
-        List<IType> sortedTypes = sortTypes(types);
+        final List<IType> sortedTypes = sortTypes(types);
         this.elements = sortedTypes.toArray();
 
         defaultSelection = getDefaultSelection(typeProposedForSelection, sortedTypes);
@@ -75,10 +75,10 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     private Map<IType, List<IMethod>> groupMethodsByType(Collection<IMethod> methods)
     {
-        Map<IType, List<IMethod>> methodsByType = new LinkedHashMap<>();
-        for (IMethod method : methods)
+        final Map<IType, List<IMethod>> methodsByType = new LinkedHashMap<>();
+        for (final IMethod method : methods)
         {
-            IType type = method.getDeclaringType();
+            final IType type = method.getDeclaringType();
             List<IMethod> methodsForType = methodsByType.get(type);
             if(methodsForType == null)
             {
@@ -88,7 +88,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
             methodsForType.add(method);
         }
 
-        for (List<IMethod> typeMethods : methodsByType.values())
+        for (final List<IMethod> typeMethods : methodsByType.values())
         {
             Collections.sort(typeMethods, new MethodComparator());
         }
@@ -98,7 +98,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     private List<IType> sortTypes(Collection<IType> types)
     {
-        List<IType> list = new ArrayList<>(types);
+        final List<IType> list = new ArrayList<>(types);
         Collections.sort(list, new TypeComparator());
         return list;
     }
@@ -113,7 +113,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
         else if(! types.isEmpty())
         {
             defaultSelectedMember = types.getFirst();
-            List<IMethod> methods = methodsByType.get(defaultSelectedMember);
+            final List<IMethod> methods = methodsByType.get(defaultSelectedMember);
             if(methods != null && ! methods.isEmpty())
             {
                 defaultSelectedMember = methods.getFirst();
@@ -125,7 +125,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
     @Override
     public Object[] getChildren(Object parentElement)
     {
-        List<IMethod> children = methodsByType.get(parentElement);
+        final List<IMethod> children = methodsByType.get(parentElement);
         return children == null ? new IMethod[0] : children.toArray();
     }
 
@@ -165,7 +165,7 @@ public class MemberContentProvider implements ITreeContentAndDefaultSelectionPro
 
     public MemberContentProvider withAction(TreeActionElement< ? > action)
     {
-        List<Object> elements = new ArrayList<>();
+        final List<Object> elements = new ArrayList<>();
         Collections.addAll(elements, this.elements);
 
         if(! elements.isEmpty() && ! (elements.getLast() instanceof SeparatorElement))

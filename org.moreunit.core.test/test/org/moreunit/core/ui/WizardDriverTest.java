@@ -14,8 +14,8 @@ public class WizardDriverTest
     @Test
     public void configure_does_nothing()
     {
-        WizardDriver driver = new WizardDriver() {};
-        DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
+        final WizardDriver driver = new WizardDriver() {};
+        final DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
 
         // This is mainly to satisfy coverage on the empty method
         driver.configure(dialog);
@@ -24,8 +24,8 @@ public class WizardDriverTest
     @Test
     public void onOpen_returns_OK_by_default()
     {
-        WizardDriver driver = new WizardDriver() {};
-        DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
+        final WizardDriver driver = new WizardDriver() {};
+        final DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
 
         assertEquals(driver.onOpen(dialog), Window.OK);
     }
@@ -33,9 +33,9 @@ public class WizardDriverTest
     @Test
     public void userValidatesCreation_performs_finish_and_returns_OK()
     {
-        WizardDriver driver = new WizardDriver() {};
-        DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
-        IWizard wizard = mock(IWizard.class);
+        final WizardDriver driver = new WizardDriver() {};
+        final DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
+        final IWizard wizard = mock(IWizard.class);
         when(dialog.getWizard()).thenReturn(wizard);
 
         assertEquals(driver.userValidatesCreation(dialog), Window.OK);
@@ -45,9 +45,9 @@ public class WizardDriverTest
     @Test
     public void userCancelsCreation_performs_cancel_and_returns_CANCEL()
     {
-        WizardDriver driver = new WizardDriver() {};
-        DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
-        IWizard wizard = mock(IWizard.class);
+        final WizardDriver driver = new WizardDriver() {};
+        final DrivableWizardDialog dialog = mock(DrivableWizardDialog.class);
+        final IWizard wizard = mock(IWizard.class);
         when(dialog.getWizard()).thenReturn(wizard);
 
         assertEquals(driver.userCancelsCreation(dialog), Window.CANCEL);

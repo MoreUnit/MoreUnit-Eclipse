@@ -9,8 +9,8 @@ public class InMemoryProjectTest {
 
     @Test
     public void testAddToParentAndGetName() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = new InMemoryProject("my-project", workspace);
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = new InMemoryProject("my-project", workspace);
 
         assertEquals(project.getName(), "my-project");
         assertSame(project.getParent(), workspace);

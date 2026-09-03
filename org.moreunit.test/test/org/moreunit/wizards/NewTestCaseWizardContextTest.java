@@ -34,7 +34,7 @@ public class NewTestCaseWizardContextTest
     @Test
     public void should_return_created_test_case()
     {
-        IType testCase = mock(IType.class);
+        final IType testCase = mock(IType.class);
         context.setCreatedTestCase(testCase);
 
         assertEquals(testCase, context.getCreatedTestCase());
@@ -43,7 +43,7 @@ public class NewTestCaseWizardContextTest
     @Test
     public void should_return_test_case_package_from_page_one()
     {
-        IPackageFragment packageFragment = mock(IPackageFragment.class);
+        final IPackageFragment packageFragment = mock(IPackageFragment.class);
         when(pageOne.getTestCasePackage()).thenReturn(packageFragment);
 
         assertEquals(packageFragment, context.getTestCasePackage());
@@ -52,7 +52,7 @@ public class NewTestCaseWizardContextTest
     @Test
     public void should_return_test_type_from_page_one()
     {
-        TestType testType = mock(TestType.class);
+        final TestType testType = mock(TestType.class);
         when(pageOne.getTestType()).thenReturn(testType);
 
         assertEquals(testType, context.getTestType());
@@ -64,8 +64,8 @@ public class NewTestCaseWizardContextTest
         context.put("key1", "value1");
         context.put("key2", 42);
 
-        String val1 = context.get("key1");
-        Integer val2 = context.get("key2");
+        final String val1 = context.get("key1");
+        final Integer val2 = context.get("key2");
 
         assertEquals("value1", val1);
         assertEquals(Integer.valueOf(42), val2);

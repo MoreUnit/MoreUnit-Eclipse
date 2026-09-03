@@ -20,7 +20,7 @@ public enum LanguageType
 
     public static LanguageType forExtension(String ext)
     {
-        for (LanguageType l : values())
+        for (final LanguageType l : values())
         {
             if(l.extension != null && l.extension.equals(ext))
             {

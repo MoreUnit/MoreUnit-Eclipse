@@ -42,7 +42,7 @@ public class ConstructorInjectionPatternResolverTest
     public void should_call_constructor_when_no_dependency() throws Exception
     {
         // when
-        String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre new ${objectUnderTestType}() post");
@@ -55,7 +55,7 @@ public class ConstructorInjectionPatternResolverTest
         dependencies.injectableByConstructor().add(new Dependency("pack.age.Foo", "foo"));
 
         // when
-        String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre new ${objectUnderTestType}(foo) post");
@@ -70,7 +70,7 @@ public class ConstructorInjectionPatternResolverTest
         dependencies.injectableByConstructor().add(new Dependency("BlobClass", "aBlob"));
 
         // when
-        String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:constructWithDependencies(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre new ${objectUnderTestType}(foo,bar,aBlob) post");

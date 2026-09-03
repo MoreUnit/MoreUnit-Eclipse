@@ -27,11 +27,11 @@ public abstract class FileNamePatternDemo
 
     public void createContents(Composite parent)
     {
-        Composite composite = new Composite(parent, SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new GridLayout(3, false));
         composite.setLayoutData(LayoutData.fillRow());
 
-        Link testLink = Composites.link(composite, "Test");
+        final Link testLink = Composites.link(composite, "Test");
 
         Label label = new Label(composite, SWT.NONE);
         label.setText("your pattern with the following file:");
@@ -52,15 +52,15 @@ public abstract class FileNamePatternDemo
             @Override
             public void widgetSelected(SelectionEvent e)
             {
-                TestFileNamePattern pattern = getPattern();
-                String fileName = inputField.getText().trim();
+                final TestFileNamePattern pattern = getPattern();
+                final String fileName = inputField.getText().trim();
 
                 if(fileName.length() == 0)
                 {
                     inputField.setText(generateSourceFileName(pattern));
                 }
 
-                FileNameEvaluation evaluation = pattern.evaluate(fileName);
+                final FileNameEvaluation evaluation = pattern.evaluate(fileName);
 
                 fileTypeLbl.setText(fileName + " is a " + (evaluation.isTestFile() ? "test" : "source") + " file");
 
@@ -81,8 +81,8 @@ public abstract class FileNamePatternDemo
 
     private String createOutput(FileNameEvaluation evaluation)
     {
-        StringBuilder sb = new StringBuilder();
-        for (String p : evaluation.getAllCorrespondingFileEclipsePatterns())
+        final StringBuilder sb = new StringBuilder();
+        for (final String p : evaluation.getAllCorrespondingFileEclipsePatterns())
         {
             if(sb.length() != 0)
             {
@@ -99,9 +99,9 @@ public abstract class FileNamePatternDemo
 
     public static String generateSourceFileName(TestFileNamePattern pattern)
     {
-        Iterator<String> words = WORD_POOL.iterator();
+        final Iterator<String> words = WORD_POOL.iterator();
 
-        String separator = pattern.getSeparator();
+        final String separator = pattern.getSeparator();
 
         if(separator.length() == 0)
         {

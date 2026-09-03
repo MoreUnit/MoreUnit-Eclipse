@@ -3,18 +3,14 @@ package org.moreunit.core.preferences;
 import static org.moreunit.core.util.Strings.countOccurrences;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.moreunit.core.matching.TestFileNamePattern;
 import org.moreunit.core.ui.Composites;
 import org.moreunit.core.ui.ExpandableCompositeContainer;
-import org.moreunit.core.ui.ExpandableCompositeContainer.ExpandableContent;
 import org.moreunit.core.ui.FileNamePatternDemo;
 import org.moreunit.core.ui.Labels;
 import org.moreunit.core.ui.LayoutData;
@@ -43,7 +39,7 @@ public class TestFileNamePatternGroup
         this.container = container;
         this.prefWriter = prefsWriter;
 
-        Composite fileTplGroup = Composites.gridGroup(parent, "Rule for naming test files:", 2, 10);
+        final Composite fileTplGroup = Composites.gridGroup(parent, "Rule for naming test files:", 2, 10);
 
         testFileTemplateField = createFileTemplateField(fileTplGroup);
         wordSeparatorField = createWordSeparatorField(fileTplGroup, forceCamelCase);
@@ -53,10 +49,10 @@ public class TestFileNamePatternGroup
 
     private Text createFileTemplateField(Composite parent)
     {
-        Label label = new Label(parent, SWT.NONE);
+        final Label label = new Label(parent, SWT.NONE);
         label.setText("Pattern:");
 
-        Text field = new Text(parent, SWT.SINGLE | SWT.BORDER);
+        final Text field = new Text(parent, SWT.SINGLE | SWT.BORDER);
         field.setLayoutData(LayoutData.labelledField());
 
         if(prefWriter.getTestFileNameTemplate().length() != 0)
@@ -78,10 +74,10 @@ public class TestFileNamePatternGroup
             return new OptionalTextField("");
         }
 
-        Label label = new Label(parent, SWT.NONE);
+        final Label label = new Label(parent, SWT.NONE);
         label.setText("Word separator:");
 
-        Text field = new Text(parent, SWT.SINGLE | SWT.BORDER);
+        final Text field = new Text(parent, SWT.SINGLE | SWT.BORDER);
         field.setLayoutData(LayoutData.labelledField());
 
         if(prefWriter.getFileWordSeparator().length() != 0)
@@ -100,32 +96,27 @@ public class TestFileNamePatternGroup
     {
         Labels.placeHolder(parent, 1);
 
-        Label lbl = new Label(parent, SWT.NONE);
+        final Label lbl = new Label(parent, SWT.NONE);
         lbl.setLayoutData(LayoutData.labelledField());
         lbl.setText(TestFileNamePattern.SRC_FILE_VARIABLE + " = source file name, * = any string, (abc|def) = 'abc' or 'def'");
 
-        container.newExpandableComposite(parent, "More explanations...", false, new ExpandableContent()
-        {
-            @Override
-            public Control createBody(ExpandableComposite expandableComposite)
+        container.newExpandableComposite(parent, "More explanations...", false, expandableComposite -> {
+            final Composite inner = new Composite(expandableComposite, SWT.NONE);
+            inner.setFont(parent.getFont());
+            inner.setLayout(new GridLayout());
+
+            final String[] explanations = { //
+            "Use the variable " + TestFileNamePattern.SRC_FILE_VARIABLE + " to represent the production source file.", //
+            "You may use stars '*' to represent variable parts.", //
+            "You may use parentheses and pipes to define several possible prefixes or suffixes: (pre1|pre2)" };
+
+            for (final String e : explanations)
             {
-                Composite inner = new Composite(expandableComposite, SWT.NONE);
-                inner.setFont(parent.getFont());
-                inner.setLayout(new GridLayout());
-
-                String[] explanations = { //
-                "Use the variable " + TestFileNamePattern.SRC_FILE_VARIABLE + " to represent the production source file.", //
-                "You may use stars '*' to represent variable parts.", //
-                "You may use parentheses and pipes to define several possible prefixes or suffixes: (pre1|pre2)" };
-
-                for (String e : explanations)
-                {
-                    Label lbl = Labels.wrappingLabel(e, EXPLANATION_WIDTH_HINT, inner);
-                    lbl.setText(e);
-                }
-
-                return inner;
+                final Label lbl1 = Labels.wrappingLabel(e, EXPLANATION_WIDTH_HINT, inner);
+                lbl1.setText(e);
             }
+
+            return inner;
         });
     }
 
@@ -146,26 +137,14 @@ public class TestFileNamePatternGroup
             }
         };
 
-        wordSeparatorField.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
-            {
-                demo.patternChanged();
-            }
-        });
+        wordSeparatorField.addModifyListener(e -> demo.patternChanged());
 
-        container.newExpandableComposite(parent, "Demonstration", false, new ExpandableContent()
-        {
-            @Override
-            public Control createBody(ExpandableComposite expandableComposite)
-            {
-                Composite inner = new Composite(expandableComposite, SWT.NONE);
-                inner.setFont(parent.getFont());
-                inner.setLayout(new GridLayout());
-                demo.createContents(inner);
-                return inner;
-            }
+        container.newExpandableComposite(parent, "Demonstration", false, expandableComposite -> {
+            final Composite inner = new Composite(expandableComposite, SWT.NONE);
+            inner.setFont(parent.getFont());
+            inner.setLayout(new GridLayout());
+            demo.createContents(inner);
+            return inner;
         });
 
         // initializes demo field
@@ -198,8 +177,8 @@ public class TestFileNamePatternGroup
 
     private String validateTestFileTemplate()
     {
-        String testFileTemplate = testFileTemplateField.getText().trim();
-        String separator = wordSeparatorField.getText();
+        final String testFileTemplate = testFileTemplateField.getText().trim();
+        final String separator = wordSeparatorField.getText();
 
         String errorMsg = null;
         if(testFileTemplate.length() == 0)

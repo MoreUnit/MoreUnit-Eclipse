@@ -61,11 +61,11 @@ public class ChooseDialogTest extends SwtPageTestCase
 
     private IType mockType(String name, String packageName)
     {
-        IType type = mock(IType.class);
+        final IType type = mock(IType.class);
         when(type.getElementName()).thenReturn(name);
         when(type.getFullyQualifiedName()).thenReturn(packageName + "." + name);
         when(type.getFullyQualifiedName('.')).thenReturn(packageName + "." + name);
-        IPackageFragment packageFragment = mock(IPackageFragment.class);
+        final IPackageFragment packageFragment = mock(IPackageFragment.class);
         when(packageFragment.getElementName()).thenReturn(packageName);
         when(type.getPackageFragment()).thenReturn(packageFragment);
         return type;
@@ -73,7 +73,7 @@ public class ChooseDialogTest extends SwtPageTestCase
 
     private ChooseDialog<Object> createDialog(IType... types)
     {
-        MemberContentProvider provider = new MemberContentProvider(Arrays.asList(types), Collections.<IMethod> emptySet(), null);
+        final MemberContentProvider provider = new MemberContentProvider(Arrays.asList(types), Collections.<IMethod> emptySet(), null);
         dialog = new ChooseDialog<>("Choose a type", provider);
         return dialog;
     }
@@ -86,7 +86,7 @@ public class ChooseDialogTest extends SwtPageTestCase
         assertNotNull(dialog.getShell());
         assertFalse(dialog.getShell().isDisposed());
 
-        TreeViewer treeViewer = (TreeViewer) getField(dialog, "treeViewer");
+        final TreeViewer treeViewer = (TreeViewer) getField(dialog, "treeViewer");
         assertNotNull(treeViewer);
         assertEquals(2, treeViewer.getTree().getItemCount());
     }
@@ -103,10 +103,10 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_close_when_escape_is_pressed()
     {
         dialog = createDialog(type1, type2);
-        Shell shell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell shell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
 
-        Event event = new Event();
+        final Event event = new Event();
         event.widget = tree;
         event.character = SWT.ESC;
         tree.notifyListeners(SWT.KeyDown, event);
@@ -119,8 +119,8 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_close_and_keep_selection_when_element_is_confirmed()
     {
         dialog = createDialog(type1, type2);
-        Shell shell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell shell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
 
         tree.setSelection(tree.getItem(1));
         tree.notifyListeners(SWT.DefaultSelection, new Event());
@@ -133,18 +133,19 @@ public class ChooseDialogTest extends SwtPageTestCase
     @Test
     public void should_execute_action_element_when_confirmed()
     {
-        Object result = mock(IType.class);
+        final Object result = mock(IType.class);
         @SuppressWarnings("unchecked")
+        final
         TreeActionElement<Object> action = mock(TreeActionElement.class);
         when(action.provideElement()).thenReturn(true);
         when(action.execute()).thenReturn(result);
         when(action.getText()).thenReturn("New Class...");
 
-        MemberContentProvider provider = new MemberContentProvider(Arrays.asList(type1), Collections.<IMethod> emptySet(), null);
+        final MemberContentProvider provider = new MemberContentProvider(Arrays.asList(type1), Collections.<IMethod> emptySet(), null);
         provider.withAction(action);
         dialog = new ChooseDialog<>("Choose", provider);
-        Shell shell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell shell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
 
         // last item is the action element
         tree.setSelection(tree.getItem(tree.getItemCount() - 1));
@@ -158,15 +159,16 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_not_execute_nor_close_when_action_does_not_provide_element()
     {
         @SuppressWarnings("unchecked")
+        final
         TreeActionElement<Object> action = mock(TreeActionElement.class);
         when(action.provideElement()).thenReturn(false);
         when(action.getText()).thenReturn("New Class...");
 
-        MemberContentProvider provider = new MemberContentProvider(Arrays.asList(type1), Collections.<IMethod> emptySet(), null);
+        final MemberContentProvider provider = new MemberContentProvider(Arrays.asList(type1), Collections.<IMethod> emptySet(), null);
         provider.withAction(action);
         dialog = new ChooseDialog<>("Choose", provider);
-        Shell shell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell shell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
 
         tree.setSelection(tree.getItem(tree.getItemCount() - 1));
         tree.notifyListeners(SWT.DefaultSelection, new Event());
@@ -180,24 +182,24 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_select_item_under_mouse_when_mouse_moves()
     {
         dialog = createDialog(type1, type2);
-        Tree tree = treeOf(dialog);
+        final Tree tree = treeOf(dialog);
         shell.open();
         while (display.readAndDispatch())
         {
         }
 
-        TreeItem item2 = tree.getItem(1);
+        final TreeItem item2 = tree.getItem(1);
         item2.setData(type2);
         tree.setSelection(tree.getItem(0));
 
-        Rectangle bounds = item2.getBounds();
-        Event event = new Event();
+        final Rectangle bounds = item2.getBounds();
+        final Event event = new Event();
         event.widget = tree;
         event.x = bounds.x + bounds.width / 2;
         event.y = bounds.y + bounds.height / 2;
         tree.notifyListeners(SWT.MouseMove, event);
 
-        TreeItem[] selection = tree.getSelection();
+        final TreeItem[] selection = tree.getSelection();
         assertEquals(1, selection.length);
         assertEquals(item2, selection[0]);
     }
@@ -206,18 +208,18 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_confirm_selection_when_mouse_is_released_on_selected_item()
     {
         dialog = createDialog(type1, type2);
-        Shell dialogShell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell dialogShell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
         shell.open();
         while (display.readAndDispatch())
         {
         }
 
-        TreeItem item1 = tree.getItem(0);
+        final TreeItem item1 = tree.getItem(0);
         tree.setSelection(item1);
 
-        Rectangle bounds = item1.getBounds();
-        Event event = new Event();
+        final Rectangle bounds = item1.getBounds();
+        final Event event = new Event();
         event.widget = tree;
         event.button = 1;
         event.x = bounds.x + bounds.width / 2;
@@ -232,19 +234,19 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_not_close_when_mouse_is_released_on_a_different_item()
     {
         dialog = createDialog(type1, type2);
-        Shell shell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell shell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
         shell.open();
         while (display.readAndDispatch())
         {
         }
 
-        TreeItem item1 = tree.getItem(0);
-        TreeItem item2 = tree.getItem(1);
+        final TreeItem item1 = tree.getItem(0);
+        final TreeItem item2 = tree.getItem(1);
         tree.setSelection(item1);
 
-        Rectangle bounds = item2.getBounds();
-        Event event = new Event();
+        final Rectangle bounds = item2.getBounds();
+        final Event event = new Event();
         event.widget = tree;
         event.button = 1;
         event.x = bounds.x + bounds.width / 2;
@@ -258,20 +260,20 @@ public class ChooseDialogTest extends SwtPageTestCase
     public void should_scroll_when_mouse_moves_repeatedly_to_the_edges_of_the_tree()
     {
         dialog = createDialog(type1, type2);
-        Shell dialogShell = dialog.getShell();
-        Tree tree = treeOf(dialog);
+        final Shell dialogShell = dialog.getShell();
+        final Tree tree = treeOf(dialog);
         dialogShell.open();
         while (display.readAndDispatch())
         {
         }
 
-        TreeItem item1 = tree.getItem(0);
-        TreeItem item2 = tree.getItem(1);
+        final TreeItem item1 = tree.getItem(0);
+        final TreeItem item2 = tree.getItem(1);
         tree.setSelection(item1);
 
-        int itemHeight = tree.getItemHeight();
-        Rectangle bounds = item1.getBounds();
-        int x = bounds.x + Math.max(bounds.width / 2, 5);
+        final int itemHeight = tree.getItemHeight();
+        final Rectangle bounds = item1.getBounds();
+        final int x = bounds.x + Math.max(bounds.width / 2, 5);
 
         // two identical moves near the top edge trigger the "scroll up" branch
         tree.setSelection(item2);
@@ -279,9 +281,9 @@ public class ChooseDialogTest extends SwtPageTestCase
         fireMouseMove(tree, x, Math.max(bounds.y + 1, 1));
 
         // two identical moves near the bottom edge trigger the "scroll down" branch
-        org.eclipse.swt.graphics.Rectangle treeBounds = tree.getBounds();
-        Rectangle bottomBounds = item2.getBounds();
-        int bottomY = Math.min(treeBounds.height - itemHeight / 4 + 1, bottomBounds.y + bottomBounds.height - 1);
+        final org.eclipse.swt.graphics.Rectangle treeBounds = tree.getBounds();
+        final Rectangle bottomBounds = item2.getBounds();
+        final int bottomY = Math.min(treeBounds.height - itemHeight / 4 + 1, bottomBounds.y + bottomBounds.height - 1);
         tree.setSelection(item2);
         fireMouseMove(tree, x, Math.max(bottomY, 1));
         fireMouseMove(tree, x, Math.max(bottomY, 1));
@@ -291,7 +293,7 @@ public class ChooseDialogTest extends SwtPageTestCase
 
     private void fireMouseMove(Tree tree, int x, int y)
     {
-        Event event = new Event();
+        final Event event = new Event();
         event.widget = tree;
         event.x = x;
         event.y = y;
@@ -300,7 +302,7 @@ public class ChooseDialogTest extends SwtPageTestCase
 
     private Tree treeOf(ChooseDialog<?> dialog)
     {
-        TreeViewer treeViewer = (TreeViewer) getField(dialog, "treeViewer");
+        final TreeViewer treeViewer = (TreeViewer) getField(dialog, "treeViewer");
         return treeViewer.getTree();
     }
 
@@ -309,15 +311,15 @@ public class ChooseDialogTest extends SwtPageTestCase
     {
         dialog = createDialog(type1, type2);
 
-        Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Set<Shell> knownShells = DialogHelper.knownShells(display);
         knownShells.remove(dialog.getShell()); // the popup shell already exists
         display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "Type2"), 2000));
 
-        java.util.concurrent.atomic.AtomicReference<Object> choice = new java.util.concurrent.atomic.AtomicReference<>();
-        Thread background = new Thread(() -> choice.set(Display.getDefault().syncCall(dialog::getChoice)));
+        final java.util.concurrent.atomic.AtomicReference<Object> choice = new java.util.concurrent.atomic.AtomicReference<>();
+        final Thread background = new Thread(() -> choice.set(Display.getDefault().syncCall(dialog::getChoice)));
         background.start();
 
-        long deadline = System.currentTimeMillis() + 30_000;
+        final long deadline = System.currentTimeMillis() + 30_000;
         while (background.isAlive() && System.currentTimeMillis() < deadline)
         {
             while (display.readAndDispatch())
@@ -336,15 +338,15 @@ public class ChooseDialogTest extends SwtPageTestCase
     {
         dialog = createDialog(type1, type2);
 
-        Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Set<Shell> knownShells = DialogHelper.knownShells(display);
         knownShells.remove(dialog.getShell());
         display.asyncExec(DialogHelper.closerFor(display, knownShells, Shell::close, 2000));
 
-        java.util.concurrent.atomic.AtomicReference<Object> choice = new java.util.concurrent.atomic.AtomicReference<>();
-        Thread background = new Thread(() -> choice.set(Display.getDefault().syncCall(dialog::getChoice)));
+        final java.util.concurrent.atomic.AtomicReference<Object> choice = new java.util.concurrent.atomic.AtomicReference<>();
+        final Thread background = new Thread(() -> choice.set(Display.getDefault().syncCall(dialog::getChoice)));
         background.start();
 
-        long deadline = System.currentTimeMillis() + 30_000;
+        final long deadline = System.currentTimeMillis() + 30_000;
         while (background.isAlive() && System.currentTimeMillis() < deadline)
         {
             while (display.readAndDispatch())

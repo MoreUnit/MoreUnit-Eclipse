@@ -13,7 +13,7 @@ public class WordScannerTest
     public void should_return_false_when_checking_has_next_with_large_offset() throws Exception
     {
         // given
-        WordScanner scanner = new WordScanner("a");
+        final WordScanner scanner = new WordScanner("a");
 
         // then
         assertFalse(scanner.hasNext(10));
@@ -23,7 +23,7 @@ public class WordScannerTest
     public void should_return_false_when_checking_has_previous_with_large_offset() throws Exception
     {
         // given
-        WordScanner scanner = new WordScanner("a");
+        final WordScanner scanner = new WordScanner("a");
 
         // then
         assertFalse(scanner.hasPrevious(10));
@@ -39,7 +39,7 @@ public class WordScannerTest
     public void should_accept_empty_string() throws Exception
     {
         // given
-        WordScanner scanner = new WordScanner("");
+        final WordScanner scanner = new WordScanner("");
 
         // then
         assertFalse(scanner.hasNext());
@@ -59,7 +59,7 @@ public class WordScannerTest
     public void should_navigate_into_string() throws Exception
     {
         // given
-        WordScanner scanner = new WordScanner("some text");
+        final WordScanner scanner = new WordScanner("some text");
 
         // then (start index is -1)
         assertTrue(scanner.hasNext());
@@ -170,7 +170,7 @@ public class WordScannerTest
     public void should_remember_word_cuts() throws Exception
     {
         // given
-        WordScanner scanner = new WordScanner("some text");
+        final WordScanner scanner = new WordScanner("some text");
 
         // when
         scanner.forward(3);
@@ -192,7 +192,7 @@ public class WordScannerTest
     public void should_reject_invalid_word_bounds() throws Exception
     {
         // given
-        WordScanner scanner = new WordScanner("some text");
+        final WordScanner scanner = new WordScanner("some text");
 
         // when
         scanner.forward(7);

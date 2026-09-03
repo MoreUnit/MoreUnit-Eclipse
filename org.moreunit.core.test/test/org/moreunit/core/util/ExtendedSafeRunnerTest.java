@@ -13,8 +13,8 @@ public class ExtendedSafeRunnerTest
     @Test
     public void applyTo_should_execute_code_and_return_result()
     {
-        ExtendedSafeRunner runner = new ExtendedSafeRunner();
-        String result = runner.applyTo("input", new GenericRunnable<String, String>()
+        final ExtendedSafeRunner runner = new ExtendedSafeRunner();
+        final String result = runner.applyTo("input", new GenericRunnable<String, String>()
         {
             @Override
             public String run(String element) throws Exception
@@ -34,8 +34,8 @@ public class ExtendedSafeRunnerTest
     @Test
     public void applyTo_iterable_should_execute_code_for_each_element()
     {
-        ExtendedSafeRunner runner = new ExtendedSafeRunner();
-        Iterable<String> results = runner.applyTo(Arrays.asList("a", "b"), new GenericRunnable<String, String>()
+        final ExtendedSafeRunner runner = new ExtendedSafeRunner();
+        final Iterable<String> results = runner.applyTo(Arrays.asList("a", "b"), new GenericRunnable<String, String>()
         {
             @Override
             public String run(String element) throws Exception
@@ -55,7 +55,7 @@ public class ExtendedSafeRunnerTest
     @Test
     public void applyTo_should_handle_exception()
     {
-        ExtendedSafeRunner runner = new ExtendedSafeRunner();
+        final ExtendedSafeRunner runner = new ExtendedSafeRunner();
         final boolean[] exceptionHandled = { false };
 
         runner.applyTo("input", new GenericRunnable<String, String>()

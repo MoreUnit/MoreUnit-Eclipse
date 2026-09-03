@@ -35,11 +35,11 @@ public class FileMatcher
 
     public MatchResult match(MatchStrategy strategy) throws DoesNotMatchConfigurationException
     {
-        FileNameEvaluation nameEvaluation = file.evaluateName();
-        SourceFolderPath correspondingSrcFolder = file.findCorrespondingSrcFolder();
+        final FileNameEvaluation nameEvaluation = file.evaluateName();
+        final SourceFolderPath correspondingSrcFolder = file.findCorrespondingSrcFolder();
 
-        FileMatchCollector matchCollector = strategy.createMatchCollector(correspondingSrcFolder);
-        Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
+        final FileMatchCollector matchCollector = strategy.createMatchCollector(correspondingSrcFolder);
+        final Resource searchFolder = correspondingSrcFolder.getResolvedPartAsResource();
 
         searchFor(nameEvaluation.getAllCorrespondingFilePatterns(), searchFolder, matchCollector);
 
@@ -53,7 +53,7 @@ public class FileMatcher
             return;
         }
 
-        Pattern fileNamePattern2 = createFileNamePattern(file, filePatterns);
+        final Pattern fileNamePattern2 = createFileNamePattern(file, filePatterns);
         searchEngine.searchFiles(searchFolder, fileNamePattern2, matchCollector);
     }
 
@@ -66,7 +66,7 @@ public class FileMatcher
     {
         StringBuilder sb = null;
         // creates an OR pattern with file names
-        for (String fileName : correspondingFileNames)
+        for (final String fileName : correspondingFileNames)
         {
             if(sb == null)
             {
@@ -81,7 +81,7 @@ public class FileMatcher
 
         sb.append(")");
 
-        String extension = file.getExtension();
+        final String extension = file.getExtension();
 
         // creates an OR pattern with the file extension: same case OR lower
         // case OR upper case (so a file having an extension with a mixed case
@@ -93,7 +93,7 @@ public class FileMatcher
         .append("|").append(extension.toUpperCase()) //
         .append(")");
 
-        String regex = sb.toString();
+        final String regex = sb.toString();
         Pattern pattern = PATTERN_CACHE.get(regex);
         if (pattern == null)
         {

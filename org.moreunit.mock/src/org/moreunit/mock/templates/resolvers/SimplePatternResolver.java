@@ -17,14 +17,14 @@ public abstract class SimplePatternResolver implements PatternResolver
     @Override
     public String resolve(String codePattern)
     {
-        int startIdx = codePattern.indexOf(prefix);
+        final int startIdx = codePattern.indexOf(prefix);
         if(startIdx != -1)
         {
-            int endIdx = codePattern.indexOf(")}", startIdx + prefix.length());
+            final int endIdx = codePattern.indexOf(")}", startIdx + prefix.length());
             if(endIdx != -1)
             {
-                String preMatch = codePattern.substring(0, startIdx);
-                String postMatch = codePattern.substring(endIdx + 2);
+                final String preMatch = codePattern.substring(0, startIdx);
+                final String postMatch = codePattern.substring(endIdx + 2);
                 return matched(preMatch, postMatch);
             }
         }

@@ -26,7 +26,7 @@ public class NewTestCaseWizardComposer
         }
 
         extensionPages.addAll(pagesToAdd);
-        for (INewTestCaseWizardPage page : pagesToAdd)
+        for (final INewTestCaseWizardPage page : pagesToAdd)
         {
             pagesById.put(page.getId(), page.getPage());
         }
@@ -41,9 +41,9 @@ public class NewTestCaseWizardComposer
     public void compose(NewTestCaseWizard wizard)
     {
         orderPages();
-        for (String pageId : orderedPageIds)
+        for (final String pageId : orderedPageIds)
         {
-            IWizardPage page = pagesById.get(pageId);
+            final IWizardPage page = pagesById.get(pageId);
             page.setWizard(wizard);
             wizard.addPage(page);
         }
@@ -57,7 +57,7 @@ public class NewTestCaseWizardComposer
 
         if(! extensionPages.isEmpty())
         {
-            for (INewTestCaseWizardPage extensionPage : extensionPages)
+            for (final INewTestCaseWizardPage extensionPage : extensionPages)
             {
                 orderedPageIds.add(extensionPage.getId());
             }
@@ -67,14 +67,14 @@ public class NewTestCaseWizardComposer
 
     private boolean insertExtensionPages()
     {
-        int startSize = extensionPages.size();
+        final int startSize = extensionPages.size();
 
-        for (Iterator<INewTestCaseWizardPage> extensionPageIt = extensionPages.iterator(); extensionPageIt.hasNext();)
+        for (final Iterator<INewTestCaseWizardPage> extensionPageIt = extensionPages.iterator(); extensionPageIt.hasNext();)
         {
-            INewTestCaseWizardPage extensionPage = extensionPageIt.next();
-            for (ListIterator<String> orderedPageIdIt = orderedPageIds.listIterator(); orderedPageIdIt.hasNext();)
+            final INewTestCaseWizardPage extensionPage = extensionPageIt.next();
+            for (final ListIterator<String> orderedPageIdIt = orderedPageIds.listIterator(); orderedPageIdIt.hasNext();)
             {
-                String orderedPageId = orderedPageIdIt.next();
+                final String orderedPageId = orderedPageIdIt.next();
                 if(extensionPage.getPosition().isAfter(orderedPageId))
                 {
                     orderedPageIds.add(orderedPageIdIt.nextIndex(), extensionPage.getId());

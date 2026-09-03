@@ -21,7 +21,7 @@ public class ConcreteSrcFile implements SrcFile
     private final File file;
     private final FileMatcher fileMatcher;
     private FileNameEvaluation nameEvaluation;
-    private LanguageExtensionManager languageExtensionManager;
+    private final LanguageExtensionManager languageExtensionManager;
 
     public ConcreteSrcFile(File file)
     {
@@ -47,8 +47,8 @@ public class ConcreteSrcFile implements SrcFile
     {
         if(nameEvaluation == null)
         {
-            TestFileNamePattern testFilePattern = getLanguagePreferences().getTestFileNamePattern();
-            String basename = file.getPath().getBaseNameWithoutExtension();
+            final TestFileNamePattern testFilePattern = getLanguagePreferences().getTestFileNamePattern();
+            final String basename = file.getPath().getBaseNameWithoutExtension();
             nameEvaluation = testFilePattern.evaluate(basename);
         }
         return nameEvaluation;
@@ -63,8 +63,8 @@ public class ConcreteSrcFile implements SrcFile
     @Override
     public SourceFolderPath findCorrespondingSrcFolder() throws DoesNotMatchConfigurationException
     {
-        TestFolderPathPattern folderPathPattern = getLanguagePreferences().getTestFolderPathPattern();
-        Path folderPath = getParent().getPath();
+        final TestFolderPathPattern folderPathPattern = getLanguagePreferences().getTestFolderPathPattern();
+        final Path folderPath = getParent().getPath();
 
         if(isTestFile())
         {

@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.JavaModelException;
 public class Field
 {
     private final IField field;
-    private boolean visibleToTestCase;
+    private final boolean visibleToTestCase;
 
     public Field(IField field, boolean visibleToTestCase)
     {
@@ -35,7 +35,7 @@ public class Field
     {
         // we can't just use fied.getAnnotation(annotationName).exists() as it
         // may return a cached value
-        for (IAnnotation annotation : field.getAnnotations())
+        for (final IAnnotation annotation : field.getAnnotations())
         {
             if(annotation.getElementName().matches("^([^\\.]+\\.)*" + annotationName + "$"))
             {

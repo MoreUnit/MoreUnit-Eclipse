@@ -45,38 +45,33 @@ public final class DialogHelper
      */
     public static Runnable closerFor(Display display, Set<Shell> knownShells, Consumer<Shell> action, int maxAttempts)
     {
-        return new Runnable()
-        {
-            @Override
-            public void run()
+        return () -> {
+            final Shell target = findNewShell(display, knownShells);
+            if(target != null)
             {
-                Shell target = findNewShell(display, knownShells);
-                if(target != null)
-                {
-                    action.accept(target);
-                    return;
-                }
-                if(maxAttempts <= 0)
-                {
-                    // give up: close any shell that appeared so the blocked
-                    // dialog call returns and the test fails on its assertion
-                    for (Shell shell : display.getShells())
-                    {
-                        if(! knownShells.contains(shell) && ! shell.isDisposed())
-                        {
-                            shell.close();
-                        }
-                    }
-                    return;
-                }
-                display.timerExec(20, DialogHelper.closerFor(display, knownShells, action, maxAttempts - 1));
+                action.accept(target);
+                return;
             }
+            if(maxAttempts <= 0)
+            {
+                // give up: close any shell that appeared so the blocked
+                // dialog call returns and the test fails on its assertion
+                for (final Shell shell : display.getShells())
+                {
+                    if(! knownShells.contains(shell) && ! shell.isDisposed())
+                    {
+                        shell.close();
+                    }
+                }
+                return;
+            }
+            display.timerExec(20, DialogHelper.closerFor(display, knownShells, action, maxAttempts - 1));
         };
     }
 
     public static Shell findNewShell(Display display, Set<Shell> knownShells)
     {
-        for (Shell shell : display.getShells())
+        for (final Shell shell : display.getShells())
         {
             if(! knownShells.contains(shell) && ! shell.isDisposed() && shell.isVisible())
             {
@@ -96,13 +91,13 @@ public final class DialogHelper
      */
     public static void confirmItem(Shell dialogShell, String itemText)
     {
-        Tree tree = findTree(dialogShell);
+        final Tree tree = findTree(dialogShell);
         if(tree == null)
         {
             dialogShell.close();
             return;
         }
-        for (TreeItem item : tree.getItems())
+        for (final TreeItem item : tree.getItems())
         {
             if(confirmItemOrChild(item, itemText))
             {
@@ -120,7 +115,7 @@ public final class DialogHelper
             item.getParent().notifyListeners(org.eclipse.swt.SWT.DefaultSelection, new Event());
             return true;
         }
-        for (TreeItem child : item.getItems())
+        for (final TreeItem child : item.getItems())
         {
             if(confirmItemOrChild(child, itemText))
             {
@@ -137,7 +132,7 @@ public final class DialogHelper
      */
     public static void confirmOkButton(Shell dialogShell)
     {
-        org.eclipse.swt.widgets.Button okButton = findButtonWithText(dialogShell, "OK");
+        final org.eclipse.swt.widgets.Button okButton = findButtonWithText(dialogShell, "OK");
         if(okButton != null)
         {
             okButton.notifyListeners(org.eclipse.swt.SWT.Selection, new Event());
@@ -152,15 +147,15 @@ public final class DialogHelper
         {
             return null;
         }
-        if(widget instanceof org.eclipse.swt.widgets.Button button && text.equals(button.getText()))
+        if(widget instanceof final org.eclipse.swt.widgets.Button button && text.equals(button.getText()))
         {
             return button;
         }
-        if(widget instanceof org.eclipse.swt.widgets.Composite composite)
+        if(widget instanceof final org.eclipse.swt.widgets.Composite composite)
         {
-            for (org.eclipse.swt.widgets.Control child : composite.getChildren())
+            for (final org.eclipse.swt.widgets.Control child : composite.getChildren())
             {
-                org.eclipse.swt.widgets.Button button = findButtonWithText(child, text);
+                final org.eclipse.swt.widgets.Button button = findButtonWithText(child, text);
                 if(button != null)
                 {
                     return button;
@@ -176,15 +171,15 @@ public final class DialogHelper
         {
             return null;
         }
-        if(control instanceof Tree tree)
+        if(control instanceof final Tree tree)
         {
             return tree;
         }
-        if(control instanceof org.eclipse.swt.widgets.Composite composite)
+        if(control instanceof final org.eclipse.swt.widgets.Composite composite)
         {
-            for (Control child : composite.getChildren())
+            for (final Control child : composite.getChildren())
             {
-                Tree tree = findTree(child);
+                final Tree tree = findTree(child);
                 if(tree != null)
                 {
                     return tree;

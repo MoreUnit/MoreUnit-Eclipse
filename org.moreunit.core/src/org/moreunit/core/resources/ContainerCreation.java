@@ -25,7 +25,7 @@ public class ContainerCreation
 
         record.addCreatedContainer(container);
 
-        ResourceContainer parentContainer = container.getParent();
+        final ResourceContainer parentContainer = container.getParent();
         if(! parentContainer.exists())
         {
             createContainerAndRecord(parentContainer, record);

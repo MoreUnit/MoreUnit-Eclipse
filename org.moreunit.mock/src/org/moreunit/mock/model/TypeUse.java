@@ -23,7 +23,7 @@ public class TypeUse<T extends TypeUse<T>> extends TypeRef<TypeUse<T>>
 
     public T withAnnotations(Collection<String> annotations)
     {
-        for (String a : annotations)
+        for (final String a : annotations)
         {
             this.annotations.add(new TypeAnnotation(a));
         }
@@ -60,7 +60,7 @@ public class TypeUse<T extends TypeUse<T>> extends TypeRef<TypeUse<T>>
             return false;
         }
 
-        TypeUse<?> other = (TypeUse<?>) obj;
+        final TypeUse<?> other = (TypeUse<?>) obj;
 
         if(typeParameters == null)
         {

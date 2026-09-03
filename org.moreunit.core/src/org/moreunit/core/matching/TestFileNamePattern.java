@@ -135,24 +135,19 @@ public final class TestFileNamePattern
     static
     {
         // ${sep} must be replaced with the actual separator before use
-        String separatorAndOrStar = "(\\*?(${sep})?)?((${sep})?\\*?)";
+        final String separatorAndOrStar = "(\\*?(${sep})?)?((${sep})?\\*?)";
         // non-brackets/pipe/star or protected ones
-        String authorizedChars = "(?:[^\\(\\|\\)\\*]|" + quote("\\)") + "|" + quote("\\(") + "|" + quote("\\*") + "|" + quote("\\|") + ")";
-        String prefixOrSuffix = separatorAndOrStar + "(\\(" + authorizedChars + "+?(\\|" + authorizedChars + "+?)*?\\)|" + authorizedChars + "*?)" + separatorAndOrStar;
+        final String authorizedChars = "(?:[^\\(\\|\\)\\*]|" + quote("\\)") + "|" + quote("\\(") + "|" + quote("\\*") + "|" + quote("\\|") + ")";
+        final String prefixOrSuffix = separatorAndOrStar + "(\\(" + authorizedChars + "+?(\\|" + authorizedChars + "+?)*?\\)|" + authorizedChars + "*?)" + separatorAndOrStar;
 
         VALIDATOR = "^" + prefixOrSuffix + quote(SRC_FILE_VARIABLE) + prefixOrSuffix + "$";
     }
 
     /* /end Various patterns */
 
-    private static final Comparator<String> byDescendingLength = new Comparator<>()
-    {
-        @Override
-        public int compare(String s1, String s2)
-        {
-            int result = Integer.valueOf(s2.length()).compareTo(s1.length());
-            return result != 0 ? result : s1.compareToIgnoreCase(s2);
-        }
+    private static final Comparator<String> byDescendingLength = (s1, s2) -> {
+        final int result = Integer.valueOf(s2.length()).compareTo(s1.length());
+        return result != 0 ? result : s1.compareToIgnoreCase(s2);
     };
 
     private final FileType fileType;
@@ -243,7 +238,7 @@ public final class TestFileNamePattern
         wildCardAfterVariable = parserResult.suffix().hasWildcardBefore();
         suffix = toSuffixPattern(parserResult.suffix());
 
-        String maybeSeparator = "(%s)?".formatted(quote(separator));
+        final String maybeSeparator = "(%s)?".formatted(quote(separator));
         prefixPattern = Pattern.compile("^" + prefix + maybeSeparator);
         suffixPattern = Pattern.compile(maybeSeparator + (suffix.equals(".*") ? "" : suffix) + "$");
 
@@ -269,7 +264,7 @@ public final class TestFileNamePattern
             return "";
         }
 
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
 
         if(part.hasWildcardBefore())
         {
@@ -292,7 +287,7 @@ public final class TestFileNamePattern
             return "";
         }
 
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
 
         appendAlternatives(buffer, part);
 
@@ -314,7 +309,7 @@ public final class TestFileNamePattern
         buffer.append('(');
 
         boolean first = true;
-        for (String s : part.alternatives())
+        for (final String s : part.alternatives())
         {
             if(first)
             {
@@ -338,9 +333,9 @@ public final class TestFileNamePattern
             return "";
         }
 
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
 
-        String beforeAlt = part.before();
+        final String beforeAlt = part.before();
         if(! beforeAlt.isEmpty())
         {
             buffer.append(beforeAlt);
@@ -348,7 +343,7 @@ public final class TestFileNamePattern
 
         buffer.append(quote(alternative));
 
-        String afterAlt = part.after();
+        final String afterAlt = part.after();
         if(! afterAlt.isEmpty())
         {
             buffer.append(afterAlt);
@@ -364,7 +359,7 @@ public final class TestFileNamePattern
             return "";
         }
 
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
 
         appendAlternatives(buffer, part);
         buffer.append('?');
@@ -379,9 +374,9 @@ public final class TestFileNamePattern
             return "";
         }
 
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
 
-        String beforeAlt = part.before();
+        final String beforeAlt = part.before();
         if(! beforeAlt.isEmpty())
         {
             buffer.append(beforeAlt);
@@ -389,7 +384,7 @@ public final class TestFileNamePattern
 
         appendAlternatives(buffer, part);
 
-        String afterAlt = part.after();
+        final String afterAlt = part.after();
         if(! afterAlt.isEmpty())
         {
             buffer.append(afterAlt);
@@ -400,7 +395,7 @@ public final class TestFileNamePattern
 
     private List<Group> createGroups()
     {
-        List<Group> result = new ArrayList<>(2);
+        final List<Group> result = new ArrayList<>(2);
         if(parserResult.prefix().hasAlternatives())
         {
             result.add(new Group(parserResult.prefix().alternatives()));
@@ -439,7 +434,7 @@ public final class TestFileNamePattern
             return emptySet();
         }
 
-        Collection<Pattern> result = new ArrayList<>(2);
+        final Collection<Pattern> result = new ArrayList<>(2);
         if(groups.size() < 2)
         {
             /*
@@ -489,7 +484,7 @@ public final class TestFileNamePattern
 
     private boolean matchesAnyPattern(String str)
     {
-        for (Pattern p : patterns)
+        for (final Pattern p : patterns)
         {
             if(p.matcher(str).matches())
             {
@@ -501,9 +496,9 @@ public final class TestFileNamePattern
 
     private FileNameEvaluation buildTestFileResult(String fileBaseName)
     {
-        String preferredName = buildPreferredSrcFileName(fileBaseName);
+        final String preferredName = buildPreferredSrcFileName(fileBaseName);
 
-        List<String> otherPatterns = buildOtherCorrespondingSrcFilePatterns(preferredName);
+        final List<String> otherPatterns = buildOtherCorrespondingSrcFilePatterns(preferredName);
 
         return new FileNameEvaluation(fileBaseName, true, preferredName, asList(quote(preferredName)), otherPatterns);
     }
@@ -521,11 +516,11 @@ public final class TestFileNamePattern
          * 📊 Impact: ~20% speedup compared to on-the-fly replaceFirst.
          */
         String res = testFileName;
-        Matcher prefixMatcher = prefixPattern.matcher(res);
+        final Matcher prefixMatcher = prefixPattern.matcher(res);
         if (prefixMatcher.find()) {
             res = res.substring(prefixMatcher.end());
         }
-        Matcher suffixMatcher = suffixPattern.matcher(res);
+        final Matcher suffixMatcher = suffixPattern.matcher(res);
         if (suffixMatcher.find()) {
             res = res.substring(0, suffixMatcher.start());
         }
@@ -543,19 +538,19 @@ public final class TestFileNamePattern
             return emptyList();
         }
 
-        TokenizationResult result = tokenizer.tokenize(preferredName);
+        final TokenizationResult result = tokenizer.tokenize(preferredName);
 
-        List<String> patterns = new ArrayList<>();
+        final List<String> patterns = new ArrayList<>();
         if(wildCardBeforeVariable)
         {
-            for (String c : result.getCombinationsFromEnd())
+            for (final String c : result.getCombinationsFromEnd())
             {
                 patterns.add(quote(c));
             }
         }
         if(wildCardAfterVariable)
         {
-            for (String c : result.getCombinationsFromStart())
+            for (final String c : result.getCombinationsFromStart())
             {
                 patterns.add(quote(c));
             }
@@ -574,13 +569,13 @@ public final class TestFileNamePattern
 
     private FileNameEvaluation buildSrcFileResult(String srcFileName)
     {
-        String preferredTestFileName = buildPreferredTestFileName(srcFileName);
+        final String preferredTestFileName = buildPreferredTestFileName(srcFileName);
 
-        String quotedSrcFileName = quote(srcFileName);
+        final String quotedSrcFileName = quote(srcFileName);
 
-        List<String> preferredPatterns = buildPreferredTestFilePatterns(quotedSrcFileName);
+        final List<String> preferredPatterns = buildPreferredTestFilePatterns(quotedSrcFileName);
 
-        List<String> otherPatterns = buildOtherCorrespondingTestFilePatterns(quotedSrcFileName);
+        final List<String> otherPatterns = buildOtherCorrespondingTestFilePatterns(quotedSrcFileName);
 
         return new FileNameEvaluation(srcFileName, false, preferredTestFileName, preferredPatterns, otherPatterns);
     }
@@ -588,8 +583,8 @@ public final class TestFileNamePattern
     private String buildPreferredTestFileName(String srcFileName)
     {
         final String result;
-        UserDefinedPart prefixPart = parserResult.prefix();
-        UserDefinedPart suffixPart = parserResult.suffix();
+        final UserDefinedPart prefixPart = parserResult.prefix();
+        final UserDefinedPart suffixPart = parserResult.suffix();
 
         if(! prefixPart.hasAlternatives() && ! suffixPart.hasAlternatives())
         {
@@ -629,9 +624,9 @@ public final class TestFileNamePattern
      */
     private List<String> buildPreferredTestFilePatterns(String quotedSrcFileName)
     {
-        List<String> result = new ArrayList<>();
-        UserDefinedPart prefixPart = parserResult.prefix();
-        UserDefinedPart suffixPart = parserResult.suffix();
+        final List<String> result = new ArrayList<>();
+        final UserDefinedPart prefixPart = parserResult.prefix();
+        final UserDefinedPart suffixPart = parserResult.suffix();
 
         if(! prefixPart.hasAlternatives() && ! suffixPart.hasAlternatives())
         {
@@ -639,14 +634,14 @@ public final class TestFileNamePattern
         }
         else if(! prefixPart.hasAlternatives())
         {
-            for (String alternative : suffixPart.alternatives())
+            for (final String alternative : suffixPart.alternatives())
             {
                 result.add(quotedSrcFileName + toPattern(suffixPart, alternative));
             }
         }
         else
         {
-            for (String preAlt : prefixPart.alternatives())
+            for (final String preAlt : prefixPart.alternatives())
             {
                 if(! suffixPart.hasAlternatives())
                 {
@@ -654,7 +649,7 @@ public final class TestFileNamePattern
                 }
                 else
                 {
-                    for (String sufAlt : suffixPart.alternatives())
+                    for (final String sufAlt : suffixPart.alternatives())
                     {
                         result.add(toPattern(prefixPart, preAlt) + quotedSrcFileName + toPattern(suffixPart, sufAlt));
                     }
@@ -677,16 +672,16 @@ public final class TestFileNamePattern
             return emptyList();
         }
 
-        String beforeVar = wildCardBeforeVariable ? ".*" : "";
-        String afterVar = wildCardAfterVariable ? ".*" : "";
+        final String beforeVar = wildCardBeforeVariable ? ".*" : "";
+        final String afterVar = wildCardAfterVariable ? ".*" : "";
 
-        List<String> result = new ArrayList<>();
+        final List<String> result = new ArrayList<>();
 
-        for (String preAlt : parserResult.prefix().alternatives())
+        for (final String preAlt : parserResult.prefix().alternatives())
         {
             result.add(toPattern(parserResult.prefix(), preAlt) + quotedSrcFileName + afterVar);
         }
-        for (String sufAlt : parserResult.suffix().alternatives())
+        for (final String sufAlt : parserResult.suffix().alternatives())
         {
             result.add(beforeVar + quotedSrcFileName + toPattern(parserResult.suffix(), sufAlt));
         }

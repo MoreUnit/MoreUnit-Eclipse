@@ -52,7 +52,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private Button testAnnotationsByNameButton;
     private Button testAnnotationsByNameAndByCallButton;
 
-    private GridData layoutForOneLineControls;
+    private final GridData layoutForOneLineControls;
 
     private final Preferences preferences;
     private final IJavaProject javaProject;
@@ -71,9 +71,9 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     public Composite getControl(Composite parent, boolean createIntermediateComposite)
     {
-        Composite newParent = createIntermediateComposite ? new Composite(parent, SWT.NONE) : parent;
+        final Composite newParent = createIntermediateComposite ? new Composite(parent, SWT.NONE) : parent;
 
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         newParent.setLayout(layout);
@@ -82,7 +82,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
         container = new ExpandableCompositeContainer(newParent);
 
-        Composite grid = Composites.grid(container, 2);
+        final Composite grid = Composites.grid(container, 2);
 
         beforeContent(grid);
 
@@ -121,9 +121,9 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
     private void createTestTypeChoice(Composite parent)
     {
         // Group with label
-        Group group = new Group(parent, SWT.NONE);
+        final Group group = new Group(parent, SWT.NONE);
         group.setLayout(new GridLayout(5, false));
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.horizontalSpan = 2;
         group.setLayoutData(gridData);
         group.setText(PreferenceConstants.TEXT_TEST_TYPE);
@@ -166,7 +166,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private GridData radioButtonLayoutData(boolean indent)
     {
-        GridData data = new GridData();
+        final GridData data = new GridData();
         if(indent)
         {
             data.horizontalIndent = 20;
@@ -176,7 +176,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private void createTestNamePatternArea(Composite parentWith2Cols)
     {
-        Composite parent = Composites.fillWidth(parentWith2Cols);
+        final Composite parent = Composites.fillWidth(parentWith2Cols);
 
         testCaseNamePatternArea = TestFileNamePatternGroup.forCamelCasePattern(parent, container, new TestFileNamePatternPreferencesWriter()
         {
@@ -210,7 +210,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private void createMethodContentTextField(Composite parent)
     {
-        Label methodContentLabel = new Label(parent, SWT.NONE);
+        final Label methodContentLabel = new Label(parent, SWT.NONE);
         methodContentLabel.setText(PreferenceConstants.TEXT_TEST_METHOD_CONTENT);
         methodContentLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_METHOD_CONTENT);
 
@@ -227,12 +227,12 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private void createPackagePrefixSuffixTextFields(Composite parent)
     {
-        Label packagePrefixLabel = new Label(parent, SWT.NONE);
+        final Label packagePrefixLabel = new Label(parent, SWT.NONE);
         packagePrefixLabel.setText(PreferenceConstants.TEXT_PACKAGE_PREFIX);
         packagePrefixLabel.setToolTipText(PreferenceConstants.TOOLTIP_PACKAGE_PREFIX);
         packagePrefixTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
 
-        Label packageSuffixLabel = new Label(parent, SWT.NONE);
+        final Label packageSuffixLabel = new Label(parent, SWT.NONE);
         packageSuffixLabel.setText(PreferenceConstants.TEXT_PACKAGE_SUFFIX);
         packageSuffixLabel.setToolTipText(PreferenceConstants.TOOLTIP_PACKAGE_SUFFIX);
         packageSuffixTextField = new Text(parent, SWT.SINGLE | SWT.BORDER);
@@ -249,7 +249,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private void createSuperClassTextField(Composite parent)
     {
-        Label superClassLabel = new Label(parent, SWT.NONE);
+        final Label superClassLabel = new Label(parent, SWT.NONE);
         superClassLabel.setText(PreferenceConstants.TEXT_TEST_SUPERCLASS);
         superClassLabel.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SUPERCLASS);
 
@@ -298,14 +298,14 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
 
     private void createTestAnnotationModeRadioButtons(Composite parent)
     {
-        Group group = new Group(parent, SWT.NONE);
+        final Group group = new Group(parent, SWT.NONE);
         group.setLayout(new GridLayout(3, false));
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.horizontalSpan = 2;
         group.setLayoutData(gridData);
         group.setText(PreferenceConstants.TEXT_ANNOTATION_MODE);
 
-        TestAnnotationMode mode = projectPreferences.getTestAnnotationMode();
+        final TestAnnotationMode mode = projectPreferences.getTestAnnotationMode();
 
         testAnnotationsDisabledButton = new Button(group, SWT.RADIO);
         testAnnotationsDisabledButton.setText(PreferenceConstants.TEST_ANNOTATION_MODE_DISABLED);
@@ -356,7 +356,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         enableJumpToMethodCodeMiningCheckbox.setText(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING);
         enableJumpToMethodCodeMiningCheckbox.setToolTipText(PreferenceConstants.TOOLTIP_ENABLE_JUMP_TO_METHOD_CODE_MINING);
 
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        final GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         gridData.horizontalSpan = 2;
         gridData.horizontalIndent = 20;
         enableJumpToMethodCodeMiningCheckbox.setLayoutData(gridData);
@@ -371,7 +371,7 @@ public class OtherMoreunitPropertiesBlock implements SelectionListener
         enableJumpToClassCodeMiningCheckbox.setText(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING);
         enableJumpToClassCodeMiningCheckbox.setToolTipText(PreferenceConstants.TOOLTIP_ENABLE_JUMP_TO_CLASS_CODE_MINING);
 
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        final GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         gridData.horizontalSpan = 2;
         gridData.horizontalIndent = 20;
         enableJumpToClassCodeMiningCheckbox.setLayoutData(gridData);

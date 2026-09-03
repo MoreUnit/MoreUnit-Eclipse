@@ -14,10 +14,10 @@ public class MethodContentProviderTest
     @Test
     public void should_return_methods_as_elements()
     {
-        IMethod method = mock(IMethod.class);
-        MethodContentProvider provider = new MethodContentProvider(List.of(method));
+        final IMethod method = mock(IMethod.class);
+        final MethodContentProvider provider = new MethodContentProvider(List.of(method));
 
-        Object[] elements = provider.getElements(null);
+        final Object[] elements = provider.getElements(null);
 
         assertEquals(1, elements.length);
         assertNotNull(elements[0]);
@@ -26,7 +26,7 @@ public class MethodContentProviderTest
     @Test
     public void should_return_empty_array_for_empty_list()
     {
-        MethodContentProvider provider = new MethodContentProvider(List.of());
+        final MethodContentProvider provider = new MethodContentProvider(List.of());
 
         assertEquals(0, provider.getElements(null).length);
     }
@@ -34,7 +34,7 @@ public class MethodContentProviderTest
     @Test
     public void dispose_and_input_changed_should_not_throw()
     {
-        MethodContentProvider provider = new MethodContentProvider(List.of());
+        final MethodContentProvider provider = new MethodContentProvider(List.of());
         provider.dispose();
         provider.inputChanged(null, null, null);
     }

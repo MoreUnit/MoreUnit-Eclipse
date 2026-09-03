@@ -34,8 +34,8 @@ public abstract class NameTokenizer
 
     private List<String> removeEmptyWords(List<String> words)
     {
-        List<String> wordsNotEmpty = new ArrayList<>();
-        for (String word : words)
+        final List<String> wordsNotEmpty = new ArrayList<>();
+        for (final String word : words)
         {
             if(word.length() != 0)
             {
@@ -72,12 +72,12 @@ public abstract class NameTokenizer
             return emptyList();
         }
 
-        List<String> combinations = new ArrayList<>();
+        final List<String> combinations = new ArrayList<>();
         StringBuilder combination = null;
 
-        for (Iterator<String> it = tokens.iterator(); it.hasNext();)
+        for (final Iterator<String> it = tokens.iterator(); it.hasNext();)
         {
-            String token = it.next();
+            final String token = it.next();
             if(! it.hasNext())
             {
                 break;
@@ -105,12 +105,12 @@ public abstract class NameTokenizer
             return emptyList();
         }
 
-        List<String> combinations = new ArrayList<>();
+        final List<String> combinations = new ArrayList<>();
         StringBuilder combination = null;
 
-        for (ListIterator<String> it = tokens.listIterator(tokens.size()); it.hasPrevious();)
+        for (final ListIterator<String> it = tokens.listIterator(tokens.size()); it.hasPrevious();)
         {
-            String token = it.previous();
+            final String token = it.previous();
             if(! it.hasPrevious())
             {
                 break;

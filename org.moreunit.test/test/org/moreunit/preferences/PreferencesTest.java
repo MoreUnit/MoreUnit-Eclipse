@@ -44,7 +44,7 @@ public class PreferencesTest
     @AfterEach
     public void resetWorkbenchPreferences()
     {
-        for (String key : new String[] { TEST_PACKAGE_PREFIX, TEST_PACKAGE_SUFFIX, TEST_CLASS_NAME_TEMPLATE })
+        for (final String key : new String[] { TEST_PACKAGE_PREFIX, TEST_PACKAGE_SUFFIX, TEST_CLASS_NAME_TEMPLATE })
         {
             workbenchStore.setToDefault(key);
         }
@@ -60,7 +60,7 @@ public class PreferencesTest
     @Project
     public void hasProjectSpecificSettings_should_return_false_by_default_and_true_when_set()
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
 
         assertFalse(prefs.hasProjectSpecificSettings(project));
 
@@ -75,7 +75,7 @@ public class PreferencesTest
     @Project
     public void getProjectStore_should_return_same_store_for_same_project()
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
 
         assertSame(prefs.getProjectStore(project), prefs.getProjectStore(project));
     }
@@ -84,9 +84,9 @@ public class PreferencesTest
     @Project
     public void clearProjectCache_should_forget_created_project_stores()
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
 
-        IPreferenceStore store = prefs.getProjectStore(project);
+        final IPreferenceStore store = prefs.getProjectStore(project);
         prefs.clearProjectCache();
 
         assertNotSame(store, prefs.getProjectStore(project));
@@ -96,7 +96,7 @@ public class PreferencesTest
     @Project
     public void should_roundtrip_simple_project_preferences() throws Exception
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
         prefs.setHasProjectSpecificSettings(project, true);
 
         prefs.setTestMethodDefaultContent(project, "someContent();");
@@ -123,7 +123,7 @@ public class PreferencesTest
     @Project
     public void should_roundtrip_comments_and_code_mining_preferences()
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
         prefs.setHasProjectSpecificSettings(project, true);
 
         // defaults
@@ -149,7 +149,7 @@ public class PreferencesTest
     @Project
     public void getMethodSearchMode_should_reflect_extended_search_and_search_by_name_settings()
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
         prefs.setHasProjectSpecificSettings(project, true);
 
         // defaults: extended search enabled + search by name enabled
@@ -175,7 +175,7 @@ public class PreferencesTest
         workbenchStore.setValue(TEST_PACKAGE_PREFIX, "test");
         workbenchStore.setValue(TEST_PACKAGE_SUFFIX, "it");
 
-        ProjectPreferences workspaceView = prefs.getWorkspaceView();
+        final ProjectPreferences workspaceView = prefs.getWorkspaceView();
         assertEquals("test", workspaceView.getPackagePrefix());
         assertEquals("it", workspaceView.getPackageSuffix());
         assertEquals("test", Preferences.forProject(null).getPackagePrefix());
@@ -192,13 +192,13 @@ public class PreferencesTest
     @Test
     public void getTestClassNamePattern_should_cache_pattern_and_renew_it_when_preferences_change()
     {
-        TestClassNamePattern pattern = prefs.getWorkspaceView().getTestClassNamePattern();
+        final TestClassNamePattern pattern = prefs.getWorkspaceView().getTestClassNamePattern();
 
         assertSame(pattern, prefs.getWorkspaceView().getTestClassNamePattern());
 
         workbenchStore.setValue(TEST_PACKAGE_PREFIX, "test");
 
-        TestClassNamePattern newPattern = prefs.getWorkspaceView().getTestClassNamePattern();
+        final TestClassNamePattern newPattern = prefs.getWorkspaceView().getTestClassNamePattern();
         assertNotSame(pattern, newPattern);
     }
 
@@ -206,7 +206,7 @@ public class PreferencesTest
     public void shouldUseJunitType_should_reflect_test_type()
     {
         workbenchStore.setValue(PreferenceConstants.TEST_TYPE, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
-        ProjectPreferences workspaceView = prefs.getWorkspaceView();
+        final ProjectPreferences workspaceView = prefs.getWorkspaceView();
         assertTrue(workspaceView.shouldUseJunit4Type());
         assertFalse(workspaceView.shouldUseJunit3Type());
         assertFalse(workspaceView.shouldUseJunit5Type());
@@ -218,9 +218,9 @@ public class PreferencesTest
     @Project
     public void should_save_project_preferences_when_migration_occurs_on_freshly_created_project_store()
     {
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
 
-        IPreferenceStore store = prefs.getProjectStore(project);
+        final IPreferenceStore store = prefs.getProjectStore(project);
         store.setValue(USE_PROJECT_SPECIFIC_SETTINGS, true);
         store.setValue(PREFERENCES_VERSION, "");
         store.setValue(TEST_CLASS_NAME_TEMPLATE, "");
@@ -232,8 +232,8 @@ public class PreferencesTest
         // getting the project store again must trigger the migration, and the
         // migration result has to be saved (otherwise it would happen again
         // and again at each startup)
-        DummyPreferencesForTesting freshPrefs = new DummyPreferencesForTesting();
-        IPreferenceStore recreatedStore = freshPrefs.getProjectStore(project);
+        final DummyPreferencesForTesting freshPrefs = new DummyPreferencesForTesting();
+        final IPreferenceStore recreatedStore = freshPrefs.getProjectStore(project);
 
         assertFalse(recreatedStore.needsSaving());
         assertEquals("(Pre1|Pre2)*${srcFile}", freshPrefs.getProjectView(project).getTestClassNameTemplate());

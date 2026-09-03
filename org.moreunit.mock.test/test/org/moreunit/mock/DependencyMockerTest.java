@@ -105,7 +105,7 @@ public class DependencyMockerTest
         when(classUnderTest.getJavaProject()).thenReturn(project);
         when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
 
-        org.moreunit.mock.model.MockingTemplate template = new org.moreunit.mock.model.MockingTemplate("test-template-id");
+        final org.moreunit.mock.model.MockingTemplate template = new org.moreunit.mock.model.MockingTemplate("test-template-id");
         when(templateStore.get("test-template-id")).thenReturn(template);
 
         // when
@@ -123,12 +123,12 @@ public class DependencyMockerTest
         when(classUnderTest.getJavaProject()).thenReturn(project);
         when(preferences.getMockingTemplate(project)).thenReturn("test-template-id");
 
-        org.moreunit.mock.model.MockingTemplate template = new org.moreunit.mock.model.MockingTemplate("test-template-id");
+        final org.moreunit.mock.model.MockingTemplate template = new org.moreunit.mock.model.MockingTemplate("test-template-id");
         when(templateStore.get("test-template-id")).thenReturn(template);
 
         when(testCase.getElementName()).thenReturn("MyTest");
 
-        org.moreunit.mock.templates.MockingTemplateException exception = new org.moreunit.mock.templates.MockingTemplateException("error");
+        final org.moreunit.mock.templates.MockingTemplateException exception = new org.moreunit.mock.templates.MockingTemplateException("error");
         doThrow(exception).when(templateApplicator).applyTemplate(template, dependencies, classUnderTest, testCase, SOME_TEST_TYPE);
 
         // when

@@ -49,8 +49,8 @@ public class JumpCodeMining extends LineEndCodeMining
 
     private static int getLineNumber(IJavaElement element, IDocument document) throws JavaModelException, BadLocationException
     {
-        ISourceRange r = ((ISourceReference) element).getNameRange();
-        int offset = r.getOffset();
+        final ISourceRange r = ((ISourceReference) element).getNameRange();
+        final int offset = r.getOffset();
         return document.getLineOfOffset(offset);
     }
 
@@ -58,19 +58,19 @@ public class JumpCodeMining extends LineEndCodeMining
     protected CompletableFuture<Void> doResolve(ITextViewer viewer, IProgressMonitor monitor)
     {
         return CompletableFuture.runAsync(() -> {
-            IMember member = (IMember) element;
-            TypeFacade typeFacade = TypeFacade.createFacade(member.getCompilationUnit());
-            String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
+            final IMember member = (IMember) element;
+            final TypeFacade typeFacade = TypeFacade.createFacade(member.getCompilationUnit());
+            final String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
             if(element instanceof IType)
             {
                 boolean jumpable = false;
-                if(typeFacade instanceof ClassTypeFacade classTypeFacade)
+                if(typeFacade instanceof final ClassTypeFacade classTypeFacade)
                 {
                     jumpable = classTypeFacade.hasTestCase();
                 }
-                else if(typeFacade instanceof TestCaseTypeFacade testCaseTypeFacade)
+                else if(typeFacade instanceof final TestCaseTypeFacade testCaseTypeFacade)
                 {
-                    IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
+                    final IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
                     jumpable = correspondingClassUnderTest != null;
                 }
                 if(jumpable)
@@ -82,16 +82,16 @@ public class JumpCodeMining extends LineEndCodeMining
                     setLabel("");
                 }
             }
-            else if(element instanceof IMethod method)
+            else if(element instanceof final IMethod method)
             {
                 boolean jumpable = false;
-                if(typeFacade instanceof ClassTypeFacade classTypeFacade)
+                if(typeFacade instanceof final ClassTypeFacade classTypeFacade)
                 {
                     jumpable = ! (classTypeFacade.getCorrespondingTestMethods(method, TestAnnotationMode.BY_CALL_AND_BY_NAME.getMethodSearchMode()).isEmpty());
                 }
-                else if(typeFacade instanceof TestCaseTypeFacade testCaseTypeFacade)
+                else if(typeFacade instanceof final TestCaseTypeFacade testCaseTypeFacade)
                 {
-                    IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
+                    final IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
                     if(correspondingClassUnderTest != null)
                     {
                         jumpable = ! (testCaseTypeFacade.getCorrespondingTestedMethods(method, correspondingClassUnderTest).isEmpty());
@@ -114,14 +114,14 @@ public class JumpCodeMining extends LineEndCodeMining
     {
         return e -> {
             Jobs.waitForIndexExecuteAndRunInUI("Jump to ... ", () -> {
-            MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(element.getJavaProject());
+            final MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(element.getJavaProject());
 
-            TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());
+            final TypeFacade typeFacade = TypeFacade.createFacade(((IMember) element).getCompilationUnit());
 
-            String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
-            CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+            final String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
+            final CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                     .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
-                    .withCurrentMethod(element instanceof IMethod method ? method : null) //
+                    .withCurrentMethod(element instanceof final IMethod method ? method : null) //
                     .methodSearchMode(searchMode) //
                     .promptText(" Jump to " + testOrTested + " class...")
                     .build();
@@ -133,10 +133,10 @@ public class JumpCodeMining extends LineEndCodeMining
 
     private void jumpToMember(IMember memberToJump)
     {
-        EditorUI editorUI = new EditorUI();
-        if(memberToJump instanceof IMethod methodToJump)
+        final EditorUI editorUI = new EditorUI();
+        if(memberToJump instanceof final IMethod methodToJump)
         {
-            IEditorPart openedEditor = editorUI.open(methodToJump.getDeclaringType().getParent());
+            final IEditorPart openedEditor = editorUI.open(methodToJump.getDeclaringType().getParent());
             editorUI.reveal(openedEditor, methodToJump);
         }
         else

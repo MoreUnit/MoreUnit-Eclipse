@@ -9,7 +9,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.junit5.SWTBotJunit5Extension;
-import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.waits.WaitForObjectCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -28,10 +27,10 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 {
     private void openProjectPropertiesAndSelectMoreUnitPage()
     {
-        SWTBotTreeItem projectItem = selectAndReturnJavaProjectFromPackageExplorer();
+        final SWTBotTreeItem projectItem = selectAndReturnJavaProjectFromPackageExplorer();
         getShortcutStrategy().openProperties(projectItem);
 
-        WaitForObjectCondition<Shell> waitForShell = waitForShell(shellWithTextStartingWith("Properties for "+projectItem.getText()));
+        final WaitForObjectCondition<Shell> waitForShell = waitForShell(shellWithTextStartingWith("Properties for "+projectItem.getText()));
         bot.waitUntil(waitForShell);
         setShellInFocus(waitForShell.get(0));
 
@@ -42,14 +41,9 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
 
     private void setShellInFocus(final Shell shell)
     {
-        UIThreadRunnable.syncExec(new VoidResult()
-        {
-            @Override
-            public void run()
-            {
-                    shell.forceFocus();
-                    shell.forceActive();
-            }
+        UIThreadRunnable.syncExec(() -> {
+                shell.forceFocus();
+                shell.forceActive();
         });
     }
 
@@ -57,12 +51,12 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     {
         openProjectPropertiesAndSelectMoreUnitPage();
         bot.checkBox("Use project specific settings").select();
-        SWTBotShell propertiesDialogShell = bot.activeShell();
+        final SWTBotShell propertiesDialogShell = bot.activeShell();
         bot.button("Add").click();
 
-        SWTBotTreeItem projectItem = bot.tree().getAllItems()[0];
+        final SWTBotTreeItem projectItem = bot.tree().getAllItems()[0];
         projectItem.expand();
-        SWTBotShell addFolderDialog = bot.activeShell();
+        final SWTBotShell addFolderDialog = bot.activeShell();
         projectItem.getNode("test").select().check();
         bot.button("Finish").click();
         bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(addFolderDialog));
@@ -76,9 +70,9 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
     private void saveAndCloseProps()
     {
         // in newer version (at least 4.8), the label has been changed and is stored in a preference
-        String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
-        String realLabel = "PreferencesDialog.okButtonLabel".equals(label)? "OK" : label;
-        SWTBotShell shellToClose = bot.activeShell();
+        final String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
+        final String realLabel = "PreferencesDialog.okButtonLabel".equals(label)? "OK" : label;
+        final SWTBotShell shellToClose = bot.activeShell();
         bot.button(realLabel).click();
         bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(shellToClose));
     }
@@ -146,7 +140,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.textWithLabel(PreferenceConstants.TEXT_TEST_METHOD_CONTENT).setText("blubberContent");
         saveAndCloseProps();
-        String testMethodDefaultContent = Preferences.getInstance().getTestMethodDefaultContent(getJavaProjectFromContext());
+        final String testMethodDefaultContent = Preferences.getInstance().getTestMethodDefaultContent(getJavaProjectFromContext());
         assertEquals("blubberContent", testMethodDefaultContent);
     }
 
@@ -156,7 +150,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.textWithLabel("Pattern:").setText("${srcFile}(Dest|ITDest)");
         saveAndCloseProps();
-        String template = Preferences.forProject(getJavaProjectFromContext()).getTestClassNameTemplate();
+        final String template = Preferences.forProject(getJavaProjectFromContext()).getTestClassNameTemplate();
         assertEquals("${srcFile}(Dest|ITDest)", template);
     }
 
@@ -166,7 +160,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_PREFIX).setText("pckgpref");
         saveAndCloseProps();
-        String testPackagePrefix = Preferences.getInstance().getTestPackagePrefix(getJavaProjectFromContext());
+        final String testPackagePrefix = Preferences.getInstance().getTestPackagePrefix(getJavaProjectFromContext());
         assertEquals("pckgpref", testPackagePrefix);
     }
 
@@ -176,7 +170,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_SUFFIX).setText("pckgsuff");
         saveAndCloseProps();
-        String testPackageSuffix = Preferences.getInstance().getTestPackageSuffix(getJavaProjectFromContext());
+        final String testPackageSuffix = Preferences.getInstance().getTestPackageSuffix(getJavaProjectFromContext());
         assertEquals("pckgsuff", testPackageSuffix);
     }
 
@@ -186,7 +180,7 @@ public class PropertiesTest extends JavaProjectSWTBotTestHelper
         openPropertiesAndActivateOtherTab();
         bot.textWithLabel(PreferenceConstants.TEXT_TEST_SUPERCLASS).setText("org.moreunit.SuperKlass");
         saveAndCloseProps();
-        String testSuperClass = Preferences.getInstance().getTestSuperClass(getJavaProjectFromContext());
+        final String testSuperClass = Preferences.getInstance().getTestSuperClass(getJavaProjectFromContext());
         assertEquals("org.moreunit.SuperKlass", testSuperClass);
     }
 

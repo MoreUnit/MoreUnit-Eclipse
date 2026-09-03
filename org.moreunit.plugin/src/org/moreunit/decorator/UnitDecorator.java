@@ -45,13 +45,13 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             logMessage = new StringBuilder("UnitDecorator.decorate(").append(element).append(") -> ");
         }
 
-        ICompilationUnit cu = getCompilationUnitIfIsTypeUnderTest(element, logMessage);
+        final ICompilationUnit cu = getCompilationUnitIfIsTypeUnderTest(element, logMessage);
         if(cu == null)
         {
             return;
         }
 
-        ClassTypeFacade javaFileFacade = new ClassTypeFacade(cu);
+        final ClassTypeFacade javaFileFacade = new ClassTypeFacade(cu);
         if(javaFileFacade.hasTestCase())
         {
             if(logger.traceEnabled())
@@ -71,7 +71,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 
     private void handleClassDecoration(IDecoration decoration)
     {
-        ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
+        final ImageDescriptor imageDescriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
         decoration.addOverlay(imageDescriptor, IDecoration.TOP_RIGHT);
     }
 
@@ -82,7 +82,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
      */
     public ICompilationUnit getCompilationUnitIfIsTypeUnderTest(Object element, StringBuilder logMessage)
     {
-        IResource objectResource = (IResource) element;
+        final IResource objectResource = (IResource) element;
         if(objectResource.getType() != IResource.FILE)
         {
             if(logger.traceEnabled())
@@ -92,7 +92,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             return null;
         }
 
-        IJavaElement javaElement = JavaCore.create(objectResource);
+        final IJavaElement javaElement = JavaCore.create(objectResource);
         if(javaElement == null)
         {
             if(logger.traceEnabled())
@@ -111,7 +111,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
             return null;
         }
 
-        ICompilationUnit compilationUnit = (ICompilationUnit) javaElement;
+        final ICompilationUnit compilationUnit = (ICompilationUnit) javaElement;
         // primary type may be null in case of empty .java file or
         // package-info.java, etc...
         if(compilationUnit.findPrimaryType() == null)
@@ -142,7 +142,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
 
     public static UnitDecorator getUnitDecorator()
     {
-        IDecoratorManager decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
+        final IDecoratorManager decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
 
         if(decoratorManager.getEnabled(MoreUnitContants.TEST_CASE_DECORATOR))
             return (UnitDecorator) decoratorManager.getBaseLabelProvider(MoreUnitContants.TEST_CASE_DECORATOR);
@@ -153,7 +153,7 @@ public class UnitDecorator extends LabelProvider implements ILightweightLabelDec
     public static void refreshAll()
     {
         PlatformUI.getWorkbench().getDisplay().asyncExec(() -> {
-            UnitDecorator unitDecorator = getUnitDecorator();
+            final UnitDecorator unitDecorator = getUnitDecorator();
 
             if(unitDecorator != null)
             {

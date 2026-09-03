@@ -40,7 +40,7 @@ public class MainPropertyPage extends PropertyPage
     @Override
     protected Control createContents(Composite parent)
     {
-        Composite contentComposite = new Composite(parent, SWT.NONE);
+        final Composite contentComposite = new Composite(parent, SWT.NONE);
         contentComposite.setLayout(new GridLayout(1, true));
         contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -107,8 +107,8 @@ public class MainPropertyPage extends PropertyPage
     @Override
     public boolean performOk()
     {
-        IJavaProject project = project();
-        boolean hadSpecificSettings = preferences.hasSpecificSettings(project);
+        final IJavaProject project = project();
+        final boolean hadSpecificSettings = preferences.hasSpecificSettings(project);
         if(hadSpecificSettings != specificSettingsChecked())
         {
             preferences.setSpecificSettings(project, specificSettingsChecked());

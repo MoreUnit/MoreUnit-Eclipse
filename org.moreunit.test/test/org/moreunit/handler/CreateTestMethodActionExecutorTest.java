@@ -65,8 +65,8 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
      */
     private void awaitTestTypeAvailable() throws Exception
     {
-        org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
-        long deadline = System.currentTimeMillis() + 20_000;
+        final org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 20_000;
         while (System.currentTimeMillis() < deadline)
         {
             if(context.getPrimaryTypeHandler("com.FooTest").get() != null)
@@ -84,11 +84,11 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
     {
         try
         {
-            var constructor = CreateTestMethodActionExecutor.class.getDeclaredConstructor(EditorUI.class, org.moreunit.preferences.Preferences.class);
+            final var constructor = CreateTestMethodActionExecutor.class.getDeclaredConstructor(EditorUI.class, org.moreunit.preferences.Preferences.class);
             constructor.setAccessible(true);
             return constructor.newInstance(editorUI, org.moreunit.preferences.Preferences.getInstance());
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
             throw new RuntimeException(e);
         }
@@ -96,8 +96,8 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
 
     private void await(int expectedOpenCount) throws Exception
     {
-        Display display = Display.getDefault();
-        long deadline = System.currentTimeMillis() + 30_000;
+        final Display display = Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 30_000;
         while (openedMethods.size() < expectedOpenCount && System.currentTimeMillis() < deadline)
         {
             // the executor runs its final step through Display#syncExec, so the
@@ -110,10 +110,10 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
 
     private IEditorPart editorOver(ICompilationUnit compilationUnit, ISourceRange selectionRange)
     {
-        IEditorPart editorPart = mock(IEditorPart.class);
-        IEditorInput editorInput = mock(IEditorInput.class);
-        IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
-        ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
+        final IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
+        final ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
 
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         when(editorInput.getAdapter(IFile.class)).thenReturn((IFile) compilationUnit.getResource());
@@ -131,14 +131,14 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
     @Test
     public void executeCreateTestMethodAction_should_create_test_method_in_corresponding_test_case() throws Exception
     {
-        IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
-        int testMethodCountBefore = testMethodCount();
+        final IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
+        final int testMethodCountBefore = testMethodCount();
 
-        CreateTestMethodActionExecutor executor = newExecutor();
+        final CreateTestMethodActionExecutor executor = newExecutor();
         executor.executeCreateTestMethodAction(editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange()));
 
         await(1);
-        IMethod createdMethod = openedMethods.get(0);
+        final IMethod createdMethod = openedMethods.get(0);
         assertEquals("FooTest", createdMethod.getDeclaringType().getElementName());
         assertEquals(testMethodCountBefore + 1, testMethodCount());
     }
@@ -146,14 +146,14 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
     @Test
     public void executeCreateTestMethodAction_should_report_existing_test_method() throws Exception
     {
-        IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
+        final IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
 
-        CreateTestMethodActionExecutor executor = newExecutor();
+        final CreateTestMethodActionExecutor executor = newExecutor();
 
         // first call creates the test method...
         executor.executeCreateTestMethodAction(editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange()));
         await(1);
-        IMethod createdMethod = openedMethods.get(0);
+        final IMethod createdMethod = openedMethods.get(0);
 
         // ... second call finds it already existing and simply opens it
         executor.executeCreateTestMethodAction(editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange()));
@@ -165,10 +165,10 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
     @Test
     public void executeCreateTestMethodAction_should_create_test_method_when_edited_unit_is_a_test_case() throws Exception
     {
-        IMethod helper = context.getPrimaryTypeHandler("com.FooTest").addMethod("public void helper()", "").get();
-        int testMethodCountBefore = testMethodCount();
+        final IMethod helper = context.getPrimaryTypeHandler("com.FooTest").addMethod("public void helper()", "").get();
+        final int testMethodCountBefore = testMethodCount();
 
-        CreateTestMethodActionExecutor executor = newExecutor();
+        final CreateTestMethodActionExecutor executor = newExecutor();
         executor.executeCreateTestMethodAction(editorOver(context.getCompilationUnit("com.FooTest"), helper.getNameRange()));
 
         await(1);
@@ -180,10 +180,10 @@ public class CreateTestMethodActionExecutorTest extends ContextTestCase
     {
         // the created test method keeps the source method name for JUnit 4, so
         // a name ending in "Suffix" triggers the suffix selection logic
-        IMethod fooSuffix = context.getPrimaryTypeHandler("com.Foo").addMethod("public int fooSuffix()", "return 0;").get();
+        final IMethod fooSuffix = context.getPrimaryTypeHandler("com.Foo").addMethod("public int fooSuffix()", "return 0;").get();
 
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), fooSuffix.getNameRange());
-        CreateTestMethodActionExecutor executor = newExecutor();
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), fooSuffix.getNameRange());
+        final CreateTestMethodActionExecutor executor = newExecutor();
         executor.executeCreateTestMethodAction(editorPart);
 
         await(1);

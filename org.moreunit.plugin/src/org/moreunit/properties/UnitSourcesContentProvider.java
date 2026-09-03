@@ -52,7 +52,7 @@ public class UnitSourcesContentProvider implements ITreeContentProvider
     @Override
     public Object[] getChildren(Object parentElement)
     {
-        if(parentElement instanceof SourceFolderMapping mapping)
+        if(parentElement instanceof final SourceFolderMapping mapping)
         {
             return mapping.getSourceFolderList().toArray();
         }

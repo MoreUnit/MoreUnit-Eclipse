@@ -58,13 +58,13 @@ public abstract class TypeFacade
 
     public static boolean isTestCase(ICompilationUnit compilationUnit)
     {
-        IType primaryType = compilationUnit.findPrimaryType();
+        final IType primaryType = compilationUnit.findPrimaryType();
         if(primaryType == null)
         {
             return false;
         }
 
-        ProjectPreferences prefs = Preferences.forProject(primaryType.getJavaProject());
+        final ProjectPreferences prefs = Preferences.forProject(primaryType.getJavaProject());
         return prefs.getTestClassNamePattern().evaluate(primaryType).isTestCase();
     }
 
@@ -128,7 +128,7 @@ public abstract class TypeFacade
             return null;
         }
 
-        IMember memberToJump = action.getCorrespondingMember();
+        final IMember memberToJump = action.getCorrespondingMember();
 
         registerJump(request.getCurrentMethod(), memberToJump);
         return memberToJump;
@@ -136,7 +136,7 @@ public abstract class TypeFacade
 
     private OneCorrespondingMemberAction getPerfectCorrespondingMember(CorrespondingMemberRequest request, Collection<IType> proposedClasses)
     {
-        Collection<IMethod> proposedMethods = findCorrespondingMethodsInClasses(request, proposedClasses);
+        final Collection<IMethod> proposedMethods = findCorrespondingMethodsInClasses(request, proposedClasses);
 
         if(proposedMethods.size() == 1)
         {
@@ -166,11 +166,11 @@ public abstract class TypeFacade
 
     private Collection<IMethod> findCorrespondingMethodsInClasses(CorrespondingMemberRequest request, Collection<IType> classes)
     {
-        Collection<IMethod> proposedMethods = new LinkedHashSet<>();
+        final Collection<IMethod> proposedMethods = new LinkedHashSet<>();
 
         if(request.shouldReturn(MemberType.TYPE_OR_METHOD))
         {
-            IMethod currentMethod = request.getCurrentMethod();
+            final IMethod currentMethod = request.getCurrentMethod();
             if(currentMethod != null && ! classes.isEmpty())
             {
                 if(request.getMethodSearchMode().searchByName)
@@ -189,7 +189,7 @@ public abstract class TypeFacade
 
     private OneCorrespondingMemberAction getLikelyCorrespondingClass(CorrespondingMemberRequest request)
     {
-        Collection<IType> proposedClasses = getCorrespondingClasses(true);
+        final Collection<IType> proposedClasses = getCorrespondingClasses(true);
         if(! proposedClasses.isEmpty())
         {
             return new OpenChoiceDialog(request, proposedClasses, false);
@@ -214,7 +214,7 @@ public abstract class TypeFacade
 
     private IMember getDefaultSelection(Collection<IType> proposedClasses, Collection<IMethod> proposedMethods, IMember startMember)
     {
-        IMember selection = MemberJumpHistory.getInstance().getLastCorrespondingJumpMember(startMember);
+        final IMember selection = MemberJumpHistory.getInstance().getLastCorrespondingJumpMember(startMember);
         if(selection != null && (proposedClasses.contains(selection) || proposedMethods.contains(selection)))
         {
             return selection;
@@ -226,7 +226,7 @@ public abstract class TypeFacade
     {
         if(toMember != null)
         {
-            IMember startMember = fromMethod != null ? fromMethod : getType();
+            final IMember startMember = fromMethod != null ? fromMethod : getType();
             MemberJumpHistory.getInstance().registerJump(startMember, toMember);
         }
     }
@@ -301,9 +301,9 @@ public abstract class TypeFacade
                 infoText = "Please note that theses classes will not be considered for other MoreUnit features such as test launching or refactoring.";
             }
 
-            IMember startMember = request.getCurrentMethod() != null ? request.getCurrentMethod() : getType();
-            IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
-            MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection).withAction(new CreateNewClassAction()
+            final IMember startMember = request.getCurrentMethod() != null ? request.getCurrentMethod() : getType();
+            final IMember defaultSelection = getDefaultSelection(proposedClasses, proposedMethods, startMember);
+            final MemberContentProvider contentProvider = new MemberContentProvider(proposedClasses, proposedMethods, defaultSelection).withAction(new CreateNewClassAction()
             {
                 @Override
                 public IType execute()
@@ -312,8 +312,8 @@ public abstract class TypeFacade
                 }
             });
 
-            String finalPromptTest = promptText;
-            String finalInfoText = infoText;
+            final String finalPromptTest = promptText;
+            final String finalInfoText = infoText;
             return Display.getDefault().syncCall(() -> new ChooseDialog<IMember>(finalPromptTest, finalInfoText, contentProvider).getChoice());
         }
     }

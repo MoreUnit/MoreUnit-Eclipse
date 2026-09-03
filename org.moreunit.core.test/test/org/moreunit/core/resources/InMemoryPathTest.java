@@ -14,50 +14,50 @@ public class InMemoryPathTest {
 
     @Test
     public void testGetBaseNameWithoutExtension() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertEquals(path.getBaseNameWithoutExtension(), "file");
 
-        InMemoryPath pathNoExt = new InMemoryPath("/project/folder/file");
+        final InMemoryPath pathNoExt = new InMemoryPath("/project/folder/file");
         assertEquals(pathNoExt.getBaseNameWithoutExtension(), "file");
 
-        InMemoryPath emptyPath = new InMemoryPath("");
+        final InMemoryPath emptyPath = new InMemoryPath("");
         assertEquals(emptyPath.getBaseNameWithoutExtension(), "");
     }
 
     @Test
     public void testGetExtension() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertEquals(path.getExtension(), "txt");
 
-        InMemoryPath pathNoExt = new InMemoryPath("/project/folder/file");
+        final InMemoryPath pathNoExt = new InMemoryPath("/project/folder/file");
         assertEquals(pathNoExt.getExtension(), "");
 
-        InMemoryPath emptyPath = new InMemoryPath("");
+        final InMemoryPath emptyPath = new InMemoryPath("");
         assertEquals(emptyPath.getExtension(), "");
     }
 
     @Test
     public void testGetProjectName() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertEquals(path.getProjectName(), "project");
 
-        InMemoryPath emptyPath = new InMemoryPath("");
+        final InMemoryPath emptyPath = new InMemoryPath("");
         assertEquals(emptyPath.getProjectName(), "");
     }
 
     @Test
     public void testHasExtension() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertTrue(path.hasExtension());
 
-        InMemoryPath pathNoExt = new InMemoryPath("/project/folder/file");
+        final InMemoryPath pathNoExt = new InMemoryPath("/project/folder/file");
         assertFalse(pathNoExt.hasExtension());
     }
 
     @Test
     public void testIterator() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
-        Iterator<String> iterator = path.iterator();
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final Iterator<String> iterator = path.iterator();
         assertTrue(iterator.hasNext());
         assertEquals(iterator.next(), "project");
         assertEquals(iterator.next(), "folder");
@@ -67,15 +67,15 @@ public class InMemoryPathTest {
 
     @Test
     public void testRelativeToProject() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertEquals(path.relativeToProject().toString(), "folder/file.txt");
     }
 
     @Test
     public void testEqualsAndHashCode() {
-        InMemoryPath path1 = new InMemoryPath("/project/folder/file.txt");
-        InMemoryPath path2 = new InMemoryPath("/project/folder/file.txt");
-        InMemoryPath path3 = new InMemoryPath("/project/folder/other.txt");
+        final InMemoryPath path1 = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path2 = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path3 = new InMemoryPath("/project/folder/other.txt");
 
         assertEquals(path1, path2);
         assertNotEquals(path1, path3);
@@ -89,19 +89,19 @@ public class InMemoryPathTest {
 
     @Test
     public void testWithoutLastSegment() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertEquals(path.withoutLastSegment().toString(), "/project/folder");
 
-        InMemoryPath pathRoot = new InMemoryPath("/project");
+        final InMemoryPath pathRoot = new InMemoryPath("/project");
         assertEquals(pathRoot.withoutLastSegment().toString(), "/");
 
-        InMemoryPath emptyPath = new InMemoryPath("");
+        final InMemoryPath emptyPath = new InMemoryPath("");
         assertEquals(emptyPath.withoutLastSegment().toString(), "");
     }
 
     @Test
     public void testUptoSegment() {
-        InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder/file.txt");
         assertEquals(path.uptoSegment(1).toString(), "/project");
         assertEquals(path.uptoSegment(2).toString(), "/project/folder");
         assertEquals(path.uptoSegment(3).toString(), "/project/folder/file.txt");
@@ -109,43 +109,43 @@ public class InMemoryPathTest {
         try {
             path.uptoSegment(4);
             fail("Expected IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
+        } catch (final IndexOutOfBoundsException e) {
             assertEquals(e.getMessage(), "No segment at index: 4");
         }
     }
 
     @Test
     public void testWithRelativePath() {
-        InMemoryPath path = new InMemoryPath("/project/folder");
-        InMemoryPath relativePath = new InMemoryPath("file.txt");
+        final InMemoryPath path = new InMemoryPath("/project/folder");
+        final InMemoryPath relativePath = new InMemoryPath("file.txt");
 
         assertEquals(path.withRelativePath(relativePath).toString(), "/project/folder/file.txt");
 
-        InMemoryPath absolutePath = new InMemoryPath("/file.txt");
+        final InMemoryPath absolutePath = new InMemoryPath("/file.txt");
         try {
             path.withRelativePath(absolutePath);
             fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             assertEquals(e.getMessage(), "not a relative path");
         }
     }
 
     @Test
     public void testIsAbsoluteAndRelative() {
-        InMemoryPath absolutePath = new InMemoryPath("/project/folder");
+        final InMemoryPath absolutePath = new InMemoryPath("/project/folder");
         assertTrue(absolutePath.isAbsolute());
         assertFalse(absolutePath.isRelative());
 
-        InMemoryPath relativePath = new InMemoryPath("folder/file.txt");
+        final InMemoryPath relativePath = new InMemoryPath("folder/file.txt");
         assertFalse(relativePath.isAbsolute());
         assertTrue(relativePath.isRelative());
     }
 
     @Test
     public void testIsPrefixOf() {
-        InMemoryPath path1 = new InMemoryPath("/project/folder");
-        InMemoryPath path2 = new InMemoryPath("/project/folder/file.txt");
-        InMemoryPath path3 = new InMemoryPath("/other/folder");
+        final InMemoryPath path1 = new InMemoryPath("/project/folder");
+        final InMemoryPath path2 = new InMemoryPath("/project/folder/file.txt");
+        final InMemoryPath path3 = new InMemoryPath("/other/folder");
 
         assertTrue(path1.isPrefixOf(path2));
         assertTrue(path1.isPrefixOf(path1));

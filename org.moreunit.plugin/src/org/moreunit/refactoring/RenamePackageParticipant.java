@@ -53,8 +53,8 @@ public class RenamePackageParticipant extends RenameParticipant
 
     private boolean isTestSourceFolder()
     {
-        List<SourceFolderMapping> sourceMappingList = Preferences.getInstance().getSourceMappingList(packageFragment.getJavaProject());
-        for (SourceFolderMapping mapping : sourceMappingList)
+        final List<SourceFolderMapping> sourceMappingList = Preferences.getInstance().getSourceMappingList(packageFragment.getJavaProject());
+        for (final SourceFolderMapping mapping : sourceMappingList)
         {
             if(packageFragmentRoot.equals(mapping.getTestFolder()))
                 return true;
@@ -77,26 +77,26 @@ public class RenamePackageParticipant extends RenameParticipant
             return null;
         }
 
-        String cutPackageName = packageFragment.getElementName();
-        ProjectPreferences prefs = Preferences.forProject(packageFragment.getJavaProject());
+        final String cutPackageName = packageFragment.getElementName();
+        final ProjectPreferences prefs = Preferences.forProject(packageFragment.getJavaProject());
 
-        List<Change> changes = new ArrayList<>();
+        final List<Change> changes = new ArrayList<>();
 
 
-        for (IPackageFragmentRoot packageRoot : correspondingPackageFragmentRoots)
+        for (final IPackageFragmentRoot packageRoot : correspondingPackageFragmentRoots)
         {
             if(packageRoot.getResource() != null)
             {
-                IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, prefs));
+                final IPackageFragment packageToRename = packageRoot.getPackageFragment(PluginTools.getTestPackageName(cutPackageName, prefs));
                 if(packageToRename != null && packageToRename.exists())
                 {
-                    RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
-                    RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
+                    final RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_PACKAGE);
+                    final RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
                     renameJavaElementDescriptor.setJavaElement(packageToRename);
                     renameJavaElementDescriptor.setNewName(PluginTools.getTestPackageName(getArguments().getNewName(), prefs));
 
-                    RefactoringStatus refactoringStatus = new RefactoringStatus();
-                    Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
+                    final RefactoringStatus refactoringStatus = new RefactoringStatus();
+                    final Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
                     renameRefactoring.checkAllConditions(pm);
 
                     changes.add(renameRefactoring.createChange(pm));
@@ -109,8 +109,8 @@ public class RenamePackageParticipant extends RenameParticipant
 
     private List<IPackageFragmentRoot> getSourceFolderFromContext()
     {
-        List<IPackageFragmentRoot> result = new ArrayList<>();
-        for (IPackageFragmentRoot folder : SourceFolderContext.getInstance().getSourceFolderToSearch(packageFragmentRoot))
+        final List<IPackageFragmentRoot> result = new ArrayList<>();
+        for (final IPackageFragmentRoot folder : SourceFolderContext.getInstance().getSourceFolderToSearch(packageFragmentRoot))
         {
             // this case may happens if tests are in the same source folder as
             // production code

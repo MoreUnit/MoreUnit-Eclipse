@@ -48,14 +48,14 @@ public class PluginResourceLoaderTest {
     @BeforeEach
     public void setUp() throws Exception {
         loader = new PluginResourceLoader(plugin, logger);
-        Field field = MoreUnitMockPlugin.class.getDeclaredField("plugin");
+        final Field field = MoreUnitMockPlugin.class.getDeclaredField("plugin");
         field.setAccessible(true);
         field.set(null, plugin);
     }
 
     @AfterEach
     public void tearDown() throws Exception {
-        Field field = MoreUnitMockPlugin.class.getDeclaredField("plugin");
+        final Field field = MoreUnitMockPlugin.class.getDeclaredField("plugin");
         field.setAccessible(true);
         field.set(null, null);
     }
@@ -65,12 +65,12 @@ public class PluginResourceLoaderTest {
        when(plugin.getStateLocation()).thenReturn(mockStateLocation);
        when(mockStateLocation.append("test")).thenReturn(mockStateLocation);
 
-       File mockFile = mock(File.class);
+       final File mockFile = mock(File.class);
        when(mockStateLocation.toFile()).thenReturn(mockFile);
        when(mockFile.exists()).thenReturn(false);
        when(mockFile.mkdirs()).thenReturn(false);
 
-       boolean result = loader.ensureStateExists("test");
+       final boolean result = loader.ensureStateExists("test");
        assertFalse(result);
        verify(logger).error(anyString());
     }
@@ -81,7 +81,7 @@ public class PluginResourceLoaderTest {
         when(plugin.getStateLocation()).thenReturn(mockStateLocation);
         when(mockStateLocation.append("templates")).thenReturn(mockStateLocation);
 
-        File stateDir = tempDir("existingState");
+        final File stateDir = tempDir("existingState");
         when(mockStateLocation.toFile()).thenReturn(stateDir);
 
         // when + then
@@ -91,12 +91,12 @@ public class PluginResourceLoaderTest {
     @Test
     public void findBundleResources_should_return_bundle_entries() throws Exception {
         // given
-        URL url = URI.create("file:/plugin/resources/templates/foo.xml").toURL();
+        final URL url = URI.create("file:/plugin/resources/templates/foo.xml").toURL();
         when(plugin.getBundle()).thenReturn(bundle);
         when(bundle.findEntries("templates", "*.xml", true)).thenReturn(Collections.enumeration(Collections.singletonList(url)));
 
         // when + then
-        Collection<URL> resources = loader.findBundleResources("templates", "*.xml");
+        final Collection<URL> resources = loader.findBundleResources("templates", "*.xml");
         assertEquals(1, resources.size());
         assertEquals(url, resources.iterator().next());
     }
@@ -104,13 +104,13 @@ public class PluginResourceLoaderTest {
     @Test
     public void findBundleResources_should_look_into_resources_folder_when_bundle_entries_are_not_found() throws Exception {
         // given
-        URL url = URI.create("file:/plugin/resources/resources/templates/foo.xml").toURL();
+        final URL url = URI.create("file:/plugin/resources/resources/templates/foo.xml").toURL();
         when(plugin.getBundle()).thenReturn(bundle);
         when(bundle.findEntries("templates", "*.xml", true)).thenReturn(null);
         when(bundle.findEntries("/resources/templates", "*.xml", true)).thenReturn(Collections.enumeration(Collections.singletonList(url)));
 
         // when + then
-        Collection<URL> resources = loader.findBundleResources("templates", "*.xml");
+        final Collection<URL> resources = loader.findBundleResources("templates", "*.xml");
         assertEquals(1, resources.size());
         assertEquals(url, resources.iterator().next());
     }
@@ -131,17 +131,17 @@ public class PluginResourceLoaderTest {
         when(plugin.getStateLocation()).thenReturn(mockStateLocation);
         when(mockStateLocation.append("templates")).thenReturn(mockStateLocation);
 
-        File stateDir = tempDir("workspaceState");
+        final File stateDir = tempDir("workspaceState");
         new File(stateDir, "foo.xml").createNewFile();
         new File(stateDir, "bar.txt").createNewFile();
         when(mockStateLocation.toFile()).thenReturn(stateDir);
 
         // when
-        Collection<URL> resources = loader.findWorkspaceStateResources("templates", "*.xml");
+        final Collection<URL> resources = loader.findWorkspaceStateResources("templates", "*.xml");
 
         // then
         assertEquals(1, resources.size());
-        String fileName = resources.iterator().next().getFile();
+        final String fileName = resources.iterator().next().getFile();
         assertEquals(true, fileName.endsWith("foo.xml"));
     }
 
@@ -157,7 +157,7 @@ public class PluginResourceLoaderTest {
     }
 
     private static File tempDir(String name) throws Exception {
-        File dir = new File(System.getProperty("java.io.tmpdir"), "moreunit-mock-test-" + name + "-" + System.nanoTime());
+        final File dir = new File(System.getProperty("java.io.tmpdir"), "moreunit-mock-test-" + name + "-" + System.nanoTime());
         dir.mkdirs();
         dir.deleteOnExit();
         return dir;

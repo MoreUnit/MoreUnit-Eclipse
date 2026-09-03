@@ -30,7 +30,7 @@ public class MethodFacade
         {
             return Signature.SIG_VOID.equals(method.getReturnType()) && (method.getFlags() & ClassFileConstants.AccPublic) != 0;
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             return false;
         }
@@ -38,7 +38,7 @@ public class MethodFacade
 
     private static boolean shouldTestMethodsBeAnnotated(IJavaProject project)
     {
-        String testType = Preferences.getInstance().getTestType(project);
+        final String testType = Preferences.getInstance().getTestType(project);
         return TestTypeConstants.TEST_ANNOTATION.containsKey(testType);
     }
 
@@ -53,7 +53,7 @@ public class MethodFacade
         {
             return method.getParent() instanceof IType && ((IType) method.getParent()).isAnonymous();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             return false;
         }

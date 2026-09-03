@@ -9,8 +9,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -63,13 +61,13 @@ public class TemplateStyleSelector implements SelectionListener
 
     public void createContents(Composite parent)
     {
-        Composite labelAndFieldComposite = new Composite(parent, SWT.NONE);
+        final Composite labelAndFieldComposite = new Composite(parent, SWT.NONE);
         labelAndFieldComposite.setLayout(new GridLayout(3, false));
 
-        GridData rowLayoutData = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(- 1, 30).span(2, 1).create();
+        final GridData rowLayoutData = GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(- 1, 30).span(2, 1).create();
         labelAndFieldComposite.setLayoutData(rowLayoutData);
 
-        Label label = new Label(labelAndFieldComposite, SWT.NONE);
+        final Label label = new Label(labelAndFieldComposite, SWT.NONE);
         label.setText("Mock style:");
 
         categoryCombo = createCombo(labelAndFieldComposite);
@@ -78,44 +76,34 @@ public class TemplateStyleSelector implements SelectionListener
         templateCombo = createCombo(labelAndFieldComposite);
         templateCombo.setItems(CATEGORY_PROMPT);
 
-        categoryCombo.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent event)
+        categoryCombo.addModifyListener(event -> {
+            final int categoryIdx = categoryCombo.getSelectionIndex();
+            if(categoryIdx == - 1)
             {
-                int categoryIdx = categoryCombo.getSelectionIndex();
-                if(categoryIdx == - 1)
-                {
-                    return;
-                }
+                return;
+            }
 
-                Category category = categories.get(categoryIdx);
+            final Category category = categories.get(categoryIdx);
 
-                if(! category.equals(selectedCategory) || Arrays.equals(templateCombo.getItems(), CATEGORY_PROMPT))
-                {
-                    categoryTemplates.clear();
-                    categoryTemplates.addAll(templateStore.getTemplates(category));
-                    Collections.sort(categoryTemplates);
+            if(! category.equals(selectedCategory) || Arrays.equals(templateCombo.getItems(), CATEGORY_PROMPT))
+            {
+                categoryTemplates.clear();
+                categoryTemplates.addAll(templateStore.getTemplates(category));
+                Collections.sort(categoryTemplates);
 
-                    templateCombo.setItems(templateNames());
-                    templateCombo.select(0);
-                    templateCombo.pack();
+                templateCombo.setItems(templateNames());
+                templateCombo.select(0);
+                templateCombo.pack();
 
-                    selectedCategory = category;
-                }
+                selectedCategory = category;
             }
         });
 
-        templateCombo.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
+        templateCombo.addModifyListener(e -> {
+            final MockingTemplate newSelectedTemplate = determineSelectedTemplate();
+            if(newSelectedTemplate != null && ! newSelectedTemplate.equals(selectedTemplate))
             {
-                MockingTemplate newSelectedTemplate = determineSelectedTemplate();
-                if(newSelectedTemplate != null && ! newSelectedTemplate.equals(selectedTemplate))
-                {
-                    selectedTemplate = newSelectedTemplate;
-                }
+                selectedTemplate = newSelectedTemplate;
             }
         });
 
@@ -128,7 +116,7 @@ public class TemplateStyleSelector implements SelectionListener
 
     private Combo createCombo(Composite parent)
     {
-        Combo combo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        final Combo combo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         combo.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false, 1, 1));
         return combo;
     }
@@ -163,7 +151,7 @@ public class TemplateStyleSelector implements SelectionListener
     {
         this.project = project;
 
-        String mockingTemplateId = preferences.getMockingTemplate(project);
+        final String mockingTemplateId = preferences.getMockingTemplate(project);
         if(Strings.isBlank(mockingTemplateId) || templateStore.get(mockingTemplateId) == null)
         {
             categoryCombo.select(0);
@@ -177,8 +165,8 @@ public class TemplateStyleSelector implements SelectionListener
 
     public void selectTemplate(String mockingTemplateId)
     {
-        MockingTemplate mockingTemplate = templateStore.get(mockingTemplateId);
-        Category category = templateStore.getCategory(mockingTemplate.categoryId());
+        final MockingTemplate mockingTemplate = templateStore.get(mockingTemplateId);
+        final Category category = templateStore.getCategory(mockingTemplate.categoryId());
         Assert.isNotNull(category);
 
         categoryCombo.select(categories.indexOf(category));
@@ -202,7 +190,7 @@ public class TemplateStyleSelector implements SelectionListener
 
     public void savePreferences()
     {
-        MockingTemplate template = getSelectedTemplate();
+        final MockingTemplate template = getSelectedTemplate();
         if(template == null)
         {
             logger.warn("Could not retrieve selected template");

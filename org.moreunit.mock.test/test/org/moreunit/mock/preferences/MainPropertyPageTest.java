@@ -37,7 +37,7 @@ public class MainPropertyPageTest
     @AfterEach
     public void disposeShells()
     {
-        for (Shell shell : shellsToDispose)
+        for (final Shell shell : shellsToDispose)
         {
             if(! shell.isDisposed())
             {
@@ -180,15 +180,15 @@ public class MainPropertyPageTest
             return;
         }
 
-        IJavaProject project = mock(IJavaProject.class);
+        final IJavaProject project = mock(IJavaProject.class);
         when(preferences.hasSpecificSettings(project)).thenReturn(true);
 
-        Shell shell = shell();
-        MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
+        final Shell shell = shell();
+        final MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
         page.setElement(project);
         page.createControl(shell);
 
-        Button checkbox = findCheckbox(shell);
+        final Button checkbox = findCheckbox(shell);
         assertTrue(checkbox.getSelection());
         verify(templateStyleSelector).setEnabled(true);
         verify(templateStyleSelector).createContents(any(Composite.class), eq(project));
@@ -202,15 +202,15 @@ public class MainPropertyPageTest
             return;
         }
 
-        IJavaProject project = mock(IJavaProject.class);
+        final IJavaProject project = mock(IJavaProject.class);
         when(preferences.hasSpecificSettings(project)).thenReturn(false);
 
-        Shell shell = shell();
-        MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
+        final Shell shell = shell();
+        final MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
         page.setElement(project);
         page.createControl(shell);
 
-        Button checkbox = findCheckbox(shell);
+        final Button checkbox = findCheckbox(shell);
         assertFalse(checkbox.getSelection());
         verify(templateStyleSelector).setEnabled(false);
     }
@@ -223,17 +223,17 @@ public class MainPropertyPageTest
             return;
         }
 
-        IJavaProject project = mock(IJavaProject.class);
+        final IJavaProject project = mock(IJavaProject.class);
         when(preferences.hasSpecificSettings(project)).thenReturn(false);
         when(logger.debugEnabled()).thenReturn(true);
 
-        Shell shell = shell();
-        MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
+        final Shell shell = shell();
+        final MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
         page.setElement(project);
         page.createControl(shell);
 
         // when the user checks the "specific settings" checkbox
-        Button checkbox = findCheckbox(shell);
+        final Button checkbox = findCheckbox(shell);
         checkbox.setSelection(true);
         checkbox.notifyListeners(SWT.Selection, new Event());
 
@@ -256,17 +256,17 @@ public class MainPropertyPageTest
             return;
         }
 
-        IJavaProject project = mock(IJavaProject.class);
+        final IJavaProject project = mock(IJavaProject.class);
         when(preferences.hasSpecificSettings(project)).thenReturn(true);
         when(logger.debugEnabled()).thenReturn(true);
 
-        Shell shell = shell();
-        MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
+        final Shell shell = shell();
+        final MainPropertyPage page = new MainPropertyPage(preferences, templateStyleSelector, logger);
         page.setElement(project);
         page.createControl(shell);
 
         // when the user unchecks the "specific settings" checkbox
-        Button checkbox = findCheckbox(shell);
+        final Button checkbox = findCheckbox(shell);
         assertTrue(checkbox.getSelection());
         checkbox.setSelection(false);
         checkbox.notifyListeners(SWT.Selection, new Event());
@@ -289,22 +289,22 @@ public class MainPropertyPageTest
 
     private static Shell shell()
     {
-        Shell shell = new Shell(Display.getDefault());
+        final Shell shell = new Shell(Display.getDefault());
         shellsToDispose.add(shell);
         return shell;
     }
 
     private static Button findCheckbox(Composite composite)
     {
-        for (Control child : composite.getChildren())
+        for (final Control child : composite.getChildren())
         {
-            if(child instanceof Button button && "Use project specific settings".equals(button.getText()))
+            if(child instanceof final Button button && "Use project specific settings".equals(button.getText()))
             {
                 return button;
             }
-            if(child instanceof Composite nested)
+            if(child instanceof final Composite nested)
             {
-                Button found = findCheckbox(nested);
+                final Button found = findCheckbox(nested);
                 if(found != null)
                 {
                     return found;

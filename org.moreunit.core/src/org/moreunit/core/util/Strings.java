@@ -40,10 +40,10 @@ public class Strings
 
         int occurrences = 0;
 
-        char[] pat = pattern.toCharArray();
+        final char[] pat = pattern.toCharArray();
         int patIdx = 0;
 
-        for (char c : string.toCharArray())
+        for (final char c : string.toCharArray())
         {
             if(c == pat[patIdx])
             {
@@ -64,16 +64,16 @@ public class Strings
 
     public static String[] split(String str, String regex)
     {
-        List<String> parts = splitAsList(str, regex);
+        final List<String> parts = splitAsList(str, regex);
         return parts.toArray(new String[0]);
     }
 
     public static List<String> splitAsList(String str, String regex)
     {
-        List<String> parts = new ArrayList<>();
-        for (String part : str.split(regex))
+        final List<String> parts = new ArrayList<>();
+        for (final String part : str.split(regex))
         {
-            String trimmed = part.trim();
+            final String trimmed = part.trim();
             if(trimmed.length() != 0)
             {
                 parts.add(trimmed);
@@ -98,7 +98,7 @@ public class Strings
 
     public static String join(String separator, Collection<String> strings)
     {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         join(sb, separator, strings);
         return sb.toString();
     }
@@ -110,9 +110,9 @@ public class Strings
 
     public static void join(StringBuilder sb, String separator, Collection<String> strings)
     {
-        for (Iterator<String> it = strings.iterator(); it.hasNext();)
+        for (final Iterator<String> it = strings.iterator(); it.hasNext();)
         {
-            String str = it.next();
+            final String str = it.next();
             sb.append(str);
             if(it.hasNext())
             {

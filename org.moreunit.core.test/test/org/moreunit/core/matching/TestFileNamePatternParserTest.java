@@ -31,10 +31,10 @@ public class TestFileNamePatternParserTest
     public void should_fail_when_src_file_variable_is_missing()
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("some_name", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("some_name", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertFalse(result.success());
@@ -45,10 +45,10 @@ public class TestFileNamePatternParserTest
     public void should_fail_when_only_src_file_variable_is_present() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertFalse(result.success());
@@ -119,10 +119,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_empty_alternatives() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("()${srcFile}", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("()${srcFile}", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.success());
@@ -134,10 +134,10 @@ public class TestFileNamePatternParserTest
     public void should_treat_plain_text_prefix_as_single_alternative() throws Exception
     {
         // given: plain text (without parentheses) is parsed as a single alternative
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("prefix_${srcFile}", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("prefix_${srcFile}", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.success());
@@ -150,10 +150,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_unclosed_alternative_group() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("(a|b${srcFile}", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("(a|b${srcFile}", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.success());
@@ -164,10 +164,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_escaped_character() throws Exception
     {
         // given: escaped text (without parentheses) is parsed as a single alternative
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\\\prefix${srcFile}", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("\\\\prefix${srcFile}", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.success());
@@ -179,10 +179,10 @@ public class TestFileNamePatternParserTest
     public void should_handle_empty_separator() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("Pre${srcFile}Suf", camelCaseTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("Pre${srcFile}Suf", camelCaseTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.success());
@@ -243,10 +243,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_pattern_with_several_suffixes() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}_(suf1|suf2|suf3)", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}_(suf1|suf2|suf3)", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertEquals(Arrays.asList("suf1", "suf2", "suf3"), result.get().suffix().alternatives());
@@ -256,10 +256,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_pattern_with_several_prefixes() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("(pre1|pre2|pre3)_${srcFile}", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("(pre1|pre2|pre3)_${srcFile}", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertEquals(Arrays.asList("pre1", "pre2", "pre3"), result.get().prefix().alternatives());
@@ -269,10 +269,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_escaped_backslash() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}_\\\\test", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}_\\\\test", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertEquals(Arrays.asList("\\test"), result.get().suffix().alternatives());
@@ -282,10 +282,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_escaped_star() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\*pre\\*_${srcFile}_\\*suf\\*", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("\\*pre\\*_${srcFile}_\\*suf\\*", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertFalse(result.get().prefix().hasWildcardBefore());
@@ -301,10 +301,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_unescaped_star_followed_by_escaped_star() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}*\\*suf", new SeparatorNameTokenizer("*"));
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}*\\*suf", new SeparatorNameTokenizer("*"));
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertTrue(result.get().suffix().hasWildcardBefore());
@@ -316,10 +316,10 @@ public class TestFileNamePatternParserTest
     public void should_parse_escaped_brackets_and_pipes() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("\\(pr\\|e\\)fix_${srcFile}_\\|suf\\(ix", underscoreTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("\\(pr\\|e\\)fix_${srcFile}_\\|suf\\(ix", underscoreTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertEquals(Arrays.asList("(pr|e)fix"), result.get().prefix().alternatives());
@@ -330,10 +330,10 @@ public class TestFileNamePatternParserTest
     public void should_order_alternatives_by_desc_length() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}(Test|Tests)", camelCaseTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}(Test|Tests)", camelCaseTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertEquals(Arrays.asList("Tests", "Test"), result.get().suffix().alternatives());
@@ -343,10 +343,10 @@ public class TestFileNamePatternParserTest
     public void should_keep_track_of_first_alternative() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("(Sh|Long)${srcFile}(Test|Tests)", camelCaseTokenizer);
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("(Sh|Long)${srcFile}(Test|Tests)", camelCaseTokenizer);
 
         // when
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         // then
         assertEquals(result.get().prefix().firstAlternative(), "Sh");
@@ -357,8 +357,8 @@ public class TestFileNamePatternParserTest
     public void should_complain_when_there_is_no_first_alternative() throws Exception
     {
         // given
-        TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}Test", camelCaseTokenizer);
-        TestFileNamePatternParser.Result result = parser.parse();
+        final TestFileNamePatternParser parser = new TestFileNamePatternParser("${srcFile}Test", camelCaseTokenizer);
+        final TestFileNamePatternParser.Result result = parser.parse();
 
         assertThrows(NoSuchElementException.class, () -> result.get().prefix().firstAlternative());
     }

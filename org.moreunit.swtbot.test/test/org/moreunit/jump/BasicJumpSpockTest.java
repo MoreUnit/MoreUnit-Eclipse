@@ -15,7 +15,7 @@ public class BasicJumpSpockTest extends JavaProjectSWTBotTestHelper
 	@BeforeEach
 	public void before()
 	{
-		for(SWTBotEditor editor : bot.editors())
+		for(final SWTBotEditor editor : bot.editors())
 		{
 			editor.close();
 		}

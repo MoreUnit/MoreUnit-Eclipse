@@ -17,7 +17,7 @@ public class CreatedFolderPathTest
     @Test
     public void delete_should_delete_the_resource_of_a_single_folder() throws Exception
     {
-        IResource resource = mock(IResource.class);
+        final IResource resource = mock(IResource.class);
 
         new CreatedFolderPath(resource).delete();
 
@@ -27,11 +27,11 @@ public class CreatedFolderPathTest
     @Test
     public void delete_should_delete_the_first_created_folder_not_the_child() throws Exception
     {
-        IResource parentResource = mock(IResource.class);
-        IResource childResource = mock(IResource.class);
+        final IResource parentResource = mock(IResource.class);
+        final IResource childResource = mock(IResource.class);
 
-        CreatedFolderPath parent = new CreatedFolderPath(parentResource);
-        CreatedFolderPath child = new CreatedFolderPath(parent, childResource);
+        final CreatedFolderPath parent = new CreatedFolderPath(parentResource);
+        final CreatedFolderPath child = new CreatedFolderPath(parent, childResource);
 
         child.delete();
 
@@ -42,13 +42,13 @@ public class CreatedFolderPathTest
     @Test
     public void delete_folders_that_are_not_parent_should_delete_non_ancestor_child() throws Exception
     {
-        IResource parentResource = mock(IResource.class);
-        IResource childResource = mock(IResource.class);
-        IResource otherResource = mock(IResource.class);
+        final IResource parentResource = mock(IResource.class);
+        final IResource childResource = mock(IResource.class);
+        final IResource otherResource = mock(IResource.class);
 
-        IPath parentPath = mock(IPath.class);
-        IPath childPath = mock(IPath.class);
-        IPath otherPath = mock(IPath.class);
+        final IPath parentPath = mock(IPath.class);
+        final IPath childPath = mock(IPath.class);
+        final IPath otherPath = mock(IPath.class);
 
         when(parentResource.getFullPath()).thenReturn(parentPath);
         when(childResource.getFullPath()).thenReturn(childPath);
@@ -57,8 +57,8 @@ public class CreatedFolderPathTest
         when(childPath.isPrefixOf(otherPath)).thenReturn(false);
         when(parentPath.isPrefixOf(otherPath)).thenReturn(true);
 
-        CreatedFolderPath parent = new CreatedFolderPath(parentResource);
-        CreatedFolderPath child = new CreatedFolderPath(parent, childResource);
+        final CreatedFolderPath parent = new CreatedFolderPath(parentResource);
+        final CreatedFolderPath child = new CreatedFolderPath(parent, childResource);
 
         child.deleteFoldersThatAreNotParentOf(otherResource);
 
@@ -69,10 +69,10 @@ public class CreatedFolderPathTest
     @Test
     public void delete_folders_that_are_not_parent_should_do_nothing_when_resource_is_parent() throws Exception
     {
-        IResource resource = mock(IResource.class);
-        IResource otherResource = mock(IResource.class);
-        IPath path = mock(IPath.class);
-        IPath otherPath = mock(IPath.class);
+        final IResource resource = mock(IResource.class);
+        final IResource otherResource = mock(IResource.class);
+        final IPath path = mock(IPath.class);
+        final IPath otherPath = mock(IPath.class);
 
         when(resource.getFullPath()).thenReturn(path);
         when(otherResource.getFullPath()).thenReturn(otherPath);

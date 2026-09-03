@@ -33,15 +33,15 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
 	public void should_move_test_method_when_static_method_gets_moved() throws JavaModelException
 	{
 		openResource("TheWorld.java");
-		SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
+		final SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
 		cutEditor.setFocus();
-		int lineNumberOfMethodSignature = 4;
+		final int lineNumberOfMethodSignature = 4;
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 27);
 		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethodSignature));
 		getShortcutStrategy().pressMoveShortcut();
 		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Move Static Members"));
 		bot.comboBox().setText("testing.TheMoon");
-		SWTBotShell moveDialog = bot.activeShell();
+		final SWTBotShell moveDialog = bot.activeShell();
 		bot.button("OK").click();
 		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(moveDialog), 10000);
 
@@ -53,7 +53,7 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
             @Override
             public boolean test() throws Exception
             {
-                IMethod[] methods = testBeforeMove.findPrimaryType().getMethods();
+                final IMethod[] methods = testBeforeMove.findPrimaryType().getMethods();
                 return methods == null || methods.length == 0;
             }
 
@@ -64,8 +64,8 @@ public class MoveMethodTest extends JavaProjectSWTBotTestHelper
             }
         });
 		assertEquals(0, testBeforeMove.findPrimaryType().getMethods().length);
-		ICompilationUnit testAfterMove = context.getCompilationUnit("testing.TheMoonTest");
-		IMethod[] movedMethods = testAfterMove.findPrimaryType().getMethods();
+		final ICompilationUnit testAfterMove = context.getCompilationUnit("testing.TheMoonTest");
+		final IMethod[] movedMethods = testAfterMove.findPrimaryType().getMethods();
 		assertEquals(1, movedMethods.length);
 		assertEquals("testGetNumber1", movedMethods[0].getElementName());
 	}

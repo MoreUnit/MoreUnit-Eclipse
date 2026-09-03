@@ -25,7 +25,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
     @Override
     public void partActivated(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor editor)
+        if(part instanceof final ITextEditor editor)
         {
             MoreUnitAnnotationModel.updateAnnotations(editor);
         }
@@ -34,7 +34,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
     @Override
     public void partBroughtToTop(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor editor)
+        if(part instanceof final ITextEditor editor)
         {
             MoreUnitAnnotationModel.updateAnnotations(editor);
         }
@@ -43,7 +43,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
     @Override
     public void partClosed(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor editor)
+        if(part instanceof final ITextEditor editor)
         {
             MoreUnitAnnotationModel.detach(editor);
         }
@@ -57,7 +57,7 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
     @Override
     public void partOpened(IWorkbenchPart part)
     {
-        if(part instanceof ITextEditor editor)
+        if(part instanceof final ITextEditor editor)
         {
             MoreUnitAnnotationModel.attach(editor);
         }
@@ -71,19 +71,19 @@ public class AnnotationUpdateListener implements IPartListener, IResourceChangeL
     @Override
     public void resourceChanged(IResourceChangeEvent event)
     {
-        IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
-        if(openEditorPart instanceof ITextEditor editor)
+        final IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
+        if(openEditorPart instanceof final ITextEditor editor)
         {
             if(PluginTools.isJavaFile(openEditorPart))
             {
-                EditorPartFacade editorPartFacade = new EditorPartFacade(openEditorPart);
-                IFile file = editorPartFacade.getFile();
+                final EditorPartFacade editorPartFacade = new EditorPartFacade(openEditorPart);
+                final IFile file = editorPartFacade.getFile();
                 if(file != null)
                 {
-                    IResourceDelta delta = event.getDelta();
+                    final IResourceDelta delta = event.getDelta();
                     if(delta != null)
                     {
-                        IResourceDelta member = delta.findMember(file.getFullPath());
+                        final IResourceDelta member = delta.findMember(file.getFullPath());
                         if(member != null)
                             MoreUnitAnnotationModel.updateAnnotations(editor);
                     }

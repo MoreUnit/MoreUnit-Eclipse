@@ -11,7 +11,7 @@ public class FileTester extends PropertyTester
 {
     private static final String HAS_DEFAULT_SUPPORT = "hasDefaultSupport";
 
-    private Workspace workspace;
+    private final Workspace workspace;
 
     public FileTester()
     {
@@ -33,7 +33,7 @@ public class FileTester extends PropertyTester
 
         if(HAS_DEFAULT_SUPPORT.equals(method))
         {
-            SrcFile file = workspace.toSrcFile((IFile) receiver);
+            final SrcFile file = workspace.toSrcFile((IFile) receiver);
             return "false".equals(expectedValue) || file.hasDefaultSupport();
         }
 

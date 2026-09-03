@@ -66,16 +66,16 @@ public class DependenciesTreeContentProviderTest
     {
         when(provider.getConstructors()).thenReturn(asList(constructor));
         when(provider.getSetters()).thenReturn(emptyList());
-        Field field = new Field(eclipseField, true);
+        final Field field = new Field(eclipseField, true);
         when(eclipseField.getFlags()).thenReturn(fieldVisibleAndAssignable ? Flags.AccDefault : Flags.AccFinal);
-        IAnnotation[] annotations = fieldInjectable ? new IAnnotation[] { injectableAnnotation() } : new IAnnotation[0];
+        final IAnnotation[] annotations = fieldInjectable ? new IAnnotation[] { injectableAnnotation() } : new IAnnotation[0];
         when(eclipseField.getAnnotations()).thenReturn(annotations);
         when(provider.getFields()).thenReturn(asList(field));
     }
 
     private IAnnotation injectableAnnotation()
     {
-        IAnnotation annotation = mock(IAnnotation.class);
+        final IAnnotation annotation = mock(IAnnotation.class);
         when(annotation.getElementName()).thenReturn("com.google.inject.Inject");
         return annotation;
     }
@@ -85,7 +85,7 @@ public class DependenciesTreeContentProviderTest
     {
         stubProvider(true, false);
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_ONLY, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_ONLY, logger);
 
         assertArrayEquals(new IType[] { classUnderTest }, contentProvider.getTypes());
         assertArrayEquals(new IType[] { classUnderTest }, contentProvider.getElements(null));
@@ -99,7 +99,7 @@ public class DependenciesTreeContentProviderTest
     @Test
     public void should_replace_already_collected_method_with_identical_one() throws Exception
     {
-        IMethod sameNamedMethod = mock(IMethod.class);
+        final IMethod sameNamedMethod = mock(IMethod.class);
         when(sameNamedMethod.getElementName()).thenReturn("Foo");
         when(sameNamedMethod.getSignature()).thenReturn("Foo(QFoo;)V");
         when(sameNamedMethod.getDeclaringType()).thenReturn(classUnderTest);
@@ -108,7 +108,7 @@ public class DependenciesTreeContentProviderTest
         when(provider.getSetters()).thenReturn(asList(sameNamedMethod));
         when(provider.getFields()).thenReturn(emptyList());
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
 
         assertArrayEquals(new IMethod[] { sameNamedMethod }, contentProvider.getChildren(classUnderTest));
     }
@@ -118,7 +118,7 @@ public class DependenciesTreeContentProviderTest
     {
         stubProvider(false, true);
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_ONLY, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_ONLY, logger);
 
         assertArrayEquals(new IMember[] { constructor }, contentProvider.getChildren(classUnderTest));
     }
@@ -128,7 +128,7 @@ public class DependenciesTreeContentProviderTest
     {
         stubProvider(false, true);
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_AND_INJECTABLE, logger);
 
         assertArrayEquals(new IMember[] { constructor, eclipseField }, contentProvider.getChildren(classUnderTest));
     }
@@ -138,7 +138,7 @@ public class DependenciesTreeContentProviderTest
     {
         stubProvider(false, false);
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
 
         assertArrayEquals(new IMember[] { constructor, eclipseField }, contentProvider.getChildren(classUnderTest));
     }
@@ -148,7 +148,7 @@ public class DependenciesTreeContentProviderTest
     {
         stubProvider(false, true);
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_ONLY, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.VISIBLE_TO_TEST_CASE_ONLY, logger);
         assertArrayEquals(new IMember[] { constructor }, contentProvider.getChildren(classUnderTest));
 
         contentProvider.showFields(VisibleFields.ALL);
@@ -162,7 +162,7 @@ public class DependenciesTreeContentProviderTest
         when(classUnderTest.newSupertypeHierarchy(any())).thenThrow(javaModelException());
         when(provider.getConstructors()).thenThrow(javaModelException());
 
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
 
         assertEquals(0, contentProvider.getTypes().length);
         assertEquals(0, contentProvider.getChildren(classUnderTest).length);
@@ -178,7 +178,7 @@ public class DependenciesTreeContentProviderTest
     public void dispose_and_input_changed_should_do_nothing() throws Exception
     {
         stubProvider(true, false);
-        DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
+        final DependenciesTreeContentProvider contentProvider = new DependenciesTreeContentProvider(classUnderTest, provider, VisibleFields.ALL, logger);
 
         contentProvider.dispose();
         contentProvider.inputChanged(null, null, null);

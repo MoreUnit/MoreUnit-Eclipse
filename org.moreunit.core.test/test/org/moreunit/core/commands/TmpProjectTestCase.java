@@ -41,12 +41,12 @@ public abstract class TmpProjectTestCase
     protected static final String TEST_PROJECT = "test-project";
 
     protected IProject project;
-    private Set<String> extensionsToClean = new HashSet<>();
+    private final Set<String> extensionsToClean = new HashSet<>();
 
     @BeforeEach
     public void createProject() throws Exception
     {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
         project = workspaceRoot.getProject(TEST_PROJECT);
         project.create(null);
         project.open(null);
@@ -60,9 +60,9 @@ public abstract class TmpProjectTestCase
 
     protected IFile createFile(String filePath) throws CoreException, FolderCreationException
     {
-        IFile file = getFile(filePath);
+        final IFile file = getFile(filePath);
 
-        IPath fullPath = file.getFullPath();
+        final IPath fullPath = file.getFullPath();
         if(fullPath.segmentCount() > 2)
         {
             Resources.createFolder(project, fullPath.removeFirstSegments(1).removeLastSegments(1));
@@ -101,7 +101,7 @@ public abstract class TmpProjectTestCase
 
     protected static IFile getFileInActiveEditor()
     {
-        IEditorPart editor = getActiveEditor();
+        final IEditorPart editor = getActiveEditor();
         if(editor == null)
         {
             return null;
@@ -116,20 +116,20 @@ public abstract class TmpProjectTestCase
 
     protected void executeCommand(String commandId) throws ExecutionException, NotDefinedException, NotEnabledException, NotHandledException
     {
-        IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
         handlerService.executeCommand(commandId, null);
     }
 
     protected void addExtension(String id, String point, String content)
     {
-        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+        final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
-        IContributor contributor = ContributorFactoryOSGi.createContributor(MoreUnitCoreTest.get().getBundle());
+        final IContributor contributor = ContributorFactoryOSGi.createContributor(MoreUnitCoreTest.get().getBundle());
 
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?eclipse version=\"3.4\"?><plugin>" //
+        final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?eclipse version=\"3.4\"?><plugin>" //
                      + "<extension id=\"" + id + "\" point=\"" + point + "\">" + content + "</extension>" //
                      + "</plugin>";
-        InputStream is = new ByteArrayInputStream(xml.getBytes());
+        final InputStream is = new ByteArrayInputStream(xml.getBytes());
 
         if(extensionRegistry.addContribution(is, contributor, false, null, null, getTempUserToken()))
         {
@@ -139,20 +139,20 @@ public abstract class TmpProjectTestCase
 
     private Object getTempUserToken()
     {
-        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+        final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
         return ((ExtensionRegistry) extensionRegistry).getTemporaryUserToken();
     }
 
     @AfterEach
     public void cleanExtensions()
     {
-        for (String id : extensionsToClean)
+        for (final String id : extensionsToClean)
         {
             try
             {
                 removeExtension(id);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 // ignored, try to clean next extensions
             }
@@ -161,9 +161,9 @@ public abstract class TmpProjectTestCase
 
     protected void removeExtension(String id)
     {
-        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+        final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
-        IExtension extension = extensionRegistry.getExtension(id);
+        final IExtension extension = extensionRegistry.getExtension(id);
 
         extensionRegistry.removeExtension(extension, getTempUserToken());
     }

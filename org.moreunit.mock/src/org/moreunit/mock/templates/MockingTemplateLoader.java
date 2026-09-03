@@ -33,17 +33,17 @@ public class MockingTemplateLoader implements Service
 
         templateStore.clear();
 
-        LoadingResult result = new LoadingResult();
+        final LoadingResult result = new LoadingResult();
 
         Collection<URL> templates = resourceLoader.findBundleResources(TEMPLATE_DIRECTORY, "*.xml");
-        for (URL template : templates)
+        for (final URL template : templates)
         {
             loadTemplate(template, result);
         }
         logger.debug("%d default templates loaded".formatted(templates.size()));
 
         templates = resourceLoader.findWorkspaceStateResources(TEMPLATE_DIRECTORY, "*.xml");
-        for (URL template : templates)
+        for (final URL template : templates)
         {
             loadTemplate(template, result);
         }
@@ -61,17 +61,17 @@ public class MockingTemplateLoader implements Service
     {
         try
         {
-            MockingTemplates templates = templateReader.read(template);
+            final MockingTemplates templates = templateReader.read(template);
             logger.info("Loaded " + template + ": " + templates.categories());
             templateStore.store(templates);
         }
         // message displayed differs depending on the exception type
-        catch (TemplateAlreadyDefinedException e)
+        catch (final TemplateAlreadyDefinedException e)
         {
             result.addInvalidTemplate(template, e);
             logger.error("Could not load template " + template, e);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             result.addInvalidTemplate(template, e);
             logger.error("Could not load template " + template, e);

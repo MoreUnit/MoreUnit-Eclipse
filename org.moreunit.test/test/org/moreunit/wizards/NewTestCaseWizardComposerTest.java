@@ -26,7 +26,7 @@ public class NewTestCaseWizardComposerTest
     @Mock
     private IWizardPage basePageZz;
 
-    private NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
+    private final NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
 
     @BeforeEach
     public void createBasePages() throws Exception
@@ -42,7 +42,7 @@ public class NewTestCaseWizardComposerTest
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, basePageX);
         inOrder.verifyNoMoreInteractions();
@@ -62,7 +62,7 @@ public class NewTestCaseWizardComposerTest
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, basePageX);
         inOrder.verifyNoMoreInteractions();
@@ -72,14 +72,14 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_after_requested_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page ZZ"));
+        final INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page ZZ"));
         composer.registerExtensionPages(asList(extensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, extensionPage.getPage());
         verifyThatPageHasBeenAdded(inOrder, basePageX);
@@ -90,14 +90,14 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_after_last_known_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page x"));
+        final INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page x"));
         composer.registerExtensionPages(asList(extensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, basePageX);
         verifyThatPageHasBeenAdded(inOrder, extensionPage.getPage());
@@ -108,18 +108,18 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_after_another_extension_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPageA = new ExtensionPage("page A", mock(IWizardPage.class), after("page x"));
-        INewTestCaseWizardPage extensionPageB = new ExtensionPage("page B", mock(IWizardPage.class), after("page ZZ"));
+        final INewTestCaseWizardPage extensionPageA = new ExtensionPage("page A", mock(IWizardPage.class), after("page x"));
+        final INewTestCaseWizardPage extensionPageB = new ExtensionPage("page B", mock(IWizardPage.class), after("page ZZ"));
         composer.registerExtensionPages(asList(extensionPageA, extensionPageB));
 
-        INewTestCaseWizardPage testedExtensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page B"));
+        final INewTestCaseWizardPage testedExtensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page B"));
         composer.registerExtensionPages(asList(testedExtensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, extensionPageB.getPage());
         verifyThatPageHasBeenAdded(inOrder, testedExtensionPage.getPage());
@@ -132,14 +132,14 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_before_requested_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page x"));
+        final INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page x"));
         composer.registerExtensionPages(asList(extensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, extensionPage.getPage());
         verifyThatPageHasBeenAdded(inOrder, basePageX);
@@ -150,14 +150,14 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_before_first_known_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page ZZ"));
+        final INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page ZZ"));
         composer.registerExtensionPages(asList(extensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, extensionPage.getPage());
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, basePageX);
@@ -168,18 +168,18 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_before_another_extension_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPageA = new ExtensionPage("page A", mock(IWizardPage.class), after("page x"));
-        INewTestCaseWizardPage extensionPageB = new ExtensionPage("page B", mock(IWizardPage.class), after("page ZZ"));
+        final INewTestCaseWizardPage extensionPageA = new ExtensionPage("page A", mock(IWizardPage.class), after("page x"));
+        final INewTestCaseWizardPage extensionPageB = new ExtensionPage("page B", mock(IWizardPage.class), after("page ZZ"));
         composer.registerExtensionPages(asList(extensionPageA, extensionPageB));
 
-        INewTestCaseWizardPage testedExtensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page B"));
+        final INewTestCaseWizardPage testedExtensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page B"));
         composer.registerExtensionPages(asList(testedExtensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, testedExtensionPage.getPage());
         verifyThatPageHasBeenAdded(inOrder, extensionPageB.getPage());
@@ -192,14 +192,14 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_at_last_position_when_after_unknown_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page that does not exist"));
+        final INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), after("page that does not exist"));
         composer.registerExtensionPages(asList(extensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, basePageX);
         verifyThatPageHasBeenAdded(inOrder, extensionPage.getPage());
@@ -210,14 +210,14 @@ public class NewTestCaseWizardComposerTest
     public void should_add_extension_page_at_last_position_when_before_unknown_page() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page that does not exist"));
+        final INewTestCaseWizardPage extensionPage = new ExtensionPage("test page", mock(IWizardPage.class), before("page that does not exist"));
         composer.registerExtensionPages(asList(extensionPage));
 
         // when
         composer.compose(wizard);
 
         // then
-        InOrder inOrder = Mockito.inOrder(wizard);
+        final InOrder inOrder = Mockito.inOrder(wizard);
         verifyThatPageHasBeenAdded(inOrder, basePageZz);
         verifyThatPageHasBeenAdded(inOrder, basePageX);
         verifyThatPageHasBeenAdded(inOrder, extensionPage.getPage());
@@ -228,8 +228,8 @@ public class NewTestCaseWizardComposerTest
     public void composition_should_be_repeatable() throws Exception
     {
         // given
-        INewTestCaseWizardPage extensionPage1 = new ExtensionPage("test page 1", mock(IWizardPage.class), before("page x"));
-        INewTestCaseWizardPage extensionPage2 = new ExtensionPage("test page 2", mock(IWizardPage.class), before("page that does not exist"));
+        final INewTestCaseWizardPage extensionPage1 = new ExtensionPage("test page 1", mock(IWizardPage.class), before("page x"));
+        final INewTestCaseWizardPage extensionPage2 = new ExtensionPage("test page 2", mock(IWizardPage.class), before("page that does not exist"));
         composer.registerExtensionPages(asList(extensionPage1, extensionPage2));
 
         // when

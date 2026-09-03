@@ -57,7 +57,7 @@ public class Language implements Comparable<Language>
         {
             return false;
         }
-        Language other = (Language) obj;
+        final Language other = (Language) obj;
         if(extension == null)
         {
             if(other.extension != null)

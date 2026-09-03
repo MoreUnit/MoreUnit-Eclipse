@@ -45,8 +45,8 @@ public class TestMethodDivinerFactoryTest
     {
         when(preferences.getTestMethodType(javaProject)).thenReturn(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX);
 
-        TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
-        TestMethodDiviner diviner = factory.create();
+        final TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
+        final TestMethodDiviner diviner = factory.create();
 
         assertNotNull(diviner);
         assertInstanceOf(TestMethodDivinerNoPraefix.class, diviner);
@@ -57,8 +57,8 @@ public class TestMethodDivinerFactoryTest
     {
         when(preferences.getTestMethodType(javaProject)).thenReturn(PreferenceConstants.TEST_METHOD_TYPE_JUNIT3);
 
-        TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
-        TestMethodDiviner diviner = factory.create();
+        final TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
+        final TestMethodDiviner diviner = factory.create();
 
         assertNotNull(diviner);
         assertInstanceOf(TestMethodDivinerJunit3Praefix.class, diviner);
@@ -67,8 +67,8 @@ public class TestMethodDivinerFactoryTest
     @Test
     public void create_with_type_should_return_Junit3Praefix_for_junit3()
     {
-        TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
-        TestMethodDiviner diviner = factory.create(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
+        final TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
+        final TestMethodDiviner diviner = factory.create(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3);
 
         assertNotNull(diviner);
         assertInstanceOf(TestMethodDivinerJunit3Praefix.class, diviner);
@@ -79,8 +79,8 @@ public class TestMethodDivinerFactoryTest
     {
         when(preferences.getTestMethodType(javaProject)).thenReturn(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX);
 
-        TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
-        TestMethodDiviner diviner = factory.create(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
+        final TestMethodDivinerFactory factory = new TestMethodDivinerFactory(compilationUnit);
+        final TestMethodDiviner diviner = factory.create(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4);
 
         assertNotNull(diviner);
         assertInstanceOf(TestMethodDivinerNoPraefix.class, diviner);

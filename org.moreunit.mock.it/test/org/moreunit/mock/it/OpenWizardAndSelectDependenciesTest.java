@@ -17,7 +17,7 @@ public class OpenWizardAndSelectDependenciesTest extends UiTestCase
     private final String expectationQualifier = "Mockito_post_1.9";
     private final String templateId = "org.moreunit.mock.mockitoWithAnnotationsAndJUnitRunner1.9";
 
-    private MockDependenciesAction mockDependenciesAction = new MockDependenciesAction();
+    private final MockDependenciesAction mockDependenciesAction = new MockDependenciesAction();
 
     @Test
     public void should_mock_all_dependencies_from_class_under_test() throws Exception

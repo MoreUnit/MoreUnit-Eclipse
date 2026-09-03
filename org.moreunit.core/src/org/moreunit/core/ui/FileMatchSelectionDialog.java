@@ -99,7 +99,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
             {
                 if(tree.equals(e.getSource()))
                 {
-                    TreeItem o = tree.getItem(new Point(e.x, e.y));
+                    final TreeItem o = tree.getItem(new Point(e.x, e.y));
                     if(! o.equals(fLastItem))
                     {
                         fLastItem = o;
@@ -108,9 +108,9 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
                     else if(e.y < tree.getItemHeight() / 4)
                     {
                         // Scroll up
-                        Point p = tree.toDisplay(e.x, e.y);
-                        Item item = treeViewer.scrollUp(p.x, p.y);
-                        if(item instanceof TreeItem treeItem)
+                        final Point p = tree.toDisplay(e.x, e.y);
+                        final Item item = treeViewer.scrollUp(p.x, p.y);
+                        if(item instanceof final TreeItem treeItem)
                         {
                             fLastItem = treeItem;
                             tree.setSelection(new TreeItem[] { fLastItem });
@@ -119,9 +119,9 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
                     else if(e.y > tree.getBounds().height - tree.getItemHeight() / 4)
                     {
                         // Scroll down
-                        Point p = tree.toDisplay(e.x, e.y);
-                        Item item = treeViewer.scrollDown(p.x, p.y);
-                        if(item instanceof TreeItem treeItem1)
+                        final Point p = tree.toDisplay(e.x, e.y);
+                        final Item item = treeViewer.scrollDown(p.x, p.y);
+                        if(item instanceof final TreeItem treeItem1)
                         {
                             fLastItem = treeItem1;
                             tree.setSelection(new TreeItem[] { fLastItem });
@@ -148,8 +148,8 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
 
                 if(tree.equals(e.getSource()))
                 {
-                    Object o = tree.getItem(new Point(e.x, e.y));
-                    TreeItem selection = tree.getSelection()[0];
+                    final Object o = tree.getItem(new Point(e.x, e.y));
+                    final TreeItem selection = tree.getSelection()[0];
                     if(selection.equals(o))
                     {
                         handleElementSelected();
@@ -178,7 +178,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         Object selectedElement = getSelectedElement();
         if(selectedElement instanceof TreeActionElement)
         {
-            TreeActionElement<T> action = (TreeActionElement<T>) selectedElement;
+            final TreeActionElement<T> action = (TreeActionElement<T>) selectedElement;
             if(! action.provideElement())
             {
                 return;
@@ -205,7 +205,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
 
     protected TreeViewer createTreeViewer(Composite parent)
     {
-        TreeViewer viewer = new TreeViewer(parent, SWT.NO_TRIM);
+        final TreeViewer viewer = new TreeViewer(parent, SWT.NO_TRIM);
         viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new FileLabelProvider());
@@ -229,7 +229,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
             return;
         }
 
-        Display display = loopShell.getDisplay();
+        final Display display = loopShell.getDisplay();
 
         while (loopShell != null && ! loopShell.isDisposed() && treeViewer != null)
         {
@@ -240,7 +240,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
                     display.sleep();
                 }
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 logger.error(e);
             }
@@ -255,7 +255,7 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         @Override
         public Image getImage(Object element)
         {
-            if(element instanceof TreeActionElement< ? > actionElement)
+            if(element instanceof final TreeActionElement< ? > actionElement)
             {
                 return actionElement.getImage();
             }
@@ -269,11 +269,11 @@ public class FileMatchSelectionDialog<T extends IAdaptable> extends PopupDialog 
         @Override
         public String getText(Object element)
         {
-            if(element instanceof TreeActionElement< ? > actionElement)
+            if(element instanceof final TreeActionElement< ? > actionElement)
             {
                 return actionElement.getText();
             }
-            else if(element instanceof IFile file)
+            else if(element instanceof final IFile file)
             {
                 return "%s - %s".formatted(file.getName(), file.getFullPath().removeLastSegments(1));
             }

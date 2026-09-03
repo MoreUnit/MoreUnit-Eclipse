@@ -36,7 +36,7 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
 
     public IType open()
     {
-        WizardDialog dialog = dialogFactory.createWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
+        final WizardDialog dialog = dialogFactory.createWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), this);
         if(dialog.open() == Window.OK)
         {
             typeCreated(createdType);
@@ -64,7 +64,7 @@ public abstract class NewClassyWizard extends Wizard implements INewWizard
             createdType = createClass();
             getDialogSettings().put(getPackageFragmentRootKey(), getPackageFragmentRoot().getHandleIdentifier());
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }

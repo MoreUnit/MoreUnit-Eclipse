@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 
 public class ContainerCreationRecordTest
 {
-    private ContainerCreationRecord containerCreationRecord = new ContainerCreationRecord();
+    private final ContainerCreationRecord containerCreationRecord = new ContainerCreationRecord();
 
-    private InMemoryWorkspace workspace = new InMemoryWorkspace();
+    private final InMemoryWorkspace workspace = new InMemoryWorkspace();
 
     private File childFile;
     private Folder parent;
@@ -37,7 +37,7 @@ public class ContainerCreationRecordTest
     public void should_ignore_cancellation_when_there_is_nothing_to_cancel() throws Exception
     {
         // given
-        ContainerCreationRecord emptyRecord = new ContainerCreationRecord();
+        final ContainerCreationRecord emptyRecord = new ContainerCreationRecord();
 
         // when
         emptyRecord.cancelCreation();

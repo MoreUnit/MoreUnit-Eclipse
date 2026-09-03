@@ -50,7 +50,7 @@ public class FieldInjectionPatternResolverTest
         dependencies.injectableByField().add(new FieldDependency("pack.age.Foo", "mFoo", "foo"));
 
         // when
-        String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre ${objectUnderTest}.mFoo = foo post");
@@ -65,7 +65,7 @@ public class FieldInjectionPatternResolverTest
         dependencies.injectableByField().add(new FieldDependency("BlobClass", "aBlob", "aBlob"));
 
         // when
-        String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:assignDependency(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre ${objectUnderTest}.m_foo = foo post" +

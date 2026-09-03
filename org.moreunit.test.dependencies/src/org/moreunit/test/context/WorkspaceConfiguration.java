@@ -32,7 +32,7 @@ class WorkspaceConfiguration
     private static final Map<TestType, String> TEST_TYPE_TO_PREF_VALUE;
     static
     {
-        Map<TestType, String> m = new HashMap<>();
+        final Map<TestType, String> m = new HashMap<>();
         m.put(TestType.JUNIT3, "junit3");
         m.put(TestType.JUNIT4, "junit4");
         m.put(TestType.JUNIT5, "junit5");
@@ -45,7 +45,7 @@ class WorkspaceConfiguration
 
     public WorkspaceHandler initWorkspace(Class< ? > loadingClass, String projectPrefix)
     {
-        WorkspaceHandler wsHandler = newWorkspaceHandler(loadingClass, projectPrefix);
+        final WorkspaceHandler wsHandler = newWorkspaceHandler(loadingClass, projectPrefix);
 
         createSources(wsHandler);
         applyPreferences(wsHandler);
@@ -63,14 +63,14 @@ class WorkspaceConfiguration
 
     private void createSources(WorkspaceHandler wsHandler)
     {
-        for (ProjectConfiguration projectConfig : getProjectConfigs())
+        for (final ProjectConfiguration projectConfig : getProjectConfigs())
         {
-            String projectName = projectConfig.getProjectName();
-            ProjectHandler projectHandler = wsHandler.addProject(projectName);
+            final String projectName = projectConfig.getProjectName();
+            final ProjectHandler projectHandler = wsHandler.addProject(projectName);
 
             createMainSources(projectHandler, projectConfig);
 
-            TestProjectConfiguration testProjectConfig = projectConfig.getTestProjectConfig();
+            final TestProjectConfiguration testProjectConfig = projectConfig.getTestProjectConfig();
             if(testProjectConfig != null)
             {
                 createTestSources(projectHandler, testProjectConfig, wsHandler);
@@ -84,8 +84,8 @@ class WorkspaceConfiguration
 
     private void createMainSources(ProjectHandler projectHandler, ProjectConfiguration projectConfig)
     {
-        String mainSrcFolderName = StringUtils.firstNonBlank(projectConfig.getMainSourceFolder(), Defaults.SRC_FOLDER_NAME);
-        SourceFolderHandler mainSrcHandler = newSourceFolderHandler(projectHandler, mainSrcFolderName);
+        final String mainSrcFolderName = StringUtils.firstNonBlank(projectConfig.getMainSourceFolder(), Defaults.SRC_FOLDER_NAME);
+        final SourceFolderHandler mainSrcHandler = newSourceFolderHandler(projectHandler, mainSrcFolderName);
         projectHandler.setMainSrcFolderHandler(mainSrcHandler);
         mainSrcHandler.createElementsFromSources(projectConfig.getMainSources());
         mainSrcHandler.createElements(projectConfig.getMainTypes());
@@ -98,11 +98,11 @@ class WorkspaceConfiguration
 
     private void createTestSources(ProjectHandler projectHandler, TestProjectConfiguration testProjectConfig, WorkspaceHandler wsHandler)
     {
-        String testProjectName = testProjectConfig.getProjectName();
-        ProjectHandler testProjectHandler = wsHandler.addProject(testProjectName);
+        final String testProjectName = testProjectConfig.getProjectName();
+        final ProjectHandler testProjectHandler = wsHandler.addProject(testProjectName);
 
-        String srcFolderName = StringUtils.firstNonBlank(testProjectConfig.getSourceFolder(), Defaults.SRC_FOLDER_NAME);
-        SourceFolderHandler testSrcHandler = newSourceFolderHandler(testProjectHandler, srcFolderName);
+        final String srcFolderName = StringUtils.firstNonBlank(testProjectConfig.getSourceFolder(), Defaults.SRC_FOLDER_NAME);
+        final SourceFolderHandler testSrcHandler = newSourceFolderHandler(testProjectHandler, srcFolderName);
         testProjectHandler.setMainSrcFolderHandler(testSrcHandler);
         testSrcHandler.createElementsFromSources(testProjectConfig.getSources());
         testSrcHandler.createElements(testProjectConfig.getTypes());
@@ -122,7 +122,7 @@ class WorkspaceConfiguration
             testSourcefolderName = PreferenceConstants.PREF_JUNIT_PATH_DEFAULT;
         }
 
-        SourceFolderHandler testSrcHandler = newSourceFolderHandler(projectHandler, testSourcefolderName);
+        final SourceFolderHandler testSrcHandler = newSourceFolderHandler(projectHandler, testSourcefolderName);
         projectHandler.setTestSrcFolderHandler(testSrcHandler);
         testSrcHandler.createElementsFromSources(projectConfig.getTestSources());
         testSrcHandler.createElements(projectConfig.getTestTypes());
@@ -130,7 +130,7 @@ class WorkspaceConfiguration
 
     protected void applyPreferences(WorkspaceHandler wsHandler)
     {
-        DummyPreferencesForTesting prefs = new DummyPreferencesForTesting();
+        final DummyPreferencesForTesting prefs = new DummyPreferencesForTesting();
         applyWorkspacePreferences(prefs);
         applyProjectProperties(wsHandler, prefs);
         applyClasspathUpdate(wsHandler);
@@ -162,13 +162,13 @@ class WorkspaceConfiguration
 
     private void applyProjectProperties(WorkspaceHandler workspaceHandler, DummyPreferencesForTesting prefs)
     {
-        for (ProjectConfiguration projectConfig : projectConfigs.values())
+        for (final ProjectConfiguration projectConfig : projectConfigs.values())
         {
-            PropertiesConfiguration propertiesConfig = projectConfig.getPropertiesConfig();
+            final PropertiesConfiguration propertiesConfig = projectConfig.getPropertiesConfig();
             if(propertiesConfig != null)
             {
-                ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfig.getProjectName());
-                IJavaProject project = projectHandler.get();
+                final ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfig.getProjectName());
+                final IJavaProject project = projectHandler.get();
 
                 prefs.setHasProjectSpecificSettings(project, true);
 
@@ -176,8 +176,8 @@ class WorkspaceConfiguration
 
                 if(projectHandler.getTestSrcFolderHandler() != null)
                 {
-                    IPackageFragmentRoot mainSrcFolder = projectHandler.getMainSrcFolderHandler().get();
-                    IPackageFragmentRoot testSrcFolder = projectHandler.getTestSrcFolderHandler().get();
+                    final IPackageFragmentRoot mainSrcFolder = projectHandler.getMainSrcFolderHandler().get();
+                    final IPackageFragmentRoot testSrcFolder = projectHandler.getTestSrcFolderHandler().get();
                     prefs.setMappingList(project, asList(new SourceFolderMapping(project, mainSrcFolder, testSrcFolder)));
                 }
             }
@@ -186,11 +186,11 @@ class WorkspaceConfiguration
 
     private void applyClasspathUpdate(WorkspaceHandler workspaceHandler)
     {
-        for (ProjectConfiguration projectConfiguration : projectConfigs.values())
+        for (final ProjectConfiguration projectConfiguration : projectConfigs.values())
         {
-            ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfiguration.getProjectName());
-            IJavaProject project = projectHandler.get();
-            String testType = Preferences.getInstance().getTestType(project);
+            final ProjectHandler projectHandler = workspaceHandler.getProjectHandler(projectConfiguration.getProjectName());
+            final IJavaProject project = projectHandler.get();
+            final String testType = Preferences.getInstance().getTestType(project);
             IPath containerPath = null;
             if(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3.equals(testType))
             {
@@ -214,18 +214,18 @@ class WorkspaceConfiguration
             }
             try
             {
-                IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(containerPath, project);
+                final IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(containerPath, project);
                 if(classpathContainer == null)
                 {
                     throw new RuntimeException("Could not find classpath container %s for project %s".formatted(containerPath, project));
                 }
                 WorkspaceHelper.addContainerToProject(project, classpathContainer);
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 throw new RuntimeException("Could not apply classpath update: ", e);
             }
-            catch (JavaModelException e)
+            catch (final JavaModelException e)
             {
                 throw new RuntimeException("Could not apply classpath update: ", e);
             }

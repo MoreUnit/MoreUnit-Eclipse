@@ -110,7 +110,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
             {
                 if(tree.equals(e.getSource()))
                 {
-                    TreeItem o = tree.getItem(new Point(e.x, e.y));
+                    final TreeItem o = tree.getItem(new Point(e.x, e.y));
                     if(o == null)
                     {
                         return;
@@ -123,9 +123,9 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                     else if(e.y < tree.getItemHeight() / 4)
                     {
                         // Scroll up
-                        Point p = tree.toDisplay(e.x, e.y);
-                        Item item = treeViewer.scrollUp(p.x, p.y);
-                        if(item instanceof TreeItem treeItem)
+                        final Point p = tree.toDisplay(e.x, e.y);
+                        final Item item = treeViewer.scrollUp(p.x, p.y);
+                        if(item instanceof final TreeItem treeItem)
                         {
                             fLastItem = treeItem;
                             tree.setSelection(new TreeItem[] { fLastItem });
@@ -134,9 +134,9 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                     else if(e.y > tree.getBounds().height - tree.getItemHeight() / 4)
                     {
                         // Scroll down
-                        Point p = tree.toDisplay(e.x, e.y);
-                        Item item = treeViewer.scrollDown(p.x, p.y);
-                        if(item instanceof TreeItem treeItem1)
+                        final Point p = tree.toDisplay(e.x, e.y);
+                        final Item item = treeViewer.scrollDown(p.x, p.y);
+                        if(item instanceof final TreeItem treeItem1)
                         {
                             fLastItem = treeItem1;
                             tree.setSelection(new TreeItem[] { fLastItem });
@@ -159,8 +159,8 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
                 if(tree.equals(e.getSource()))
                 {
-                    Object o = tree.getItem(new Point(e.x, e.y));
-                    TreeItem selection = tree.getSelection()[0];
+                    final Object o = tree.getItem(new Point(e.x, e.y));
+                    final TreeItem selection = tree.getSelection()[0];
                     if(selection.equals(o))
                     {
                         handleElementSelected();
@@ -187,7 +187,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         Object selectedElement = getSelectedElement();
         if(selectedElement instanceof TreeActionElement)
         {
-            TreeActionElement<T> action = (TreeActionElement<T>) selectedElement;
+            final TreeActionElement<T> action = (TreeActionElement<T>) selectedElement;
             if(! action.provideElement())
             {
                 return;
@@ -214,7 +214,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
     protected TreeViewer createTreeViewer(Composite parent)
     {
-        TreeViewer viewer = new TreeViewer(parent, SWT.NO_TRIM);
+        final TreeViewer viewer = new TreeViewer(parent, SWT.NO_TRIM);
         viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new LabelProvider()));
@@ -238,7 +238,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
             return;
         }
 
-        Display display = loopShell.getDisplay();
+        final Display display = loopShell.getDisplay();
 
         while (loopShell != null && ! loopShell.isDisposed() && treeViewer != null)
         {
@@ -249,7 +249,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
                     display.sleep();
                 }
             }
-            catch (Throwable e)
+            catch (final Throwable e)
             {
                 LogHandler.getInstance().handleWarnLog(e.toString());
             }
@@ -267,7 +267,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         @Override
         public Image getImage(Object element)
         {
-            if(element instanceof TreeActionElement action)
+            if(element instanceof final TreeActionElement action)
             {
                 return action.getImage();
             }
@@ -277,11 +277,11 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
         @Override
         public StyledString getStyledText(Object element)
         {
-            if(element instanceof TreeActionElement action)
+            if(element instanceof final TreeActionElement action)
             {
                 return styled(action.getText(), null);
             }
-            else if(element instanceof IType type)
+            else if(element instanceof final IType type)
             {
                 return styled(type.getElementName(), type.getPackageFragment().getElementName());
             }
@@ -290,7 +290,7 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
 
         private StyledString styled(String text, String decoration)
         {
-            StyledString styled = new StyledString();
+            final StyledString styled = new StyledString();
             styled.append(text);
             if(decoration != null && ! Strings.isBlank(decoration))
             {

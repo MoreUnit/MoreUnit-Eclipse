@@ -36,27 +36,27 @@ public class MethodTestCallerFinderTest extends ContextTestCase
     @Test
     public void getMatches_should_return_empty_list_when_no_testmethod_exists() throws JavaModelException
     {
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
+        final Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertTrue(matches.isEmpty());
     }
 
     @Test
     public void getMatches_should_find_only_existing_testmethod() throws JavaModelException
     {
-        MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
+        final MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
+        final Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertTrue((matches).contains(giveMe1TestMethod.get()));
     }
 
     @Test
     public void getMatches_should_find_all_testmethods() throws JavaModelException
     {
-        MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
-        MethodHandler gimme1TestMethod = testcaseType.addMethod("public void testGimme1()", "new Hello().getNumberOne();");
-        MethodHandler getNumber1TestMethod = testcaseType.addMethod("public void testGetNumber1()", "new Hello().getNumberOne();");
+        final MethodHandler giveMe1TestMethod = testcaseType.addMethod("public void testGiveMe1()", "new Hello().getNumberOne();");
+        final MethodHandler gimme1TestMethod = testcaseType.addMethod("public void testGimme1()", "new Hello().getNumberOne();");
+        final MethodHandler getNumber1TestMethod = testcaseType.addMethod("public void testGetNumber1()", "new Hello().getNumberOne();");
 
-        Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
+        final Set<IMethod> matches = new MethodTestCallerFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())).getMatches(new NullProgressMonitor());
         assertEquals(new java.util.HashSet<>(Arrays.asList(giveMe1TestMethod.get(), gimme1TestMethod.get(), getNumber1TestMethod.get())), new java.util.HashSet<>((matches)));
     }
 }

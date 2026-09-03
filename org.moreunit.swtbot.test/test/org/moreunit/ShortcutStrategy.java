@@ -26,7 +26,7 @@ public abstract class ShortcutStrategy
 	
 	protected static boolean isRunningOnLinuxOrWindows() 
 	{
-		String osName = System.getProperty("os.name");
+		final String osName = System.getProperty("os.name");
 		LogHandler.getInstance().handleInfoLog("os.name used to define on which Platform it is running "+ osName);
         return osName.contains("Linux") || osName.contains("Win");
 	}

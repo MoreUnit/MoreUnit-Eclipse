@@ -23,16 +23,16 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
     @Override
     public Object[] getChildren(Object parent)
     {
-        if(parent instanceof IPackageFragment packageFragment)
+        if(parent instanceof final IPackageFragment packageFragment)
         {
             try
             {
-            Set<ICompilationUnit> compilationUnits = new HashSet<>();
-            for (ICompilationUnit compilationUnit : packageFragment.getCompilationUnits())
+            final Set<ICompilationUnit> compilationUnits = new HashSet<>();
+            for (final ICompilationUnit compilationUnit : packageFragment.getCompilationUnits())
             {
                 if(compilationUnit.findPrimaryType() != null)
                 {
-                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                    final ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
                     if(! TypeFacade.isTestCase(compilationUnit) && ! classTypeFacade.hasTestCase())
                     {
                         compilationUnits.add(compilationUnit);
@@ -41,7 +41,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
             }
             return compilationUnits.stream().sorted(Comparator.comparing(Object::toString, String.CASE_INSENSITIVE_ORDER)).toArray(ICompilationUnit[]::new);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -52,7 +52,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
     @Override
     public Object getParent(Object child)
     {
-        if(child instanceof ICompilationUnit unit)
+        if(child instanceof final ICompilationUnit unit)
         {
             return unit.getParent();
         }
@@ -68,26 +68,26 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
     @Override
     public Object[] getElements(Object inputElement)
     {
-        Set<IPackageFragment> packages = new HashSet<>();
-        if(inputElement instanceof MissingTestsViewPart missingTestsViewPart)
+        final Set<IPackageFragment> packages = new HashSet<>();
+        if(inputElement instanceof final MissingTestsViewPart missingTestsViewPart)
         {
-            IJavaProject javaProject = missingTestsViewPart.getSelectedJavaProject();
+            final IJavaProject javaProject = missingTestsViewPart.getSelectedJavaProject();
             if(javaProject != null)
             {
-                List<IPackageFragmentRoot> allSourceFolderFromProject = PluginTools.getAllSourceFolderFromProject(javaProject);
-                for (IPackageFragmentRoot sourceFolder : allSourceFolderFromProject)
+                final List<IPackageFragmentRoot> allSourceFolderFromProject = PluginTools.getAllSourceFolderFromProject(javaProject);
+                for (final IPackageFragmentRoot sourceFolder : allSourceFolderFromProject)
                 {
                     try
                     {
-                        IJavaElement[] children = sourceFolder.getChildren();
-                        for (IJavaElement javaPackage : children)
+                        final IJavaElement[] children = sourceFolder.getChildren();
+                        for (final IJavaElement javaPackage : children)
                         {
-                            ICompilationUnit[] compilationUnits = ((IPackageFragment) javaPackage).getCompilationUnits();
-                            for (ICompilationUnit compilationUnit : compilationUnits)
+                            final ICompilationUnit[] compilationUnits = ((IPackageFragment) javaPackage).getCompilationUnits();
+                            for (final ICompilationUnit compilationUnit : compilationUnits)
                             {
                                 if(compilationUnit.findPrimaryType() != null)
                                 {
-                                    ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                                    final ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
                                     if(! TypeFacade.isTestCase(compilationUnit) && ! classTypeFacade.hasTestCase())
                                     {
                                         packages.add((IPackageFragment) javaPackage);
@@ -97,7 +97,7 @@ public class MissingClassTreeContentProvider implements ITreeContentProvider
                             }
                         }
                     }
-                    catch (JavaModelException e)
+                    catch (final JavaModelException e)
                     {
                         LogHandler.getInstance().handleExceptionLog(e);
                     }

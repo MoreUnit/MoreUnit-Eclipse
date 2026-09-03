@@ -43,14 +43,14 @@ public class WorkspaceHelper
 
     public static IJavaProject createJavaProject(String projectName) throws Exception
     {
-        IProject project = createNewProject(projectName);
+        final IProject project = createNewProject(projectName);
         return createJavaProjectFromProject(project);
     }
 
     private static IProject createNewProject(String projectName) throws CoreException
     {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IProject project = workspaceRoot.getProject(projectName);
+        final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        final IProject project = workspaceRoot.getProject(projectName);
 
         // If project existed, delete if first, because create would throw an
         // exception
@@ -69,15 +69,15 @@ public class WorkspaceHelper
 
     public static IJavaProject getJavaProject(String projectName)
     {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IProject project = workspaceRoot.getProject(projectName);
+        final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        final IProject project = workspaceRoot.getProject(projectName);
         return (IJavaProject) project.getAdapter(IJavaProject.class);
     }
 
     private static IJavaProject createJavaProjectFromProject(IProject project) throws Exception
     {
-        IJavaProject javaProject = JavaCore.create(project);
-        IProjectDescription description = project.getDescription();
+        final IJavaProject javaProject = JavaCore.create(project);
+        final IProjectDescription description = project.getDescription();
         description.setNatureIds(new String[] { JavaCore.NATURE_ID });
         project.setDescription(description, null);
 
@@ -91,9 +91,9 @@ public class WorkspaceHelper
 
     public static void addContainerToProject(IJavaProject javaProject, IClasspathContainer container) throws IOException, JavaModelException
     {
-        IClasspathEntry[] entriesToAdd = container.getClasspathEntries();
-        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + entriesToAdd.length];
+        final IClasspathEntry[] entriesToAdd = container.getClasspathEntries();
+        final IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        final IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + entriesToAdd.length];
         System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
         System.arraycopy(entriesToAdd, 0, newEntries, oldEntries.length, entriesToAdd.length);
         javaProject.setRawClasspath(newEntries, null);
@@ -101,13 +101,13 @@ public class WorkspaceHelper
 
     private static IPackageFragmentRoot createNewClassFolder(IJavaProject javaProject, String classFolderName) throws CoreException
     {
-        IFolder classFolder = javaProject.getProject().getFolder(classFolderName);
+        final IFolder classFolder = javaProject.getProject().getFolder(classFolderName);
         classFolder.create(false, true, null);
 
-        IPath outputLocation = classFolder.getFullPath();
+        final IPath outputLocation = classFolder.getFullPath();
         javaProject.setOutputLocation(outputLocation, null);
 
-        IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(classFolder);
+        final IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(classFolder);
         return fragmentRoot;
     }
 
@@ -115,8 +115,8 @@ public class WorkspaceHelper
     {
         javaProject.setRawClasspath(new IClasspathEntry[0], null);
 
-        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
+        final IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        final IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
 
         System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
         newEntries[oldEntries.length] = JavaRuntime.getDefaultJREContainerEntry();
@@ -126,9 +126,9 @@ public class WorkspaceHelper
 
     public static void addJarToProject(IJavaProject javaProject, String jarName) throws IOException, JavaModelException
     {
-        Path result = createPathForFilename(jarName);
-        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
+        final Path result = createPathForFilename(jarName);
+        final IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        final IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
         System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
         newEntries[oldEntries.length] = JavaCore.newLibraryEntry(result, null, null);
         javaProject.setRawClasspath(newEntries, null);
@@ -136,19 +136,19 @@ public class WorkspaceHelper
 
     private static Path createPathForFilename(String filename) throws IOException
     {
-        Location location = Platform.getInstallLocation();
-        URL pluginURL = location.getURL();
+        final Location location = Platform.getInstallLocation();
+        final URL pluginURL = location.getURL();
         URL jarURL;
         try
         {
             jarURL = pluginURL.toURI().resolve(filename).toURL();
         }
-        catch (URISyntaxException e)
+        catch (final URISyntaxException e)
         {
             throw new IOException(e);
         }
 
-        URL localJarURL = FileLocator.toFileURL(jarURL);
+        final URL localJarURL = FileLocator.toFileURL(jarURL);
 
         return new Path(localJarURL.getPath());
     }
@@ -165,7 +165,7 @@ public class WorkspaceHelper
 
     public static IPackageFragmentRoot createSourceFolderInProject(IJavaProject javaProject, String sourceFolderName) throws CoreException
     {
-        IFolder folder = javaProject.getProject().getFolder(sourceFolderName);
+        final IFolder folder = javaProject.getProject().getFolder(sourceFolderName);
         if(folder.exists())
         {
             return javaProject.getPackageFragmentRoot(folder);
@@ -173,10 +173,10 @@ public class WorkspaceHelper
 
         createFolder(javaProject, sourceFolderName);
 
-        IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(folder);
+        final IPackageFragmentRoot fragmentRoot = javaProject.getPackageFragmentRoot(folder);
 
-        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-        IClasspathEntry[] newEntires = new IClasspathEntry[oldEntries.length + 1];
+        final IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        final IClasspathEntry[] newEntires = new IClasspathEntry[oldEntries.length + 1];
         System.arraycopy(oldEntries, 0, newEntires, 0, oldEntries.length);
         newEntires[oldEntries.length] = JavaCore.newSourceEntry(fragmentRoot.getPath());
         javaProject.setRawClasspath(newEntires, null);
@@ -190,8 +190,8 @@ public class WorkspaceHelper
 
     public static IType createJavaClassExtending(IPackageFragment packageFragment, String javaClassName, String parentClassName) throws JavaModelException
     {
-        String declaration = "public %1$s %2$s extends %3$s { %4$s%4$s } %4$s".formatted(JavaTypeKind.CLASS.toJavaCode(), javaClassName, parentClassName, NEW_LINE);
-        String sourceCode = "%s%s%s".formatted(getPackageDeclarationString(packageFragment), NEW_LINE, declaration);
+        final String declaration = "public %1$s %2$s extends %3$s { %4$s%4$s } %4$s".formatted(JavaTypeKind.CLASS.toJavaCode(), javaClassName, parentClassName, NEW_LINE);
+        final String sourceCode = "%s%s%s".formatted(getPackageDeclarationString(packageFragment), NEW_LINE, declaration);
         return createJavaType(packageFragment, javaClassName, sourceCode);
     }
 
@@ -207,13 +207,13 @@ public class WorkspaceHelper
 
     private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, JavaTypeKind type) throws JavaModelException
     {
-        String sourceCode = "%s%s%s".formatted(getPackageDeclarationString(packageFragment), NEW_LINE, getTypeDeclarationString(type, javaClassName));
+        final String sourceCode = "%s%s%s".formatted(getPackageDeclarationString(packageFragment), NEW_LINE, getTypeDeclarationString(type, javaClassName));
         return createJavaType(packageFragment, javaClassName, sourceCode);
     }
 
     private static IType createJavaType(IPackageFragment packageFragment, String javaClassName, String sourceCode) throws JavaModelException
     {
-        ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("%s.java".formatted(javaClassName), sourceCode, false, null);
+        final ICompilationUnit compilationUnit = packageFragment.createCompilationUnit("%s.java".formatted(javaClassName), sourceCode, false, null);
         return compilationUnit.getTypes()[0];
     }
 
@@ -229,7 +229,7 @@ public class WorkspaceHelper
 
     public static IMethod createMethodInJavaType(IType javaType, String methodDeclaration, String methodSourceCode) throws JavaModelException
     {
-        String completeMethodCodeString = "%s{%s%s}".formatted(methodDeclaration, NEW_LINE, methodSourceCode);
+        final String completeMethodCodeString = "%s{%s%s}".formatted(methodDeclaration, NEW_LINE, methodSourceCode);
         return javaType.createMethod(completeMethodCodeString, null, true, null);
     }
 
@@ -240,7 +240,7 @@ public class WorkspaceHelper
 
     public static IFolder createFolder(IJavaProject project, String folderName) throws CoreException
     {
-        IFolder srcFolder = project.getProject().getFolder(folderName);
+        final IFolder srcFolder = project.getProject().getFolder(folderName);
         if(srcFolder.exists())
         {
             return srcFolder;
@@ -254,13 +254,13 @@ public class WorkspaceHelper
          * 📊 Impact: O(1) string allocations instead of O(N) array creation and string parsing. Reduced workspace locking and resource resolution overhead for deep folder hierarchies.
          * 🔬 Measurement: Workspace setup time in test suites with deep package structures should see a minor measurable decrease in latency.
          */
-        List<IFolder> foldersToCreate = new ArrayList<>();
+        final List<IFolder> foldersToCreate = new ArrayList<>();
         IFolder current = srcFolder;
 
         while (!current.exists())
         {
             foldersToCreate.add(current);
-            IContainer parent = current.getParent();
+            final IContainer parent = current.getParent();
             if(parent == null || parent.getType() != IResource.FOLDER)
             {
                 break;
@@ -270,7 +270,7 @@ public class WorkspaceHelper
 
         Collections.reverse(foldersToCreate);
 
-        for (IFolder folder : foldersToCreate)
+        for (final IFolder folder : foldersToCreate)
         {
             folder.create(false, true, null);
         }
@@ -280,7 +280,7 @@ public class WorkspaceHelper
 
     public static void deleteCompilationUnitsForTypes(IType[] types) throws JavaModelException
     {
-        for (IType type : types)
+        for (final IType type : types)
         {
             type.getCompilationUnit().delete(true, null);
         }

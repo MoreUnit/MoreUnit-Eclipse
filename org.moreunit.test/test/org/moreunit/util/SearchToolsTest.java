@@ -30,17 +30,17 @@ public class SearchToolsTest extends ContextTestCase
     @Test
     public void findConcreteSubclasses_should_find_all_concrete_subclasses() throws Exception
     {
-        TypeHandler abstractTypeHandler = context.getPrimaryTypeHandler("AbstractTest");
+        final TypeHandler abstractTypeHandler = context.getPrimaryTypeHandler("AbstractTest");
         abstractTypeHandler.get().getCompilationUnit().getBuffer().setContents("public abstract class AbstractTest {}");
         abstractTypeHandler.get().getCompilationUnit().save(null, true);
 
         abstractTypeHandler.createSubclass("ConcreteTest");
         abstractTypeHandler.createSubclass("AnotherConcreteTest");
-        TypeHandler anotherAbstractTypeHandler = abstractTypeHandler.createSubclass("AnotherAbstractTest");
+        final TypeHandler anotherAbstractTypeHandler = abstractTypeHandler.createSubclass("AnotherAbstractTest");
         anotherAbstractTypeHandler.get().getCompilationUnit().getBuffer().setContents("public abstract class AnotherAbstractTest extends AbstractTest {}");
         anotherAbstractTypeHandler.get().getCompilationUnit().save(null, true);
 
-        Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(abstractTypeHandler.get());
+        final Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(abstractTypeHandler.get());
 
         assertEquals(2, concreteSubclasses.size());
     }
@@ -49,13 +49,13 @@ public class SearchToolsTest extends ContextTestCase
     @Test
     public void findConcreteSubclasses_should_find_only_concrete_ones() throws Exception
     {
-        TypeHandler abstractTypeHandler = context.getPrimaryTypeHandler("AbstractTest2");
+        final TypeHandler abstractTypeHandler = context.getPrimaryTypeHandler("AbstractTest2");
         abstractTypeHandler.get().getCompilationUnit().getBuffer().setContents("public abstract class AbstractTest2 {}");
         abstractTypeHandler.get().getCompilationUnit().save(null, true);
 
         abstractTypeHandler.createSubclass("ConcreteTest2");
 
-        Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(abstractTypeHandler.get());
+        final Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(abstractTypeHandler.get());
 
         assertEquals(1, concreteSubclasses.size());
     }
@@ -64,16 +64,16 @@ public class SearchToolsTest extends ContextTestCase
     @Test
     public void findConcreteSubclasses_should_handle_interfaces() throws Exception
     {
-        TypeHandler interfaceHandler = context.getPrimaryTypeHandler("ITest");
+        final TypeHandler interfaceHandler = context.getPrimaryTypeHandler("ITest");
         interfaceHandler.get().getCompilationUnit().getBuffer().setContents("public interface ITest {}");
         interfaceHandler.get().getCompilationUnit().save(null, true);
 
         interfaceHandler.createSubclass("ConcreteTest3");
-        TypeHandler abstractTypeHandler = interfaceHandler.createSubclass("AbstractTest3");
+        final TypeHandler abstractTypeHandler = interfaceHandler.createSubclass("AbstractTest3");
         abstractTypeHandler.get().getCompilationUnit().getBuffer().setContents("public abstract class AbstractTest3 implements ITest {}");
         abstractTypeHandler.get().getCompilationUnit().save(null, true);
 
-        Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(interfaceHandler.get());
+        final Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(interfaceHandler.get());
 
         assertEquals(1, concreteSubclasses.size());
     }
@@ -82,11 +82,11 @@ public class SearchToolsTest extends ContextTestCase
     @Test
     public void search_should_return_the_types_matching_the_given_pattern() throws Exception
     {
-        IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new org.eclipse.jdt.core.IJavaElement[] { context.getProjectHandler().get() });
+        final IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new org.eclipse.jdt.core.IJavaElement[] { context.getProjectHandler().get() });
 
-        SearchPattern pattern = SearchPattern.createPattern("SearchTarget*", IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH);
+        final SearchPattern pattern = SearchPattern.createPattern("SearchTarget*", IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH);
 
-        Collection<IType> matches = SearchTools.search(pattern, scope);
+        final Collection<IType> matches = SearchTools.search(pattern, scope);
 
         assertEquals(2, matches.size());
         assertTrue(matches.stream().anyMatch(t -> "SearchTarget".equals(t.getElementName())));
@@ -97,15 +97,15 @@ public class SearchToolsTest extends ContextTestCase
     @Test
     public void createSearchPattern_should_combine_patterns_with_or() throws Exception
     {
-        Method method = SearchTools.class.getDeclaredMethod("createSearchPattern", Collection.class, int.class, int.class, int.class);
+        final Method method = SearchTools.class.getDeclaredMethod("createSearchPattern", Collection.class, int.class, int.class, int.class);
         method.setAccessible(true);
 
-        SearchPattern pattern = (SearchPattern) method.invoke(null, java.util.List.of("OrTarget", "DoesNotExist"), IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
+        final SearchPattern pattern = (SearchPattern) method.invoke(null, java.util.List.of("OrTarget", "DoesNotExist"), IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
 
         assertNotNull(pattern);
 
-        IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new org.eclipse.jdt.core.IJavaElement[] { context.getProjectHandler().get() });
-        Collection<IType> matches = SearchTools.search(pattern, scope);
+        final IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new org.eclipse.jdt.core.IJavaElement[] { context.getProjectHandler().get() });
+        final Collection<IType> matches = SearchTools.search(pattern, scope);
         assertEquals(1, matches.size());
         assertEquals("OrTarget", matches.iterator().next().getElementName());
     }

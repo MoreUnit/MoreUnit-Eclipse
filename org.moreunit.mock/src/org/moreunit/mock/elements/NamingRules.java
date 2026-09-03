@@ -14,19 +14,19 @@ public class NamingRules
 
     public String cleanFieldName(String fieldName)
     {
-        String baseName = NamingConventions.getBaseName(NamingConventions.VK_INSTANCE_FIELD, fieldName, project);
+        final String baseName = NamingConventions.getBaseName(NamingConventions.VK_INSTANCE_FIELD, fieldName, project);
         return baseName != null ? baseName : fieldName;
     }
 
     public String cleanParameterName(String parameterName)
     {
-        String baseName = NamingConventions.getBaseName(NamingConventions.VK_PARAMETER, parameterName, project);
+        final String baseName = NamingConventions.getBaseName(NamingConventions.VK_PARAMETER, parameterName, project);
         return baseName != null ? baseName : parameterName;
     }
 
     public String decorateFieldName(String fieldName)
     {
-        String[] suggestions = NamingConventions.suggestVariableNames(NamingConventions.VK_INSTANCE_FIELD, NamingConventions.BK_NAME, fieldName, project, 0, null, true);
+        final String[] suggestions = NamingConventions.suggestVariableNames(NamingConventions.VK_INSTANCE_FIELD, NamingConventions.BK_NAME, fieldName, project, 0, null, true);
         return suggestions != null && suggestions.length != 0 ? suggestions[0] : fieldName;
     }
 }

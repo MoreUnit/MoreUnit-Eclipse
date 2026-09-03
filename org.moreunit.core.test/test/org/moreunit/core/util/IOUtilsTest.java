@@ -17,8 +17,8 @@ public class IOUtilsTest
     public void closeQuietly_should_close_resources() throws Exception
     {
         // given
-        Closeable closeable1 = mock(Closeable.class);
-        Closeable closeable2 = mock(Closeable.class);
+        final Closeable closeable1 = mock(Closeable.class);
+        final Closeable closeable2 = mock(Closeable.class);
 
         // when
         closeQuietly(closeable1, closeable2);
@@ -43,7 +43,7 @@ public class IOUtilsTest
     public void closeQuietly_should_swallow_IOExceptions() throws Exception
     {
         // given
-        Closeable closeable = mock(Closeable.class);
+        final Closeable closeable = mock(Closeable.class);
 
         doThrow(new IOException()).when(closeable).close();
 
@@ -75,9 +75,9 @@ public class IOUtilsTest
     public void closeQuietly_should_continue_closing_remaining_resources_on_exception() throws Exception
     {
         // given
-        Closeable c1 = mock(Closeable.class);
-        Closeable c2 = mock(Closeable.class);
-        Closeable c3 = mock(Closeable.class);
+        final Closeable c1 = mock(Closeable.class);
+        final Closeable c2 = mock(Closeable.class);
+        final Closeable c3 = mock(Closeable.class);
 
         doThrow(new IOException()).when(c2).close();
 

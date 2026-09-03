@@ -51,46 +51,46 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_create_junit3_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
 
-        MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
+        final MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
         assertTrue(result.methodCreated());
         assertFalse(result.methodAlreadyExists());
 
-        IMethod createTestMethod = result.getMethod();
+        final IMethod createTestMethod = result.getMethod();
         assertEquals(createTestMethod.getElementName(), "testGetNumberOne");
         assertFalse((createTestMethod.getSource()).contains("@Test"));
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_junit4_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
         assertEquals(createTestMethod.getElementName(), "getNumberOne");
         assertTrue(createTestMethod.getSource().startsWith("@Test"));
         assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_junit5_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
         assertEquals(createTestMethod.getElementName(), "getNumberOne");
         assertTrue(createTestMethod.getSource().startsWith("@Test"));
         assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
@@ -98,30 +98,30 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = true)
     public void createTestMethod_should_create_junit4_testmethod_with_prefix() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
         assertEquals(createTestMethod.getElementName(), "testGetNumberOne");
         assertTrue(createTestMethod.getSource().startsWith("@Test"));
         assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_testng_testmethod() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_TESTNG).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_TESTNG).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
         assertEquals(createTestMethod.getElementName(), "getNumberOne");
         assertTrue(createTestMethod.getSource().startsWith("@Test"));
         assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
@@ -129,54 +129,54 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = true)
     public void createTestMethod_should_create_testng_testmethod_with_prefix() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_TESTNG).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_TESTNG).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
         assertEquals(createTestMethod.getElementName(), "testGetNumberOne");
         assertTrue(createTestMethod.getSource().startsWith("@Test"));
         assertTrue((createTestMethod.getSource()).contains(SOME_TEST_CODE));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(new java.util.HashSet<>(Arrays.asList(createTestMethod)), new java.util.HashSet<>(Arrays.asList(methods)));
     }
 
     @Test
     public void createTestMethod_should_create_another_junit3_testmethod_when_called_with_testmethod() throws CoreException
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
+        final MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
         assertEquals(createTestMethod.getElementName(), "testGetNumberOneSuffix");
         assertFalse((createTestMethod.getSource()).contains("@Test"));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(2, methods.length);
     }
 
     @Test
     public void createTestMethod_should_create_another_junit4_testmethod_when_called_with_testmethod() throws CoreException
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("public void getNumberOne()");
+        final MethodHandler existingTestMethod = testcaseType.addMethod("public void getNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
         assertEquals(createTestMethod.getElementName(), "getNumberOneSuffix");
         assertTrue(createTestMethod.getSource().startsWith("@Test"));
 
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(2, methods.length);
     }
 
     @Test
     public void createTestMethod_should_create_final_method_when_selected() throws Exception
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
         assertTrue((createTestMethod.getSource()).contains("public final void"));
     }
 
@@ -184,12 +184,12 @@ public class TestmethodCreatorTest extends ContextTestCase
     public void createTestMethod_should_use_parameter_types_in_method_name_when_method_under_test_is_overloaded() throws Exception
     {
         // given
-        MethodHandler doSomethingWithoutArg = cutType.addMethod("public void doSomething()", "");
-        MethodHandler doSomethingWithString = cutType.addMethod("public void doSomething(String str)", "");
-        MethodHandler doSomethingWithInteger = cutType.addMethod("public void doSomething(Integer i, Double d)", "");
-        MethodHandler doSomethingElseWithString = cutType.addMethod("public void doSomethingElse(String str)", "");
+        final MethodHandler doSomethingWithoutArg = cutType.addMethod("public void doSomething()", "");
+        final MethodHandler doSomethingWithString = cutType.addMethod("public void doSomething(String str)", "");
+        final MethodHandler doSomethingWithInteger = cutType.addMethod("public void doSomething(Integer i, Double d)", "");
+        final MethodHandler doSomethingElseWithString = cutType.addMethod("public void doSomethingElse(String str)", "");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
 
         // when
         testmethodCreator.createTestMethod(doSomethingWithoutArg.get());
@@ -205,10 +205,10 @@ public class TestmethodCreatorTest extends ContextTestCase
     public void createTestMethods_should_use_parameter_types_in_method_name_when_method_under_test_is_overloaded() throws Exception
     {
         // given
-        MethodHandler doSomethingWithoutArg = cutType.addMethod("public void doSomething()", "");
-        MethodHandler doSomethingWithStringArray = cutType.addMethod("public void doSomething(String[] str)", "");
+        final MethodHandler doSomethingWithoutArg = cutType.addMethod("public void doSomething()", "");
+        final MethodHandler doSomethingWithStringArray = cutType.addMethod("public void doSomething(String[] str)", "");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createFinalMethod(true).createTasks(false));
 
         // when
         testmethodCreator.createTestMethods(asList(doSomethingWithoutArg.get(), doSomethingWithStringArray.get()));
@@ -220,11 +220,11 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_not_create_another_test_method_when_called_with_method_under_test() throws CoreException
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
+        final MethodHandler existingTestMethod = testcaseType.addMethod("public void testGetNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_3).defaultTestMethodContent(SOME_TEST_CODE));
 
-        MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
+        final MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
         assertTrue(result.methodAlreadyExists());
         assertFalse(result.methodCreated());
@@ -234,9 +234,9 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_not_create_anything_when_called_with_null_method() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
-        MethodCreationResult result = testmethodCreator.createTestMethod(null);
+        final MethodCreationResult result = testmethodCreator.createTestMethod(null);
 
         assertFalse(result.methodCreated());
         assertNull(result.getMethod());
@@ -247,9 +247,9 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_not_add_comments_for_the_new_test_method_when_not_requested() throws Exception
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).generateComments(false));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).generateComments(false));
 
-        MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
+        final MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
         assertTrue(result.methodCreated());
         assertNull(result.getMethod().getJavadocRange());
@@ -259,9 +259,9 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_generate_comments_for_the_new_test_method_when_called_with_method_under_test() throws Exception
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent("").generateComments(true));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent("").generateComments(true));
 
-        MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
+        final MethodCreationResult result = testmethodCreator.createTestMethod(methodUnderTest.get());
 
         assertTrue(result.methodCreated());
         assertNotNull(result.getMethod().getJavadocRange());
@@ -272,11 +272,11 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_copy_comments_from_the_existing_test_method_when_called_with_that_test_method() throws Exception
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("/** Some test comments. */ @Test public void getNumberOne()");
+        final MethodHandler existingTestMethod = testcaseType.addMethod("/** Some test comments. */ @Test public void getNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent("").generateComments(true));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent("").generateComments(true));
 
-        IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
+        final IMethod createTestMethod = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
         assertNotNull(createTestMethod.getJavadocRange());
         assertEquals(createTestMethod.getSource().replaceAll("\\s+", " "), "/** Some test comments. */" + " @Test" + " public void getNumberOneSuffix() { }");
     }
@@ -289,16 +289,16 @@ public class TestmethodCreatorTest extends ContextTestCase
 
         // pass the IMethod handle coming from the test case type so that the
         // sibling lookup (which uses reference equality) finds the method
-        IMethod existingHandle = Arrays.stream(testcaseType.get().getMethods()) //
+        final IMethod existingHandle = Arrays.stream(testcaseType.get().getMethods()) //
                 .filter(m -> "getNumberOne".equals(m.getElementName())) //
                 .findFirst().orElseThrow();
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE));
 
-        IMethod created = testmethodCreator.createTestMethod(existingHandle).getMethod();
+        final IMethod created = testmethodCreator.createTestMethod(existingHandle).getMethod();
 
         assertEquals("getNumberOneSuffix", created.getElementName());
-        IMethod[] methods = testcaseType.get().getMethods();
+        final IMethod[] methods = testcaseType.get().getMethods();
         assertEquals(3, methods.length);
         // the new method must be inserted above the method that followed the existing test method
         assertEquals("getNumberOneSuffix", methods[1].getElementName());
@@ -308,9 +308,9 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_add_todo_task_when_requested() throws CoreException
     {
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createTasks(true));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).createTasks(true));
 
-        IMethod created = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
+        final IMethod created = testmethodCreator.createTestMethod(methodUnderTest.get()).getMethod();
 
         assertTrue(created.getSource().contains("// TODO"));
     }
@@ -320,14 +320,14 @@ public class TestmethodCreatorTest extends ContextTestCase
     public void createTestMethod_should_mention_parameter_types_in_generated_comment() throws CoreException
     {
         cutType.addMethod("public int add(int a)", "return 0");
-        MethodHandler methodWithParams = cutType.addMethod("public int add(int a, String b)", "return 0");
+        final MethodHandler methodWithParams = cutType.addMethod("public int add(int a, String b)", "return 0");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));
 
-        IMethod created = testmethodCreator.createTestMethod(methodWithParams.get()).getMethod();
+        final IMethod created = testmethodCreator.createTestMethod(methodWithParams.get()).getMethod();
 
         assertEquals("addIntString", created.getElementName());
-        String comment = created.getSource().replaceAll("\\s+", " ");
+        final String comment = created.getSource().replaceAll("\\s+", " ");
         assertTrue(comment.contains("{@link testing.Hello#add(int, java.lang.String)}"), comment);
     }
 
@@ -335,11 +335,11 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_not_copy_comments_when_existing_test_method_has_no_javadoc() throws CoreException
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("@Test public void getNumberOne()");
+        final MethodHandler existingTestMethod = testcaseType.addMethod("@Test public void getNumberOne()");
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(testcaseType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));
 
-        IMethod created = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
+        final IMethod created = testmethodCreator.createTestMethod(existingTestMethod.get()).getMethod();
 
         assertEquals("getNumberOneSuffix", created.getElementName());
         assertNull(created.getJavadocRange());

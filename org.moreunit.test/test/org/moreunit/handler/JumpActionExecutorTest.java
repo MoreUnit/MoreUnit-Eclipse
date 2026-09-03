@@ -71,11 +71,11 @@ public class JumpActionExecutorTest extends ContextTestCase
     {
         try
         {
-            var constructor = JumpActionExecutor.class.getDeclaredConstructor(EditorUI.class);
+            final var constructor = JumpActionExecutor.class.getDeclaredConstructor(EditorUI.class);
             constructor.setAccessible(true);
             return constructor.newInstance(editorUI);
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
             throw new RuntimeException(e);
         }
@@ -83,8 +83,8 @@ public class JumpActionExecutorTest extends ContextTestCase
 
     private void await(Runnable assertion) throws Exception
     {
-        Display display = Display.getDefault();
-        long deadline = System.currentTimeMillis() + 30_000;
+        final Display display = Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 30_000;
         AssertionError lastFailure = null;
         while (System.currentTimeMillis() < deadline)
         {
@@ -94,7 +94,7 @@ public class JumpActionExecutorTest extends ContextTestCase
                 assertion.run();
                 return;
             }
-            catch (AssertionError e)
+            catch (final AssertionError e)
             {
                 lastFailure = e;
             }
@@ -105,10 +105,10 @@ public class JumpActionExecutorTest extends ContextTestCase
 
     private IEditorPart editorOver(ICompilationUnit compilationUnit, ISourceRange selectionRange)
     {
-        IEditorPart editorPart = mock(IEditorPart.class);
-        IEditorInput editorInput = mock(IEditorInput.class);
-        IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
-        ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
+        final IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
+        final ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
 
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         when(editorInput.getAdapter(IFile.class)).thenReturn((IFile) compilationUnit.getResource());
@@ -128,8 +128,8 @@ public class JumpActionExecutorTest extends ContextTestCase
     @Test
     public void executeJumpAction_should_jump_from_class_to_corresponding_test_case() throws Exception
     {
-        ICompilationUnit foo = context.getCompilationUnit("com.Foo");
-        ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final ICompilationUnit foo = context.getCompilationUnit("com.Foo");
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
 
         newExecutorWithMockedEditorUI().executeJumpAction(foo);
 
@@ -139,8 +139,8 @@ public class JumpActionExecutorTest extends ContextTestCase
     @Test
     public void executeJumpAction_should_jump_from_test_case_to_corresponding_class() throws Exception
     {
-        ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
-        ICompilationUnit foo = context.getCompilationUnit("com.Foo");
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final ICompilationUnit foo = context.getCompilationUnit("com.Foo");
 
         newExecutorWithMockedEditorUI().executeJumpAction(fooTest);
 
@@ -150,8 +150,8 @@ public class JumpActionExecutorTest extends ContextTestCase
     @Test
     public void executeJumpAction_should_accept_a_file_and_jump_to_corresponding_member() throws Exception
     {
-        IFile fooFile = (IFile) context.getCompilationUnit("com.Foo").getResource();
-        ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final IFile fooFile = (IFile) context.getCompilationUnit("com.Foo").getResource();
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
 
         newExecutorWithMockedEditorUI().executeJumpAction(fooFile);
 
@@ -161,11 +161,11 @@ public class JumpActionExecutorTest extends ContextTestCase
     @Test
     public void executeJumpAction_should_jump_to_corresponding_test_method_and_reveal_it() throws Exception
     {
-        IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
-        IMethod testFoo = context.getPrimaryTypeHandler("com.FooTest").addMethod("@Test\npublic void foo()", "").get();
-        ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
+        final IMethod testFoo = context.getPrimaryTypeHandler("com.FooTest").addMethod("@Test\npublic void foo()", "").get();
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
 
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange());
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange());
 
         newExecutorWithMockedEditorUI().executeJumpAction(editorPart);
 
@@ -181,16 +181,16 @@ public class JumpActionExecutorTest extends ContextTestCase
     @Test
     public void revealInEditor_should_delegate_to_editor_ui()
     {
-        IEditorPart editorPart = mock(IEditorPart.class);
-        IMethod method = mock(IMethod.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
+        final IMethod method = mock(IMethod.class);
 
         try
         {
-            var reveal = JumpActionExecutor.class.getDeclaredMethod("revealInEditor", IEditorPart.class, IMethod.class);
+            final var reveal = JumpActionExecutor.class.getDeclaredMethod("revealInEditor", IEditorPart.class, IMethod.class);
             reveal.setAccessible(true);
             reveal.invoke(newExecutorWithMockedEditorUI(), editorPart, method);
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
             throw new RuntimeException(e);
         }

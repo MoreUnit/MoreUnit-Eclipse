@@ -29,7 +29,7 @@ public class MockDependenciesPageManager
 
     public MockDependenciesWizardPage createPage(final INewTestCaseWizardContext context)
     {
-        DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(logger);
+        final DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(logger);
         return wizardFactory.createMockDependenciesWizardPage(new MockDependenciesWizardValues()
         {
             @Override
@@ -41,7 +41,7 @@ public class MockDependenciesPageManager
             @Override
             public DependencyInjectionPointProvider getInjectionPointProvider()
             {
-                DependencyInjectionPointProvider provider = new DependencyInjectionPointCollector(context.getClassUnderTest(), context.getTestCasePackage());
+                final DependencyInjectionPointProvider provider = new DependencyInjectionPointCollector(context.getClassUnderTest(), context.getTestCasePackage());
                 return new DependencyInjectionPointProviderCache(provider);
             }
         }, injectionPointStore);
@@ -49,7 +49,7 @@ public class MockDependenciesPageManager
 
     private MockDependenciesWizardPage createPage(final IType classUnderTest, final IPackageFragment testCasePackage)
     {
-        DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(logger);
+        final DependencyInjectionPointStore injectionPointStore = new DependencyInjectionPointStore(logger);
 
         return wizardFactory.createMockDependenciesWizardPage(new MockDependenciesWizardValues()
         {
@@ -62,7 +62,7 @@ public class MockDependenciesPageManager
             @Override
             public DependencyInjectionPointProvider getInjectionPointProvider()
             {
-                DependencyInjectionPointCollector provider = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
+                final DependencyInjectionPointCollector provider = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
                 return new DependencyInjectionPointProviderCache(provider);
             }
         }, injectionPointStore);
@@ -72,16 +72,16 @@ public class MockDependenciesPageManager
     {
         page.validated();
 
-        IType classUnderTest = page.getClassUnderTest();
-        DependencyInjectionPointStore injectionPointStore = page.getInjectionPointStore();
+        final IType classUnderTest = page.getClassUnderTest();
+        final DependencyInjectionPointStore injectionPointStore = page.getInjectionPointStore();
 
-        NamingRules namingRules = new NamingRules(classUnderTest.getJavaProject());
-        Dependencies dependencies = new Dependencies(classUnderTest, injectionPointStore, namingRules);
+        final NamingRules namingRules = new NamingRules(classUnderTest.getJavaProject());
+        final Dependencies dependencies = new Dependencies(classUnderTest, injectionPointStore, namingRules);
         try
         {
             dependencies.init();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // MSG
             logger.error("Could not determine dependencies to mock for " + classUnderTest.getElementName());
@@ -93,7 +93,7 @@ public class MockDependenciesPageManager
 
     public void openWizard(IType classUnderTest, IType testCase)
     {
-        MockDependenciesWizardPage page = createPage(classUnderTest, testCase.getPackageFragment());
+        final MockDependenciesWizardPage page = createPage(classUnderTest, testCase.getPackageFragment());
 
         if(logger.debugEnabled())
         {
@@ -106,7 +106,7 @@ public class MockDependenciesPageManager
             {
                 logger.debug("User confirmed mocking of dependencies");
             }
-            String testType = Preferences.forProject(classUnderTest.getJavaProject()).getTestType();
+            final String testType = Preferences.forProject(classUnderTest.getJavaProject()).getTestType();
             pageValidated(page, testCase, testType);
         }
     }

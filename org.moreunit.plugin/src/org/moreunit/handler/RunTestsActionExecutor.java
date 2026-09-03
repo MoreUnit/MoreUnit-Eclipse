@@ -95,13 +95,13 @@ public class RunTestsActionExecutor
 
     public void executeRunTestAction(IEditorPart editorPart, String launchMode)
     {
-        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
+        final ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
         executeRunAllTestsAction(compilationUnit, launchMode);
     }
 
     private ICompilationUnit createCompilationUnitFrom(IEditorPart editorPart)
     {
-        IFile file = editorPart.getEditorInput().getAdapter(IFile.class);
+        final IFile file = editorPart.getEditorInput().getAdapter(IFile.class);
         return JavaCore.createCompilationUnitFrom(file);
     }
 
@@ -115,8 +115,8 @@ public class RunTestsActionExecutor
         saveIfNeeded(compilationUnit);
         Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
 
-            Collection<IType> testCases = new LinkedHashSet<>();
-            IType selectedJavaType = compilationUnit.findPrimaryType();
+            final Collection<IType> testCases = new LinkedHashSet<>();
+            final IType selectedJavaType = compilationUnit.findPrimaryType();
 
             if(TypeFacade.isTestCase(selectedJavaType))
             {
@@ -124,8 +124,8 @@ public class RunTestsActionExecutor
             }
             else
             {
-                IJavaProject javaProject = selectedJavaType.getJavaProject();
-                ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
+                final IJavaProject javaProject = selectedJavaType.getJavaProject();
+                final ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
 
                 if(featureDetector.isTestSelectionRunSupported(javaProject))
                 {
@@ -133,7 +133,7 @@ public class RunTestsActionExecutor
                 }
                 else
                 {
-                    CorrespondingTestCase testCase = typeFacade.getOneCorrespondingTestCase(true, "Run test...");
+                    final CorrespondingTestCase testCase = typeFacade.getOneCorrespondingTestCase(true, "Run test...");
                     if(testCase.found() && ! testCase.hasJustBeenCreated())
                     {
                         testCases.add(testCase.get());
@@ -151,8 +151,8 @@ public class RunTestsActionExecutor
 
     private Collection<IType> resolveAbstractTestCases(Collection<IType> testCases)
     {
-        Collection<IType> resolvedTestCases = new LinkedHashSet<>();
-        for (IType testCase : testCases)
+        final Collection<IType> resolvedTestCases = new LinkedHashSet<>();
+        for (final IType testCase : testCases)
         {
             resolvedTestCases.addAll(resolveAbstractTestCase(testCase));
         }
@@ -168,7 +168,7 @@ public class RunTestsActionExecutor
                 return Collections.singleton(testCase);
             }
 
-            Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(testCase);
+            final Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(testCase);
             if(concreteSubclasses.isEmpty())
             {
                 return Collections.singleton(testCase);
@@ -178,17 +178,17 @@ public class RunTestsActionExecutor
                 return Collections.singleton(concreteSubclasses.iterator().next());
             }
 
-            Collection<IType> choice = chooseSubclasses(testCase, concreteSubclasses);
+            final Collection<IType> choice = chooseSubclasses(testCase, concreteSubclasses);
             if(choice != null && ! choice.isEmpty())
             {
-                for (IType type : choice)
+                for (final IType type : choice)
                 {
                     MemberJumpHistory.getInstance().registerJump(testCase, type);
                 }
                 return choice;
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // ignore and return original
         }
@@ -197,7 +197,7 @@ public class RunTestsActionExecutor
 
     private void saveIfNeeded(ICompilationUnit compilationUnit)
     {
-        IEditorPart editorPart = EditorUtility.isOpenInEditor(compilationUnit);
+        final IEditorPart editorPart = EditorUtility.isOpenInEditor(compilationUnit);
         if(editorPart != null && editorPart.isDirty())
         {
             editorPart.doSave(new NullProgressMonitor());
@@ -206,8 +206,8 @@ public class RunTestsActionExecutor
 
     public void executeRunTestsOfSelectedMemberAction(IEditorPart editorPart, String launchMode)
     {
-        ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
-        IMethod methodFromEditor = editorPart == null ? null : new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
+        final ICompilationUnit compilationUnit = createCompilationUnitFrom(editorPart);
+        final IMethod methodFromEditor = editorPart == null ? null : new EditorPartFacade(editorPart).getFirstNonAnonymousMethodSurroundingCursorPosition();
         executeRunTestsOfSelectedMemberAction(methodFromEditor, compilationUnit, launchMode);
     }
 
@@ -215,8 +215,8 @@ public class RunTestsActionExecutor
     {
         saveIfNeeded(compilationUnit);
         Jobs.waitForIndexExecuteAndRunInUI("Running tests ... ", () -> {
-            Collection<IMember> testElements = new LinkedHashSet<>();
-            IType selectedJavaType = compilationUnit.findPrimaryType();
+            final Collection<IMember> testElements = new LinkedHashSet<>();
+            final IType selectedJavaType = compilationUnit.findPrimaryType();
 
             if(TypeFacade.isTestCase(selectedJavaType))
             {
@@ -224,11 +224,11 @@ public class RunTestsActionExecutor
             }
             else
             {
-                IJavaProject javaProject = compilationUnit.getJavaProject();
-                MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(javaProject);
-                ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
+                final IJavaProject javaProject = compilationUnit.getJavaProject();
+                final MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(javaProject);
+                final ClassTypeFacade typeFacade = new ClassTypeFacade(compilationUnit);
 
-                IMethod methodUnderTest = methodFromEditor;
+                final IMethod methodUnderTest = methodFromEditor;
 
                 if(methodUnderTest != null && featureDetector.isTestSelectionRunSupported(selectedJavaType.getJavaProject()))
                 {
@@ -236,7 +236,7 @@ public class RunTestsActionExecutor
                 }
                 else
                 {
-                    CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+                    final CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                             .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                             .withCurrentMethod(methodUnderTest) //
                             .methodSearchMode(searchMode) //
@@ -257,8 +257,8 @@ public class RunTestsActionExecutor
 
     private Collection<IMember> resolveAbstractTestElements(Collection<IMember> testElements)
     {
-        Collection<IMember> resolvedTestElements = new LinkedHashSet<>();
-        for (IMember testElement : testElements)
+        final Collection<IMember> resolvedTestElements = new LinkedHashSet<>();
+        for (final IMember testElement : testElements)
         {
             resolvedTestElements.addAll(resolveAbstractTestElement(testElement));
         }
@@ -267,7 +267,7 @@ public class RunTestsActionExecutor
 
     private Collection<IMember> resolveAbstractTestElement(IMember testElement)
     {
-        IType type = testElement instanceof IType it ? it : testElement.getDeclaringType();
+        final IType type = testElement instanceof final IType it ? it : testElement.getDeclaringType();
         try
         {
             if(! Flags.isAbstract(type.getFlags()))
@@ -275,7 +275,7 @@ public class RunTestsActionExecutor
                 return Collections.singleton(testElement);
             }
 
-            Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(type);
+            final Collection<IType> concreteSubclasses = SearchTools.findConcreteSubclasses(type);
             if(concreteSubclasses.isEmpty())
             {
                 return Collections.singleton(testElement);
@@ -285,11 +285,11 @@ public class RunTestsActionExecutor
                 return Collections.singleton(substituteType(testElement, concreteSubclasses.iterator().next()));
             }
 
-            Collection<IType> chosenSubclasses = chooseSubclasses(type, concreteSubclasses);
+            final Collection<IType> chosenSubclasses = chooseSubclasses(type, concreteSubclasses);
             if(chosenSubclasses != null && ! chosenSubclasses.isEmpty())
             {
-                Collection<IMember> resolvedElements = new ArrayList<>();
-                for (IType chosenSubclass : chosenSubclasses)
+                final Collection<IMember> resolvedElements = new ArrayList<>();
+                for (final IType chosenSubclass : chosenSubclasses)
                 {
                     MemberJumpHistory.getInstance().registerJump(testElement, chosenSubclass);
                     resolvedElements.add(substituteType(testElement, chosenSubclass));
@@ -297,7 +297,7 @@ public class RunTestsActionExecutor
                 return resolvedElements;
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // ignore and return original
         }
@@ -314,8 +314,8 @@ public class RunTestsActionExecutor
         // If not, we still return the method from the abstract class, but the launcher should handle it.
         // Actually, JDT's JUnit launcher handles methods from superclasses correctly if the target type is the subclass.
         // But for clarity, let's see if we can find the method in the subclass.
-        IMethod method = (IMethod) testElement;
-        IMethod subclassMethod = newType.getMethod(method.getElementName(), method.getParameterTypes());
+        final IMethod method = (IMethod) testElement;
+        final IMethod subclassMethod = newType.getMethod(method.getElementName(), method.getParameterTypes());
         if(subclassMethod.exists())
         {
             return subclassMethod;
@@ -331,23 +331,24 @@ public class RunTestsActionExecutor
             defaultSelection = null;
         }
 
-        MemberContentProvider contentProvider = new MemberContentProvider(concreteSubclasses, (IType) defaultSelection);
+        final MemberContentProvider contentProvider = new MemberContentProvider(concreteSubclasses, (IType) defaultSelection);
         contentProvider.withAction(new AllSubclassesAction(concreteSubclasses));
 
-        String promptText = "Choose concrete subclass for " + abstractType.getElementName();
+        final String promptText = "Choose concrete subclass for " + abstractType.getElementName();
         return Display.getDefault().syncCall(() -> {
-            ChooseDialog<Object> dialog = new ChooseDialog<>(promptText, contentProvider);
-            Object choice = dialog.getChoice();
+            final ChooseDialog<Object> dialog = new ChooseDialog<>(promptText, contentProvider);
+            final Object choice = dialog.getChoice();
             if(choice instanceof Collection)
             {
                 // choice comes from ChooseDialog<Object>: the dialog was fed
                 // with IType elements (plus a TreeActionElement returning
                 // Collection<IType>), so an unchecked cast is safe here
                 @SuppressWarnings("unchecked")
+                final
                 Collection<IType> selectedTypes = (Collection<IType>) choice;
                 return selectedTypes;
             }
-            if(choice instanceof IType type)
+            if(choice instanceof final IType type)
             {
                 return Collections.singleton(type);
             }
@@ -405,10 +406,10 @@ public class RunTestsActionExecutor
 
     private void runTests(Collection< ? extends IMember> testElements, String launchMode)
     {
-        IJavaElement aTestMember = testElements.iterator().next();
+        final IJavaElement aTestMember = testElements.iterator().next();
         if(aTestMember != null)
         {
-            String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
+            final String testType = Preferences.getInstance().getTestType(aTestMember.getJavaProject());
             testLauncher.launch(testType, testElements, launchMode);
         }
     }

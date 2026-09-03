@@ -24,7 +24,7 @@ public class EclipseWorkspace extends EclipseResourceContainer implements Worksp
         return InstanceHolder.INSTANCE;
     }
 
-    private IWorkspaceRoot workspaceRoot;
+    private final IWorkspaceRoot workspaceRoot;
 
     private EclipseWorkspace()
     {
@@ -82,9 +82,9 @@ public class EclipseWorkspace extends EclipseResourceContainer implements Worksp
     @Override
     public List<Project> listProjects()
     {
-        IProject[] projects = workspaceRoot.getProjects();
-        List<Project> result = new ArrayList<>(projects.length);
-        for (IProject p : projects)
+        final IProject[] projects = workspaceRoot.getProjects();
+        final List<Project> result = new ArrayList<>(projects.length);
+        for (final IProject p : projects)
         {
             result.add(new EclipseProject(p));
         }

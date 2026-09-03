@@ -35,22 +35,22 @@ public abstract class MethodCallFinder
 
     public Set<IMethod> getMatches(IProgressMonitor progressMonitor)
     {
-        CallHierarchy callHierarchy = CallHierarchy.getDefault();
-        IJavaSearchScope originalSearchScope = callHierarchy.getSearchScope();
+        final CallHierarchy callHierarchy = CallHierarchy.getDefault();
+        final IJavaSearchScope originalSearchScope = callHierarchy.getSearchScope();
         try
         {
             callHierarchy.setSearchScope(searchScope);
 
-            Set<IMethod> testCallers = new LinkedHashSet<>();
-            MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
-            for (int i = 0; i < calls.length; i++)
+            final Set<IMethod> testCallers = new LinkedHashSet<>();
+            final MethodWrapper[] calls = this.methodWrapper.getCalls(progressMonitor);
+            for (final MethodWrapper call : calls)
             {
-                IMember member = calls[i].getMember();
+                final IMember member = call.getMember();
                 if(! (member instanceof IMethod) || member.getCompilationUnit() == null)
                 {
                     continue;
                 }
-                IMethod method = getFirstNonAnonymousMethod(member);
+                final IMethod method = getFirstNonAnonymousMethod(member);
                 if(methodMatch(method))
                 {
                     testCallers.add(method);

@@ -15,7 +15,7 @@ public class InMemoryWorkspaceTest {
 
     @Test
     public void testCreateDeleteExists() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
 
         // Exists is always true
         assertTrue(workspace.exists());
@@ -30,21 +30,21 @@ public class InMemoryWorkspaceTest {
 
     @Test
     public void testGetPreferences() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
         assertNull(workspace.getPreferences());
     }
 
     @Test
     public void testToFile() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
 
-        IPath mockPath = mock(IPath.class);
+        final IPath mockPath = mock(IPath.class);
         when(mockPath.toString()).thenReturn("/project/folder/file.txt");
 
-        IFile mockPlatformFile = mock(IFile.class);
+        final IFile mockPlatformFile = mock(IFile.class);
         when(mockPlatformFile.getFullPath()).thenReturn(mockPath);
 
-        File file = workspace.toFile(mockPlatformFile);
+        final File file = workspace.toFile(mockPlatformFile);
 
         assertNotNull(file);
         assertEquals(file.getPath().toString(), "/project/folder/file.txt");
@@ -52,15 +52,15 @@ public class InMemoryWorkspaceTest {
 
     @Test
     public void testToSrcFile() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
 
-        IPath mockPath = mock(IPath.class);
+        final IPath mockPath = mock(IPath.class);
         when(mockPath.toString()).thenReturn("/project/folder/file.txt");
 
-        IFile mockPlatformFile = mock(IFile.class);
+        final IFile mockPlatformFile = mock(IFile.class);
         when(mockPlatformFile.getFullPath()).thenReturn(mockPath);
 
-        SrcFile srcFile = workspace.toSrcFile(mockPlatformFile);
+        final SrcFile srcFile = workspace.toSrcFile(mockPlatformFile);
 
         assertNotNull(srcFile);
         assertEquals(srcFile.getPath().toString(), "/project/folder/file.txt");

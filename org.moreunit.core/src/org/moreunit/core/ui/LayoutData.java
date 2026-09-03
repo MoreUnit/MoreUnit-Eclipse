@@ -8,14 +8,14 @@ public class LayoutData
 
     public static GridData labelledField()
     {
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalIndent = 15;
         return gd;
     }
 
     public static GridData colSpan(int numColumns)
     {
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = numColumns;
         return gd;
     }
@@ -27,7 +27,7 @@ public class LayoutData
 
     public static GridData fillRow()
     {
-        GridData gd = new GridData();
+        final GridData gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalSpan = SPAN_ALL_COLS;

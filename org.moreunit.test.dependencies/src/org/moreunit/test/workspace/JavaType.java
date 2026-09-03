@@ -45,11 +45,10 @@ public class JavaType
         {
             return true;
         }
-        if(! (other instanceof JavaType))
+        if(! (other instanceof final JavaType o))
         {
             return false;
         }
-        JavaType o = (JavaType) other;
         return Objects.equals(typeName, o.typeName) && Objects.equals(packageName, o.packageName) && Objects.equals(typeKind, o.typeKind);
     }
 

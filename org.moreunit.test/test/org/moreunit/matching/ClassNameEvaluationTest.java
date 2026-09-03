@@ -14,56 +14,56 @@ public class ClassNameEvaluationTest {
 
     @Test
     public void should_strip_package_prefix() {
-        FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
+        final FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
         when(mockEvaluation.isTestFile()).thenReturn(true);
         when(mockEvaluation.getPreferredCorrespondingFileName()).thenReturn("TheClass");
 
-        ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", null, "com.test.example");
-        JavaType javaType = eval.getPreferredCorrespondingClass();
+        final ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", null, "com.test.example");
+        final JavaType javaType = eval.getPreferredCorrespondingClass();
         assertEquals(javaType.getQualifier(), "example");
     }
 
     @Test
     public void should_not_strip_package_prefix_if_no_match() {
-        FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
+        final FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
         when(mockEvaluation.isTestFile()).thenReturn(true);
         when(mockEvaluation.getPreferredCorrespondingFileName()).thenReturn("TheClass");
 
-        ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", null, "org.example");
-        JavaType javaType = eval.getPreferredCorrespondingClass();
+        final ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", null, "org.example");
+        final JavaType javaType = eval.getPreferredCorrespondingClass();
         assertEquals(javaType.getQualifier(), "org.example");
     }
 
     @Test
     public void should_strip_package_suffix() {
-        FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
+        final FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
         when(mockEvaluation.isTestFile()).thenReturn(true);
         when(mockEvaluation.getPreferredCorrespondingFileName()).thenReturn("TheClass");
 
-        ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, null, "test", "org.example.test");
-        JavaType javaType = eval.getPreferredCorrespondingClass();
+        final ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, null, "test", "org.example.test");
+        final JavaType javaType = eval.getPreferredCorrespondingClass();
         assertEquals(javaType.getQualifier(), "org.example");
     }
 
     @Test
     public void should_not_strip_package_suffix_if_no_match() {
-        FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
+        final FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
         when(mockEvaluation.isTestFile()).thenReturn(true);
         when(mockEvaluation.getPreferredCorrespondingFileName()).thenReturn("TheClass");
 
-        ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, null, "test", "org.example.dev");
-        JavaType javaType = eval.getPreferredCorrespondingClass();
+        final ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, null, "test", "org.example.dev");
+        final JavaType javaType = eval.getPreferredCorrespondingClass();
         assertEquals(javaType.getQualifier(), "org.example.dev");
     }
 
     @Test
     public void should_add_package_prefix_and_suffix_for_non_test_file() {
-        FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
+        final FileNameEvaluation mockEvaluation = mock(FileNameEvaluation.class);
         when(mockEvaluation.isTestFile()).thenReturn(false);
         when(mockEvaluation.getPreferredCorrespondingFileName()).thenReturn("TheClassTest");
 
-        ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", "integration", "org.example");
-        JavaType javaType = eval.getPreferredCorrespondingClass();
+        final ClassNameEvaluation eval = new ClassNameEvaluation(mockEvaluation, "com.test", "integration", "org.example");
+        final JavaType javaType = eval.getPreferredCorrespondingClass();
         assertEquals(javaType.getQualifier(), "com.test.org.example.integration");
     }
 }

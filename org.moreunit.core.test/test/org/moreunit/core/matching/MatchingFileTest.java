@@ -16,10 +16,10 @@ public class MatchingFileTest
     @Test
     public void found_should_initialize_properties_correctly()
     {
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
         when(file.toString()).thenReturn("L/mock/file");
 
-        MatchingFile matchingFile = MatchingFile.found(file);
+        final MatchingFile matchingFile = MatchingFile.found(file);
 
         assertTrue(matchingFile.isFound());
         assertFalse(matchingFile.isSearchCancelled());
@@ -32,11 +32,11 @@ public class MatchingFileTest
     @Test
     public void notFound_should_initialize_properties_correctly()
     {
-        SourceFolderPath srcFolder = mock(SourceFolderPath.class);
+        final SourceFolderPath srcFolder = mock(SourceFolderPath.class);
         when(srcFolder.toString()).thenReturn("src/folder");
-        String fileToCreate = "NewFile.java";
+        final String fileToCreate = "NewFile.java";
 
-        MatchingFile matchingFile = MatchingFile.notFound(srcFolder, fileToCreate);
+        final MatchingFile matchingFile = MatchingFile.notFound(srcFolder, fileToCreate);
 
         assertFalse(matchingFile.isFound());
         assertFalse(matchingFile.isSearchCancelled());
@@ -49,7 +49,7 @@ public class MatchingFileTest
     @Test
     public void searchCancelled_should_initialize_properties_correctly()
     {
-        MatchingFile matchingFile = MatchingFile.searchCancelled();
+        final MatchingFile matchingFile = MatchingFile.searchCancelled();
 
         assertFalse(matchingFile.isFound());
         assertTrue(matchingFile.isSearchCancelled());

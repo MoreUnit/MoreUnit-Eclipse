@@ -184,7 +184,7 @@ public class AddTestMethodContext implements IAddTestMethodContext
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("AddTestMethodContext [");
         builder.append("\n  classUnderTestCompilationUnit=");
         builder.append(classUnderTestCompilationUnit.getElementName());

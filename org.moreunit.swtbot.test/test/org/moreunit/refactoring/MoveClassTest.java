@@ -36,14 +36,14 @@ public class MoveClassTest extends JavaProjectSWTBotTestHelper
 	protected void moveSomeClassFromOrgtoComPackageAndWaitUntilFinished() throws JavaModelException
 	{
 		WorkspaceHelper.createNewPackageInSourceFolder(context.getProjectHandler().getMainSrcFolderHandler().get(), "com");
-		SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
+		final SWTBotTreeItem packageItem = selectAndReturnPackageWithName("org");
 		packageItem.expand();
 		packageItem.getNode("SomeClass.java").select();
 		getShortcutStrategy().pressMoveShortcut();
 		bot.waitUntil(Conditions.shellIsActive("Move"));
-		SWTBotTreeItem projectItem = bot.tree().getTreeItem(context.getProjectHandler().getName());
+		final SWTBotTreeItem projectItem = bot.tree().getTreeItem(context.getProjectHandler().getName());
 		projectItem.getNode("src").getNode("com").select();
-		SWTBotShell moveDialog = bot.activeShell();
+		final SWTBotShell moveDialog = bot.activeShell();
 		bot.button("OK").click();
 		bot.waitUntil(Conditions.shellCloses(moveDialog), 20000);
 	}

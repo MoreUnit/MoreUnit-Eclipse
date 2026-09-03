@@ -26,14 +26,14 @@ import org.moreunit.util.MoreUnitContants;
 public class FilterMethodVisitor extends ASTVisitor
 {
 
-    private List<MethodDeclaration> privateMethods = new ArrayList<>();
-    private List<FieldDeclaration> fieldDeclarations = new ArrayList<>();
-    private List<MethodDeclaration> getterMethods = new ArrayList<>();
-    private List<MethodDeclaration> setterMethods = new ArrayList<>();
+    private final List<MethodDeclaration> privateMethods = new ArrayList<>();
+    private final List<FieldDeclaration> fieldDeclarations = new ArrayList<>();
+    private final List<MethodDeclaration> getterMethods = new ArrayList<>();
+    private final List<MethodDeclaration> setterMethods = new ArrayList<>();
 
     public FilterMethodVisitor(IType classType)
     {
-        ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
+        final ASTParser parser = ASTParser.newParser(AST.getJLSLatest());
         parser.setSource(classType.getCompilationUnit());
         parser.createAST(null).accept(this);
     }
@@ -98,7 +98,7 @@ public class FilterMethodVisitor extends ASTVisitor
 
     public boolean isPrivateMethod(IMethod method)
     {
-        for (MethodDeclaration methodDeclaration : privateMethods)
+        for (final MethodDeclaration methodDeclaration : privateMethods)
         {
             if(sameMethodName(method, methodDeclaration) && sameParameters(method, methodDeclaration))
                 return true;
@@ -111,16 +111,17 @@ public class FilterMethodVisitor extends ASTVisitor
     {
         // Performance optimization: Avoids regex compilation overhead of replaceFirst by using
         // startsWith and substring, which is faster for simple literal prefix removal.
-        String elementName = method.getElementName();
-        String getterVariableName = elementName.startsWith(MoreUnitContants.GETTER_PREFIX)
+        final String elementName = method.getElementName();
+        final String getterVariableName = elementName.startsWith(MoreUnitContants.GETTER_PREFIX)
             ? elementName.substring(MoreUnitContants.GETTER_PREFIX.length())
             : elementName;
 
-        for (FieldDeclaration fieldDeclaration : fieldDeclarations)
+        for (final FieldDeclaration fieldDeclaration : fieldDeclarations)
         {
             @SuppressWarnings("unchecked")
+            final
             List<VariableDeclarationFragment> variableDeclarationFragments = fieldDeclaration.fragments();
-            for (VariableDeclarationFragment declarationFragment : variableDeclarationFragments)
+            for (final VariableDeclarationFragment declarationFragment : variableDeclarationFragments)
             {
                 if(sameVariableName(getterVariableName, declarationFragment) && sameVariableType(fieldDeclaration, method) && hasNoParameters(method))
                     return true;
@@ -135,7 +136,7 @@ public class FilterMethodVisitor extends ASTVisitor
         {
             return method.getParameterNames().length == 0;
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
         }
 
@@ -144,13 +145,13 @@ public class FilterMethodVisitor extends ASTVisitor
 
     private boolean hasExactlyOneParameterOfFieldType(FieldDeclaration fieldDeclaration, IMethod method)
     {
-        String[] parameterTypes = method.getParameterTypes();
+        final String[] parameterTypes = method.getParameterTypes();
 
         // Getters must have exactly one parameter
         if(parameterTypes.length != 1)
             return false;
 
-        String fieldTypeSignature = Signature.createTypeSignature(fieldDeclaration.getType().toString(), false);
+        final String fieldTypeSignature = Signature.createTypeSignature(fieldDeclaration.getType().toString(), false);
         return fieldTypeSignature.equals(parameterTypes[0]);
     }
 
@@ -161,19 +162,19 @@ public class FilterMethodVisitor extends ASTVisitor
      */
     private boolean sameVariableName(String getterVariableName, VariableDeclarationFragment declarationFragment)
     {
-        String fieldName = declarationFragment.getName().getFullyQualifiedName().toLowerCase();
+        final String fieldName = declarationFragment.getName().getFullyQualifiedName().toLowerCase();
 
         // check exact name
         if(getterVariableName.equalsIgnoreCase(fieldName))
             return true;
 
         // check underscore
-        String getterWithUnderscore = "_%s".formatted(getterVariableName);
+        final String getterWithUnderscore = "_%s".formatted(getterVariableName);
         if(getterWithUnderscore.equalsIgnoreCase(fieldName))
             return true;
 
         // check m-prefix
-        String getterWithMemberPrefix = "m%s".formatted(getterVariableName);
+        final String getterWithMemberPrefix = "m%s".formatted(getterVariableName);
         if(getterWithMemberPrefix.equalsIgnoreCase(fieldName))
             return true;
 
@@ -184,10 +185,10 @@ public class FilterMethodVisitor extends ASTVisitor
     {
         try
         {
-            String typeSignature = Signature.createTypeSignature(fieldDeclaration.getType().toString(), false);
+            final String typeSignature = Signature.createTypeSignature(fieldDeclaration.getType().toString(), false);
             return typeSignature.equals(method.getReturnType());
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             return false;
         }
@@ -197,16 +198,17 @@ public class FilterMethodVisitor extends ASTVisitor
     {
         // Performance optimization: Avoids regex compilation overhead of replaceFirst by using
         // startsWith and substring, which is faster for simple literal prefix removal.
-        String elementName = method.getElementName();
-        String setterVariableName = elementName.startsWith(MoreUnitContants.SETTER_PREFIX)
+        final String elementName = method.getElementName();
+        final String setterVariableName = elementName.startsWith(MoreUnitContants.SETTER_PREFIX)
             ? elementName.substring(MoreUnitContants.SETTER_PREFIX.length())
             : elementName;
 
-        for (FieldDeclaration fieldDeclaration : fieldDeclarations)
+        for (final FieldDeclaration fieldDeclaration : fieldDeclarations)
         {
             @SuppressWarnings("unchecked")
+            final
             List<VariableDeclarationFragment> variableDeclarationFragments = fieldDeclaration.fragments();
-            for (VariableDeclarationFragment declarationFragment : variableDeclarationFragments)
+            for (final VariableDeclarationFragment declarationFragment : variableDeclarationFragments)
             {
                 if(sameVariableName(setterVariableName, declarationFragment) && hasExactlyOneParameterOfFieldType(fieldDeclaration, method))
                     return true;
@@ -224,18 +226,19 @@ public class FilterMethodVisitor extends ASTVisitor
     private boolean sameParameters(IMethod method, MethodDeclaration methodDeclaration)
     {
         @SuppressWarnings("unchecked")
+        final
         List<SingleVariableDeclaration> parameters = methodDeclaration.parameters();
-        String[] parameterTypes = method.getParameterTypes();
+        final String[] parameterTypes = method.getParameterTypes();
 
         if(parameters.size() != parameterTypes.length)
             return false;
 
         for (int i = 0; i < parameters.size(); i++)
         {
-            SingleVariableDeclaration singleVariableDeclaration = parameters.get(i);
-            String parameterString = parameterTypes[i];
+            final SingleVariableDeclaration singleVariableDeclaration = parameters.get(i);
+            final String parameterString = parameterTypes[i];
 
-            String signatureMethodDeclaration = Signature.createTypeSignature(singleVariableDeclaration.getType().toString(), false);
+            final String signatureMethodDeclaration = Signature.createTypeSignature(singleVariableDeclaration.getType().toString(), false);
             if(! parameterString.equals(signatureMethodDeclaration))
                 return false;
         }

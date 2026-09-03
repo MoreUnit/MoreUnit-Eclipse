@@ -25,7 +25,7 @@ public class LabelsTest
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -45,11 +45,11 @@ public class LabelsTest
     @Test
     public void should_create_wrapping_label_with_width_hint()
     {
-        Label label = Labels.wrappingLabel("Some long text", 123, shell);
+        final Label label = Labels.wrappingLabel("Some long text", 123, shell);
 
         assertEquals("Some long text", label.getText());
 
-        GridData data = (GridData) label.getLayoutData();
+        final GridData data = (GridData) label.getLayoutData();
         assertEquals(123, data.widthHint);
         assertEquals(GridData.FILL, data.horizontalAlignment);
         assertTrue(data.grabExcessHorizontalSpace);
@@ -58,7 +58,7 @@ public class LabelsTest
     @Test
     public void should_create_place_holder_without_layout_data()
     {
-        Label label = Labels.placeHolder(shell);
+        final Label label = Labels.placeHolder(shell);
 
         assertNotNull(label);
         assertEquals(null, label.getLayoutData());
@@ -67,9 +67,9 @@ public class LabelsTest
     @Test
     public void should_create_place_holder_spanning_several_columns()
     {
-        Label label = Labels.placeHolder(shell, 3);
+        final Label label = Labels.placeHolder(shell, 3);
 
-        GridData data = (GridData) label.getLayoutData();
+        final GridData data = (GridData) label.getLayoutData();
         assertEquals(3, data.horizontalSpan);
     }
 }

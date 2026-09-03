@@ -80,11 +80,11 @@ public class TemplateProcessorTest
     public void should_apply_all_included_templates_and_update_test_case_source() throws Exception
     {
         // given
-        CodeTemplate includedTemplate = codeTemplate(true);
-        CodeTemplate excludedTemplate = codeTemplate(false);
+        final CodeTemplate includedTemplate = codeTemplate(true);
+        final CodeTemplate excludedTemplate = codeTemplate(false);
         when(mockingTemplate.codeTemplates()).thenReturn(List.of(includedTemplate, excludedTemplate));
 
-        EclipseTemplate eclipseTemplate = new EclipseTemplate(Part.TEST_CLASS_FIELDS, "some pattern");
+        final EclipseTemplate eclipseTemplate = new EclipseTemplate(Part.TEST_CLASS_FIELDS, "some pattern");
         when(mockingContext.preEvaluate(includedTemplate)).thenReturn(eclipseTemplate);
 
         // when
@@ -118,12 +118,12 @@ public class TemplateProcessorTest
     public void should_rethrow_MockingTemplateException_unchanged() throws Exception
     {
         // given
-        MockingTemplateException exception = new MockingTemplateException("boom");
+        final MockingTemplateException exception = new MockingTemplateException("boom");
         doThrow(exception).when(mockingContext).prepareContext(mockingTemplate, templateProcessor);
         when(mockingTemplate.codeTemplates()).thenReturn(List.of());
 
         // when + then
-        MockingTemplateException caught = assertThrows(MockingTemplateException.class,
+        final MockingTemplateException caught = assertThrows(MockingTemplateException.class,
             () -> templateProcessor.applyTemplate(mockingTemplate, new Dependencies(null, null, null), classUnderTest, testCase, "junit4"));
         assertSame(exception, caught);
     }
@@ -136,7 +136,7 @@ public class TemplateProcessorTest
         when(sourceFormatter.getFormattedSource(workingCopy)).thenThrow(new BadLocationException("bad location"));
 
         // when + then
-        MockingTemplateException caught = assertThrows(MockingTemplateException.class,
+        final MockingTemplateException caught = assertThrows(MockingTemplateException.class,
             () -> templateProcessor.applyTemplate(mockingTemplate, new Dependencies(null, null, null), classUnderTest, testCase, "junit4"));
         assertEquals(BadLocationException.class, caught.getCause().getClass());
     }
@@ -160,11 +160,11 @@ public class TemplateProcessorTest
     public void should_log_error_and_continue_when_template_evaluation_fails() throws Exception
     {
         // given
-        CodeTemplate includedTemplate = codeTemplate(true);
+        final CodeTemplate includedTemplate = codeTemplate(true);
         when(mockingTemplate.codeTemplates()).thenReturn(List.of(includedTemplate));
-        EclipseTemplate eclipseTemplate = new EclipseTemplate(Part.TEST_CLASS_FIELDS, "some pattern");
+        final EclipseTemplate eclipseTemplate = new EclipseTemplate(Part.TEST_CLASS_FIELDS, "some pattern");
         when(mockingContext.preEvaluate(includedTemplate)).thenReturn(eclipseTemplate);
-        TemplateException evaluationError = new TemplateException("cannot evaluate");
+        final TemplateException evaluationError = new TemplateException("cannot evaluate");
         doThrow(evaluationError).when(eclipseTemplateContext).evaluate(eclipseTemplate);
 
         // when
@@ -179,8 +179,8 @@ public class TemplateProcessorTest
     public void should_propagate_error_raised_while_pre_evaluating_template() throws Exception
     {
         // given
-        CodeTemplate template = codeTemplate(true);
-        MockingTemplateException evaluationError = new MockingTemplateException("could not pre-evaluate");
+        final CodeTemplate template = codeTemplate(true);
+        final MockingTemplateException evaluationError = new MockingTemplateException("could not pre-evaluate");
         doThrow(evaluationError).when(mockingContext).preEvaluate(template);
         when(mockingTemplate.codeTemplates()).thenReturn(List.of(template));
 
@@ -191,7 +191,7 @@ public class TemplateProcessorTest
 
     private CodeTemplate codeTemplate(boolean included) throws JavaModelException
     {
-        CodeTemplate codeTemplate = mock(CodeTemplate.class);
+        final CodeTemplate codeTemplate = mock(CodeTemplate.class);
         when(codeTemplate.isIncluded(mockingContext)).thenReturn(included);
         return codeTemplate;
     }

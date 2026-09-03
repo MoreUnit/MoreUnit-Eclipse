@@ -46,9 +46,9 @@ public abstract class LanguagePreferences
     {
         synchronized (CACHE_LOCK)
         {
-            String template = getTestFileNameTemplate();
-            String separator = getFileWordSeparator();
-            String key = (template == null ? "" : template.length() + template) //
+            final String template = getTestFileNameTemplate();
+            final String separator = getFileWordSeparator();
+            final String key = (template == null ? "" : template.length() + template) //
                          + (separator == null ? "" : separator.length() + separator);
 
             TestFileNamePattern pattern = FILE_NAME_PATTERN_CACHE.get(key);

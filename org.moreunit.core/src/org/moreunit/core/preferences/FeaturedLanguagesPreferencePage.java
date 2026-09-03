@@ -23,7 +23,7 @@ public class FeaturedLanguagesPreferencePage extends PropertyPage implements IWo
     @Override
     protected final Control createContents(Composite parent)
     {
-        Composite composite = Composites.fillWidth(parent);
+        final Composite composite = Composites.fillWidth(parent);
 
         wrappingLabel("Welcome! These preferences pages allow you to tell MoreUnit how your tests are organized.", WIDTH_HINT, composite);
         placeHolder(composite);

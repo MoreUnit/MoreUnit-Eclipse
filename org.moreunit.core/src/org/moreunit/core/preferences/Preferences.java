@@ -63,7 +63,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
             return languagePrefWriters.get(language);
         }
 
-        LanguagePreferencesWriter writer = new LanguagePreferencesWriter(language, this);
+        final LanguagePreferencesWriter writer = new LanguagePreferencesWriter(language, this);
         languagePrefWriters.put(language, writer);
 
         return writer;
@@ -87,7 +87,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
             return languagePrefReaders.get(language);
         }
 
-        LanguagePreferencesReader reader = new LanguagePreferencesReader(language, anyLanguagePrefReader, this);
+        final LanguagePreferencesReader reader = new LanguagePreferencesReader(language, anyLanguagePrefReader, this);
         languagePrefReaders.put(language, reader);
 
         return reader;
@@ -113,14 +113,14 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
 
     public List<Language> getLanguages()
     {
-        String str = orDefault(store.getString(LANGUAGES), "");
+        final String str = orDefault(store.getString(LANGUAGES), "");
 
-        List<Language> result = new ArrayList<>();
-        for (String s : str.split(","))
+        final List<Language> result = new ArrayList<>();
+        for (final String s : str.split(","))
         {
             if(s.length() > 2)
             {
-                String[] lang = s.split(":");
+                final String[] lang = s.split(":");
                 if(lang.length == 2)
                 {
                     result.add(new Language(lang[0], lang[1]));
@@ -134,7 +134,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
     @Override
     public void add(Language language)
     {
-        List<Language> languages = getLanguages();
+        final List<Language> languages = getLanguages();
         languages.add(language);
         sort(languages);
 
@@ -143,8 +143,8 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
 
     private void setLanguages(List<Language> languages)
     {
-        StringBuilder sb = new StringBuilder();
-        for (Language lang : languages)
+        final StringBuilder sb = new StringBuilder();
+        for (final Language lang : languages)
         {
             if(sb.length() != 0)
             {
@@ -158,7 +158,7 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
     @Override
     public void remove(Language language)
     {
-        List<Language> languages = getLanguages();
+        final List<Language> languages = getLanguages();
         languages.remove(language);
         setLanguages(languages);
     }
@@ -170,8 +170,8 @@ public class Preferences implements WriteablePreferences, ReadablePreferences, L
             return projectStores.get(project);
         }
 
-        ProjectScope projectScope = new ProjectScope(project);
-        ScopedPreferenceStore store = new ScopedPreferenceStore(projectScope, MoreUnitCore.PLUGIN_ID);
+        final ProjectScope projectScope = new ProjectScope(project);
+        final ScopedPreferenceStore store = new ScopedPreferenceStore(projectScope, MoreUnitCore.PLUGIN_ID);
         store.setSearchContexts(new IScopeContext[] { projectScope });
         projectStores.put(project, store);
 

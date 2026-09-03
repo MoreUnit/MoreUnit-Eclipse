@@ -12,14 +12,14 @@ public class TypeFacadeFactoryTest
     @Test
     public void should_create_and_check()
     {
-        TypeFacadeFactory factory = new TypeFacadeFactory();
+        final TypeFacadeFactory factory = new TypeFacadeFactory();
         assertFalse(factory.isTestCase(mock(ICompilationUnit.class)));
     }
 
     @Test
     public void should_create_facade()
     {
-        TypeFacadeFactory factory = new TypeFacadeFactory();
+        final TypeFacadeFactory factory = new TypeFacadeFactory();
         assertNotNull(factory.createFacade(mock(ICompilationUnit.class)));
     }
 }

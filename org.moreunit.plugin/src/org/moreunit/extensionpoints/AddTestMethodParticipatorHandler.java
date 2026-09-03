@@ -101,14 +101,14 @@ public final class AddTestMethodParticipatorHandler
 
         // class and method under test are pure guesses in the following case,
         // and they might be wrong from time to time
-        TestCaseTypeFacade testCase = new TestCaseTypeFacade(testMethod.getCompilationUnit());
-        Collection<IType> correspondingClasses = testCase.getCorrespondingClasses(false);
+        final TestCaseTypeFacade testCase = new TestCaseTypeFacade(testMethod.getCompilationUnit());
+        final Collection<IType> correspondingClasses = testCase.getCorrespondingClasses(false);
         if(correspondingClasses.size() != 1)
         {
             return null;
         }
 
-        List<IMethod> methodsUnderTest = testCase.getCorrespondingTestedMethods(testMethod, correspondingClasses);
+        final List<IMethod> methodsUnderTest = testCase.getCorrespondingTestedMethods(testMethod, correspondingClasses);
         if(methodsUnderTest.size() != 1)
         {
             return null;
@@ -174,7 +174,7 @@ public final class AddTestMethodParticipatorHandler
         {
             doCallExtension(context);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -193,10 +193,10 @@ public final class AddTestMethodParticipatorHandler
     {
 
         // Get extensions
-        IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionID);
+        final IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionID);
 
         // Run all extensions found
-        for (IConfigurationElement e : config)
+        for (final IConfigurationElement e : config)
         {
 
             // Create Object from class definition
@@ -211,7 +211,7 @@ public final class AddTestMethodParticipatorHandler
             }
 
             // Create safe runner
-            ISafeRunnable runnable = new ISafeRunnable()
+            final ISafeRunnable runnable = new ISafeRunnable()
             {
                 @Override
                 public void handleException(Throwable throwable)

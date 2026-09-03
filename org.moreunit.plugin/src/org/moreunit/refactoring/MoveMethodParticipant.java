@@ -62,10 +62,10 @@ public class MoveMethodParticipant extends MoveParticipant
     @Override
     public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException
     {
-        SourceType destination = (SourceType) getArguments().getDestination();
-        ICompilationUnit destinationCompilationUnit = (ICompilationUnit) destination.getParent();
-        ClassTypeFacade destinationFacade = new ClassTypeFacade(destinationCompilationUnit);
-        Collection<IType> correspondingTestCaseList = destinationFacade.getCorrespondingTestCases();
+        final SourceType destination = (SourceType) getArguments().getDestination();
+        final ICompilationUnit destinationCompilationUnit = (ICompilationUnit) destination.getParent();
+        final ClassTypeFacade destinationFacade = new ClassTypeFacade(destinationCompilationUnit);
+        final Collection<IType> correspondingTestCaseList = destinationFacade.getCorrespondingTestCases();
 
         // if no tests or more than one, don't do anything
         if(correspondingTestCaseList.size() != 1)
@@ -74,17 +74,17 @@ public class MoveMethodParticipant extends MoveParticipant
         }
 
         // get the destination for the testmethods
-        IType targetType = correspondingTestCaseList.iterator().next();
+        final IType targetType = correspondingTestCaseList.iterator().next();
 
-        List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(movedMethod);
+        final List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(movedMethod);
 
-        List<Change> changes = new ArrayList<>();
+        final List<Change> changes = new ArrayList<>();
         if(allTestMethods == null)
         {
             return null;
         }
 
-        for(IMethod testMethod : allTestMethods)
+        for(final IMethod testMethod : allTestMethods)
         {
             if(testMethod != null)
             {

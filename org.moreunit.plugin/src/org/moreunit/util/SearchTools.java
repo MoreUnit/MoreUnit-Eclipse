@@ -40,18 +40,18 @@ public class SearchTools
 
     public static Set<IType> searchFor(Collection<String> typeNamePatterns, IJavaSearchScope scope) throws CoreException
     {
-        Set<IType> result = new LinkedHashSet<>();
-        SearchEngine engine = new SearchEngine();
-        TypeNameRequestor requestor = new TypeNameRequestor()
+        final Set<IType> result = new LinkedHashSet<>();
+        final SearchEngine engine = new SearchEngine();
+        final TypeNameRequestor requestor = new TypeNameRequestor()
         {
             @Override
             public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path)
             {
-                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromPortableString(path));
-                IJavaElement element = JavaCore.create(file);
-                if(element instanceof ICompilationUnit unit)
+                final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromPortableString(path));
+                final IJavaElement element = JavaCore.create(file);
+                if(element instanceof final ICompilationUnit unit)
                 {
-                    IType type = unit.getType(new String(simpleTypeName));
+                    final IType type = unit.getType(new String(simpleTypeName));
                     if(type.exists())
                     {
                         result.add(type);
@@ -59,9 +59,9 @@ public class SearchTools
                 }
             }
         };
-        for (String pattern : typeNamePatterns)
+        for (final String pattern : typeNamePatterns)
         {
-            int lastDot = pattern.lastIndexOf('.');
+            final int lastDot = pattern.lastIndexOf('.');
             char[] qualification;
             char[] typeName;
             if(lastDot >= 0)
@@ -81,10 +81,10 @@ public class SearchTools
 
     public static Set<IType> findConcreteSubclasses(IType type) throws JavaModelException
     {
-        Set<IType> concreteSubclasses = new LinkedHashSet<>();
-        ITypeHierarchy hierarchy = type.newTypeHierarchy(new NullProgressMonitor());
-        IType[] subtypes = hierarchy.getAllSubtypes(type);
-        for (IType subtype : subtypes)
+        final Set<IType> concreteSubclasses = new LinkedHashSet<>();
+        final ITypeHierarchy hierarchy = type.newTypeHierarchy(new NullProgressMonitor());
+        final IType[] subtypes = hierarchy.getAllSubtypes(type);
+        for (final IType subtype : subtypes)
         {
             if(! Flags.isAbstract(subtype.getFlags()) && ! Flags.isInterface(subtype.getFlags()))
             {
@@ -96,8 +96,8 @@ public class SearchTools
 
     public static Set<IType> search(SearchPattern pattern, IJavaSearchScope scope) throws CoreException
     {
-        SearchParticipant[] participants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
-        MatchCollector collector = new MatchCollector();
+        final SearchParticipant[] participants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
+        final MatchCollector collector = new MatchCollector();
 
         new SearchEngine().search(pattern, participants, scope, collector, null);
 
@@ -119,9 +119,9 @@ public class SearchTools
         SearchPattern result = null;
         SearchPattern lastPattern = null;
 
-        for (String p : typeNamePatterns)
+        for (final String p : typeNamePatterns)
         {
-            SearchPattern currentPattern = createPattern(p, searchFor, limitTo, matchRule);
+            final SearchPattern currentPattern = createPattern(p, searchFor, limitTo, matchRule);
             if(lastPattern == null)
             {
                 result = currentPattern;

@@ -23,7 +23,7 @@ public class MethodTreeContentProviderTest extends ContextTestCase
     @BeforeEach
     public void createContentProvider()
     {
-        IType cut = context.getPrimaryTypeHandler("Hello").get();
+        final IType cut = context.getPrimaryTypeHandler("Hello").get();
         contentProvider = new MethodTreeContentProvider(cut);
     }
 

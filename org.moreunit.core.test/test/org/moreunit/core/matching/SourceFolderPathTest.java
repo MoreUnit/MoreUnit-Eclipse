@@ -35,7 +35,7 @@ public class SourceFolderPathTest
     public void should_return_resolved_part_when_containing_variable_segment() throws Exception
     {
         // given
-        SourceFolderPath p = sourceFolderPath("project/src/variable[^/]*segment/other-segment/othervariable[^/]*segment");
+        final SourceFolderPath p = sourceFolderPath("project/src/variable[^/]*segment/other-segment/othervariable[^/]*segment");
 
         // then
         assertEquals(p.getResolvedPart().toString(), "project/src");
@@ -45,7 +45,7 @@ public class SourceFolderPathTest
     public void should_return_resolved_part_when_containing_variable_path() throws Exception
     {
         // given
-        SourceFolderPath p = sourceFolderPath("project/src/main/.*/segment/.*/other-segment");
+        final SourceFolderPath p = sourceFolderPath("project/src/main/.*/segment/.*/other-segment");
 
         // then
         assertEquals(p.getResolvedPart().toString(), "project/src/main");
@@ -55,7 +55,7 @@ public class SourceFolderPathTest
     public void should_return_whole_path_otherwise() throws Exception
     {
         // given
-        SourceFolderPath p = sourceFolderPath("project/src/main/.*/segment/.*/other-segment");
+        final SourceFolderPath p = sourceFolderPath("project/src/main/.*/segment/.*/other-segment");
 
         // then
         assertEquals(p.getResolvedPart().toString(), "project/src/main");
@@ -67,7 +67,7 @@ public class SourceFolderPathTest
         // given
         SourceFolderPath p = sourceFolderPath("project/src/.*/variable[^/]*segment/.*/other-segment");
 
-        IFile f = mock(IFile.class);
+        final IFile f = mock(IFile.class);
         when(f.getFullPath()).thenReturn(new Path("project/src/java/variable-segment/path/to/other-segment/SomeClass.java"));
 
         // then

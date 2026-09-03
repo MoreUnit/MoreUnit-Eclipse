@@ -19,8 +19,8 @@ public enum Part
         @Override
         public int getInsertionOffset(MockingContext context) throws JavaModelException
         {
-            IType type = type(context);
-            ISourceRange javadocRange = type.getJavadocRange();
+            final IType type = type(context);
+            final ISourceRange javadocRange = type.getJavadocRange();
             if(javadocRange != null)
             {
                 return javadocRange.getOffset() + javadocRange.getLength() + 1;
@@ -35,8 +35,8 @@ public enum Part
         @Override
         public int getInsertionOffset(MockingContext context) throws JavaModelException
         {
-            IType type = type(context);
-            Integer offset = afterLastField(type);
+            final IType type = type(context);
+            final Integer offset = afterLastField(type);
             return offset != null ? offset : beforeFirstMember(type);
         }
     },
@@ -47,7 +47,7 @@ public enum Part
         @Override
         public int getInsertionOffset(MockingContext context) throws JavaModelException
         {
-            IMethod beforeInstanceMethod = context.beforeInstanceMethod();
+            final IMethod beforeInstanceMethod = context.beforeInstanceMethod();
             return beforeInstanceMethod.getSourceRange().getOffset() + beforeInstanceMethod.getSource().lastIndexOf('}') - 1;
         }
     },
@@ -57,8 +57,8 @@ public enum Part
         @Override
         public int getInsertionOffset(MockingContext context) throws JavaModelException
         {
-            IType type = type(context);
-            Integer offset = beforeFirstMethod(type);
+            final IType type = type(context);
+            final Integer offset = beforeFirstMethod(type);
             return offset != null ? offset : beforeFirstMember(type);
         }
     };
@@ -72,7 +72,7 @@ public enum Part
 
     private static Integer beforeFirstMethod(IType type) throws JavaModelException
     {
-        IMethod[] methods = type.getMethods();
+        final IMethod[] methods = type.getMethods();
         if(methods.length != 0)
         {
             return methods[0].getSourceRange().getOffset();
@@ -82,10 +82,10 @@ public enum Part
 
     private static Integer afterLastField(IType type) throws JavaModelException
     {
-        IField[] fields = type.getFields();
+        final IField[] fields = type.getFields();
         if(fields.length != 0)
         {
-            ISourceRange fieldRange = fields[fields.length - 1].getSourceRange();
+            final ISourceRange fieldRange = fields[fields.length - 1].getSourceRange();
             return fieldRange.getOffset() + fieldRange.getLength();
         }
         return null;

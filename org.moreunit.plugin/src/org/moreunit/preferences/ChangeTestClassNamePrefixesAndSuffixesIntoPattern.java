@@ -34,7 +34,7 @@ public class ChangeTestClassNamePrefixesAndSuffixesIntoPattern implements Migrat
     @Override
     public void apply(IPreferenceStore store)
     {
-        String currentTemplate = store.getString(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE);
+        final String currentTemplate = store.getString(PreferenceConstants.TEST_CLASS_NAME_TEMPLATE);
         if(Strings.isBlank(currentTemplate) || ! TestFileNamePattern.isValid(currentTemplate, ""))
         {
             convertPrefs(store);
@@ -44,9 +44,9 @@ public class ChangeTestClassNamePrefixesAndSuffixesIntoPattern implements Migrat
 
     private void convertPrefs(IPreferenceStore store)
     {
-        String[] prefixes = convertStringToArray(store.getString(PreferenceConstants.Deprecated.PREFIXES));
-        String[] suffixes = convertStringToArray(store.getString(PreferenceConstants.Deprecated.SUFFIXES));
-        boolean flexibleNaming = store.getBoolean(PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING);
+        final String[] prefixes = convertStringToArray(store.getString(PreferenceConstants.Deprecated.PREFIXES));
+        final String[] suffixes = convertStringToArray(store.getString(PreferenceConstants.Deprecated.SUFFIXES));
+        final boolean flexibleNaming = store.getBoolean(PreferenceConstants.Deprecated.FLEXIBEL_TESTCASE_NAMING);
 
         final String template;
 

@@ -64,7 +64,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
         FeatureDetector.setBundleContext(context);
         annotationUpdateListener = new AnnotationUpdateListener();
 
-        IPartService partService = getPartService();
+        final IPartService partService = getPartService();
         if(partService != null)
             partService.addPartListener(annotationUpdateListener);
 
@@ -77,7 +77,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
 
     protected IPartService getPartService()
     {
-        IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+        final IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
         if(workbenchWindows.length > 0)
             return workbenchWindows[0].getPartService();
 
@@ -91,14 +91,14 @@ public class MoreUnitPlugin extends AbstractUIPlugin
      */
     private void removeMarkerFromOlderMoreUnitVersions()
     {
-        List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
-        for (IJavaProject javaProject : javaProjectsFromWorkspace)
+        final List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
+        for (final IJavaProject javaProject : javaProjectsFromWorkspace)
         {
             try
             {
                 javaProject.getProject().deleteMarkers(MoreUnitContants.TEST_CASE_MARKER, true, IResource.DEPTH_INFINITE);
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 LogHandler.getInstance().handleExceptionLog(e);
             }
@@ -114,7 +114,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
         super.stop(context);
         annotationUpdateListener.dispose();
 
-        IPartService partService = getPartService();
+        final IPartService partService = getPartService();
         if(partService != null)
             partService.removePartListener(annotationUpdateListener);
 

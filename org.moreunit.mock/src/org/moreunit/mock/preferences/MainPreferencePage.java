@@ -48,7 +48,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
     @Override
     protected Control createContents(Composite parent)
     {
-        Composite contentComposite = new Composite(parent, SWT.NONE);
+        final Composite contentComposite = new Composite(parent, SWT.NONE);
         contentComposite.setLayout(new GridLayout(1, true));
         contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -61,7 +61,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 
         lbl = new Label(contentComposite, SWT.NONE);
         lbl.setText(templateLoader.getWorkspaceTemplatesLocation());
-        GridData data = new GridData();
+        final GridData data = new GridData();
         data.horizontalIndent = 15;
         lbl.setLayoutData(data);
 
@@ -72,14 +72,14 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 
         placeHolder(contentComposite);
 
-        Button reloadTemplatesBtn = new Button(contentComposite, SWT.NONE);
+        final Button reloadTemplatesBtn = new Button(contentComposite, SWT.NONE);
         reloadTemplatesBtn.setText("Reload templates");
         reloadTemplatesBtn.addSelectionListener(new SelectionAdapter()
         {
             @Override
             public void widgetSelected(SelectionEvent e)
             {
-                LoadingResult templateLoadingResult = templateLoader.loadTemplates();
+                final LoadingResult templateLoadingResult = templateLoader.loadTemplates();
                 templateStyleSelector.reloadTemplates();
                 informUserAboutInvalidTemplates(templateLoadingResult);
             }
@@ -100,9 +100,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
             return;
         }
 
-        StringBuilder errBuilder = new StringBuilder("The following templates could not be loaded:");
+        final StringBuilder errBuilder = new StringBuilder("The following templates could not be loaded:");
 
-        for (Entry<URL, String> urlAndReason : templateLoadingResult.invalidTemplates().entrySet())
+        for (final Entry<URL, String> urlAndReason : templateLoadingResult.invalidTemplates().entrySet())
         {
             errBuilder.append(NEWLINE)
                     .append(NEWLINE).append("Template: ")

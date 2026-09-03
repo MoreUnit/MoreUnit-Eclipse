@@ -115,7 +115,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_non_constructor_method_as_constructor() throws Exception
     {
         // given
-        IMethod notAConstructor = method("notAConstructor", 1, Flags.AccPublic, false);
+        final IMethod notAConstructor = method("notAConstructor", 1, Flags.AccPublic, false);
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { notAConstructor });
 
         // then
@@ -124,7 +124,7 @@ public class DependencyInjectionPointCollectorTest
 
     private IMethod method(String name, int argNum, int flags, boolean constructor) throws JavaModelException
     {
-        IMethod method = mock(IMethod.class);
+        final IMethod method = mock(IMethod.class);
         when(method.getElementName()).thenReturn(name);
         when(method.getNumberOfParameters()).thenReturn(argNum);
         when(method.getFlags()).thenReturn(flags);
@@ -136,7 +136,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_constructors_with_zero_arguments() throws Exception
     {
         // given
-        IMethod noArgConstructor = method("ClassUnderTestConstructor", 0, Flags.AccPublic, true);
+        final IMethod noArgConstructor = method("ClassUnderTestConstructor", 0, Flags.AccPublic, true);
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { noArgConstructor });
 
         // then
@@ -147,7 +147,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_invisible_constructors() throws Exception
     {
         // given
-        IMethod packagePrivateConstructor = method("ClassUnderTestConstructor", 1, Flags.AccDefault, true);
+        final IMethod packagePrivateConstructor = method("ClassUnderTestConstructor", 1, Flags.AccDefault, true);
 
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { packagePrivateConstructor });
 
@@ -159,9 +159,9 @@ public class DependencyInjectionPointCollectorTest
     public void constructor_collection_happy_path() throws Exception
     {
         // given
-        IMethod publicConstructor = method("ClassUnderTestConstructor", 1, Flags.AccPublic, true);
+        final IMethod publicConstructor = method("ClassUnderTestConstructor", 1, Flags.AccPublic, true);
 
-        IMethod packagePrivateConstructor = method("ClassUnderTestConstructor", 1, Flags.AccDefault, true);
+        final IMethod packagePrivateConstructor = method("ClassUnderTestConstructor", 1, Flags.AccDefault, true);
         when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { publicConstructor, packagePrivateConstructor });
@@ -174,10 +174,10 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_methods_which_name_does_not_match_setter_pattern() throws Exception
     {
         // given
-        IMethod notASetter = method("notASetter", 1, Flags.AccPublic, false);
-        IMethod alsoNotASetter = method("set", 1, Flags.AccPublic, false);
-        IMethod alsoNotASetter2 = method("seta", 1, Flags.AccPublic, false);
-        IMethod alsoNotASetter3 = method("setup", 1, Flags.AccPublic, false);
+        final IMethod notASetter = method("notASetter", 1, Flags.AccPublic, false);
+        final IMethod alsoNotASetter = method("set", 1, Flags.AccPublic, false);
+        final IMethod alsoNotASetter2 = method("seta", 1, Flags.AccPublic, false);
+        final IMethod alsoNotASetter3 = method("setup", 1, Flags.AccPublic, false);
         classUnderTestHierarchyHasMethods(notASetter, alsoNotASetter, alsoNotASetter2, alsoNotASetter3);
 
         // then
@@ -190,16 +190,16 @@ public class DependencyInjectionPointCollectorTest
      */
     private void classUnderTestHierarchyHasMethods(IMethod... methods) throws JavaModelException
     {
-        IType aSuperType = createTypeHierarchyForClassUnderTestAndReturnASuperType();
+        final IType aSuperType = createTypeHierarchyForClassUnderTestAndReturnASuperType();
         when(aSuperType.getMethods()).thenReturn(methods);
     }
 
     private IType createTypeHierarchyForClassUnderTestAndReturnASuperType() throws JavaModelException
     {
-        ITypeHierarchy typeHierarchy = mock(ITypeHierarchy.class);
+        final ITypeHierarchy typeHierarchy = mock(ITypeHierarchy.class);
         when(classUnderTest.newSupertypeHierarchy(any(IProgressMonitor.class))).thenReturn(typeHierarchy);
 
-        IType aSuperType = mock(IType.class);
+        final IType aSuperType = mock(IType.class);
         when(typeHierarchy.getAllClasses()).thenReturn(new IType[] { aSuperType });
 
         return aSuperType;
@@ -209,7 +209,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_setters_with_zero_arguments() throws Exception
     {
         // given
-        IMethod notASetter = method("setProperty", 0, Flags.AccPublic, false);
+        final IMethod notASetter = method("setProperty", 0, Flags.AccPublic, false);
         classUnderTestHierarchyHasMethods(notASetter);
 
         // then
@@ -220,7 +220,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_setters_with_several_arguments() throws Exception
     {
         // given
-        IMethod notASetter = method("setProperty", 2, Flags.AccPublic, false);
+        final IMethod notASetter = method("setProperty", 2, Flags.AccPublic, false);
         classUnderTestHierarchyHasMethods(notASetter);
 
         // then
@@ -231,7 +231,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_not_collect_invisible_setters() throws Exception
     {
         // given
-        IMethod packagePrivateSetter = method("setProperty", 1, Flags.AccDefault, false);
+        final IMethod packagePrivateSetter = method("setProperty", 1, Flags.AccDefault, false);
 
         classUnderTestHierarchyHasMethods(packagePrivateSetter);
 
@@ -243,9 +243,9 @@ public class DependencyInjectionPointCollectorTest
     public void setter_collection_happy_path() throws Exception
     {
         // given
-        IMethod publicSetter = method("setProperty", 1, Flags.AccPublic, false);
+        final IMethod publicSetter = method("setProperty", 1, Flags.AccPublic, false);
 
-        IMethod packagePrivateSetter = method("setOtherProperty", 1, Flags.AccDefault, true);
+        final IMethod packagePrivateSetter = method("setOtherProperty", 1, Flags.AccDefault, true);
         when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         classUnderTestHierarchyHasMethods(publicSetter, packagePrivateSetter);
@@ -258,7 +258,7 @@ public class DependencyInjectionPointCollectorTest
     public void should_collect_invisible_fields() throws Exception
     {
         // given
-        IField packagePrivateField = field("aField", Flags.AccDefault);
+        final IField packagePrivateField = field("aField", Flags.AccDefault);
 
         classUnderTestHierarchyHasFields(packagePrivateField);
 
@@ -268,7 +268,7 @@ public class DependencyInjectionPointCollectorTest
 
     private IField field(String name, int flags) throws JavaModelException
     {
-        IField field = mock(IField.class);
+        final IField field = mock(IField.class);
         when(field.getElementName()).thenReturn(name);
         when(field.getFlags()).thenReturn(flags);
         return field;
@@ -280,7 +280,7 @@ public class DependencyInjectionPointCollectorTest
      */
     private void classUnderTestHierarchyHasFields(IField... fields) throws JavaModelException
     {
-        IType aSuperType = createTypeHierarchyForClassUnderTestAndReturnASuperType();
+        final IType aSuperType = createTypeHierarchyForClassUnderTestAndReturnASuperType();
         when(aSuperType.getFields()).thenReturn(fields);
     }
 
@@ -288,9 +288,9 @@ public class DependencyInjectionPointCollectorTest
     public void field_collection_happy_path() throws Exception
     {
         // given
-        IField publicField = field("aField", Flags.AccDefault);
+        final IField publicField = field("aField", Flags.AccDefault);
 
-        IField packagePrivateField = field("anotherField", Flags.AccDefault);
+        final IField packagePrivateField = field("anotherField", Flags.AccDefault);
         when(classUnderTest.getPackageFragment().getElementName()).thenReturn(TEST_PACKAGE_NAME);
 
         classUnderTestHierarchyHasFields(publicField, packagePrivateField);
@@ -301,15 +301,15 @@ public class DependencyInjectionPointCollectorTest
 
     private IType mockType()
     {
-        IType type = mock(IType.class);
-        IPackageFragment typePackageFragment = mock(IPackageFragment.class);
+        final IType type = mock(IType.class);
+        final IPackageFragment typePackageFragment = mock(IPackageFragment.class);
         when(type.getPackageFragment()).thenReturn(typePackageFragment);
         return type;
     }
 
     private IPackageFragment mockPackageFragmentWithPackageName(String packageName)
     {
-        IPackageFragment fragment = mock(IPackageFragment.class);
+        final IPackageFragment fragment = mock(IPackageFragment.class);
         when(fragment.getElementName()).thenReturn(packageName);
         return fragment;
     }

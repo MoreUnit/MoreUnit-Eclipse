@@ -51,8 +51,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -117,7 +115,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private static final String NewTestCaseWizardPageOne_spock_without_groovy_nature = "Spock tests require Groovy nature! Please install the Groovy-Eclipse plugin first.";
 
     private final NewTestCaseWizardPageTwo fPage2;
-    private MethodStubsSelectionButtonGroup fMethodStubsButtons;
+    private final MethodStubsSelectionButtonGroup fMethodStubsButtons;
 
     private String fClassUnderTestText; // model
     private IType fClassUnderTest; // resolved model, can be null
@@ -126,7 +124,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private IStatus fClassUnderTestStatus; // status
 
     private Button fClassUnderTestButton;
-    private JavaTypeCompletionProcessor fClassToTestCompletionProcessor;
+    private final JavaTypeCompletionProcessor fClassToTestCompletionProcessor;
 
     private String testType;
     private IStatus fJunitStatus; // status
@@ -140,7 +138,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private Button testNgToggle;
 
     private final ProjectPreferences preferences;
-    private IJavaProject javaProjectUnderTest;
+    private final IJavaProject javaProjectUnderTest;
     private final LanguageType langType;
 
     private TmpMemento tmpMemento;
@@ -159,7 +157,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
         enableCommentControl(true);
 
-        JUnitVersion junitVersion = retrieveJUnitVersion(preferences);
+        final JUnitVersion junitVersion = retrieveJUnitVersion(preferences);
 
         fMethodStubsButtons = new MethodStubsSelectionButtonGroup(SWT.CHECK, junitVersion, 2);
         fMethodStubsButtons.setLabelText(WizardMessages.NewTestCaseWizardPageOne_method_Stub_label);
@@ -199,7 +197,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     public void init(IStructuredSelection selection)
     {
-        IJavaElement element = getInitialJavaElement(selection);
+        final IJavaElement element = getInitialJavaElement(selection);
 
         initContainerPage(element);
         initTypePage(element);
@@ -211,7 +209,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         {
             IType classToTest = null;
             // evaluate the enclosing type
-            IType typeInCompUnit = (IType) element.getAncestor(IJavaElement.TYPE);
+            final IType typeInCompUnit = (IType) element.getAncestor(IJavaElement.TYPE);
             if(typeInCompUnit != null)
             {
                 if(typeInCompUnit.getCompilationUnit() != null)
@@ -221,19 +219,19 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             }
             else
             {
-                ICompilationUnit cu = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+                final ICompilationUnit cu = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
                 if(cu != null)
                     classToTest = cu.findPrimaryType();
                 else
                 {
-                    if(element instanceof IClassFile cf)
+                    if(element instanceof final IClassFile cf)
                     {
                         try
                         {
-                            if(cf.isStructureKnown() && cf instanceof IOrdinaryClassFile ordinaryClassFile)
+                            if(cf.isStructureKnown() && cf instanceof final IOrdinaryClassFile ordinaryClassFile)
                                 classToTest = ordinaryClassFile.getType();
                         }
-                        catch (JavaModelException e)
+                        catch (final JavaModelException e)
                         {
                             JUnitPlugin.log(e);
                         }
@@ -249,7 +247,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                         setClassUnderTest(classToTest.getFullyQualifiedName('.'));
                     }
                 }
-                catch (JavaModelException e)
+                catch (final JavaModelException e)
                 {
                     JUnitCorePlugin.log(e);
                 }
@@ -263,7 +261,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private IStatus getJunitOkStatus()
     {
-        JUnitStatus status = new JUnitStatus();
+        final JUnitStatus status = new JUnitStatus();
         return status;
     }
 
@@ -339,7 +337,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else if(fieldName.equals(JUNIT4TOGGLE))
         {
             updateBuildPathMessage();
-            boolean junit3 = junit3Toggle.getSelection();
+            final boolean junit3 = junit3Toggle.getSelection();
             fMethodStubsButtons.setEnabled(IDX_SETUP_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_TEARDOWN_CLASS, ! junit3);
             fMethodStubsButtons.setEnabled(IDX_CONSTRUCTOR, junit3);
@@ -387,11 +385,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     {
         initializeDialogUnits(parent);
 
-        Composite composite = new Composite(parent, SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
 
-        int nColumns = 4;
+        final int nColumns = 4;
 
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.numColumns = nColumns;
         composite.setLayout(layout);
         createJUnit4Controls(composite, nColumns);
@@ -419,10 +417,10 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void updateTypeName()
     {
-        String classUnderTest = getClassUnderTestText();
+        final String classUnderTest = getClassUnderTestText();
         if(classUnderTest.length() > 0)
         {
-            String testSuffix = spockToggle.getSelection() ? SPOCK_TEST_SUFFIX : TEST_SUFFIX;
+            final String testSuffix = spockToggle.getSelection() ? SPOCK_TEST_SUFFIX : TEST_SUFFIX;
             setTypeName(Signature.getSimpleName(classUnderTest) + testSuffix, true);
         }
     }
@@ -450,7 +448,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     protected void createClassUnderTestControls(Composite composite, int nColumns)
     {
-        Label classUnderTestLabel = new Label(composite, SWT.LEFT | SWT.WRAP);
+        final Label classUnderTestLabel = new Label(composite, SWT.LEFT | SWT.WRAP);
         classUnderTestLabel.setFont(composite.getFont());
         classUnderTestLabel.setText(WizardMessages.NewTestCaseWizardPageOne_class_to_test_label);
         classUnderTestLabel.setLayoutData(new GridData());
@@ -459,14 +457,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         fClassUnderTestControl.setEnabled(true);
         fClassUnderTestControl.setFont(composite.getFont());
         fClassUnderTestControl.setText(fClassUnderTestText);
-        fClassUnderTestControl.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
-            {
-                internalSetClassUnderText(((Text) e.widget).getText());
-            }
-        });
+        fClassUnderTestControl.addModifyListener(e -> internalSetClassUnderText(((Text) e.widget).getText()));
         GridData gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.grabExcessHorizontalSpace = true;
@@ -533,14 +524,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
          * GridData.CENTER, false, false, 1, 1));
          * fJUnit4Toggle.addSelectionListener(listener);
          */
-        Composite inner = new Composite(composite, SWT.NONE);
+        final Composite inner = new Composite(composite, SWT.NONE);
         inner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, nColumns, 1));
-        GridLayout layout = new GridLayout(5, false);
+        final GridLayout layout = new GridLayout(5, false);
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         inner.setLayout(layout);
 
-        SelectionAdapter listener = new SelectionAdapter()
+        final SelectionAdapter listener = new SelectionAdapter()
         {
             @Override
             public void widgetSelected(SelectionEvent e)
@@ -588,7 +579,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void testTypeSelectionChanged()
     {
-        IPackageFragmentRoot mainSrcFolder = ((NewTestCaseWizard) getWizard()).getMainSrcFolder();
+        final IPackageFragmentRoot mainSrcFolder = ((NewTestCaseWizard) getWizard()).getMainSrcFolder();
         if(junit3Toggle.getSelection())
         {
             testType = PreferenceConstants.TEST_TYPE_VALUE_JUNIT_3;
@@ -628,9 +619,9 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     protected void createBuildPathConfigureControls(Composite composite, int nColumns)
     {
-        Composite inner = new Composite(composite, SWT.NONE);
+        final Composite inner = new Composite(composite, SWT.NONE);
         inner.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, nColumns, 1));
-        GridLayout layout = new GridLayout(2, false);
+        final GridLayout layout = new GridLayout(2, false);
         layout.marginWidth = 0;
         layout.marginHeight = 0;
         inner.setLayout(layout);
@@ -649,7 +640,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 performBuildpathConfiguration(e.text);
             }
         });
-        GridData gd = new GridData(GridData.FILL, GridData.BEGINNING, true, false, 1, 1);
+        final GridData gd = new GridData(GridData.FILL, GridData.BEGINNING, true, false, 1, 1);
         gd.widthHint = convertWidthInCharsToPixels(60);
         fLink.setLayoutData(gd);
         updateBuildPathMessage();
@@ -657,39 +648,39 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void performBuildpathConfiguration(Object data)
     {
-        IPackageFragmentRoot root = getPackageFragmentRoot();
+        final IPackageFragmentRoot root = getPackageFragmentRoot();
         if(root == null)
         {
             return; // should not happen. Link shouldn't be visible
         }
-        IJavaProject javaProject = root.getJavaProject();
+        final IJavaProject javaProject = root.getJavaProject();
 
         if("a3".equals(data)) { // add and configure JUnit 3 //$NON-NLS-1$
-            String id = BUILD_PATH_PAGE_ID;
-            Map<Object, Object> input = new HashMap<>();
-            IClasspathEntry newEntry = BuildPathSupport.getJUnit3ClasspathEntry();
+            final String id = BUILD_PATH_PAGE_ID;
+            final Map<Object, Object> input = new HashMap<>();
+            final IClasspathEntry newEntry = BuildPathSupport.getJUnit3ClasspathEntry();
             input.put(BUILD_PATH_KEY_ADD_ENTRY, newEntry);
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, id, new String[] { id }, input).open();
         }
         else if("a4".equals(data)) { // add and configure JUnit 4 //$NON-NLS-1$
-            String id = BUILD_PATH_PAGE_ID;
-            Map<Object, Object> input = new HashMap<>();
-            IClasspathEntry newEntry = BuildPathSupport.getJUnit4ClasspathEntry();
+            final String id = BUILD_PATH_PAGE_ID;
+            final Map<Object, Object> input = new HashMap<>();
+            final IClasspathEntry newEntry = BuildPathSupport.getJUnit4ClasspathEntry();
             input.put(BUILD_PATH_KEY_ADD_ENTRY, newEntry);
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, id, new String[] { id }, input).open();
         }
         else if("b".equals(data)) { // open build path //$NON-NLS-1$
-            String id = BUILD_PATH_PAGE_ID;
-            Map<Object, Object> input = new HashMap<>();
+            final String id = BUILD_PATH_PAGE_ID;
+            final Map<Object, Object> input = new HashMap<>();
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, id, new String[] { id }, input).open();
         }
         else if("c".equals(data)) { // open compliance //$NON-NLS-1$
-            String buildPath = BUILD_PATH_PAGE_ID;
-            String complianceId = COMPLIANCE_PAGE_ID;
-            Map<Object, Object> input = new HashMap<>();
+            final String buildPath = BUILD_PATH_PAGE_ID;
+            final String complianceId = COMPLIANCE_PAGE_ID;
+            final Map<Object, Object> input = new HashMap<>();
             input.put(BUILD_PATH_BLOCK, Boolean.TRUE);
             input.put(KEY_NO_LINK, Boolean.TRUE);
             PreferencesUtil.createPropertyDialogOn(getShell(), javaProject, complianceId, new String[] { buildPath, complianceId }, data).open();
@@ -705,8 +696,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return;
         }
 
-        String message = null;
-        IPackageFragmentRoot root = getPackageFragmentRoot();
+        final String message = null;
+        final IPackageFragmentRoot root = getPackageFragmentRoot();
         if(root != null)
         {
             root.getJavaProject();
@@ -717,7 +708,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void classToTestButtonPressed()
     {
-        IType type = chooseClassToTestType();
+        final IType type = chooseClassToTestType();
         if(type != null)
         {
             setClassUnderTest(type.getFullyQualifiedName('.'));
@@ -726,26 +717,26 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private IType chooseClassToTestType()
     {
-        IPackageFragmentRoot root = getPackageFragmentRoot();
+        final IPackageFragmentRoot root = getPackageFragmentRoot();
         if(root == null)
             return null;
 
-        IJavaElement[] elements = new IJavaElement[] { javaProjectUnderTest };
-        IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
+        final IJavaElement[] elements = new IJavaElement[] { javaProjectUnderTest };
+        final IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
 
         try
         {
-            SelectionDialog dialog = JavaUI.createTypeDialog(getShell(), getWizard().getContainer(), scope, IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS, false, getClassUnderTestText());
+            final SelectionDialog dialog = JavaUI.createTypeDialog(getShell(), getWizard().getContainer(), scope, IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS, false, getClassUnderTestText());
             dialog.setTitle(WizardMessages.NewTestCaseWizardPageOne_class_to_test_dialog_title);
             dialog.setMessage(WizardMessages.NewTestCaseWizardPageOne_class_to_test_dialog_message);
             if(dialog.open() == Window.OK)
             {
-                Object[] resultArray = dialog.getResult();
+                final Object[] resultArray = dialog.getResult();
                 if(resultArray != null && resultArray.length > 0)
                     return (IType) resultArray[0];
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             JUnitPlugin.log(e);
         }
@@ -759,7 +750,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     @Override
     protected IStatus packageChanged()
     {
-        IStatus status = super.packageChanged();
+        final IStatus status = super.packageChanged();
         fClassToTestCompletionProcessor.setPackageFragment(getPackageFragment());
         return status;
     }
@@ -775,33 +766,33 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     protected IStatus classUnderTestChanged()
     {
-        JUnitStatus status = new JUnitStatus();
+        final JUnitStatus status = new JUnitStatus();
 
         fClassUnderTest = null;
 
-        IPackageFragmentRoot root = getPackageFragmentRoot();
+        final IPackageFragmentRoot root = getPackageFragmentRoot();
         if(root == null)
         {
             return status;
         }
 
-        String classToTestName = getClassUnderTestText();
+        final String classToTestName = getClassUnderTestText();
         if(classToTestName.length() == 0)
         {
             return status;
         }
 
-        IStatus val = JavaConventionsUtil.validateJavaTypeName(classToTestName, root);
+        final IStatus val = JavaConventionsUtil.validateJavaTypeName(classToTestName, root);
         if(val.getSeverity() == IStatus.ERROR)
         {
             status.setError(WizardMessages.NewTestCaseWizardPageOne_error_class_to_test_not_valid);
             return status;
         }
 
-        IPackageFragment pack = getPackageFragment(); // can be null
+        final IPackageFragment pack = getPackageFragment(); // can be null
         try
         {
-            IType type = resolveClassNameToType(javaProjectUnderTest, pack, classToTestName);
+            final IType type = resolveClassNameToType(javaProjectUnderTest, pack, classToTestName);
             if(type == null)
             {
                 status.setError(WizardMessages.NewTestCaseWizardPageOne_error_class_to_test_not_exist);
@@ -819,7 +810,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             fClassUnderTest = type;
             fPage2.setClassUnderTest(fClassUnderTest);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             status.setError(WizardMessages.NewTestCaseWizardPageOne_error_class_to_test_not_valid);
         }
@@ -909,13 +900,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             createTestMethodStubs(type, imports);
         }
 
-        String testImport = TestTypeConstants.TEST_ANNOTATION.get(testType);
+        final String testImport = TestTypeConstants.TEST_ANNOTATION.get(testType);
         if(testImport != null)
         {
             imports.addImport(testImport);
         }
 
-        String staticImportBaseClass = TestTypeConstants.STATIC_IMPORT_BASE_CLASS.get(testType);
+        final String staticImportBaseClass = TestTypeConstants.STATIC_IMPORT_BASE_CLASS.get(testType);
         if(staticImportBaseClass != null)
         {
             imports.addStaticImport(staticImportBaseClass, "*", false); //$NON-NLS-1$
@@ -932,11 +923,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         {
             typeHierarchy = type.newSupertypeHierarchy(null);
             superTypes = typeHierarchy.getAllSuperclasses(type);
-            for (int i = 0; i < superTypes.length; i++)
+            for (final IType superType : superTypes)
             {
-                if(superTypes[i].exists())
+                if(superType.exists())
                 {
-                    IMethod constrMethod = superTypes[i].getMethod(superTypes[i].getElementName(), new String[] { "Ljava.lang.String;" }); //$NON-NLS-1$
+                    final IMethod constrMethod = superType.getMethod(superType.getElementName(), new String[] { "Ljava.lang.String;" }); //$NON-NLS-1$
                     if(constrMethod.exists() && constrMethod.isConstructor())
                     {
                         methodTemplate = constrMethod;
@@ -945,7 +936,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 }
             }
         }
-        GenStubSettings settings = JUnitStubUtility.getCodeGenerationSettings(type.getJavaProject());
+        final GenStubSettings settings = JUnitStubUtility.getCodeGenerationSettings(type.getJavaProject());
         settings.createComments = isAddComments();
 
         if(methodTemplate != null)
@@ -957,7 +948,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else
         {
             final String delimiter = getLineDelimiter();
-            StringBuffer buffer = new StringBuffer(32);
+            final StringBuilder buffer = new StringBuilder(32);
             buffer.append("public "); //$NON-NLS-1$
             buffer.append(getTypeName());
             buffer.append('(');
@@ -986,11 +977,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         {
             typeHierarchy = type.newSupertypeHierarchy(null);
             superTypes = typeHierarchy.getAllSuperclasses(type);
-            for (int i = 0; i < superTypes.length; i++)
+            for (final IType superType : superTypes)
             {
-                if(superTypes[i].exists())
+                if(superType.exists())
                 {
-                    IMethod testMethod = superTypes[i].getMethod(methodName, new String[] {});
+                    final IMethod testMethod = superType.getMethod(methodName, new String[] {});
                     if(testMethod.exists())
                     {
                         return testMethod;
@@ -1004,14 +995,14 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
     private void createSetupStubs(IType type, String methodName, boolean isStatic, String annotationType, ImportsManager imports) throws CoreException
     {
         String content = null;
-        IMethod methodTemplate = findInHierarchy(type, methodName);
+        final IMethod methodTemplate = findInHierarchy(type, methodName);
         String annotation = null;
         if(isJUnit5() || isJUnit4() || isTestNgSelected())
         {
             annotation = '@' + imports.addImport(annotationType);
         }
 
-        GenStubSettings settings = JUnitStubUtility.getCodeGenerationSettings(type.getJavaProject());
+        final GenStubSettings settings = JUnitStubUtility.getCodeGenerationSettings(type.getJavaProject());
         settings.createComments = isAddComments();
 
         if(methodTemplate != null)
@@ -1023,11 +1014,11 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         else
         {
             final String delimiter = getLineDelimiter();
-            StringBuffer buffer = new StringBuffer();
+            final StringBuilder buffer = new StringBuilder();
             if(settings.createComments)
             {
-                String[] excSignature = { Signature.createTypeSignature("java.lang.Exception", true) }; //$NON-NLS-1$
-                String comment = CodeGeneration.getMethodComment(type.getCompilationUnit(), type.getElementName(), methodName, new String[0], excSignature, Signature.SIG_VOID, null, delimiter);
+                final String[] excSignature = { Signature.createTypeSignature("java.lang.Exception", true) }; //$NON-NLS-1$
+                final String comment = CodeGeneration.getMethodComment(type.getCompilationUnit(), type.getElementName(), methodName, new String[0], excSignature, Signature.SIG_VOID, null, delimiter);
                 if(comment != null)
                 {
                     buffer.append(comment);
@@ -1063,35 +1054,35 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private void createSetUp(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
+        final String annotation = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "setUp", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDown(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = TestTypeConstants.TEARDOWN_METHOD_ANNOTATION.get(testType);
+        final String annotation = TestTypeConstants.TEARDOWN_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "tearDown", false, annotation, imports); //$NON-NLS-1$
     }
 
     private void createSetUpClass(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = TestTypeConstants.BEFORE_CLASS_METHOD_ANNOTATION.get(testType);
+        final String annotation = TestTypeConstants.BEFORE_CLASS_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "setUpBeforeClass", true, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTearDownClass(IType type, ImportsManager imports) throws CoreException
     {
-        String annotation = TestTypeConstants.AFTER_CLASS_METHOD_ANNOTATION.get(testType);
+        final String annotation = TestTypeConstants.AFTER_CLASS_METHOD_ANNOTATION.get(testType);
         createSetupStubs(type, "tearDownAfterClass", true, annotation, imports); //$NON-NLS-1$
     }
 
     private void createTestMethodStubs(IType type, ImportsManager imports) throws CoreException
     {
-        IMethod[] methods = fPage2.getCheckedMethods();
+        final IMethod[] methods = fPage2.getCheckedMethods();
         if(methods.length == 0)
             return;
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
                 .compilationUnit(fClassUnderTest.getCompilationUnit())
                 .testType(getTestTypePrefValue())
                 .defaultTestMethodContent(preferences.getTestMethodDefaultContent())
@@ -1104,7 +1095,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
 
     private String getLineDelimiter() throws JavaModelException
     {
-        IType classToTest = getClassUnderTest();
+        final IType classToTest = getClassUnderTest();
 
         if(classToTest != null && classToTest.exists() && classToTest.getCompilationUnit() != null)
             return classToTest.getCompilationUnit().findRecommendedLineSeparator();
@@ -1137,13 +1128,13 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     protected IStatus validateIfJUnitProject()
     {
-        JUnitStatus status = new JUnitStatus();
-        IPackageFragmentRoot root = getPackageFragmentRoot();
+        final JUnitStatus status = new JUnitStatus();
+        final IPackageFragmentRoot root = getPackageFragmentRoot();
         if(root != null)
         {
             try
             {
-                IJavaProject project = root.getJavaProject();
+                final IJavaProject project = root.getJavaProject();
                 if(project.exists())
                 {
                     if(isJUnit4())
@@ -1164,7 +1155,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     }
                 }
             }
-            catch (JavaModelException e)
+            catch (final JavaModelException e)
             {
             }
         }
@@ -1184,8 +1175,8 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             return new JUnitStatus();
         }
 
-        String superClassName = getSuperClass();
-        JUnitStatus status = new JUnitStatus();
+        final String superClassName = getSuperClass();
+        final JUnitStatus status = new JUnitStatus();
         if(superClassName == null || superClassName.trim().equals("")) { //$NON-NLS-1$
             status.setError(WizardMessages.NewTestCaseWizardPageOne_error_superclass_empty);
             return status;
@@ -1198,7 +1189,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 // see if .groovy file creation is allowed
                 getPackageFragment().getCompilationUnit(getName() + GROOVY_FILE_SUFFIX);
             }
-            catch (IllegalArgumentException e)
+            catch (final IllegalArgumentException e)
             {
                 status.setError(NewTestCaseWizardPageOne_spock_without_groovy_nature);
                 return status;
@@ -1211,7 +1202,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         {
             try
             {
-                IType type = resolveClassNameToType(getPackageFragmentRoot().getJavaProject(), getPackageFragment(), superClassName);
+                final IType type = resolveClassNameToType(getPackageFragmentRoot().getJavaProject(), getPackageFragment(), superClassName);
                 if(type == null)
                 {
                     status.setWarning(WizardMessages.NewTestCaseWizardPageOne_error_superclass_not_exist);
@@ -1228,7 +1219,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                     return status;
                 }
             }
-            catch (JavaModelException e)
+            catch (final JavaModelException e)
             {
                 JUnitPlugin.log(e);
             }
@@ -1275,7 +1266,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     private void restoreWidgetValues()
     {
-        IDialogSettings settings = getDialogSettings();
+        final IDialogSettings settings = getDialogSettings();
         if(settings != null)
         {
             fMethodStubsButtons.setSelection(IDX_SETUP, settings.getBoolean(STORE_SETUP));
@@ -1302,7 +1293,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
      */
     private void saveWidgetValues()
     {
-        IDialogSettings settings = getDialogSettings();
+        final IDialogSettings settings = getDialogSettings();
         if(settings != null)
         {
             settings.put(STORE_SETUP, fMethodStubsButtons.isSelected(IDX_SETUP));

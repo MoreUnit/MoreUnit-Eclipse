@@ -42,14 +42,14 @@ public class MockDependenciesActionTest
 
     private MockDependenciesAction action;
 
-    private IAction anAction = null;
+    private final IAction anAction = null;
 
     @BeforeEach
     public void createAction() throws Exception
     {
         action = new MockDependenciesAction(pageManager, conversionUtils, facadeFactory);
 
-        IEditorPart activeEditor = mock(IEditorPart.class);
+        final IEditorPart activeEditor = mock(IEditorPart.class);
         when(conversionUtils.getCompilationUnit(activeEditor)).thenReturn(openCompilationUnit);
         action.setActiveEditor(null, activeEditor);
     }
@@ -60,10 +60,10 @@ public class MockDependenciesActionTest
         // given
         when(facadeFactory.isTestCase(openCompilationUnit)).thenReturn(false);
 
-        IType classUnderTest = mock(IType.class);
+        final IType classUnderTest = mock(IType.class);
         when(openCompilationUnit.findPrimaryType()).thenReturn(classUnderTest);
 
-        ClassTypeFacade facade = classFacadeThatWillFindTestCase(null);
+        final ClassTypeFacade facade = classFacadeThatWillFindTestCase(null);
         when(facadeFactory.createClassFacade(openCompilationUnit)).thenReturn(facade);
 
         // when
@@ -75,7 +75,7 @@ public class MockDependenciesActionTest
 
     private ClassTypeFacade classFacadeThatWillFindTestCase(IType testCase)
     {
-        ClassTypeFacade facade = mock(ClassTypeFacade.class);
+        final ClassTypeFacade facade = mock(ClassTypeFacade.class);
         when(facade.getOneCorrespondingTestCase(eq(true), anyString())).thenReturn(new CorrespondingTestCase(testCase, false));
         return facade;
     }
@@ -86,11 +86,11 @@ public class MockDependenciesActionTest
         // given
         when(facadeFactory.isTestCase(openCompilationUnit)).thenReturn(false);
 
-        IType classUnderTest = mock(IType.class);
+        final IType classUnderTest = mock(IType.class);
         when(openCompilationUnit.findPrimaryType()).thenReturn(classUnderTest);
 
-        IType testCase = mock(IType.class);
-        ClassTypeFacade facade = classFacadeThatWillFindTestCase(testCase);
+        final IType testCase = mock(IType.class);
+        final ClassTypeFacade facade = classFacadeThatWillFindTestCase(testCase);
         when(facadeFactory.createClassFacade(openCompilationUnit)).thenReturn(facade);
 
         // when
@@ -106,11 +106,11 @@ public class MockDependenciesActionTest
         // given
         when(facadeFactory.isTestCase(openCompilationUnit)).thenReturn(true);
 
-        IType classUnderTest = mock(IType.class);
-        TestCaseTypeFacade facade = classFacadeThatWillFoundClassUnderTest(classUnderTest);
+        final IType classUnderTest = mock(IType.class);
+        final TestCaseTypeFacade facade = classFacadeThatWillFoundClassUnderTest(classUnderTest);
         when(facadeFactory.createTestCaseFacade(openCompilationUnit)).thenReturn(facade);
 
-        IType testCase = mock(IType.class);
+        final IType testCase = mock(IType.class);
         when(openCompilationUnit.findPrimaryType()).thenReturn(testCase);
 
         // when
@@ -122,7 +122,7 @@ public class MockDependenciesActionTest
 
     private TestCaseTypeFacade classFacadeThatWillFoundClassUnderTest(IType classUnderTest)
     {
-        TestCaseTypeFacade facade = mock(TestCaseTypeFacade.class);
+        final TestCaseTypeFacade facade = mock(TestCaseTypeFacade.class);
         when(facade.getOneCorrespondingMember(any(CorrespondingMemberRequest.class))).thenReturn(classUnderTest);
         return facade;
     }
@@ -133,10 +133,10 @@ public class MockDependenciesActionTest
         // given
         when(facadeFactory.isTestCase(openCompilationUnit)).thenReturn(true);
 
-        TestCaseTypeFacade facade = classFacadeThatWillFoundClassUnderTest(null);
+        final TestCaseTypeFacade facade = classFacadeThatWillFoundClassUnderTest(null);
         when(facadeFactory.createTestCaseFacade(openCompilationUnit)).thenReturn(facade);
 
-        IType testCase = mock(IType.class);
+        final IType testCase = mock(IType.class);
         when(openCompilationUnit.findPrimaryType()).thenReturn(testCase);
 
         // when

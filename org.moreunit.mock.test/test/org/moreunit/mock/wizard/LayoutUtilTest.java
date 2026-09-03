@@ -24,11 +24,7 @@ public class LayoutUtilTest
         display = Display.getDefault();
         headless = display == null;
         if (!headless) {
-            display.syncExec(new Runnable() {
-                public void run() {
-                    shell = new Shell(display);
-                }
-            });
+            display.syncExec(() -> shell = new Shell(display));
         }
     }
 
@@ -36,11 +32,7 @@ public class LayoutUtilTest
     public void tearDown()
     {
         if (shell != null && !shell.isDisposed()) {
-            display.syncExec(new Runnable() {
-                public void run() {
-                    shell.dispose();
-                }
-            });
+            display.syncExec(() -> shell.dispose());
         }
     }
 
@@ -50,15 +42,13 @@ public class LayoutUtilTest
         if (headless) {
             return; // Skip when there is no display
         }
-        display.syncExec(new Runnable() {
-            public void run() {
-                Button button = new Button(shell, SWT.PUSH);
-                button.setText("Ok");
+        display.syncExec(() -> {
+            final Button button = new Button(shell, SWT.PUSH);
+            button.setText("Ok");
 
-                int hint = LayoutUtil.getButtonWidthHint(button);
+            final int hint = LayoutUtil.getButtonWidthHint(button);
 
-                assertTrue(hint > 0);
-            }
+            assertTrue(hint > 0);
         });
     }
 
@@ -68,19 +58,17 @@ public class LayoutUtilTest
         if (headless) {
             return;
         }
-        display.syncExec(new Runnable() {
-            public void run() {
-                Button button = new Button(shell, SWT.PUSH);
-                button.setText("Cancel");
-                GridData layoutData = new GridData();
-                button.setLayoutData(layoutData);
+        display.syncExec(() -> {
+            final Button button = new Button(shell, SWT.PUSH);
+            button.setText("Cancel");
+            final GridData layoutData = new GridData();
+            button.setLayoutData(layoutData);
 
-                LayoutUtil.setButtonDimensionHint(button);
+            LayoutUtil.setButtonDimensionHint(button);
 
-                int expectedHint = LayoutUtil.getButtonWidthHint(button);
-                assertEquals(layoutData.widthHint, expectedHint);
-                assertEquals(layoutData.horizontalAlignment, GridData.FILL);
-            }
+            final int expectedHint = LayoutUtil.getButtonWidthHint(button);
+            assertEquals(layoutData.widthHint, expectedHint);
+            assertEquals(layoutData.horizontalAlignment, GridData.FILL);
         });
     }
 
@@ -90,16 +78,14 @@ public class LayoutUtilTest
         if (headless) {
             return;
         }
-        display.syncExec(new Runnable() {
-            public void run() {
-                Button button = new Button(shell, SWT.PUSH);
-                button.setLayoutData(new Object());
+        display.syncExec(() -> {
+            final Button button = new Button(shell, SWT.PUSH);
+            button.setLayoutData(new Object());
 
-                try {
-                    LayoutUtil.setButtonDimensionHint(button);
-                } catch (Exception e) {
-                    throw new AssertionError("Should not throw exception", e);
-                }
+            try {
+                LayoutUtil.setButtonDimensionHint(button);
+            } catch (final Exception e) {
+                throw new AssertionError("Should not throw exception", e);
             }
         });
     }

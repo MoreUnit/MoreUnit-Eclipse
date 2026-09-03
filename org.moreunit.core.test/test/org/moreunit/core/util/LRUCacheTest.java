@@ -11,7 +11,7 @@ public class LRUCacheTest
     @Test
     public void should_remove_last_read_entry_when_adding_entry_after_max_size_is_reached()
     {
-        LRUCache<String, String> cache = new LRUCache<>(2);
+        final LRUCache<String, String> cache = new LRUCache<>(2);
         assertTrue(cache.isEmpty());
 
         cache.put("key1", "val1");

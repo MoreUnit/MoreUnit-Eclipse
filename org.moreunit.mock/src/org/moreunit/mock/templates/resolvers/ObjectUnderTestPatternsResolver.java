@@ -35,7 +35,7 @@ public class ObjectUnderTestPatternsResolver implements PatternResolver
 
     private String objectUnderTestName()
     {
-        String name = context.classUnderTest.getElementName();
+        final String name = context.classUnderTest.getElementName();
         return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 }

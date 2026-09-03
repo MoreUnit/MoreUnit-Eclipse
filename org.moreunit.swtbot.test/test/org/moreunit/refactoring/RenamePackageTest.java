@@ -40,13 +40,13 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 			getShortcutStrategy().pressRenameShortcut();
 
 			// fill dialog to rename package
-			SWTBotText textWithLabel = bot.textWithLabel("New name:");
+			final SWTBotText textWithLabel = bot.textWithLabel("New name:");
 			assertNotNull(textWithLabel);
 			textWithLabel.setText("some.name");
 			bot.shell("Rename Package").activate();
 
 			// start rename refactoring
-			SWTBotButton okButton = bot.button("OK");
+			final SWTBotButton okButton = bot.button("OK");
 			assertNotNull(okButton);
 			okButton.click();
 		});
@@ -66,13 +66,13 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 		getShortcutStrategy().pressRenameShortcut();
 
 		// fill dialog to rename package
-		SWTBotText textWithLabel = bot.textWithLabel("New name:");
+		final SWTBotText textWithLabel = bot.textWithLabel("New name:");
 		assertNotNull(textWithLabel);
 		textWithLabel.setText("any");
 		bot.shell("Rename Package").activate();
 
 		// start rename refactoring
-		SWTBotButton okButton = bot.button("OK");
+		final SWTBotButton okButton = bot.button("OK");
 		okButton.click();
 
 		bot.waitUntil(new DefaultCondition()
@@ -90,7 +90,7 @@ public class RenamePackageTest extends JavaProjectSWTBotTestHelper
 			}
 		});
 
-		ICompilationUnit testcase = context.getCompilationUnit("any.SecondTest");
+		final ICompilationUnit testcase = context.getCompilationUnit("any.SecondTest");
 		assertNotNull(testcase);
 	}
 }

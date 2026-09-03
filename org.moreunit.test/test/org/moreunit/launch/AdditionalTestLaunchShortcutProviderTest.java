@@ -49,7 +49,7 @@ public class AdditionalTestLaunchShortcutProviderTest
     {
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[0]);
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -57,8 +57,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                boolean result = provider.isShortcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final boolean result = provider.isShortcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertFalse(result);
             }
@@ -70,7 +70,7 @@ public class AdditionalTestLaunchShortcutProviderTest
     {
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[0]);
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -78,8 +78,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut shortcut = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut shortcut = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertNull(shortcut);
             }
@@ -91,7 +91,7 @@ public class AdditionalTestLaunchShortcutProviderTest
     {
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[0]);
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -99,8 +99,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut shortcut = provider.getShorcutFor("junit5", IMember.class, 1);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut shortcut = provider.getShorcutFor("junit5", IMember.class, 1);
 
                 assertNull(shortcut);
             }
@@ -112,7 +112,7 @@ public class AdditionalTestLaunchShortcutProviderTest
     {
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[0]);
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -120,8 +120,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut shortcut = provider.getShorcutFor("junit5", IMember.class, 3);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut shortcut = provider.getShorcutFor("junit5", IMember.class, 3);
 
                 assertNull(shortcut);
             }
@@ -131,17 +131,17 @@ public class AdditionalTestLaunchShortcutProviderTest
     @Test
     public void getShorcutFor_should_return_first_matching_support_shortcut() throws Exception
     {
-        ILaunchShortcut shortcut1 = mock(ILaunchShortcut.class);
-        ITestLaunchSupport support1 = mock(ITestLaunchSupport.class);
+        final ILaunchShortcut shortcut1 = mock(ILaunchShortcut.class);
+        final ITestLaunchSupport support1 = mock(ITestLaunchSupport.class);
         when(support1.isLaunchSupported(TestType.JUNIT_5, IMember.class, Cardinality.ONE)).thenReturn(true);
         when(support1.getShortcut()).thenReturn(shortcut1);
 
-        IConfigurationElement configElement1 = mock(IConfigurationElement.class);
+        final IConfigurationElement configElement1 = mock(IConfigurationElement.class);
         when(configElement1.createExecutableExtension("class")).thenReturn(support1);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[] { configElement1 });
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -149,8 +149,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertSame(shortcut1, result);
             }
@@ -160,15 +160,15 @@ public class AdditionalTestLaunchShortcutProviderTest
     @Test
     public void getShorcutFor_should_return_null_when_support_does_not_handle_the_cardinality() throws Exception
     {
-        ITestLaunchSupport support = mock(ITestLaunchSupport.class);
+        final ITestLaunchSupport support = mock(ITestLaunchSupport.class);
         when(support.isLaunchSupported(any(TestType.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(false);
 
-        IConfigurationElement configElement = mock(IConfigurationElement.class);
+        final IConfigurationElement configElement = mock(IConfigurationElement.class);
         when(configElement.createExecutableExtension("class")).thenReturn(support);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[] { configElement });
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -176,8 +176,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertNull(result);
             }
@@ -187,12 +187,12 @@ public class AdditionalTestLaunchShortcutProviderTest
     @Test
     public void getShorcutFor_should_skip_extensions_that_throw_CoreException() throws Exception
     {
-        IConfigurationElement badElement = mock(IConfigurationElement.class);
+        final IConfigurationElement badElement = mock(IConfigurationElement.class);
         when(badElement.createExecutableExtension("class")).thenThrow(new CoreException(new Status(IStatus.ERROR, "test", "boom")));
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[] { badElement });
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -200,8 +200,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertNull(result);
             }
@@ -211,12 +211,12 @@ public class AdditionalTestLaunchShortcutProviderTest
     @Test
     public void getShorcutFor_should_skip_extensions_returning_non_ITestLaunchSupport_objects() throws Exception
     {
-        IConfigurationElement wrongClassElement = mock(IConfigurationElement.class);
+        final IConfigurationElement wrongClassElement = mock(IConfigurationElement.class);
         when(wrongClassElement.createExecutableExtension("class")).thenReturn("not a test launch support");
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[] { wrongClassElement });
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -224,8 +224,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertNull(result);
             }
@@ -235,24 +235,24 @@ public class AdditionalTestLaunchShortcutProviderTest
     @Test
     public void getShorcutFor_should_stop_after_finding_first_match() throws Exception
     {
-        ILaunchShortcut shortcut1 = mock(ILaunchShortcut.class);
-        ITestLaunchSupport support1 = mock(ITestLaunchSupport.class);
+        final ILaunchShortcut shortcut1 = mock(ILaunchShortcut.class);
+        final ITestLaunchSupport support1 = mock(ITestLaunchSupport.class);
         when(support1.isLaunchSupported(TestType.JUNIT_5, IMember.class, Cardinality.ONE)).thenReturn(true);
         when(support1.getShortcut()).thenReturn(shortcut1);
 
         // A second support that explicitly does NOT handle the request.
-        ITestLaunchSupport support2 = mock(ITestLaunchSupport.class);
+        final ITestLaunchSupport support2 = mock(ITestLaunchSupport.class);
         when(support2.isLaunchSupported(any(TestType.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(false);
 
-        IConfigurationElement configElement1 = mock(IConfigurationElement.class);
+        final IConfigurationElement configElement1 = mock(IConfigurationElement.class);
         when(configElement1.createExecutableExtension("class")).thenReturn(support1);
 
-        IConfigurationElement configElement2 = mock(IConfigurationElement.class);
+        final IConfigurationElement configElement2 = mock(IConfigurationElement.class);
         when(configElement2.createExecutableExtension("class")).thenReturn(support2);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[] { configElement1, configElement2 });
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -260,8 +260,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final ILaunchShortcut result = provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertSame(shortcut1, result);
                 // support2 must NOT have been consulted for a shortcut, since
@@ -276,7 +276,7 @@ public class AdditionalTestLaunchShortcutProviderTest
     {
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[0]);
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -284,7 +284,7 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
                 provider.getShorcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 verify(registry).getConfigurationElementsFor(MoreUnitPlugin.PLUGIN_ID + ".testLaunchSupportAddition");
@@ -295,17 +295,17 @@ public class AdditionalTestLaunchShortcutProviderTest
     @Test
     public void isShortcutFor_should_return_true_when_a_support_handles_the_request() throws Exception
     {
-        ILaunchShortcut shortcut = mock(ILaunchShortcut.class);
-        ITestLaunchSupport support = mock(ITestLaunchSupport.class);
+        final ILaunchShortcut shortcut = mock(ILaunchShortcut.class);
+        final ITestLaunchSupport support = mock(ITestLaunchSupport.class);
         when(support.isLaunchSupported(TestType.JUNIT_5, IMember.class, Cardinality.ONE)).thenReturn(true);
         when(support.getShortcut()).thenReturn(shortcut);
 
-        IConfigurationElement configElement = mock(IConfigurationElement.class);
+        final IConfigurationElement configElement = mock(IConfigurationElement.class);
         when(configElement.createExecutableExtension("class")).thenReturn(support);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
-            IExtensionRegistry registry = mock(IExtensionRegistry.class);
+            final IExtensionRegistry registry = mock(IExtensionRegistry.class);
             when(registry.getConfigurationElementsFor(any())).thenReturn(new IConfigurationElement[] { configElement });
             platformMock.when(Platform::getExtensionRegistry).thenReturn(registry);
 
@@ -313,8 +313,8 @@ public class AdditionalTestLaunchShortcutProviderTest
             {
                 logHandlerMock.when(LogHandler::getInstance).thenReturn(mock(LogHandler.class));
 
-                AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
-                boolean result = provider.isShortcutFor("junit5", IMember.class, Cardinality.ONE);
+                final AdditionalTestLaunchShortcutProvider provider = new AdditionalTestLaunchShortcutProvider();
+                final boolean result = provider.isShortcutFor("junit5", IMember.class, Cardinality.ONE);
 
                 assertTrue(result);
             }

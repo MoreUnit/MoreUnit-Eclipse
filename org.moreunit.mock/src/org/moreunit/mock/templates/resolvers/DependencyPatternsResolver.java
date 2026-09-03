@@ -30,11 +30,11 @@ public class DependencyPatternsResolver implements PatternResolver
             return codePattern;
         }
 
-        StringBuilder buffer = new StringBuilder();
-        for (Dependency d : context.dependenciesToMock())
+        final StringBuilder buffer = new StringBuilder();
+        for (final Dependency d : context.dependenciesToMock())
         {
-            String resolvedType = newTypeTpl(d.simpleClassName, d.fullyQualifiedClassName);
-            String typeParams = buildTypeParametersDeclaration(d.typeParameters, new StringBuilder()).toString();
+            final String resolvedType = newTypeTpl(d.simpleClassName, d.fullyQualifiedClassName);
+            final String typeParams = buildTypeParametersDeclaration(d.typeParameters, new StringBuilder()).toString();
 
             /*
              * ⚡ Bolt Performance Optimization
@@ -44,7 +44,7 @@ public class DependencyPatternsResolver implements PatternResolver
              * 📊 Impact: ~4x speedup for this regex replacement.
              * 🔬 Measurement: Benchmarked against String.replaceAll using a 1M loop on sample patterns.
              */
-            String replacedClass = DEPENDENCY_CLASS_PATTERN.matcher(codePattern)
+            final String replacedClass = DEPENDENCY_CLASS_PATTERN.matcher(codePattern)
                     .replaceAll(Matcher.quoteReplacement(resolvedType + ".class"));
 
             buffer.append(replacedClass.
@@ -68,11 +68,11 @@ public class DependencyPatternsResolver implements PatternResolver
 
         buffer.append('<');
 
-        for (Iterator<TypeParameter> paramIt = typeParameters.iterator(); paramIt.hasNext();)
+        for (final Iterator<TypeParameter> paramIt = typeParameters.iterator(); paramIt.hasNext();)
         {
-            TypeParameter p = paramIt.next();
+            final TypeParameter p = paramIt.next();
 
-            for (TypeAnnotation a : p.annotations)
+            for (final TypeAnnotation a : p.annotations)
             {
                 buffer.append('@').append(newTypeTpl(a.simpleClassName, a.fullyQualifiedClassName)).append(' ');
             }
@@ -81,7 +81,7 @@ public class DependencyPatternsResolver implements PatternResolver
 
             if(p.hasName())
             {
-                for (TypeAnnotation a : p.baseTypeAnnotations)
+                for (final TypeAnnotation a : p.baseTypeAnnotations)
                 {
                     buffer.append('@').append(newTypeTpl(a.simpleClassName, a.fullyQualifiedClassName)).append(' ');
                 }

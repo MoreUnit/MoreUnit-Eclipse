@@ -54,14 +54,14 @@ public class FileMatchSelectionDialogTest
     private Shell workbenchShell()
     {
         assumeTrue(PlatformUI.isWorkbenchRunning(), "Workbench is not running");
-        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         assumeTrue(shell != null, "No active workbench window");
         return shell;
     }
 
     private IFile newFile(String name, String path)
     {
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
         when(file.getName()).thenReturn(name);
         when(file.getFullPath()).thenReturn(new Path(path));
         return file;
@@ -81,7 +81,7 @@ public class FileMatchSelectionDialogTest
 
     private Tree tree()
     {
-        TreeViewer viewer = (TreeViewer) getField(dialog, "treeViewer");
+        final TreeViewer viewer = (TreeViewer) getField(dialog, "treeViewer");
         assertNotNull(viewer);
         return viewer.getTree();
     }
@@ -97,8 +97,8 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_show_default_selection_after_creation()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
         createDialog(new Object[] { file1, file2 }, new StructuredSelection(file1));
 
         assertSame(file1, dialog.getSelectedElement());
@@ -116,11 +116,11 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_close_when_escape_is_pressed()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
         createDialog(new Object[] { file1 }, new StructuredSelection(file1));
-        Shell popup = dialog.getShell();
+        final Shell popup = dialog.getShell();
 
-        Event esc = new Event();
+        final Event esc = new Event();
         esc.character = SWT.ESC;
         tree().notifyListeners(SWT.KeyDown, esc);
 
@@ -132,9 +132,9 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_close_and_keep_selected_element_when_element_is_default_selected()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
         createDialog(new Object[] { file1 }, new StructuredSelection(file1));
-        Shell popup = dialog.getShell();
+        final Shell popup = dialog.getShell();
 
         tree().notifyListeners(SWT.DefaultSelection, new Event());
 
@@ -145,8 +145,8 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_not_close_when_tree_action_element_provides_no_element()
     {
-        boolean[] provideElementCalled = new boolean[1];
-        TreeActionElement<IFile> action = new TreeActionElement<IFile>()
+        final boolean[] provideElementCalled = new boolean[1];
+        final TreeActionElement<IFile> action = new TreeActionElement<IFile>()
         {
             public boolean provideElement()
             {
@@ -170,7 +170,7 @@ public class FileMatchSelectionDialogTest
             }
         };
 
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
         createDialog(new Object[] { file1, action }, new StructuredSelection(action));
 
         tree().notifyListeners(SWT.DefaultSelection, new Event());
@@ -182,8 +182,8 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_close_and_keep_element_returned_by_tree_action_element()
     {
-        IFile createdFile = newFile("FooTest.java", "/prj/test/FooTest.java");
-        TreeActionElement<IFile> action = new TreeActionElement<IFile>()
+        final IFile createdFile = newFile("FooTest.java", "/prj/test/FooTest.java");
+        final TreeActionElement<IFile> action = new TreeActionElement<IFile>()
         {
             public boolean provideElement()
             {
@@ -206,9 +206,9 @@ public class FileMatchSelectionDialogTest
             }
         };
 
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
         createDialog(new Object[] { file1, action }, new StructuredSelection(action));
-        Shell popup = dialog.getShell();
+        final Shell popup = dialog.getShell();
 
         tree().notifyListeners(SWT.DefaultSelection, new Event());
 
@@ -219,21 +219,21 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_update_tree_selection_when_mouse_moves_over_an_item()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
         createDialog(new Object[] { file1, file2 }, new StructuredSelection(file1));
 
         dialog.getShell().open();
         drainEvents();
 
-        Tree tree = tree();
+        final Tree tree = tree();
         assumeTrue(tree.getItemHeight() > 0, "Tree items are not realized");
 
-        TreeItem item2 = tree.getItem(1);
-        Rectangle bounds = item2.getBounds();
+        final TreeItem item2 = tree.getItem(1);
+        final Rectangle bounds = item2.getBounds();
         assumeTrue(bounds.width > 0, "Tree item bounds are not available");
 
-        Event mouseMove = new Event();
+        final Event mouseMove = new Event();
         mouseMove.x = bounds.x + 2;
         mouseMove.y = bounds.y + 2;
         tree.notifyListeners(SWT.MouseMove, mouseMove);
@@ -245,24 +245,24 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_scroll_up_when_mouse_moves_at_top_of_tree()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
         createDialog(new Object[] { file1, file2 }, new StructuredSelection(file1));
 
         dialog.getShell().open();
         drainEvents();
 
-        Tree tree = tree();
+        final Tree tree = tree();
         assumeTrue(tree.getItemHeight() > 0, "Tree items are not realized");
 
-        Rectangle bounds = tree.getItem(0).getBounds();
+        final Rectangle bounds = tree.getItem(0).getBounds();
         assumeTrue(bounds.width > 0, "Tree item bounds are not available");
 
         // first move selects the topmost item; second move at the very top
         // triggers the scroll-up attempt (nothing to scroll: no-op)
         for (int i = 0; i < 2; i++)
         {
-            Event mouseMove = new Event();
+            final Event mouseMove = new Event();
             mouseMove.x = bounds.x + 2;
             mouseMove.y = bounds.y + 1;
             tree.notifyListeners(SWT.MouseMove, mouseMove);
@@ -275,25 +275,25 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_scroll_down_when_mouse_moves_at_bottom_of_tree()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
         createDialog(new Object[] { file1, file2 }, new StructuredSelection(file1));
 
         dialog.getShell().open();
         drainEvents();
 
-        Tree tree = tree();
+        final Tree tree = tree();
         assumeTrue(tree.getItemCount() > 1, "Tree should contain several items");
         assumeTrue(tree.getItemHeight() > 0, "Tree items are not realized");
 
-        Rectangle bounds = tree.getItem(1).getBounds();
+        final Rectangle bounds = tree.getItem(1).getBounds();
         assumeTrue(bounds.width > 0, "Tree item bounds are not available");
 
         // first move selects the bottom item; second move triggers the
         // scroll-down attempt (nothing to scroll: no-op)
         for (int i = 0; i < 2; i++)
         {
-            Event mouseMove = new Event();
+            final Event mouseMove = new Event();
             mouseMove.x = bounds.x + 2;
             mouseMove.y = bounds.y + bounds.height - 1;
             tree.notifyListeners(SWT.MouseMove, mouseMove);
@@ -311,7 +311,7 @@ public class FileMatchSelectionDialogTest
         dialog.getShell().open();
         drainEvents();
 
-        Event mouseUp = new Event();
+        final Event mouseUp = new Event();
         mouseUp.button = 1;
         mouseUp.x = 5;
         mouseUp.y = 5;
@@ -323,13 +323,13 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_do_nothing_when_mouse_is_released_with_non_primary_button()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
         createDialog(new Object[] { file1 }, new StructuredSelection(file1));
 
         dialog.getShell().open();
         drainEvents();
 
-        Event mouseUp = new Event();
+        final Event mouseUp = new Event();
         mouseUp.button = 2;
         mouseUp.x = 5;
         mouseUp.y = 5;
@@ -341,23 +341,23 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_close_and_select_element_when_selected_item_is_clicked()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
         createDialog(new Object[] { file1, file2 }, new StructuredSelection(file1));
 
         dialog.getShell().open();
         drainEvents();
 
-        Tree tree = tree();
+        final Tree tree = tree();
         assumeTrue(tree.getItemHeight() > 0, "Tree items are not realized");
 
-        TreeItem selectedItem = tree.getSelection()[0];
-        Rectangle bounds = selectedItem.getBounds();
+        final TreeItem selectedItem = tree.getSelection()[0];
+        final Rectangle bounds = selectedItem.getBounds();
         assumeTrue(bounds.width > 0, "Tree item bounds are not available");
 
-        Shell popup = dialog.getShell();
+        final Shell popup = dialog.getShell();
 
-        Event mouseUp = new Event();
+        final Event mouseUp = new Event();
         mouseUp.button = 1;
         mouseUp.x = bounds.x + 2;
         mouseUp.y = bounds.y + 2;
@@ -370,22 +370,22 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_not_close_when_clicked_item_is_not_the_selected_one()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file2 = newFile("Bar.java", "/prj/src/Bar.java");
         createDialog(new Object[] { file1, file2 }, new StructuredSelection(file1));
 
         dialog.getShell().open();
         drainEvents();
 
-        Tree tree = tree();
+        final Tree tree = tree();
         assumeTrue(tree.getItemCount() > 1, "Tree should contain several items");
         assumeTrue(tree.getItemHeight() > 0, "Tree items are not realized");
 
-        TreeItem otherItem = tree.getItem(1);
-        Rectangle bounds = otherItem.getBounds();
+        final TreeItem otherItem = tree.getItem(1);
+        final Rectangle bounds = otherItem.getBounds();
         assumeTrue(bounds.width > 0, "Tree item bounds are not available");
 
-        Event mouseUp = new Event();
+        final Event mouseUp = new Event();
         mouseUp.button = 1;
         mouseUp.x = bounds.x + 2;
         mouseUp.y = bounds.y + 2;
@@ -397,9 +397,9 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_close_after_choice_and_return_no_element_when_cancelled()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        FileMatchSelectionDialog<IFile> d = createDialog(new Object[] { file1 }, new StructuredSelection(file1));
-        Shell popup = d.getShell();
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final FileMatchSelectionDialog<IFile> d = createDialog(new Object[] { file1 }, new StructuredSelection(file1));
+        final Shell popup = d.getShell();
 
         // the popup is non-modal: the event loop started by getChoice() will
         // dispatch the queued close request
@@ -417,14 +417,14 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_survive_exceptions_thrown_during_event_loop()
     {
-        IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
-        FileMatchSelectionDialog<IFile> d = createDialog(new Object[] { file1 }, new StructuredSelection(file1));
+        final IFile file1 = newFile("Foo.java", "/prj/src/Foo.java");
+        final FileMatchSelectionDialog<IFile> d = createDialog(new Object[] { file1 }, new StructuredSelection(file1));
         dialog = d;
 
         // the event loop is driven manually on a controlled shell: the queued
         // throwing runnable must not break the loop, which then ends when the
         // shell gets disposed by the second runnable
-        Shell loopShell = new Shell(workbenchShell().getDisplay());
+        final Shell loopShell = new Shell(workbenchShell().getDisplay());
         loopShell.getDisplay().asyncExec(() -> {
             throw new RuntimeException("boom");
         });
@@ -444,11 +444,11 @@ public class FileMatchSelectionDialogTest
     {
         try
         {
-            Method method = FileMatchSelectionDialog.class.getDeclaredMethod("runEventLoop", Shell.class);
+            final Method method = FileMatchSelectionDialog.class.getDeclaredMethod("runEventLoop", Shell.class);
             method.setAccessible(true);
             method.invoke(d, loopShell);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -457,8 +457,8 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_use_action_element_text_and_image_in_label_provider()
     {
-        Image image = workbenchShell().getDisplay().getSystemImage(SWT.ICON_INFORMATION);
-        TreeActionElement<IFile> action = new TreeActionElement<IFile>()
+        final Image image = workbenchShell().getDisplay().getSystemImage(SWT.ICON_INFORMATION);
+        final TreeActionElement<IFile> action = new TreeActionElement<IFile>()
         {
             public boolean provideElement()
             {
@@ -481,7 +481,7 @@ public class FileMatchSelectionDialogTest
             }
         };
 
-        Object labelProvider = newLabelProvider();
+        final Object labelProvider = newLabelProvider();
 
         assertEquals("Create new test", invokeText(labelProvider, action));
         assertSame(image, invokeImage(labelProvider, action));
@@ -490,9 +490,9 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_display_file_name_and_folder_in_label_provider()
     {
-        IFile file = newFile("Foo.java", "/prj/src/Foo.java");
+        final IFile file = newFile("Foo.java", "/prj/src/Foo.java");
 
-        Object labelProvider = newLabelProvider();
+        final Object labelProvider = newLabelProvider();
 
         assertEquals("Foo.java - /prj/src", invokeText(labelProvider, file));
         assertNotNull(invokeImage(labelProvider, file));
@@ -501,8 +501,8 @@ public class FileMatchSelectionDialogTest
     @Test
     public void should_fall_back_to_default_text_and_image_for_unknown_elements()
     {
-        Object labelProvider = newLabelProvider();
-        Object unknownElement = new Object();
+        final Object labelProvider = newLabelProvider();
+        final Object unknownElement = new Object();
 
         // must not throw and must fall back to the default label provider
         invokeText(labelProvider, unknownElement);
@@ -513,12 +513,12 @@ public class FileMatchSelectionDialogTest
     {
         try
         {
-            Class<?> c = Class.forName("org.moreunit.core.ui.FileMatchSelectionDialog$FileLabelProvider");
-            Constructor<?> constructor = c.getDeclaredConstructor();
+            final Class<?> c = Class.forName("org.moreunit.core.ui.FileMatchSelectionDialog$FileLabelProvider");
+            final Constructor<?> constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -538,11 +538,11 @@ public class FileMatchSelectionDialogTest
     {
         try
         {
-            Method method = target.getClass().getDeclaredMethod(methodName, Object.class);
+            final Method method = target.getClass().getDeclaredMethod(methodName, Object.class);
             method.setAccessible(true);
             return method.invoke(target, arg);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -552,11 +552,11 @@ public class FileMatchSelectionDialogTest
     {
         try
         {
-            Field field = FileMatchSelectionDialog.class.getDeclaredField(name);
+            final Field field = FileMatchSelectionDialog.class.getDeclaredField(name);
             field.setAccessible(true);
             return field.get(owner);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }

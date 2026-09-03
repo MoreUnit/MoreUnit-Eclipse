@@ -11,8 +11,8 @@ public class ResourceOperationExceptionTest
     @Test
     public void should_create_with_cause()
     {
-        RuntimeException cause = new RuntimeException("root");
-        ResourceOperationException ex = new ResourceOperationException(cause);
+        final RuntimeException cause = new RuntimeException("root");
+        final ResourceOperationException ex = new ResourceOperationException(cause);
         assertEquals(cause, ex.getCause());
         assertEquals(String.valueOf(cause), ex.getMessage());
     }
@@ -20,14 +20,14 @@ public class ResourceOperationExceptionTest
     @Test
     public void should_create_with_null_cause()
     {
-        ResourceOperationException ex = new ResourceOperationException(null);
+        final ResourceOperationException ex = new ResourceOperationException(null);
         assertNull(ex.getCause());
     }
 
     @Test
     public void should_be_runtime_exception()
     {
-        ResourceOperationException ex = new ResourceOperationException(new RuntimeException());
+        final ResourceOperationException ex = new ResourceOperationException(new RuntimeException());
         assertNotNull(ex instanceof RuntimeException);
     }
 }

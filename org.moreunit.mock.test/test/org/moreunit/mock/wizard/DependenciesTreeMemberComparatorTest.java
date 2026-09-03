@@ -18,8 +18,8 @@ public class DependenciesTreeMemberComparatorTest
     @Test
     public void methods_should_come_before_fields()
     {
-        IMethod method = mock(IMethod.class);
-        IField field = mock(IField.class);
+        final IMethod method = mock(IMethod.class);
+        final IField field = mock(IField.class);
 
         assertTrue(comparator.compare(method, field) < 0);
         assertTrue(comparator.compare(field, method) > 0);
@@ -28,8 +28,8 @@ public class DependenciesTreeMemberComparatorTest
     @Test
     public void constructors_should_come_before_setters() throws JavaModelException
     {
-        IMethod constructor = mock(IMethod.class);
-        IMethod setter = mock(IMethod.class);
+        final IMethod constructor = mock(IMethod.class);
+        final IMethod setter = mock(IMethod.class);
         when(constructor.isConstructor()).thenReturn(true);
         when(setter.isConstructor()).thenReturn(false);
 
@@ -40,8 +40,8 @@ public class DependenciesTreeMemberComparatorTest
     @Test
     public void constructors_with_more_params_should_come_first() throws JavaModelException
     {
-        IMethod manyParams = mock(IMethod.class);
-        IMethod fewParams = mock(IMethod.class);
+        final IMethod manyParams = mock(IMethod.class);
+        final IMethod fewParams = mock(IMethod.class);
         when(manyParams.isConstructor()).thenReturn(true);
         when(fewParams.isConstructor()).thenReturn(true);
         when(manyParams.getNumberOfParameters()).thenReturn(3);
@@ -54,8 +54,8 @@ public class DependenciesTreeMemberComparatorTest
     @Test
     public void same_type_members_should_be_ordered_by_name()
     {
-        IField a = mock(IField.class);
-        IField b = mock(IField.class);
+        final IField a = mock(IField.class);
+        final IField b = mock(IField.class);
         when(a.getElementName()).thenReturn("apple");
         when(b.getElementName()).thenReturn("banana");
 

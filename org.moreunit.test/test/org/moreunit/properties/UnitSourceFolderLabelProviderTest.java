@@ -56,7 +56,7 @@ public class UnitSourceFolderLabelProviderTest extends SwtPageTestCase
     @Test
     public void should_display_source_folder_of_mapping_for_its_own_label()
     {
-        IPackageFragmentRoot mainSrcFolder = context.getProjectHandler().getMainSrcFolderHandler().get();
+        final IPackageFragmentRoot mainSrcFolder = context.getProjectHandler().getMainSrcFolderHandler().get();
 
         assertEquals(javaProject.getElementName() + "/src (mapped source folder)", labelProvider.getText(mainSrcFolder));
         assertNotNull(labelProvider.getImage(mainSrcFolder));

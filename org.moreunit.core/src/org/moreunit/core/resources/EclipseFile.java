@@ -28,10 +28,10 @@ public class EclipseFile extends EclipseResource implements File
 
         try
         {
-            Path path = new Path(getPath().toString());
+            final Path path = new Path(getPath().toString());
             ResourcesPlugin.getWorkspace().getRoot().getFile(path).create(null, false, null);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             throw new ResourceException("Could not create file: " + getPath(), e);
         }
@@ -46,7 +46,7 @@ public class EclipseFile extends EclipseResource implements File
     @Override
     public String getExtension()
     {
-        String ext = file.getFileExtension();
+        final String ext = file.getFileExtension();
         return ext == null ? "" : ext;
     }
 

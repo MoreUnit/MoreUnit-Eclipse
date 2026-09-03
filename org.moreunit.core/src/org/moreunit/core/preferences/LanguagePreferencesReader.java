@@ -6,7 +6,7 @@ import org.moreunit.core.matching.TestFolderPathPattern;
 
 public class LanguagePreferencesReader extends LanguagePreferences
 {
-    private LanguagePreferencesReader defaults;
+    private final LanguagePreferencesReader defaults;
 
     public LanguagePreferencesReader(String languageId, LanguagePreferencesReader defaults, WriteablePreferences parentPreferences)
     {

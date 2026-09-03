@@ -13,7 +13,7 @@ public class ImageDescriptorCenterTest
     @Test
     public void getTestCaseLabelImageDescriptor_should_return_descriptor_and_cache_it()
     {
-        ImageDescriptor descriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
+        final ImageDescriptor descriptor = ImageDescriptorCenter.getTestCaseLabelImageDescriptor();
 
         assertNotNull(descriptor);
         assertSame(descriptor, ImageDescriptorCenter.getTestCaseLabelImageDescriptor());

@@ -60,8 +60,8 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
 
         Object createAndDestroyPageFor(IWorkbenchPart part)
         {
-            org.eclipse.ui.part.PageBookView.PageRec rec = doCreatePage(part);
-            Object page = rec == null ? null : rec.page;
+            final org.eclipse.ui.part.PageBookView.PageRec rec = doCreatePage(part);
+            final Object page = rec == null ? null : rec.page;
             if(rec != null)
             {
                 doDestroyPage(part, rec);
@@ -87,7 +87,7 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
         cutType = context.getPrimaryTypeHandler("org.SomeClass").get();
         // a real IViewSite (a PageSite cannot be built on a mock) is required
         // to initialize the pages of this PageBookView
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         siteProviderView = page.showView(OUTLINE_VIEW_ID);
         view = new TestableViewPart(siteProviderView.getViewSite());
     }
@@ -104,10 +104,10 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
 
     private IEditorPart mockEditorPartShowing(IType type)
     {
-        IFile file = (IFile) type.getCompilationUnit().getResource();
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IFile file = (IFile) type.getCompilationUnit().getResource();
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(file);
-        IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         return editorPart;
     }
@@ -117,7 +117,7 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IPage currentPage = view.getCurrentPage();
+        final IPage currentPage = view.getCurrentPage();
         assertNotNull(currentPage);
     }
 
@@ -130,9 +130,9 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     @Test
     public void should_not_be_important_for_editors_not_showing_a_file()
     {
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(null);
-        IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
 
         assertFalse(view.isPartImportant(editorPart));
@@ -141,10 +141,10 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     @Test
     public void should_not_be_important_for_editors_not_showing_a_java_file()
     {
-        IFile file = (IFile) cutType.getCompilationUnit().getResource();
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IFile file = (IFile) cutType.getCompilationUnit().getResource();
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(file.getWorkspace().getRoot().getFile(file.getFullPath().removeFileExtension().addFileExtension("txt")));
-        IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
 
         assertFalse(view.isPartImportant(editorPart));
@@ -167,8 +167,8 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IEditorPart editorPart = mockEditorPartShowing(cutType);
-        Object page = view.createAndDestroyPageFor(editorPart);
+        final IEditorPart editorPart = mockEditorPartShowing(cutType);
+        final Object page = view.createAndDestroyPageFor(editorPart);
 
         assertEquals(cutType, ((MethodPage) page).getInputType());
     }
@@ -178,13 +178,13 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IEditorPart editorPart = mockEditorPartShowing(cutType);
+        final IEditorPart editorPart = mockEditorPartShowing(cutType);
         view.createPageFor(editorPart);
-        Object activePage = getField(view, "activePage");
+        final Object activePage = getField(view, "activePage");
 
-        IEditorPart otherEditorPart = mockEditorPartShowing(cutType);
+        final IEditorPart otherEditorPart = mockEditorPartShowing(cutType);
         view.createPageFor(otherEditorPart);
-        Object activePageAfter = getField(view, "activePage");
+        final Object activePageAfter = getField(view, "activePage");
 
         assertSame(activePage, activePageAfter);
     }
@@ -194,7 +194,7 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IEditorPart editorPart = mockEditorPartShowing(cutType);
+        final IEditorPart editorPart = mockEditorPartShowing(cutType);
         view.createPageFor(editorPart);
         assertNotNull(getField(view, "activePage"));
 
@@ -219,11 +219,11 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IEditorPart firstEditor = mockEditorPartShowing(cutType);
+        final IEditorPart firstEditor = mockEditorPartShowing(cutType);
         view.createPageFor(firstEditor);
-        MethodPage activePage = (MethodPage) getField(view, "activePage");
+        final MethodPage activePage = (MethodPage) getField(view, "activePage");
 
-        IType testType = context.getPrimaryTypeHandler("org.SomeClassTest").get();
+        final IType testType = context.getPrimaryTypeHandler("org.SomeClassTest").get();
         view.partActivated(mockEditorPartShowing(testType));
 
         assertEquals(testType, activePage.getInputType());
@@ -234,9 +234,9 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IEditorPart firstEditor = mockEditorPartShowing(cutType);
+        final IEditorPart firstEditor = mockEditorPartShowing(cutType);
         view.createPageFor(firstEditor);
-        MethodPage activePage = (MethodPage) getField(view, "activePage");
+        final MethodPage activePage = (MethodPage) getField(view, "activePage");
 
         // same file: nothing should change
         view.partActivated(mockEditorPartShowing(cutType));
@@ -249,9 +249,9 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        EditorPart editorPart = mock(EditorPart.class);
-        IFile file = (IFile) cutType.getCompilationUnit().getResource();
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final EditorPart editorPart = mock(EditorPart.class);
+        final IFile file = (IFile) cutType.getCompilationUnit().getResource();
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(file);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
 
@@ -292,7 +292,7 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
 
     private void awaitActiveEditor(IWorkbenchPage page) throws InterruptedException
     {
-        long deadline = System.currentTimeMillis() + 10_000;
+        final long deadline = System.currentTimeMillis() + 10_000;
         while (page.getActiveEditor() == null && System.currentTimeMillis() < deadline)
         {
             while (Display.getDefault().readAndDispatch())
@@ -307,9 +307,9 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IFile file = (IFile) cutType.getCompilationUnit().getResource();
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart editor = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), "org.eclipse.ui.DefaultTextEditor", true);
+        final IFile file = (IFile) cutType.getCompilationUnit().getResource();
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IEditorPart editor = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), "org.eclipse.ui.DefaultTextEditor", true);
         try
         {
             assertNotNull(editor);
@@ -317,7 +317,7 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
 
             view.partOpened(view);
 
-            Object activePage = getField(view, "activePage");
+            final Object activePage = getField(view, "activePage");
             assertNotNull(activePage, "the view should have created a page for the open editor");
             assertEquals(cutType, ((MethodPage) activePage).getInputType());
         }
@@ -332,18 +332,18 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IFile file = (IFile) cutType.getCompilationUnit().getResource();
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart editor = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), "org.eclipse.ui.DefaultTextEditor", true);
+        final IFile file = (IFile) cutType.getCompilationUnit().getResource();
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IEditorPart editor = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), "org.eclipse.ui.DefaultTextEditor", true);
         try
         {
             assertNotNull(editor);
             awaitActiveEditor(page);
 
             // create the page for a mocked editor showing the test case
-            IType testType = context.getPrimaryTypeHandler("org.SomeClassTest").get();
+            final IType testType = context.getPrimaryTypeHandler("org.SomeClassTest").get();
             view.partActivated(mockEditorPartShowing(testType));
-            MethodPage activePage = (MethodPage) getField(view, "activePage");
+            final MethodPage activePage = (MethodPage) getField(view, "activePage");
             assertEquals(testType, activePage.getInputType());
 
             // closing an editor that has no page must not throw, whatever the
@@ -364,11 +364,11 @@ public class MissingTestmethodViewPartTest extends SwtPageTestCase
     {
         view.createPartControl(shell);
 
-        IPage defaultPage = view.getCurrentPage();
+        final IPage defaultPage = view.getCurrentPage();
         assertNotNull(defaultPage);
 
-        Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
-        java.util.Set<Shell> knownShells = org.moreunit.test.support.DialogHelper.knownShells(workbenchDisplay);
+        final Display workbenchDisplay = PlatformUI.getWorkbench().getDisplay();
+        final java.util.Set<Shell> knownShells = org.moreunit.test.support.DialogHelper.knownShells(workbenchDisplay);
         knownShells.remove(shell); // ignore the test shell, only look for new popups
         workbenchDisplay.asyncExec(org.moreunit.test.support.DialogHelper.closerFor(workbenchDisplay, knownShells, Shell::close, 300));
 

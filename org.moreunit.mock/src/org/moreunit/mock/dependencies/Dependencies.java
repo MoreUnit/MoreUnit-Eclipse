@@ -56,7 +56,7 @@ public class Dependencies extends ArrayList<Dependency>
     private void initContructorDependencies() throws JavaModelException
     {
         IMethod constructor = null;
-        for (IMethod c : injectionPointProvider.getConstructors())
+        for (final IMethod c : injectionPointProvider.getConstructors())
         {
             if(constructor == null || c.getNumberOfParameters() > constructor.getNumberOfParameters())
             {
@@ -66,12 +66,12 @@ public class Dependencies extends ArrayList<Dependency>
 
         if(constructor != null)
         {
-            String[] parameterTypes = constructor.getParameterTypes();
-            String[] parameterNames = constructor.getParameterNames();
+            final String[] parameterTypes = constructor.getParameterTypes();
+            final String[] parameterNames = constructor.getParameterNames();
 
             for (int i = 0; i < parameterNames.length; i++)
             {
-                Dependency dependency = createConstructorDependency(parameterTypes[i], parameterNames[i]);
+                final Dependency dependency = createConstructorDependency(parameterTypes[i], parameterNames[i]);
                 if(! contains(dependency))
                 {
                     constructorDependencies.add(dependency);
@@ -83,16 +83,16 @@ public class Dependencies extends ArrayList<Dependency>
 
     private Dependency createConstructorDependency(String parameterType, String parameterName) throws JavaModelException
     {
-        String signature = Signature.toString(parameterType);
-        String dependencyName = namingRules.cleanParameterName(parameterName);
+        final String signature = Signature.toString(parameterType);
+        final String dependencyName = namingRules.cleanParameterName(parameterName);
         return new Dependency(resolveTypeSignature(signature), dependencyName, resolveTypeParameters(signature));
     }
 
     private void initSetterDependencies() throws JavaModelException
     {
-        for (IMethod method : injectionPointProvider.getSetters())
+        for (final IMethod method : injectionPointProvider.getSetters())
         {
-            SetterDependency dependency = createSetterDependency(method);
+            final SetterDependency dependency = createSetterDependency(method);
             if(! contains(dependency))
             {
                 setterDependencies.add(dependency);
@@ -103,7 +103,7 @@ public class Dependencies extends ArrayList<Dependency>
 
     private SetterDependency createSetterDependency(IMethod method) throws JavaModelException
     {
-        String signature = Signature.toString(method.getParameterTypes()[0]);
+        final String signature = Signature.toString(method.getParameterTypes()[0]);
         return new SetterDependency(resolveTypeSignature(signature), method.getElementName(), resolveTypeParameters(signature));
     }
 
@@ -111,7 +111,7 @@ public class Dependencies extends ArrayList<Dependency>
     {
         // removes type parameters
         String cleanSignature = signature;
-        int angleBracketIdx = cleanSignature.indexOf('<');
+        final int angleBracketIdx = cleanSignature.indexOf('<');
         if(angleBracketIdx != -1 && cleanSignature.endsWith(">"))
         {
             cleanSignature = cleanSignature.substring(0, angleBracketIdx);
@@ -134,21 +134,21 @@ public class Dependencies extends ArrayList<Dependency>
             cleanSignature = cleanSignature.substring(lastSpaceIdx + 1);
         }
 
-        String[][] possibleFieldTypes = classUnderTest.resolveType(cleanSignature);
+        final String[][] possibleFieldTypes = classUnderTest.resolveType(cleanSignature);
         if(possibleFieldTypes == null || possibleFieldTypes.length == 0)
         {
             return cleanSignature;
         }
 
-        String[] fieldType = possibleFieldTypes[0];
+        final String[] fieldType = possibleFieldTypes[0];
         return fieldType[0] + "." + fieldType[1];
     }
 
     private void initFieldDependencies() throws JavaModelException
     {
-        for (IField field : injectionPointProvider.getFields())
+        for (final IField field : injectionPointProvider.getFields())
         {
-            FieldDependency dependency = createFieldDependency(field);
+            final FieldDependency dependency = createFieldDependency(field);
             if(! contains(dependency))
             {
                 fieldDependencies.add(dependency);
@@ -159,15 +159,15 @@ public class Dependencies extends ArrayList<Dependency>
 
     private FieldDependency createFieldDependency(IField field) throws JavaModelException
     {
-        String signature = Signature.toString(field.getTypeSignature());
-        String fieldName = field.getElementName();
-        String dependencyName = namingRules.cleanFieldName(fieldName);
+        final String signature = Signature.toString(field.getTypeSignature());
+        final String fieldName = field.getElementName();
+        final String dependencyName = namingRules.cleanFieldName(fieldName);
         return new FieldDependency(resolveTypeSignature(signature), fieldName, dependencyName, resolveTypeParameters(signature));
     }
 
     List<TypeParameter> resolveTypeParameters(String signature) throws JavaModelException
     {
-        int indexOfAngleBracket = signature.indexOf('<');
+        final int indexOfAngleBracket = signature.indexOf('<');
         if(indexOfAngleBracket != - 1)
         {
             return resolveTypeParameters(signature.toCharArray(), new CharIterator(signature, indexOfAngleBracket + 1));
@@ -177,21 +177,21 @@ public class Dependencies extends ArrayList<Dependency>
 
     private List<TypeParameter> resolveTypeParameters(char[] signatureBuffer, CharIterator iterator) throws JavaModelException
     {
-        List<TypeParameter> parameters = new ArrayList<>();
-        List<String> annotations = new ArrayList<>();
-        List<String> wildcardAnnotations = new ArrayList<>();
+        final List<TypeParameter> parameters = new ArrayList<>();
+        final List<String> annotations = new ArrayList<>();
+        final List<String> wildcardAnnotations = new ArrayList<>();
 
         TypeParameter.Kind parameterKind = Kind.REGULAR;
 
         StringBuilder buffer = new StringBuilder();
         while (iterator.hasNext())
         {
-            char c = iterator.next();
+            final char c = iterator.next();
             if(c == '<' || c == ',' || c == '>')
             {
                 if(buffer.length() != 0 || parameterKind == Kind.WILDARD_UNBOUNDED)
                 {
-                    TypeParameter parameter = TypeParameter.create(parameterKind, resolveTypeSignature(buffer.toString()))
+                    final TypeParameter parameter = TypeParameter.create(parameterKind, resolveTypeSignature(buffer.toString()))
                             .withAnnotations(annotations)
                             .withBaseTypeAnnotations(wildcardAnnotations);
                     parameters.add(parameter);
@@ -213,7 +213,7 @@ public class Dependencies extends ArrayList<Dependency>
             }
             if(c == '@')
             {
-                String annotation = consume(TYPE_ANNOTATION, iterator);
+                final String annotation = consume(TYPE_ANNOTATION, iterator);
                 if(annotation != null)
                 {
                     (parameterKind == Kind.REGULAR ? annotations : wildcardAnnotations).add(resolveTypeSignature(annotation));
@@ -250,10 +250,10 @@ public class Dependencies extends ArrayList<Dependency>
 
     private String consume(Pattern pattern, CharIterator iterator)
     {
-        Matcher matcher = pattern.matcher(iterator.stringFromNextIdx());
+        final Matcher matcher = pattern.matcher(iterator.stringFromNextIdx());
         if(matcher.matches())
         {
-            String capture = matcher.group(1);
+            final String capture = matcher.group(1);
             iterator.increment(capture.length());
             return capture;
         }

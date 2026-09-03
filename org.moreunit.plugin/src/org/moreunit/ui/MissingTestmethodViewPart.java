@@ -56,7 +56,7 @@ public class MissingTestmethodViewPart extends PageBookView
     @Override
     protected IPage createDefaultPage(PageBook book)
     {
-        MessagePage page = new EmptyPage();
+        final MessagePage page = new EmptyPage();
         initPage(page);
         page.createControl(book);
         return page;
@@ -110,7 +110,7 @@ public class MissingTestmethodViewPart extends PageBookView
         // on startup the view should become synchronized with the open file
         if(part instanceof MissingTestmethodViewPart)
         {
-            IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
+            final IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
             if(openEditorPart != null)
             {
                 super.partActivated(openEditorPart);
@@ -130,8 +130,8 @@ public class MissingTestmethodViewPart extends PageBookView
         else if(PluginTools.isJavaFile(part))
         {
             // only if a different java file is activated, do something
-            EditorPartFacade editorPartFacade = new EditorPartFacade((IEditorPart) part);
-            IType primaryType = editorPartFacade.getCompilationUnit().findPrimaryType();
+            final EditorPartFacade editorPartFacade = new EditorPartFacade((IEditorPart) part);
+            final IType primaryType = editorPartFacade.getCompilationUnit().findPrimaryType();
             if(primaryType != null && ! primaryType.equals(activePage.getInputType()))
             {
                 activePage.setNewEditorPartFacade(editorPartFacade);
@@ -155,7 +155,7 @@ public class MissingTestmethodViewPart extends PageBookView
             // Bugfix for #2869899
             if(getCurrentPage() != activePage && isImportant(part))
             {
-                PageRec pageRec = getPageRec(activePage);
+                final PageRec pageRec = getPageRec(activePage);
                 showPageRec(pageRec);
             }
         }
@@ -168,7 +168,7 @@ public class MissingTestmethodViewPart extends PageBookView
 
         if(part instanceof IEditorPart)
         {
-            IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
+            final IEditorPart openEditorPart = PluginTools.getOpenEditorPart();
             if(openEditorPart != null && activePage != null)
             {
                 super.partActivated(openEditorPart);
@@ -182,14 +182,14 @@ public class MissingTestmethodViewPart extends PageBookView
 
         @Override
         public void createControl(Composite parent) {
-            Color background= parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+            final Color background= parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 
-            Composite composite= new Composite(parent, SWT.NONE);
+            final Composite composite= new Composite(parent, SWT.NONE);
             composite.setLayout(new GridLayout(1, false));
 
             composite.setBackground(background);
 
-            Link link= new Link(composite, SWT.NONE);
+            final Link link= new Link(composite, SWT.NONE);
             link.setText("No Java editor opened. Open a <a>Java file</a>...");
             link.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false));
             link.setBackground(background);
@@ -220,12 +220,12 @@ public class MissingTestmethodViewPart extends PageBookView
                 return;
             }
 
-            Object[] result = dialog.getResult();
+            final Object[] result = dialog.getResult();
             if(result == null)
             {
                 return;
             }
-            var files = Arrays.stream(result).filter(IFile.class::isInstance).map(IFile.class::cast).toList();
+            final var files = Arrays.stream(result).filter(IFile.class::isInstance).map(IFile.class::cast).toList();
             if(files.isEmpty())
             {
                 return;
@@ -238,7 +238,7 @@ public class MissingTestmethodViewPart extends PageBookView
 
             try
             {
-                for (IFile iFile : files)
+                for (final IFile iFile : files)
                 {
                     IDE.openEditor(page, iFile, true);
                 }

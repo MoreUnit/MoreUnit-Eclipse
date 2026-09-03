@@ -24,7 +24,7 @@ public class TestFileNamePatternParser
 
     public Result parse()
     {
-        int varIdx = patternToParse.indexOf(SRC_FILE_VARIABLE);
+        final int varIdx = patternToParse.indexOf(SRC_FILE_VARIABLE);
         if(varIdx == - 1)
         {
             return Failure.MISSING_SRC_FILE_VARIABLE;
@@ -34,13 +34,13 @@ public class TestFileNamePatternParser
             return Failure.TEST_FILE_NAME_IS_EQUAL_TO_SRC_FILE_NAME;
         }
 
-        UserDefinedPart prefix = parseUserDefinedPart(patternToParse.substring(0, varIdx));
+        final UserDefinedPart prefix = parseUserDefinedPart(patternToParse.substring(0, varIdx));
         if(prefix.failure != null)
         {
             return prefix.failure;
         }
 
-        UserDefinedPart suffix = parseUserDefinedPart(patternToParse.substring(varIdx + SRC_FILE_VARIABLE.length()));
+        final UserDefinedPart suffix = parseUserDefinedPart(patternToParse.substring(varIdx + SRC_FILE_VARIABLE.length()));
         if(suffix.failure != null)
         {
             return suffix.failure;
@@ -123,7 +123,7 @@ public class TestFileNamePatternParser
     {
         private final String rawString;
         private final char[] chars;
-        private String quotedSeparator;
+        private final String quotedSeparator;
         private final char[] separatorChars;
         private int currentCharIdx;
         private final List<String> alternatives = new ArrayList<>();
@@ -132,8 +132,8 @@ public class TestFileNamePatternParser
         private boolean wildcardBefore;
         private boolean wildcardAfter;
         private boolean escapementOn;
-        private StringBuilder before = new StringBuilder();
-        private StringBuilder after = new StringBuilder();
+        private final StringBuilder before = new StringBuilder();
+        private final StringBuilder after = new StringBuilder();
 
         private UserDefinedPart(String str, String separator)
         {
@@ -251,11 +251,11 @@ public class TestFileNamePatternParser
 
         private boolean parseAlternatives()
         {
-            StringBuilder buffer = new StringBuilder();
+            final StringBuilder buffer = new StringBuilder();
 
             while (isAlternativeChar())
             {
-                char currentChar = currentChar();
+                final char currentChar = currentChar();
                 if(! escapementOn && currentChar == '(')
                 {
                     moveToNextChar();

@@ -32,7 +32,7 @@ public class DependencyMocker
             return;
         }
 
-        MockingTemplate template = getTemplate(classUnderTest.getJavaProject());
+        final MockingTemplate template = getTemplate(classUnderTest.getJavaProject());
         if(template == null)
         {
             // MSG
@@ -43,7 +43,7 @@ public class DependencyMocker
         {
             templateProcessor.applyTemplate(template, dependencies, classUnderTest, testCase, testType);
         }
-        catch (MockingTemplateException e)
+        catch (final MockingTemplateException e)
         {
             // MSG
             logger.error("Could not apply " + template + " to " + testCase.getElementName(), e);
@@ -54,7 +54,7 @@ public class DependencyMocker
     {
         final String templateId = preferences.getMockingTemplate(project);
 
-        MockingTemplate template = mockingTemplateStore.get(templateId);
+        final MockingTemplate template = mockingTemplateStore.get(templateId);
         if(template == null)
         {
             logger.error("Template not found: " + templateId);

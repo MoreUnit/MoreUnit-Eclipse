@@ -18,27 +18,27 @@ public class NewClassWizard extends NewClassyWizard
     private final IPackageFragmentRoot mainSrcFolder;
 
     private NewClassWizardPage newClassWizardPage;
-    private ProjectPreferences preferences;
+    private final ProjectPreferences preferences;
 
     public NewClassWizard(IType testCase)
     {
         super(testCase);
-        IJavaProject projectUnderTest = Preferences.getInstance().getMainProject(testCase.getJavaProject());
+        final IJavaProject projectUnderTest = Preferences.getInstance().getMainProject(testCase.getJavaProject());
         preferences = Preferences.forProject(projectUnderTest);
         mainSrcFolder = getSourceFolderForCut(testCase);
     }
 
     private IPackageFragmentRoot getSourceFolderForCut(IType testCase)
     {
-        String key = getPackageFragmentRootKey();
-        String root = getDialogSettings().get(key);
-        IPackageFragmentRoot fragment = (IPackageFragmentRoot) JavaCore.create(root);
+        final String key = getPackageFragmentRootKey();
+        final String root = getDialogSettings().get(key);
+        final IPackageFragmentRoot fragment = (IPackageFragmentRoot) JavaCore.create(root);
         if(fragment != null && fragment.exists())
         {
             return fragment;
         }
 
-        IPackageFragmentRoot testSrcFolder = (IPackageFragmentRoot) testCase.getCompilationUnit().getParent().getParent();
+        final IPackageFragmentRoot testSrcFolder = (IPackageFragmentRoot) testCase.getCompilationUnit().getParent().getParent();
         return preferences.getMainSourceFolder(testSrcFolder);
     }
 
@@ -57,7 +57,7 @@ public class NewClassWizard extends NewClassyWizard
         this.newClassWizardPage.setWizard(this);
         this.newClassWizardPage.init(new StructuredSelection(getType()));
 
-        JavaType cutName = preferences.getTestClassNamePattern().nameClassTestedBy(getType());
+        final JavaType cutName = preferences.getTestClassNamePattern().nameClassTestedBy(getType());
         this.newClassWizardPage.setTypeName(cutName.getSimpleName(), true);
         this.newClassWizardPage.setPackageFragment(mainSrcFolder.getPackageFragment(cutName.getQualifier()), true);
 

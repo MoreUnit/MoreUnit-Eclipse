@@ -19,9 +19,9 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
  */
 public class CutImportChange extends Change
 {
-    private ICompilationUnit testCompilationUnit;
-    private String importCutString;
-    private boolean shouldAddImport;
+    private final ICompilationUnit testCompilationUnit;
+    private final String importCutString;
+    private final boolean shouldAddImport;
     
     public CutImportChange(String importCutString, ICompilationUnit testCompilationUnit)
     {
@@ -75,7 +75,7 @@ public class CutImportChange extends Change
     
     private void removeImport(IProgressMonitor pm) throws JavaModelException
     {
-        IImportDeclaration importDeclaration = testCompilationUnit.getImport(importCutString);
+        final IImportDeclaration importDeclaration = testCompilationUnit.getImport(importCutString);
         if(importDeclaration.exists())
         {
             importDeclaration.delete(true, pm);

@@ -33,10 +33,10 @@ public class MoveMethodParticipantTest extends ContextTestCase
     @BeforeEach
     public void setUp()
     {
-        TypeHandler fooType = context.getCompilationUnitHandler("com.Foo").getPrimaryTypeHandler();
+        final TypeHandler fooType = context.getCompilationUnitHandler("com.Foo").getPrimaryTypeHandler();
         fooMethod = fooType.addMethod("public int foo()", "return 0;");
 
-        TypeHandler fooTestType = context.getCompilationUnitHandler("com.FooTest").getPrimaryTypeHandler();
+        final TypeHandler fooTestType = context.getCompilationUnitHandler("com.FooTest").getPrimaryTypeHandler();
         testFooMethod = fooTestType.addMethod("public void foo()", "");
 
         barType = context.getPrimaryTypeHandler("com.Bar").get();
@@ -57,10 +57,10 @@ public class MoveMethodParticipantTest extends ContextTestCase
     @Test
     public void checkConditions_should_return_ok_status()
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(fooMethod.get(), new MoveArguments(barType, true));
 
-        RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
+        final RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
 
         assertNotNull(status);
         assertTrue(status.isOK());
@@ -69,9 +69,9 @@ public class MoveMethodParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_return_null_when_destination_has_no_corresponding_test_case() throws Exception
     {
-        TypeHandler bazType = context.getProjectHandler().getMainSrcFolderHandler().createClass("com.Baz");
+        final TypeHandler bazType = context.getProjectHandler().getMainSrcFolderHandler().createClass("com.Baz");
 
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(fooMethod.get(), new MoveArguments(bazType.get(), true));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -80,12 +80,12 @@ public class MoveMethodParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_create_move_change_for_corresponding_test_methods() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(fooMethod.get(), new MoveArguments(barType, true));
         awaitSearchResult(() -> new org.moreunit.elements.ClassTypeFacade(context.getCompilationUnit("com.Bar")).getCorrespondingTestCases());
         awaitSearchResult(() -> new org.moreunit.elements.ClassTypeFacade(context.getCompilationUnit("com.Foo")).getCorrespondingTestMethodsByName(fooMethod.get()));
 
-        Change change = participant.createChange(new NullProgressMonitor());
+        final Change change = participant.createChange(new NullProgressMonitor());
 
         assertNotNull(change);
         assertInstanceOf(MoveMethodChange.class, change);
@@ -101,8 +101,8 @@ public class MoveMethodParticipantTest extends ContextTestCase
      */
     private void awaitSearchResult(java.util.function.Supplier<java.util.Collection< ? >> search) throws Exception
     {
-        org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
-        long deadline = System.currentTimeMillis() + 20_000;
+        final org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 20_000;
         while (System.currentTimeMillis() < deadline)
         {
             if(! search.get().isEmpty())

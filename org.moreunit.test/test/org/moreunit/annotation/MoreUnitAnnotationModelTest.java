@@ -38,9 +38,9 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
 {
     private MoreUnitAnnotationModel createModel(IDocument document)
     {
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(null);
-        ITextEditor editor = mock(ITextEditor.class);
+        final ITextEditor editor = mock(ITextEditor.class);
         when(editor.getEditorInput()).thenReturn(editorInput);
 
         return new MoreUnitAnnotationModel(document, editor);
@@ -49,8 +49,8 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void constructor_should_create_empty_model_and_schedule_update()
     {
-        IDocument document = mock(IDocument.class);
-        MoreUnitAnnotationModel model = createModel(document);
+        final IDocument document = mock(IDocument.class);
+        final MoreUnitAnnotationModel model = createModel(document);
 
         assertFalse(model.getAnnotationIterator().hasNext());
     }
@@ -58,10 +58,10 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void getAnnotationIterator_should_return_empty_iterator_initially()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
 
         // annotations are only added by the (asynchronously running) update job
-        Iterator<Annotation> iterator = model.getAnnotationIterator();
+        final Iterator<Annotation> iterator = model.getAnnotationIterator();
         assertNotNull(iterator);
         assertFalse(iterator.hasNext());
     }
@@ -69,9 +69,9 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void addAnnotationModelListener_should_notify_listener_of_world_change()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
 
-        IAnnotationModelListener listener = mock(IAnnotationModelListener.class);
+        final IAnnotationModelListener listener = mock(IAnnotationModelListener.class);
         model.addAnnotationModelListener(listener);
 
         verify(listener).modelChanged(model);
@@ -80,9 +80,9 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void addAnnotationModelListener_should_not_add_same_listener_twice()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
 
-        IAnnotationModelListener listener = mock(IAnnotationModelListener.class);
+        final IAnnotationModelListener listener = mock(IAnnotationModelListener.class);
         model.addAnnotationModelListener(listener);
         model.addAnnotationModelListener(listener);
 
@@ -92,8 +92,8 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void removeAnnotationModelListener_should_not_notify_removed_listener_anymore()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
-        IAnnotationModelListener listener = mock(IAnnotationModelListener.class);
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final IAnnotationModelListener listener = mock(IAnnotationModelListener.class);
 
         // adding the listener immediately notifies it (world change event)
         model.addAnnotationModelListener(listener);
@@ -110,8 +110,8 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void connect_should_accept_expected_document_and_reject_others()
     {
-        IDocument document = mock(IDocument.class);
-        MoreUnitAnnotationModel model = createModel(document);
+        final IDocument document = mock(IDocument.class);
+        final MoreUnitAnnotationModel model = createModel(document);
 
         model.connect(document);
 
@@ -121,8 +121,8 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void disconnect_should_accept_expected_document_and_reject_others()
     {
-        IDocument document = mock(IDocument.class);
-        MoreUnitAnnotationModel model = createModel(document);
+        final IDocument document = mock(IDocument.class);
+        final MoreUnitAnnotationModel model = createModel(document);
 
         model.disconnect(document);
 
@@ -132,18 +132,18 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void getPosition_should_return_position_of_own_annotations_and_null_for_foreign_ones()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
 
         assertNull(model.getPosition(mock(Annotation.class)));
 
-        MoreUnitAnnotation annotation = MoreUnitAnnotation.createAnnotationForTestedMethod(mock(ISourceRange.class));
+        final MoreUnitAnnotation annotation = MoreUnitAnnotation.createAnnotationForTestedMethod(mock(ISourceRange.class));
         assertEquals(new Position(0, 0), model.getPosition(annotation));
     }
 
     @Test
     public void addAnnotation_and_removeAnnotation_should_not_be_supported()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
 
         assertThrows(UnsupportedOperationException.class, () -> model.addAnnotation(mock(Annotation.class), new Position(0, 1)));
         assertThrows(UnsupportedOperationException.class, () -> model.removeAnnotation(mock(Annotation.class)));
@@ -152,9 +152,9 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void getAnnotationIterator_should_return_empty_iterator()
     {
-        MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
+        final MoreUnitAnnotationModel model = createModel(mock(IDocument.class));
 
-        Iterator<Annotation> iterator = model.getAnnotationIterator();
+        final Iterator<Annotation> iterator = model.getAnnotationIterator();
         assertNotNull(iterator);
         assertFalse(iterator.hasNext());
     }
@@ -165,23 +165,23 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
 
     private ITextEditor editorOver(ICompilationUnit compilationUnit)
     {
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn((IFile) compilationUnit.getResource());
-        ITextEditor editor = mock(ITextEditor.class);
+        final ITextEditor editor = mock(ITextEditor.class);
         when(editor.getEditorInput()).thenReturn(editorInput);
         return editor;
     }
 
     private MoreUnitAnnotationModel modelFor(ICompilationUnit compilationUnit) throws Exception
     {
-        IDocument document = new org.eclipse.jface.text.Document(compilationUnit.getSource());
+        final IDocument document = new org.eclipse.jface.text.Document(compilationUnit.getSource());
         return new MoreUnitAnnotationModel(document, editorOver(compilationUnit));
     }
 
     private void await(Runnable assertion) throws Exception
     {
-        Display display = Display.getDefault();
-        long deadline = System.currentTimeMillis() + 30_000;
+        final Display display = Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 30_000;
         AssertionError lastFailure = null;
         while (System.currentTimeMillis() < deadline)
         {
@@ -193,7 +193,7 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
                 assertion.run();
                 return;
             }
-            catch (AssertionError e)
+            catch (final AssertionError e)
             {
                 lastFailure = e;
             }
@@ -206,7 +206,7 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     private int annotationCount(MoreUnitAnnotationModel model)
     {
         int count = 0;
-        for (Iterator<Annotation> it = model.getAnnotationIterator(); it.hasNext(); it.next())
+        for (final Iterator<Annotation> it = model.getAnnotationIterator(); it.hasNext(); it.next())
         {
             count++;
         }
@@ -217,24 +217,24 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void updateJob_should_annotate_methods_having_a_test() throws Exception
     {
-        ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
+        final ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumber()", "return 1;");
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void getNumber()", "");
         Preferences.getInstance().setTestAnnotationMode(cut.getJavaProject(), TestAnnotationMode.BY_NAME);
 
-        MoreUnitAnnotationModel model = modelFor(cut);
+        final MoreUnitAnnotationModel model = modelFor(cut);
 
         await(() -> assertEquals(1, annotationCount(model)));
 
-        MoreUnitAnnotation annotation = (MoreUnitAnnotation) model.getAnnotationIterator().next();
+        final MoreUnitAnnotation annotation = (MoreUnitAnnotation) model.getAnnotationIterator().next();
         assertEquals(MoreUnitAnnotation.ANNOTATION_ID, annotation.getType());
 
         // the annotation position must match the name range of the tested method
-        IMethod method = context.getPrimaryTypeHandler("org.SomeClass").get().getMethods()[0];
+        final IMethod method = context.getPrimaryTypeHandler("org.SomeClass").get().getMethods()[0];
         assertEquals(new Position(method.getNameRange().getOffset(), method.getNameRange().getLength()), annotation.getPosition());
 
         // connect/disconnect must accept the annotated document
-        IDocument document = getDocument(model);
+        final IDocument document = getDocument(model);
         model.connect(document);
         model.disconnect(document);
     }
@@ -243,11 +243,11 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     {
         try
         {
-            java.lang.reflect.Field field = MoreUnitAnnotationModel.class.getDeclaredField("document");
+            final java.lang.reflect.Field field = MoreUnitAnnotationModel.class.getDeclaredField("document");
             field.setAccessible(true);
             return (IDocument) field.get(model);
         }
-        catch (ReflectiveOperationException e)
+        catch (final ReflectiveOperationException e)
         {
             throw new RuntimeException(e);
         }
@@ -257,11 +257,11 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void updateJob_should_create_no_annotation_for_methods_without_test() throws Exception
     {
-        ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
+        final ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumber()", "return 1;");
         Preferences.getInstance().setTestAnnotationMode(cut.getJavaProject(), TestAnnotationMode.BY_NAME);
 
-        MoreUnitAnnotationModel model = modelFor(cut);
+        final MoreUnitAnnotationModel model = modelFor(cut);
 
         Thread.sleep(500);
         while (Display.getDefault().readAndDispatch())
@@ -275,12 +275,12 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void updateJob_should_annotate_nothing_when_test_annotation_mode_is_off() throws Exception
     {
-        ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
+        final ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumber()", "return 1;");
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void getNumber()", "");
         Preferences.getInstance().setTestAnnotationMode(cut.getJavaProject(), TestAnnotationMode.OFF);
 
-        MoreUnitAnnotationModel model = modelFor(cut);
+        final MoreUnitAnnotationModel model = modelFor(cut);
 
         Thread.sleep(500);
         while (Display.getDefault().readAndDispatch())
@@ -294,16 +294,16 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void updateJob_should_create_ignored_annotation_when_test_method_is_annotated_with_ignore() throws Exception
     {
-        ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
+        final ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumber()", "return 1;");
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("@Ignore\n@Test\npublic void getNumber()", "");
         Preferences.getInstance().setTestAnnotationMode(cut.getJavaProject(), TestAnnotationMode.BY_NAME);
 
-        MoreUnitAnnotationModel model = modelFor(cut);
+        final MoreUnitAnnotationModel model = modelFor(cut);
 
         await(() -> assertEquals(1, annotationCount(model)));
 
-        MoreUnitAnnotation annotation = (MoreUnitAnnotation) model.getAnnotationIterator().next();
+        final MoreUnitAnnotation annotation = (MoreUnitAnnotation) model.getAnnotationIterator().next();
         assertEquals(MoreUnitAnnotation.ANNOTATION_ID_IGNORED, annotation.getType());
     }
 
@@ -311,24 +311,24 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void updateAnnotations_should_refresh_existing_annotations() throws Exception
     {
-        ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
+        final ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumber()", "return 1;");
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void getNumber()", "");
         Preferences.getInstance().setTestAnnotationMode(cut.getJavaProject(), TestAnnotationMode.BY_NAME);
 
-        ITextEditor editor = editorOver(cut);
-        org.eclipse.jface.text.source.AnnotationModel annotationModel = new org.eclipse.jface.text.source.AnnotationModel();
-        IDocumentProvider provider = mock(IDocumentProvider.class);
+        final ITextEditor editor = editorOver(cut);
+        final org.eclipse.jface.text.source.AnnotationModel annotationModel = new org.eclipse.jface.text.source.AnnotationModel();
+        final IDocumentProvider provider = mock(IDocumentProvider.class);
         when(provider.getAnnotationModel(any())).thenReturn(annotationModel);
         when(provider.getDocument(any())).thenReturn(new org.eclipse.jface.text.Document(cut.getSource()));
         when(editor.getDocumentProvider()).thenReturn(provider);
 
         MoreUnitAnnotationModel.attach(editor);
-        MoreUnitAnnotationModel attached = (MoreUnitAnnotationModel) annotationModel.getAnnotationModel("org.moreunit.model_key");
+        final MoreUnitAnnotationModel attached = (MoreUnitAnnotationModel) annotationModel.getAnnotationModel("org.moreunit.model_key");
         await(() -> assertEquals(1, annotationCount(attached)));
 
         // now the tested method has no test anymore: refreshing must clear the annotation
-        org.eclipse.jdt.core.IMethod testMethod = context.getPrimaryTypeHandler("org.SomeClassTest").get().getMethods()[0];
+        final org.eclipse.jdt.core.IMethod testMethod = context.getPrimaryTypeHandler("org.SomeClassTest").get().getMethods()[0];
         testMethod.delete(true, null);
         MoreUnitAnnotationModel.updateAnnotations(editor);
 
@@ -338,7 +338,7 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void updateAnnotations_should_do_nothing_when_editor_has_no_document_provider()
     {
-        ITextEditor editor = mock(ITextEditor.class);
+        final ITextEditor editor = mock(ITextEditor.class);
         when(editor.getDocumentProvider()).thenReturn(null);
 
         // must neither throw nor schedule anything
@@ -349,18 +349,18 @@ public class MoreUnitAnnotationModelTest extends ContextTestCase
     @Test
     public void attach_should_register_a_model_for_the_editor_and_detach_should_remove_it() throws Exception
     {
-        ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
+        final ICompilationUnit cut = context.getCompilationUnit("org.SomeClass");
 
-        org.eclipse.jface.text.source.AnnotationModel annotationModel = new org.eclipse.jface.text.source.AnnotationModel();
-        IDocumentProvider provider = mock(IDocumentProvider.class);
+        final org.eclipse.jface.text.source.AnnotationModel annotationModel = new org.eclipse.jface.text.source.AnnotationModel();
+        final IDocumentProvider provider = mock(IDocumentProvider.class);
         when(provider.getAnnotationModel(any())).thenReturn(annotationModel);
         when(provider.getDocument(any())).thenReturn(new org.eclipse.jface.text.Document(cut.getSource()));
-        ITextEditor editor = editorOver(cut);
+        final ITextEditor editor = editorOver(cut);
         when(editor.getDocumentProvider()).thenReturn(provider);
 
         MoreUnitAnnotationModel.attach(editor);
 
-        MoreUnitAnnotationModel attached = (MoreUnitAnnotationModel) annotationModel.getAnnotationModel("org.moreunit.model_key");
+        final MoreUnitAnnotationModel attached = (MoreUnitAnnotationModel) annotationModel.getAnnotationModel("org.moreunit.model_key");
         assertNotNull(attached);
 
         // attaching again must not create a second model

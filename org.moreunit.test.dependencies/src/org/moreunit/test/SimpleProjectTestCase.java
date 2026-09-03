@@ -71,9 +71,9 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 
     private static void initPreferencesForTestCaseContext()
     {
-        Preferences preferences = new DummyPreferencesForTesting();
+        final Preferences preferences = new DummyPreferencesForTesting();
         preferences.setHasProjectSpecificSettings(workspaceTestProject, true);
-        List<SourceFolderMapping> mappingList = new ArrayList<>();
+        final List<SourceFolderMapping> mappingList = new ArrayList<>();
         mappingList.add(new SourceFolderMapping(workspaceTestProject, sourcesFolder, testFolder));
         preferences.setMappingList(workspaceTestProject, mappingList);
         preferences.getProjectView(workspaceTestProject).setTestClassNameTemplate("${srcFile}Test");
@@ -91,7 +91,7 @@ public abstract class SimpleProjectTestCase extends WorkspaceTestCase
 
     private IType createJavaClass(IPackageFragment packageFragment, String javaClassName, boolean deleteCompilationUnitAfterTest) throws JavaModelException
     {
-        IType type = WorkspaceHelper.createJavaClass(packageFragment, javaClassName);
+        final IType type = WorkspaceHelper.createJavaClass(packageFragment, javaClassName);
         if(deleteCompilationUnitAfterTest)
         {
             deleteAfterTest(type);

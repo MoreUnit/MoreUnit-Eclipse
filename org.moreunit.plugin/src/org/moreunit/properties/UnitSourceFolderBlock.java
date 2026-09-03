@@ -36,8 +36,8 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
     private Button mappingButton;
     private UnitSourcesContentProvider unitSourcesContentProvider;
 
-    private IJavaProject javaProject;
-    private MoreUnitPropertyPage propertyPage;
+    private final IJavaProject javaProject;
+    private final MoreUnitPropertyPage propertyPage;
 
     public UnitSourceFolderBlock(IJavaProject javaProject, MoreUnitPropertyPage propertyPage)
     {
@@ -47,9 +47,9 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     public Composite getControl(Composite parent)
     {
-        Composite composite = new Composite(parent, SWT.NONE);
+        final Composite composite = new Composite(parent, SWT.NONE);
 
-        GridLayout layout = new GridLayout(2, false);
+        final GridLayout layout = new GridLayout(2, false);
         layout.marginWidth = 0;
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -74,11 +74,11 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private void createLabel(Composite composite)
     {
-        Label label = new Label(composite, SWT.LEFT);
+        final Label label = new Label(composite, SWT.LEFT);
         label.setText("Projects with tests for " + javaProject.getElementName());
         label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 
-        GridData layoutData = new GridData();
+        final GridData layoutData = new GridData();
         layoutData.horizontalSpan = 2;
 
         label.setLayoutData(layoutData);
@@ -86,7 +86,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private void createButtons(Composite composite)
     {
-        Composite buttonComposite = new Composite(composite, SWT.NONE);
+        final Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setFont(composite.getFont());
 
         addButton = createAddButton(buttonComposite, composite.getFont());
@@ -95,7 +95,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
         removeButton.setEnabled(false);
         mappingButton.setEnabled(false);
 
-        FillLayout buttonBoxLayout = new FillLayout(SWT.VERTICAL);
+        final FillLayout buttonBoxLayout = new FillLayout(SWT.VERTICAL);
         buttonComposite.setLayout(buttonBoxLayout);
 
         buttonComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.TOP).hint(100, SWT.DEFAULT).create());
@@ -103,7 +103,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private Button createAddButton(Composite buttonComposite, Font font)
     {
-        Button button = new Button(buttonComposite, SWT.PUSH);
+        final Button button = new Button(buttonComposite, SWT.PUSH);
         button.setFont(font);
         button.setText("Add");
         button.addSelectionListener(new SelectionListener()
@@ -125,7 +125,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private Button createRemoveButton(Composite buttonComposite, Font font)
     {
-        Button button = new Button(buttonComposite, SWT.PUSH);
+        final Button button = new Button(buttonComposite, SWT.PUSH);
         button.setFont(font);
         button.setText("Remove");
         button.addSelectionListener(new SelectionListener()
@@ -147,7 +147,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private Button createMappingButton(Composite buttonComposite, Font font)
     {
-        Button button = new Button(buttonComposite, SWT.PUSH);
+        final Button button = new Button(buttonComposite, SWT.PUSH);
         button.setFont(font);
         button.setText("Remap");
         button.addSelectionListener(new SelectionListener()
@@ -180,13 +180,13 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private Object getSelectedObject()
     {
-        TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
+        final TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
         return selection.getFirstElement();
     }
 
     private void mappingButtonClicked()
     {
-        TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
+        final TreeSelection selection = (TreeSelection) sourceFolderTree.getSelection();
         SourceFolderMappingDialog.open(this, propertyPage.getShell(), (SourceFolderMapping) selection.getFirstElement());
     }
 
@@ -213,7 +213,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     public void saveProperties()
     {
-        List<SourceFolderMapping> mappingList = getListOfUnitSourceFolder();
+        final List<SourceFolderMapping> mappingList = getListOfUnitSourceFolder();
         Preferences.getInstance().setMappingList(javaProject, mappingList);
 
         SourceFolderContext.getInstance().initContextForWorkspace();
@@ -231,7 +231,7 @@ public class UnitSourceFolderBlock implements ISelectionChangedListener
 
     private boolean isSourceFolderMappingSelected()
     {
-        Object selectedObject = getSelectedObject();
+        final Object selectedObject = getSelectedObject();
         return selectedObject instanceof SourceFolderMapping;
     }
 

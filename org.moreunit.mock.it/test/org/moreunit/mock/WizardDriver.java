@@ -97,15 +97,15 @@ public final class WizardDriver
 
         public void checkElements(String... elementNames)
         {
-            Set<Object> elementsToCheck = new HashSet<>();
+            final Set<Object> elementsToCheck = new HashSet<>();
 
-            for (String elName : elementNames)
+            for (final String elName : elementNames)
             {
-                for (Object type : page.getTreeContentProvider().getTypes())
+                for (final Object type : page.getTreeContentProvider().getTypes())
                 {
-                    for (Object el : page.getTreeContentProvider().getChildren(type))
+                    for (final Object el : page.getTreeContentProvider().getChildren(type))
                     {
-                        if(el instanceof IMember member && member.getElementName().equals(elName))
+                        if(el instanceof final IMember member && member.getElementName().equals(elName))
                         {
                             elementsToCheck.add(el);
                             break;
@@ -181,31 +181,26 @@ public final class WizardDriver
 
         public void done()
         {
-            driver.whenMockDependenciesPageIsOpen(new MockDependenciesPageIsOpenAction()
-            {
-                @Override
-                public void execute(MockDependenciesWizardDriver driver)
+            driver.whenMockDependenciesPageIsOpen(driver -> {
+                if(templateId != null)
                 {
-                    if(templateId != null)
-                    {
-                        driver.selectTemplate(templateId);
-                    }
-                    if(showInjectableFields)
-                    {
-                        driver.showInjectableFields();
-                    }
-                    if(showAllFields)
-                    {
-                        driver.showAllFields();
-                    }
-                    if(checkAllElements)
-                    {
-                        driver.checkAllElements();
-                    }
-                    if(elementsToCheck != null)
-                    {
-                        driver.checkElements(elementsToCheck);
-                    }
+                    driver.selectTemplate(templateId);
+                }
+                if(showInjectableFields)
+                {
+                    driver.showInjectableFields();
+                }
+                if(showAllFields)
+                {
+                    driver.showAllFields();
+                }
+                if(checkAllElements)
+                {
+                    driver.checkAllElements();
+                }
+                if(elementsToCheck != null)
+                {
+                    driver.checkElements(elementsToCheck);
                 }
             });
         }

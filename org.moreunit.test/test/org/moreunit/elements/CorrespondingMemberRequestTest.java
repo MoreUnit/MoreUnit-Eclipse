@@ -17,7 +17,7 @@ public class CorrespondingMemberRequestTest
     @Test
     public void default_request_should_use_default_values()
     {
-        CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest().build();
+        final CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest().build();
 
         assertFalse(request.shouldCreateClassIfNoResult());
         assertEquals(MethodSearchMode.DEFAULT, request.getMethodSearchMode());
@@ -30,9 +30,9 @@ public class CorrespondingMemberRequestTest
     @Test
     public void should_configure_method_search_mode_and_current_method()
     {
-        IMethod method = mock(org.eclipse.jdt.core.IMethod.class);
+        final IMethod method = mock(org.eclipse.jdt.core.IMethod.class);
 
-        CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
+        final CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
                 .withCurrentMethod(method) //
                 .methodSearchMode(MethodSearchMode.BY_NAME) //
                 .build();
@@ -44,7 +44,7 @@ public class CorrespondingMemberRequestTest
     @Test
     public void should_configure_expected_result_type()
     {
-        CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
+        final CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
                 .withExpectedResultType(MemberType.TYPE) //
                 .build();
 
@@ -55,7 +55,7 @@ public class CorrespondingMemberRequestTest
     @Test
     public void create_class_if_no_result_should_enable_creation_and_set_prompt_text()
     {
-        CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
+        final CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
                 .createClassIfNoResult("Choose a member") //
                 .build();
 
@@ -66,7 +66,7 @@ public class CorrespondingMemberRequestTest
     @Test
     public void prompt_text_should_be_set_without_enabling_class_creation()
     {
-        CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
+        final CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
                 .promptText("hint") //
                 .build();
 

@@ -42,7 +42,7 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
     public void beforeEach(ExtensionContext context) throws Exception
     {
         // Extract config from method and class annotations
-        WorkspaceConfiguration config = configExtractor.extractFrom(new AnnotatedElement()
+        final WorkspaceConfiguration config = configExtractor.extractFrom(new AnnotatedElement()
         {
             @Override
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
@@ -60,7 +60,7 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
             @Override
             public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
             {
-                Class<?> testClass = context.getTestClass().orElse(null);
+                final Class<?> testClass = context.getTestClass().orElse(null);
                 if (testClass == null)
                 {
                     return null;
@@ -83,10 +83,10 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
         }
 
         // Abbreviate to prevent reaching file name size limit on some file systems
-        String projectPrefix = abbreviate(context.getTestClass().map(c -> c.getName()).orElse("")) + "."
+        final String projectPrefix = abbreviate(context.getTestClass().map(c -> c.getName()).orElse("")) + "."
                 + abbreviate(context.getTestMethod().map(m -> m.getName()).orElse("")) + "-";
 
-        ContextState newState = new ContextState(config, context.getTestClass().map(c -> c).orElse(null), projectPrefix);
+        final ContextState newState = new ContextState(config, context.getTestClass().map(c -> c).orElse(null), projectPrefix);
         state.set(newState);
         newState.initWorkspace();
     }
@@ -94,7 +94,7 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
     @Override
     public void afterEach(ExtensionContext context) throws Exception
     {
-        ContextState current = state.get();
+        final ContextState current = state.get();
         if (current != null)
         {
             try
@@ -110,8 +110,8 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
 
     private static String abbreviate(String javaIdentifier)
     {
-        StringBuilder b = new StringBuilder();
-        for (String part : javaIdentifier.split("((?=\\p{Lu})|[\\._])"))
+        final StringBuilder b = new StringBuilder();
+        for (final String part : javaIdentifier.split("((?=\\p{Lu})|[\\._])"))
         {
             if(! part.isEmpty())
             {
@@ -225,7 +225,7 @@ public class TestContextRule implements BeforeEachCallback, AfterEachCallback
 
     private ContextState currentState()
     {
-        ContextState s = state.get();
+        final ContextState s = state.get();
         checkState(s != null, "No context defined. Are you accessing this extension from outside a test method? or from one that has no Context annotation?");
         return s;
     }

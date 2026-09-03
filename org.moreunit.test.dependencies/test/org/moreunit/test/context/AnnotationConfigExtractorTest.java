@@ -13,7 +13,7 @@ import org.moreunit.test.workspace.JavaType;
 
 public class AnnotationConfigExtractorTest
 {
-    private AnnotationConfigExtractor configExtractor = new AnnotationConfigExtractor();
+    private final AnnotationConfigExtractor configExtractor = new AnnotationConfigExtractor();
 
     @Test
     public void should_reject_null_annotated_element() throws Exception
@@ -52,7 +52,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList("SomeProductionType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
@@ -68,7 +68,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class));
+        final WorkspaceConfiguration config = configExtractor.extractFrom(new ElementWithoutAnnotation(), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList("DefaultProductionType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
@@ -89,7 +89,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList("SomeProductionType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
@@ -162,7 +162,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList("SampleType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
@@ -184,7 +184,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList("SampleType")), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainSources())));
@@ -206,7 +206,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
         assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getMainSourceFolder(), "sources");
@@ -223,7 +223,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Pre");
@@ -239,7 +239,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertNull(config.getPreferencesConfig());
@@ -255,7 +255,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertNotNull(config.getProject(DEFAULT_PROJECT_NAME));
@@ -277,7 +277,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suffix");
@@ -293,7 +293,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestClassNameTemplate(), "${srcFile}Prefix");
@@ -314,7 +314,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestSuperClass(), "SuperClass");
@@ -330,7 +330,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertNull(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig());
@@ -346,10 +346,10 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
-        TestProjectConfiguration testProjectConfig = config.getProject(DEFAULT_PROJECT_NAME).getTestProjectConfig();
+        final TestProjectConfiguration testProjectConfig = config.getProject(DEFAULT_PROJECT_NAME).getTestProjectConfig();
         assertEquals(testProjectConfig.getProjectName(), "test-project-name");
         assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("net", "Foo"), JavaType.newEnum("net", "Baz"))), new java.util.HashSet<>((testProjectConfig.getTypes())));
         assertEquals(new java.util.HashSet<>(Arrays.asList("Bar.txt", "qux.txt")), new java.util.HashSet<>((testProjectConfig.getSources())));
@@ -403,7 +403,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "Pfx${srcFile}");
@@ -438,7 +438,7 @@ public class AnnotationConfigExtractorTest
         }
 
         {
-            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            final IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
             assertEquals("Too much recursion in @Preferences definitions", e.getMessage());
         }
     }
@@ -463,7 +463,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getPropertiesConfig().getTestType(), TestType.TESTNG);
@@ -491,7 +491,7 @@ public class AnnotationConfigExtractorTest
         }
 
         {
-            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            final IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
             assertEquals("Too much recursion in @Properties definitions", e.getMessage());
         }
     }
@@ -521,7 +521,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getProject(DEFAULT_PROJECT_NAME).getTestSourceFolder(), "tests");
@@ -554,7 +554,7 @@ public class AnnotationConfigExtractorTest
         }
 
         {
-            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            final IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
             assertEquals("Too much recursion in @Project definitions", e.getMessage());
         }
     }
@@ -589,7 +589,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "${srcFile}Suffix");
@@ -619,7 +619,7 @@ public class AnnotationConfigExtractorTest
         }
 
         {
-            IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
+            final IllegalConfigurationException e = assertThrows(IllegalConfigurationException.class, () -> configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null));
             assertEquals("Too much recursion in @Context definitions", e.getMessage());
         }
     }
@@ -633,7 +633,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("org.example", "SomeClass"), JavaType.newEnum("org.example", "SomeEnum"), JavaType.newClass("", "AnotherClass"))), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainTypes())));
@@ -649,7 +649,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), null);
 
         // then
         assertEquals(new java.util.HashSet<>(Arrays.asList(JavaType.newClass("org.example", "SomeClass"), JavaType.newEnum("org.example", "SomeEnum"), JavaType.newClass("", "AnotherClass"))), new java.util.HashSet<>((config.getProject(DEFAULT_PROJECT_NAME).getMainTypes())));
@@ -700,7 +700,7 @@ public class AnnotationConfigExtractorTest
         }
 
         // when
-        WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
+        final WorkspaceConfiguration config = configExtractor.extractFrom(annotatedElement(AnnotationHolder.class), annotatedElement(DefaultAnnotationHolder.class));
 
         // then
         assertEquals(config.getPreferencesConfig().getTestClassNameTemplate(), "{srcFile}Mest");

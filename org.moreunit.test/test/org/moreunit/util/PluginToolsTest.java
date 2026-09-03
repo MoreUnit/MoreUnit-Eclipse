@@ -23,12 +23,12 @@ import org.moreunit.test.workspace.WorkspaceHelper;
 
 public class PluginToolsTest
 {
-    private Set<IProject> projectsToDeleteAfterTest = new HashSet<>();
+    private final Set<IProject> projectsToDeleteAfterTest = new HashSet<>();
 
     @AfterEach
     public void deleteCreatedProjects() throws Exception
     {
-        for (IProject project : projectsToDeleteAfterTest)
+        for (final IProject project : projectsToDeleteAfterTest)
             project.delete(true, null);
     }
 
@@ -40,7 +40,7 @@ public class PluginToolsTest
         createProject("SecondProject");
 
         // when
-        List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
+        final List<IJavaProject> javaProjectsFromWorkspace = PluginTools.getJavaProjectsFromWorkspace();
 
         // then
         assertEquals(2, javaProjectsFromWorkspace.size());
@@ -50,11 +50,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_source_folder_when_only_one_source_folder() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/folder");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/folder");
+        final Project project = createAProjectWithSourceFolders("src/folder");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/folder");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, testSrcFolder);
@@ -64,11 +64,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_main_folder_when_test_folder_follows_maven_conventions() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/test/java", "src/main/java");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/java");
+        final Project project = createAProjectWithSourceFolders("src/test/java", "src/main/java");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/java");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("src/main/java"));
@@ -78,11 +78,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_main_folder_regardless_of_the_language_when_test_folder_follows_maven_conventions_and_a_different_lanague_is_used_for_tests() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/main/java", "src/test/groovy");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/groovy");
+        final Project project = createAProjectWithSourceFolders("src/main/java", "src/test/groovy");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/groovy");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("src/main/java"));
@@ -92,11 +92,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_main_folder_regardless_of_the_language_when_test_folder_follows_maven_conventions_and_a_different_lanague_is_used_for_tests__2() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/main/resources", "src/test/resources", "src/main/java", "src/test/groovy");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/groovy");
+        final Project project = createAProjectWithSourceFolders("src/main/resources", "src/test/resources", "src/main/java", "src/test/groovy");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/groovy");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("src/main/java"));
@@ -106,11 +106,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_source_folder_not_containing_test_word() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("test", "src");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("test");
+        final Project project = createAProjectWithSourceFolders("test", "src");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("test");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("src"));
@@ -120,11 +120,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_source_folder_not_containing_test_word_when_several_test_folders_contain_that_word() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("test/one", "source/folder", "test/two");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("test/two");
+        final Project project = createAProjectWithSourceFolders("test/one", "source/folder", "test/two");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("test/two");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("source/folder"));
@@ -134,11 +134,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_source_folder_not_containing_junit_word() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src", "junit");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("junit");
+        final Project project = createAProjectWithSourceFolders("src", "junit");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("junit");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("src"));
@@ -148,11 +148,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_other_source_folder_when_no_clever_guess_can_be_made() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("one", "two");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("one");
+        final Project project = createAProjectWithSourceFolders("one", "two");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("one");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("two"));
@@ -162,11 +162,11 @@ public class PluginToolsTest
     public void guessSourceFolderCorrespondingToTestFolder_should_return_another_source_folder_when_no_clever_guess_can_be_made() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("one", "two", "three");
-        IPackageFragmentRoot testSrcFolder = project.getSourceFolder("one");
+        final Project project = createAProjectWithSourceFolders("one", "two", "three");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("one");
 
         // when
-        IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
 
         // then
         assertEquals(mainSrcFolder, project.getSourceFolder("two"));
@@ -176,11 +176,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_source_folder_when_only_one_source_folder() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/folder");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/folder");
+        final Project project = createAProjectWithSourceFolders("src/folder");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/folder");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, mainSrcFolder);
@@ -190,11 +190,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_test_folder_when_main_folder_follows_maven_conventions() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/test/java", "src/main/java");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+        final Project project = createAProjectWithSourceFolders("src/test/java", "src/main/java");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("src/test/java"));
@@ -204,11 +204,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_test_folder_regardless_of_the_language_when_main_folder_follows_maven_conventions_and_a_different_lanague_is_used_for_sources() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/main/java", "src/test/groovy");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+        final Project project = createAProjectWithSourceFolders("src/main/java", "src/test/groovy");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("src/test/groovy"));
@@ -218,11 +218,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_test_folder_regardless_of_the_language_when_main_folder_follows_maven_conventions_and_a_different_lanague_is_used_for_sources__2() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("src/main/resources", "src/test/resources", "src/test/groovy", "src/main/java");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+        final Project project = createAProjectWithSourceFolders("src/main/resources", "src/test/resources", "src/test/groovy", "src/main/java");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("src/test/groovy"));
@@ -232,11 +232,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_source_folder_named_test() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("test", "src");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src");
+        final Project project = createAProjectWithSourceFolders("test", "src");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("test"));
@@ -246,11 +246,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_other_source_folder_when_no_clever_guess_can_be_made() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("one", "two");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("one");
+        final Project project = createAProjectWithSourceFolders("one", "two");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("one");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("two"));
@@ -260,11 +260,11 @@ public class PluginToolsTest
     public void guessTestFolderCorrespondingToMainSrcFolder_should_return_another_source_folder_when_no_clever_guess_can_be_made() throws Exception
     {
         // given
-        Project project = createAProjectWithSourceFolders("one", "two", "three");
-        IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("one");
+        final Project project = createAProjectWithSourceFolders("one", "two", "three");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("one");
 
         // when
-        IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
 
         // then
         assertEquals(testSrcFolder, project.getSourceFolder("two"));
@@ -296,7 +296,7 @@ public class PluginToolsTest
 
     private org.moreunit.preferences.Preferences.ProjectPreferences projectPreferences(String prefix, String suffix)
     {
-        org.moreunit.preferences.Preferences.ProjectPreferences prefs = mock(org.moreunit.preferences.Preferences.ProjectPreferences.class);
+        final org.moreunit.preferences.Preferences.ProjectPreferences prefs = mock(org.moreunit.preferences.Preferences.ProjectPreferences.class);
         when(prefs.getPackagePrefix()).thenReturn(prefix);
         when(prefs.getPackageSuffix()).thenReturn(suffix);
         return prefs;
@@ -305,10 +305,10 @@ public class PluginToolsTest
     @Test
     public void createPackageFragmentRoot_should_return_existing_source_folder() throws Exception
     {
-        IJavaProject project = createProject("CreatePFRProject");
+        final IJavaProject project = createProject("CreatePFRProject");
         WorkspaceHelper.createSourceFolderInProject(project, "src/test/java");
 
-        IPackageFragmentRoot root = PluginTools.createPackageFragmentRoot("CreatePFRProject", "src/test/java");
+        final IPackageFragmentRoot root = PluginTools.createPackageFragmentRoot("CreatePFRProject", "src/test/java");
 
         assertNotNull(root);
         assertEquals("src/test/java", getPathStringWithoutProjectName(root));
@@ -324,15 +324,15 @@ public class PluginToolsTest
 
     private IJavaProject createProject(String name) throws Exception
     {
-        IJavaProject project = WorkspaceHelper.createJavaProject(name);
+        final IJavaProject project = WorkspaceHelper.createJavaProject(name);
         projectsToDeleteAfterTest.add(project.getProject());
         return project;
     }
 
     private Project createAProjectWithSourceFolders(String... sourceFolderNames) throws Exception
     {
-        IJavaProject project = createProject("aProject");
-        for (String sourceFolder : sourceFolderNames)
+        final IJavaProject project = createProject("aProject");
+        for (final String sourceFolder : sourceFolderNames)
             WorkspaceHelper.createSourceFolderInProject(project, sourceFolder);
         return new Project(project);
     }
@@ -353,7 +353,7 @@ public class PluginToolsTest
 
         public IPackageFragmentRoot getSourceFolder(String name) throws JavaModelException
         {
-            for (IPackageFragmentRoot srcFolder : project.getPackageFragmentRoots())
+            for (final IPackageFragmentRoot srcFolder : project.getPackageFragmentRoots())
                 if(getPathStringWithoutProjectName(srcFolder).equals(name))
                     return srcFolder;
             return null;

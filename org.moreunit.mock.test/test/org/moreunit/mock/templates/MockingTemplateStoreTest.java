@@ -47,7 +47,7 @@ public class MockingTemplateStoreTest
     public void should_return_template_when_id_is_knwon() throws Exception
     {
         // given
-        MockingTemplate template = new MockingTemplate("templateID", "category1");
+        final MockingTemplate template = new MockingTemplate("templateID", "category1");
 
         // when
         templateStore.store(new MockingTemplates(asList(category1), asList(template)));
@@ -60,7 +60,7 @@ public class MockingTemplateStoreTest
     public void should_not_contain_template_anymore_when_cleared() throws Exception
     {
         // given
-        MockingTemplate template2 = new MockingTemplate("template2", "category1");
+        final MockingTemplate template2 = new MockingTemplate("template2", "category1");
 
         // when
         templateStore.store(new MockingTemplates(asList(category1), asList(template2)));
@@ -105,8 +105,8 @@ public class MockingTemplateStoreTest
     public void should_retrieve_templates_by_category() throws Exception
     {
         // given
-        MockingTemplate template2 = new MockingTemplate("template2", "category2");
-        MockingTemplate template3 = new MockingTemplate("template3", "category1");
+        final MockingTemplate template2 = new MockingTemplate("template2", "category2");
+        final MockingTemplate template3 = new MockingTemplate("template3", "category1");
 
         // when
         templateStore.store(new MockingTemplates(asList(category2), asList(template2, template3)));
@@ -120,7 +120,7 @@ public class MockingTemplateStoreTest
     public void should_not_override_categories() throws Exception
     {
         // given
-        Category category1bis = new Category("category1", "New name for category 1");
+        final Category category1bis = new Category("category1", "New name for category 1");
 
         // when
         templateStore.store(new MockingTemplates(asList(category1bis), new ArrayList<>()));
@@ -132,10 +132,10 @@ public class MockingTemplateStoreTest
     @Test
     public void should_reject_template_which_already_exists() throws Exception
     {
-        MockingTemplate template1bis = new MockingTemplate("template1", "category1");
+        final MockingTemplate template1bis = new MockingTemplate("template1", "category1");
 
         {
-            TemplateAlreadyDefinedException e = assertThrows(TemplateAlreadyDefinedException.class, () -> templateStore.store(new MockingTemplates(new ArrayList<>(), asList(template1bis))));
+            final TemplateAlreadyDefinedException e = assertThrows(TemplateAlreadyDefinedException.class, () -> templateStore.store(new MockingTemplates(new ArrayList<>(), asList(template1bis))));
             assertEquals(((TemplateAlreadyDefinedException) e).getTemplateId(), template1bis.id());
         }
     }

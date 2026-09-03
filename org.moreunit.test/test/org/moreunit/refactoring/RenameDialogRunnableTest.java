@@ -19,13 +19,13 @@ public class RenameDialogRunnableTest extends org.moreunit.test.context.ContextT
     @Test
     public void constructor_should_store_parameters_and_create_diviner()
     {
-        ClassTypeFacade javaFile = mock(ClassTypeFacade.class);
-        ICompilationUnit cu = mock(ICompilationUnit.class);
+        final ClassTypeFacade javaFile = mock(ClassTypeFacade.class);
+        final ICompilationUnit cu = mock(ICompilationUnit.class);
         when(javaFile.getCompilationUnit()).thenReturn(cu);
 
-        IMethod method = mock(IMethod.class);
+        final IMethod method = mock(IMethod.class);
 
-        RenameDialogRunnable runnable = new RenameDialogRunnable(javaFile, method, "newName");
+        final RenameDialogRunnable runnable = new RenameDialogRunnable(javaFile, method, "newName");
 
         assertEquals(method, runnable.renamedMethod);
         assertEquals("newName", runnable.newMethodName);
@@ -38,22 +38,22 @@ public class RenameDialogRunnableTest extends org.moreunit.test.context.ContextT
     @org.junit.jupiter.api.Test
     public void run_should_open_the_rename_dialog_and_do_nothing_when_it_is_cancelled() throws Exception
     {
-        IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
+        final IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void testGetNumberOne()", "");
 
-        IWorkbenchPage page = org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        org.eclipse.core.resources.IFile file = (org.eclipse.core.resources.IFile) context.getCompilationUnit("org.SomeClass").getResource();
-        IEditorPart editor = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), "org.eclipse.ui.DefaultTextEditor", true);
+        final IWorkbenchPage page = org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final org.eclipse.core.resources.IFile file = (org.eclipse.core.resources.IFile) context.getCompilationUnit("org.SomeClass").getResource();
+        final IEditorPart editor = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), "org.eclipse.ui.DefaultTextEditor", true);
         try
         {
             assertNotNull(editor);
             awaitActiveEditor(page);
 
-            Display display = Display.getDefault();
-            java.util.Set<Shell> knownShells = org.moreunit.test.support.DialogHelper.knownShells(display);
+            final Display display = Display.getDefault();
+            final java.util.Set<Shell> knownShells = org.moreunit.test.support.DialogHelper.knownShells(display);
             display.asyncExec(org.moreunit.test.support.DialogHelper.closerFor(display, knownShells, Shell::close, 2000));
 
-            ClassTypeFacade facade = new ClassTypeFacade(context.getCompilationUnit("org.SomeClass"));
+            final ClassTypeFacade facade = new ClassTypeFacade(context.getCompilationUnit("org.SomeClass"));
             new RenameDialogRunnable(facade, method, "getNumberTwo").run();
 
             // dialog was cancelled: no test method must have been renamed
@@ -67,7 +67,7 @@ public class RenameDialogRunnableTest extends org.moreunit.test.context.ContextT
 
     private void awaitActiveEditor(IWorkbenchPage page) throws InterruptedException
     {
-        long deadline = System.currentTimeMillis() + 10_000;
+        final long deadline = System.currentTimeMillis() + 10_000;
         while (page.getActiveEditor() == null && System.currentTimeMillis() < deadline)
         {
             while (Display.getDefault().readAndDispatch())

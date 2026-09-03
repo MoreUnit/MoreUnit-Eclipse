@@ -20,7 +20,7 @@ public class WizardFactory
 
     public WizardDialog<NewFileWizard> createNewFileWizard(SourceFolderPath selectedFolder, String fileName)
     {
-        NewFileWizard wizard = new NewFileWizard(workbench, $().getWorkspace(), selectedFolder, fileName);
+        final NewFileWizard wizard = new NewFileWizard(workbench, $().getWorkspace(), selectedFolder, fileName);
         return new WizardDialog<>(createWizardDialog(wizard), wizard);
     }
 

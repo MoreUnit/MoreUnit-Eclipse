@@ -25,7 +25,7 @@ public class DependencyInjectionPointProviderCache implements DependencyInjectio
             setters.addAll(provider.getSetters());
             fields.addAll(provider.getFields());
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             exception = e;
         }

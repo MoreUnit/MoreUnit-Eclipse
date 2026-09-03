@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IPath;
 
 public class EclipsePath implements Path
 {
-    private IPath path;
+    private final IPath path;
 
     EclipsePath(IPath path)
     {
@@ -37,7 +37,7 @@ public class EclipsePath implements Path
             return "";
         }
 
-        String lastSegment = path.lastSegment();
+        final String lastSegment = path.lastSegment();
         return lastSegment == null ? "/" : lastSegment;
     }
 
@@ -50,7 +50,7 @@ public class EclipsePath implements Path
     @Override
     public String getExtension()
     {
-        String ext = path.getFileExtension();
+        final String ext = path.getFileExtension();
         return ext == null ? "" : ext;
     }
 

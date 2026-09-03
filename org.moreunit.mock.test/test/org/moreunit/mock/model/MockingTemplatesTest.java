@@ -19,8 +19,8 @@ public class MockingTemplatesTest
     @Test
     public void should_return_empty_categories_when_none_provided()
     {
-        MockingTemplates templates = new MockingTemplates(null, new ArrayList<>());
-        Collection<Category> categories = templates.categories();
+        final MockingTemplates templates = new MockingTemplates(null, new ArrayList<>());
+        final Collection<Category> categories = templates.categories();
         assertNotNull(categories);
         assertTrue(categories.isEmpty());
     }
@@ -28,16 +28,16 @@ public class MockingTemplatesTest
     @Test
     public void should_return_provided_categories()
     {
-        List<Category> cats = Arrays.asList(new Category("mock", "Mocking"), new Category("stub", "Stubbing"));
-        MockingTemplates templates = new MockingTemplates(cats, new ArrayList<>());
+        final List<Category> cats = Arrays.asList(new Category("mock", "Mocking"), new Category("stub", "Stubbing"));
+        final MockingTemplates templates = new MockingTemplates(cats, new ArrayList<>());
         assertEquals(2, templates.categories().size());
     }
 
     @Test
     public void should_return_empty_iterator_when_no_templates()
     {
-        MockingTemplates templates = new MockingTemplates(new ArrayList<>(), null);
-        Iterator<MockingTemplate> it = templates.iterator();
+        final MockingTemplates templates = new MockingTemplates(new ArrayList<>(), null);
+        final Iterator<MockingTemplate> it = templates.iterator();
         assertNotNull(it);
         assertFalse(it.hasNext());
     }
@@ -45,14 +45,14 @@ public class MockingTemplatesTest
     @Test
     public void should_iterate_over_templates()
     {
-        List<MockingTemplate> tmplList = Arrays.asList(
+        final List<MockingTemplate> tmplList = Arrays.asList(
                 new MockingTemplate("id1"),
                 new MockingTemplate("id2"),
                 new MockingTemplate("id3"));
-        MockingTemplates templates = new MockingTemplates(new ArrayList<>(), tmplList);
+        final MockingTemplates templates = new MockingTemplates(new ArrayList<>(), tmplList);
 
         int count = 0;
-        for (Iterator<MockingTemplate> iter = templates.iterator(); iter.hasNext(); iter.next())
+        for (final Iterator<MockingTemplate> iter = templates.iterator(); iter.hasNext(); iter.next())
         {
             count++;
         }
@@ -62,9 +62,9 @@ public class MockingTemplatesTest
     @Test
     public void should_find_template_by_id()
     {
-        MockingTemplate t1 = new MockingTemplate("id1");
-        MockingTemplate t2 = new MockingTemplate("id2");
-        MockingTemplates templates = new MockingTemplates(new ArrayList<>(), Arrays.asList(t1, t2));
+        final MockingTemplate t1 = new MockingTemplate("id1");
+        final MockingTemplate t2 = new MockingTemplate("id2");
+        final MockingTemplates templates = new MockingTemplates(new ArrayList<>(), Arrays.asList(t1, t2));
 
         assertEquals(t1, templates.findTemplate("id1"));
         assertEquals(t2, templates.findTemplate("id2"));
@@ -73,23 +73,23 @@ public class MockingTemplatesTest
     @Test
     public void should_return_null_when_template_not_found()
     {
-        MockingTemplates templates = new MockingTemplates(new ArrayList<>(), new ArrayList<>());
+        final MockingTemplates templates = new MockingTemplates(new ArrayList<>(), new ArrayList<>());
         assertNull(templates.findTemplate("unknown"));
     }
 
     @Test
     public void should_return_null_when_searching_in_null_templates_list()
     {
-        MockingTemplates templates = new MockingTemplates(new ArrayList<>(), null);
+        final MockingTemplates templates = new MockingTemplates(new ArrayList<>(), null);
         assertNull(templates.findTemplate("any"));
     }
 
     @Test
     public void should_handle_multiple_templates_with_same_id_returns_first()
     {
-        MockingTemplate t1 = new MockingTemplate("dup");
-        MockingTemplate t2 = new MockingTemplate("dup");
-        MockingTemplates templates = new MockingTemplates(new ArrayList<>(), Arrays.asList(t1, t2));
+        final MockingTemplate t1 = new MockingTemplate("dup");
+        final MockingTemplate t2 = new MockingTemplate("dup");
+        final MockingTemplates templates = new MockingTemplates(new ArrayList<>(), Arrays.asList(t1, t2));
 
         assertEquals(t1, templates.findTemplate("dup"));
     }

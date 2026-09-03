@@ -29,8 +29,8 @@ public class PreferencesConverter
      */
     public static String convertSourceMappingsToString(List<SourceFolderMapping> mappingList)
     {
-        List<String> mappingStrings = new ArrayList<>();
-        for (SourceFolderMapping mapping : mappingList)
+        final List<String> mappingStrings = new ArrayList<>();
+        for (final SourceFolderMapping mapping : mappingList)
         {
             mappingStrings.add(PreferencesConverter.createStringFromSourceMapping(mapping));
         }
@@ -40,13 +40,13 @@ public class PreferencesConverter
 
     public static String createStringFromSourceMapping(SourceFolderMapping mapping)
     {
-        List<String> resultList = new ArrayList<>();
+        final List<String> resultList = new ArrayList<>();
 
-        new StringBuffer();
+        new StringBuilder();
 
-        for (IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
+        for (final IPackageFragmentRoot sourceFolder : mapping.getSourceFolderList())
         {
-            StringBuilder stringPart = new StringBuilder();
+            final StringBuilder stringPart = new StringBuilder();
             stringPart.append(getSourceFolderTokenPart(sourceFolder));
             stringPart.append(PreferencesConverter.DELIMITER_INTERNAL);
             stringPart.append(getTestFolderTokenPart(mapping.getTestFolder()));
@@ -58,7 +58,7 @@ public class PreferencesConverter
 
     private static final String getSourceFolderTokenPart(IPackageFragmentRoot sourceFolder)
     {
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         result.append(sourceFolder.getJavaProject().getElementName());
         result.append(PreferencesConverter.DELIMITER_INTERNAL);
         result.append(PluginTools.getPathStringWithoutProjectName(sourceFolder));
@@ -67,7 +67,7 @@ public class PreferencesConverter
 
     private static final String getTestFolderTokenPart(IPackageFragmentRoot testFolder)
     {
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         result.append(testFolder.getJavaProject().getElementName());
         result.append(PreferencesConverter.DELIMITER_INTERNAL);
         result.append(PluginTools.getPathStringWithoutProjectName(testFolder));
@@ -76,23 +76,23 @@ public class PreferencesConverter
 
     public static List<SourceFolderMapping> convertStringToSourceMappingList(String sourceMappingString)
     {
-        List<SourceFolderMapping> resultList = new ArrayList<>();
+        final List<SourceFolderMapping> resultList = new ArrayList<>();
 
         if(Strings.isBlank(sourceMappingString))
             return resultList;
 
-        String[] mappingSplits = sourceMappingString.split(PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
+        final String[] mappingSplits = sourceMappingString.split(PreferencesConverter.DELIMITER_BETWEEN_MAPPING);
 
-        for (String mappingToken : mappingSplits)
+        for (final String mappingToken : mappingSplits)
         {
-            String[] folderSplit = mappingToken.split(PreferencesConverter.DELIMITER_INTERNAL);
+            final String[] folderSplit = mappingToken.split(PreferencesConverter.DELIMITER_INTERNAL);
 
-            IPackageFragmentRoot sourceFolder = PluginTools.createPackageFragmentRoot(folderSplit[PreferencesConverter.INDEX_SOURCE_PROJECT], folderSplit[PreferencesConverter.INDEX_SOURCE_FOLDER]);
-            IPackageFragmentRoot testFolder = PluginTools.createPackageFragmentRoot(folderSplit[PreferencesConverter.INDEX_TEST_PROJECT], folderSplit[PreferencesConverter.INDEX_TEST_FOLDER]);
+            final IPackageFragmentRoot sourceFolder = PluginTools.createPackageFragmentRoot(folderSplit[PreferencesConverter.INDEX_SOURCE_PROJECT], folderSplit[PreferencesConverter.INDEX_SOURCE_FOLDER]);
+            final IPackageFragmentRoot testFolder = PluginTools.createPackageFragmentRoot(folderSplit[PreferencesConverter.INDEX_TEST_PROJECT], folderSplit[PreferencesConverter.INDEX_TEST_FOLDER]);
 
             if(sourceFolder != null && testFolder != null)
             {
-                SourceFolderMapping mapping = new SourceFolderMapping(sourceFolder.getJavaProject(), sourceFolder, testFolder);
+                final SourceFolderMapping mapping = new SourceFolderMapping(sourceFolder.getJavaProject(), sourceFolder, testFolder);
                 resultList.add(mapping);
             }
         }

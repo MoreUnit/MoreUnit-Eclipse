@@ -11,7 +11,7 @@ public class TestSafeRunner extends ExtendedSafeRunner
         {
             return code.run(element);
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             code.handleException(t, element);
         }

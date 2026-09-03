@@ -55,10 +55,10 @@ public class JumpActionExecutorTest
     public void testExecute_WhenJumpResultIsDone_DoesNothingElse() throws ExecutionException
     {
         when(selectedFile.isSupported()).thenReturn(true);
-        IJumpContext jumpContext = mock(IJumpContext.class);
+        final IJumpContext jumpContext = mock(IJumpContext.class);
         when(selectedFile.createJumpContext()).thenReturn(jumpContext);
 
-        JumpResult jumpResult = JumpResult.done();
+        final JumpResult jumpResult = JumpResult.done();
         when(extensionManager.jump(jumpContext)).thenReturn(jumpResult);
 
         executor.execute(context);
@@ -71,16 +71,16 @@ public class JumpActionExecutorTest
     public void testExecute_WhenSearchIsCancelled_DoesNothingElse() throws ExecutionException, DoesNotMatchConfigurationException
     {
         when(selectedFile.isSupported()).thenReturn(true);
-        IJumpContext jumpContext = mock(IJumpContext.class);
+        final IJumpContext jumpContext = mock(IJumpContext.class);
         when(selectedFile.createJumpContext()).thenReturn(jumpContext);
 
-        JumpResult jumpResult = JumpResult.notDone();
+        final JumpResult jumpResult = JumpResult.notDone();
         when(extensionManager.jump(jumpContext)).thenReturn(jumpResult);
 
-        SrcFile srcFile = mock(SrcFile.class);
+        final SrcFile srcFile = mock(SrcFile.class);
         when(selectedFile.getSrcFile()).thenReturn(srcFile);
 
-        MatchingFile matchingFile = mock(MatchingFile.class);
+        final MatchingFile matchingFile = mock(MatchingFile.class);
         when(matchingFile.isSearchCancelled()).thenReturn(true);
         when(srcFile.findUniqueMatch()).thenReturn(matchingFile);
 

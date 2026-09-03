@@ -98,7 +98,7 @@ public class MockingContext
     public EclipseTemplate preEvaluate(CodeTemplate codeTemplate) throws MockingTemplateException
     {
         String pattern = codeTemplate.pattern();
-        for (PatternResolver resolver : patternResolvers)
+        for (final PatternResolver resolver : patternResolvers)
         {
             pattern = resolver.resolve(pattern);
         }
@@ -135,7 +135,7 @@ public class MockingContext
 
     private boolean beforeInstanceMethodIsRequired(MockingTemplate mockingTemplate)
     {
-        for (CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
+        for (final CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
         {
             if(Part.BEFORE_INSTANCE_METHOD == codeTemplate.part() && codeTemplate.isIncluded(this))
             {
@@ -147,7 +147,7 @@ public class MockingContext
 
     private IMethod findBeforeMethod(String beforeMethodName) throws JavaModelException
     {
-        for (IMethod method : testCaseCompilationUnit.findPrimaryType().getMethods())
+        for (final IMethod method : testCaseCompilationUnit.findPrimaryType().getMethods())
         {
             if(isNoArgMethodWithName(method, beforeMethodName) && hasBeforeAnnotationIfRequired(method))
             {
@@ -159,14 +159,14 @@ public class MockingContext
 
     private boolean hasBeforeAnnotationIfRequired(IMethod method)
     {
-        String beforeAnnotation = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
+        final String beforeAnnotation = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         if(beforeAnnotation == null)
         {
             return true;
         }
         else
         {
-            String simpleName = beforeAnnotation.substring(beforeAnnotation.lastIndexOf('.') + 1);
+            final String simpleName = beforeAnnotation.substring(beforeAnnotation.lastIndexOf('.') + 1);
             return method.getAnnotation(simpleName).exists();
         }
     }
@@ -178,9 +178,9 @@ public class MockingContext
 
     private String createBeforeInstanceMethod(TemplateProcessor templateProcessor, String methodBaseName) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
     {
-        String methodName = incrementMethodNameIfRequired(methodBaseName);
+        final String methodName = incrementMethodNameIfRequired(methodBaseName);
 
-        String annotationClass = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
+        final String annotationClass = TestTypeConstants.BEFORE_METHOD_ANNOTATION.get(testType);
         String beforeMethodSource = "";
 
         if(annotationClass != null)
@@ -190,7 +190,7 @@ public class MockingContext
 
         beforeMethodSource += "public void " + methodName + "() throws Exception {}";
 
-        CodeTemplate template = new CodeTemplate(BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, Part.BEFORE_INSTANCE_METHOD_DEFINITION, beforeMethodSource);
+        final CodeTemplate template = new CodeTemplate(BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, Part.BEFORE_INSTANCE_METHOD_DEFINITION, beforeMethodSource);
         templateProcessor.applyTemplate(template, this);
 
         return methodName;
@@ -208,7 +208,7 @@ public class MockingContext
 
     private boolean hasMethod(IType type, String methodName) throws JavaModelException
     {
-        for (IMethod method : type.getMethods())
+        for (final IMethod method : type.getMethods())
         {
             if(methodName.equals(method.getElementName()))
             {

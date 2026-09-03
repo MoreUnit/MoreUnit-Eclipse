@@ -101,7 +101,7 @@ public class FieldTest
     public void field_should_be_equal_to_field_wrapping_same_eclipse_field()
     {
         // given
-        IField eclipseField2 = mock(IField.class);
+        final IField eclipseField2 = mock(IField.class);
 
         // then
         assertTrue(field.equals(field));
@@ -117,7 +117,7 @@ public class FieldTest
     public void field_should_have_consistent_hash_code()
     {
         // given
-        IField eclipseField2 = mock(IField.class);
+        final IField eclipseField2 = mock(IField.class);
 
         // then
         assertEquals(field.hashCode(), new Field(eclipseField, true).hashCode());

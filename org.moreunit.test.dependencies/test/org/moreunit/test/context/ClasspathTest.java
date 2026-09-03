@@ -18,7 +18,7 @@ public class ClasspathTest extends ContextTestCase
     @Test
     public void should_add_junit4_lib_to_classpath_when_junit4_is_used() throws JavaModelException
     {
-        IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
+        final IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
         assertTrue(containsElementNamed(packageFragmentRoots, "junit.jar"));
     }
 
@@ -26,7 +26,7 @@ public class ClasspathTest extends ContextTestCase
     @Test
     public void should_add_junit5_lib_to_classpath_when_junit5_is_used() throws JavaModelException
     {
-        IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
+        final IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
         assertTrue(anyMatchOnPattern(packageFragmentRoots, "org\\.junit\\.jupiter\\.api.*\\.jar"));
     }
 
@@ -34,7 +34,7 @@ public class ClasspathTest extends ContextTestCase
     @Test
     public void should_add_junit3_lib_to_classpath_when_junit3_is_used() throws JavaModelException
     {
-        IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
+        final IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
         assertTrue(containsElementNamed(packageFragmentRoots, "junit.jar"));
     }
 
@@ -42,8 +42,8 @@ public class ClasspathTest extends ContextTestCase
     @Test
     public void should_add_testng_lib_to_classpath_when_testng_is_used() throws JavaModelException
     {
-        IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
-        for(IPackageFragmentRoot root : packageFragmentRoots)
+        final IPackageFragmentRoot[] packageFragmentRoots = context.getProjectHandler().get().getPackageFragmentRoots();
+        for(final IPackageFragmentRoot root : packageFragmentRoots)
         {
             System.out.println(root.getElementName());
         }
@@ -52,7 +52,7 @@ public class ClasspathTest extends ContextTestCase
 
     private static boolean containsElementNamed(IPackageFragmentRoot[] roots, String name)
     {
-        for (IPackageFragmentRoot root : roots) {
+        for (final IPackageFragmentRoot root : roots) {
             if (name.equals(root.getElementName())) {
                 return true;
             }
@@ -62,7 +62,7 @@ public class ClasspathTest extends ContextTestCase
 
     private static boolean anyMatchOnPattern(IPackageFragmentRoot[] roots, final String pattern)
     {
-        for (IPackageFragmentRoot root : roots) {
+        for (final IPackageFragmentRoot root : roots) {
             if (root.getElementName().matches(pattern)) {
                 return true;
             }

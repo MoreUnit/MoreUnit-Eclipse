@@ -31,9 +31,9 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 	public void should_create_testmethod_when_shortcut_is_pressed_in_method() throws JavaModelException
 	{
 		openResource("TheWorld.java");
-    	SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
+    	final SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
     	// move cursor to method
-    	int lineNumberOfMethod = 6;
+    	final int lineNumberOfMethod = 6;
 		cutEditor.navigateTo(lineNumberOfMethod, 9);
 		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethod));
 
@@ -54,7 +54,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
                 return "No method added to testing.TheWorldTest";
             }
         }, 20000);
-		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
+		final IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
 		assertEquals(1, methods.length);
 		assertEquals("testGetNumber1", methods[0].getElementName());
 	}
@@ -73,7 +73,7 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		openResource("TheWorldTest.java");
 		final SWTBotEclipseEditor testcaseEditor = bot.activeEditor().toTextEditor();
 		// move cursor to method
-    	int lineNumberOfMethod = 9;
+    	final int lineNumberOfMethod = 9;
     	testcaseEditor.navigateTo(lineNumberOfMethod, 9);
     	bot.waitUntil(new ConditionCursorLine(testcaseEditor, lineNumberOfMethod));
 
@@ -94,9 +94,9 @@ public class MethodCreationTest extends JavaProjectSWTBotTestHelper
 		}, 20000);
 		testcaseEditor.save();
 
-		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
+		final IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
 		boolean found = false;
-		for (IMethod m : methods) {
+		for (final IMethod m : methods) {
 			if ("testGetNumber1Suffix".equals(m.getElementName())) {
 				found = true;
 				break;

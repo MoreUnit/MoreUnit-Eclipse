@@ -9,9 +9,9 @@ import org.moreunit.mock.preferences.TemplateStyleSelector;
 
 public class WizardFactory
 {
-    private Preferences preferences;
-    private TemplateStyleSelector templateStyleSelector;
-    private Logger logger;
+    private final Preferences preferences;
+    private final TemplateStyleSelector templateStyleSelector;
+    private final Logger logger;
 
     public WizardFactory(Preferences preferences, TemplateStyleSelector templateStyleSelector, Logger logger)
     {

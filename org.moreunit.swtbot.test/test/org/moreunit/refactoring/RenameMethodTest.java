@@ -35,16 +35,16 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 	public void should_rename_corresponding_test_methods_when_method_gets_renamed() throws JavaModelException
 	{
 		openResource("TheWorld.java");
-		SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
+		final SWTBotEclipseEditor cutEditor = bot.activeEditor().toTextEditor();
 		cutEditor.setFocus();
-		int lineNumberOfMethodSignature = 4;
+		final int lineNumberOfMethodSignature = 4;
 		cutEditor.navigateTo(lineNumberOfMethodSignature, 20);
 		bot.waitUntil(new ConditionCursorLine(cutEditor, lineNumberOfMethodSignature));
 
 		pressRenameShortcutTwiceAndWaitForDialog();
 		renameMethodAndWaitUntilFinished();
 
-		IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
+		final IMethod[] methods = context.getCompilationUnit("testing.TheWorldTest").findPrimaryType().getMethods();
 		assertEquals(1, methods.length);
 		assertEquals("testGetNumberOne", methods[0].getElementName());
 	}
@@ -62,7 +62,7 @@ public class RenameMethodTest extends JavaProjectSWTBotTestHelper
 	protected void renameMethodAndWaitUntilFinished()
 	{
 		bot.textWithLabel(RefactoringUIMessages.RenameResourceWizard_name_field_label).setText("getNumberOne");
-		SWTBotShell renameDialog = bot.activeShell();
+		final SWTBotShell renameDialog = bot.activeShell();
 		bot.button(IDialogConstants.OK_LABEL).click();
 		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(renameDialog), 20000);
 	}

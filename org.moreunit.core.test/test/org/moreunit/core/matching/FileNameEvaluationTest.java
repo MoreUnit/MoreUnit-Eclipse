@@ -19,7 +19,7 @@ public class FileNameEvaluationTest
     public void should_return_all_corresponding_file_patterns__preferred_first() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), asList("other1", "other2"));
+        final FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), asList("other1", "other2"));
 
         // when
         assertEquals(eval.getAllCorrespondingFilePatterns(), asList("preferred1", "preferred2", "other1", "other2"));
@@ -29,7 +29,7 @@ public class FileNameEvaluationTest
     public void should_return_all_corresponding_file_patterns__preferred_patterns_only() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), NO_PATTERNS);
+        final FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1", "preferred2"), NO_PATTERNS);
 
         // when
         assertEquals(eval.getAllCorrespondingFilePatterns(), asList("preferred1", "preferred2"));
@@ -39,8 +39,8 @@ public class FileNameEvaluationTest
     public void should_return_is_test_file() throws Exception
     {
         // given
-        FileNameEvaluation eval1 = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1"), NO_PATTERNS);
-        FileNameEvaluation eval2 = new FileNameEvaluation("Irrelevant", true, "preferred1", asList("preferred1"), NO_PATTERNS);
+        final FileNameEvaluation eval1 = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1"), NO_PATTERNS);
+        final FileNameEvaluation eval2 = new FileNameEvaluation("Irrelevant", true, "preferred1", asList("preferred1"), NO_PATTERNS);
 
         // then
         assertFalse(eval1.isTestFile());
@@ -51,7 +51,7 @@ public class FileNameEvaluationTest
     public void should_return_to_string() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1"), NO_PATTERNS);
+        final FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "preferred1", asList("preferred1"), NO_PATTERNS);
 
         // then
         assertTrue(eval.toString().contains("FileNameEvaluation("));
@@ -61,7 +61,7 @@ public class FileNameEvaluationTest
     public void should_convert_regex_to_eclipse_search_pattern() throws Exception
     {
         // given
-        FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "PreFileSuf", asList("\\QPre\\E.*\\QFile\\E.*\\QSuf\\E"), asList("\\QPre\\E.*\\QFile\\E", "\\QFile\\E.*\\QSuf\\E"));
+        final FileNameEvaluation eval = new FileNameEvaluation("Irrelevant", false, "PreFileSuf", asList("\\QPre\\E.*\\QFile\\E.*\\QSuf\\E"), asList("\\QPre\\E.*\\QFile\\E", "\\QFile\\E.*\\QSuf\\E"));
 
         // then
         assertEquals(Arrays.asList("Pre*File*Suf", "Pre*File", "File*Suf"), eval.getAllCorrespondingFileEclipsePatterns());

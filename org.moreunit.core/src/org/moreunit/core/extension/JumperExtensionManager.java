@@ -21,9 +21,9 @@ public class JumperExtensionManager
 
     public JumpResult jump(final IJumpContext context)
     {
-        for (IJumper jumper : languageExtensionMgr.getJumpersFor(context.getSelectedFile().getFileExtension()))
+        for (final IJumper jumper : languageExtensionMgr.getJumpersFor(context.getSelectedFile().getFileExtension()))
         {
-            JumpResult result = safeRunner.applyTo(jumper, new GenericRunnable<IJumper, JumpResult>()
+            final JumpResult result = safeRunner.applyTo(jumper, new GenericRunnable<IJumper, JumpResult>()
             {
                 @Override
                 public void handleException(Throwable t, IJumper j)

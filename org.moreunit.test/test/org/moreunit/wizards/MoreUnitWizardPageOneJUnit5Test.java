@@ -45,7 +45,7 @@ public class MoreUnitWizardPageOneJUnit5Test extends SwtPageTestCase
         assertFalse(page.isJUnit4());
         assertEquals(TestType.JUNIT_5, page.getTestType());
 
-        Button unit5Toggle = (Button) getField(page, "unit5Toggle");
+        final Button unit5Toggle = (Button) getField(page, "unit5Toggle");
         assertTrue(unit5Toggle.getSelection());
         assertEquals(0, page.getModifiers() & Flags.AccPublic);
     }

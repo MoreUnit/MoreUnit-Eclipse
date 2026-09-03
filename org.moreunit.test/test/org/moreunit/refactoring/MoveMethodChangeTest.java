@@ -25,14 +25,14 @@ public class MoveMethodChangeTest
     @Test
     public void getName_should_describe_the_move()
     {
-        IType sourceType = mock(IType.class);
-        IType destinationType = mock(IType.class);
-        IMethod methodToMove = mock(IMethod.class);
+        final IType sourceType = mock(IType.class);
+        final IType destinationType = mock(IType.class);
+        final IMethod methodToMove = mock(IMethod.class);
         when(sourceType.getElementName()).thenReturn("FooTest");
         when(destinationType.getElementName()).thenReturn("BarTest");
         when(methodToMove.getElementName()).thenReturn("testFoo");
 
-        MoveMethodChange change = new MoveMethodChange(sourceType, destinationType, methodToMove);
+        final MoveMethodChange change = new MoveMethodChange(sourceType, destinationType, methodToMove);
 
         assertEquals("Move method testFoo from FooTest to BarTest", change.getName());
     }
@@ -40,11 +40,11 @@ public class MoveMethodChangeTest
     @Test
     public void getModifiedElement_should_return_the_moved_method()
     {
-        IType sourceType = mock(IType.class);
-        IType destinationType = mock(IType.class);
-        IMethod methodToMove = mock(IMethod.class);
+        final IType sourceType = mock(IType.class);
+        final IType destinationType = mock(IType.class);
+        final IMethod methodToMove = mock(IMethod.class);
 
-        MoveMethodChange change = new MoveMethodChange(sourceType, destinationType, methodToMove);
+        final MoveMethodChange change = new MoveMethodChange(sourceType, destinationType, methodToMove);
 
         assertEquals(methodToMove, change.getModifiedElement());
     }
@@ -52,11 +52,11 @@ public class MoveMethodChangeTest
     @Test
     public void isValid_should_return_ok_status() throws Exception
     {
-        IType sourceType = mock(IType.class);
-        IType destinationType = mock(IType.class);
-        IMethod methodToMove = mock(IMethod.class);
+        final IType sourceType = mock(IType.class);
+        final IType destinationType = mock(IType.class);
+        final IMethod methodToMove = mock(IMethod.class);
 
-        RefactoringStatus status = new MoveMethodChange(sourceType, destinationType, methodToMove).isValid(monitor);
+        final RefactoringStatus status = new MoveMethodChange(sourceType, destinationType, methodToMove).isValid(monitor);
 
         assertNotNull(status);
         assertTrue(status.isOK());
@@ -65,15 +65,15 @@ public class MoveMethodChangeTest
     @Test
     public void perform_should_move_method_and_return_undo_change_with_swapped_types() throws Exception
     {
-        IType sourceType = mock(IType.class);
-        IType destinationType = mock(IType.class);
-        IMethod methodToMove = mock(IMethod.class);
+        final IType sourceType = mock(IType.class);
+        final IType destinationType = mock(IType.class);
+        final IMethod methodToMove = mock(IMethod.class);
         when(sourceType.getElementName()).thenReturn("FooTest");
         when(destinationType.getElementName()).thenReturn("BarTest");
         when(methodToMove.getElementName()).thenReturn("testFoo");
 
-        MoveMethodChange change = new MoveMethodChange(sourceType, destinationType, methodToMove);
-        Change undo = change.perform(monitor);
+        final MoveMethodChange change = new MoveMethodChange(sourceType, destinationType, methodToMove);
+        final Change undo = change.perform(monitor);
 
         verify(methodToMove).move(eq(destinationType), isNull(), isNull(), eq(false), isNull());
         assertNotNull(undo);

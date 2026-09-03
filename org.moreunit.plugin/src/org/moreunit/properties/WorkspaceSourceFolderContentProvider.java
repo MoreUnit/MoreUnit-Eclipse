@@ -21,11 +21,11 @@ import org.moreunit.log.LogHandler;
 public class WorkspaceSourceFolderContentProvider implements ITreeContentProvider
 {
 
-    private List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences = new ArrayList<>();
+    private final List<IPackageFragmentRoot> selectedUnitSourceFolderFromPreferences = new ArrayList<>();
 
     public WorkspaceSourceFolderContentProvider(List<SourceFolderMapping> selectedUnitSourceFolderFromPreferences)
     {
-        for (SourceFolderMapping mapping : selectedUnitSourceFolderFromPreferences)
+        for (final SourceFolderMapping mapping : selectedUnitSourceFolderFromPreferences)
         {
             this.selectedUnitSourceFolderFromPreferences.add(mapping.getTestFolder());
         }
@@ -54,7 +54,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
     @Override
     public Object[] getChildren(Object parentElement)
     {
-        if(parentElement instanceof IJavaProject project)
+        if(parentElement instanceof final IJavaProject project)
             return getRelevantSourceFolderForProject(project).toArray();
 
         return new Object[0];
@@ -63,7 +63,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
     @Override
     public Object getParent(Object element)
     {
-        if(element instanceof IPackageFragmentRoot root)
+        if(element instanceof final IPackageFragmentRoot root)
             return root.getJavaProject();
 
         return null;
@@ -72,7 +72,7 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
     @Override
     public boolean hasChildren(Object element)
     {
-        if(element instanceof IJavaProject project)
+        if(element instanceof final IJavaProject project)
             return ! getRelevantSourceFolderForProject(project).isEmpty();
 
         return false;
@@ -84,21 +84,21 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
      */
     private List<IJavaProject> getRelevantJavaProjectsInWorkspace()
     {
-        List<IJavaProject> allJavaProjectsInWorkspace = new ArrayList<>();
+        final List<IJavaProject> allJavaProjectsInWorkspace = new ArrayList<>();
 
-        IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-        for (IProject aProject : projects)
+        final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        for (final IProject aProject : projects)
         {
             try
             {
                 if(aProject.isAccessible() && aProject.hasNature(JavaCore.NATURE_ID))
                 {
-                    IJavaProject javaProject = JavaCore.create(aProject);
+                    final IJavaProject javaProject = JavaCore.create(aProject);
                     if(hasChildren(javaProject))
                         allJavaProjectsInWorkspace.add(JavaCore.create(aProject));
                 }
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 LogHandler.getInstance().handleExceptionLog(e);
             }
@@ -114,20 +114,20 @@ public class WorkspaceSourceFolderContentProvider implements ITreeContentProvide
      */
     private List<IPackageFragmentRoot> getRelevantSourceFolderForProject(IJavaProject javaProject)
     {
-        List<IPackageFragmentRoot> resultList = new ArrayList<>();
+        final List<IPackageFragmentRoot> resultList = new ArrayList<>();
 
         if(javaProject == null)
             return resultList;
 
         try
         {
-            for (IPackageFragmentRoot fragmentRoot : javaProject.getPackageFragmentRoots())
+            for (final IPackageFragmentRoot fragmentRoot : javaProject.getPackageFragmentRoots())
             {
                 if(! fragmentRoot.isArchive() && ! selectedUnitSourceFolderFromPreferences.contains(fragmentRoot))
                     resultList.add(fragmentRoot);
             }
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }

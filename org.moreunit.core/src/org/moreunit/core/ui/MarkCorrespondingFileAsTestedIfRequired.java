@@ -36,13 +36,13 @@ public class MarkCorrespondingFileAsTestedIfRequired implements FileCreationList
 
         try
         {
-            MatchingFile matchingFile = maybeTestFile.findUniqueMatch();
+            final MatchingFile matchingFile = maybeTestFile.findUniqueMatch();
             if(matchingFile.isFound())
             {
                 decorator.refreshIndicatorFor(matchingFile.get());
             }
         }
-        catch (DoesNotMatchConfigurationException e)
+        catch (final DoesNotMatchConfigurationException e)
         {
             $().getLogger().warn("Could not find corresponding source file", e);
         }

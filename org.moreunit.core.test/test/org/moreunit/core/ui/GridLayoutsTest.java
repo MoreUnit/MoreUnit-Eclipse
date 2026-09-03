@@ -11,7 +11,7 @@ public class GridLayoutsTest
     @Test
     public void should_create_layout_without_margins()
     {
-        GridLayout layout = GridLayouts.noMargin();
+        final GridLayout layout = GridLayouts.noMargin();
 
         assertEquals(0, layout.marginHeight);
         assertEquals(0, layout.marginWidth);
@@ -21,7 +21,7 @@ public class GridLayoutsTest
     @Test
     public void should_create_layout_with_one_column_by_default()
     {
-        GridLayout layout = GridLayouts.noMargin();
+        final GridLayout layout = GridLayouts.noMargin();
 
         assertEquals(1, layout.numColumns);
     }

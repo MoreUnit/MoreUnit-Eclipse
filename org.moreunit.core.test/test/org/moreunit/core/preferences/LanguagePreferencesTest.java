@@ -14,9 +14,9 @@ public class LanguagePreferencesTest
     public void should_cache_test_file_name_patterns_and_share_them_between_instances() throws Exception
     {
         // given
-        LanguagePreferences prefs = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
-        LanguagePreferences otherPrefsWithSamePattern = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
-        LanguagePreferences otherPrefsWithDifferentPattern = preferencesWithTestFileNameTemplateAndSeparator("test-${srcFile}", "-");
+        final LanguagePreferences prefs = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
+        final LanguagePreferences otherPrefsWithSamePattern = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
+        final LanguagePreferences otherPrefsWithDifferentPattern = preferencesWithTestFileNameTemplateAndSeparator("test-${srcFile}", "-");
 
         // then
         assertSame(prefs.getTestFileNamePattern(), otherPrefsWithSamePattern.getTestFileNamePattern());
@@ -27,10 +27,10 @@ public class LanguagePreferencesTest
     public void should_clear_cache_on_preference_change() throws Exception
     {
         // given
-        LanguagePreferences prefs = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
-        LanguagePreferences otherPrefsWithSamePattern = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
+        final LanguagePreferences prefs = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
+        final LanguagePreferences otherPrefsWithSamePattern = preferencesWithTestFileNameTemplateAndSeparator("${srcFile}_test", "_");
 
-        TestFileNamePattern patternBeforeChange = prefs.getTestFileNamePattern();
+        final TestFileNamePattern patternBeforeChange = prefs.getTestFileNamePattern();
 
         // when
         prefs.setValue("foo", "bar");

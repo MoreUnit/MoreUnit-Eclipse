@@ -12,7 +12,7 @@ public class ActionsSelectionGuardTest
     @Test
     public void run_test_from_type_should_throw_when_selection_not_structured()
     {
-        RunTestFromTypeAction action = new RunTestFromTypeAction();
+        final RunTestFromTypeAction action = new RunTestFromTypeAction();
         assertThrows(ClassCastException.class, () ->
             action.selectionChanged(mock(IAction.class), mock(ISelection.class)));
     }
@@ -20,7 +20,7 @@ public class ActionsSelectionGuardTest
     @Test
     public void debug_test_from_type_should_throw_when_selection_not_structured()
     {
-        DebugTestFromTypeAction action = new DebugTestFromTypeAction();
+        final DebugTestFromTypeAction action = new DebugTestFromTypeAction();
         assertThrows(ClassCastException.class, () ->
             action.selectionChanged(mock(IAction.class), mock(ISelection.class)));
     }
@@ -28,7 +28,7 @@ public class ActionsSelectionGuardTest
     @Test
     public void run_test_from_compilation_unit_should_throw_when_selection_not_structured()
     {
-        RunTestFromCompilationUnitAction action = new RunTestFromCompilationUnitAction();
+        final RunTestFromCompilationUnitAction action = new RunTestFromCompilationUnitAction();
         assertThrows(ClassCastException.class, () ->
             action.selectionChanged(mock(IAction.class), mock(ISelection.class)));
     }
@@ -36,7 +36,7 @@ public class ActionsSelectionGuardTest
     @Test
     public void jump_from_type_should_throw_when_selection_not_structured()
     {
-        JumpFromTypeAction action = new JumpFromTypeAction();
+        final JumpFromTypeAction action = new JumpFromTypeAction();
         assertThrows(ClassCastException.class, () ->
             action.selectionChanged(mock(IAction.class), mock(ISelection.class)));
     }
@@ -44,7 +44,7 @@ public class ActionsSelectionGuardTest
     @Test
     public void jump_from_compilation_unit_should_throw_when_selection_not_structured()
     {
-        JumpFromCompilationUnitAction action = new JumpFromCompilationUnitAction();
+        final JumpFromCompilationUnitAction action = new JumpFromCompilationUnitAction();
         assertThrows(ClassCastException.class, () ->
             action.selectionChanged(mock(IAction.class), mock(ISelection.class)));
     }

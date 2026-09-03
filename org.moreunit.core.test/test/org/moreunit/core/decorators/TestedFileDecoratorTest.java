@@ -26,7 +26,7 @@ public class TestedFileDecoratorTest
     @BeforeEach
     public void prepareImageRegistry() throws Exception
     {
-        ImageDescriptor imageDescriptor = mock(ImageDescriptor.class);
+        final ImageDescriptor imageDescriptor = mock(ImageDescriptor.class);
         when(imageRegistry.getTestedFileIndicator()).thenReturn(imageDescriptor);
     }
 

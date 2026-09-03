@@ -64,7 +64,7 @@ public class Category implements Comparable<Category>
         {
             return false;
         }
-        Category other = (Category) obj;
+        final Category other = (Category) obj;
         if(id == null)
         {
             if(other.id != null)

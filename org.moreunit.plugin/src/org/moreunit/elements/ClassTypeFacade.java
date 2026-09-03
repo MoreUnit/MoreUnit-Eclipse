@@ -51,7 +51,7 @@ public class ClassTypeFacade extends TypeFacade
      */
     public CorrespondingTestCase getOneCorrespondingTestCase(boolean createIfNecessary, String promptText)
     {
-        Collection<IType> testcases = getCorrespondingTestCases();
+        final Collection<IType> testcases = getCorrespondingTestCases();
 
         if(testcases.size() == 1)
         {
@@ -59,15 +59,15 @@ public class ClassTypeFacade extends TypeFacade
         }
         else if(testcases.size() > 1)
         {
-            CreateNewTestCaseAction newTestCaseAction = new CreateNewTestCaseAction(getType());
-            MemberContentProvider contentProvider = new MemberContentProvider(testcases, null).withAction(newTestCaseAction);
+            final CreateNewTestCaseAction newTestCaseAction = new CreateNewTestCaseAction(getType());
+            final MemberContentProvider contentProvider = new MemberContentProvider(testcases, null).withAction(newTestCaseAction);
 
-            IType testCase = Display.getDefault().syncCall(() -> new ChooseDialog<IType>(promptText, contentProvider).getChoice());
+            final IType testCase = Display.getDefault().syncCall(() -> new ChooseDialog<IType>(promptText, contentProvider).getChoice());
             return new CorrespondingTestCase(testCase, newTestCaseAction.testCaseCreated);
         }
         else if(createIfNecessary)
         {
-            IType testcaseToJump = Display.getDefault().syncCall(() -> new NewTestCaseWizard(getType()).open());
+            final IType testcaseToJump = Display.getDefault().syncCall(() -> new NewTestCaseWizard(getType()).open());
             return new CorrespondingTestCase(testcaseToJump, testcaseToJump != null);
         }
 
@@ -81,21 +81,21 @@ public class ClassTypeFacade extends TypeFacade
 
     public IMethod getCorrespondingTestMethod(IMethod method, IType testCaseType)
     {
-        List<IMethod> testMethods = getTestMethodsForTestCase(method, testCaseType);
+        final List<IMethod> testMethods = getTestMethodsForTestCase(method, testCaseType);
         return testMethods.isEmpty() ? null : testMethods.getFirst();
     }
 
     public List<IMethod> getCorrespondingTestMethodsByName(IMethod method)
     {
-        Collection<IType> allTestCases = getCorrespondingTestCases();
+        final Collection<IType> allTestCases = getCorrespondingTestCases();
         return getTestMethodsForTestCases(method, allTestCases);
     }
 
     private List<IMethod> getTestMethodsForTestCases(IMethod method, Collection<IType> testCases)
     {
-        List<IMethod> result = new ArrayList<>();
+        final List<IMethod> result = new ArrayList<>();
 
-        for (IType testCaseType : testCases)
+        for (final IType testCaseType : testCases)
         {
             result.addAll(getTestMethodsForTestCase(method, testCaseType));
         }
@@ -105,19 +105,19 @@ public class ClassTypeFacade extends TypeFacade
 
     private List<IMethod> getTestMethodsForTestCase(IMethod method, IType testCaseType)
     {
-        List<IMethod> result = new ArrayList<>();
+        final List<IMethod> result = new ArrayList<>();
 
         if(testCaseType == null)
         {
             return result;
         }
 
-        String nameOfCorrespondingTestMethod = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
+        final String nameOfCorrespondingTestMethod = testMethodDiviner.getTestMethodNameFromMethodName(method.getElementName());
 
         try
         {
-            IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
-            for (IMethod testmethod : methodsOfType)
+            final IMethod[] methodsOfType = testCaseType.getCompilationUnit().findPrimaryType().getMethods();
+            for (final IMethod testmethod : methodsOfType)
             {
                 if(testmethod.getElementName().startsWith(nameOfCorrespondingTestMethod))
                 {
@@ -125,7 +125,7 @@ public class ClassTypeFacade extends TypeFacade
                 }
             }
         }
-        catch (JavaModelException exc)
+        catch (final JavaModelException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
@@ -138,7 +138,7 @@ public class ClassTypeFacade extends TypeFacade
         final Set<IMethod> correspondingTestMethods = new HashSet<>();
         if(searchMethod.searchByCall)
         {
-            Collection<IType> correspondingClasses = getCorrespondingTestCases();
+            final Collection<IType> correspondingClasses = getCorrespondingTestCases();
             if(! correspondingClasses.isEmpty())
             {
                 correspondingTestMethods.addAll(getCallRelationshipFinder(method, correspondingClasses).getMatches(new NullProgressMonitor()));
@@ -193,7 +193,7 @@ public class ClassTypeFacade extends TypeFacade
         @Override
         public IType execute()
         {
-            IType newTestCase = new NewTestCaseWizard(type).open();
+            final IType newTestCase = new NewTestCaseWizard(type).open();
             testCaseCreated = newTestCase != null;
             return newTestCase;
         }

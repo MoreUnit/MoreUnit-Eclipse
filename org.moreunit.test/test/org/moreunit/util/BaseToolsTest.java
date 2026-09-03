@@ -17,8 +17,8 @@ public class BaseToolsTest
     @Test
     public void getTestedClass_should_return_empty_list_when_called_without_prefix()
     {
-        String className = "Eins";
-        String[] prefixes = { "Test" };
+        final String className = "Eins";
+        final String[] prefixes = { "Test" };
         assertTrue(BaseTools.getTestedClass(className, prefixes, new String[0], null, null).isEmpty());
     }
 
@@ -38,28 +38,28 @@ public class BaseToolsTest
     @Test
     public void getTestedClass_should_return_empty_list_when_called_with_null_as_classname()
     {
-        String className = null;
+        final String className = null;
         assertTrue(BaseTools.getTestedClass(className, new String[0], new String[0], null, null).isEmpty());
     }
 
     @Test
     public void getTestedClass_should_return_empty_list_when_called_with_empty_prefix_and_suffix_lists()
     {
-        String className = "ABC";
+        final String className = "ABC";
         assertTrue(BaseTools.getTestedClass(className, new String[0], new String[0], null, null).isEmpty());
     }
 
     @Test
     public void getTestedClass_should_return_empty_list_when_called_with_null_as_prefix_and_suffix_lists()
     {
-        String className = "ABC";
+        final String className = "ABC";
         assertTrue(BaseTools.getTestedClass(className, null, null, null, null).isEmpty());
     }
 
     @Test
     public void getTestedClass_should_handle_more_than_one_suffix()
     {
-        String[] suffixes = { "SystemTest", "Test" };
+        final String[] suffixes = { "SystemTest", "Test" };
         String className = "EinsTest";
         assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, null));
         className = "EinsSystemTest";
@@ -70,8 +70,8 @@ public class BaseToolsTest
     public void getTestedClass_should_handle_package_prefix()
     {
         String className = "test.EinsTest";
-        String[] suffixes = { "Test" };
-        String packagePrefix = "test";
+        final String[] suffixes = { "Test" };
+        final String packagePrefix = "test";
         assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, packagePrefix, null));
 
         className = "EinsTest";
@@ -88,8 +88,8 @@ public class BaseToolsTest
     public void getTestedClass_should_handle_package_suffix() throws Exception
     {
         String className = "test.EinsTest";
-        String[] suffixes = { "Test" };
-        String packageSuffix = "test";
+        final String[] suffixes = { "Test" };
+        final String packageSuffix = "test";
         assertEquals(Arrays.asList("Eins"), BaseTools.getTestedClass(className, new String[0], suffixes, null, packageSuffix));
 
         className = "EinsTest";
@@ -132,10 +132,10 @@ public class BaseToolsTest
     @Test
     public void getListOfUnqualifiedTypeNames_should_return_list_sorted_by_raw_length() throws Exception
     {
-        ArrayList<String> testedClasses = new ArrayList<>();
+        final ArrayList<String> testedClasses = new ArrayList<>();
         testedClasses.add("EinsZweiDrei");
         testedClasses.add("OneTwoThree");
-        List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
+        final List<String> result = BaseTools.getListOfUnqualifiedTypeNames(testedClasses);
         assertEquals(result.get(0), "EinsZweiDrei");
         assertEquals(result.get(1), "OneTwoThree");
         assertEquals(result.get(5), "One");
@@ -143,37 +143,37 @@ public class BaseToolsTest
 
     @Test
     public void getFirstMethodWithSameNamePrefix_should_return_null_when_methodName_is_null() {
-        org.eclipse.jdt.core.IMethod[] methods = new org.eclipse.jdt.core.IMethod[0];
+        final org.eclipse.jdt.core.IMethod[] methods = new org.eclipse.jdt.core.IMethod[0];
         assertNull(BaseTools.getFirstMethodWithSameNamePrefix(methods, null));
     }
 
     @Test
     public void getFirstMethodWithSameNamePrefix_should_return_null_when_no_method_matches() {
-        org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
+        final org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
         org.mockito.Mockito.when(method1.getElementName()).thenReturn("foo");
         org.mockito.Mockito.when(method1.exists()).thenReturn(true);
 
-        org.eclipse.jdt.core.IMethod[] methods = { method1 };
+        final org.eclipse.jdt.core.IMethod[] methods = { method1 };
         assertNull(BaseTools.getFirstMethodWithSameNamePrefix(methods, "bar"));
     }
 
     @Test
     public void getFirstMethodWithSameNamePrefix_should_return_matching_method() {
-        org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
+        final org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
         org.mockito.Mockito.when(method1.getElementName()).thenReturn("foo");
         org.mockito.Mockito.when(method1.exists()).thenReturn(true);
 
-        org.eclipse.jdt.core.IMethod[] methods = { method1 };
+        final org.eclipse.jdt.core.IMethod[] methods = { method1 };
         assertEquals(method1, BaseTools.getFirstMethodWithSameNamePrefix(methods, "fooBar"));
     }
 
     @Test
     public void getFirstMethodWithSameNamePrefix_should_not_return_method_that_does_not_exist() {
-        org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
+        final org.eclipse.jdt.core.IMethod method1 = org.mockito.Mockito.mock(org.eclipse.jdt.core.IMethod.class);
         org.mockito.Mockito.when(method1.getElementName()).thenReturn("foo");
         org.mockito.Mockito.when(method1.exists()).thenReturn(false);
 
-        org.eclipse.jdt.core.IMethod[] methods = { method1 };
+        final org.eclipse.jdt.core.IMethod[] methods = { method1 };
         assertNull(BaseTools.getFirstMethodWithSameNamePrefix(methods, "fooBar"));
     }
 }

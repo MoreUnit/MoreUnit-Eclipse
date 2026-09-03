@@ -6,8 +6,8 @@ import org.moreunit.preferences.Preferences;
 
 public class TestMethodDivinerFactory
 {
-    private ICompilationUnit compilationUnit;
-    private Preferences preferences;
+    private final ICompilationUnit compilationUnit;
+    private final Preferences preferences;
 
     public TestMethodDivinerFactory(ICompilationUnit compilationUnit)
     {
@@ -17,7 +17,7 @@ public class TestMethodDivinerFactory
 
     public TestMethodDiviner create()
     {
-        String methodType = preferences.getTestMethodType(compilationUnit.getJavaProject());
+        final String methodType = preferences.getTestMethodType(compilationUnit.getJavaProject());
         // LogHandler.getInstance().handleInfoLog(
         // "TestMethodDivinerFactory.create() - " +methodType);
         if(methodType.equals(PreferenceConstants.TEST_METHOD_TYPE_NO_PREFIX))

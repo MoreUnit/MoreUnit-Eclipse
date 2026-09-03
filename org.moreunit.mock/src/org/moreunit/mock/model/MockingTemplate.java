@@ -104,7 +104,7 @@ public class MockingTemplate implements Comparable<MockingTemplate>
         {
             return false;
         }
-        MockingTemplate other = (MockingTemplate) obj;
+        final MockingTemplate other = (MockingTemplate) obj;
         if(id == null)
         {
             if(other.id != null)

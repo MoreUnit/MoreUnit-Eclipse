@@ -40,19 +40,19 @@ public class EclipseTemplateContext
 
     public void evaluate(EclipseTemplate eclipseTemplate) throws MockingTemplateException, JavaModelException, BadLocationException, TemplateException
     {
-        IDocument document = new Document(compilationUnit.getSource());
-        int insertionOffset = eclipseTemplate.getInsertionOffset(globalContext);
+        final IDocument document = new Document(compilationUnit.getSource());
+        final int insertionOffset = eclipseTemplate.getInsertionOffset(globalContext);
 
-        CustomJavaContext localContext = new CustomJavaContext(document, insertionOffset, compilationUnit);
+        final CustomJavaContext localContext = new CustomJavaContext(document, insertionOffset, compilationUnit);
 
-        Template template = eclipseTemplate.template();
+        final Template template = eclipseTemplate.template();
         if(! localContext.canEvaluate(template))
         {
             throw new MockingTemplateException("Cannot evaluate template: " + template.getPattern(), false);
         }
 
         // this may already modify the compilation unit (e.g. add imports)
-        TemplateBuffer templateBuffer = localContext.evaluate(template);
+        final TemplateBuffer templateBuffer = localContext.evaluate(template);
 
         // takes such modifications into account
         reconcile(compilationUnit);
@@ -71,8 +71,8 @@ public class EclipseTemplateContext
 
     private void updateSource(TemplateBuffer templateBuffer, EclipseTemplate eclipseTemplate) throws JavaModelException, MockingTemplateException, BadLocationException
     {
-        IDocument document = new Document(compilationUnit.getSource());
-        int insertionOffset = eclipseTemplate.getInsertionOffset(globalContext);
+        final IDocument document = new Document(compilationUnit.getSource());
+        final int insertionOffset = eclipseTemplate.getInsertionOffset(globalContext);
 
         document.replace(insertionOffset, 0, templateBuffer.getString());
 

@@ -11,7 +11,7 @@ public class LayoutDataTest
     @Test
     public void should_create_labelled_field_data_with_indent()
     {
-        GridData gd = LayoutData.labelledField();
+        final GridData gd = LayoutData.labelledField();
 
         assertEquals(GridData.FILL, gd.horizontalAlignment);
         assertTrue(gd.grabExcessHorizontalSpace);
@@ -21,7 +21,7 @@ public class LayoutDataTest
     @Test
     public void should_create_col_span_data()
     {
-        GridData gd = LayoutData.colSpan(3);
+        final GridData gd = LayoutData.colSpan(3);
 
         assertEquals(GridData.FILL, gd.horizontalAlignment);
         assertTrue(gd.grabExcessHorizontalSpace);
@@ -31,7 +31,7 @@ public class LayoutDataTest
     @Test
     public void should_create_fill_grid_data()
     {
-        GridData gd = LayoutData.fillGrid();
+        final GridData gd = LayoutData.fillGrid();
 
         assertEquals(GridData.FILL, gd.horizontalAlignment);
         assertEquals(GridData.FILL, gd.verticalAlignment);
@@ -42,7 +42,7 @@ public class LayoutDataTest
     @Test
     public void should_create_fill_row_data_spanning_all_columns()
     {
-        GridData gd = LayoutData.fillRow();
+        final GridData gd = LayoutData.fillRow();
 
         assertEquals(GridData.FILL, gd.horizontalAlignment);
         assertTrue(gd.grabExcessHorizontalSpace);

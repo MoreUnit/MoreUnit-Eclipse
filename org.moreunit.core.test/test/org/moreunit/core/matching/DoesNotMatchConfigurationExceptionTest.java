@@ -12,10 +12,10 @@ public class DoesNotMatchConfigurationExceptionTest
     public void should_store_path_in_exception()
     {
         // given
-        Path mockPath = mock(Path.class);
+        final Path mockPath = mock(Path.class);
 
         // when
-        DoesNotMatchConfigurationException exception = new DoesNotMatchConfigurationException(mockPath);
+        final DoesNotMatchConfigurationException exception = new DoesNotMatchConfigurationException(mockPath);
 
         // then
         assertEquals(mockPath, exception.getPath());

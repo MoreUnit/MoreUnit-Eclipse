@@ -15,10 +15,10 @@ public class UnmarshallingTest
     {
         try
         {
-            JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
+            final JAXBContext jc = JAXBContext.newInstance(MockingTemplates.class);
             unmarshaller = jc.createUnmarshaller();
         }
-        catch (JAXBException e)
+        catch (final JAXBException e)
         {
             throw new RuntimeException("Could not create unmarshaller", e);
         }
@@ -28,7 +28,7 @@ public class UnmarshallingTest
     public void should_handle_missing_mocking_templates() throws Exception
     {
         // given
-        MockingTemplates templates = (MockingTemplates) unmarshaller.unmarshal(getClass().getResource("no_mocking_template.xml"));
+        final MockingTemplates templates = (MockingTemplates) unmarshaller.unmarshal(getClass().getResource("no_mocking_template.xml"));
         // when
         templates.iterator();
         // then no NPE is thrown
@@ -38,7 +38,7 @@ public class UnmarshallingTest
     public void should_handle_missing_categories() throws Exception
     {
         // given
-        MockingTemplates templates = (MockingTemplates) unmarshaller.unmarshal(getClass().getResource("no_category.xml"));
+        final MockingTemplates templates = (MockingTemplates) unmarshaller.unmarshal(getClass().getResource("no_category.xml"));
         // then
         assertNotNull(templates.categories());
     }

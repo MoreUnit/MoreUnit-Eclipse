@@ -35,8 +35,8 @@ public class ModuleTest
     @Test
     public void start_should_prepare_and_start_registered_services()
     {
-        Service service1 = mock(Service.class);
-        Service service2 = mock(Service.class);
+        final Service service1 = mock(Service.class);
+        final Service service2 = mock(Service.class);
 
         module.addService(service1);
         module.addService(service2);
@@ -46,7 +46,7 @@ public class ModuleTest
         assertTrue(module.prepareCalled);
         assertEquals(module.getContext(), context);
 
-        InOrder inOrder = inOrder(service1, service2);
+        final InOrder inOrder = inOrder(service1, service2);
         inOrder.verify(service1).start();
         inOrder.verify(service2).start();
     }
@@ -54,8 +54,8 @@ public class ModuleTest
     @Test
     public void stop_should_stop_services_in_reverse_order_and_clean()
     {
-        Service service1 = mock(Service.class);
-        Service service2 = mock(Service.class);
+        final Service service1 = mock(Service.class);
+        final Service service2 = mock(Service.class);
 
         module.addService(service1);
         module.addService(service2);
@@ -66,7 +66,7 @@ public class ModuleTest
         assertTrue(module.cleanCalled);
         assertNull(module.getContext());
 
-        InOrder inOrder = inOrder(service1, service2);
+        final InOrder inOrder = inOrder(service1, service2);
         inOrder.verify(service2).stop();
         inOrder.verify(service1).stop();
     }
@@ -74,10 +74,10 @@ public class ModuleTest
     @Test
     public void start_should_log_exceptions_and_continue_when_service_fails_to_start()
     {
-        Service service1 = mock(Service.class);
-        Service service2 = mock(Service.class);
+        final Service service1 = mock(Service.class);
+        final Service service2 = mock(Service.class);
 
-        RuntimeException exception = new RuntimeException("start failed");
+        final RuntimeException exception = new RuntimeException("start failed");
         doThrow(exception).when(service1).start();
 
         module.addService(service1);
@@ -92,10 +92,10 @@ public class ModuleTest
     @Test
     public void stop_should_log_exceptions_and_continue_when_service_fails_to_stop()
     {
-        Service service1 = mock(Service.class);
-        Service service2 = mock(Service.class);
+        final Service service1 = mock(Service.class);
+        final Service service2 = mock(Service.class);
 
-        RuntimeException exception = new RuntimeException("stop failed");
+        final RuntimeException exception = new RuntimeException("stop failed");
         doThrow(exception).when(service2).stop();
 
         module.addService(service1);
@@ -111,11 +111,11 @@ public class ModuleTest
     @Test
     public void constructor_should_replace_existing_instance_and_transfer_context_when_override_is_true()
     {
-        Service service = mock(Service.class);
+        final Service service = mock(Service.class);
         module.addService(service);
         module.start(context);
 
-        TestModule newModule = new TestModule(true, logger);
+        final TestModule newModule = new TestModule(true, logger);
 
         assertTrue(module.cleanCalled);
         verify(service).stop();

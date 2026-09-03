@@ -17,11 +17,11 @@ public class SourceFolderMappingTest
     @Test
     public void three_arg_constructor_should_init_project_source_and_test_folders()
     {
-        IJavaProject project = mock(IJavaProject.class);
-        IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
-        IPackageFragmentRoot testFolder = mock(IPackageFragmentRoot.class);
+        final IJavaProject project = mock(IJavaProject.class);
+        final IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
+        final IPackageFragmentRoot testFolder = mock(IPackageFragmentRoot.class);
 
-        SourceFolderMapping mapping = new SourceFolderMapping(project, sourceFolder, testFolder);
+        final SourceFolderMapping mapping = new SourceFolderMapping(project, sourceFolder, testFolder);
 
         assertSame(project, mapping.getJavaProject());
         assertSame(testFolder, mapping.getTestFolder());
@@ -32,12 +32,12 @@ public class SourceFolderMappingTest
     @Test
     public void set_source_folder_list_should_replace_the_list()
     {
-        IJavaProject project = mock(IJavaProject.class);
-        IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
-        IPackageFragmentRoot testFolder = mock(IPackageFragmentRoot.class);
-        IPackageFragmentRoot otherSource = mock(IPackageFragmentRoot.class);
+        final IJavaProject project = mock(IJavaProject.class);
+        final IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
+        final IPackageFragmentRoot testFolder = mock(IPackageFragmentRoot.class);
+        final IPackageFragmentRoot otherSource = mock(IPackageFragmentRoot.class);
 
-        SourceFolderMapping mapping = new SourceFolderMapping(project, sourceFolder, testFolder);
+        final SourceFolderMapping mapping = new SourceFolderMapping(project, sourceFolder, testFolder);
         mapping.setSourceFolderList(List.of(otherSource));
 
         assertEquals(1, mapping.getSourceFolderList().size());
@@ -47,9 +47,9 @@ public class SourceFolderMappingTest
     @Test
     public void to_string_should_describe_source_to_test_mapping()
     {
-        IJavaProject project = mock(IJavaProject.class);
-        IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
-        IPackageFragmentRoot testFolder = mock(IPackageFragmentRoot.class);
+        final IJavaProject project = mock(IJavaProject.class);
+        final IPackageFragmentRoot sourceFolder = mock(IPackageFragmentRoot.class);
+        final IPackageFragmentRoot testFolder = mock(IPackageFragmentRoot.class);
 
         when(project.getElementName()).thenReturn("Proj");
         when(sourceFolder.getJavaProject()).thenReturn(project);
@@ -57,9 +57,9 @@ public class SourceFolderMappingTest
         when(testFolder.getJavaProject()).thenReturn(project);
         when(testFolder.getElementName()).thenReturn("test");
 
-        SourceFolderMapping mapping = new SourceFolderMapping(project, sourceFolder, testFolder);
+        final SourceFolderMapping mapping = new SourceFolderMapping(project, sourceFolder, testFolder);
 
-        String str = mapping.toString();
+        final String str = mapping.toString();
         assertTrue(str.contains("SourceFolderMapping"));
         assertTrue(str.contains("Proj:src => Proj:test"));
     }

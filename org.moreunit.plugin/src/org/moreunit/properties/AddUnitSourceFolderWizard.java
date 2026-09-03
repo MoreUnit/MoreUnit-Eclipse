@@ -17,11 +17,11 @@ public class AddUnitSourceFolderWizard extends Wizard
 {
 
     private AddUnitSourceFolderWizardPage page;
-    private IJavaProject javaProject;
+    private final IJavaProject javaProject;
 
     private List<IPackageFragmentRoot> selectedSourceFolder = new ArrayList<>();
 
-    private UnitSourceFolderBlock unitSourceFolderBlock;
+    private final UnitSourceFolderBlock unitSourceFolderBlock;
 
     public AddUnitSourceFolderWizard(IJavaProject javaProject, UnitSourceFolderBlock unitSourceFolderBlock)
     {
@@ -35,10 +35,10 @@ public class AddUnitSourceFolderWizard extends Wizard
     public boolean performFinish()
     {
         selectedSourceFolder = page.getSelectedSourceFolder();
-        List<SourceFolderMapping> mappingList = new ArrayList<>();
-        for (IPackageFragmentRoot sourceFolder : selectedSourceFolder)
+        final List<SourceFolderMapping> mappingList = new ArrayList<>();
+        for (final IPackageFragmentRoot sourceFolder : selectedSourceFolder)
         {
-            SourceFolderMapping mapping = new SourceFolderMapping(javaProject, sourceFolder);
+            final SourceFolderMapping mapping = new SourceFolderMapping(javaProject, sourceFolder);
             mappingList.add(mapping);
         }
         unitSourceFolderBlock.handlePerformFinishFromAddUnitSourceFolderWizard(mappingList);
@@ -54,7 +54,7 @@ public class AddUnitSourceFolderWizard extends Wizard
 
     public void open(Shell parentShell)
     {
-        WizardDialog dialog = new WizardDialog(parentShell, this);
+        final WizardDialog dialog = new WizardDialog(parentShell, this);
         dialog.open();
     }
 
