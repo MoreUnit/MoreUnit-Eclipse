@@ -2,6 +2,7 @@ package org.moreunit.refactoring;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -16,6 +17,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.junit.jupiter.api.Test;
 import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.util.TestMethodDiviner;
+import org.moreunit.util.TestMethodDivinerFactory;
 
 public class RenameDialogRunnableTest extends org.moreunit.test.context.ContextTestCase
 {
@@ -85,8 +87,12 @@ public class RenameDialogRunnableTest extends org.moreunit.test.context.ContextT
     @org.junit.jupiter.api.Test
     public void run_should_rename_test_methods_when_dialog_is_confirmed() throws Exception
     {
+        // name the test method through the same diviner the production code
+        // uses, so the lookup succeeds whatever naming convention is active
+        final TestMethodDiviner diviner = new TestMethodDivinerFactory(context.getCompilationUnit("org.SomeClass")).create();
+        final String testMethodName = diviner.getTestMethodNameFromMethodName("getNumberOne");
         final IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
-        context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void testGetNumberOne()", "");
+        context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void " + testMethodName + "()", "");
 
         final IWorkbenchPage page = org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         final org.eclipse.core.resources.IFile file = (org.eclipse.core.resources.IFile) context.getCompilationUnit("org.SomeClass").getResource();
@@ -101,9 +107,12 @@ public class RenameDialogRunnableTest extends org.moreunit.test.context.ContextT
             display.asyncExec(org.moreunit.test.support.DialogHelper.closerFor(display, knownShells, org.moreunit.test.support.DialogHelper::confirmOkButton, 2000));
 
             final ClassTypeFacade facade = new ClassTypeFacade(context.getCompilationUnit("org.SomeClass"));
+            assertFalse(facade.getCorrespondingTestCases().isEmpty(), "setup: test case should be found");
+            assertFalse(facade.getCorrespondingTestMethodsByName(method).isEmpty(), "setup: corresponding test method should be found");
             new RenameDialogRunnable(facade, method, "getNumberTwo").run();
 
-            assertEquals("testGetNumberTwo", context.getPrimaryTypeHandler("org.SomeClassTest").get().getMethods()[0].getElementName());
+            final String expectedRenamedTest = diviner.getTestMethodNameAfterRename("getNumberOne", "getNumberTwo", testMethodName);
+            assertEquals(expectedRenamedTest, context.getPrimaryTypeHandler("org.SomeClassTest").get().getMethods()[0].getElementName());
         }
         finally
         {

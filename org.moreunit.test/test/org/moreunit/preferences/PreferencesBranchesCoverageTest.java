@@ -85,7 +85,7 @@ public class PreferencesBranchesCoverageTest
         final IPreferenceStore storeWithoutDefaults = mock(IPreferenceStore.class);
         when(storeWithoutDefaults.contains(anyString())).thenReturn(false);
         when(storeWithoutDefaults.getInt(anyString())).thenReturn(999);
-        final Preferences barePrefs = new DummyPreferencesForTesting()
+        final Preferences barePrefs = new Preferences()
         {
             @Override
             public IPreferenceStore getWorkbenchStore()

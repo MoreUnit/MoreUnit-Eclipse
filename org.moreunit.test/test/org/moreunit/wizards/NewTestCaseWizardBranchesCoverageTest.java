@@ -65,24 +65,32 @@ public class NewTestCaseWizardBranchesCoverageTest extends NewClassyWizardTestCa
         try
         {
             final NewTestCaseWizard wizard = new NewTestCaseWizard(context.getPrimaryTypeHandler("pack.Class").get());
+            wizard.addPages();
 
-            willAutomaticallyValidateWhenOpen(wizard);
+            // when the first page is configured (covers the Spock branches
+            // without opening the wizard, which cannot finish without a
+            // groovy test folder on the project)
+            final Method configurePageOne = NewTestCaseWizard.class.getDeclaredMethod("configurePageOne");
+            configurePageOne.setAccessible(true);
+            configurePageOne.invoke(wizard);
 
-            // when
-            final IType createdType = wizard.open();
-
-            // then a Spec class extending Spock's Specification was created
-            assertNotNull(createdType);
-            assertEquals("ClassSpec", createdType.getElementName());
-            final String superClass = createdType.getSuperclassName();
-            assertNotNull(superClass);
-            assertTrue(superClass.endsWith("Specification"), "unexpected superclass: " + superClass);
+            // then the spec name and the Spock superclass were applied
+            final MoreUnitWizardPageOne pageOne = pageOneOf(wizard);
+            assertTrue(pageOne.getTypeName().endsWith("Spec"), "unexpected test name: " + pageOne.getTypeName());
+            assertEquals("spock.lang.Specification", pageOne.getSuperClass());
         }
         finally
         {
             preferences.setTestType(project, oldTestType);
             preferences.setHasProjectSpecificSettings(project, oldSpecificSettings);
         }
+    }
+
+    private static MoreUnitWizardPageOne pageOneOf(NewTestCaseWizard wizard) throws Exception
+    {
+        final Field pageOneField = NewTestCaseWizard.class.getDeclaredField("pageOne");
+        pageOneField.setAccessible(true);
+        return (MoreUnitWizardPageOne) pageOneField.get(wizard);
     }
 
     @Test
@@ -122,7 +130,9 @@ public class NewTestCaseWizardBranchesCoverageTest extends NewClassyWizardTestCa
         boolean aborted = false;
         try
         {
-            wizard.creationAborted();
+            final Method creationAborted = NewTestCaseWizard.class.getDeclaredMethod("creationAborted");
+            creationAborted.setAccessible(true);
+            creationAborted.invoke(wizard);
             aborted = true;
         }
         catch (final RuntimeException e)

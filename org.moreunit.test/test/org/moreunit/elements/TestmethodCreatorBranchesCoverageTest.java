@@ -297,8 +297,8 @@ public class TestmethodCreatorBranchesCoverageTest
             final LogHandler mockLog = mock(LogHandler.class);
             logs.when(LogHandler::getInstance).thenReturn(mockLog);
 
-            // when
-            final IMethod result = creator.findTestMethod("anything");
+            // when (protected method across bundles: call reflectively)
+            final IMethod result = (IMethod) callPrivate(creator, "findTestMethod", new Class< ? >[] { String.class }, new Object[] { "anything" });
 
             // then
             assertNull(result);

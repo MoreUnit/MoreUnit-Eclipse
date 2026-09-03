@@ -2,8 +2,10 @@ package org.moreunit.annotation;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -11,6 +13,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
@@ -20,7 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -171,21 +176,52 @@ public class MoreUnitAnnotationModelBranchesCoverageTest extends ContextTestCase
     }
 
     @Test
-    public void should_log_exception_when_update_job_fails()
+    public void should_log_exception_when_update_job_fails() throws Exception
     {
+        // let pending builds finish first: the update job waits for a quiet
+        // workspace before touching the editor, so background builds from
+        // previous tests would otherwise eat the whole verification timeout
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+
         // given an editor that fails as soon as it is accessed
         final ITextEditor editor = mock(ITextEditor.class);
-        when(editor.getEditorInput()).thenThrow(new RuntimeException("boom"));
+        doAnswer(invocation -> {
+            throw new RuntimeException("boom");
+        }).when(editor).getEditorInput();
 
-        try (var logs = mockStatic(LogHandler.class))
+        // swap the LogHandler singleton for a recording one (mockStatic does
+        // not reliably intercept the background update job in this setup)
+        final List<Throwable> loggedErrors = java.util.Collections.synchronizedList(new java.util.ArrayList<>());
+        final org.moreunit.core.log.Logger recordingLogger = mock(org.moreunit.core.log.Logger.class);
+        doAnswer(invocation -> {
+            loggedErrors.add(invocation.getArgument(0));
+            return null;
+        }).when(recordingLogger).error(any(Throwable.class));
+        final java.lang.reflect.Constructor<LogHandler> constructor = LogHandler.class.getDeclaredConstructor(org.moreunit.core.log.Logger.class);
+        constructor.setAccessible(true);
+        final Class<?> holderClass = Class.forName("org.moreunit.log.LogHandler$InstanceHolder");
+        final Field instanceField = holderClass.getDeclaredField("instance");
+        instanceField.setAccessible(true);
+        final LogHandler originalHandler = (LogHandler) instanceField.get(null);
+        instanceField.set(null, constructor.newInstance(recordingLogger));
+        final Job updateJob;
+        try
         {
-            final LogHandler mockLog = mock(LogHandler.class);
-            logs.when(LogHandler::getInstance).thenReturn(mockLog);
+            final MoreUnitAnnotationModel model = new MoreUnitAnnotationModel(mock(IDocument.class), editor);
+            final Field jobField = MoreUnitAnnotationModel.class.getDeclaredField("updateJob");
+            jobField.setAccessible(true);
+            updateJob = (Job) jobField.get(model);
+            assertNotNull(updateJob);
 
-            new MoreUnitAnnotationModel(mock(IDocument.class), editor);
-
-            verify(mockLog, timeout(15000)).handleExceptionLog(any(Throwable.class));
+            // wait for the job itself: a completed job that did not log means
+            // the expected catch branch was not reached, which must fail loudly
+            assertTrue(updateJob.join(20000, new NullProgressMonitor()), "update job did not complete in time");
         }
+        finally
+        {
+            instanceField.set(null, originalHandler);
+        }
+        assertFalse(loggedErrors.isEmpty(), "expected the job failure to be logged");
     }
 
     @Test
