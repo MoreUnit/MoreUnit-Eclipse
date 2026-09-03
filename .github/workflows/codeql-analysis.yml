@@ -22,7 +22,6 @@ on:
     paths-ignore:
       - '**/README.md'
 
-# Cheap (build-mode: none) but pointless to run twice on an active PR.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

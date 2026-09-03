@@ -6,15 +6,10 @@ on:
     tags : ['*']
   pull_request:
     branches: [ master ]
-    # Docs-only PRs need no 10+ min Tycho build (GitHub skips the run only
-    # when *every* changed file matches).
     paths-ignore: [ '**.md', 'docs/**' ]
 
 permissions: write-all
 
-# Cancel outdated runs of the same workflow on the same ref (active PRs
-# pushing often). Tag/master builds never cancel each other mid-release:
-# each run has its own ref.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -29,10 +24,7 @@ defaults:
 
 env:
   # Common flags for every mvn invocation (no internal quotes: the value is
-  # expanded unquoted into the shell command line).
-  # No --update-snapshots: there are no external SNAPSHOT dependencies
-  # (Tycho is pinned, the rest is the reactor), and -U forces p2/metadata
-  # re-checks on each of the 4 mvn invocations of this workflow.
+  # expanded unquoted into the shell command line)
   MVN_ARGS: --batch-mode --strict-checksums -Dtarget.platform.classifier=eclipse-latest -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
 jobs:
@@ -59,8 +51,6 @@ jobs:
       - name: Build and verify
         run: mvn -file org.moreunit.build/pom.xml clean install ${{ env.MVN_ARGS }} -pl "!org.moreunit.plugins:org.moreunit.swtbot.test" --fail-at-end
 
-      # Pinned version (was: unpinned pmd:check, resolving LATEST metadata on
-      # every run). 3.28.0 is what the unpinned goal resolved to.
       - name: Run PMD and CPD checks
         run: mvn -file org.moreunit.build/pom.xml org.apache.maven.plugins:maven-pmd-plugin:3.28.0:check org.apache.maven.plugins:maven-pmd-plugin:3.28.0:cpd-check
 

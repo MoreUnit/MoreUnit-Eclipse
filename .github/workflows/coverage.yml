@@ -1,8 +1,5 @@
 name: Coverage
 
-# Full suite incl. SWTBot (~16 min on windows-latest = ~33 billed minutes).
-# Runs on master only: maven.yml already runs every test on PRs, so per-PR
-# coverage only duplicated it. Use "Run workflow" for a manual report.
 on:
   push:
     branches: [ master ]
