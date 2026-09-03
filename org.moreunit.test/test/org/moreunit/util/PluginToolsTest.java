@@ -377,8 +377,12 @@ public class PluginToolsTest
     {
         final IPackageFragmentRoot root = mock(IPackageFragmentRoot.class);
         when(root.isArchive()).thenReturn(false);
+        final IClasspathEntry entry = mock(IClasspathEntry.class);
+        when(entry.getEntryKind()).thenReturn(IClasspathEntry.CPE_SOURCE);
+        // the first call serves the source-folder collection, the second one
+        // (inside the exclusion check) fails and must be swallowed
         final JavaModelException failure = mock(JavaModelException.class);
-        when(root.getRawClasspathEntry()).thenThrow(failure);
+        when(root.getRawClasspathEntry()).thenReturn(entry).thenThrow(failure);
         when(root.getPath()).thenReturn(new Path("/aProject/src/main/java"));
 
         final IJavaProject project = mock(IJavaProject.class);

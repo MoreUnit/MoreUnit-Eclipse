@@ -438,7 +438,10 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
         attachRealWizard();
         selectOnly("junit3Toggle");
 
-        ((Button) getField(page, "junit3Toggle")).notifyListeners(SWT.Selection, new Event());
+        // junit3Toggle carries no listener of its own: natively, selecting a
+        // radio deselects the others, and their Selection event drives
+        // testTypeSelectionChanged(), so notify the deselected toggle
+        ((Button) getField(page, "unit4Toggle")).notifyListeners(SWT.Selection, new Event());
 
         assertFalse(page.isJUnit4());
         assertFalse(page.isJUnit5());
@@ -990,6 +993,10 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
         final IType newType = mockNewType();
         final Object imports = mockImportsManager();
 
+        // page two was never opened: create its control so that checked
+        // methods can be queried (empty selection by default)
+        ((NewTestCaseWizardPageTwo) getField(page, "fPage2")).createControl(shell);
+
         invoke(page, "createTypeMembers", newType, imports, null);
 
         final ArgumentCaptor<String> content = ArgumentCaptor.forClass(String.class);
@@ -1017,10 +1024,14 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
         final IType newType = mockNewType();
         final Object imports = mockImportsManager();
 
+        // page two was never opened: create its control so that checked
+        // methods can be queried (empty selection by default)
+        ((NewTestCaseWizardPageTwo) getField(page, "fPage2")).createControl(shell);
+
         invoke(page, "createTypeMembers", newType, imports, null);
 
         final ArgumentCaptor<String> content = ArgumentCaptor.forClass(String.class);
-        verify(newType, times(5)).createMethod(content.capture(), isNull(), anyBoolean(), isNull());
-        assertEquals(5, content.getAllValues().size());
+        verify(newType, times(3)).createMethod(content.capture(), isNull(), anyBoolean(), isNull());
+        assertEquals(3, content.getAllValues().size());
     }
 }

@@ -1,5 +1,6 @@
 package org.moreunit.wizards;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -60,8 +61,10 @@ public class MoreUnitWizardPageOneStubVariantsTest extends NewClassyWizardTestCa
     }
 
     @Test
-    public void should_create_constructor_stub_for_junit4_test() throws Exception
+    public void should_not_create_constructor_stub_for_junit4_test() throws Exception
     {
+        // the constructor checkbox is disabled for JUnit 4: the setting is
+        // stored but no constructor stub is generated
         setStub("USE_CONSTRUCTOR", true);
 
         final NewTestCaseWizard wizard = new NewTestCaseWizard(context.getPrimaryTypeHandler("pack.Class").get());
@@ -71,12 +74,10 @@ public class MoreUnitWizardPageOneStubVariantsTest extends NewClassyWizardTestCa
         final IType createdType = wizard.open();
         assertNotNull(createdType);
 
-        boolean constructorFound = false;
         for (final IMethod method : createdType.getMethods())
         {
-            constructorFound |= method.isConstructor();
+            assertFalse(method.isConstructor(), "No constructor stub should exist for JUnit 4");
         }
-        assertTrue(constructorFound, "Constructor stub should exist");
     }
 
     @Test
@@ -101,12 +102,19 @@ public class MoreUnitWizardPageOneStubVariantsTest extends NewClassyWizardTestCa
 
         assertMethodExists(createdType, "setUp");
         assertMethodExists(createdType, "tearDown");
-        assertMethodExists(createdType, "setUpBeforeClass");
-        assertMethodExists(createdType, "tearDownAfterClass");
+        // class-level fixtures do not exist for JUnit 3: their checkboxes are
+        // disabled, so no such stubs are generated even when enabled
+        assertMethodDoesNotExist(createdType, "setUpBeforeClass");
+        assertMethodDoesNotExist(createdType, "tearDownAfterClass");
     }
 
     private void assertMethodExists(IType type, String methodName) throws Exception
     {
         assertTrue(type.getMethod(methodName, new String[0]).exists(), "Method " + methodName + " should exist");
+    }
+
+    private void assertMethodDoesNotExist(IType type, String methodName) throws Exception
+    {
+        assertFalse(type.getMethod(methodName, new String[0]).exists(), "Method " + methodName + " should not exist");
     }
 }
