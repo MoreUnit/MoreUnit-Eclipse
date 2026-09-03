@@ -1,12 +1,19 @@
 name: Coverage
 
+# Full suite incl. SWTBot (~16 min on windows-latest = ~33 billed minutes).
+# Runs on master only: maven.yml already runs every test on PRs, so per-PR
+# coverage only duplicated it. Use "Run workflow" for a manual report.
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths-ignore: [ '**.md', 'docs/**' ]
+  workflow_dispatch:
 
 permissions: write-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -26,7 +33,7 @@ jobs:
 
 
       - name: Build with Coverage
-        run: mvn -file org.moreunit.build/pom.xml clean install -Pcoverage "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums --update-snapshots "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+        run: mvn -file org.moreunit.build/pom.xml clean install -Pcoverage "-Dtarget.platform.classifier=eclipse-latest" --fail-at-end --batch-mode --strict-checksums "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
