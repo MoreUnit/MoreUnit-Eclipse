@@ -10,7 +10,7 @@ public class ExtensionPointsTest
     @Test
     public void LANGUAGES_should_be_correct_extension_point_id()
     {
-        String expected = MoreUnitCore.PLUGIN_ID + ".languages";
+        final String expected = MoreUnitCore.PLUGIN_ID + ".languages";
 
         assertEquals(expected, ExtensionPoints.LANGUAGES);
     }

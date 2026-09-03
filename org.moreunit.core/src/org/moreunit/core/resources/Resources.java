@@ -27,19 +27,19 @@ public class Resources
 
     public static CreatedFolder createFolder(IProject project, IPath folderPath)
     {
-        IFolder srcFolder = project.getFolder(folderPath);
+        final IFolder srcFolder = project.getFolder(folderPath);
         if(srcFolder.exists())
         {
             return new CreatedFolder(srcFolder);
         }
 
-        List<IFolder> foldersToCreate = new ArrayList<>();
+        final List<IFolder> foldersToCreate = new ArrayList<>();
         IFolder current = srcFolder;
 
         while (!current.exists())
         {
             foldersToCreate.add(current);
-            IContainer parent = current.getParent();
+            final IContainer parent = current.getParent();
             if(parent == null || parent.getType() != IResource.FOLDER)
             {
                 break;
@@ -50,13 +50,13 @@ public class Resources
         Collections.reverse(foldersToCreate);
 
         CreatedFolderPath createdFolderPath = null;
-        for (IFolder folder : foldersToCreate)
+        for (final IFolder folder : foldersToCreate)
         {
             try
             {
                 folder.create(false, true, null);
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 throw new FolderCreationException(e, folder);
             }

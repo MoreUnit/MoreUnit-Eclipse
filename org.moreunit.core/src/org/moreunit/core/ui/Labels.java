@@ -9,9 +9,9 @@ public class Labels
 {
     public static Label wrappingLabel(String text, int widthHint, Composite parent)
     {
-        Label l = new Label(parent, SWT.WRAP);
+        final Label l = new Label(parent, SWT.WRAP);
         l.setText(text);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.widthHint = widthHint;
         l.setLayoutData(gd);
         return l;
@@ -24,8 +24,8 @@ public class Labels
 
     public static Label placeHolder(Composite parent, int numColumns)
     {
-        Label l = new Label(parent, SWT.NONE);
-        GridData gridData = new GridData();
+        final Label l = new Label(parent, SWT.NONE);
+        final GridData gridData = new GridData();
         gridData.horizontalSpan = numColumns;
         l.setLayoutData(gridData);
         return l;

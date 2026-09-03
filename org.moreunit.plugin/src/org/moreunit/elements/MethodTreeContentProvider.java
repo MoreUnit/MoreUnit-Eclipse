@@ -39,19 +39,19 @@ public class MethodTreeContentProvider implements ITreeContentProvider
             return;
         }
 
-        MethodSearchMode searchMode = Preferences.forProject(javaFileFile.getJavaProject()).getMethodSearchMode();
+        final MethodSearchMode searchMode = Preferences.forProject(javaFileFile.getJavaProject()).getMethodSearchMode();
         try
         {
-            ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
-            IMethod[] allMethods = javaFileFile.getMethods();
+            final ClassTypeFacade typeFacade = new ClassTypeFacade(javaFileFile.getCompilationUnit());
+            final IMethod[] allMethods = javaFileFile.getMethods();
 
-            for (IMethod method : allMethods)
+            for (final IMethod method : allMethods)
             {
                 if(typeFacade.getCorrespondingTestMethods(method, searchMode).size() == 0)
                     methods.add(method);
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             methods = new ArrayList<>();
         }
@@ -78,10 +78,10 @@ public class MethodTreeContentProvider implements ITreeContentProvider
     @Override
     public Object[] getElements(Object inputElement)
     {
-        if(inputElement instanceof MethodPage page)
+        if(inputElement instanceof final MethodPage page)
             resetMethods(page.getInputType());
 
-        List<IMethod> resultMethodList = new ArrayList<>();
+        final List<IMethod> resultMethodList = new ArrayList<>();
         if(isPrivateFiltered)
             resultMethodList.addAll(filterPrivateMethods(methods));
         else
@@ -108,10 +108,10 @@ public class MethodTreeContentProvider implements ITreeContentProvider
 
     private List<IMethod> filterPrivateMethods(List<IMethod> methodList)
     {
-        List<IMethod> resultList = new ArrayList<>();
-        FilterMethodVisitor privateMethodVisitor = new FilterMethodVisitor(classType);
+        final List<IMethod> resultList = new ArrayList<>();
+        final FilterMethodVisitor privateMethodVisitor = new FilterMethodVisitor(classType);
 
-        for (IMethod method : methodList)
+        for (final IMethod method : methodList)
         {
             if(! privateMethodVisitor.isPrivateMethod(method))
                 resultList.add(method);
@@ -122,10 +122,10 @@ public class MethodTreeContentProvider implements ITreeContentProvider
 
     private List<IMethod> filterGetterAndSetter(List<IMethod> methodList)
     {
-        List<IMethod> resultList = new ArrayList<>();
-        FilterMethodVisitor getterMethodVisitor = new FilterMethodVisitor(classType);
+        final List<IMethod> resultList = new ArrayList<>();
+        final FilterMethodVisitor getterMethodVisitor = new FilterMethodVisitor(classType);
 
-        for (IMethod method : methodList)
+        for (final IMethod method : methodList)
         {
             if(! getterMethodVisitor.isGetterMethod(method) && ! getterMethodVisitor.isSetterMethod(method))
                 resultList.add(method);

@@ -19,18 +19,18 @@ public class JUnitTestSelectionLaunchConfigurationDelegateTest
     @Test
     public void evaluateTests_should_return_constructor_members_in_insertion_order() throws Exception
     {
-        IMember member1 = mock(IMember.class);
-        IMember member2 = mock(IMember.class);
-        IMember member3 = mock(IMember.class);
+        final IMember member1 = mock(IMember.class);
+        final IMember member2 = mock(IMember.class);
+        final IMember member3 = mock(IMember.class);
 
-        Collection<IMember> input = new LinkedHashSet<>(Arrays.asList(member1, member2, member3));
+        final Collection<IMember> input = new LinkedHashSet<>(Arrays.asList(member1, member2, member3));
 
-        JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
+        final JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
 
-        ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
+        final ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
+        final IProgressMonitor monitor = mock(IProgressMonitor.class);
 
-        IMember[] result = delegate.evaluateTests(configuration, monitor);
+        final IMember[] result = delegate.evaluateTests(configuration, monitor);
 
         assertNotNull(result);
         assertEquals(3, result.length);
@@ -40,14 +40,14 @@ public class JUnitTestSelectionLaunchConfigurationDelegateTest
     @Test
     public void evaluateTests_should_return_empty_array_when_no_members_were_given() throws Exception
     {
-        Collection<IMember> input = new LinkedHashSet<>();
+        final Collection<IMember> input = new LinkedHashSet<>();
 
-        JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
+        final JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
 
-        ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
+        final ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
+        final IProgressMonitor monitor = mock(IProgressMonitor.class);
 
-        IMember[] result = delegate.evaluateTests(configuration, monitor);
+        final IMember[] result = delegate.evaluateTests(configuration, monitor);
 
         assertNotNull(result);
         assertEquals(0, result.length);
@@ -56,15 +56,15 @@ public class JUnitTestSelectionLaunchConfigurationDelegateTest
     @Test
     public void evaluateTests_should_preserve_single_member() throws Exception
     {
-        IMember single = mock(IMember.class);
-        Collection<IMember> input = new LinkedHashSet<>(Arrays.asList(single));
+        final IMember single = mock(IMember.class);
+        final Collection<IMember> input = new LinkedHashSet<>(Arrays.asList(single));
 
-        JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
+        final JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
 
-        ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
+        final ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
+        final IProgressMonitor monitor = mock(IProgressMonitor.class);
 
-        IMember[] result = delegate.evaluateTests(configuration, monitor);
+        final IMember[] result = delegate.evaluateTests(configuration, monitor);
 
         assertNotNull(result);
         assertEquals(1, result.length);
@@ -74,16 +74,16 @@ public class JUnitTestSelectionLaunchConfigurationDelegateTest
     @Test
     public void evaluateTests_should_deduplicate_when_collection_has_duplicates() throws Exception
     {
-        IMember member = mock(IMember.class);
+        final IMember member = mock(IMember.class);
         // LinkedHashSet treats the second addition as a no-op
-        Collection<IMember> input = new LinkedHashSet<>(Arrays.asList(member, member));
+        final Collection<IMember> input = new LinkedHashSet<>(Arrays.asList(member, member));
 
-        JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
+        final JUnitTestSelectionLaunchConfigurationDelegate delegate = new JUnitTestSelectionLaunchConfigurationDelegate(input);
 
-        ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
+        final ILaunchConfiguration configuration = mock(ILaunchConfiguration.class);
+        final IProgressMonitor monitor = mock(IProgressMonitor.class);
 
-        IMember[] result = delegate.evaluateTests(configuration, monitor);
+        final IMember[] result = delegate.evaluateTests(configuration, monitor);
 
         assertNotNull(result);
         assertEquals(1, result.length);

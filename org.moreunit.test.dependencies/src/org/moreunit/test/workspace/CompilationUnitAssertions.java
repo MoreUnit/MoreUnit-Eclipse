@@ -25,9 +25,9 @@ public class CompilationUnitAssertions
 
     public final CompilationUnitAssertions hasSameSourceAsIn(String expectedSourceFile)
     {
-        SourceFolderHandler srcFolderHandler = cuHandler.getSourceFolderHandler();
-        String actualSource = cuHandler.getActualSource();
-        String expectedSource = getSource(srcFolderHandler, expectedSourceFile);
+        final SourceFolderHandler srcFolderHandler = cuHandler.getSourceFolderHandler();
+        final String actualSource = cuHandler.getActualSource();
+        final String expectedSource = getSource(srcFolderHandler, expectedSourceFile);
         assertEquals(normalizeSpaces(ignoreJdkDependentImports(actualSource)), normalizeSpaces(expectedSource));
         return this;
     }

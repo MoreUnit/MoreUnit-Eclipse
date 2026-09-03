@@ -37,7 +37,7 @@ public class DefaultLoggerTest
     @Test
     public void default_level_is_info_when_property_not_set()
     {
-        DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
+        final DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
         assertFalse(logger.traceEnabled());
         assertFalse(logger.debugEnabled());
@@ -50,7 +50,7 @@ public class DefaultLoggerTest
     public void trace_level_enabled()
     {
         System.setProperty(LOG_LEVEL_PROPERTY, "trace");
-        DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
+        final DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
         assertTrue(logger.traceEnabled());
         assertTrue(logger.debugEnabled());
@@ -58,7 +58,7 @@ public class DefaultLoggerTest
         logger.trace("trace message");
         logger.debug("debug message");
 
-        ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
+        final ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog, org.mockito.Mockito.times(2)).log(statusCaptor.capture());
 
         assertEquals(statusCaptor.getAllValues().get(0).getMessage(), "[TRACE] trace message");
@@ -71,7 +71,7 @@ public class DefaultLoggerTest
     public void warn_level_enabled()
     {
         System.setProperty(LOG_LEVEL_PROPERTY, "WARNING");
-        DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
+        final DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
         assertFalse(logger.infoEnabled());
         assertTrue(logger.warnEnabled());
@@ -80,7 +80,7 @@ public class DefaultLoggerTest
         verify(mockLog, never()).log(any(IStatus.class));
 
         logger.warn("warn message");
-        ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
+        final ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
         assertEquals(statusCaptor.getValue().getMessage(), "warn message");
@@ -91,15 +91,15 @@ public class DefaultLoggerTest
     public void error_level_enabled_with_throwable()
     {
         System.setProperty(LOG_LEVEL_PROPERTY, "ERROR");
-        DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
+        final DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
         assertFalse(logger.warnEnabled());
         assertTrue(logger.errorEnabled());
 
-        Throwable exception = new RuntimeException("Test exception");
+        final Throwable exception = new RuntimeException("Test exception");
         logger.error("error message", exception);
 
-        ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
+        final ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
         assertEquals(statusCaptor.getValue().getMessage(), "error message");
@@ -111,12 +111,12 @@ public class DefaultLoggerTest
     public void error_level_only_throwable()
     {
         System.setProperty(LOG_LEVEL_PROPERTY, "ERROR");
-        DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
+        final DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
-        Throwable exception = new RuntimeException("Test exception");
+        final Throwable exception = new RuntimeException("Test exception");
         logger.error(exception);
 
-        ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
+        final ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
         assertTrue((statusCaptor.getValue().getMessage()).contains("java.lang.RuntimeException: Test exception"));
@@ -127,12 +127,12 @@ public class DefaultLoggerTest
     public void warn_level_with_throwable()
     {
         System.setProperty(LOG_LEVEL_PROPERTY, "WARNING");
-        DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
+        final DefaultLogger logger = new DefaultLogger(mockLog, PLUGIN_ID, LOG_LEVEL_PROPERTY);
 
-        Throwable exception = new RuntimeException("Test exception");
+        final Throwable exception = new RuntimeException("Test exception");
         logger.warn("warn message", exception);
 
-        ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
+        final ArgumentCaptor<IStatus> statusCaptor = ArgumentCaptor.forClass(IStatus.class);
         verify(mockLog).log(statusCaptor.capture());
 
         assertEquals(statusCaptor.getValue().getMessage(), "warn message");

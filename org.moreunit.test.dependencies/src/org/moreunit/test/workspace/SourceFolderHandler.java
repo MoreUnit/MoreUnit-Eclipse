@@ -45,7 +45,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
             {
                 sourceFolder = WorkspaceHelper.createSourceFolderInProject(projectHandler.get(), sourceFolderName);
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 throw new RuntimeException(e);
             }
@@ -64,7 +64,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         final IType type;
         try
         {
-            IPackageFragment packageFragment = WorkspaceHelper.createNewPackageInSourceFolder(get(), javaType.packageName);
+            final IPackageFragment packageFragment = WorkspaceHelper.createNewPackageInSourceFolder(get(), javaType.packageName);
 
             if(javaType.typeKind == JavaTypeKind.CLASS)
             {
@@ -79,7 +79,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
                 type = WorkspaceHelper.createJavaEnum(packageFragment, javaType.typeName);
             }
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             throw new RuntimeException(e);
         }
@@ -106,12 +106,12 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
     {
         try
         {
-            TypeName cuName = new TypeName(fullyQualifiedTypeName);
-            IPackageFragment pf = WorkspaceHelper.createNewPackageInSourceFolder(get(), cuName.packageName);
-            ICompilationUnit cu = pf.createCompilationUnit("%s.java".formatted(cuName.typeName), contents, false, null);
+            final TypeName cuName = new TypeName(fullyQualifiedTypeName);
+            final IPackageFragment pf = WorkspaceHelper.createNewPackageInSourceFolder(get(), cuName.packageName);
+            final ICompilationUnit cu = pf.createCompilationUnit("%s.java".formatted(cuName.typeName), contents, false, null);
             return new CompilationUnitHandler(this, cu);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             throw new RuntimeException(e);
         }
@@ -119,7 +119,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
     private TypeHandler createType(JavaTypeKind typeKind, String fullyQualifiedTypeName)
     {
-        TypeName name = new TypeName(fullyQualifiedTypeName);
+        final TypeName name = new TypeName(fullyQualifiedTypeName);
 
         if(typeKind == JavaTypeKind.ENUM)
         {
@@ -134,15 +134,15 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
     public TypeHandler extendClass(TypeHandler typeHandler, String fullyQualifiedSubclassName)
     {
-        TypeName name = new TypeName(fullyQualifiedSubclassName);
+        final TypeName name = new TypeName(fullyQualifiedSubclassName);
         try
         {
-            IPackageFragment packageFragment = WorkspaceHelper.createNewPackageInSourceFolder(get(), name.packageName);
-            IType type = WorkspaceHelper.createJavaClassExtending(packageFragment, name.typeName, typeHandler.getName());
+            final IPackageFragment packageFragment = WorkspaceHelper.createNewPackageInSourceFolder(get(), name.packageName);
+            final IType type = WorkspaceHelper.createJavaClassExtending(packageFragment, name.typeName, typeHandler.getName());
 
             return new TypeHandler(new CompilationUnitHandler(this, type.getCompilationUnit()), type);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             throw new RuntimeException(e);
         }
@@ -155,9 +155,9 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
             return;
         }
 
-        for (String sourceLocation : sourceLocations)
+        for (final String sourceLocation : sourceLocations)
         {
-            CompilationUnitHandler cuHandler = createCompilationUnit(this, sourceLocation);
+            final CompilationUnitHandler cuHandler = createCompilationUnit(this, sourceLocation);
             cuHandlers.put(cuHandler.getName(), cuHandler);
         }
     }
@@ -168,7 +168,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
         {
             return createSource(sourceLocation).getOrCreateCompilationUnit();
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             throw new RuntimeException("Could not create compilation unit defined at " + sourceLocation, e);
         }
@@ -186,9 +186,9 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
     public void createElements(Collection<JavaType> types)
     {
-        for (JavaType type : types)
+        for (final JavaType type : types)
         {
-            CompilationUnitHandler cuHandler = createType(type).getCompilationUnitHandler();
+            final CompilationUnitHandler cuHandler = createType(type).getCompilationUnitHandler();
             cuHandlers.put(cuHandler.getName(), cuHandler);
         }
     }
@@ -205,7 +205,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
     public CompilationUnitHandler createHandlerFor(ICompilationUnit cu)
     {
-        CompilationUnitHandler cuHandler = new CompilationUnitHandler(this, cu);
+        final CompilationUnitHandler cuHandler = new CompilationUnitHandler(this, cu);
         cuHandlers.put(cuHandler.getName(), cuHandler);
         return cuHandler;
     }
@@ -222,7 +222,7 @@ public class SourceFolderHandler implements ElementHandler<IPackageFragmentRoot,
 
         TypeName(String fullyQualifiedName)
         {
-            int dotIndex = fullyQualifiedName.lastIndexOf(".");
+            final int dotIndex = fullyQualifiedName.lastIndexOf(".");
             if(dotIndex != - 1)
             {
                 packageName = fullyQualifiedName.substring(0, dotIndex);

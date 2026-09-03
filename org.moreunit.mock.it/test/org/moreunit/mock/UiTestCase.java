@@ -8,7 +8,7 @@ public class UiTestCase
     @RegisterExtension
     public final TestContextRule context = new TestContextRule();
 
-    private MockTestModule config = new MockTestModule()
+    private final MockTestModule config = new MockTestModule()
     {
         {
             wizardDriver = new WizardDriver();

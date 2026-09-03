@@ -193,7 +193,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_find_test_path_when_no_variable_part() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
         assertEquals(p.getTestPathFor(path("js-project/src/")).toString(), "js-project/test");
     }
@@ -201,7 +201,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_find_test_path_when_template_only_contains_project_name() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
 
         assertEquals(p.getTestPathFor(path("js-project")).toString(), "js-project");
     }
@@ -209,7 +209,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_ignore_leading_and_trailing_separators_in_patterns() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
 
         assertEquals(p.getTestPathFor(path("js-project/src/")).toString(), "js-project/test");
     }
@@ -217,7 +217,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_ignore_leading_and_trailing_separators_in_input() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
 
         assertEquals(p.getTestPathFor(path("/js-project/src/")).toString(), "js-project/test");
     }
@@ -225,7 +225,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_reproduce_src_path_end() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
         assertEquals(p.getTestPathFor(path("js-project/src/some/path/to/the/code")).toString(), "js-project/test/some/path/to/the/code");
     }
@@ -233,7 +233,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_find_test_path_when_variable_parts() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/*/some/path*/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/*/some/path*/", "${srcProject}/test/");
 
         assertEquals(p.getTestPathFor(path("js-project/src/rb/some/path-to-the-code")).toString(), "js-project/test");
     }
@@ -241,7 +241,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_find_project_name() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "pre-${srcProject}-suf/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "pre-${srcProject}-suf/test/");
 
         assertEquals(p.getTestPathFor(path("lisp-project/src/")).toString(), "pre-lisp-project-suf/test");
     }
@@ -249,7 +249,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_find_test_path_when_variable_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**/java/", "${srcProject}/test/java");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**/java/", "${srcProject}/test/java");
 
         assertEquals(p.getTestPathFor(path("myproject/src/some/path/java")).toString(), "myproject/test/java");
     }
@@ -257,7 +257,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_find_test_path_when_variable_path_in_last_position() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**", "${srcProject}/test");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**", "${srcProject}/test");
 
         assertEquals(p.getTestPathFor(path("myproject/src/java/code")).toString(), "myproject/test");
     }
@@ -265,7 +265,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_use_captured_variable() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}/test-\\1/code");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}/test-\\1/code");
 
         assertEquals(p.getTestPathFor(path("myproject/src-java/code")).toString(), "myproject/test-java/code");
     }
@@ -273,7 +273,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_use_captured_variables() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code-(*)", "${srcProject}/test-\\1/code-\\2");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code-(*)", "${srcProject}/test-\\1/code-\\2");
 
         assertEquals(p.getTestPathFor(path("myproject/src-A/code-B")).toString(), "myproject/test-A/code-B");
     }
@@ -281,7 +281,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_use_captured_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/(**)/main", "${srcProject}/\\1/test");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/(**)/main", "${srcProject}/\\1/test");
 
         assertEquals(p.getTestPathFor(path("myproject/src/java/main/code")).toString(), "myproject/src/java/test/code");
     }
@@ -289,7 +289,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_use_captured_path_when_in_last_position() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/(**)", "${srcProject}/test/\\1");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/(**)", "${srcProject}/test/\\1");
 
         assertEquals(p.getTestPathFor(path("myproject/src/java/code")).toString(), "myproject/test/java/code");
     }
@@ -297,7 +297,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_use_captured_variables_and_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
 
         assertEquals(p.getTestPathFor(path("myproject/a1/some/path/b2")).toString(), "myproject/x2/y1/some/path");
     }
@@ -305,7 +305,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_handle_braces_in_project_name() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
         assertEquals(p.getTestPathFor(path("/foobar [1]/src/")).toString(), "foobar [1]/test");
         assertEquals(p.getTestPathFor(path("/foobar {1}/src/")).toString(), "foobar {1}/test");
@@ -315,14 +315,14 @@ public class TestFolderPathPatternTest
     @Test
     public void getTestPathFor_should_handle_range_like_parts_in_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
         assertEquals(p.getTestPathFor(path("com.example/src/dir/with [rangelike-123]")).toString(), "com.example/test/dir/with [rangelike-123]");
     }
 
     @Test
     public void getSrcPathFor_should_find_src_path_when_no_variable_part() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
         assertEquals(p.getSrcPathFor(path("js-project/test/")).toString(), "js-project/src");
     }
@@ -330,7 +330,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_find_test_path_when_template_only_contains_project_name() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}", "${srcProject}");
 
         assertEquals(p.getSrcPathFor(path("js-project")).toString(), "js-project");
     }
@@ -338,7 +338,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_ignore_leading_and_trailing_separators_in_patterns() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("/${srcProject}/src/", "/${srcProject}/test/");
 
         assertEquals(p.getSrcPathFor(path("js-project/test/")).toString(), "js-project/src");
     }
@@ -346,7 +346,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_ignore_leading_and_trailing_separators_in_input() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src", "${srcProject}/test");
 
         assertEquals(p.getSrcPathFor(path("/js-project/test/")).toString(), "js-project/src");
     }
@@ -354,7 +354,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_reproduce_test_path_end() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
         assertEquals(p.getSrcPathFor(path("js-project/test/some/path/to/the/code")).toString(), "js-project/src/some/path/to/the/code");
     }
@@ -362,7 +362,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_find_test_path_when_variable_parts() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/*/some/path*/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/*/some/path*/", "${srcProject}/test/");
 
         assertEquals(p.getSrcPathFor(path("js-project/test/")).toString(), "js-project/src/[^/]*/some/path[^/]*");
     }
@@ -370,7 +370,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_find_project_name() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "pre-${srcProject}-suf/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "pre-${srcProject}-suf/test/");
 
         assertEquals(p.getSrcPathFor(path("pre-rb-project-suf/test/")).toString(), "rb-project/src");
     }
@@ -378,7 +378,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_find_test_path_when_variable_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**/java/", "${srcProject}/test/java");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/**/java/", "${srcProject}/test/java");
 
         assertEquals(p.getSrcPathFor(path("myproject/test/java")).toString(), "myproject/src/.*/java");
     }
@@ -386,7 +386,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_use_captured_variable() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}-test/test-\\1/code");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}-test/test-\\1/code");
 
         assertEquals(p.getSrcPathFor(path("myproject-test/test-java/code")).toString(), "myproject/src-java/code");
     }
@@ -395,13 +395,13 @@ public class TestFolderPathPatternTest
     public void getSrcPathFor_should_throw_exception_when_no_match_found() throws Exception
     {
         // given
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}-test/test-\\1/code");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src-(*)/code", "${srcProject}-test/test-\\1/code");
 
         // does not start with myproject-test
-        Path tstPath = path("myproject/test-java/code");
+        final Path tstPath = path("myproject/test-java/code");
 
         {
-            DoesNotMatchConfigurationException e = assertThrows(DoesNotMatchConfigurationException.class, () -> p.getSrcPathFor(tstPath));
+            final DoesNotMatchConfigurationException e = assertThrows(DoesNotMatchConfigurationException.class, () -> p.getSrcPathFor(tstPath));
             assertEquals(((DoesNotMatchConfigurationException) e).getPath(), tstPath);
         }
     }
@@ -409,7 +409,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_use_captured_variables() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/X-(*)/Y-(*)/Z-(*)", "${srcProject}/U-\\1/V-\\2/W-\\3");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/X-(*)/Y-(*)/Z-(*)", "${srcProject}/U-\\1/V-\\2/W-\\3");
 
         assertEquals(p.getSrcPathFor(path("myproject/U-A/V-B/W-C")).toString(), "myproject/X-A/Y-B/Z-C");
     }
@@ -417,7 +417,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_respect_order_when_using_captured_variables() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/X-(*)/Y-(*)/Z-(*)", "${srcProject}/U-\\3/V-\\1/W-\\2");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/X-(*)/Y-(*)/Z-(*)", "${srcProject}/U-\\3/V-\\1/W-\\2");
 
         assertEquals(p.getSrcPathFor(path("myproject/U-A/V-B/W-C")).toString(), "myproject/X-B/Y-C/Z-A");
     }
@@ -425,7 +425,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_use_captured_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/(**)/main", "${srcProject}/\\1/test");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/(**)/main", "${srcProject}/\\1/test");
 
         assertEquals(p.getSrcPathFor(path("myproject/src/java/test/code")).toString(), "myproject/src/java/main/code");
     }
@@ -433,7 +433,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_use_captured_path_when_in_last_position() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/(**)", "${srcProject}/test/\\1");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/(**)", "${srcProject}/test/\\1");
 
         assertEquals(p.getSrcPathFor(path("myproject/test/java/code")).toString(), "myproject/src/java/code");
     }
@@ -441,7 +441,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_use_captured_variables_and_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/a(*)/(**)/b(*)", "${srcProject}/x\\3/y\\1/\\2");
 
         assertEquals(p.getSrcPathFor(path("myproject/x2/y1/some/path")).toString(), "myproject/a1/some/path/b2");
     }
@@ -449,7 +449,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_handle_braces_in_project_name() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
 
         assertEquals(p.getSrcPathFor(path("/foobar [1]/test/")).toString(), "foobar [1]/src");
         assertEquals(p.getSrcPathFor(path("/foobar {1}/test/")).toString(), "foobar {1}/src");
@@ -459,7 +459,7 @@ public class TestFolderPathPatternTest
     @Test
     public void getSrcPathFor_should_handle_range_like_parts_in_path() throws Exception
     {
-        TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
+        final TestFolderPathPattern p = new TestFolderPathPattern("${srcProject}/src/", "${srcProject}/test/");
         assertEquals(p.getSrcPathFor(path("com.example/test/dir/with [rangelike-123]")).toString(), "com.example/src/dir/with [rangelike-123]");
     }
 

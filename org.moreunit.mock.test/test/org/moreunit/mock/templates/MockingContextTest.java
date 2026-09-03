@@ -187,7 +187,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), method("foobar"), method("setUp") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), method("foobar"), method("setUp") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -206,7 +206,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before"), methodWithAnnotation("createSomething", "Before") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before"), methodWithAnnotation("createSomething", "Before") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -225,7 +225,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "BeforeMethod"), methodWithAnnotation("createSomething", "BeforeMethod") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "BeforeMethod"), methodWithAnnotation("createSomething", "BeforeMethod") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -244,7 +244,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), method("foobar") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), method("foobar") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -263,7 +263,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -283,7 +283,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "Before") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -303,7 +303,7 @@ public class MockingContextTest
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "BeforeMethod") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), methodWithAnnotation("foobar", "BeforeMethod") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -320,7 +320,7 @@ public class MockingContextTest
         // given
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt"), method("foobar"), method("createSomething") };
+        final IMethod[] methods = new IMethod[] { method("doIt"), method("foobar"), method("createSomething") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
@@ -335,20 +335,20 @@ public class MockingContextTest
     public void should_not_create_before_method_when_template_is_excluded() throws Exception
     {
         // given
-        String testType = TEST_TYPE_VALUE_JUNIT_4;
+        final String testType = TEST_TYPE_VALUE_JUNIT_4;
 
         createMockingContextWithTestType(testType);
 
         when(classUnderTest.getElementName()).thenReturn("Something");
 
-        IMethod[] methods = new IMethod[] { method("doIt") };
+        final IMethod[] methods = new IMethod[] { method("doIt") };
         when(testCase.getMethods()).thenReturn(methods);
 
         // when
         mockingContext.prepareContext(templateRequiringBeforeMethod(new ExcludeIf(ConditionType.TEST_TYPE, testType)), templateProcessor);
 
         // then
-        CodeTemplate codeTemplate = new CodeTemplate(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, null, null);
+        final CodeTemplate codeTemplate = new CodeTemplate(MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID, null, null);
         verify(templateProcessor, never()).applyTemplate(codeTemplate, mockingContext);
 
         assertNull(mockingContext.getBeforeInstanceMethodName());
@@ -362,13 +362,13 @@ public class MockingContextTest
         patternResolvers.add(new TestResolver());
 
         // when
-        EclipseTemplate eclipseTemplate = mockingContext.preEvaluate(new CodeTemplate("a template", Part.TEST_CLASS_FIELDS, "pattern contents"));
+        final EclipseTemplate eclipseTemplate = mockingContext.preEvaluate(new CodeTemplate("a template", Part.TEST_CLASS_FIELDS, "pattern contents"));
 
         // then
         assertEquals(eclipseTemplate.template().getPattern(), "pattern contents");
         assertEquals(eclipseTemplate.part(), Part.TEST_CLASS_FIELDS);
 
-        for (PatternResolver resolver : patternResolvers)
+        for (final PatternResolver resolver : patternResolvers)
         {
             assertTrue(((TestResolver) resolver).called);
         }
@@ -396,13 +396,13 @@ public class MockingContextTest
 
     private IMethod methodWithAnnotation(String name, String methodAnnotation)
     {
-        IMethod method = mock(IMethod.class);
+        final IMethod method = mock(IMethod.class);
         when(method.getElementName()).thenReturn(name);
 
-        IAnnotation unexistingAnnotation = mock(IAnnotation.class);
+        final IAnnotation unexistingAnnotation = mock(IAnnotation.class);
         when(method.getAnnotation(anyString())).thenReturn(unexistingAnnotation);
 
-        IAnnotation possiblyExistingAnnotation = mock(IAnnotation.class);
+        final IAnnotation possiblyExistingAnnotation = mock(IAnnotation.class);
         when(possiblyExistingAnnotation.exists()).thenReturn(methodAnnotation != null);
 
         when(method.getAnnotation(methodAnnotation)).thenReturn(possiblyExistingAnnotation);
@@ -412,19 +412,19 @@ public class MockingContextTest
 
     private MockingTemplate templateRequiringBeforeMethod(InclusionCondition... conditions)
     {
-        CodeTemplate templateRequiringBeforeMethod = new CodeTemplate("", Part.BEFORE_INSTANCE_METHOD, "", Set.of(conditions));
+        final CodeTemplate templateRequiringBeforeMethod = new CodeTemplate("", Part.BEFORE_INSTANCE_METHOD, "", Set.of(conditions));
         return new MockingTemplate("", "", "", asList(templateRequiringBeforeMethod));
     }
 
     private void verifyThatBeforeInstanceMethodHasBeenCreatedWithPatternContaining(String expectedPatternContent) throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
     {
-        ArgumentCaptor<CodeTemplate> codeTemplate = verifyThatBeforeInstanceMethodHasBeenCreated();
+        final ArgumentCaptor<CodeTemplate> codeTemplate = verifyThatBeforeInstanceMethodHasBeenCreated();
         assertTrue((codeTemplate.getValue().pattern()).contains(expectedPatternContent));
     }
 
     private ArgumentCaptor<CodeTemplate> verifyThatBeforeInstanceMethodHasBeenCreated() throws JavaModelException, BadLocationException, TemplateException, MockingTemplateException
     {
-        ArgumentCaptor<CodeTemplate> codeTemplate = ArgumentCaptor.forClass(CodeTemplate.class);
+        final ArgumentCaptor<CodeTemplate> codeTemplate = ArgumentCaptor.forClass(CodeTemplate.class);
         verify(templateProcessor).applyTemplate(codeTemplate.capture(), eq(mockingContext));
 
         assertEquals(codeTemplate.getValue().id(), MockingContext.BEFORE_INSTANCE_METHOD_CREATION_TEMPLATE_ID);

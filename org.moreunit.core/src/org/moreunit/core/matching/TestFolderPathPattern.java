@@ -37,16 +37,16 @@ public class TestFolderPathPattern
     static
     {
         // stars may be captured or not
-        String optionalStar = "(?:\\(\\*\\)|\\*)?";
-        String twoStars = "(?:\\(\\*{2}\\)|\\*{2})";
+        final String optionalStar = "(?:\\(\\*\\)|\\*)?";
+        final String twoStars = "(?:\\(\\*{2}\\)|\\*{2})";
 
-        String nonStars = "[^\\*\\(\\)]+";
+        final String nonStars = "[^\\*\\(\\)]+";
 
-        String simpleVariableSegment = "(?:\\(\\*\\)|\\*)";
-        String variableSegmentPart = nonStars + "(" + optionalStar + nonStars + ")*";
-        String segmentWithVariableStart = optionalStar + variableSegmentPart;
-        String segmentWithVariableMiddle = nonStars + optionalStar + nonStars;
-        String segmentWithVariableEnd = variableSegmentPart + optionalStar;
+        final String simpleVariableSegment = "(?:\\(\\*\\)|\\*)";
+        final String variableSegmentPart = nonStars + "(" + optionalStar + nonStars + ")*";
+        final String segmentWithVariableStart = optionalStar + variableSegmentPart;
+        final String segmentWithVariableMiddle = nonStars + optionalStar + nonStars;
+        final String segmentWithVariableEnd = variableSegmentPart + optionalStar;
 
         SRC_PATH_VALIDATOR = compile("^/?" + quote(SRC_PROJECT_VARIABLE) + "(?:/(?:" + twoStars + "|" + nonStars + "|" + simpleVariableSegment + "|" + segmentWithVariableStart + "|" + segmentWithVariableMiddle + "|" + segmentWithVariableEnd + "))*" + "/?$");
     }
@@ -73,7 +73,7 @@ public class TestFolderPathPattern
 
     private static Pattern createTestProjectPattern(String testPathTemplate)
     {
-        String testProjTemplate = getProjectName(testPathTemplate);
+        final String testProjTemplate = getProjectName(testPathTemplate);
         /*
          * ⚡ Bolt Performance Optimization
          *
@@ -82,13 +82,13 @@ public class TestFolderPathPattern
          * 📊 Impact: ~7x speedup for this specific operation (from ~1100ms to ~150ms for 1M iterations).
          * 🔬 Measurement: Benchmarked against regex replaceFirst using a 1M loop on sample templates.
          */
-        String ptn = testProjTemplate.replace(SRC_PROJECT_VARIABLE, "\\E(.*)\\Q");
+        final String ptn = testProjTemplate.replace(SRC_PROJECT_VARIABLE, "\\E(.*)\\Q");
         return compile("\\Q" + ptn + "\\E");
     }
 
     private static String getProjectName(String path)
     {
-        int separatorIdx = path.indexOf("/");
+        final int separatorIdx = path.indexOf("/");
         if(separatorIdx == - 1)
         {
             return path;
@@ -117,7 +117,7 @@ public class TestFolderPathPattern
             return false;
         }
 
-        int groupCount = countOccurrences(srcPathTemplate, "(");
+        final int groupCount = countOccurrences(srcPathTemplate, "(");
         if(groupCount > MAX_GROUPS)
         {
             return false;
@@ -127,7 +127,7 @@ public class TestFolderPathPattern
             return false;
         }
 
-        List<GroupRef> groupRefs = getGroupRefs(testPathTemplate);
+        final List<GroupRef> groupRefs = getGroupRefs(testPathTemplate);
         if(groupCount != groupRefs.size())
         {
             return false;
@@ -138,15 +138,15 @@ public class TestFolderPathPattern
 
     private static List<GroupRef> getGroupRefs(String template)
     {
-        List<GroupRef> refs = new ArrayList<>();
+        final List<GroupRef> refs = new ArrayList<>();
 
         boolean backslashEscaped = false;
         int refStart = - 1;
 
-        char[] chars = template.toCharArray();
+        final char[] chars = template.toCharArray();
         for (int i = 0; i < chars.length; i++)
         {
-            char c = chars[i];
+            final char c = chars[i];
 
             if(refStart != - 1) // currently parsing a group reference
             {
@@ -170,7 +170,7 @@ public class TestFolderPathPattern
             backslashEscaped = false;
         }
 
-        char lastChar = chars[chars.length - 1];
+        final char lastChar = chars[chars.length - 1];
         // last char was part of a group ref, let's add the ref to the list
         if(refStart != - 1 && lastChar != '\\')
         {
@@ -196,13 +196,13 @@ public class TestFolderPathPattern
 
     public SourceFolderPath getTestPathFor(Path srcPath) throws DoesNotMatchConfigurationException
     {
-        String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
-        String projectName = getProjectName(cleanSrcPath);
+        final String cleanSrcPath = removeSurroundingSlashes(srcPath.toString());
+        final String projectName = getProjectName(cleanSrcPath);
 
         // We use quote() but NOT quoteReplacement() anymore because we replaced
         // String.replaceFirst (which needed regex escaping) with String.replace (which doesn't).
         String srcPathTpl = getSrcPathTemplateForSrcProject(quote(projectName));
-        String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
+        final String codePathWithinSrcFolder = cleanSrcPath.replaceFirst(srcPathTpl, "");
 
         String tstPathTpl = getTestPathTemplateForSrcProject(projectName) + codePathWithinSrcFolder;
         srcPathTpl += quote(codePathWithinSrcFolder);
@@ -223,14 +223,14 @@ public class TestFolderPathPattern
             PATTERN_CACHE.putIfAbsent(tplWithGroups, pattern);
         }
 
-        Matcher matcher = pattern.matcher(path);
+        final Matcher matcher = pattern.matcher(path);
         if(matcher.matches())
         {
-            List<GroupRef> groupRefs = getGroupRefs(result);
+            final List<GroupRef> groupRefs = getGroupRefs(result);
             reverse(groupRefs);
 
-            StringBuilder resultBuilder = new StringBuilder(result);
-            for (GroupRef ref : groupRefs)
+            final StringBuilder resultBuilder = new StringBuilder(result);
+            for (final GroupRef ref : groupRefs)
             {
                 final String groupContent;
                 if(matcher.groupCount() >= ref.num)
@@ -251,12 +251,12 @@ public class TestFolderPathPattern
 
     public SourceFolderPath getSrcPathFor(Path testPath) throws DoesNotMatchConfigurationException
     {
-        String tstProjectName = testPath.getProjectName();
-        String srcProjectName = getSrcProjectName(tstProjectName, testPath);
-        String cleanTestPath = removeSurroundingSlashes(testPath.toString());
+        final String tstProjectName = testPath.getProjectName();
+        final String srcProjectName = getSrcProjectName(tstProjectName, testPath);
+        final String cleanTestPath = removeSurroundingSlashes(testPath.toString());
 
         String tstPathTpl = getTestPathTemplateForSrcProject(srcProjectName);
-        List<GroupRef> groupRefs = getGroupRefs(tstPathTpl);
+        final List<GroupRef> groupRefs = getGroupRefs(tstPathTpl);
         /*
          * ⚡ Bolt Performance Optimization
          *
@@ -270,7 +270,7 @@ public class TestFolderPathPattern
         String srcPathTpl = getSrcPathTemplateForSrcProject(srcProjectName);
         srcPathTpl = replaceGroupsWithRefs(srcPathTpl, groupRefs);
 
-        String codePathWithinSrcFolder = cleanTestPath.replaceFirst(tstPathTpl, "");
+        final String codePathWithinSrcFolder = cleanTestPath.replaceFirst(tstPathTpl, "");
         if(codePathWithinSrcFolder.length() != 0 && ! codePathWithinSrcFolder.startsWith(tstProjectName))
         {
             srcPathTpl += codePathWithinSrcFolder;
@@ -289,29 +289,29 @@ public class TestFolderPathPattern
             return template;
         }
 
-        Map<Integer, Integer> refIndices = new HashMap<>();
+        final Map<Integer, Integer> refIndices = new HashMap<>();
         int idx = 1;
-        for (GroupRef ref : groupRefs)
+        for (final GroupRef ref : groupRefs)
         {
             refIndices.put(ref.num - 1, idx);
             idx++;
         }
 
-        Matcher matcher = GROUP_PATTERN.matcher(template);
-        StringBuffer sb = new StringBuffer();
+        final Matcher matcher = GROUP_PATTERN.matcher(template);
+        final StringBuilder sb = new StringBuilder();
         int i = 0;
         while (matcher.find() && i < groupRefs.size())
         {
             matcher.appendReplacement(sb, Matcher.quoteReplacement("\\" + refIndices.get(i)));
             i++;
         }
-        matcher.appendTail(sb);
+        new StringBuilder(matcher.appendTail(sb).toString());
         return sb.toString();
     }
 
     private String getSrcProjectName(String tstProjectName, Path tstPath) throws DoesNotMatchConfigurationException
     {
-        Matcher m = testProjectPattern.matcher(tstProjectName);
+        final Matcher m = testProjectPattern.matcher(tstProjectName);
         if(! m.matches())
         {
             throw new DoesNotMatchConfigurationException(tstPath);
@@ -329,7 +329,7 @@ public class TestFolderPathPattern
          * 📊 Impact: ~7x speedup for this specific operation.
          * 🔬 Measurement: Benchmarked against regex replaceFirst using a 1M loop.
          */
-        String tpl = srcPathTemplate.replace(SRC_PROJECT_VARIABLE, projectName);
+        final String tpl = srcPathTemplate.replace(SRC_PROJECT_VARIABLE, projectName);
 
         /*
          * ⚡ Bolt Performance Optimization

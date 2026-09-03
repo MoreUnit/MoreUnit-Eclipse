@@ -63,7 +63,7 @@ public class MainLanguageRepositoryTest
     public void should_add_language_to_user_languages() throws Exception
     {
         // given
-        Language lang = new Language("rb");
+        final Language lang = new Language("rb");
 
         // when
         mainRepo.add(lang);
@@ -75,7 +75,7 @@ public class MainLanguageRepositoryTest
     public void should_remove_language_from_user_languages() throws Exception
     {
         // given
-        Language lang = new Language("js");
+        final Language lang = new Language("js");
         mainRepo.add(lang);
 
         // when
@@ -91,7 +91,7 @@ public class MainLanguageRepositoryTest
         mainRepo.addListener(listener1);
         mainRepo.addListener(listener2);
 
-        Language lang = new Language("rb");
+        final Language lang = new Language("rb");
 
         // when
         mainRepo.add(lang);
@@ -108,7 +108,7 @@ public class MainLanguageRepositoryTest
         mainRepo.addListener(listener1);
         mainRepo.addListener(listener2);
 
-        Language lang = new Language("clj");
+        final Language lang = new Language("clj");
         mainRepo.add(lang);
 
         // when

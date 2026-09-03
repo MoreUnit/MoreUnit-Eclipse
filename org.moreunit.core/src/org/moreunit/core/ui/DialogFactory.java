@@ -16,25 +16,11 @@ public class DialogFactory
 
     public Dialog createInfoDialog(final String message)
     {
-        return new Dialog()
-        {
-            @Override
-            public void open()
-            {
-                MessageDialog.openInformation(activeShell, TITLE, message);
-            }
-        };
+        return () -> MessageDialog.openInformation(activeShell, TITLE, message);
     }
 
     public Dialog createErrorDialog(final String message)
     {
-        return new Dialog()
-        {
-            @Override
-            public void open()
-            {
-                MessageDialog.openError(activeShell, TITLE, message);
-            }
-        };
+        return () -> MessageDialog.openError(activeShell, TITLE, message);
     }
 }

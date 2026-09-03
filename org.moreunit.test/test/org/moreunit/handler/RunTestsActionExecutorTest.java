@@ -62,7 +62,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         launchedMembers.set(null);
         launchMode.set(null);
 
-        TestLauncher testLauncher = mock(TestLauncher.class);
+        final TestLauncher testLauncher = mock(TestLauncher.class);
         doAnswer(invocation -> {
             launchedMembers.set(invocation.getArgument(1));
             launchMode.set(invocation.getArgument(2));
@@ -75,7 +75,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
 
     private void setPrivateField(String fieldName, Object value) throws Exception
     {
-        Field field = RunTestsActionExecutor.class.getDeclaredField(fieldName);
+        final Field field = RunTestsActionExecutor.class.getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(RunTestsActionExecutor.getInstance(), value);
     }
@@ -87,8 +87,8 @@ public class RunTestsActionExecutorTest extends ContextTestCase
 
     private void awaitLaunch(long timeoutMillis) throws Exception
     {
-        Display display = Display.getDefault();
-        long deadline = System.currentTimeMillis() + timeoutMillis;
+        final Display display = Display.getDefault();
+        final long deadline = System.currentTimeMillis() + timeoutMillis;
         while (! launchCalled.get() && System.currentTimeMillis() < deadline)
         {
             // the executor runs its final step through Display#syncExec, so the
@@ -106,10 +106,10 @@ public class RunTestsActionExecutorTest extends ContextTestCase
 
     private IEditorPart editorOver(ICompilationUnit compilationUnit, ISourceRange selectionRange)
     {
-        IEditorPart editorPart = mock(IEditorPart.class);
-        IEditorInput editorInput = mock(IEditorInput.class);
-        IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
-        ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
+        final IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
+        final ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
 
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         when(editorInput.getAdapter(IFile.class)).thenReturn((IFile) compilationUnit.getResource());
@@ -148,7 +148,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
     @Test
     public void executeRunTestAction_should_use_one_corresponding_test_case_when_test_selection_run_is_not_supported() throws Exception
     {
-        FeatureDetector featureDetector = mock(FeatureDetector.class);
+        final FeatureDetector featureDetector = mock(FeatureDetector.class);
         when(featureDetector.isTestSelectionRunSupported(any())).thenReturn(false);
         setPrivateField("featureDetector", featureDetector);
 
@@ -168,7 +168,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         RunTestsActionExecutor.getInstance().executeRunTestAction(context.getCompilationUnit("com.Foo"), ILaunchManager.RUN_MODE);
 
         awaitLaunch();
-        List<String> launchedNames = launchedElementNames();
+        final List<String> launchedNames = launchedElementNames();
         assertTrue(launchedNames.contains("FooTest"));
         assertTrue(launchedNames.contains("FooAbstractTestImpl"));
         assertFalse(launchedNames.contains("FooAbstractTest"));
@@ -183,7 +183,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         RunTestsActionExecutor.getInstance().executeRunTestAction(context.getCompilationUnit("com.Foo"), ILaunchManager.RUN_MODE);
 
         awaitLaunch();
-        List<String> launchedNames = launchedElementNames();
+        final List<String> launchedNames = launchedElementNames();
         assertTrue(launchedNames.contains("FooTest"));
         assertTrue(launchedNames.contains("FooAbstractTest"));
     }
@@ -191,10 +191,10 @@ public class RunTestsActionExecutorTest extends ContextTestCase
     @Test
     public void executeRunTestsOfSelectedMemberAction_should_launch_corresponding_test_methods() throws Exception
     {
-        IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
+        final IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
         context.getPrimaryTypeHandler("com.FooTest").addMethod("public void foo()", "");
 
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange());
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), foo.getNameRange());
         RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
 
         awaitLaunch();
@@ -204,9 +204,9 @@ public class RunTestsActionExecutorTest extends ContextTestCase
     @Test
     public void executeRunTestsOfSelectedMemberAction_should_launch_selected_test_method_when_edited_unit_is_a_test_case() throws Exception
     {
-        IMethod testFoo = context.getPrimaryTypeHandler("com.FooTest").addMethod("@Test\npublic void foo()", "").get();
+        final IMethod testFoo = context.getPrimaryTypeHandler("com.FooTest").addMethod("@Test\npublic void foo()", "").get();
 
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooTest"), testFoo.getNameRange());
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooTest"), testFoo.getNameRange());
         RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
 
         awaitLaunch();
@@ -217,14 +217,14 @@ public class RunTestsActionExecutorTest extends ContextTestCase
     @SuppressWarnings("unchecked")
     public void allSubclassesAction_should_expose_the_whole_collection_of_subclasses() throws Exception
     {
-        Class< ? > actionClass = Class.forName("org.moreunit.handler.RunTestsActionExecutor$AllSubclassesAction");
-        Constructor< ? > constructor = actionClass.getDeclaredConstructor(Collection.class);
+        final Class< ? > actionClass = Class.forName("org.moreunit.handler.RunTestsActionExecutor$AllSubclassesAction");
+        final Constructor< ? > constructor = actionClass.getDeclaredConstructor(Collection.class);
         constructor.setAccessible(true);
 
-        List<IType> subclasses = new ArrayList<>();
+        final List<IType> subclasses = new ArrayList<>();
         subclasses.add(mock(IType.class));
         subclasses.add(mock(IType.class));
-        TreeActionElement<Collection<IType>> action = (TreeActionElement<Collection<IType>>) constructor.newInstance(subclasses);
+        final TreeActionElement<Collection<IType>> action = (TreeActionElement<Collection<IType>>) constructor.newInstance(subclasses);
 
         assertTrue(action.provideElement());
         assertEquals("All concrete subclasses", action.getText());
@@ -239,9 +239,9 @@ public class RunTestsActionExecutorTest extends ContextTestCase
     {
         static void createAbstractTest(org.moreunit.test.context.TestContextRule testCase, String fullyQualifiedName) throws Exception
         {
-            int lastDot = fullyQualifiedName.lastIndexOf('.');
-            String packageName = fullyQualifiedName.substring(0, lastDot);
-            String typeName = fullyQualifiedName.substring(lastDot + 1);
+            final int lastDot = fullyQualifiedName.lastIndexOf('.');
+            final String packageName = fullyQualifiedName.substring(0, lastDot);
+            final String typeName = fullyQualifiedName.substring(lastDot + 1);
 
             testCase.getProjectHandler().getTestSrcFolderHandler() //
             .createCompilationUnit(fullyQualifiedName, "package %s;\npublic abstract class %s {}\n".formatted(packageName, typeName));
@@ -256,7 +256,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
     @Test
     public void executeRunTestAction_should_launch_tests_when_called_with_an_editor_part() throws Exception
     {
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), new org.eclipse.jdt.core.SourceRange(0, 0));
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.Foo"), new org.eclipse.jdt.core.SourceRange(0, 0));
 
         RunTestsActionExecutor.getInstance().executeRunTestAction(editorPart, ILaunchManager.RUN_MODE);
 
@@ -272,15 +272,15 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         TypeHandlerAccess.createSubclass(context, "com.FooAbstractTest", "com.FooAbstractTestImpl");
         TypeHandlerAccess.createSubclass(context, "com.FooAbstractTest", "com.FooAbstractTestImpl2");
 
-        Display display = Display.getDefault();
-        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Display display = Display.getDefault();
+        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
         display.asyncExec(DialogHelper.closerFor(display, knownShells, //
                 shell -> DialogHelper.confirmItem(shell, "FooAbstractTestImpl"), 2000));
 
         RunTestsActionExecutor.getInstance().executeRunTestAction(context.getCompilationUnit("com.Foo"), ILaunchManager.RUN_MODE);
 
         awaitLaunch(90_000);
-        List<String> launchedNames = launchedElementNames();
+        final List<String> launchedNames = launchedElementNames();
         assertTrue(launchedNames.contains("FooTest"));
         assertTrue(launchedNames.contains("FooAbstractTestImpl"), "chosen subclass should be launched: " + launchedNames);
         assertFalse(launchedNames.contains("FooAbstractTestImpl2"), "not chosen subclass should not be launched: " + launchedNames);
@@ -296,20 +296,20 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         context.getPrimaryTypeHandler("com.FooAbstractTestImpl").addMethod("@Test\npublic void testFoo()", "");
         TypeHandlerAccess.createSubclass(context, "com.FooAbstractTest", "com.FooAbstractTestImpl2");
 
-        IMethod abstractTestMethod = context.getPrimaryTypeHandler("com.FooAbstractTest").get().getMethods()[0];
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooAbstractTest"), abstractTestMethod.getNameRange());
+        final IMethod abstractTestMethod = context.getPrimaryTypeHandler("com.FooAbstractTest").get().getMethods()[0];
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooAbstractTest"), abstractTestMethod.getNameRange());
 
-        Display display = Display.getDefault();
-        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Display display = Display.getDefault();
+        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
         display.asyncExec(DialogHelper.closerFor(display, knownShells, //
                 shell -> DialogHelper.confirmItem(shell, "FooAbstractTestImpl"), 2000));
 
         RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
 
         awaitLaunch(90_000);
-        List<String> launchedNames = launchedElementNames();
+        final List<String> launchedNames = launchedElementNames();
         assertEquals(1, launchedNames.size());
-        IJavaElement launched = launchedMembers.get().iterator().next();
+        final IJavaElement launched = launchedMembers.get().iterator().next();
         assertEquals("testFoo", launched.getElementName());
         assertEquals("FooAbstractTestImpl", ((IMethod) launched).getDeclaringType().getElementName());
     }
@@ -325,18 +325,18 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         TypeHandlerAccess.createSubclass(context, "com.FooAbstractTest", "com.FooAbstractTestImpl2");
         context.getPrimaryTypeHandler("com.FooAbstractTestImpl2").addMethod("@Test\npublic void testFoo()", "");
 
-        IMethod abstractTestMethod = context.getPrimaryTypeHandler("com.FooAbstractTest").get().getMethods()[0];
-        IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooAbstractTest"), abstractTestMethod.getNameRange());
+        final IMethod abstractTestMethod = context.getPrimaryTypeHandler("com.FooAbstractTest").get().getMethods()[0];
+        final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooAbstractTest"), abstractTestMethod.getNameRange());
 
-        Display display = Display.getDefault();
-        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Display display = Display.getDefault();
+        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
         display.asyncExec(DialogHelper.closerFor(display, knownShells, //
                 shell -> DialogHelper.confirmItem(shell, "All concrete subclasses"), 2000));
 
         RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
 
         awaitLaunch(90_000);
-        java.util.Set<String> declaringTypes = launchedMembers.get().stream() //
+        final java.util.Set<String> declaringTypes = launchedMembers.get().stream() //
                 .map(e -> ((IMethod) e).getDeclaringType().getElementName()) //
                 .collect(java.util.stream.Collectors.toSet());
         assertEquals(new java.util.HashSet<>(java.util.Arrays.asList("FooAbstractTestImpl", "FooAbstractTestImpl2")), declaringTypes);

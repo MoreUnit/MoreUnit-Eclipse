@@ -9,18 +9,18 @@ public class InMemoryFolderTest {
 
     @Test
     public void testGetProject() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
-        InMemoryFolder folder = project.getFolder("folder/subfolder");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
+        final InMemoryFolder folder = project.getFolder("folder/subfolder");
 
         assertSame(folder.getProject(), project);
     }
 
     @Test
     public void testGetProjectPreferences() {
-        InMemoryWorkspace workspace = new InMemoryWorkspace();
-        InMemoryProject project = workspace.getProject("project");
-        InMemoryFolder folder = project.getFolder("folder/subfolder");
+        final InMemoryWorkspace workspace = new InMemoryWorkspace();
+        final InMemoryProject project = workspace.getProject("project");
+        final InMemoryFolder folder = project.getFolder("folder/subfolder");
 
         assertNull(folder.getProjectPreferences());
     }

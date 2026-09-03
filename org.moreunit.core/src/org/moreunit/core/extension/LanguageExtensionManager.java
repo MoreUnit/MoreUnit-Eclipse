@@ -47,9 +47,9 @@ public class LanguageExtensionManager
 
     private Collection<Language> getLanguages()
     {
-        Collection<Language> languages = new HashSet<>();
+        final Collection<Language> languages = new HashSet<>();
 
-        for (IConfigurationElement cfg : Platform.getExtensionRegistry().getConfigurationElementsFor(ExtensionPoints.LANGUAGES))
+        for (final IConfigurationElement cfg : Platform.getExtensionRegistry().getConfigurationElementsFor(ExtensionPoints.LANGUAGES))
         {
             try
             {
@@ -58,7 +58,7 @@ public class LanguageExtensionManager
                     languages.add(new Language(cfg.getAttribute(FILE_EXTENSION_ATTR), cfg.getAttribute(NAME_ATTR)));
                 }
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 logger.warn("Could not load extension from plug-in \"" + cfg.getContributor().getName() + "\" for point \"" + ExtensionPoints.LANGUAGES + "\": " + e.getMessage());
                 continue;
@@ -75,7 +75,7 @@ public class LanguageExtensionManager
             return true;
         }
 
-        for (IConfigurationElement condition : conditionElements)
+        for (final IConfigurationElement condition : conditionElements)
         {
             if(DEPENDENCY_COND_TYPE.equals(condition.getAttribute(TYPE_ATTR)) && ! isDependencyPresent(condition.getAttribute(VALUE_ATTR)))
             {
@@ -88,8 +88,8 @@ public class LanguageExtensionManager
 
     private boolean isDependencyPresent(String bundleId)
     {
-        Bundle[] bundles = bundleContext.getBundles();
-        for (Bundle bundle : bundles)
+        final Bundle[] bundles = bundleContext.getBundles();
+        for (final Bundle bundle : bundles)
         {
             if(bundleId.equals(bundle.getSymbolicName()))
             {
@@ -155,7 +155,7 @@ public class LanguageExtensionManager
 
             while (languageExtensions.hasNext())
             {
-                IConfigurationElement currentExtension = languageExtensions.next();
+                final IConfigurationElement currentExtension = languageExtensions.next();
 
                 jumpersOfCurrentExtension = new InternalJumperIterator(currentExtension.getChildren(JUMPER_EL), mgr);
 
@@ -193,10 +193,10 @@ public class LanguageExtensionManager
         {
             while (possibleJumpers.hasNext())
             {
-                IConfigurationElement el = possibleJumpers.next();
+                final IConfigurationElement el = possibleJumpers.next();
                 try
                 {
-                    Object jumper = el.createExecutableExtension(CLASS_ATTR);
+                    final Object jumper = el.createExecutableExtension(CLASS_ATTR);
                     if(! (jumper instanceof IJumper))
                     {
                         mgr.logger.warn("Element " + JUMPER_EL + " of point " + ExtensionPoints.LANGUAGES + " does not support class: " + el.getClass());
@@ -205,7 +205,7 @@ public class LanguageExtensionManager
                     setCurrent((IJumper) jumper);
                     return true;
                 }
-                catch (CoreException e)
+                catch (final CoreException e)
                 {
                     mgr.logger.warn("Could not create instance of class defined by attribute " + CLASS_ATTR + " of element " + el.getName() + " from plug-in \"" + el.getContributor().getName() + "\" for point \"" + ExtensionPoints.LANGUAGES + "\": " + e.getMessage());
                     continue;

@@ -31,7 +31,7 @@ public class MockDependenciesWizard extends Wizard implements INewWizard
 
     public boolean openAndReturnIfOk()
     {
-        WizardDialog dialog = wizardFactory.createWizardDialog(shell, this);
+        final WizardDialog dialog = wizardFactory.createWizardDialog(shell, this);
         return Window.OK == dialog.open();
     }
 

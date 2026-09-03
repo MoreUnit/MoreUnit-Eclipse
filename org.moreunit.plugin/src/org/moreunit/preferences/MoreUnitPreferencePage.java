@@ -5,8 +5,6 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -39,7 +37,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
     {
         initializeDialogUnits(parent);
 
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         parent.setLayout(layout);
@@ -56,14 +54,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
         };
         otherMoreunitPropertiesBlock.getControl(parent, false);
 
-        otherMoreunitPropertiesBlock.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
-            {
-                validate();
-            }
-        });
+        otherMoreunitPropertiesBlock.addModifyListener(e -> validate());
 
         Dialog.applyDialogFont(parent);
 
@@ -72,12 +63,12 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
 
     private void validate()
     {
-        String errorMsg = otherMoreunitPropertiesBlock.getError();
+        final String errorMsg = otherMoreunitPropertiesBlock.getError();
         if(errorMsg == null)
         {
             setValid();
 
-            String warningMsg = otherMoreunitPropertiesBlock.getWarning();
+            final String warningMsg = otherMoreunitPropertiesBlock.getWarning();
             if(warningMsg != null)
             {
                 setMessage(warningMsg, IMessageProvider.WARNING);
@@ -99,7 +90,7 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
 
     private void createTestSourceFolderField(Composite parentWith2Cols)
     {
-        Label label = new Label(parentWith2Cols, SWT.NONE);
+        final Label label = new Label(parentWith2Cols, SWT.NONE);
         label.setText(PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
         label.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
 
@@ -107,16 +98,11 @@ public class MoreUnitPreferencePage extends PreferencePage implements IWorkbench
         testSourceFolderField.setLayoutData(LayoutData.labelledField());
         testSourceFolderField.setText(Preferences.getInstance().getJunitDirectoryFromPreferences(null));
         testSourceFolderField.setToolTipText(PreferenceConstants.TOOLTIP_TEST_SOURCE_FOLDER);
-        testSourceFolderField.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
-            {
-                if(testSourceFolderField.getText().endsWith("/"))
-                    setErrorMessage("Test source folder should not end with a slash");
-                else
-                    setErrorMessage(null);
-            }
+        testSourceFolderField.addModifyListener(e -> {
+            if(testSourceFolderField.getText().endsWith("/"))
+                setErrorMessage("Test source folder should not end with a slash");
+            else
+                setErrorMessage(null);
         });
     }
 

@@ -83,13 +83,7 @@ public class MockDependenciesWizardPageTest
         {
             return;
         }
-        display.syncExec(new Runnable()
-        {
-            public void run()
-            {
-                shell = new Shell(display);
-            }
-        });
+        display.syncExec(() -> shell = new Shell(display));
 
         when(wizardValues.getClassUnderTest()).thenReturn(classUnderTest);
         when(classUnderTest.getJavaProject()).thenReturn(javaProject);
@@ -122,7 +116,7 @@ public class MockDependenciesWizardPageTest
         when(classUnderTest.getPackageFragment()).thenReturn(testCasePackage);
         when(testCasePackage.getElementName()).thenReturn("com.x");
 
-        DependencyInjectionPointCollector collector = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
+        final DependencyInjectionPointCollector collector = new DependencyInjectionPointCollector(classUnderTest, testCasePackage);
         // the cache is built lazily so that it collects the values stubbed by each test
         when(wizardValues.getInjectionPointProvider()).thenAnswer(invocation -> new DependencyInjectionPointProviderCache(collector));
 
@@ -134,13 +128,7 @@ public class MockDependenciesWizardPageTest
     {
         if(shell != null && ! shell.isDisposed())
         {
-            display.syncExec(new Runnable()
-            {
-                public void run()
-                {
-                    shell.dispose();
-                }
-            });
+            display.syncExec(() -> shell.dispose());
         }
     }
 
@@ -184,8 +172,8 @@ public class MockDependenciesWizardPageTest
 
         createControl();
 
-        Button showAllFieldsCheckbox = findButton(shell, "Show all fields");
-        Button showInjectableFieldsCheckbox = findButton(shell, "Show injectable fields");
+        final Button showAllFieldsCheckbox = findButton(shell, "Show all fields");
+        final Button showInjectableFieldsCheckbox = findButton(shell, "Show injectable fields");
 
         // when: the user asks for all fields to be displayed
         showAllFieldsCheckbox.setSelection(true);
@@ -210,7 +198,7 @@ public class MockDependenciesWizardPageTest
             return;
         }
 
-        IMethod plainMethod = mock(IMethod.class);
+        final IMethod plainMethod = mock(IMethod.class);
         when(plainMethod.isConstructor()).thenReturn(false);
         when(plainMethod.getElementName()).thenReturn("doSomething");
         when(classUnderTest.getMethods()).thenReturn(new IMethod[] { plainMethod });
@@ -228,7 +216,7 @@ public class MockDependenciesWizardPageTest
             return;
         }
 
-        IMethod defaultConstructor = mock(IMethod.class);
+        final IMethod defaultConstructor = mock(IMethod.class);
         when(defaultConstructor.isConstructor()).thenReturn(true);
         when(defaultConstructor.getNumberOfParameters()).thenReturn(0);
         when(defaultConstructor.getElementName()).thenReturn("Foo");
@@ -284,7 +272,7 @@ public class MockDependenciesWizardPageTest
 
         createControl();
 
-        Button deselectAll = findButton(shell, "Deselect All");
+        final Button deselectAll = findButton(shell, "Deselect All");
         deselectAll.notifyListeners(SWT.Selection, new Event());
 
         // no exception, no checked element
@@ -316,7 +304,7 @@ public class MockDependenciesWizardPageTest
         verify(templateStyleSelector, never()).savePreferences();
 
         // when: all dependencies are deselected
-        Button deselectAll = findButton(shell, "Deselect All");
+        final Button deselectAll = findButton(shell, "Deselect All");
         deselectAll.notifyListeners(SWT.Selection, new Event());
 
         // then
@@ -348,15 +336,15 @@ public class MockDependenciesWizardPageTest
 
     private static Button findButton(Composite composite, String text)
     {
-        for (Control child : composite.getChildren())
+        for (final Control child : composite.getChildren())
         {
-            if(child instanceof Button button && text.equals(button.getText()))
+            if(child instanceof final Button button && text.equals(button.getText()))
             {
                 return button;
             }
-            if(child instanceof Composite nested)
+            if(child instanceof final Composite nested)
             {
-                Button found = findButton(nested, text);
+                final Button found = findButton(nested, text);
                 if(found != null)
                 {
                     return found;

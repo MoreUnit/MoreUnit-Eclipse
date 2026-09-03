@@ -27,7 +27,7 @@ import org.moreunit.preferences.Preferences;
 public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
 {
 
-    private Preferences preferences;
+    private final Preferences preferences;
 
     public MoreUnitCodeMiningProvider()
     {
@@ -37,8 +37,8 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
     @Override
     public CompletableFuture<List< ? extends ICodeMining>> provideCodeMinings(ITextViewer viewer, IProgressMonitor monitor)
     {
-        ITextEditor textEditor = super.getAdapter(ITextEditor.class);
-        ITypeRoot unit = EditorUtility.getEditorInputJavaElement(textEditor, true);
+        final ITextEditor textEditor = super.getAdapter(ITextEditor.class);
+        final ITypeRoot unit = EditorUtility.getEditorInputJavaElement(textEditor, true);
         if(unit == null || ! preferences.shouldEnableMoreUnitCodeMining(unit.getJavaProject()))
         {
             return CompletableFuture.completedFuture(Collections.emptyList());
@@ -47,12 +47,12 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             monitor.isCanceled();
             try
             {
-                IJavaElement[] elements = unit.getChildren();
-                List<ICodeMining> minings = new ArrayList<>(elements.length);
+                final IJavaElement[] elements = unit.getChildren();
+                final List<ICodeMining> minings = new ArrayList<>(elements.length);
                 collectMinings(unit, textEditor, unit.getChildren(), minings, viewer, monitor);
                 return minings;
             }
-            catch (JavaModelException e)
+            catch (final JavaModelException e)
             {
                 // Should never occur
             }
@@ -68,7 +68,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             return;
         }
 
-        for (IJavaElement element : elements)
+        for (final IJavaElement element : elements)
         {
             if(monitor.isCanceled())
             {
@@ -84,7 +84,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             }
             // support methods, classes
             boolean addMining = false;
-            if(element instanceof IType type && preferences.shouldEnableJumpToClassCodeMining(unit.getJavaProject()))
+            if(element instanceof final IType type && preferences.shouldEnableJumpToClassCodeMining(unit.getJavaProject()))
             {
                 if(type.isClass() || type.isEnum() || type.isInterface() || type.isRecord() || type.isAnnotation())
                 {
@@ -101,7 +101,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
                 {
                     minings.add(new JumpCodeMining(element, viewer.getDocument(), this));
                 }
-                catch (BadLocationException e)
+                catch (final BadLocationException e)
                 {
                     // Should never occur
                 }

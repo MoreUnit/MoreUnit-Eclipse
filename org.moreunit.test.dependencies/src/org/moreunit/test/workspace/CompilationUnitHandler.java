@@ -59,7 +59,7 @@ public class CompilationUnitHandler implements ElementHandler<ICompilationUnit, 
         {
             return compilationUnit.getSource();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             throw new RuntimeException("Could not load source of " + compilationUnit.getElementName(), e);
         }

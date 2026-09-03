@@ -26,8 +26,8 @@ public class EclipseProjectTest
     @Test
     public void exists_should_check_project_and_open() throws Exception
     {
-        IProject iproject = mock(IProject.class);
-        IPath path = mock(IPath.class);
+        final IProject iproject = mock(IProject.class);
+        final IPath path = mock(IPath.class);
         when(path.removeTrailingSeparator()).thenReturn(path);
         when(iproject.getFullPath()).thenReturn(path);
         when(iproject.exists()).thenReturn(true);

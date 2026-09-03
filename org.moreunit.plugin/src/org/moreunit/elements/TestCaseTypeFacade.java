@@ -29,7 +29,7 @@ public class TestCaseTypeFacade extends TypeFacade
 
     public IType getCorrespondingClassUnderTest()
     {
-        Collection<IType> correspondingCuts = getCorrespondingClasses(false);
+        final Collection<IType> correspondingCuts = getCorrespondingClasses(false);
         if(correspondingCuts.isEmpty())
         {
             return null;
@@ -40,9 +40,9 @@ public class TestCaseTypeFacade extends TypeFacade
 
     public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, Collection<IType> classesUnderTest)
     {
-        List<IMethod> result = new ArrayList<>();
+        final List<IMethod> result = new ArrayList<>();
 
-        for (IType classUnderTest : classesUnderTest)
+        for (final IType classUnderTest : classesUnderTest)
         {
             result.addAll(getCorrespondingTestedMethods(testMethod, classUnderTest));
         }
@@ -52,14 +52,14 @@ public class TestCaseTypeFacade extends TypeFacade
 
     public List<IMethod> getCorrespondingTestedMethods(IMethod testMethod, IType classUnderTest)
     {
-        List<IMethod> testedMethods = new ArrayList<>();
+        final List<IMethod> testedMethods = new ArrayList<>();
         try
         {
-            String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
+            final String testedMethodName = testMethodDiviner.getMethodNameFromTestMethodName(testMethod.getElementName());
             if(testedMethodName != null)
             {
-                IMethod[] foundTestMethods = classUnderTest.getMethods();
-                for (IMethod method : foundTestMethods)
+                final IMethod[] foundTestMethods = classUnderTest.getMethods();
+                for (final IMethod method : foundTestMethods)
                 {
                     if(method.exists())
                     {
@@ -77,7 +77,7 @@ public class TestCaseTypeFacade extends TypeFacade
                 }
             }
         }
-        catch (JavaModelException exc)
+        catch (final JavaModelException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }

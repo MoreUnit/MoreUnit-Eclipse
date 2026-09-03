@@ -12,11 +12,11 @@ public class WizardDialogFactoryTest
     @Test
     public void should_create_wizard_dialog()
     {
-        WizardDialogFactory factory = new WizardDialogFactory();
-        Shell shell = mock(Shell.class);
-        NewClassyWizard wizard = mock(NewClassyWizard.class);
+        final WizardDialogFactory factory = new WizardDialogFactory();
+        final Shell shell = mock(Shell.class);
+        final NewClassyWizard wizard = mock(NewClassyWizard.class);
 
-        WizardDialog dialog = factory.createWizardDialog(shell, wizard);
+        final WizardDialog dialog = factory.createWizardDialog(shell, wizard);
 
         assertNotNull(dialog);
     }

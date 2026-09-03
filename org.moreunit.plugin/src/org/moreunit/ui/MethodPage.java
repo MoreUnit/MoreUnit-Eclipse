@@ -116,7 +116,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
         this.addTestAction.setImageDescriptor(MoreUnitPlugin.getImageDescriptor("icons/new_testcase.png"));
         this.addTestAction.setToolTipText("Add test");
 
-        IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
+        final IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
         toolBarManager.add(this.filterPrivateAction);
         toolBarManager.add(this.filterGetterAction);
         toolBarManager.add(this.addTestAction);
@@ -137,23 +137,23 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
     @SuppressWarnings("unchecked")
     private void addItem()
     {
-        ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
+        final ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
         if(selection.isEmpty())
         {
             return;
         }
 
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(this.editorPartFacade.getEditorPart());
-        CorrespondingTestCase testCase = classTypeFacade.getOneCorrespondingTestCase(true);
+        final ClassTypeFacade classTypeFacade = new ClassTypeFacade(this.editorPartFacade.getEditorPart());
+        final CorrespondingTestCase testCase = classTypeFacade.getOneCorrespondingTestCase(true);
 
         if(! testCase.found() || ! testCase.get().exists())
         {
             return;
         }
 
-        ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
+        final ProjectPreferences prefs = Preferences.forProject(this.editorPartFacade.getJavaProject());
 
-        TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
+        final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings()
                 .compilationUnit(this.editorPartFacade.getCompilationUnit(), testCase.get().getCompilationUnit())
                 .testCaseJustCreated(testCase.hasJustBeenCreated())
                 .testType(prefs.getTestType())
@@ -193,7 +193,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
     @Override
     public void elementChanged(ElementChangedEvent event)
     {
-        int type = event.getDelta().getElement().getElementType();
+        final int type = event.getDelta().getElement().getElementType();
         switch (type)
         {
         case (IJavaElement.COMPILATION_UNIT):
@@ -207,14 +207,7 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
 
     private void updateUIafterElementChangedEvent()
     {
-        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                updateUI();
-            }
-        });
+        PlatformUI.getWorkbench().getDisplay().asyncExec(() -> updateUI());
     }
 
     @Override
@@ -227,9 +220,9 @@ public class MethodPage extends Page implements IElementChangedListener, IDouble
     @Override
     public void doubleClick(DoubleClickEvent event)
     {
-        ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
+        final ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
 
-        IMethod method = (IMethod) selection.getFirstElement();
+        final IMethod method = (IMethod) selection.getFirstElement();
         new EditorUI().open(method);
     }
 

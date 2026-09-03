@@ -27,7 +27,7 @@ public class LanguageTest
     @Test
     public void should_set_extension_and_label()
     {
-        Language lang = new Language("ext", "Label");
+        final Language lang = new Language("ext", "Label");
         org.junit.jupiter.api.Assertions.assertEquals("ext", lang.getExtension());
         org.junit.jupiter.api.Assertions.assertEquals("Label", lang.getLabel());
         org.junit.jupiter.api.Assertions.assertEquals("Label[.ext]", lang.toString());
@@ -36,7 +36,7 @@ public class LanguageTest
     @Test
     public void should_use_extension_as_label_if_label_is_null()
     {
-        Language lang = new Language("ext", null);
+        final Language lang = new Language("ext", null);
         org.junit.jupiter.api.Assertions.assertEquals("ext", lang.getExtension());
         org.junit.jupiter.api.Assertions.assertEquals("ext", lang.getLabel());
     }
@@ -44,7 +44,7 @@ public class LanguageTest
     @Test
     public void should_use_extension_as_label_if_label_is_null_and_trim_extension()
     {
-        Language lang = new Language("  ext  ", null);
+        final Language lang = new Language("  ext  ", null);
         org.junit.jupiter.api.Assertions.assertEquals("ext", lang.getExtension());
         org.junit.jupiter.api.Assertions.assertEquals("  ext  ", lang.getLabel());
     }
@@ -52,7 +52,7 @@ public class LanguageTest
     @Test
     public void should_trim_extension()
     {
-        Language lang = new Language("  ext  ");
+        final Language lang = new Language("  ext  ");
         org.junit.jupiter.api.Assertions.assertEquals("ext", lang.getExtension());
         org.junit.jupiter.api.Assertions.assertEquals("  ext  ", lang.getLabel());
     }
@@ -60,9 +60,9 @@ public class LanguageTest
     @Test
     public void test_equals_and_hashCode()
     {
-        Language lang1 = new Language("ext", "Label");
-        Language lang2 = new Language("ext", "Label2"); // equals only checks extension
-        Language lang3 = new Language("ext3", "Label");
+        final Language lang1 = new Language("ext", "Label");
+        final Language lang2 = new Language("ext", "Label2"); // equals only checks extension
+        final Language lang3 = new Language("ext3", "Label");
 
         org.junit.jupiter.api.Assertions.assertEquals(lang1, lang1);
         org.junit.jupiter.api.Assertions.assertEquals(lang1, lang2);
@@ -76,8 +76,8 @@ public class LanguageTest
     @Test
     public void test_compareTo()
     {
-        Language lang1 = new Language("extA", "Label A");
-        Language lang2 = new Language("extB", "Label B");
+        final Language lang1 = new Language("extA", "Label A");
+        final Language lang2 = new Language("extB", "Label B");
 
         org.junit.jupiter.api.Assertions.assertTrue(lang1.compareTo(lang2) < 0);
         org.junit.jupiter.api.Assertions.assertTrue(lang2.compareTo(lang1) > 0);
@@ -87,7 +87,7 @@ public class LanguageTest
     @Test
     public void should_create_language_with_extension_only()
     {
-        Language lang = new Language("groovy");
+        final Language lang = new Language("groovy");
         org.junit.jupiter.api.Assertions.assertEquals("groovy", lang.getExtension());
         org.junit.jupiter.api.Assertions.assertEquals("groovy", lang.getLabel());
     }

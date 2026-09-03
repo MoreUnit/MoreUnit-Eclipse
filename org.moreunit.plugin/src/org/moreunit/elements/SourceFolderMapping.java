@@ -14,9 +14,9 @@ import org.moreunit.util.PluginTools;
  */
 public class SourceFolderMapping
 {
-    private IJavaProject javaProject;
+    private final IJavaProject javaProject;
     private List<IPackageFragmentRoot> sourceFolderList = new ArrayList<>();
-    private IPackageFragmentRoot testFolder;
+    private final IPackageFragmentRoot testFolder;
 
     public SourceFolderMapping(IJavaProject javaProject, IPackageFragmentRoot sourceFolder, IPackageFragmentRoot testFolder)
     {
@@ -55,9 +55,9 @@ public class SourceFolderMapping
     @Override
     public String toString()
     {
-        List<String> toStringParts = new ArrayList<>();
+        final List<String> toStringParts = new ArrayList<>();
         toStringParts.add(SourceFolderMapping.class.getSimpleName());
-        for (IPackageFragmentRoot sourceFolder : sourceFolderList)
+        for (final IPackageFragmentRoot sourceFolder : sourceFolderList)
         {
             toStringParts.add(" (%s:%s => %s:%s)".formatted(sourceFolder.getJavaProject().getElementName(), sourceFolder.getElementName(), testFolder.getJavaProject().getElementName(), testFolder.getElementName()));
         }

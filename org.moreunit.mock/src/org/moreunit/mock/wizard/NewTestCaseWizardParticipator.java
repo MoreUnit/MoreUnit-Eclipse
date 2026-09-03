@@ -50,7 +50,7 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
             return null;
         }
 
-        INewTestCaseWizardPage page = pageManager.createPage(context);
+        final INewTestCaseWizardPage page = pageManager.createPage(context);
         context.put(PAGE_KEY, page);
 
         return page == null ? null : asList(page);
@@ -59,7 +59,7 @@ public class NewTestCaseWizardParticipator implements INewTestCaseWizardParticip
     @Override
     public void testCaseCreated(INewTestCaseWizardContext context)
     {
-        MockDependenciesWizardPage page = context.get(PAGE_KEY);
+        final MockDependenciesWizardPage page = context.get(PAGE_KEY);
         if(page == null || context.getCreatedTestCase() == null)
         {
             return;

@@ -26,7 +26,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
 {
     private void openPreferencesAndSelectMoreUnitPage()
     {
-        try { bot.shell("Preferences").close(); } catch (Exception e) { }
+        try { bot.shell("Preferences").close(); } catch (final Exception e) { }
         getShortcutStrategy().openPreferences();
         bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive("Preferences"), 20000);
         bot.shell("Preferences").activate();
@@ -39,7 +39,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
     {
         openPreferencesAndSelectMoreUnitPage();
 
-        SWTBotText sourceFolderTextField = bot.textWithLabel(PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
+        final SWTBotText sourceFolderTextField = bot.textWithLabel(PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
         sourceFolderTextField.setText("unittest");
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_PREFIX).setText("pckgprefix");
         bot.textWithLabel(PreferenceConstants.TEXT_PACKAGE_SUFFIX).setText("pckgsuffix");
@@ -52,22 +52,22 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
         bot.checkBox(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING).deselect();
         saveAndClosePrefs();
 
-        String junitDirectoryFromPreferences = Preferences.getInstance().getJunitDirectoryFromPreferences(getJavaProjectFromContext());
+        final String junitDirectoryFromPreferences = Preferences.getInstance().getJunitDirectoryFromPreferences(getJavaProjectFromContext());
         assertEquals("unittest", junitDirectoryFromPreferences);
 
-        String testPackagePrefix = Preferences.getInstance().getTestPackagePrefix(getJavaProjectFromContext());
+        final String testPackagePrefix = Preferences.getInstance().getTestPackagePrefix(getJavaProjectFromContext());
         assertEquals("pckgprefix", testPackagePrefix);
 
-        String testPackageSuffix = Preferences.getInstance().getTestPackageSuffix(getJavaProjectFromContext());
+        final String testPackageSuffix = Preferences.getInstance().getTestPackageSuffix(getJavaProjectFromContext());
         assertEquals("pckgsuffix", testPackageSuffix);
 
-        String testSuperClass = Preferences.getInstance().getTestSuperClass(getJavaProjectFromContext());
+        final String testSuperClass = Preferences.getInstance().getTestSuperClass(getJavaProjectFromContext());
         assertEquals("org.moreunit.SuperClass", testSuperClass);
 
-        String testMethodDefaultContent = Preferences.getInstance().getTestMethodDefaultContent(getJavaProjectFromContext());
+        final String testMethodDefaultContent = Preferences.getInstance().getTestMethodDefaultContent(getJavaProjectFromContext());
         assertEquals("blubbContent", testMethodDefaultContent);
 
-        String template = Preferences.forProject(getJavaProjectFromContext()).getTestClassNameTemplate();
+        final String template = Preferences.forProject(getJavaProjectFromContext()).getTestClassNameTemplate();
         assertEquals("${srcFile}(Test|ITTest)", template);
 
         assertTrue(Preferences.getInstance().getMethodSearchMode(getJavaProjectFromContext()).searchByCall);
@@ -136,7 +136,7 @@ public class PreferencesTest extends JavaProjectSWTBotTestHelper
     private void saveAndClosePrefs()
     {
         // in newer version (at least 4.8), the label has been changed and is stored in a preference
-        String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
+        final String label = JFaceResources.getString("PreferencesDialog.okButtonLabel");
         bot.button("PreferencesDialog.okButtonLabel".equals(label)? "OK" : label).click();
     }
 }

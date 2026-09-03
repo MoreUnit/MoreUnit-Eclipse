@@ -1,20 +1,12 @@
 package org.moreunit.mock.templates;
 
 import java.net.URL;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class LoadingResult
 {
-    private Map<URL, String> invalidTemplates = new TreeMap<>(new Comparator<URL>()
-    {
-        @Override
-        public int compare(URL url1, URL url2)
-        {
-            return url1.toString().compareTo(url2.toString());
-        }
-    });
+    private final Map<URL, String> invalidTemplates = new TreeMap<>((url1, url2) -> url1.toString().compareTo(url2.toString()));
 
     public boolean invalidTemplatesFound()
     {

@@ -11,7 +11,7 @@ public class MoreUnitAnnotationTest
     @Test
     public void create_annotation_for_tested_method_should_return_annotation()
     {
-        ISourceRange range = mock(ISourceRange.class);
+        final ISourceRange range = mock(ISourceRange.class);
 
         assertNotNull(MoreUnitAnnotation.createAnnotationForTestedMethod(range));
     }
@@ -19,7 +19,7 @@ public class MoreUnitAnnotationTest
     @Test
     public void create_annotation_for_ignored_test_method_should_return_annotation()
     {
-        ISourceRange range = mock(ISourceRange.class);
+        final ISourceRange range = mock(ISourceRange.class);
 
         assertNotNull(MoreUnitAnnotation.createAnnotationForIgnoredTesMethod(range));
     }

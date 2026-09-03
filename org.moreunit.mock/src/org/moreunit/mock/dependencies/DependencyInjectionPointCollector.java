@@ -31,9 +31,9 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
     @Override
     public Collection<IMethod> getConstructors() throws JavaModelException
     {
-        Collection<IMethod> constructors = new HashSet<>();
+        final Collection<IMethod> constructors = new HashSet<>();
 
-        for (IMethod method : classUnderTest.getMethods())
+        for (final IMethod method : classUnderTest.getMethods())
         {
             if(isVisibleToTestCase(method) && method.isConstructor() && method.getNumberOfParameters() > 0)
             {
@@ -46,7 +46,7 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
 
     public boolean isVisibleToTestCase(IMember member) throws JavaModelException
     {
-        int flags = member.getFlags();
+        final int flags = member.getFlags();
         return ! Flags.isSynthetic(flags) && (Flags.isPublic(flags) || (canAccessPackage(classUnderTest, testCasePackage) && ! Flags.isPrivate(flags)));
     }
 
@@ -58,11 +58,11 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
     @Override
     public Collection<IMethod> getSetters() throws JavaModelException
     {
-        Collection<IMethod> setters = new HashSet<>();
+        final Collection<IMethod> setters = new HashSet<>();
 
-        for (IMethod method : getAllMethods())
+        for (final IMethod method : getAllMethods())
         {
-            String methodName = method.getElementName();
+            final String methodName = method.getElementName();
             /*
              * ⚡ Bolt Performance Optimization
              *
@@ -83,8 +83,8 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
 
     private Set<IMethod> getAllMethods() throws JavaModelException
     {
-        Set<IMethod> methods = new HashSet<>();
-        for (IType type : getTypeHierarchy().getAllClasses())
+        final Set<IMethod> methods = new HashSet<>();
+        for (final IType type : getTypeHierarchy().getAllClasses())
         {
             Collections.addAll(methods, type.getMethods());
         }
@@ -103,9 +103,9 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
     @Override
     public Collection<Field> getFields() throws JavaModelException
     {
-        HashSet<Field> fields = new HashSet<>();
+        final HashSet<Field> fields = new HashSet<>();
 
-        for (IField field : getAllFields())
+        for (final IField field : getAllFields())
         {
             fields.add(new Field(field, isVisibleToTestCase(field)));
         }
@@ -115,8 +115,8 @@ public class DependencyInjectionPointCollector implements DependencyInjectionPoi
 
     private Set<IField> getAllFields() throws JavaModelException
     {
-        Set<IField> fields = new HashSet<>();
-        for (IType type : getTypeHierarchy().getAllClasses())
+        final Set<IField> fields = new HashSet<>();
+        for (final IType type : getTypeHierarchy().getAllClasses())
         {
             Collections.addAll(fields, type.getFields());
         }

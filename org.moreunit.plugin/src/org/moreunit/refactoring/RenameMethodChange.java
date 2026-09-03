@@ -47,14 +47,14 @@ public class RenameMethodChange extends Change
     @Override
     public Change perform(IProgressMonitor pm) throws CoreException
     {
-        String oldName = methodToRename.getElementName();
+        final String oldName = methodToRename.getElementName();
         methodToRename.rename(newName, false, pm);
         return getUndo(oldName);
     }
 
     private Change getUndo(String oldName)
     {
-        IMethod newMethod = getNewMethod();
+        final IMethod newMethod = getNewMethod();
         if(newMethod == null)
         {
             return null;
@@ -66,16 +66,16 @@ public class RenameMethodChange extends Change
     {
         try
         {
-            IMethod[] methods = methodToRename.getDeclaringType().getMethods();
-            for (int i = 0; i < methods.length; i++)
+            final IMethod[] methods = methodToRename.getDeclaringType().getMethods();
+            for (final IMethod method : methods)
             {
-                if(methods[i].getElementName().equals(newName))
+                if(method.getElementName().equals(newName))
                 {
-                    return methods[i];
+                    return method;
                 }
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }

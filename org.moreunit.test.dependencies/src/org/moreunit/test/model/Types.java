@@ -21,11 +21,11 @@ public final class Types
 
     public static IType typeWithPackage(String typeName, String packageName)
     {
-        IType t = mock(IType.class);
+        final IType t = mock(IType.class);
 
         when(t.getElementName()).thenReturn(typeName);
 
-        IPackageFragment p = mock(IPackageFragment.class);
+        final IPackageFragment p = mock(IPackageFragment.class);
         when(p.getElementName()).thenReturn(packageName);
         when(t.getPackageFragment()).thenReturn(p);
         when(t.getFullyQualifiedName()).thenReturn((StringUtils.isNullOrEmpty(packageName) ? "" : packageName + ".") + typeName);

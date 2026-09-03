@@ -35,10 +35,10 @@ public class RenameMethodParticipantTest extends ContextTestCase
     @BeforeEach
     public void setUp()
     {
-        TypeHandler cutType = context.getCompilationUnitHandler("com.Foo").getPrimaryTypeHandler();
+        final TypeHandler cutType = context.getCompilationUnitHandler("com.Foo").getPrimaryTypeHandler();
         methodUnderTest = cutType.addMethod("public int foo()", "return 0;");
 
-        TypeHandler testType = context.getCompilationUnitHandler("com.FooTest").getPrimaryTypeHandler();
+        final TypeHandler testType = context.getCompilationUnitHandler("com.FooTest").getPrimaryTypeHandler();
         testMethod = testType.addMethod("public void foo()", "");
     }
 
@@ -57,10 +57,10 @@ public class RenameMethodParticipantTest extends ContextTestCase
     @Test
     public void checkConditions_should_return_ok_status()
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(methodUnderTest.get(), new RenameArguments("bar", true));
 
-        RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
+        final RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
 
         assertNotNull(status);
         assertTrue(status.isOK());
@@ -69,7 +69,7 @@ public class RenameMethodParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_return_null_when_references_should_not_be_updated() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(methodUnderTest.get(), new RenameArguments("bar", false));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -78,9 +78,9 @@ public class RenameMethodParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_return_null_when_no_test_method_exists_for_the_renamed_method() throws Exception
     {
-        MethodHandler methodWithoutTest = context.getPrimaryTypeHandler("com.Foo").addMethod("public int baz()", "return 1;");
+        final MethodHandler methodWithoutTest = context.getPrimaryTypeHandler("com.Foo").addMethod("public int baz()", "return 1;");
 
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(methodWithoutTest.get(), new RenameArguments("qux", true));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -89,11 +89,11 @@ public class RenameMethodParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_rename_corresponding_test_methods() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(methodUnderTest.get(), new RenameArguments("bar", true));
         awaitSearchResult(() -> new org.moreunit.elements.ClassTypeFacade(context.getCompilationUnit("com.Foo")).getCorrespondingTestMethodsByName(methodUnderTest.get()));
 
-        Change change = participant.createChange(new NullProgressMonitor());
+        final Change change = participant.createChange(new NullProgressMonitor());
 
         assertNotNull(change);
         assertInstanceOf(RenameMethodChange.class, change);
@@ -109,8 +109,8 @@ public class RenameMethodParticipantTest extends ContextTestCase
      */
     private void awaitSearchResult(java.util.function.Supplier<java.util.Collection< ? >> search) throws Exception
     {
-        org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
-        long deadline = System.currentTimeMillis() + 20_000;
+        final org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 20_000;
         while (System.currentTimeMillis() < deadline)
         {
             if(! search.get().isEmpty())

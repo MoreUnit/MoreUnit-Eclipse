@@ -23,7 +23,7 @@ public class PreferenceTest
     public void should_prefix_preference_name_with_plugin_id()
     {
         // given
-        BooleanPreference pref = new BooleanPreference("myPref", true);
+        final BooleanPreference pref = new BooleanPreference("myPref", true);
 
         // then
         assertEquals(prefixed("myPref"), pref.name);
@@ -34,7 +34,7 @@ public class PreferenceTest
     public void boolean_preference_should_accept_both_boolean_values()
     {
         // given
-        BooleanPreference pref = new BooleanPreference("myPref", true);
+        final BooleanPreference pref = new BooleanPreference("myPref", true);
 
         // then
         assertTrue(pref.isPossibleValue(true));
@@ -45,8 +45,8 @@ public class PreferenceTest
     public void boolean_preference_should_register_default_value_in_store()
     {
         // given
-        BooleanPreference pref = new BooleanPreference("myPref", true);
-        IPreferenceStore store = mock(IPreferenceStore.class);
+        final BooleanPreference pref = new BooleanPreference("myPref", true);
+        final IPreferenceStore store = mock(IPreferenceStore.class);
 
         // when
         pref.registerDefaultValue(store);
@@ -59,7 +59,7 @@ public class PreferenceTest
     public void string_preference_without_possible_values_should_accept_any_value()
     {
         // given
-        StringPreference pref = new StringPreference("myPref", "default");
+        final StringPreference pref = new StringPreference("myPref", "default");
 
         // then
         assertTrue(pref.isPossibleValue("anything"));
@@ -70,8 +70,8 @@ public class PreferenceTest
     public void string_preference_should_register_default_value_in_store()
     {
         // given
-        StringPreference pref = new StringPreference("myPref", "default");
-        IPreferenceStore store = mock(IPreferenceStore.class);
+        final StringPreference pref = new StringPreference("myPref", "default");
+        final IPreferenceStore store = mock(IPreferenceStore.class);
 
         // when
         pref.registerDefaultValue(store);
@@ -84,7 +84,7 @@ public class PreferenceTest
     public void string_preference_with_possible_values_should_only_accept_these_values()
     {
         // given
-        StringPreference pref = new StringPreference("myPref", "a", "a", "b");
+        final StringPreference pref = new StringPreference("myPref", "a", "a", "b");
 
         // then
         assertTrue(pref.isPossibleValue("a"));
@@ -103,8 +103,8 @@ public class PreferenceTest
     public void should_not_register_default_value_when_none_is_defined()
     {
         // given
-        BooleanPreference pref = new BooleanPreference("myPref", null);
-        IPreferenceStore store = mock(IPreferenceStore.class);
+        final BooleanPreference pref = new BooleanPreference("myPref", null);
+        final IPreferenceStore store = mock(IPreferenceStore.class);
 
         // when
         pref.registerDefaultValue(store);

@@ -38,19 +38,19 @@ public class EditorPartFacadeTest extends ContextTestCase
 
     private IEditorPart mockEditorPartShowing(IFile file)
     {
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(file);
 
-        IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         return editorPart;
     }
 
     private EditorPartFacade facadeWithCursorInMethod(IEditorPart editorPart, int offset)
     {
-        IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
-        ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
-        ITextSelection selection = mock(ITextSelection.class);
+        final IWorkbenchPartSite site = mock(IWorkbenchPartSite.class);
+        final ISelectionProvider selectionProvider = mock(ISelectionProvider.class);
+        final ITextSelection selection = mock(ITextSelection.class);
         when(selection.getOffset()).thenReturn(offset);
         when(selectionProvider.getSelection()).thenReturn(selection);
         when(site.getSelectionProvider()).thenReturn(selectionProvider);
@@ -62,8 +62,8 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void should_return_file_and_compilation_unit_of_the_edited_file()
     {
-        IFile file = (IFile) cutHandler.getCompilationUnit().getResource();
-        EditorPartFacade facade = new EditorPartFacade(mockEditorPartShowing(file));
+        final IFile file = (IFile) cutHandler.getCompilationUnit().getResource();
+        final EditorPartFacade facade = new EditorPartFacade(mockEditorPartShowing(file));
 
         assertSame(file, facade.getFile());
         assertTrue(facade.isJavaLikeFile());
@@ -74,7 +74,7 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void should_return_given_editor_part()
     {
-        IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
+        final IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
 
         assertSame(editorPart, new EditorPartFacade(editorPart).getEditorPart());
     }
@@ -82,9 +82,9 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void getTextSelection_should_return_selection_from_editor_site() throws Exception
     {
-        IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
-        int offset = methodUnderTest.get().getNameRange().getOffset() + 1;
-        EditorPartFacade facade = facadeWithCursorInMethod(editorPart, offset);
+        final IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
+        final int offset = methodUnderTest.get().getNameRange().getOffset() + 1;
+        final EditorPartFacade facade = facadeWithCursorInMethod(editorPart, offset);
 
         assertEquals(offset, facade.getTextSelection().getOffset());
     }
@@ -92,9 +92,9 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void getMethodUnderCursorPosition_should_return_method_at_cursor_position() throws Exception
     {
-        IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
-        int offset = methodUnderTest.get().getNameRange().getOffset() + 1;
-        EditorPartFacade facade = facadeWithCursorInMethod(editorPart, offset);
+        final IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
+        final int offset = methodUnderTest.get().getNameRange().getOffset() + 1;
+        final EditorPartFacade facade = facadeWithCursorInMethod(editorPart, offset);
 
         assertEquals(methodUnderTest.get(), facade.getMethodUnderCursorPosition());
     }
@@ -102,9 +102,9 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void getMethodUnderCursorPosition_should_return_null_when_cursor_is_not_in_a_method()
     {
-        IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
+        final IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
         // offset 0 is on the package declaration, not within a method
-        EditorPartFacade facade = facadeWithCursorInMethod(editorPart, 0);
+        final EditorPartFacade facade = facadeWithCursorInMethod(editorPart, 0);
 
         assertNull(facade.getMethodUnderCursorPosition());
     }
@@ -112,7 +112,7 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void getMethodUnderCursorPosition_should_return_null_when_no_file_is_edited()
     {
-        EditorPartFacade facade = facadeWithCursorInMethod(mockEditorPartShowing(null), 0);
+        final EditorPartFacade facade = facadeWithCursorInMethod(mockEditorPartShowing(null), 0);
 
         assertNull(facade.getMethodUnderCursorPosition());
     }
@@ -120,9 +120,9 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void getFirstNonAnonymousMethodSurroundingCursorPosition_should_return_method_at_cursor_position() throws Exception
     {
-        IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
-        int offset = methodUnderTest.get().getNameRange().getOffset() + 1;
-        EditorPartFacade facade = facadeWithCursorInMethod(editorPart, offset);
+        final IEditorPart editorPart = mockEditorPartShowing((IFile) cutHandler.getCompilationUnit().getResource());
+        final int offset = methodUnderTest.get().getNameRange().getOffset() + 1;
+        final EditorPartFacade facade = facadeWithCursorInMethod(editorPart, offset);
 
         assertEquals(methodUnderTest.get(), facade.getFirstNonAnonymousMethodSurroundingCursorPosition());
     }
@@ -130,7 +130,7 @@ public class EditorPartFacadeTest extends ContextTestCase
     @Test
     public void should_not_consider_edited_file_as_java_like_file_when_it_is_not_a_file()
     {
-        EditorPartFacade facade = new EditorPartFacade(mockEditorPartShowing(null));
+        final EditorPartFacade facade = new EditorPartFacade(mockEditorPartShowing(null));
 
         assertFalse(facade.isJavaLikeFile());
         assertNull(facade.getCompilationUnit());

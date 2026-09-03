@@ -26,12 +26,12 @@ public class TemplateProcessor
 
     public void applyTemplate(MockingTemplate mockingTemplate, Dependencies dependencies, IType classUnderTest, IType testCase, String testType) throws MockingTemplateException
     {
-        ICompilationUnit testCaseCu = testCase.getCompilationUnit();
+        final ICompilationUnit testCaseCu = testCase.getCompilationUnit();
         try
         {
-            ICompilationUnit workingCopy = createWorkingCopy(testCaseCu);
+            final ICompilationUnit workingCopy = createWorkingCopy(testCaseCu);
 
-            MockingContext context = contextFactory.createMockingContext(dependencies, classUnderTest, testType, workingCopy);
+            final MockingContext context = contextFactory.createMockingContext(dependencies, classUnderTest, testType, workingCopy);
             if(! context.hasDependenciesToMock())
             {
                 throw new NoDependenciesToMockException(classUnderTest);
@@ -43,9 +43,9 @@ public class TemplateProcessor
 
             setSource(testCaseCu, sourceFormatter.getFormattedSource(workingCopy));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
-            if(e instanceof MockingTemplateException exception)
+            if(e instanceof final MockingTemplateException exception)
             {
                 throw exception;
             }
@@ -64,7 +64,7 @@ public class TemplateProcessor
 
     private void applyTemplate(MockingTemplate mockingTemplate, MockingContext context) throws JavaModelException, BadLocationException, MockingTemplateException
     {
-        for (CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
+        for (final CodeTemplate codeTemplate : mockingTemplate.codeTemplates())
         {
             if(codeTemplate.isIncluded(context))
             {
@@ -75,12 +75,12 @@ public class TemplateProcessor
 
     void applyTemplate(final CodeTemplate codeTemplate, MockingContext globalContext) throws JavaModelException, BadLocationException, MockingTemplateException
     {
-        EclipseTemplate eclipseTemplate = globalContext.preEvaluate(codeTemplate);
+        final EclipseTemplate eclipseTemplate = globalContext.preEvaluate(codeTemplate);
         try
         {
             contextFactory.createEclipseTemplateContext(globalContext).evaluate(eclipseTemplate);
         }
-        catch (TemplateException e)
+        catch (final TemplateException e)
         {
             logger.error("Evaluating template: " + eclipseTemplate.template().getPattern(), e);
         }
@@ -88,7 +88,7 @@ public class TemplateProcessor
 
     private void setSource(ICompilationUnit compilationUnit, String source) throws JavaModelException
     {
-        ICompilationUnit wc = createWorkingCopy(compilationUnit);
+        final ICompilationUnit wc = createWorkingCopy(compilationUnit);
         wc.getBuffer().setContents(source);
         wc.commitWorkingCopy(false, new NullProgressMonitor());
     }

@@ -15,7 +15,7 @@ public class LogHandler
         return InstanceHolder.instance;
     }
 
-    private Logger logger;
+    private final Logger logger;
 
     private LogHandler(Logger logger)
     {

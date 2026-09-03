@@ -16,10 +16,10 @@ public class JobsTest
     @Test
     public void should_run_background_job_then_run_ui_job_with_its_result() throws Exception
     {
-        Display display = tryGetDisplay();
+        final Display display = tryGetDisplay();
         assumeTrue(display != null, "No SWT display available");
 
-        List<String> uiResults = new CopyOnWriteArrayList<>();
+        final List<String> uiResults = new CopyOnWriteArrayList<>();
 
         Jobs.waitForIndexExecuteAndRunInUI( //
         "MoreUnit test job", //
@@ -35,10 +35,10 @@ public class JobsTest
     @Test
     public void should_not_run_ui_job_when_background_job_returns_null() throws Exception
     {
-        Display display = tryGetDisplay();
+        final Display display = tryGetDisplay();
         assumeTrue(display != null, "No SWT display available");
 
-        AtomicBoolean uiJobRan = new AtomicBoolean(false);
+        final AtomicBoolean uiJobRan = new AtomicBoolean(false);
 
         Jobs.waitForIndexExecuteAndRunInUI( //
         "MoreUnit test job (null result)", //
@@ -46,7 +46,7 @@ public class JobsTest
         result -> uiJobRan.set(true));
 
         // give the job time to complete without ever dispatching a UI result
-        long deadline = System.currentTimeMillis() + 2_000;
+        final long deadline = System.currentTimeMillis() + 2_000;
         while(System.currentTimeMillis() < deadline)
         {
             display.readAndDispatch();
@@ -62,7 +62,7 @@ public class JobsTest
         {
             return Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             return null;
         }
@@ -70,7 +70,7 @@ public class JobsTest
 
     private void waitForUiResult(Display display, List<String> uiResults) throws InterruptedException
     {
-        long deadline = System.currentTimeMillis() + 30_000;
+        final long deadline = System.currentTimeMillis() + 30_000;
         while(uiResults.isEmpty() && System.currentTimeMillis() < deadline)
         {
             // readAndDispatch allows the syncExec of the job to run, even when

@@ -51,7 +51,7 @@ public class AdditionalTestLaunchShortcutProvider
      */
     public ILaunchShortcut getShorcutFor(final String testType, final Class< ? extends IJavaElement> elementType, final Cardinality cardinality)
     {
-        Set<ITestLaunchSupport> supports = getTestLaunchSupports();
+        final Set<ITestLaunchSupport> supports = getTestLaunchSupports();
 
         final Set<ILaunchShortcut> container = new HashSet<>(1);
 
@@ -87,17 +87,17 @@ public class AdditionalTestLaunchShortcutProvider
 
     private Set<ITestLaunchSupport> getTestLaunchSupports()
     {
-        IConfigurationElement[] configurations = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
+        final IConfigurationElement[] configurations = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
 
-        Set<ITestLaunchSupport> supports = new HashSet<>();
-        for (IConfigurationElement configuration : configurations)
+        final Set<ITestLaunchSupport> supports = new HashSet<>();
+        for (final IConfigurationElement configuration : configurations)
         {
             Object extension = null;
             try
             {
                 extension = configuration.createExecutableExtension("class");
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 LogHandler.getInstance().handleWarnLog("Error in extension point " + EXTENSION_ID + ": " + e.getMessage());
                 continue;

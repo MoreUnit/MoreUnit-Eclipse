@@ -21,7 +21,7 @@ public class DialogFactoryTest
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -41,7 +41,7 @@ public class DialogFactoryTest
     @Test
     public void should_create_info_dialog()
     {
-        DialogFactory factory = new DialogFactory(shell);
+        final DialogFactory factory = new DialogFactory(shell);
 
         assertNotNull(factory.createInfoDialog("Some information"));
     }
@@ -49,7 +49,7 @@ public class DialogFactoryTest
     @Test
     public void should_create_error_dialog()
     {
-        DialogFactory factory = new DialogFactory(shell);
+        final DialogFactory factory = new DialogFactory(shell);
 
         assertNotNull(factory.createErrorDialog("Some error"));
     }

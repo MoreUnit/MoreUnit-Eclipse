@@ -84,7 +84,7 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
     {
         assertEquals("SomeClass.java", invoke(page, "getCompilationUnitName", "SomeClass"));
 
-        MoreUnitWizardPageOne groovyPage = newPage(LanguageType.GROOVY);
+        final MoreUnitWizardPageOne groovyPage = newPage(LanguageType.GROOVY);
         assertEquals("SomeClass.groovy", invoke(groovyPage, "getCompilationUnitName", "SomeClass"));
     }
 
@@ -129,9 +129,9 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
 
         invoke(page, "handleFieldChanged", getContainerFieldId());
 
-        Button classUnderTestButton = (Button) getField(page, "fClassUnderTestButton");
+        final Button classUnderTestButton = (Button) getField(page, "fClassUnderTestButton");
         assertNotNull(classUnderTestButton);
-        Object root = invoke(page, "getPackageFragmentRoot");
+        final Object root = invoke(page, "getPackageFragmentRoot");
         assertEquals(root != null, classUnderTestButton.isEnabled(), "root=" + root + " enabled=" + classUnderTestButton.isEnabled());
     }
 
@@ -148,7 +148,7 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
         createPageControl();
         page.init(new StructuredSelection(cutType));
 
-        Button classUnderTestButton = (Button) getField(page, "fClassUnderTestButton");
+        final Button classUnderTestButton = (Button) getField(page, "fClassUnderTestButton");
         assertNotNull(classUnderTestButton);
         assertTrue(classUnderTestButton.isEnabled());
     }
@@ -171,7 +171,7 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
         createPageControl();
         page.init(new StructuredSelection(cutType));
 
-        Object[] statuses = (Object[]) invoke(page, "getStatusList");
+        final Object[] statuses = (Object[]) invoke(page, "getStatusList");
 
         assertEquals(7, statuses.length);
     }
@@ -187,7 +187,7 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
         assertFalse(page.isJUnit5());
         assertEquals(TestType.JUNIT_4, page.getTestType());
 
-        Button unit4Toggle = (Button) getField(page, "unit4Toggle");
+        final Button unit4Toggle = (Button) getField(page, "unit4Toggle");
         assertTrue(unit4Toggle.getSelection());
     }
 
@@ -196,7 +196,7 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
     {
         page.init(new StructuredSelection(cutType));
 
-        Object root = invoke(page, "getPackageFragmentRoot");
+        final Object root = invoke(page, "getPackageFragmentRoot");
 
         assertNotNull(root);
         assertEquals(cutType.getPackageFragment().getParent(), root);

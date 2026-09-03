@@ -10,8 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -49,7 +47,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     public void prepareProjectPreferences()
     {
         javaProject = context.getProjectHandler().get();
-        Preferences preferences = Preferences.getInstance();
+        final Preferences preferences = Preferences.getInstance();
 
         preferences.setHasProjectSpecificSettings(javaProject, true);
         preferences.setTestType(javaProject, PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5);
@@ -76,7 +74,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
 
     private Button findRadioButton(String text)
     {
-        Button button = findButton(blockControl, text);
+        final Button button = findButton(blockControl, text);
         assertNotNull(button, () -> "button not found: " + text);
         return button;
     }
@@ -88,9 +86,9 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
      */
     private void selectRadioButton(Button target)
     {
-        for (Control control : target.getParent().getChildren())
+        for (final Control control : target.getParent().getChildren())
         {
-            if(control instanceof Button button && (button.getStyle() & SWT.RADIO) != 0)
+            if(control instanceof final Button button && (button.getStyle() & SWT.RADIO) != 0)
             {
                 button.setSelection(button == target);
             }
@@ -108,15 +106,15 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Button junit5 = findRadioButton("Junit 5");
+        final Button junit5 = findRadioButton("Junit 5");
         assertTrue(junit5.getSelection());
 
         // default test method type has no prefix
-        Button methodPrefixButton = findRadioButton(PreferenceConstants.TEXT_TEST_METHOD_TYPE);
+        final Button methodPrefixButton = findRadioButton(PreferenceConstants.TEXT_TEST_METHOD_TYPE);
         assertFalse(methodPrefixButton.getSelection());
         assertTrue(methodPrefixButton.getEnabled());
 
-        Text methodContentField = findTextByLabel(blockControl, PreferenceConstants.TEXT_TEST_METHOD_CONTENT);
+        final Text methodContentField = findTextByLabel(blockControl, PreferenceConstants.TEXT_TEST_METHOD_CONTENT);
         assertEquals(PreferenceConstants.DEFAULT_TEST_METHOD_DEFAULT_CONTENT, methodContentField.getText());
 
         assertEquals("", findTextByLabel(blockControl, PreferenceConstants.TEXT_PACKAGE_PREFIX).getText());
@@ -126,7 +124,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
         assertTrue(findRadioButton(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH).getSelection());
         assertTrue(findRadioButton(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME).getSelection());
 
-        Button codeMiningButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING);
+        final Button codeMiningButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING);
         assertTrue(codeMiningButton.getSelection());
         assertTrue(findRadioButton(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING).getEnabled());
         assertTrue(findRadioButton(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING).getEnabled());
@@ -178,7 +176,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
 
         selectRadioButton(findRadioButton("Junit 4"));
 
-        Button methodPrefixButton = findRadioButton(PreferenceConstants.TEXT_TEST_METHOD_TYPE);
+        final Button methodPrefixButton = findRadioButton(PreferenceConstants.TEXT_TEST_METHOD_TYPE);
         methodPrefixButton.setSelection(true);
         save();
         assertEquals(PreferenceConstants.TEST_METHOD_TYPE_JUNIT3, Preferences.getInstance().getProjectStore(javaProject).getString(PreferenceConstants.TEST_METHOD_TYPE));
@@ -195,7 +193,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
 
         selectRadioButton(findRadioButton("JUnit 3.8"));
 
-        Button methodPrefixButton = findRadioButton(PreferenceConstants.TEXT_TEST_METHOD_TYPE);
+        final Button methodPrefixButton = findRadioButton(PreferenceConstants.TEXT_TEST_METHOD_TYPE);
         methodPrefixButton.setSelection(false);
         save();
 
@@ -214,7 +212,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
 
         save();
 
-        var projectStore = Preferences.getInstance().getProjectStore(javaProject);
+        final var projectStore = Preferences.getInstance().getProjectStore(javaProject);
         assertEquals("// custom content", projectStore.getString(PreferenceConstants.TEST_METHOD_DEFAULT_CONTENT));
         assertEquals("test", projectStore.getString(PreferenceConstants.TEST_PACKAGE_PREFIX));
         assertEquals(".test", projectStore.getString(PreferenceConstants.TEST_PACKAGE_SUFFIX));
@@ -226,7 +224,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Text patternField = findTextByLabel(blockControl, "Pattern:");
+        final Text patternField = findTextByLabel(blockControl, "Pattern:");
         patternField.setText(SRC_FILE_VARIABLE + "IT");
 
         save();
@@ -239,10 +237,10 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Text patternField = findTextByLabel(blockControl, "Pattern:");
+        final Text patternField = findTextByLabel(blockControl, "Pattern:");
         patternField.setText(SRC_FILE_VARIABLE + "IT");
 
-        TestFileNamePatternGroup patternGroup = (TestFileNamePatternGroup) getField(block, "testCaseNamePatternArea");
+        final TestFileNamePatternGroup patternGroup = (TestFileNamePatternGroup) getField(block, "testCaseNamePatternArea");
         patternGroup.restoreDefaults();
 
         assertEquals(org.moreunit.core.preferences.Preferences.DEFAULTS.getTestFileNameTemplate(), patternField.getText());
@@ -253,8 +251,8 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Button extendedSearchButton = findRadioButton(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH);
-        Button searchByNameButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
+        final Button extendedSearchButton = findRadioButton(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH);
+        final Button searchByNameButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
 
         extendedSearchButton.setSelection(false);
         extendedSearchButton.notifyListeners(SWT.Selection, new Event());
@@ -267,8 +265,8 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Button extendedSearchButton = findRadioButton(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH);
-        Button searchByNameButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
+        final Button extendedSearchButton = findRadioButton(PreferenceConstants.TEXT_EXTENDED_TEST_METHOD_SEARCH);
+        final Button searchByNameButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME);
 
         searchByNameButton.setSelection(false);
         searchByNameButton.notifyListeners(SWT.Selection, new Event());
@@ -285,7 +283,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
         findRadioButton(PreferenceConstants.TEXT_ENABLE_TEST_METHOD_SEARCH_BY_NAME).setSelection(false);
         save();
 
-        Preferences.MethodSearchMode mode = Preferences.getInstance().getMethodSearchMode(javaProject);
+        final Preferences.MethodSearchMode mode = Preferences.getInstance().getMethodSearchMode(javaProject);
         assertTrue(mode.searchByCall);
         assertFalse(mode.searchByName);
     }
@@ -295,9 +293,9 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Button codeMiningButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING);
-        Button jumpToMethodButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING);
-        Button jumpToClassButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING);
+        final Button codeMiningButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_MOREUNIT_CODEMINING);
+        final Button jumpToMethodButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_JUMP_TO_METHOD_CODE_MINING);
+        final Button jumpToClassButton = findRadioButton(PreferenceConstants.TEXT_ENABLE_JUMP_TO_CLASS_CODE_MINING);
 
         codeMiningButton.setSelection(false);
         codeMiningButton.notifyListeners(SWT.Selection, new Event());
@@ -323,7 +321,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
 
         save();
 
-        var projectStore = Preferences.getInstance().getProjectStore(javaProject);
+        final var projectStore = Preferences.getInstance().getProjectStore(javaProject);
         assertFalse(projectStore.getBoolean(PreferenceConstants.ENABLE_MOREUNIT_CODE_MINING));
         assertFalse(projectStore.getBoolean(PreferenceConstants.ENABLE_JUMP_TO_METHOD_CODE_MINING));
         assertFalse(projectStore.getBoolean(PreferenceConstants.ENABLE_JUMP_TO_CLASS_CODE_MINING));
@@ -362,7 +360,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Text patternField = findTextByLabel(blockControl, "Pattern:");
+        final Text patternField = findTextByLabel(blockControl, "Pattern:");
 
         patternField.setText("");
         assertEquals("You must enter a rule for naming test files", block.getError());
@@ -379,7 +377,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Text patternField = findTextByLabel(blockControl, "Pattern:");
+        final Text patternField = findTextByLabel(blockControl, "Pattern:");
         patternField.setText(SRC_FILE_VARIABLE + "*Test*");
 
         assertNotNull(block.getWarning());
@@ -390,15 +388,8 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        AtomicInteger modificationCount = new AtomicInteger();
-        block.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
-            {
-                modificationCount.incrementAndGet();
-            }
-        });
+        final AtomicInteger modificationCount = new AtomicInteger();
+        block.addModifyListener(e -> modificationCount.incrementAndGet());
 
         findTextByLabel(blockControl, "Pattern:").setText(SRC_FILE_VARIABLE + "Test");
 
@@ -442,9 +433,9 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        for (Control control : findRadioButton("Junit 5").getParent().getChildren())
+        for (final Control control : findRadioButton("Junit 5").getParent().getChildren())
         {
-            if(control instanceof Button button && (button.getStyle() & SWT.RADIO) != 0)
+            if(control instanceof final Button button && (button.getStyle() & SWT.RADIO) != 0)
             {
                 button.setSelection(false);
             }
@@ -460,7 +451,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        Event event = new Event();
+        final Event event = new Event();
         event.widget = blockControl;
         block.widgetDefaultSelected(new SelectionEvent(event));
     }
@@ -510,8 +501,8 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
     {
         createBlock();
 
-        TestFileNamePatternGroup patternGroup = (TestFileNamePatternGroup) getField(block, "testCaseNamePatternArea");
-        var prefWriter = (org.moreunit.core.preferences.TestFileNamePatternPreferencesWriter) getField(patternGroup, "prefWriter");
+        final TestFileNamePatternGroup patternGroup = (TestFileNamePatternGroup) getField(block, "testCaseNamePatternArea");
+        final var prefWriter = (org.moreunit.core.preferences.TestFileNamePatternPreferencesWriter) getField(patternGroup, "prefWriter");
 
         assertEquals("", prefWriter.getFileWordSeparator());
     }

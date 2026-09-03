@@ -12,7 +12,7 @@ public class IOUtils
             return;
         }
 
-        for (Closeable closeable : closeables)
+        for (final Closeable closeable : closeables)
         {
             if(closeable != null)
             {
@@ -20,7 +20,7 @@ public class IOUtils
                 {
                     closeable.close();
                 }
-                catch (IOException e)
+                catch (final IOException e)
                 {
                     // ignored
                 }

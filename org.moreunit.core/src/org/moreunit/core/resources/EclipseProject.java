@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class EclipseProject extends EclipseResourceContainer implements Project
 {
-    private IProject project;
+    private final IProject project;
 
     EclipseProject(IProject project)
     {
@@ -27,7 +27,7 @@ public class EclipseProject extends EclipseResourceContainer implements Project
                 project.open(null);
             }
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             throw new ResourceException(e);
         }

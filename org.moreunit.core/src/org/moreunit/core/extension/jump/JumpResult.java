@@ -44,7 +44,7 @@ public final class JumpResult
             return true;
         if(obj == null || getClass() != obj.getClass())
             return false;
-        JumpResult other = (JumpResult) obj;
+        final JumpResult other = (JumpResult) obj;
         return done == other.done;
     }
 }

@@ -58,14 +58,14 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
 
     private Button findProjectSpecificSettingsCheckbox()
     {
-        Button checkbox = findButton(shell, "Use project specific settings");
+        final Button checkbox = findButton(shell, "Use project specific settings");
         assertNotNull(checkbox);
         return checkbox;
     }
 
     private void selectProjectSpecificSettings(boolean selected)
     {
-        Button checkbox = findProjectSpecificSettingsCheckbox();
+        final Button checkbox = findProjectSpecificSettingsCheckbox();
         checkbox.setSelection(selected);
         checkbox.notifyListeners(SWT.Selection, new Event());
     }
@@ -107,7 +107,7 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
 
             assertFalse(findButton(shell, "Junit 5").getEnabled());
 
-            Button cb = findProjectSpecificSettingsCheckbox();
+            final Button cb = findProjectSpecificSettingsCheckbox();
             cb.setSelection(true);
             cb.notifyListeners(SWT.Selection, new Event());
 
@@ -173,16 +173,16 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
             createPageContents();
             selectProjectSpecificSettings(true);
 
-            Text packagePrefixField = findTextByLabel(shell, "Test package prefix:");
+            final Text packagePrefixField = findTextByLabel(shell, "Test package prefix:");
             packagePrefixField.setText("testpref");
 
-            Button junit4Button = findButton(shell, "Junit 4");
+            final Button junit4Button = findButton(shell, "Junit 4");
             junit4Button.setSelection(true);
             junit4Button.notifyListeners(SWT.Selection, new Event());
 
             assertTrue(page.performOk());
 
-            var projectStore = Preferences.getInstance().getProjectStore(javaProject);
+            final var projectStore = Preferences.getInstance().getProjectStore(javaProject);
             assertEquals(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, projectStore.getString(PreferenceConstants.TEST_TYPE));
             assertEquals("testpref", projectStore.getString(PreferenceConstants.TEST_PACKAGE_PREFIX));
             assertTrue(Preferences.getInstance().hasProjectSpecificSettings(javaProject));
@@ -203,7 +203,7 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
             createPageContents();
             selectProjectSpecificSettings(true);
 
-            Text packageSuffixField = findTextByLabel(shell, "Test package suffix:");
+            final Text packageSuffixField = findTextByLabel(shell, "Test package suffix:");
             packageSuffixField.setText("testsuffix");
 
             performApply(page);
@@ -225,7 +225,7 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
             createPageContents();
             selectProjectSpecificSettings(true);
 
-            Text patternField = findTextByLabel(shell, "Pattern:");
+            final Text patternField = findTextByLabel(shell, "Pattern:");
             patternField.setText(TestFileNamePattern.SRC_FILE_VARIABLE);
             patternField.notifyListeners(SWT.Modify, new Event());
 
@@ -260,14 +260,14 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
     {
         // a previous test (bug regression test) may have installed a throwing
         // logger; use a harmless one so that the logged error does not explode
-        Field loggerField = LogHandler.getInstance().getClass().getDeclaredField("logger");
+        final Field loggerField = LogHandler.getInstance().getClass().getDeclaredField("logger");
         loggerField.setAccessible(true);
         loggerField.set(LogHandler.getInstance(), mock(Logger.class));
 
         createPageContents();
         selectProjectSpecificSettings(true);
 
-        IPreferenceStore replacedStore = replaceProjectStoreWithFailingStore();
+        final IPreferenceStore replacedStore = replaceProjectStoreWithFailingStore();
         try
         {
             assertTrue(page.performOk());
@@ -283,8 +283,8 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
     @SuppressWarnings("unchecked")
     private IPreferenceStore replaceProjectStoreWithFailingStore() throws Exception
     {
-        IPreferenceStore oldStore = Preferences.getInstance().getProjectStore(javaProject);
-        IPreferenceStore failingStore = new ScopedPreferenceStore(new ProjectScope(javaProject.getProject()), MoreUnitPlugin.PLUGIN_ID)
+        final IPreferenceStore oldStore = Preferences.getInstance().getProjectStore(javaProject);
+        final IPreferenceStore failingStore = new ScopedPreferenceStore(new ProjectScope(javaProject.getProject()), MoreUnitPlugin.PLUGIN_ID)
         {
             @Override
             public void save() throws IOException
@@ -293,9 +293,9 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
             }
         };
 
-        Field preferenceMapField = Preferences.class.getDeclaredField("preferenceMap");
+        final Field preferenceMapField = Preferences.class.getDeclaredField("preferenceMap");
         preferenceMapField.setAccessible(true);
-        Map<IJavaProject, IPreferenceStore> preferenceMap = (Map<IJavaProject, IPreferenceStore>) preferenceMapField.get(Preferences.getInstance());
+        final Map<IJavaProject, IPreferenceStore> preferenceMap = (Map<IJavaProject, IPreferenceStore>) preferenceMapField.get(Preferences.getInstance());
         preferenceMap.put(javaProject, failingStore);
 
         return oldStore;
@@ -306,9 +306,9 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
     @SuppressWarnings("unchecked")
     private void restoreProjectStore(IPreferenceStore oldStore) throws Exception
     {
-        Field preferenceMapField = Preferences.class.getDeclaredField("preferenceMap");
+        final Field preferenceMapField = Preferences.class.getDeclaredField("preferenceMap");
         preferenceMapField.setAccessible(true);
-        Map<IJavaProject, IPreferenceStore> preferenceMap = (Map<IJavaProject, IPreferenceStore>) preferenceMapField.get(Preferences.getInstance());
+        final Map<IJavaProject, IPreferenceStore> preferenceMap = (Map<IJavaProject, IPreferenceStore>) preferenceMapField.get(Preferences.getInstance());
         preferenceMap.put(javaProject, oldStore);
     }
 
@@ -320,8 +320,8 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
         assertTrue(page.performOk());
 
         // the default workspace mapping (src -> test) has been written to the project store
-        var projectStore = Preferences.getInstance().getProjectStore(javaProject);
-        String storedMappings = projectStore.getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+        final var projectStore = Preferences.getInstance().getProjectStore(javaProject);
+        final String storedMappings = projectStore.getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
         assertNotNull(storedMappings);
         assertFalse(storedMappings.isEmpty());
     }

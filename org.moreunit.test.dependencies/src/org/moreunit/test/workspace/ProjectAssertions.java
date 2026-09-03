@@ -18,9 +18,9 @@ public class ProjectAssertions
     {
         try
         {
-            IPackageFragmentRoot[] roots = projectHandler.get().getPackageFragmentRoots();
+            final IPackageFragmentRoot[] roots = projectHandler.get().getPackageFragmentRoots();
             boolean found = false;
-            for (IPackageFragmentRoot root : roots) {
+            for (final IPackageFragmentRoot root : roots) {
                 if (srcFolder.equals(root.getElementName())) {
                     found = true;
                     break;
@@ -28,7 +28,7 @@ public class ProjectAssertions
             }
             assertTrue(found, "expected source folder: " + srcFolder);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             throw new RuntimeException(e);
         }

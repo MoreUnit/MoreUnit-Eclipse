@@ -36,9 +36,9 @@ public class UnitSourcesContentProviderTest extends SwtPageTestCase
     @Test
     public void should_return_existing_mappings_as_elements()
     {
-        List<SourceFolderMapping> mappings = Preferences.getInstance().getSourceMappingList(javaProject);
+        final List<SourceFolderMapping> mappings = Preferences.getInstance().getSourceMappingList(javaProject);
 
-        Object[] elements = provider.getElements(null);
+        final Object[] elements = provider.getElements(null);
 
         assertEquals(mappings.size(), elements.length);
         assertEquals(mappings.get(0).getTestFolder(), ((SourceFolderMapping) elements[0]).getTestFolder());
@@ -47,7 +47,7 @@ public class UnitSourcesContentProviderTest extends SwtPageTestCase
     @Test
     public void should_return_source_folders_of_mapping_as_children()
     {
-        SourceFolderMapping mapping = Preferences.getInstance().getSourceMappingList(javaProject).get(0);
+        final SourceFolderMapping mapping = Preferences.getInstance().getSourceMappingList(javaProject).get(0);
 
         assertSame(mapping.getSourceFolderList().toArray()[0], provider.getChildren(mapping)[0]);
     }
@@ -55,9 +55,9 @@ public class UnitSourcesContentProviderTest extends SwtPageTestCase
     @Test
     public void should_return_all_mappings_as_children_of_any_other_element()
     {
-        List<SourceFolderMapping> mappings = Preferences.getInstance().getSourceMappingList(javaProject);
+        final List<SourceFolderMapping> mappings = Preferences.getInstance().getSourceMappingList(javaProject);
 
-        Object[] children = provider.getChildren(null);
+        final Object[] children = provider.getChildren(null);
 
         assertEquals(mappings.size(), children.length);
         assertEquals(mappings.get(0).getTestFolder(), ((SourceFolderMapping) children[0]).getTestFolder());
@@ -66,7 +66,7 @@ public class UnitSourcesContentProviderTest extends SwtPageTestCase
     @Test
     public void should_declare_children_only_for_mappings()
     {
-        SourceFolderMapping mapping = Preferences.getInstance().getSourceMappingList(javaProject).get(0);
+        final SourceFolderMapping mapping = Preferences.getInstance().getSourceMappingList(javaProject).get(0);
 
         assertTrue(provider.hasChildren(mapping));
         assertFalse(provider.hasChildren(mapping.getTestFolder()));
@@ -75,7 +75,7 @@ public class UnitSourcesContentProviderTest extends SwtPageTestCase
     @Test
     public void should_return_no_parent()
     {
-        SourceFolderMapping mapping = Preferences.getInstance().getSourceMappingList(javaProject).get(0);
+        final SourceFolderMapping mapping = Preferences.getInstance().getSourceMappingList(javaProject).get(0);
 
         assertNull(provider.getParent(mapping));
         assertNull(provider.getParent(mapping.getTestFolder()));
@@ -84,15 +84,15 @@ public class UnitSourcesContentProviderTest extends SwtPageTestCase
     @Test
     public void should_add_and_remove_mappings()
     {
-        List<SourceFolderMapping> initialContent = provider.getListOfUnitSourceFolder();
-        int initialSize = initialContent.size();
+        final List<SourceFolderMapping> initialContent = provider.getListOfUnitSourceFolder();
+        final int initialSize = initialContent.size();
 
-        SourceFolderMapping newMapping = new SourceFolderMapping(javaProject, initialContent.get(0).getTestFolder());
+        final SourceFolderMapping newMapping = new SourceFolderMapping(javaProject, initialContent.get(0).getTestFolder());
         provider.add(newMapping);
         assertEquals(initialSize + 1, provider.getListOfUnitSourceFolder().size());
         assertTrue(provider.getListOfUnitSourceFolder().contains(newMapping));
 
-        SourceFolderMapping anotherMapping = new SourceFolderMapping(javaProject, context.getProjectHandler().getMainSrcFolderHandler().get());
+        final SourceFolderMapping anotherMapping = new SourceFolderMapping(javaProject, context.getProjectHandler().getMainSrcFolderHandler().get());
         provider.add(List.of(anotherMapping, initialContent.get(0)));
         assertEquals(initialSize + 3, provider.getListOfUnitSourceFolder().size());
 

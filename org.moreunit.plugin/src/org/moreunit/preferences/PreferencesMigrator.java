@@ -11,15 +11,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class PreferencesMigrator
 {
-    private static final Comparator<MigrationStep> BY_TARGET_VERSION = new Comparator<>()
-    {
-        @Override
-        public int compare(MigrationStep s1, MigrationStep s2)
-        {
-            int v1 = s1.targetVersion();
-            int v2 = s2.targetVersion();
-            return v1 == v2 ? 0 : (v1 < v2 ? - 1 : 1);
-        }
+    private static final Comparator<MigrationStep> BY_TARGET_VERSION = (s1, s2) -> {
+        final int v1 = s1.targetVersion();
+        final int v2 = s2.targetVersion();
+        return v1 == v2 ? 0 : (v1 < v2 ? - 1 : 1);
     };
 
     private final IPreferenceStore store;
@@ -43,11 +38,11 @@ public class PreferencesMigrator
 
     public void migrate()
     {
-        int storeVersion = getStoreVersion();
+        final int storeVersion = getStoreVersion();
         if(storeVersion < pluginPrefVersion)
         {
             int targetVersion = storeVersion + 1;
-            for (MigrationStep step : steps)
+            for (final MigrationStep step : steps)
             {
                 if(step.targetVersion() < targetVersion)
                 {
@@ -63,7 +58,7 @@ public class PreferencesMigrator
 
     private int getStoreVersion()
     {
-        int v = store.getInt(PreferenceConstants.PREFERENCES_VERSION);
+        final int v = store.getInt(PreferenceConstants.PREFERENCES_VERSION);
         return v < 1 ? 1 : v;
     }
 }

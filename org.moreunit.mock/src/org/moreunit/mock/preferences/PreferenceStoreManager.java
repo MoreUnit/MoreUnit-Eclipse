@@ -42,8 +42,8 @@ public class PreferenceStoreManager
 
         if(store == null)
         {
-            ProjectScope scope = new ProjectScope(project.getProject());
-            ScopedPreferenceStore scopedStore = new ScopedPreferenceStore(scope, MoreUnitMockPlugin.PLUGIN_ID);
+            final ProjectScope scope = new ProjectScope(project.getProject());
+            final ScopedPreferenceStore scopedStore = new ScopedPreferenceStore(scope, MoreUnitMockPlugin.PLUGIN_ID);
             scopedStore.setSearchContexts(new IScopeContext[] { scope });
             projectStores.put(project, scopedStore);
 
@@ -65,20 +65,20 @@ public class PreferenceStoreManager
 
     public void setSpecificSettings(IJavaProject project, boolean projectHasSpecificSettings)
     {
-        IPreferenceStore store = getStore(project, true);
+        final IPreferenceStore store = getStore(project, true);
         store.setValue(SPECIFIC_SETTINGS.name, projectHasSpecificSettings);
         save(project, store);
     }
 
     void save(IJavaProject project, IPreferenceStore store)
     {
-        if(store instanceof ScopedPreferenceStore preferenceStore)
+        if(store instanceof final ScopedPreferenceStore preferenceStore)
         {
             try
             {
                 preferenceStore.save();
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 logger.error("Could not store preferences for project " + project.getElementName(), e);
             }

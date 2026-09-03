@@ -7,14 +7,11 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.moreunit.core.matching.TestFolderPathPattern;
 import org.moreunit.core.ui.Composites;
 import org.moreunit.core.ui.ExpandableCompositeContainer;
-import org.moreunit.core.ui.ExpandableCompositeContainer.ExpandableContent;
 import org.moreunit.core.ui.Labels;
 import org.moreunit.core.ui.LayoutData;
 
@@ -47,9 +44,9 @@ class GenericConfigurationPage
 
     public void createContents()
     {
-        Composite parent = container;
+        final Composite parent = container;
 
-        Composite folderTplGroup = Composites.gridGroup(parent, "Rule for locating test files:", 2, 10);
+        final Composite folderTplGroup = Composites.gridGroup(parent, "Rule for locating test files:", 2, 10);
 
         createFolderTemplateFields(folderTplGroup);
         createFolderTplExplanations(folderTplGroup);
@@ -97,46 +94,41 @@ class GenericConfigurationPage
 
     private void createFolderTplExplanations(final Composite parent)
     {
-        String[] explanations = { //
+        final String[] explanations = { //
         TestFolderPathPattern.SRC_PROJECT_VARIABLE + " = source project, * = variable part, ** = variable set of segments,", //
         "(**) or (*) = group capture, \\1 = reference to 1st captured group" };
 
-        for (String e : explanations)
+        for (final String e : explanations)
         {
             Labels.placeHolder(parent, 1);
 
-            Label lbl = new Label(parent, SWT.NONE);
+            final Label lbl = new Label(parent, SWT.NONE);
             lbl.setLayoutData(LayoutData.labelledField());
             lbl.setText(e);
         }
 
-        container.newExpandableComposite(parent, "More explanations...", false, new ExpandableContent()
-        {
-            @Override
-            public Control createBody(ExpandableComposite expandableComposite)
+        container.newExpandableComposite(parent, "More explanations...", false, expandableComposite -> {
+            final Composite inner = new Composite(expandableComposite, SWT.NONE);
+            inner.setFont(parent.getFont());
+            inner.setLayout(new GridLayout());
+
+            final String[] explanations1 = { //
+            "Use the variable " + TestFolderPathPattern.SRC_PROJECT_VARIABLE + " to represent the production source project.", //
+            "You may use stars '*' to represent variable parts within path segments, and double stars '**' for a variable set of path segments.", //
+            "You may capture variable parts using parentheses and then reference them using backslashes '\\'.", //
+            "When matching files, the part of the file path that lies after then end of your pattern is automatically used.", //
+            "", //
+            "Example: the definition '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/(*)-src' => '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/\\1-test'" //
+                    + " allows for finding the file 'my-project/js-test/some/path/to/MyClassTest.js'" //
+                    + " from 'my-project/js-src/some/path/to/MyClass.js'" };
+
+            for (final String e : explanations1)
             {
-                Composite inner = new Composite(expandableComposite, SWT.NONE);
-                inner.setFont(parent.getFont());
-                inner.setLayout(new GridLayout());
-
-                String[] explanations = { //
-                "Use the variable " + TestFolderPathPattern.SRC_PROJECT_VARIABLE + " to represent the production source project.", //
-                "You may use stars '*' to represent variable parts within path segments, and double stars '**' for a variable set of path segments.", //
-                "You may capture variable parts using parentheses and then reference them using backslashes '\\'.", //
-                "When matching files, the part of the file path that lies after then end of your pattern is automatically used.", //
-                "", //
-                "Example: the definition '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/(*)-src' => '" + TestFolderPathPattern.SRC_PROJECT_VARIABLE + "'/\\1-test'" //
-                        + " allows for finding the file 'my-project/js-test/some/path/to/MyClassTest.js'" //
-                        + " from 'my-project/js-src/some/path/to/MyClass.js'" };
-
-                for (String e : explanations)
-                {
-                    Label lbl = Labels.wrappingLabel(e, EXPLANATION_WIDTH_HINT, inner);
-                    lbl.setText(e);
-                }
-
-                return inner;
+                final Label lbl = Labels.wrappingLabel(e, EXPLANATION_WIDTH_HINT, inner);
+                lbl.setText(e);
             }
+
+            return inner;
         });
     }
 
@@ -169,7 +161,7 @@ class GenericConfigurationPage
         {
             setValid();
 
-            String warningMsg = testFileNamePattern.getWarning();
+            final String warningMsg = testFileNamePattern.getWarning();
             if(warningMsg != null)
             {
                 page.setMessage(warningMsg, IMessageProvider.WARNING);
@@ -184,8 +176,8 @@ class GenericConfigurationPage
 
     private String validateTestFolderTemplate()
     {
-        String srcFolderTpl = srcFolderTemplateField.getText().trim();
-        String tstFolderTpl = testFolderTemplateField.getText().trim();
+        final String srcFolderTpl = srcFolderTemplateField.getText().trim();
+        final String tstFolderTpl = testFolderTemplateField.getText().trim();
 
         String errorMsg = null;
         if(srcFolderTpl.length() == 0 || tstFolderTpl.length() == 0)

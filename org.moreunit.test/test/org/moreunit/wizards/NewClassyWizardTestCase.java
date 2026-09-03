@@ -23,7 +23,7 @@ public abstract class NewClassyWizardTestCase extends ContextTestCase
     {
         if(context.isDefined())
         {
-            IDialogSettings dialogSettings = MoreUnitPlugin.getDefault().getDialogSettings();
+            final IDialogSettings dialogSettings = MoreUnitPlugin.getDefault().getDialogSettings();
             if(context.getMainProjectHandler() != null)
             {
                 dialogSettings.put(getWizardClass().getName() + ".packageFragmentRoot." + context.getMainProjectHandler().getName(), (String) null);
@@ -39,7 +39,7 @@ public abstract class NewClassyWizardTestCase extends ContextTestCase
 
     protected void addMapping(ProjectHandler project, SourceFolderHandler mainSrcFolder, SourceFolderHandler testSrcFolder)
     {
-        List<SourceFolderMapping> mappingList = Preferences.getInstance().getSourceMappingList(project.get());
+        final List<SourceFolderMapping> mappingList = Preferences.getInstance().getSourceMappingList(project.get());
         mappingList.add(new SourceFolderMapping(project.get(), mainSrcFolder.get(), testSrcFolder.get()));
         Preferences.getInstance().setMappingList(project.get(), mappingList);
     }

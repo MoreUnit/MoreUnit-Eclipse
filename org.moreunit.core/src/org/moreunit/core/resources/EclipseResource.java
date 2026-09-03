@@ -25,7 +25,7 @@ abstract class EclipseResource implements Resource
         {
             resource.delete(true, null);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             throw new ResourceException("Could not delete resource: " + getPath(), e);
         }
@@ -60,16 +60,16 @@ abstract class EclipseResource implements Resource
     @Override
     public final ResourceContainer getParent()
     {
-        IContainer parent = resource.getParent();
+        final IContainer parent = resource.getParent();
         if(parent == null || parent instanceof IWorkspaceRoot)
         {
             return EclipseWorkspace.get();
         }
-        if(parent instanceof IProject project)
+        if(parent instanceof final IProject project)
         {
             return new EclipseProject(project);
         }
-        if(parent instanceof IFolder folder)
+        if(parent instanceof final IFolder folder)
         {
             return new EclipseFolder(folder);
         }

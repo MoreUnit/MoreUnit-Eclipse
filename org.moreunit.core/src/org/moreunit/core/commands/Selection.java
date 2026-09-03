@@ -24,20 +24,20 @@ public class Selection
 
     public SelectedSrcFile getUniqueSrcFile()
     {
-        Object firstElement = getUniqueSelectedElement();
-        if(firstElement instanceof IAdaptable adaptable)
+        final Object firstElement = getUniqueSelectedElement();
+        if(firstElement instanceof final IAdaptable adaptable)
         {
-            IFile file = toFile(adaptable);
+            final IFile file = toFile(adaptable);
             if(file != null)
             {
                 return SelectedSrcFile.fromSelection(toSrcFile(file), executionContext);
             }
         }
 
-        IEditorPart activeEditorPart = executionContext.getActiveEditorPart();
+        final IEditorPart activeEditorPart = executionContext.getActiveEditorPart();
         if(activeEditorPart != null)
         {
-            IFile file = toFile(activeEditorPart.getEditorInput());
+            final IFile file = toFile(activeEditorPart.getEditorInput());
             if(file != null)
             {
                 return SelectedSrcFile.fromEditor(toSrcFile(file), activeEditorPart, executionContext);
@@ -54,13 +54,13 @@ public class Selection
 
     private Object getUniqueSelectedElement()
     {
-        IEvaluationContext context = executionContext.getApplicationContext();
+        final IEvaluationContext context = executionContext.getApplicationContext();
         if(context == null)
         {
             return null;
         }
 
-        Collection< ? > selectedElements = (Collection< ? >) context.getDefaultVariable();
+        final Collection< ? > selectedElements = (Collection< ? >) context.getDefaultVariable();
         if(selectedElements == null || selectedElements.size() != 1)
         {
             return null;

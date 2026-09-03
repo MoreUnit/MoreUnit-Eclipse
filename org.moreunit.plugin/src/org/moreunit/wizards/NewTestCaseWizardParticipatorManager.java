@@ -33,7 +33,7 @@ public class NewTestCaseWizardParticipatorManager
 
     public NewTestCaseWizardComposer createWizardComposer(final INewTestCaseWizardContext context)
     {
-        NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
+        final NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
         addExtensionPagesToComposer(composer, context, getParticipators());
         return composer;
     }
@@ -61,16 +61,16 @@ public class NewTestCaseWizardParticipatorManager
 
     private Collection<INewTestCaseWizardParticipator> getParticipators()
     {
-        TreeMap<String, INewTestCaseWizardParticipator> participatorsOrderedById = new TreeMap<>();
+        final TreeMap<String, INewTestCaseWizardParticipator> participatorsOrderedById = new TreeMap<>();
 
-        for (IConfigurationElement configuration : Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID))
+        for (final IConfigurationElement configuration : Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID))
         {
             Object extension = null;
             try
             {
                 extension = configuration.createExecutableExtension("class");
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 logger.handleWarnLog("Error in extension point " + EXTENSION_ID + ": " + e.getMessage());
                 continue;

@@ -22,7 +22,7 @@ public class WordTokenizerTest
     @Test
     public void should_handle_all_lower_case_string()
     {
-        WordTokenizer wordTokenizer = new WordTokenizer("abcdef");
+        final WordTokenizer wordTokenizer = new WordTokenizer("abcdef");
         assertTrue(wordTokenizer.hasMoreElements());
         assertEquals("abcdef", wordTokenizer.nextElement());
         assertFalse(wordTokenizer.hasMoreElements());
@@ -31,7 +31,7 @@ public class WordTokenizerTest
     @Test
     public void should_handle_all_upper_case_string()
     {
-        WordTokenizer wordTokenizer = new WordTokenizer("ABC");
+        final WordTokenizer wordTokenizer = new WordTokenizer("ABC");
         assertTrue(wordTokenizer.hasMoreElements());
         assertEquals("A", wordTokenizer.nextElement());
         assertTrue(wordTokenizer.hasMoreElements());

@@ -21,7 +21,7 @@ public class MatchResult
 
     public MatchingFile getUniqueMatchingFile()
     {
-        Set<IFile> results = matchCollector.getResults();
+        final Set<IFile> results = matchCollector.getResults();
         if(results.isEmpty())
         {
             return MatchingFile.notFound(correspondingSrcFolder, preferredFileName);
@@ -31,7 +31,7 @@ public class MatchResult
             return MatchingFile.found(results.iterator().next());
         }
 
-        MatchSelection selection = matchSelector.select(results, null);
+        final MatchSelection selection = matchSelector.select(results, null);
         if(selection.exists())
         {
             return MatchingFile.found(selection.get());

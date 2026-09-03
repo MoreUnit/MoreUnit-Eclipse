@@ -40,8 +40,8 @@ public class MatchResultTest
     {
         when(matchCollector.getResults()).thenReturn(Collections.emptySet());
 
-        MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
-        MatchingFile matchingFile = result.getUniqueMatchingFile();
+        final MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
+        final MatchingFile matchingFile = result.getUniqueMatchingFile();
 
         assertFalse(matchingFile.isFound());
         assertFalse(matchingFile.isSearchCancelled());
@@ -52,11 +52,11 @@ public class MatchResultTest
     @Test
     public void getUniqueMatchingFile_should_return_found_when_collector_has_exactly_one_result()
     {
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
         when(matchCollector.getResults()).thenReturn(Collections.singleton(file));
 
-        MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
-        MatchingFile matchingFile = result.getUniqueMatchingFile();
+        final MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
+        final MatchingFile matchingFile = result.getUniqueMatchingFile();
 
         assertTrue(matchingFile.isFound());
         assertFalse(matchingFile.isSearchCancelled());
@@ -66,16 +66,16 @@ public class MatchResultTest
     @Test
     public void getUniqueMatchingFile_should_return_found_when_selector_returns_valid_selection_for_multiple_results()
     {
-        IFile file1 = mock(IFile.class);
-        IFile file2 = mock(IFile.class);
-        IFile selectedFile = mock(IFile.class);
-        Set<IFile> results = new HashSet<>(Arrays.asList(file1, file2));
+        final IFile file1 = mock(IFile.class);
+        final IFile file2 = mock(IFile.class);
+        final IFile selectedFile = mock(IFile.class);
+        final Set<IFile> results = new HashSet<>(Arrays.asList(file1, file2));
 
         when(matchCollector.getResults()).thenReturn(results);
         when(matchSelector.select(any(), isNull())).thenReturn(MatchSelection.file(selectedFile));
 
-        MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
-        MatchingFile matchingFile = result.getUniqueMatchingFile();
+        final MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
+        final MatchingFile matchingFile = result.getUniqueMatchingFile();
 
         assertTrue(matchingFile.isFound());
         assertFalse(matchingFile.isSearchCancelled());
@@ -85,15 +85,15 @@ public class MatchResultTest
     @Test
     public void getUniqueMatchingFile_should_return_searchCancelled_when_selector_returns_none_for_multiple_results()
     {
-        IFile file1 = mock(IFile.class);
-        IFile file2 = mock(IFile.class);
-        Set<IFile> results = new HashSet<>(Arrays.asList(file1, file2));
+        final IFile file1 = mock(IFile.class);
+        final IFile file2 = mock(IFile.class);
+        final Set<IFile> results = new HashSet<>(Arrays.asList(file1, file2));
 
         when(matchCollector.getResults()).thenReturn(results);
         when(matchSelector.select(any(), isNull())).thenReturn(MatchSelection.none());
 
-        MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
-        MatchingFile matchingFile = result.getUniqueMatchingFile();
+        final MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
+        final MatchingFile matchingFile = result.getUniqueMatchingFile();
 
         assertFalse(matchingFile.isFound());
         assertTrue(matchingFile.isSearchCancelled());
@@ -105,7 +105,7 @@ public class MatchResultTest
     {
         when(matchCollector.getResults()).thenReturn(Collections.emptySet());
 
-        MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
+        final MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
 
         assertFalse(result.matchFound());
     }
@@ -113,10 +113,10 @@ public class MatchResultTest
     @Test
     public void matchFound_should_return_true_when_results_are_not_empty()
     {
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
         when(matchCollector.getResults()).thenReturn(Collections.singleton(file));
 
-        MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
+        final MatchResult result = new MatchResult(matchCollector, preferredFileName, correspondingSrcFolder, matchSelector);
 
         assertTrue(result.matchFound());
     }

@@ -22,10 +22,10 @@ public class MethodComparatorTest
     @Test
     public void should_order_methods_by_element_name()
     {
-        IMethod methodA = mock(IMethod.class);
+        final IMethod methodA = mock(IMethod.class);
         when(methodA.getElementName()).thenReturn("methodA");
 
-        IMethod methodB = mock(IMethod.class);
+        final IMethod methodB = mock(IMethod.class);
         when(methodB.getElementName()).thenReturn("methodB");
 
         assertTrue(methodComparator.compare(methodA, methodB) < 0);
@@ -35,10 +35,10 @@ public class MethodComparatorTest
     @Test
     public void should_return_zero_for_equal_methods()
     {
-        IMethod methodA = mock(IMethod.class);
+        final IMethod methodA = mock(IMethod.class);
         when(methodA.getElementName()).thenReturn("methodA");
 
-        IMethod methodB = mock(IMethod.class);
+        final IMethod methodB = mock(IMethod.class);
         when(methodB.getElementName()).thenReturn("methodA");
 
         assertEquals(0, methodComparator.compare(methodA, methodB));

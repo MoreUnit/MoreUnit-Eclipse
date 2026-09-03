@@ -13,10 +13,10 @@ public class FieldInjectionPatternResolver extends SimplePatternResolver
     @Override
     protected String matched(String preMatch, String postMatch)
     {
-        StringBuilder buffer = new StringBuilder();
-        for (FieldDependency d : context.dependenciesToMock().injectableByField())
+        final StringBuilder buffer = new StringBuilder();
+        for (final FieldDependency d : context.dependenciesToMock().injectableByField())
         {
-            String resolvedPattern = "${objectUnderTest}.%s = %s".formatted(d.fieldName, d.name);
+            final String resolvedPattern = "${objectUnderTest}.%s = %s".formatted(d.fieldName, d.name);
             buffer.append(preMatch).append(resolvedPattern).append(postMatch);
         }
         return buffer.toString();

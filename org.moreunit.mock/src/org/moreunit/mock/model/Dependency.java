@@ -42,11 +42,10 @@ public class Dependency extends TypeUse<Dependency> implements Comparable<Depend
         {
             return true;
         }
-        if((obj == null) || ! (obj instanceof Dependency))
+        if((obj == null) || ! (obj instanceof final Dependency other))
         {
             return false;
         }
-        Dependency other = (Dependency) obj;
         if(fullyQualifiedClassName == null)
         {
             if(other.fullyQualifiedClassName != null)

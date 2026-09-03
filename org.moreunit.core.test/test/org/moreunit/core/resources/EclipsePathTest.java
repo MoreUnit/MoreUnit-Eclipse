@@ -36,7 +36,7 @@ public class EclipsePathTest
     @Test
     public void should_wrap_ipath_and_delegate_methods() throws Exception
     {
-        IPath ipath = mock(IPath.class);
+        final IPath ipath = mock(IPath.class);
         when(ipath.removeTrailingSeparator()).thenReturn(ipath);
         when(ipath.segmentCount()).thenReturn(2);
         when(ipath.segment(0)).thenReturn("proj");
@@ -48,7 +48,7 @@ public class EclipsePathTest
         when(ipath.toString()).thenReturn("/proj/Foo.java");
         when(ipath.segments()).thenReturn(new String[] {"proj", "Foo.java"});
 
-        EclipsePath path = constructor.newInstance(ipath);
+        final EclipsePath path = constructor.newInstance(ipath);
 
         assertEquals(2, path.getSegmentCount());
         assertEquals("proj", path.getProjectName());
@@ -69,9 +69,9 @@ public class EclipsePathTest
     @Test
     public void should_compare_paths_by_value() throws Exception
     {
-        EclipsePath path = newPath("/proj/Foo.java");
-        EclipsePath samePath = newPath("/proj/Foo.java");
-        EclipsePath otherPath = newPath("/proj/Bar.java");
+        final EclipsePath path = newPath("/proj/Foo.java");
+        final EclipsePath samePath = newPath("/proj/Foo.java");
+        final EclipsePath otherPath = newPath("/proj/Bar.java");
 
         assertSame(path, path);
         assertEquals(path, samePath);
@@ -89,7 +89,7 @@ public class EclipsePathTest
     @Test
     public void should_return_empty_extension_when_path_has_none() throws Exception
     {
-        EclipsePath path = newPath("/proj/src/Foo");
+        final EclipsePath path = newPath("/proj/src/Foo");
 
         assertFalse(path.hasExtension());
         assertEquals("", path.getExtension());
@@ -117,7 +117,7 @@ public class EclipsePathTest
     @Test
     public void should_iterate_over_segments() throws Exception
     {
-        Iterator<String> segments = newPath("/proj/src/Foo.java").iterator();
+        final Iterator<String> segments = newPath("/proj/src/Foo.java").iterator();
 
         assertEquals("proj", segments.next());
         assertEquals("src", segments.next());

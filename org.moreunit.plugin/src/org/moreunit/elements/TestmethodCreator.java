@@ -51,15 +51,15 @@ public class TestmethodCreator
     // to be used for testing only
     public static boolean discardExtensions;
 
-    private ICompilationUnit compilationUnit;
+    private final ICompilationUnit compilationUnit;
     private ICompilationUnit testCaseCompilationUnit;
-    private String testType;
+    private final String testType;
     private String defaultTestMethodContent = "";
-    private TestMethodDiviner testMethodDiviner;
+    private final TestMethodDiviner testMethodDiviner;
 
-    private boolean generateComments;
-    private boolean shouldCreateFinalMethod;
-    private boolean shouldCreateTasks;
+    private final boolean generateComments;
+    private final boolean shouldCreateFinalMethod;
+    private final boolean shouldCreateTasks;
     private CodeFormatter testFormatter;
     private boolean testCaseJustCreated;
 
@@ -89,12 +89,12 @@ public class TestmethodCreator
 
     public List<IMethod> createTestMethods(List<IMethod> methodsUnderTest)
     {
-        List<IMethod> createdMethods = new ArrayList<>(methodsUnderTest.size());
-        List<IMethod> overloadedMethods = getOverloadedMethods();
+        final List<IMethod> createdMethods = new ArrayList<>(methodsUnderTest.size());
+        final List<IMethod> overloadedMethods = getOverloadedMethods();
 
-        for (IMethod methodUnderTest : methodsUnderTest)
+        for (final IMethod methodUnderTest : methodsUnderTest)
         {
-            MethodCreationResult creationResult = createFirstTestMethod(methodUnderTest, overloadedMethods);
+            final MethodCreationResult creationResult = createFirstTestMethod(methodUnderTest, overloadedMethods);
             if(creationResult.methodCreated())
             {
                 createdMethods.add(creationResult.getMethod());
@@ -107,26 +107,26 @@ public class TestmethodCreator
     // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
     private List<IMethod> getOverloadedMethods()
     {
-        List<IMethod> allMethods = new ArrayList<>();
+        final List<IMethod> allMethods = new ArrayList<>();
         try
         {
             addAll(allMethods, compilationUnit.findPrimaryType().getMethods());
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // we can live without them
             return allMethods;
         }
 
-        List<IMethod> overloadedMethods = new ArrayList<>();
+        final List<IMethod> overloadedMethods = new ArrayList<>();
         for (int i = 0; i < allMethods.size(); i++)
         {
-            IMethod current = allMethods.get(i);
-            String currentName = current.getElementName();
+            final IMethod current = allMethods.get(i);
+            final String currentName = current.getElementName();
             boolean currentAdded = false;
-            for (ListIterator<IMethod> iter = allMethods.listIterator(i + 1); iter.hasNext();)
+            for (final ListIterator<IMethod> iter = allMethods.listIterator(i + 1); iter.hasNext();)
             {
-                IMethod iterMethod = iter.next();
+                final IMethod iterMethod = iter.next();
                 if(iterMethod.getElementName().equals(currentName))
                 {
                     // method is overloaded
@@ -158,7 +158,7 @@ public class TestmethodCreator
             return MethodCreationResult.from(createAnotherTestMethod(method));
         }
 
-        List<IMethod> overloadedMethods = getOverloadedMethods();
+        final List<IMethod> overloadedMethods = getOverloadedMethods();
         return createFirstTestMethod(method, overloadedMethods);
     }
 
@@ -172,10 +172,10 @@ public class TestmethodCreator
      */
     private MethodCreationResult createFirstTestMethod(IMethod methodUnderTest, List<IMethod> overloadedMethods)
     {
-        ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+        final ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
         if(testCaseCompilationUnit == null)
         {
-            CorrespondingTestCase testCase = classTypeFacade.getOneCorrespondingTestCase(true);
+            final CorrespondingTestCase testCase = classTypeFacade.getOneCorrespondingTestCase(true);
 
             // This happens if the user chooses cancel from the wizard
             if(! testCase.found())
@@ -193,11 +193,11 @@ public class TestmethodCreator
         }
 
         // If test method exists, ready
-        IMethod existingMethod = findTestMethod(testMethodName);
+        final IMethod existingMethod = findTestMethod(testMethodName);
         if(existingMethod != null)
             return MethodCreationResult.methodAlreadyExists(existingMethod);
 
-        String comment = generateTestMethodComment(methodUnderTest);
+        final String comment = generateTestMethodComment(methodUnderTest);
 
         IMethod testMethod = null;
         if(TestTypeConstants.TEST_ANNOTATION.containsKey(testType))
@@ -207,7 +207,7 @@ public class TestmethodCreator
 
         if(! discardExtensions && testMethod != null)
         {
-            IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(testMethod, methodUnderTest, testCaseJustCreated);
+            final IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().callExtension(testMethod, methodUnderTest, testCaseJustCreated);
             if(testMethodContext.getTestMethod() != null)
                 testMethod = testMethodContext.getTestMethod();
         }
@@ -218,15 +218,15 @@ public class TestmethodCreator
     // borrowed from org.eclipse.jdt.ui.wizards.NewTypeWizardPage
     private String appendParameterNamesToMethodName(String name, String[] parameters)
     {
-        StringBuilder buffer = new StringBuilder(name);
-        for (int i = 0; i < parameters.length; i++)
+        final StringBuilder buffer = new StringBuilder(name);
+        for (final String parameter : parameters)
         {
-            final StringBuilder buf = new StringBuilder(Signature.getSimpleName(Signature.toString(Signature.getElementType(parameters[i]))));
+            final StringBuilder buf = new StringBuilder(Signature.getSimpleName(Signature.toString(Signature.getElementType(parameter))));
             final char character = buf.charAt(0);
             if(buf.length() > 0 && ! Character.isUpperCase(character))
                 buf.setCharAt(0, Character.toUpperCase(character));
             buffer.append(buf);
-            for (int j = 0, arrayCount = Signature.getArrayCount(parameters[i]); j < arrayCount; j++)
+            for (int j = 0, arrayCount = Signature.getArrayCount(parameter); j < arrayCount; j++)
             {
                 buffer.append("Array"); //$NON-NLS-1$
             }
@@ -241,7 +241,7 @@ public class TestmethodCreator
         if(doesMethodExist(testMethodName))
             testMethodName = testMethodName.concat(MoreUnitContants.SUFFIX_NAME);
 
-        String comment = getComments(testMethod);
+        final String comment = getComments(testMethod);
 
         IMethod newTestMethod = null;
         if(TestTypeConstants.TEST_ANNOTATION.containsKey(testType))
@@ -251,7 +251,7 @@ public class TestmethodCreator
 
         if(! discardExtensions && newTestMethod != null)
         {
-            IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().maybeCallExtension(newTestMethod);
+            final IAddTestMethodContext testMethodContext = AddTestMethodParticipatorHandler.getInstance().maybeCallExtension(newTestMethod);
             if(testMethodContext != null && testMethodContext.getTestMethod() != null)
                 return testMethodContext.getTestMethod();
         }
@@ -267,16 +267,16 @@ public class TestmethodCreator
         try
         {
             String comment = "";
-            ISourceRange javadocRange = testMethod.getJavadocRange();
+            final ISourceRange javadocRange = testMethod.getJavadocRange();
             if(javadocRange != null)
             {
-                String source = testMethod.getCompilationUnit().getSource();
+                final String source = testMethod.getCompilationUnit().getSource();
                 comment = source.substring(javadocRange.getOffset(), javadocRange.getOffset() + javadocRange.getLength());
                 comment += "\n";
             }
             return comment;
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             return "";
         }
@@ -295,17 +295,17 @@ public class TestmethodCreator
     {
         try
         {
-            IMethod[] methods = testCaseCompilationUnit.findPrimaryType().getMethods();
+            final IMethod[] methods = testCaseCompilationUnit.findPrimaryType().getMethods();
             for (int i = 0; i < methods.length; i++)
             {
-                boolean isNotLastMethodInClass = i < methods.length - 1;
+                final boolean isNotLastMethodInClass = i < methods.length - 1;
                 if(testMethod == methods[i] && isNotLastMethodInClass)
                 {
                     return methods[i + 1];
                 }
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -320,7 +320,7 @@ public class TestmethodCreator
 
     private String getJUnit3MethodStub(String testmethodName, String comment)
     {
-        StringBuilder methodContent = new StringBuilder();
+        final StringBuilder methodContent = new StringBuilder();
         methodContent.append(comment);
         methodContent.append(getTestMethodString(testmethodName));
 
@@ -334,7 +334,7 @@ public class TestmethodCreator
 
     private String getTestAnnotatedMethodStub(String testmethodName, String comment)
     {
-        StringBuilder methodContent = new StringBuilder();
+        final StringBuilder methodContent = new StringBuilder();
         methodContent.append(comment);
         methodContent.append("@Test").append(StringConstants.NEWLINE);
         methodContent.append(getTestMethodString(testmethodName));
@@ -350,14 +350,15 @@ public class TestmethodCreator
         if(! generateComments)
             return "";
 
-        String recommendedLineSeparator = findRecommendedLineSeparator();
+        final String recommendedLineSeparator = findRecommendedLineSeparator();
 
+        // must stay StringBuffer: JavaElementLabels.getTypeLabel requires it
         final StringBuffer buf = new StringBuffer("{@link "); //$NON-NLS-1$
         JavaElementLabels.getTypeLabel(testedMethod.getDeclaringType(), JavaElementLabels.T_FULLY_QUALIFIED, buf);
         buf.append('#');
         buf.append(testedMethod.getElementName());
         buf.append('(');
-        String[] paramTypes = JUnitStubUtility.getParameterTypeNamesForSeeTag(testedMethod);
+        final String[] paramTypes = JUnitStubUtility.getParameterTypeNamesForSeeTag(testedMethod);
         for (int i = 0; i < paramTypes.length; i++)
         {
             if(i != 0)
@@ -370,7 +371,7 @@ public class TestmethodCreator
         buf.append(')');
         buf.append('}');
 
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("/**");//$NON-NLS-1$
         buffer.append(recommendedLineSeparator);
         buffer.append(" * ");//$NON-NLS-1$
@@ -388,12 +389,12 @@ public class TestmethodCreator
         if(shouldCreateFinalMethod)
             finalPlaceholder = "final ";
 
-        String recommendedLineSeparator = findRecommendedLineSeparator();
+        final String recommendedLineSeparator = findRecommendedLineSeparator();
 
         String methodBody = defaultTestMethodContent;
         if(shouldCreateTasks)
         {
-            String todoTaskTag = JUnitStubUtility.getTodoTaskTag(compilationUnit.getJavaProject());
+            final String todoTaskTag = JUnitStubUtility.getTodoTaskTag(compilationUnit.getJavaProject());
             if(todoTaskTag != null)
             {
                 methodBody = "// " + todoTaskTag + recommendedLineSeparator + defaultTestMethodContent;
@@ -409,7 +410,7 @@ public class TestmethodCreator
         {
             recommendedLineSeparator = testCaseCompilationUnit.findRecommendedLineSeparator();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -422,27 +423,27 @@ public class TestmethodCreator
             return null;
         try
         {
-            String testImport = TestTypeConstants.TEST_ANNOTATION.get(testType);
+            final String testImport = TestTypeConstants.TEST_ANNOTATION.get(testType);
             if(testImport != null && Arrays.stream(testCaseCompilationUnit.getImports()).noneMatch(i -> i.getElementName().equals(testImport)))
             {
                 testCaseCompilationUnit.createImport(testImport, null, null);
             }
-            String staticImportBaseClass = TestTypeConstants.STATIC_IMPORT_BASE_CLASS.get(testType);
+            final String staticImportBaseClass = TestTypeConstants.STATIC_IMPORT_BASE_CLASS.get(testType);
             if(staticImportBaseClass != null && Arrays.stream(testCaseCompilationUnit.getImports()).noneMatch(i -> i.getElementName().equals(staticImportBaseClass)))
             {
                 testCaseCompilationUnit.createImport(staticImportBaseClass, null, null);
             }
             return testCaseCompilationUnit.findPrimaryType().createMethod(format(methodString), sibling, true, null);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
-        catch (MalformedTreeException e)
+        catch (final MalformedTreeException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
-        catch (BadLocationException e)
+        catch (final BadLocationException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -451,9 +452,9 @@ public class TestmethodCreator
 
     private String format(String methodString) throws MalformedTreeException, BadLocationException
     {
-        IDocument document = new Document(methodString);
-        String lineDelimiter = TextUtilities.getDefaultLineDelimiter(document);
-        TextEdit edit = testFormatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, document.get(), 0, document.getLength(), 0, lineDelimiter);
+        final IDocument document = new Document(methodString);
+        final String lineDelimiter = TextUtilities.getDefaultLineDelimiter(document);
+        final TextEdit edit = testFormatter.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, document.get(), 0, document.getLength(), 0, lineDelimiter);
 
         if(edit != null)
         {
@@ -487,15 +488,14 @@ public class TestmethodCreator
     {
         try
         {
-            IMethod[] existingTests = testCaseCompilationUnit.findPrimaryType().getMethods();
-            for (int i = 0; i < existingTests.length; i++)
+            final IMethod[] existingTests = testCaseCompilationUnit.findPrimaryType().getMethods();
+            for (final IMethod method : existingTests)
             {
-                IMethod method = existingTests[i];
                 if(testMethodName.equals(method.getElementName()))
                     return method;
             }
         }
-        catch (JavaModelException exc)
+        catch (final JavaModelException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }

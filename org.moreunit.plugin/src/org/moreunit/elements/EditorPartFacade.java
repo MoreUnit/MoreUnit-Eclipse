@@ -54,8 +54,8 @@ public class EditorPartFacade
 
     public ITextSelection getTextSelection()
     {
-        IWorkbenchPartSite site = editorPart.getSite();
-        ISelectionProvider selectionProvider = site.getSelectionProvider();
+        final IWorkbenchPartSite site = editorPart.getSite();
+        final ISelectionProvider selectionProvider = site.getSelectionProvider();
         return (ITextSelection) selectionProvider.getSelection();
     }
 
@@ -69,19 +69,19 @@ public class EditorPartFacade
         IMethod method = null;
         try
         {
-            ICompilationUnit compilationUnit = getCompilationUnit();
+            final ICompilationUnit compilationUnit = getCompilationUnit();
             if(compilationUnit == null)
                 return null;
 
-            IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
-            if(javaElement instanceof IMethod iMethod)
+            final IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
+            if(javaElement instanceof final IMethod iMethod)
             {
                 method = iMethod;
             }
             else
                 LogHandler.getInstance().handleInfoLog("No method found under cursor position.");
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -91,7 +91,7 @@ public class EditorPartFacade
 
     public IJavaProject getJavaProject()
     {
-        ICompilationUnit compilationUnit = getCompilationUnit();
+        final ICompilationUnit compilationUnit = getCompilationUnit();
         return compilationUnit == null ? null : compilationUnit.getJavaProject();
     }
 
@@ -106,7 +106,7 @@ public class EditorPartFacade
      */
     public IMethod getFirstNonAnonymousMethodSurroundingCursorPosition()
     {
-        IMethod method = getFirstMethodSurroundingCursorPosition();
+        final IMethod method = getFirstMethodSurroundingCursorPosition();
         return method == null ? null : new MethodFacade(method).getFirstNonAnonymousMethodCallingThisMethod();
     }
 
@@ -115,21 +115,21 @@ public class EditorPartFacade
         IMethod method = null;
         try
         {
-            ICompilationUnit compilationUnit = getCompilationUnit();
+            final ICompilationUnit compilationUnit = getCompilationUnit();
             if(compilationUnit == null)
                 return null;
 
-            IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
-            if(javaElement instanceof IMethod iMethod)
+            final IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
+            if(javaElement instanceof final IMethod iMethod)
             {
                 method = iMethod;
             }
-            else if(javaElement instanceof IType type && type.isAnonymous() && javaElement.getParent() instanceof IMethod)
+            else if(javaElement instanceof final IType type && type.isAnonymous() && javaElement.getParent() instanceof IMethod)
             {
                 method = (IMethod) javaElement.getParent();
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }

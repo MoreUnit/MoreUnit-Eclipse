@@ -11,8 +11,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -45,8 +43,8 @@ public class MoreUnitPropertyPage extends PropertyPage
     @Override
     protected Control createContents(Composite parent)
     {
-        Composite contentComposite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        final Composite contentComposite = new Composite(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
         contentComposite.setLayout(layout);
         contentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -78,7 +76,7 @@ public class MoreUnitPropertyPage extends PropertyPage
             }
         });
 
-        GridData gridData = new GridData();
+        final GridData gridData = new GridData();
         gridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
 
         projectSpecificSettingsCheckbox.setLayoutData(gridData);
@@ -89,30 +87,23 @@ public class MoreUnitPropertyPage extends PropertyPage
     private void createTabContent(Composite parent)
     {
         tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.TOP);
-        CTabItem sourceFolderItem = new CTabItem(tabFolder, SWT.NONE);
+        final CTabItem sourceFolderItem = new CTabItem(tabFolder, SWT.NONE);
         sourceFolderItem.setText("Test source folder");
         firstTabUnitSourceFolder = new UnitSourceFolderBlock(getJavaProject(), this);
         sourceFolderItem.setControl(fixesFirstTabStyle(firstTabUnitSourceFolder.getControl(tabFolder)));
 
-        CTabItem otherFolderItem = new CTabItem(tabFolder, SWT.NONE);
+        final CTabItem otherFolderItem = new CTabItem(tabFolder, SWT.NONE);
         otherFolderItem.setText("Other");
         secondTabOtherProperties = new OtherMoreunitPropertiesBlock(getJavaProject());
         otherFolderItem.setControl(fixesSecondTabStyle(secondTabOtherProperties.getControl(tabFolder, true)));
 
-        secondTabOtherProperties.addModifyListener(new ModifyListener()
-        {
-            @Override
-            public void modifyText(ModifyEvent e)
-            {
-                updateValidState();
-            }
-        });
+        secondTabOtherProperties.addModifyListener(e -> updateValidState());
 
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
         tabFolder.setLayout(layout);
 
-        GridData gridData = new GridData(GridData.FILL_BOTH);
+        final GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = otherFolderItem.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
         tabFolder.setLayoutData(gridData);
         tabFolder.setSelection(0);
@@ -122,7 +113,7 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     private Composite fixesFirstTabStyle(Composite tab)
     {
-        GridLayout l = ((GridLayout) tab.getLayout());
+        final GridLayout l = ((GridLayout) tab.getLayout());
         l.marginRight = 10;
         l.marginLeft = 10;
         return tab;
@@ -130,21 +121,21 @@ public class MoreUnitPropertyPage extends PropertyPage
 
     private Composite fixesSecondTabStyle(Composite tab)
     {
-        GridLayout l = ((GridLayout) tab.getLayout());
+        final GridLayout l = ((GridLayout) tab.getLayout());
         l.marginLeft = 10;
         return tab;
     }
 
     private IJavaProject getJavaProject()
     {
-        IAdaptable selection = getElement();
-        if(selection instanceof IJavaProject project)
+        final IAdaptable selection = getElement();
+        if(selection instanceof final IJavaProject project)
         {
             return project;
         }
         // when files are selected, they need to be adapted to their project
         // first (see enabledWhen clause of plugin.xml)
-        IProject project = Adapters.adapt(selection, IProject.class);
+        final IProject project = Adapters.adapt(selection, IProject.class);
         return JavaCore.create(project);
     }
 
@@ -190,13 +181,13 @@ public class MoreUnitPropertyPage extends PropertyPage
                 firstTabUnitSourceFolder.saveProperties();
                 secondTabOtherProperties.saveProperties();
             }
-            IPreferenceStore store = Preferences.getInstance().getProjectStore(getJavaProject());
-            if(store instanceof ScopedPreferenceStore preferenceStore)
+            final IPreferenceStore store = Preferences.getInstance().getProjectStore(getJavaProject());
+            if(store instanceof final ScopedPreferenceStore preferenceStore)
                 preferenceStore.save();
 
             UnitDecorator.refreshAll();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }

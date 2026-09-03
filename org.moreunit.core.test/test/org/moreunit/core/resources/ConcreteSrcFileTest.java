@@ -47,7 +47,7 @@ public class ConcreteSrcFileTest extends TmpProjectTestCase
     @Test
     public void should_create_and_delete_file() throws Exception
     {
-        ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
+        final ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
 
         assertTrue(srcFile.exists());
 
@@ -59,7 +59,7 @@ public class ConcreteSrcFileTest extends TmpProjectTestCase
     @Test
     public void should_delegate_file_properties() throws Exception
     {
-        ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
+        final ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
 
         assertEquals("Foo.java", srcFile.getName());
         assertEquals("Foo", srcFile.getBaseNameWithoutExtension());
@@ -76,7 +76,7 @@ public class ConcreteSrcFileTest extends TmpProjectTestCase
     @Test
     public void should_not_be_supported_when_file_has_no_extension() throws Exception
     {
-        ConcreteSrcFile srcFile = createSrcFile("src/Foo");
+        final ConcreteSrcFile srcFile = createSrcFile("src/Foo");
 
         assertFalse(srcFile.hasExtension());
         assertFalse(srcFile.isSupported());
@@ -86,13 +86,13 @@ public class ConcreteSrcFileTest extends TmpProjectTestCase
     @Test
     public void should_evaluate_name_against_test_file_pattern() throws Exception
     {
-        ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
-        ConcreteSrcFile testFile = createSrcFile("src/FooTest.java");
+        final ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
+        final ConcreteSrcFile testFile = createSrcFile("src/FooTest.java");
 
         assertFalse(srcFile.isTestFile());
         assertTrue(testFile.isTestFile());
 
-        FileNameEvaluation evaluation = srcFile.evaluateName();
+        final FileNameEvaluation evaluation = srcFile.evaluateName();
         assertFalse(evaluation.isTestFile());
         assertSame(evaluation, srcFile.evaluateName(), "name evaluation should be cached");
     }
@@ -100,11 +100,11 @@ public class ConcreteSrcFileTest extends TmpProjectTestCase
     @Test
     public void should_find_corresponding_folder_of_test_and_src_files() throws Exception
     {
-        ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
-        ConcreteSrcFile testFile = createSrcFile("test/FooTest.java");
+        final ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
+        final ConcreteSrcFile testFile = createSrcFile("test/FooTest.java");
 
-        SourceFolderPath testFolder = srcFile.findCorrespondingSrcFolder();
-        SourceFolderPath srcFolder = testFile.findCorrespondingSrcFolder();
+        final SourceFolderPath testFolder = srcFile.findCorrespondingSrcFolder();
+        final SourceFolderPath srcFolder = testFile.findCorrespondingSrcFolder();
 
         assertNotNull(testFolder);
         assertNotNull(srcFolder);

@@ -40,10 +40,10 @@ public class EclipseTemplateContextTest
     {
         when(testCaseCompilationUnit.getSource()).thenReturn(TEST_CASE_SOURCE);
 
-        IType testCaseType = mock(IType.class);
+        final IType testCaseType = mock(IType.class);
         when(testCaseCompilationUnit.findPrimaryType()).thenReturn(testCaseType);
-        IField field = mock(IField.class);
-        ISourceRange fieldRange = range(FIELD_OFFSET, FIELD_LENGTH);
+        final IField field = mock(IField.class);
+        final ISourceRange fieldRange = range(FIELD_OFFSET, FIELD_LENGTH);
         when(field.getSourceRange()).thenReturn(fieldRange);
         when(testCaseType.getFields()).thenReturn(new IField[] { field });
 
@@ -57,19 +57,19 @@ public class EclipseTemplateContextTest
     {
         // given: a template whose name does not match the context key, so that
         // CustomJavaContext.canEvaluate() returns false
-        EclipseTemplate eclipseTemplate = mock(EclipseTemplate.class);
+        final EclipseTemplate eclipseTemplate = mock(EclipseTemplate.class);
         when(eclipseTemplate.getInsertionOffset(mockingContext)).thenReturn(0);
         when(eclipseTemplate.template()).thenReturn(new Template("a-template-that-cannot-be-evaluated", "", "java", "some pattern", false));
 
         // when + then
-        MockingTemplateException exception = assertThrows(MockingTemplateException.class, () -> templateContext.evaluate(eclipseTemplate));
+        final MockingTemplateException exception = assertThrows(MockingTemplateException.class, () -> templateContext.evaluate(eclipseTemplate));
         assertTrue(exception.getMessage().contains("some pattern"));
         assertFalse(exception.isUserMessage());
     }
 
     private ISourceRange range(int offset, int length)
     {
-        ISourceRange range = mock(ISourceRange.class);
+        final ISourceRange range = mock(ISourceRange.class);
         when(range.getOffset()).thenReturn(offset);
         when(range.getLength()).thenReturn(length);
         return range;

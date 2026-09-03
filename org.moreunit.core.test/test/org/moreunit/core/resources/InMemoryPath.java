@@ -51,8 +51,8 @@ public class InMemoryPath implements Path
     @Override
     public String getBaseNameWithoutExtension()
     {
-        String baseName = getBaseName();
-        int lastDotIdx = baseName.lastIndexOf('.');
+        final String baseName = getBaseName();
+        final int lastDotIdx = baseName.lastIndexOf('.');
         if(lastDotIdx != - 1)
         {
             return baseName.substring(0, lastDotIdx);
@@ -63,8 +63,8 @@ public class InMemoryPath implements Path
     @Override
     public String getExtension()
     {
-        String baseName = getBaseName();
-        int lastDotIdx = baseName.lastIndexOf(".");
+        final String baseName = getBaseName();
+        final int lastDotIdx = baseName.lastIndexOf(".");
         if(lastDotIdx != - 1)
         {
             return baseName.substring(lastDotIdx + 1);
@@ -146,7 +146,7 @@ public class InMemoryPath implements Path
             throw new IndexOutOfBoundsException("No segment at index: " + segmentIndex);
         }
 
-        StringBuilder result = new StringBuilder(isAbsolute() ? "/" : "");
+        final StringBuilder result = new StringBuilder(isAbsolute() ? "/" : "");
         for (int i = 1; i <= segmentIndex; i++)
         {
             if(i != 1)
@@ -160,7 +160,7 @@ public class InMemoryPath implements Path
     @Override
     public InMemoryPath withoutLastSegment()
     {
-        int lastSlashIdx = path.lastIndexOf("/");
+        final int lastSlashIdx = path.lastIndexOf("/");
         if(lastSlashIdx == - 1)
             return new InMemoryPath("");
         if(lastSlashIdx == 0)

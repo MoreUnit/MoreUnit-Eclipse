@@ -52,7 +52,7 @@ abstract class ResourcesTest
     @Test
     public void workspace_should_be_traversable_from_top_to_bottom_ignoring_resources_that_do_not_exist() throws Exception
     {
-        List<Project> projects = workspace.listProjects();
+        final List<Project> projects = workspace.listProjects();
         assertEquals(Arrays.asList("project1", "project2"), namesOf(projects));
 
         assertContainsFolders(projects.get(0), "folderA", "folderB", "folderC", "folderD");
@@ -70,7 +70,7 @@ abstract class ResourcesTest
     @Test
     public void workspace_should_be_traversable_from_bottom_to_top__existing_resource() throws Exception
     {
-        File fileA2A = workspace.getFile("/project1/folderA/subfolderA2/subsubfolderA/fileA2A");
+        final File fileA2A = workspace.getFile("/project1/folderA/subfolderA2/subsubfolderA/fileA2A");
 
         assertInstanceOf(Folder.class, fileA2A.getParent());
         assertInstanceOf(Folder.class, fileA2A.getParent().getParent().getParent());
@@ -82,7 +82,7 @@ abstract class ResourcesTest
     @Test
     public void workspace_should_be_traversable_from_bottom_to_top__non_existing_resource() throws Exception
     {
-        File fileD3 = workspace.getFile("/project1/folderD/fileD3");
+        final File fileD3 = workspace.getFile("/project1/folderD/fileD3");
 
         assertFalse(fileD3.exists());
         assertInstanceOf(Folder.class, fileD3.getParent());
@@ -92,7 +92,7 @@ abstract class ResourcesTest
     @Test
     public void resources_should_have_expected_path() throws Exception
     {
-        File fileC = workspace.getFile("/project1/folderC/subfolderC/fileC");
+        final File fileC = workspace.getFile("/project1/folderC/subfolderC/fileC");
 
         assertEquals(fileC.getPath().toString(), "/project1/folderC/subfolderC/fileC");
         assertEquals(fileC.getParent().getPath().toString(), "/project1/folderC/subfolderC");
@@ -177,7 +177,7 @@ abstract class ResourcesTest
         assertFalse(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists());
 
         // when
-        ContainerCreationRecord record = workspace.getFolder("/project1/folderA/subfolder/subsubfolder").createWithRecord();
+        final ContainerCreationRecord record = workspace.getFolder("/project1/folderA/subfolder/subsubfolder").createWithRecord();
 
         // then
         assertTrue(workspace.getFolder("/project1/folderA/subfolder/subsubfolder").exists());
@@ -208,7 +208,7 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_other_than_workspace_should_search_for_relative_subfolders() throws Exception
     {
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
         assertIllegalFolderAccess(project2, "/project2/folderZ");
         assertIllegalFolderAccess(project2.getFolder("folderZ"), "/project2/folderZ/subfolderZ1");
     }
@@ -216,7 +216,7 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_other_than_workspace_should_search_for_relative_subfiles() throws Exception
     {
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
         assertIllegalFileAccess(project2, "/project2/fileAtProjectRoot");
         assertIllegalFileAccess(project2.getFolder("folderZ/subfolderZ1"), "/project2/folderZ/subfolderZ1/fileZ1");
     }
@@ -224,7 +224,7 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_should_complain_when_requested_subfolder_path_is_empty() throws Exception
     {
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
         assertIllegalFolderAccess(project2, "");
         assertIllegalFolderAccess(project2.getFolder("folderZ"), "");
     }
@@ -232,7 +232,7 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_should_complain_when_requested_subfile_path_is_empty() throws Exception
     {
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
         assertIllegalFileAccess(project2, "");
         assertIllegalFileAccess(project2.getFolder("folderZ"), "");
     }
@@ -240,7 +240,7 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_should_complain_when_requested_file_path_is_used_by_an_existing_folder() throws Exception
     {
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
 
         // no FILE can be accessed/created with name "folderZ" because a FOLDER
         // already exists with this name
@@ -253,7 +253,7 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_should_complain_when_requested_folder_path_is_used_by_an_existing_file() throws Exception
     {
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
 
         // no FOLDER can be accessed/created with name "fileAtProjectRoot"
         // because a FILE already exists with this name
@@ -267,7 +267,7 @@ abstract class ResourcesTest
     public void resource_containers_should_complain_when_requested_file_path_is_used_by_a_non_existing_folder() throws Exception
     {
         // given
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
 
         // no call to create(), so folder does not exist
         project2.getFolder("some_path/some_name");
@@ -283,7 +283,7 @@ abstract class ResourcesTest
     public void resource_containers_should_complain_when_requested_folder_path_is_used_by_a_non_existing_file() throws Exception
     {
         // given
-        Project project2 = workspace.getProject("project2");
+        final Project project2 = workspace.getProject("project2");
 
         // no call to create(), so files do not exist
         project2.getFile("some_name1");
@@ -317,39 +317,39 @@ abstract class ResourcesTest
     @Test
     public void paths_should_know_when_they_are_relatives() throws Exception
     {
-        Path childPath = workspace.path("/some/path/with/lots/of/segments");
-        Path parentPath = workspace.path("/some/path/");
+        final Path childPath = workspace.path("/some/path/with/lots/of/segments");
+        final Path parentPath = workspace.path("/some/path/");
 
         assertTrue(parentPath.isPrefixOf(childPath));
         assertFalse(childPath.isPrefixOf(parentPath));
 
-        Path someOtherPath = workspace.path("/some/other/path");
+        final Path someOtherPath = workspace.path("/some/other/path");
         assertFalse(parentPath.isPrefixOf(someOtherPath));
     }
 
     @Test
     public void paths_should_return_themselves_without_the_last_segment() throws Exception
     {
-        Path longPath = workspace.path("/some/path/with/lots/of/segments");
+        final Path longPath = workspace.path("/some/path/with/lots/of/segments");
         assertEquals(longPath.withoutLastSegment().toString(), "/some/path/with/lots/of");
 
-        Path absolutePathWithSingleSegment = workspace.path("/path");
+        final Path absolutePathWithSingleSegment = workspace.path("/path");
         assertEquals(absolutePathWithSingleSegment.withoutLastSegment().toString(), "/");
 
-        Path relativePathWithSingleSegment = workspace.path("path");
+        final Path relativePathWithSingleSegment = workspace.path("path");
         assertEquals(relativePathWithSingleSegment.withoutLastSegment().toString(), "");
 
-        Path emptyPath = workspace.path("");
+        final Path emptyPath = workspace.path("");
         assertEquals(emptyPath.withoutLastSegment().toString(), "");
 
-        Path rootPath = workspace.path("/");
+        final Path rootPath = workspace.path("/");
         assertEquals(rootPath.withoutLastSegment().toString(), "/");
     }
 
     @Test
     public void absolute_paths_should_return_themselves_up_to_a_given_segment() throws Exception
     {
-        Path absolutePath = workspace.path("/some/path/with/lots/of/segments");
+        final Path absolutePath = workspace.path("/some/path/with/lots/of/segments");
 
         assertEquals(absolutePath.uptoSegment(0).toString(), "/");
         assertEquals(absolutePath.uptoSegment(1).toString(), "/some");
@@ -361,7 +361,7 @@ abstract class ResourcesTest
     @Test
     public void relative_paths_should_return_themselves_up_to_a_given_segment() throws Exception
     {
-        Path relativePath = workspace.path("some/path/with/lots/of/segments");
+        final Path relativePath = workspace.path("some/path/with/lots/of/segments");
 
         assertEquals(relativePath.uptoSegment(0).toString(), "");
         assertEquals(relativePath.uptoSegment(1).toString(), "some");
@@ -373,19 +373,19 @@ abstract class ResourcesTest
     @Test
     public void resource_containers_should_know_when_they_are_parent_of_other_resources() throws Exception
     {
-        File childFile = workspace.getFile("/some/path/with/lots/of/segments");
-        Folder parentFolder = workspace.getFolder("/some/path/");
+        final File childFile = workspace.getFile("/some/path/with/lots/of/segments");
+        final Folder parentFolder = workspace.getFolder("/some/path/");
 
         assertTrue(parentFolder.isParentOf(childFile));
 
-        Folder someOtherFolder = workspace.getFolder("/some/other/path");
+        final Folder someOtherFolder = workspace.getFolder("/some/other/path");
         assertFalse(parentFolder.isParentOf(someOtherFolder));
     }
 
     @Test
     public void file_extensions_should_never_be_null() throws Exception
     {
-        File fileWithoutExtension = workspace.getFile("/some-project/some-file-without-extension");
+        final File fileWithoutExtension = workspace.getFile("/some-project/some-file-without-extension");
 
         assertFalse(fileWithoutExtension.hasExtension());
         assertFalse(fileWithoutExtension.getPath().hasExtension());

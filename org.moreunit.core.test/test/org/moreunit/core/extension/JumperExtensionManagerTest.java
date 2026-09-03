@@ -34,18 +34,11 @@ public class JumperExtensionManagerTest
     @Test
     public void jump_should_return_notDone_when_no_jumpers_for_extension()
     {
-        IJumpContext context = createMockContext("java");
+        final IJumpContext context = createMockContext("java");
 
-        when(languageExtensionManager.getJumpersFor("java")).thenReturn(new Iterable<IJumper>()
-        {
-            @Override
-            public java.util.Iterator<IJumper> iterator()
-            {
-                return java.util.Collections.emptyIterator();
-            }
-        });
+        when(languageExtensionManager.getJumpersFor("java")).thenReturn((Iterable<IJumper>) () -> java.util.Collections.emptyIterator());
 
-        JumpResult result = manager.jump(context);
+        final JumpResult result = manager.jump(context);
 
         assertEquals(JumpResult.notDone(), result);
     }
@@ -53,13 +46,13 @@ public class JumperExtensionManagerTest
     @Test
     public void jump_should_return_done_when_jumper_returns_done()
     {
-        IJumpContext context = createMockContext("java");
-        IJumper jumper = mock(IJumper.class);
+        final IJumpContext context = createMockContext("java");
+        final IJumper jumper = mock(IJumper.class);
 
         when(languageExtensionManager.getJumpersFor("java")).thenReturn(() -> java.util.Collections.singleton(jumper).iterator());
         when(jumper.jump(context)).thenReturn(JumpResult.done());
 
-        JumpResult result = manager.jump(context);
+        final JumpResult result = manager.jump(context);
 
         assertEquals(JumpResult.done(), result);
     }
@@ -67,15 +60,15 @@ public class JumperExtensionManagerTest
     @Test
     public void jump_should_stop_at_first_done_result()
     {
-        IJumpContext context = createMockContext("java");
-        IJumper jumper1 = mock(IJumper.class);
-        IJumper jumper2 = mock(IJumper.class);
+        final IJumpContext context = createMockContext("java");
+        final IJumper jumper1 = mock(IJumper.class);
+        final IJumper jumper2 = mock(IJumper.class);
 
         when(languageExtensionManager.getJumpersFor("java")).thenReturn(() -> java.util.Arrays.asList(jumper1, jumper2).iterator());
         when(jumper1.jump(context)).thenReturn(JumpResult.done());
         when(jumper2.jump(context)).thenReturn(JumpResult.notDone());
 
-        JumpResult result = manager.jump(context);
+        final JumpResult result = manager.jump(context);
 
         assertEquals(JumpResult.done(), result);
         verify(jumper1).jump(context);
@@ -84,13 +77,13 @@ public class JumperExtensionManagerTest
     @Test
     public void jump_should_return_done_when_jumper_throws_exception()
     {
-        IJumpContext context = createMockContext("java");
-        IJumper jumper = mock(IJumper.class);
+        final IJumpContext context = createMockContext("java");
+        final IJumper jumper = mock(IJumper.class);
 
         when(languageExtensionManager.getJumpersFor("java")).thenReturn(() -> java.util.Collections.singleton(jumper).iterator());
         when(jumper.jump(context)).thenThrow(new RuntimeException("test exception"));
 
-        JumpResult result = manager.jump(context);
+        final JumpResult result = manager.jump(context);
 
         assertEquals(JumpResult.done(), result);
     }
@@ -98,21 +91,21 @@ public class JumperExtensionManagerTest
     @Test
     public void jump_should_return_done_when_jumper_returns_null()
     {
-        IJumpContext context = createMockContext("java");
-        IJumper jumper = mock(IJumper.class);
+        final IJumpContext context = createMockContext("java");
+        final IJumper jumper = mock(IJumper.class);
 
         when(languageExtensionManager.getJumpersFor("java")).thenReturn(() -> java.util.Collections.singleton(jumper).iterator());
         when(jumper.jump(context)).thenReturn(null);
 
-        JumpResult result = manager.jump(context);
+        final JumpResult result = manager.jump(context);
 
         assertEquals(JumpResult.done(), result);
     }
 
     private IJumpContext createMockContext(String fileExtension)
     {
-        IJumpContext context = mock(IJumpContext.class);
-        IFile file = mock(IFile.class);
+        final IJumpContext context = mock(IJumpContext.class);
+        final IFile file = mock(IFile.class);
         when(file.getFileExtension()).thenReturn(fileExtension);
         when(context.getSelectedFile()).thenReturn(file);
         when(context.getExecutionEvent()).thenReturn(mock(ExecutionEvent.class));

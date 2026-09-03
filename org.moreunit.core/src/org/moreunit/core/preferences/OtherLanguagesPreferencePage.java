@@ -32,7 +32,7 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
     @Override
     protected void doCreateContent(Composite parent)
     {
-        Label explainationLabel = new Label(parent, SWT.NONE);
+        final Label explainationLabel = new Label(parent, SWT.NONE);
         explainationLabel.setLayoutData(LayoutData.colSpan(1));
         explainationLabel.setText("The following configuration will be applied to all languages as a default:");
 
@@ -47,21 +47,21 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
 
     private void createFields(Composite parent)
     {
-        Composite group = Composites.gridGroup(parent, "Per-language configurations may also be created:", 2, 10);
+        final Composite group = Composites.gridGroup(parent, "Per-language configurations may also be created:", 2, 10);
 
-        Label nameLabel = new Label(group, SWT.NONE);
+        final Label nameLabel = new Label(group, SWT.NONE);
         nameLabel.setText("Language name:");
 
         nameField = new Text(group, SWT.SINGLE | SWT.BORDER);
         nameField.setLayoutData(LayoutData.labelledField());
 
-        Label extensionLabel = new Label(group, SWT.NONE);
+        final Label extensionLabel = new Label(group, SWT.NONE);
         extensionLabel.setText("Extension:");
 
         extensionField = new ExtensionField(group, SWT.SINGLE | SWT.BORDER);
         extensionField.setLayoutData(LayoutData.labelledField());
 
-        Button creationButton = new Button(group, SWT.NONE);
+        final Button creationButton = new Button(group, SWT.NONE);
         creationButton.setText("Create Configuration");
         creationButton.addSelectionListener(new SelectionAdapter()
         {
@@ -80,7 +80,7 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
                     return;
                 }
 
-                Language lang = new Language(extensionField.getExtension(), nameField.getText().trim());
+                final Language lang = new Language(extensionField.getExtension(), nameField.getText().trim());
                 languageRepository.add(lang);
             }
         });
@@ -90,8 +90,8 @@ public class OtherLanguagesPreferencePage extends PreferencePageBase
 
     private void separator(Composite parent)
     {
-        Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
-        GridData gridData = new GridData();
+        final Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
+        final GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = true;
         separator.setLayoutData(gridData);

@@ -75,7 +75,7 @@ public class MockDependenciesPageManagerTest
         // given
         when(classUnderTest.getMethods()).thenReturn(new IMethod[0]);
         when(classUnderTest.getFields()).thenReturn(new IField[0]);
-        ITypeHierarchy typeHierarchy = mock(ITypeHierarchy.class);
+        final ITypeHierarchy typeHierarchy = mock(ITypeHierarchy.class);
         when(typeHierarchy.getAllClasses()).thenReturn(new IType[0]);
         when(classUnderTest.newSupertypeHierarchy(any(IProgressMonitor.class))).thenReturn(typeHierarchy);
         when(context.getClassUnderTest()).thenReturn(classUnderTest);
@@ -83,15 +83,15 @@ public class MockDependenciesPageManagerTest
         when(wizardFactory.createMockDependenciesWizardPage(any(MockDependenciesWizardValues.class), any(DependencyInjectionPointStore.class))).thenReturn(page);
 
         // when
-        MockDependenciesWizardPage createdPage = pageManager.createPage(context);
+        final MockDependenciesWizardPage createdPage = pageManager.createPage(context);
 
         // then
         assertSame(page, createdPage);
 
-        ArgumentCaptor<MockDependenciesWizardValues> valuesCaptor = ArgumentCaptor.forClass(MockDependenciesWizardValues.class);
+        final ArgumentCaptor<MockDependenciesWizardValues> valuesCaptor = ArgumentCaptor.forClass(MockDependenciesWizardValues.class);
         verify(wizardFactory).createMockDependenciesWizardPage(valuesCaptor.capture(), any(DependencyInjectionPointStore.class));
 
-        MockDependenciesWizardValues wizardValues = valuesCaptor.getValue();
+        final MockDependenciesWizardValues wizardValues = valuesCaptor.getValue();
         assertSame(classUnderTest, wizardValues.getClassUnderTest());
 
         assertNotNull(wizardValues.getInjectionPointProvider());
@@ -153,7 +153,7 @@ public class MockDependenciesPageManagerTest
     public void should_log_error_and_not_mock_dependencies_when_dependencies_cannot_be_determined() throws Exception
     {
         // given
-        DependencyInjectionPointStore injectionPointStore = mock(DependencyInjectionPointStore.class);
+        final DependencyInjectionPointStore injectionPointStore = mock(DependencyInjectionPointStore.class);
         when(injectionPointStore.getConstructors()).thenThrow(new JavaModelException(new CoreException(Status.CANCEL_STATUS)));
 
         when(page.getClassUnderTest()).thenReturn(classUnderTest);

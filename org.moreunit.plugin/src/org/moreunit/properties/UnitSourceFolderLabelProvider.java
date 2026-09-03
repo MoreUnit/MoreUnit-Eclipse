@@ -14,16 +14,16 @@ import org.moreunit.util.PluginTools;
 public class UnitSourceFolderLabelProvider extends LabelProvider
 {
 
-    private JavaElementLabelProvider baseLabelProvider = new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_QUALIFIED | JavaElementLabelProvider.SHOW_ROOT);
+    private final JavaElementLabelProvider baseLabelProvider = new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_QUALIFIED | JavaElementLabelProvider.SHOW_ROOT);
 
     private static final String SUFFIX_SOURCE = " (mapped source folder)";
 
     @Override
     public Image getImage(Object element)
     {
-        if(element instanceof SourceFolderMapping mapping)
+        if(element instanceof final SourceFolderMapping mapping)
         {
-            IPackageFragmentRoot testFolder = mapping.getTestFolder();
+            final IPackageFragmentRoot testFolder = mapping.getTestFolder();
             return baseLabelProvider.getImage(testFolder);
         }
 
@@ -33,13 +33,13 @@ public class UnitSourceFolderLabelProvider extends LabelProvider
     @Override
     public String getText(Object element)
     {
-        if(element instanceof SourceFolderMapping mapping)
+        if(element instanceof final SourceFolderMapping mapping)
         {
-            IPackageFragmentRoot sourceFolder = mapping.getTestFolder();
+            final IPackageFragmentRoot sourceFolder = mapping.getTestFolder();
             return getLabelForPackageFragmentRoot(sourceFolder);
         }
 
-        if(element instanceof IPackageFragmentRoot root)
+        if(element instanceof final IPackageFragmentRoot root)
         {
             return getLabelForPackageFragmentRoot(root) + SUFFIX_SOURCE;
         }
@@ -49,7 +49,7 @@ public class UnitSourceFolderLabelProvider extends LabelProvider
 
     private String getLabelForPackageFragmentRoot(IPackageFragmentRoot folder)
     {
-        StringBuffer result = new StringBuffer();
+        final StringBuilder result = new StringBuilder();
         result.append(folder.getJavaProject().getElementName());
         result.append(StringConstants.SLASH);
         result.append(PluginTools.getPathStringWithoutProjectName(folder));

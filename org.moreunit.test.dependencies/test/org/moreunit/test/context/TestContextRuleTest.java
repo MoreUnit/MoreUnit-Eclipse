@@ -17,33 +17,12 @@ public class TestContextRuleTest
     @Test
     public void should_complain_when_there_is_no_context() throws Exception
     {
-        List< ? extends Runnable> runnables = asList(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                context.getCompilationUnit("irrelevant");
-            }
-        }, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                context.assertCompilationUnit("irrelevant");
-            }
-        }, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                context.assertCompilationUnit("irrelevant");
-            }
-        });
+        final List< ? extends Runnable> runnables = asList(() -> context.getCompilationUnit("irrelevant"), () -> context.assertCompilationUnit("irrelevant"), () -> context.assertCompilationUnit("irrelevant"));
 
-        for (Runnable runnable : runnables)
+        for (final Runnable runnable : runnables)
         {
             {
-                IllegalStateException e = assertThrows(IllegalStateException.class, () -> runnable.run());
+                final IllegalStateException e = assertThrows(IllegalStateException.class, () -> runnable.run());
                 assertEquals("No context defined. Are you accessing this extension from outside a test method? or from one that has no Context annotation?", e.getMessage());
             }
         }
@@ -54,7 +33,7 @@ public class TestContextRuleTest
     public void should_complain_when_source_is_undefined() throws Exception
     {
         {
-            Exception e = assertThrows(Exception.class, () -> context.getCompilationUnit("AClass"));
+            final Exception e = assertThrows(Exception.class, () -> context.getCompilationUnit("AClass"));
             assertEquals("No compilation unit defined with name: AClass", e.getMessage());
         }
     }

@@ -51,8 +51,8 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
      */
     private void awaitTestTypeAvailable() throws Exception
     {
-        org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
-        long deadline = System.currentTimeMillis() + 20_000;
+        final org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 20_000;
         while (System.currentTimeMillis() < deadline)
         {
             if(context.getPrimaryTypeHandler("com.FooTest").get() != null)
@@ -69,8 +69,8 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
      */
     private void awaitTestSearchReady(java.util.function.Supplier<java.util.Collection< ? >> search) throws Exception
     {
-        org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
-        long deadline = System.currentTimeMillis() + 20_000;
+        final org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 20_000;
         while (System.currentTimeMillis() < deadline)
         {
             if(! search.get().isEmpty())
@@ -82,8 +82,8 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
 
     private void await(int expectedOpenCount) throws Exception
     {
-        Display display = Display.getDefault();
-        long deadline = System.currentTimeMillis() + 30_000;
+        final Display display = Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 30_000;
         while (openedElements.size() < expectedOpenCount && System.currentTimeMillis() < deadline)
         {
             // the action runs its final step through Display#syncExec, so the
@@ -97,9 +97,9 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
     @Test
     public void should_accept_selection_and_ignore_non_structured_selection()
     {
-        CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction();
+        final CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction();
 
-        ISelection nonStructured = mock(ISelection.class);
+        final ISelection nonStructured = mock(ISelection.class);
         action.selectionChanged(null, nonStructured);
         // run with non-structured selection should do nothing (no exception)
         action.run(mock(IAction.class));
@@ -108,7 +108,7 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
     @Test
     public void should_ignore_structured_selection_not_containing_a_method()
     {
-        CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction();
+        final CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction();
         action.selectionChanged(null, new StructuredSelection(new Object()));
 
         action.run(mock(IAction.class));
@@ -119,12 +119,12 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
     @Test
     public void run_should_create_test_method_for_selected_method_of_class_under_test() throws Exception
     {
-        MethodHandler foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;");
-        int testMethodCountBefore = testMethodCount();
+        final MethodHandler foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;");
+        final int testMethodCountBefore = testMethodCount();
 
         awaitTestSearchReady(() -> new org.moreunit.elements.ClassTypeFacade(context.getCompilationUnit("com.Foo")).getCorrespondingTestCases());
 
-        CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction(editorUI);
+        final CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction(editorUI);
         action.selectionChanged(null, new StructuredSelection(foo.get()));
         action.run(mock(IAction.class));
 
@@ -135,12 +135,12 @@ public class CreateTestMethodHierarchyActionTest extends ContextTestCase
     @Test
     public void run_should_create_test_method_when_selected_method_belongs_to_a_test_case() throws Exception
     {
-        MethodHandler testFoo = context.getPrimaryTypeHandler("com.FooTest").addMethod("public void testFoo()", "");
-        int testMethodCountBefore = testMethodCount();
+        final MethodHandler testFoo = context.getPrimaryTypeHandler("com.FooTest").addMethod("public void testFoo()", "");
+        final int testMethodCountBefore = testMethodCount();
 
         awaitTestSearchReady(() -> new org.moreunit.elements.TestCaseTypeFacade(context.getCompilationUnit("com.FooTest")).getCorrespondingClasses(false));
 
-        CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction(editorUI);
+        final CreateTestMethodHierarchyAction action = new CreateTestMethodHierarchyAction(editorUI);
         action.selectionChanged(null, new StructuredSelection(testFoo.get()));
         action.run(mock(IAction.class));
 

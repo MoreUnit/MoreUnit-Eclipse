@@ -30,7 +30,7 @@ public class GenericPreferencePage extends PreferencePageBase
 
     private void createFields(Composite parent)
     {
-        Button button = new Button(parent, SWT.NONE);
+        final Button button = new Button(parent, SWT.NONE);
         button.setText("Delete Configuration");
         button.addSelectionListener(new SelectionAdapter()
         {

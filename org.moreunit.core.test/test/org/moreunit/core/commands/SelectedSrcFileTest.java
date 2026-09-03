@@ -19,11 +19,11 @@ public class SelectedSrcFileTest
     @Test
     public void testFromEditor()
     {
-        SrcFile mockFile = mock(SrcFile.class);
-        IEditorPart mockEditor = mock(IEditorPart.class);
-        ExecutionContext mockContext = mock(ExecutionContext.class);
+        final SrcFile mockFile = mock(SrcFile.class);
+        final IEditorPart mockEditor = mock(IEditorPart.class);
+        final ExecutionContext mockContext = mock(ExecutionContext.class);
 
-        SelectedSrcFile selectedFile = SelectedSrcFile.fromEditor(mockFile, mockEditor, mockContext);
+        final SelectedSrcFile selectedFile = SelectedSrcFile.fromEditor(mockFile, mockEditor, mockContext);
 
         assertNotNull(selectedFile);
         assertSame(mockFile, selectedFile.getSrcFile());
@@ -32,10 +32,10 @@ public class SelectedSrcFileTest
     @Test
     public void testFromSelection()
     {
-        SrcFile mockFile = mock(SrcFile.class);
-        ExecutionContext mockContext = mock(ExecutionContext.class);
+        final SrcFile mockFile = mock(SrcFile.class);
+        final ExecutionContext mockContext = mock(ExecutionContext.class);
 
-        SelectedSrcFile selectedFile = SelectedSrcFile.fromSelection(mockFile, mockContext);
+        final SelectedSrcFile selectedFile = SelectedSrcFile.fromSelection(mockFile, mockContext);
 
         assertNotNull(selectedFile);
         assertSame(mockFile, selectedFile.getSrcFile());
@@ -44,7 +44,7 @@ public class SelectedSrcFileTest
     @Test
     public void testNone()
     {
-        SelectedSrcFile noneFile = SelectedSrcFile.none();
+        final SelectedSrcFile noneFile = SelectedSrcFile.none();
 
         assertNotNull(noneFile);
         assertNull(noneFile.getSrcFile());
@@ -54,11 +54,11 @@ public class SelectedSrcFileTest
     @Test
     public void testIsSupportedWhenFileIsSupported()
     {
-        SrcFile mockFile = mock(SrcFile.class);
+        final SrcFile mockFile = mock(SrcFile.class);
         when(mockFile.isSupported()).thenReturn(true);
-        ExecutionContext mockContext = mock(ExecutionContext.class);
+        final ExecutionContext mockContext = mock(ExecutionContext.class);
 
-        SelectedSrcFile selectedFile = SelectedSrcFile.fromSelection(mockFile, mockContext);
+        final SelectedSrcFile selectedFile = SelectedSrcFile.fromSelection(mockFile, mockContext);
 
         assertTrue(selectedFile.isSupported());
     }
@@ -66,11 +66,11 @@ public class SelectedSrcFileTest
     @Test
     public void testIsSupportedWhenFileIsNotSupported()
     {
-        SrcFile mockFile = mock(SrcFile.class);
+        final SrcFile mockFile = mock(SrcFile.class);
         when(mockFile.isSupported()).thenReturn(false);
-        ExecutionContext mockContext = mock(ExecutionContext.class);
+        final ExecutionContext mockContext = mock(ExecutionContext.class);
 
-        SelectedSrcFile selectedFile = SelectedSrcFile.fromSelection(mockFile, mockContext);
+        final SelectedSrcFile selectedFile = SelectedSrcFile.fromSelection(mockFile, mockContext);
 
         assertFalse(selectedFile.isSupported());
     }
@@ -78,7 +78,7 @@ public class SelectedSrcFileTest
     @Test
     public void testIsSupportedWhenFileIsNull()
     {
-        SelectedSrcFile noneFile = SelectedSrcFile.none();
+        final SelectedSrcFile noneFile = SelectedSrcFile.none();
 
         assertFalse(noneFile.isSupported());
     }
@@ -86,7 +86,7 @@ public class SelectedSrcFileTest
     @Test
     public void testCreateJumpContextThrowsExceptionWhenFileIsNull()
     {
-        SelectedSrcFile noneFile = SelectedSrcFile.none();
+        final SelectedSrcFile noneFile = SelectedSrcFile.none();
         assertThrows(IllegalStateException.class, noneFile::createJumpContext);
     }
 }

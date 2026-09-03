@@ -46,7 +46,7 @@ public class UserInterface
         {
             IDE.openEditor(activePage, file, true);
         }
-        catch (PartInitException e)
+        catch (final PartInitException e)
         {
             logger.error("Could not open editor for " + file, e);
         }

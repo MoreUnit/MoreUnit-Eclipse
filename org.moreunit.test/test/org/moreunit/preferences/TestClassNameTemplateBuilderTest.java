@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 public class TestClassNameTemplateBuilderTest
 {
-    private TestClassNameTemplateBuilder builder = new TestClassNameTemplateBuilder();
+    private final TestClassNameTemplateBuilder builder = new TestClassNameTemplateBuilder();
 
     @Test
     public void should_create_test_class_name_pattern_with_prefix() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] { "Pre" }, new String[] {}, false);
+        final String template = builder.buildFromSettings(new String[] { "Pre" }, new String[] {}, false);
 
         assertEquals(template, "Pre${srcFile}");
     }
@@ -19,7 +19,7 @@ public class TestClassNameTemplateBuilderTest
     @Test
     public void should_create_test_class_name_pattern_with_prefixes() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] { "Pre1", "Pre2" }, new String[] {}, false);
+        final String template = builder.buildFromSettings(new String[] { "Pre1", "Pre2" }, new String[] {}, false);
 
         assertEquals(template, "(Pre1|Pre2)${srcFile}");
     }
@@ -27,7 +27,7 @@ public class TestClassNameTemplateBuilderTest
     @Test
     public void should_create_test_class_name_pattern_with_suffix() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] {}, new String[] { "Suf" }, false);
+        final String template = builder.buildFromSettings(new String[] {}, new String[] { "Suf" }, false);
 
         assertEquals(template, "${srcFile}Suf");
     }
@@ -35,14 +35,14 @@ public class TestClassNameTemplateBuilderTest
     @Test
     public void should_create_test_class_name_pattern_with_suffixes() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] {}, new String[] { "Suf1", "Suf2" }, false);
+        final String template = builder.buildFromSettings(new String[] {}, new String[] { "Suf1", "Suf2" }, false);
 
         assertEquals(template, "${srcFile}(Suf1|Suf2)");
     }
 
     public void should_create_test_class_name_pattern_with_prefix_and_flexible_naming() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] { "Pre" }, new String[] {}, true);
+        final String template = builder.buildFromSettings(new String[] { "Pre" }, new String[] {}, true);
 
         assertEquals(template, "Pre*${srcFile}");
     }
@@ -50,7 +50,7 @@ public class TestClassNameTemplateBuilderTest
     @Test
     public void should_create_test_class_name_pattern_with_suffix_and_flexible_naming() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] {}, new String[] { "Suf" }, true);
+        final String template = builder.buildFromSettings(new String[] {}, new String[] { "Suf" }, true);
 
         assertEquals(template, "${srcFile}*Suf");
     }
@@ -58,7 +58,7 @@ public class TestClassNameTemplateBuilderTest
     @Test
     public void should_create_test_class_name_pattern_with_prefixes_and_suffixes() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] { "Pre1", "Pre2" }, new String[] { "Suf1", "Suf2" }, false);
+        final String template = builder.buildFromSettings(new String[] { "Pre1", "Pre2" }, new String[] { "Suf1", "Suf2" }, false);
 
         assertEquals(template, "(Pre1|Pre2)${srcFile}(Suf1|Suf2)");
     }
@@ -66,7 +66,7 @@ public class TestClassNameTemplateBuilderTest
     @Test
     public void should_create_test_class_name_pattern_with_prefixes_and_suffixes_and_flexible_naming() throws Exception
     {
-        String template = builder.buildFromSettings(new String[] { "Pre1", "Pre2" }, new String[] { "Suf1", "Suf2" }, true);
+        final String template = builder.buildFromSettings(new String[] { "Pre1", "Pre2" }, new String[] { "Suf1", "Suf2" }, true);
 
         assertEquals(template, "(Pre1|Pre2)*${srcFile}*(Suf1|Suf2)");
     }

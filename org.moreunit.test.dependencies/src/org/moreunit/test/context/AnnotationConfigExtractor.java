@@ -26,16 +26,16 @@ class AnnotationConfigExtractor
             return null;
         }
 
-        WorkspaceConfiguration config = newWorkspaceConfig();
+        final WorkspaceConfiguration config = newWorkspaceConfig();
 
-        Context context = getContext(annotatedElement, defaultAnnotatedElement);
+        final Context context = getContext(annotatedElement, defaultAnnotatedElement);
 
         final Preferences preferences;
         if(context == null)
         {
             preferences = getAnnotation(annotatedElement, defaultAnnotatedElement, Preferences.class);
 
-            Project project = getAnnotation(annotatedElement, defaultAnnotatedElement, Project.class);
+            final Project project = getAnnotation(annotatedElement, defaultAnnotatedElement, Project.class);
             if(project != null)
             {
                 extractProjectConfiguration(config, project);
@@ -115,7 +115,7 @@ class AnnotationConfigExtractor
     {
         if(annotatedElement != null)
         {
-            for (Class< ? extends Annotation> annotationType : asList(Context.class, Project.class, Preferences.class))
+            for (final Class< ? extends Annotation> annotationType : asList(Context.class, Project.class, Preferences.class))
             {
                 if(annotatedElement.getAnnotation(annotationType) != null)
                 {
@@ -135,7 +135,7 @@ class AnnotationConfigExtractor
     {
         if(annotatedElement != null)
         {
-            Context context = annotatedElement.getAnnotation(Context.class);
+            final Context context = annotatedElement.getAnnotation(Context.class);
             if(context != null || defaultAnnotatedElement == null)
             {
                 return context;
@@ -151,7 +151,7 @@ class AnnotationConfigExtractor
             return;
         }
 
-        for (Class< ? extends Annotation> annotationType : asList(Project.class, Preferences.class))
+        for (final Class< ? extends Annotation> annotationType : asList(Project.class, Preferences.class))
         {
             if(annotatedElement.getAnnotation(annotationType) != null)
             {
@@ -164,7 +164,7 @@ class AnnotationConfigExtractor
     {
         if(annotatedElement != null)
         {
-            A annotation = annotatedElement.getAnnotation(annotationClass);
+            final A annotation = annotatedElement.getAnnotation(annotationClass);
             if(annotation != null || defaultAnnotatedElement == null)
             {
                 return annotation;
@@ -188,7 +188,7 @@ class AnnotationConfigExtractor
                 throw new IllegalConfigurationException("Too much recursion in @Project definitions");
             }
 
-            Class< ? > projValue = project.value();
+            final Class< ? > projValue = project.value();
             project = projValue.getAnnotation(Project.class);
             if(project == null)
             {
@@ -196,8 +196,8 @@ class AnnotationConfigExtractor
             }
         }
 
-        String projectName = StringUtils.firstNonBlank(project.name(), Defaults.PROJECT_NAME);
-        ProjectConfiguration projectConfig = config.createProject(projectName);
+        final String projectName = StringUtils.firstNonBlank(project.name(), Defaults.PROJECT_NAME);
+        final ProjectConfiguration projectConfig = config.createProject(projectName);
         projectConfig.setMainTypes(splitTypes(project.mainCls()));
         projectConfig.setMainSources(splitSources(project.mainSrc()));
         projectConfig.setMainSourceFolder(project.mainSrcFolder().trim());
@@ -205,7 +205,7 @@ class AnnotationConfigExtractor
         projectConfig.setTestSources(splitSources(project.testSrc()));
         projectConfig.setTestSourceFolder(project.testSrcFolder().trim());
 
-        TestProject testProject = project.testProject();
+        final TestProject testProject = project.testProject();
         if(testProject != null && testProject.value() != Default.class)
         {
             if(! StringUtils.isNullOrEmpty(project.testCls()))
@@ -217,15 +217,15 @@ class AnnotationConfigExtractor
                 throw new IllegalConfigurationException("Both testSrc and testProject are defined for @Project");
             }
 
-            String testProjectName = StringUtils.firstNonBlank(testProject.name(), Defaults.TEST_PROJECT_NAME);
-            TestProjectConfiguration testProjectConfig = new TestProjectConfiguration(testProjectName);
+            final String testProjectName = StringUtils.firstNonBlank(testProject.name(), Defaults.TEST_PROJECT_NAME);
+            final TestProjectConfiguration testProjectConfig = new TestProjectConfiguration(testProjectName);
             testProjectConfig.setSources(splitSources(testProject.src()));
             testProjectConfig.setTypes(splitTypes(testProject.cls()));
             testProjectConfig.setSourceFolder(testProject.srcFolder().trim());
             projectConfig.setTestProjectConfig(testProjectConfig);
         }
 
-        Properties properties = project.properties();
+        final Properties properties = project.properties();
         if(properties != null && properties.value() != Default.class)
         {
             extractPropertiesConfiguration(projectConfig, properties);
@@ -234,7 +234,7 @@ class AnnotationConfigExtractor
 
     private Collection<JavaType> splitTypes(String classes)
     {
-        Set<JavaType> types = new HashSet<>();
+        final Set<JavaType> types = new HashSet<>();
 
         String[] typeDefsByPackage = StringUtils.split(classes, ";");
         if(typeDefsByPackage.length == 0)
@@ -242,12 +242,12 @@ class AnnotationConfigExtractor
             typeDefsByPackage = new String[] { classes };
         }
 
-        for (String typeDefsForPackage : typeDefsByPackage)
+        for (final String typeDefsForPackage : typeDefsByPackage)
         {
             final String packageName;
             final String typeDefs;
 
-            int columnIdx = typeDefsForPackage.indexOf(":");
+            final int columnIdx = typeDefsForPackage.indexOf(":");
             if(columnIdx == - 1)
             {
                 packageName = "";
@@ -259,7 +259,7 @@ class AnnotationConfigExtractor
                 typeDefs = typeDefsForPackage.substring(columnIdx + 1);
             }
 
-            for (String typeDef : StringUtils.split(typeDefs, ","))
+            for (final String typeDef : StringUtils.split(typeDefs, ","))
             {
                 if(typeDef.startsWith("enum "))
                 {
@@ -298,7 +298,7 @@ class AnnotationConfigExtractor
                 throw new IllegalConfigurationException("Too much recursion in @Properties definitions");
             }
 
-            Class< ? > propValue = properties.value();
+            final Class< ? > propValue = properties.value();
             properties = propValue.getAnnotation(Properties.class);
             if(properties == null)
             {
@@ -306,7 +306,7 @@ class AnnotationConfigExtractor
             }
         }
 
-        PropertiesConfiguration propertiesConfig = new PropertiesConfiguration();
+        final PropertiesConfiguration propertiesConfig = new PropertiesConfiguration();
         propertiesConfig.setExtendedMethodSearch(properties.extendedMethodSearch());
         propertiesConfig.setMethodPrefix(properties.testMethodPrefix());
         propertiesConfig.setMethodSearchByName(properties.methodSearchByName());
@@ -320,7 +320,7 @@ class AnnotationConfigExtractor
 
     private void extractContextConfiguration(WorkspaceConfiguration config, Context context)
     {
-        ProjectConfiguration projectConfig = config.createProject(Defaults.PROJECT_NAME);
+        final ProjectConfiguration projectConfig = config.createProject(Defaults.PROJECT_NAME);
         projectConfig.setMainTypes(splitTypes(context.mainCls()));
         projectConfig.setMainSources(splitSources(context.mainSrc()));
         projectConfig.setTestTypes(splitTypes(context.testCls()));
@@ -342,7 +342,7 @@ class AnnotationConfigExtractor
                 throw new IllegalConfigurationException("Too much recursion in @Preferences definitions");
             }
 
-            Class< ? > prefValue = preferences.value();
+            final Class< ? > prefValue = preferences.value();
             preferences = preferences.value().getAnnotation(Preferences.class);
             if(preferences == null)
             {
@@ -350,7 +350,7 @@ class AnnotationConfigExtractor
             }
         }
 
-        PreferencesConfiguration preferencesConfig = new PreferencesConfiguration();
+        final PreferencesConfiguration preferencesConfig = new PreferencesConfiguration();
         preferencesConfig.setExtendedMethodSearch(preferences.extendedMethodSearch());
         preferencesConfig.setMethodPrefix(preferences.testMethodPrefix());
         preferencesConfig.setMethodSearchByName(preferences.methodSearchByName());

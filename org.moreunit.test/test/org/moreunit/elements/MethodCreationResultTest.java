@@ -14,8 +14,8 @@ public class MethodCreationResultTest
     @Test
     public void should_create_result_for_existing_method()
     {
-        IMethod method = mock(IMethod.class);
-        MethodCreationResult result = MethodCreationResult.methodAlreadyExists(method);
+        final IMethod method = mock(IMethod.class);
+        final MethodCreationResult result = MethodCreationResult.methodAlreadyExists(method);
 
         assertTrue(result.methodAlreadyExists());
         assertFalse(result.methodCreated());
@@ -25,8 +25,8 @@ public class MethodCreationResultTest
     @Test
     public void should_create_result_for_created_method()
     {
-        IMethod method = mock(IMethod.class);
-        MethodCreationResult result = MethodCreationResult.from(method);
+        final IMethod method = mock(IMethod.class);
+        final MethodCreationResult result = MethodCreationResult.from(method);
 
         assertFalse(result.methodAlreadyExists());
         assertTrue(result.methodCreated());
@@ -36,7 +36,7 @@ public class MethodCreationResultTest
     @Test
     public void should_create_result_when_no_method_created()
     {
-        MethodCreationResult result = MethodCreationResult.noMethodCreated();
+        final MethodCreationResult result = MethodCreationResult.noMethodCreated();
 
         assertFalse(result.methodAlreadyExists());
         assertFalse(result.methodCreated());
@@ -46,7 +46,7 @@ public class MethodCreationResultTest
     @Test
     public void should_return_null_from_from_when_method_is_null()
     {
-        MethodCreationResult result = MethodCreationResult.from(null);
+        final MethodCreationResult result = MethodCreationResult.from(null);
 
         assertFalse(result.methodAlreadyExists());
         assertFalse(result.methodCreated());

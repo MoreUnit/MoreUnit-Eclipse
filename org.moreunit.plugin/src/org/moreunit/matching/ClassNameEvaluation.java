@@ -33,10 +33,10 @@ public class ClassNameEvaluation
 
     private List<String> addPackageToPatterns(List<String> patterns)
     {
-        String packageName = getPackageName();
+        final String packageName = getPackageName();
 
-        List<String> result = new ArrayList<>();
-        for (String p : patterns)
+        final List<String> result = new ArrayList<>();
+        for (final String p : patterns)
         {
             result.add(packageName + "." + p);
         }
@@ -54,7 +54,7 @@ public class ClassNameEvaluation
 
         if(packagePrefix != null)
         {
-            String prefixWithDot = packagePrefix + ".";
+            final String prefixWithDot = packagePrefix + ".";
             if(packageName.startsWith(prefixWithDot))
             {
                 packageName = packageName.substring(prefixWithDot.length());
@@ -63,7 +63,7 @@ public class ClassNameEvaluation
 
         if(packageSuffix != null)
         {
-            String dotWithSuffix = "." + packageSuffix;
+            final String dotWithSuffix = "." + packageSuffix;
             if(packageName.endsWith(dotWithSuffix))
             {
                 packageName = packageName.substring(0, packageName.length() - dotWithSuffix.length());

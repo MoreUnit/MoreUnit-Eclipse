@@ -22,10 +22,10 @@ public class TypeComparatorTest
     @Test
     public void should_order_types_by_fully_qualified_name()
     {
-        IType typeA = mock(IType.class);
+        final IType typeA = mock(IType.class);
         when(typeA.getFullyQualifiedName()).thenReturn("org.example.AClass");
 
-        IType typeB = mock(IType.class);
+        final IType typeB = mock(IType.class);
         when(typeB.getFullyQualifiedName()).thenReturn("org.example.BClass");
 
         assertTrue(typeComparator.compare(typeA, typeB) < 0);
@@ -35,10 +35,10 @@ public class TypeComparatorTest
     @Test
     public void should_handle_different_length_same_prefix()
     {
-        IType typeA = mock(IType.class);
+        final IType typeA = mock(IType.class);
         when(typeA.getFullyQualifiedName()).thenReturn("org.example.AClass");
 
-        IType typeB = mock(IType.class);
+        final IType typeB = mock(IType.class);
         when(typeB.getFullyQualifiedName()).thenReturn("org.example.AClassTest");
 
         assertTrue(typeComparator.compare(typeA, typeB) < 0);
@@ -48,10 +48,10 @@ public class TypeComparatorTest
     @Test
     public void should_handle_special_characters_in_name()
     {
-        IType typeA = mock(IType.class);
+        final IType typeA = mock(IType.class);
         when(typeA.getFullyQualifiedName()).thenReturn("org.example.$AClass");
 
-        IType typeB = mock(IType.class);
+        final IType typeB = mock(IType.class);
         when(typeB.getFullyQualifiedName()).thenReturn("org.example._AClass");
 
         assertTrue(typeComparator.compare(typeA, typeB) < 0);
@@ -61,10 +61,10 @@ public class TypeComparatorTest
     @Test
     public void should_return_zero_for_equal_types()
     {
-        IType typeA = mock(IType.class);
+        final IType typeA = mock(IType.class);
         when(typeA.getFullyQualifiedName()).thenReturn("org.example.AClass");
 
-        IType typeB = mock(IType.class);
+        final IType typeB = mock(IType.class);
         when(typeB.getFullyQualifiedName()).thenReturn("org.example.AClass");
 
         assertEquals(0, typeComparator.compare(typeA, typeB));

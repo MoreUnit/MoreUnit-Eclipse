@@ -81,7 +81,7 @@ public class LanguagePreferencesReaderTest
         when(store.getString(BASE + LANG + LanguagePreferences.TEST_FOLDER_PATH_TEMPLATE)).thenReturn("");
 
         // when
-        TestFolderPathPattern pattern = reader.getTestFolderPathPattern();
+        final TestFolderPathPattern pattern = reader.getTestFolderPathPattern();
 
         // then
         assertNotNull(pattern);

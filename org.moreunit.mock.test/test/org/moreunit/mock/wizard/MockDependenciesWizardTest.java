@@ -46,7 +46,7 @@ public class MockDependenciesWizardTest
     @Test
     public void should_add_page_to_wizard()
     {
-        IWizardPage[] pages = wizard.getPages();
+        final IWizardPage[] pages = wizard.getPages();
 
         assertEquals(1, pages.length);
         assertSame(page, pages[0]);
@@ -85,8 +85,8 @@ public class MockDependenciesWizardTest
 
     private IWorkbench workbenchWithShell()
     {
-        IWorkbench workbench = mock(IWorkbench.class);
-        IWorkbenchWindow window = mock(IWorkbenchWindow.class);
+        final IWorkbench workbench = mock(IWorkbench.class);
+        final IWorkbenchWindow window = mock(IWorkbenchWindow.class);
         when(workbench.getActiveWorkbenchWindow()).thenReturn(window);
         when(window.getShell()).thenReturn(shell);
         return workbench;

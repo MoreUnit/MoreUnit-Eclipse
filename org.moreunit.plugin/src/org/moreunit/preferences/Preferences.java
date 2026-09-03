@@ -122,23 +122,23 @@ public class Preferences
 
     private List<SourceFolderMapping> getProjectSpecificSourceMappingList(IJavaProject javaProject)
     {
-        String mappingString = storeToRead(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+        final String mappingString = storeToRead(javaProject).getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
         return PreferencesConverter.convertStringToSourceMappingList(mappingString);
     }
 
     private List<SourceFolderMapping> getWorkspaceSpecificSourceMappingList(IJavaProject javaProject)
     {
-        List<SourceFolderMapping> mappings = new ArrayList<>();
+        final List<SourceFolderMapping> mappings = new ArrayList<>();
 
-        List<IPackageFragmentRoot> javaSourceFolders = PluginTools.findJavaSourceFoldersFor(javaProject);
+        final List<IPackageFragmentRoot> javaSourceFolders = PluginTools.findJavaSourceFoldersFor(javaProject);
 
-        IPackageFragmentRoot testSourceFolder = findDefaultTestSourceFolder(javaSourceFolders);
+        final IPackageFragmentRoot testSourceFolder = findDefaultTestSourceFolder(javaSourceFolders);
 
-        List<IPackageFragmentRoot> possibleMainSrcFolders = findPossibleMainSourceFolders(javaSourceFolders);
+        final List<IPackageFragmentRoot> possibleMainSrcFolders = findPossibleMainSourceFolders(javaSourceFolders);
 
         if(testSourceFolder != null)
         {
-            for (IPackageFragmentRoot mainSourceFolder : possibleMainSrcFolders)
+            for (final IPackageFragmentRoot mainSourceFolder : possibleMainSrcFolders)
             {
                 mappings.add(new SourceFolderMapping(javaProject, mainSourceFolder, testSourceFolder));
             }
@@ -149,11 +149,11 @@ public class Preferences
 
     private IPackageFragmentRoot findDefaultTestSourceFolder(List<IPackageFragmentRoot> sourceFolders)
     {
-        String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
+        final String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
 
-        for (IPackageFragmentRoot sourceFolder : sourceFolders)
+        for (final IPackageFragmentRoot sourceFolder : sourceFolders)
         {
-            String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
+            final String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
 
             if(sourceFolderPath.equals(defaultTestSourceFolderPath))
             {
@@ -166,13 +166,13 @@ public class Preferences
 
     private List<IPackageFragmentRoot> findPossibleMainSourceFolders(List<IPackageFragmentRoot> javaSourceFolders)
     {
-        List<IPackageFragmentRoot> possibleMainSrcFolders = new ArrayList<>();
+        final List<IPackageFragmentRoot> possibleMainSrcFolders = new ArrayList<>();
 
-        String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
+        final String defaultTestSourceFolderPath = getWorkbenchStore().getString(PreferenceConstants.PREF_JUNIT_PATH);
 
-        for (IPackageFragmentRoot sourceFolder : javaSourceFolders)
+        for (final IPackageFragmentRoot sourceFolder : javaSourceFolders)
         {
-            String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
+            final String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
 
             if(! (sourceFolderPath.equals(defaultTestSourceFolderPath) || isMavenLikeTestFolder(sourceFolderPath)))
             {
@@ -296,7 +296,7 @@ public class Preferences
 
     private IPreferenceStore storeToRead(IJavaProject javaProject)
     {
-        IPreferenceStore resultStore = getProjectStore(javaProject);
+        final IPreferenceStore resultStore = getProjectStore(javaProject);
 
         if(resultStore.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC_SETTINGS))
             return resultStore;
@@ -330,8 +330,8 @@ public class Preferences
         }
         else
         {
-            ProjectScope projectScopeContext = new ProjectScope(javaProject.getProject());
-            ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
+            final ProjectScope projectScopeContext = new ProjectScope(javaProject.getProject());
+            final ScopedPreferenceStore preferenceStore = new ScopedPreferenceStore(projectScopeContext, MoreUnitPlugin.PLUGIN_ID);
             preferenceStore.setSearchContexts(new IScopeContext[] { projectScopeContext });
             preferenceMap.put(javaProject, preferenceStore);
             resultStore = initStore(migratePrefsIfRequired(preferenceStore));
@@ -354,7 +354,7 @@ public class Preferences
             {
                 store.save();
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 logger.error("Could not save preferences for project " + javaProject, e);
             }
@@ -377,9 +377,9 @@ public class Preferences
     public IPackageFragmentRoot getTestSourceFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
     {
         // check for project specific settings
-        List<SourceFolderMapping> mappings = getSourceMappingList(project);
+        final List<SourceFolderMapping> mappings = getSourceMappingList(project);
 
-        for (SourceFolderMapping mapping : mappings)
+        for (final SourceFolderMapping mapping : mappings)
         {
             if(mapping.getSourceFolderList().contains(mainSrcFolder))
             {
@@ -394,10 +394,10 @@ public class Preferences
         }
 
         // no mapping exists: falls back to un-mapped source folders
-        String junitFolder = getJunitDirectoryFromPreferences(project);
-        List<IPackageFragmentRoot> javaSrcFolders = PluginTools.findJavaSourceFoldersFor(project);
+        final String junitFolder = getJunitDirectoryFromPreferences(project);
+        final List<IPackageFragmentRoot> javaSrcFolders = PluginTools.findJavaSourceFoldersFor(project);
 
-        for (IPackageFragmentRoot packageFragmentRoot : javaSrcFolders)
+        for (final IPackageFragmentRoot packageFragmentRoot : javaSrcFolders)
         {
             if(PluginTools.getPathStringWithoutProjectName(packageFragmentRoot).equals(junitFolder))
             {
@@ -406,7 +406,7 @@ public class Preferences
         }
 
         // attempt to make everyone happy
-        IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder, testFrameworkLanguage);
+        final IPackageFragmentRoot mvnTestFolder = guessTestFolderCorrespondingToMainSrcFolder(project, mainSrcFolder, testFrameworkLanguage);
         if(mvnTestFolder != null)
             return mvnTestFolder;
 
@@ -416,9 +416,9 @@ public class Preferences
 
     public IPackageFragmentRoot getMainSourceFolder(IJavaProject mainProject, IPackageFragmentRoot testSrcFolder)
     {
-        List<SourceFolderMapping> mappings = getSourceMappingList(mainProject);
+        final List<SourceFolderMapping> mappings = getSourceMappingList(mainProject);
 
-        for (SourceFolderMapping mapping : mappings)
+        for (final SourceFolderMapping mapping : mappings)
         {
             if(mapping.getTestFolder().equals(testSrcFolder))
             {
@@ -433,7 +433,7 @@ public class Preferences
         }
 
         // no mapping exists: falls back to un-mapped source folders
-        List<IPackageFragmentRoot> possibleMainSourceFolders = findPossibleMainSourceFolders(PluginTools.findJavaSourceFoldersFor(mainProject));
+        final List<IPackageFragmentRoot> possibleMainSourceFolders = findPossibleMainSourceFolders(PluginTools.findJavaSourceFoldersFor(mainProject));
         if(! possibleMainSourceFolders.isEmpty())
         {
             return possibleMainSourceFolders.getFirst();
@@ -445,11 +445,11 @@ public class Preferences
 
     public IJavaProject getMainProject(IJavaProject testProject)
     {
-        for (IPreferenceStore store : stores())
+        for (final IPreferenceStore store : stores())
         {
-            String mappingString = store.getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
-            List<SourceFolderMapping> mappings = PreferencesConverter.convertStringToSourceMappingList(mappingString);
-            for (SourceFolderMapping mapping : mappings)
+            final String mappingString = store.getString(PreferenceConstants.UNIT_SOURCE_FOLDER);
+            final List<SourceFolderMapping> mappings = PreferencesConverter.convertStringToSourceMappingList(mappingString);
+            for (final SourceFolderMapping mapping : mappings)
             {
                 if(mapping.getTestFolder().getJavaProject().equals(testProject))
                 {
@@ -525,8 +525,8 @@ public class Preferences
 
     public MethodSearchMode getMethodSearchMode(IJavaProject javaProject)
     {
-        boolean searchByCall = getBooleanValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, javaProject);
-        boolean searchByName = ! searchByCall || getBooleanValue(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, javaProject);
+        final boolean searchByCall = getBooleanValue(PreferenceConstants.EXTENDED_TEST_METHOD_SEARCH, javaProject);
+        final boolean searchByName = ! searchByCall || getBooleanValue(PreferenceConstants.ENABLE_TEST_METHOD_SEARCH_BY_NAME, javaProject);
         return new MethodSearchMode(searchByCall, searchByName);
     }
 
@@ -689,10 +689,10 @@ public class Preferences
         {
             synchronized (CACHE_LOCK)
             {
-                String template = getTestClassNameTemplate();
-                String prefix = getPackagePrefix();
-                String suffix = getPackageSuffix();
-                String key = (template == null ? "" : template.length() + template) //
+                final String template = getTestClassNameTemplate();
+                final String prefix = getPackagePrefix();
+                final String suffix = getPackageSuffix();
+                final String key = (template == null ? "" : template.length() + template) //
                              + (prefix == null ? "" : prefix.length() + prefix) //
                              + (suffix == null ? "" : suffix.length() + suffix);
 
@@ -723,7 +723,7 @@ public class Preferences
 
         public TestAnnotationMode getTestAnnotationMode()
         {
-            String mode = prefs.getTestAnnotationMode(project);
+            final String mode = prefs.getTestAnnotationMode(project);
             return mode == null || mode.isEmpty() ? TestAnnotationMode.OFF : TestAnnotationMode.valueOf(mode);
         }
 

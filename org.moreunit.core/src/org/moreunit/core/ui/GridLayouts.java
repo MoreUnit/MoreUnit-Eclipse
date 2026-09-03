@@ -6,7 +6,7 @@ public class GridLayouts
 {
     public static GridLayout noMargin()
     {
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         return layout;

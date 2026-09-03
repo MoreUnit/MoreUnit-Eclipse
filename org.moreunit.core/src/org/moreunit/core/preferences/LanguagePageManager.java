@@ -48,7 +48,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
     @Override
     public void start()
     {
-        for (Language lang : preferences.getLanguages())
+        for (final Language lang : preferences.getLanguages())
         {
             addPages(lang);
         }
@@ -62,7 +62,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     private void addPreferencePage(Language lang)
     {
-        PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
+        final PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
 
         preferenceManager.addTo(MAIN_PAGE + "/" + OTHER_LANGUAGES_PAGE, new LanguagePreferenceNode(lang, preferences.writerForLanguage(lang.getExtension()), languageRepository));
 
@@ -71,10 +71,10 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     private void addPropertyPage(Language lang)
     {
-        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-        Object token = ((ExtensionRegistry) extensionRegistry).getTemporaryUserToken();
+        final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+        final Object token = ((ExtensionRegistry) extensionRegistry).getTemporaryUserToken();
 
-        IContributor contributor = ContributorFactoryOSGi.createContributor(MoreUnitCore.get().getBundle());
+        final IContributor contributor = ContributorFactoryOSGi.createContributor(MoreUnitCore.get().getBundle());
 
         try
         {
@@ -85,13 +85,13 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
             .replace("${languageName}", lang.getLabel()) //
             .replace("${languageExtension}", lang.getExtension());
 
-            InputStream is = new ByteArrayInputStream(xml.getBytes());
+            final InputStream is = new ByteArrayInputStream(xml.getBytes());
 
-            boolean result = extensionRegistry.addContribution(is, contributor, false, null, null, token);
+            final boolean result = extensionRegistry.addContribution(is, contributor, false, null, null, token);
 
             logger.debug("Added property page for language " + lang + " with result: " + result);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             logger.error("Could not add property page for language " + lang, e);
         }
@@ -99,12 +99,12 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     public static String asString(InputStream is, String encoding) throws IOException
     {
-        StringBuilder sb = new StringBuilder(Math.max(16, is.available()));
-        char[] buf = new char[4096];
+        final StringBuilder sb = new StringBuilder(Math.max(16, is.available()));
+        final char[] buf = new char[4096];
 
         try
         {
-            InputStreamReader reader = new InputStreamReader(is, encoding);
+            final InputStreamReader reader = new InputStreamReader(is, encoding);
             for (int cnt; (cnt = reader.read(buf)) > 0;)
             {
                 sb.append(buf, 0, cnt);
@@ -120,7 +120,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
     @Override
     public void stop()
     {
-        for (Language lang : preferences.getLanguages())
+        for (final Language lang : preferences.getLanguages())
         {
             removePages(lang);
         }
@@ -134,29 +134,29 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     private void removePreferencePage(Language lang)
     {
-        PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
+        final PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
         if(preferenceManager == null)
         {
             logger.debug("Could not remove preference page for language " + lang + ", because PreferenceManager is already gone");
             return;
         }
 
-        IPreferenceNode otherLanguagesNode = preferenceManager.find(MAIN_PAGE).findSubNode(OTHER_LANGUAGES_PAGE);
-        IPreferenceNode node = otherLanguagesNode.findSubNode(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
+        final IPreferenceNode otherLanguagesNode = preferenceManager.find(MAIN_PAGE).findSubNode(OTHER_LANGUAGES_PAGE);
+        final IPreferenceNode node = otherLanguagesNode.findSubNode(PREFERENCE_PAGE_ID_BASE + lang.getExtension());
 
-        boolean result = otherLanguagesNode.remove(node);
+        final boolean result = otherLanguagesNode.remove(node);
 
         logger.debug("Removed preference page for language " + lang + " with result: " + result);
     }
 
     private void removePropertyPage(Language lang)
     {
-        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-        Object token = ((ExtensionRegistry) extensionRegistry).getTemporaryUserToken();
+        final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+        final Object token = ((ExtensionRegistry) extensionRegistry).getTemporaryUserToken();
 
-        IExtension extension = extensionRegistry.getExtension(PROPERTY_PAGE_EXTENSION_ID_BASE + lang.getExtension());
+        final IExtension extension = extensionRegistry.getExtension(PROPERTY_PAGE_EXTENSION_ID_BASE + lang.getExtension());
 
-        boolean result = extensionRegistry.removeExtension(extension, token);
+        final boolean result = extensionRegistry.removeExtension(extension, token);
 
         logger.debug("Removed property page for language " + lang + " with result: " + result);
     }
@@ -177,7 +177,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     private void refreshTreeAndOpenPage(String pageId)
     {
-        PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(null, pageId, null, null);
+        final PreferenceDialog pd = PreferencesUtil.createPreferenceDialogOn(null, pageId, null, null);
         if(pd != null)
         {
             pd.getTreeViewer().refresh();
@@ -193,7 +193,7 @@ public class LanguagePageManager implements Service, LanguageConfigurationListen
 
     private IPreferenceNode findNode(String pageId)
     {
-        IPreferenceNode mainNode = PlatformUI.getWorkbench().getPreferenceManager().find(MAIN_PAGE).findSubNode(OTHER_LANGUAGES_PAGE);
+        final IPreferenceNode mainNode = PlatformUI.getWorkbench().getPreferenceManager().find(MAIN_PAGE).findSubNode(OTHER_LANGUAGES_PAGE);
         return OTHER_LANGUAGES_PAGE.equals(pageId) ? mainNode : mainNode.findSubNode(pageId);
     }
 

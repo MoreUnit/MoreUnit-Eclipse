@@ -41,7 +41,7 @@ public class PluginTools
     private static final Map<String, Pattern> TEST_KEYWORD_PATTERNS = new HashMap<>();
     static
     {
-        for (String testKeyword : TEST_KEYWORDS)
+        for (final String testKeyword : TEST_KEYWORDS)
         {
             TEST_KEYWORD_PATTERNS.put(testKeyword, Pattern.compile(".*\\b" + testKeyword + "\\b.*"));
         }
@@ -49,13 +49,13 @@ public class PluginTools
 
     public static IEditorPart getOpenEditorPart()
     {
-        IWorkbench wb = PlatformUI.getWorkbench();
-        IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
+        final IWorkbench wb = PlatformUI.getWorkbench();
+        final IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
 
         if(window == null)
             return null;
 
-        IWorkbenchPage page = window.getActivePage();
+        final IWorkbenchPage page = window.getActivePage();
 
         if(page != null)
             return page.getActiveEditor();
@@ -68,7 +68,7 @@ public class PluginTools
         if(! (part instanceof IEditorPart))
             return false;
 
-        IFile file = (IFile) ((IEditorPart) part).getEditorInput().getAdapter(IFile.class);
+        final IFile file = (IFile) ((IEditorPart) part).getEditorInput().getAdapter(IFile.class);
         if(file == null)
             return false;
 
@@ -77,17 +77,17 @@ public class PluginTools
 
     public static IPackageFragmentRoot createPackageFragmentRoot(String projectName, String folderName)
     {
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        IJavaProject javaProject = JavaCore.create(project);
+        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        final IJavaProject javaProject = JavaCore.create(project);
         try
         {
-            for (IPackageFragmentRoot aSourceFolder : javaProject.getPackageFragmentRoots())
+            for (final IPackageFragmentRoot aSourceFolder : javaProject.getPackageFragmentRoots())
             {
                 if(folderName.equals(PluginTools.getPathStringWithoutProjectName(aSourceFolder)))
                     return aSourceFolder;
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -97,9 +97,9 @@ public class PluginTools
 
     public static List<IJavaProject> getJavaProjectsFromWorkspace()
     {
-        List<IJavaProject> result = new ArrayList<>();
-        IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-        for (IProject aProject : projects)
+        final List<IJavaProject> result = new ArrayList<>();
+        final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        for (final IProject aProject : projects)
         {
             try
             {
@@ -108,7 +108,7 @@ public class PluginTools
                     result.add(JavaCore.create(aProject));
                 }
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 LogHandler.getInstance().handleExceptionLog(e);
             }
@@ -130,10 +130,10 @@ public class PluginTools
 
     public static List<IPackageFragmentRoot> getAllSourceFolderFromProject(IJavaProject javaProject)
     {
-        List<IPackageFragmentRoot> resultList = new ArrayList<>();
+        final List<IPackageFragmentRoot> resultList = new ArrayList<>();
         try
         {
-            for (IPackageFragmentRoot root : javaProject.getPackageFragmentRoots())
+            for (final IPackageFragmentRoot root : javaProject.getPackageFragmentRoots())
             {
                 if(! root.isArchive() && root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE)
                 {
@@ -141,7 +141,7 @@ public class PluginTools
                 }
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -151,11 +151,11 @@ public class PluginTools
 
     public static List<IPackageFragmentRoot> findJavaSourceFoldersFor(IJavaProject project)
     {
-        List<IPackageFragmentRoot> javaSrcFolders = new ArrayList<>();
+        final List<IPackageFragmentRoot> javaSrcFolders = new ArrayList<>();
 
-        for (IPackageFragmentRoot sourceFolder : getAllSourceFolderFromProject(project))
+        for (final IPackageFragmentRoot sourceFolder : getAllSourceFolderFromProject(project))
         {
-            String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
+            final String sourceFolderPath = PluginTools.getPathStringWithoutProjectName(sourceFolder);
 
             if(! (excludesJavaFiles(sourceFolder) || isMavenLikeResourceFolder(sourceFolderPath)))
             {
@@ -170,10 +170,10 @@ public class PluginTools
     {
         try
         {
-            IPath[] exclusionPatterns = srcFolder.getRawClasspathEntry().getExclusionPatterns();
+            final IPath[] exclusionPatterns = srcFolder.getRawClasspathEntry().getExclusionPatterns();
             if(exclusionPatterns != null)
             {
-                for (IPath pattern : exclusionPatterns)
+                for (final IPath pattern : exclusionPatterns)
                 {
                     if(pattern.toString().equals("**/*.java"))
                     {
@@ -182,7 +182,7 @@ public class PluginTools
                 }
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -215,8 +215,8 @@ public class PluginTools
      */
     public static String getTestPackageName(String cutPackageName, ProjectPreferences preferences)
     {
-        String testPackagePrefix = preferences.getPackagePrefix();
-        String testPackageSuffix = preferences.getPackageSuffix();
+        final String testPackagePrefix = preferences.getPackagePrefix();
+        final String testPackageSuffix = preferences.getPackageSuffix();
         String testPackageName = cutPackageName;
 
         if(testPackagePrefix != null)
@@ -234,7 +234,7 @@ public class PluginTools
 
     public static IPackageFragmentRoot guessSourceFolderCorrespondingToTestFolder(IJavaProject project, IPackageFragmentRoot testFolder)
     {
-        List<IPackageFragmentRoot> allSourceFolders = getAllSourceFolderFromProject(project);
+        final List<IPackageFragmentRoot> allSourceFolders = getAllSourceFolderFromProject(project);
         if(allSourceFolders.isEmpty())
             return null;
 
@@ -244,7 +244,7 @@ public class PluginTools
         if(allSourceFolders.size() == 2)
             return firstSourceFolderNotEqualTo(allSourceFolders, testFolder);
 
-        IPackageFragmentRoot likelySourceFolder = findLikelySourceFolder(allSourceFolders, testFolder);
+        final IPackageFragmentRoot likelySourceFolder = findLikelySourceFolder(allSourceFolders, testFolder);
         if(likelySourceFolder != null)
             return likelySourceFolder;
 
@@ -254,9 +254,9 @@ public class PluginTools
 
     private static IPackageFragmentRoot findLikelySourceFolder(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot testFolder)
     {
-        String testFolderPath = getPathStringWithoutProjectName(testFolder);
+        final String testFolderPath = getPathStringWithoutProjectName(testFolder);
 
-        IPackageFragmentRoot srcFolder = findMavenLikeSrcFolderFor(allSourceFolders, testFolderPath);
+        final IPackageFragmentRoot srcFolder = findMavenLikeSrcFolderFor(allSourceFolders, testFolderPath);
         if(srcFolder != null)
             return srcFolder;
 
@@ -265,7 +265,7 @@ public class PluginTools
 
     private static IPackageFragmentRoot findSourceFolderNotContainingTestKeyword(List<IPackageFragmentRoot> allSourceFolders, String testFolderPath)
     {
-        String testKeyword = findTestKeyword(testFolderPath);
+        final String testKeyword = findTestKeyword(testFolderPath);
         if(testKeyword == null)
             return null;
 
@@ -280,7 +280,7 @@ public class PluginTools
             testKeywordPattern = Pattern.compile(".*\\b" + testKeyword + "\\b.*");
         }
 
-        for (IPackageFragmentRoot folder : allSourceFolders)
+        for (final IPackageFragmentRoot folder : allSourceFolders)
             if(! testKeywordPattern.matcher(getPathStringWithoutProjectName(folder)).matches())
                 return folder;
 
@@ -289,7 +289,7 @@ public class PluginTools
 
     private static IPackageFragmentRoot firstSourceFolderNotEqualTo(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot testFolder)
     {
-        for (IPackageFragmentRoot folder : allSourceFolders)
+        for (final IPackageFragmentRoot folder : allSourceFolders)
             if(! folder.equals(testFolder))
                 return folder;
 
@@ -299,22 +299,22 @@ public class PluginTools
 
     private static IPackageFragmentRoot findMavenLikeSrcFolderFor(List<IPackageFragmentRoot> allSourceFolders, String testFolderPath)
     {
-        Matcher matcher = MAVEN_TEST_FOLDER.matcher(testFolderPath);
+        final Matcher matcher = MAVEN_TEST_FOLDER.matcher(testFolderPath);
         if(! matcher.matches())
             return null;
 
-        String languagePart = matcher.group(1);
-        String mainSourceFolderForLanguage = "src/main/" + languagePart;
+        final String languagePart = matcher.group(1);
+        final String mainSourceFolderForLanguage = "src/main/" + languagePart;
 
-        for (IPackageFragmentRoot folder : allSourceFolders)
+        for (final IPackageFragmentRoot folder : allSourceFolders)
             if(getPathStringWithoutProjectName(folder).equals(mainSourceFolderForLanguage))
                 return folder;
 
         // maybe production code and test code are not written using the same
         // language
-        for (IPackageFragmentRoot folder : allSourceFolders)
+        for (final IPackageFragmentRoot folder : allSourceFolders)
         {
-            String folderName = getPathStringWithoutProjectName(folder);
+            final String folderName = getPathStringWithoutProjectName(folder);
             if(folderName.startsWith("src/main/") && ! folderName.equals("src/main/resources"))
                 return folder;
         }
@@ -329,7 +329,7 @@ public class PluginTools
 
     public static IPackageFragmentRoot guessTestFolderCorrespondingToMainSrcFolder(IJavaProject project, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
     {
-        List<IPackageFragmentRoot> allSourceFolders = getAllSourceFolderFromProject(project);
+        final List<IPackageFragmentRoot> allSourceFolders = getAllSourceFolderFromProject(project);
         if(allSourceFolders.isEmpty())
             return null;
 
@@ -339,7 +339,7 @@ public class PluginTools
         if(allSourceFolders.size() == 2)
             return firstSourceFolderNotEqualTo(allSourceFolders, mainSrcFolder);
 
-        IPackageFragmentRoot likelyTestFolder = findLikelyTestFolder(allSourceFolders, mainSrcFolder, testFrameworkLanguage);
+        final IPackageFragmentRoot likelyTestFolder = findLikelyTestFolder(allSourceFolders, mainSrcFolder, testFrameworkLanguage);
         if(likelyTestFolder != null)
             return likelyTestFolder;
 
@@ -349,14 +349,14 @@ public class PluginTools
 
     private static IPackageFragmentRoot findLikelyTestFolder(List<IPackageFragmentRoot> allSourceFolders, IPackageFragmentRoot mainSrcFolder, String testFrameworkLanguage)
     {
-        String mainSrcFolderPath = getPathStringWithoutProjectName(mainSrcFolder);
+        final String mainSrcFolderPath = getPathStringWithoutProjectName(mainSrcFolder);
 
-        IPackageFragmentRoot testSrcFolder = findMavenLikeTestFolderFor(allSourceFolders, mainSrcFolderPath, testFrameworkLanguage);
+        final IPackageFragmentRoot testSrcFolder = findMavenLikeTestFolderFor(allSourceFolders, mainSrcFolderPath, testFrameworkLanguage);
         if(testSrcFolder != null)
             return testSrcFolder;
 
         // last attempt, just in case...
-        for (IPackageFragmentRoot packageFragmentRoot : allSourceFolders)
+        for (final IPackageFragmentRoot packageFragmentRoot : allSourceFolders)
             if(getPathStringWithoutProjectName(packageFragmentRoot).equals("test"))
                 return packageFragmentRoot;
 
@@ -365,22 +365,22 @@ public class PluginTools
 
     private static IPackageFragmentRoot findMavenLikeTestFolderFor(List<IPackageFragmentRoot> allSourceFolders, String mainSrcFolderPath, String testFrameworkLanguage)
     {
-        Matcher matcher = MAVEN_MAIN_FOLDER.matcher(mainSrcFolderPath);
+        final Matcher matcher = MAVEN_MAIN_FOLDER.matcher(mainSrcFolderPath);
         if(! matcher.matches())
             return null;
 
-        String languagePart = testFrameworkLanguage != null ? testFrameworkLanguage : matcher.group(1);
-        String testSourceFolderForLanguage = "src/test/" + languagePart;
+        final String languagePart = testFrameworkLanguage != null ? testFrameworkLanguage : matcher.group(1);
+        final String testSourceFolderForLanguage = "src/test/" + languagePart;
 
-        for (IPackageFragmentRoot folder : allSourceFolders)
+        for (final IPackageFragmentRoot folder : allSourceFolders)
             if(getPathStringWithoutProjectName(folder).equals(testSourceFolderForLanguage))
                 return folder;
 
         // maybe production code and test code are not written using the same
         // language
-        for (IPackageFragmentRoot folder : allSourceFolders)
+        for (final IPackageFragmentRoot folder : allSourceFolders)
         {
-            String folderName = getPathStringWithoutProjectName(folder);
+            final String folderName = getPathStringWithoutProjectName(folder);
             if(folderName.startsWith("src/test/") && ! folderName.equals("src/test/resources"))
                 return folder;
         }
@@ -396,10 +396,10 @@ public class PluginTools
          * 🎯 Why: String.matches() compiles the regex on every invocation, causing overhead.
          * 🔬 Measurement: Benchmarked against String.matches(), Pattern.matcher() provides ~2.3x speedup.
          */
-        String lowerCasePath = testFolderPath.toLowerCase();
-        for (String testKeyword : TEST_KEYWORDS)
+        final String lowerCasePath = testFolderPath.toLowerCase();
+        for (final String testKeyword : TEST_KEYWORDS)
         {
-            Pattern p = TEST_KEYWORD_PATTERNS.get(testKeyword);
+            final Pattern p = TEST_KEYWORD_PATTERNS.get(testKeyword);
             if(p != null && p.matcher(lowerCasePath).matches())
                 return testKeyword;
         }

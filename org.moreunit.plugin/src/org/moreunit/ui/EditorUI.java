@@ -16,11 +16,11 @@ public class EditorUI
         {
             openedEditorPart = JavaUI.openInEditor(element);
         }
-        catch (PartInitException exc)
+        catch (final PartInitException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }
-        catch (JavaModelException exc)
+        catch (final JavaModelException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }

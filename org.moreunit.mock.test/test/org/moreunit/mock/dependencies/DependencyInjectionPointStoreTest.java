@@ -18,15 +18,15 @@ public class DependencyInjectionPointStoreTest
     @Test
     public void should_store_constructors_setters_and_fields() throws JavaModelException
     {
-        DependencyInjectionPointStore store = new DependencyInjectionPointStore(mock(Logger.class));
+        final DependencyInjectionPointStore store = new DependencyInjectionPointStore(mock(Logger.class));
 
-        IMethod constructor = mock(IMethod.class);
+        final IMethod constructor = mock(IMethod.class);
         when(constructor.isConstructor()).thenReturn(true);
 
-        IMethod setter = mock(IMethod.class);
+        final IMethod setter = mock(IMethod.class);
         when(setter.isConstructor()).thenReturn(false);
 
-        IField field = mock(IField.class);
+        final IField field = mock(IField.class);
 
         store.setInjectionPoints(List.of(constructor, setter, field));
 
@@ -38,9 +38,9 @@ public class DependencyInjectionPointStoreTest
     @Test
     public void should_clear_before_inserting_new_members() throws JavaModelException
     {
-        DependencyInjectionPointStore store = new DependencyInjectionPointStore(mock(Logger.class));
+        final DependencyInjectionPointStore store = new DependencyInjectionPointStore(mock(Logger.class));
 
-        IMethod constructor = mock(IMethod.class);
+        final IMethod constructor = mock(IMethod.class);
         when(constructor.isConstructor()).thenReturn(true);
         store.setInjectionPoints(List.of(constructor));
         assertTrue(store.getConstructors().size() > 0);

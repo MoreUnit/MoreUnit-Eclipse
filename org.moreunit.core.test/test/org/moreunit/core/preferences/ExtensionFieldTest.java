@@ -12,9 +12,9 @@ import org.mockito.Mockito;
 
 public class ExtensionFieldTest
 {
-    private Text textField = mock(Text.class);
+    private final Text textField = mock(Text.class);
 
-    private ExtensionField field = new ExtensionField(mock(Composite.class, Mockito.RETURNS_DEEP_STUBS), 0)
+    private final ExtensionField field = new ExtensionField(mock(Composite.class, Mockito.RETURNS_DEEP_STUBS), 0)
     {
         @Override
         public Text getField()

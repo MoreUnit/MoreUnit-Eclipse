@@ -37,8 +37,8 @@ public final class FileNameEvaluation
 
     private static Collection<String> simplify(Collection<String> patterns)
     {
-        List<String> result = new ArrayList<>();
-        for (String pattern : patterns)
+        final List<String> result = new ArrayList<>();
+        for (final String pattern : patterns)
         {
             // PERFORMANCE: Use literal String.replace instead of regex Matcher.replaceAll
             result.add(pattern.replace("\\E\\Q", ""));
@@ -57,7 +57,7 @@ public final class FileNameEvaluation
 
     public Collection<String> getAllCorrespondingFilePatterns()
     {
-        Collection<String> result = new ArrayList<>(preferredCorrespondingFilePatterns.size() + otherCorrespondingFilePatterns.size());
+        final Collection<String> result = new ArrayList<>(preferredCorrespondingFilePatterns.size() + otherCorrespondingFilePatterns.size());
         result.addAll(preferredCorrespondingFilePatterns);
         result.addAll(otherCorrespondingFilePatterns);
         return result;
@@ -65,12 +65,12 @@ public final class FileNameEvaluation
 
     public List<String> getAllCorrespondingFileEclipsePatterns()
     {
-        List<String> result = new ArrayList<>(preferredCorrespondingFilePatterns.size() + otherCorrespondingFilePatterns.size());
-        for (String p : preferredCorrespondingFilePatterns)
+        final List<String> result = new ArrayList<>(preferredCorrespondingFilePatterns.size() + otherCorrespondingFilePatterns.size());
+        for (final String p : preferredCorrespondingFilePatterns)
         {
             result.add(convertWildcards(removeQuotes(p)));
         }
-        for (String p : otherCorrespondingFilePatterns)
+        for (final String p : otherCorrespondingFilePatterns)
         {
             result.add(convertWildcards(removeQuotes(p)));
         }

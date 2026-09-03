@@ -77,7 +77,7 @@ public class MockModule extends Module<MockModule>
         mockingTemplateStore = new MockingTemplateStore();
         registerService(mockingTemplateStore);
 
-        PluginResourceLoader resourceLoader = getPluginResourceLoader();
+        final PluginResourceLoader resourceLoader = getPluginResourceLoader();
         templateLoader = new MockingTemplateLoader(resourceLoader, getXmlTemplateDefinitionReader(resourceLoader), mockingTemplateStore, getLogger());
         registerService(templateLoader);
     }
@@ -165,7 +165,7 @@ public class MockModule extends Module<MockModule>
 
     private XmlTemplateDefinitionReader getXmlTemplateDefinitionReader(PluginResourceLoader resourceLoader)
     {
-        Collection<URL> xsds = resourceLoader.findBundleResources(MockingTemplateLoader.TEMPLATE_DIRECTORY, "mocking-templates.xsd");
+        final Collection<URL> xsds = resourceLoader.findBundleResources(MockingTemplateLoader.TEMPLATE_DIRECTORY, "mocking-templates.xsd");
         return new XmlTemplateDefinitionReader(xsds.iterator().next());
     }
 }

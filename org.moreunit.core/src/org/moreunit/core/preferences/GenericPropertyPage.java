@@ -34,7 +34,7 @@ public class GenericPropertyPage extends PropertyPage
     @Override
     protected Control createContents(Composite parent)
     {
-        IProject project = (IProject) getElement().getAdapter(IProject.class);
+        final IProject project = (IProject) getElement().getAdapter(IProject.class);
         if(project == null)
         {
             return parent;
@@ -76,7 +76,7 @@ public class GenericPropertyPage extends PropertyPage
             @Override
             public void widgetSelected(SelectionEvent e)
             {
-                boolean checked = projectSpecificSettingsCheckbox.getSelection();
+                final boolean checked = projectSpecificSettingsCheckbox.getSelection();
                 prefs.setActive(checked);
                 delegate.setEnabled(checked);
 
@@ -87,7 +87,7 @@ public class GenericPropertyPage extends PropertyPage
             }
         });
 
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        final GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.verticalAlignment = GridData.VERTICAL_ALIGN_BEGINNING;
         gridData.horizontalSpan = 2;
         projectSpecificSettingsCheckbox.setLayoutData(gridData);

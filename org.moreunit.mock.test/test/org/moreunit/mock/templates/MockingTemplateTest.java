@@ -17,7 +17,7 @@ import org.moreunit.mock.model.Part;
 
 public class MockingTemplateTest
 {
-    private MockingTemplates mockingTemplates = new MockingTemplates(new ArrayList<>(),
+    private final MockingTemplates mockingTemplates = new MockingTemplates(new ArrayList<>(),
                                                                      asList(new MockingTemplate("a template"), new MockingTemplate("another template")));
 
     @Test
@@ -37,7 +37,7 @@ public class MockingTemplateTest
     public void should_return_empty_code_templates_when_none_was_defined() throws Exception
     {
         // given
-        MockingTemplate template = new MockingTemplate("a template", "a category");
+        final MockingTemplate template = new MockingTemplate("a template", "a category");
 
         // when + then
         assertTrue(template.codeTemplates().isEmpty());
@@ -46,7 +46,7 @@ public class MockingTemplateTest
     @Test
     public void should_expose_id_and_category() throws Exception
     {
-        MockingTemplate template = new MockingTemplate("a template", "a category", "a name", asList(new CodeTemplate("ct", Part.TEST_CLASS_FIELDS, "pattern")));
+        final MockingTemplate template = new MockingTemplate("a template", "a category", "a name", asList(new CodeTemplate("ct", Part.TEST_CLASS_FIELDS, "pattern")));
 
         assertEquals("a template", template.id());
         assertEquals("a category", template.categoryId());
@@ -63,8 +63,8 @@ public class MockingTemplateTest
     @Test
     public void should_not_be_equal_when_id_is_null_and_other_id_is_not() throws Exception
     {
-        MockingTemplate template1 = new MockingTemplate(null);
-        MockingTemplate template2 = new MockingTemplate("a template");
+        final MockingTemplate template1 = new MockingTemplate(null);
+        final MockingTemplate template2 = new MockingTemplate("a template");
 
         assertFalse(template1.equals(template2));
         assertFalse(template2.equals(template1));
@@ -73,25 +73,25 @@ public class MockingTemplateTest
     @Test
     public void should_be_equal_to_itself() throws Exception
     {
-        MockingTemplate template = new MockingTemplate("a template");
+        final MockingTemplate template = new MockingTemplate("a template");
         assertTrue(template.equals(template));
     }
 
     @Test
     public void should_not_be_equal_to_null_or_to_object_of_different_class() throws Exception
     {
-        MockingTemplate template = new MockingTemplate("a template");
+        final MockingTemplate template = new MockingTemplate("a template");
 
         assertFalse(template.equals(null));
-        Object objectOfDifferentClass = "a template";
+        final Object objectOfDifferentClass = "a template";
         assertFalse(template.equals(objectOfDifferentClass));
     }
 
     @Test
     public void should_include_id_and_category_in_to_string() throws Exception
     {
-        MockingTemplate template = new MockingTemplate("a template", "a category");
-        String str = template.toString();
+        final MockingTemplate template = new MockingTemplate("a template", "a category");
+        final String str = template.toString();
 
         assertNotNull(str);
         assertTrue(str.contains("a template"));

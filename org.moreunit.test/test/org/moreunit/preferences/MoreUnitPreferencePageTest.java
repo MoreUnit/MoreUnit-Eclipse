@@ -57,7 +57,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
 
     private Text findTestSourceFolderField()
     {
-        Text field = findTextByLabel(shell, PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
+        final Text field = findTextByLabel(shell, PreferenceConstants.TEXT_TEST_SOURCE_FOLDER);
         assertNotNull(field);
         return field;
     }
@@ -82,7 +82,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     public void should_declare_error_message_when_test_source_folder_ends_with_slash()
     {
         createPageContents();
-        Text field = findTestSourceFolderField();
+        final Text field = findTestSourceFolderField();
 
         field.setText("src/test/");
         field.notifyListeners(SWT.Modify, new org.eclipse.swt.widgets.Event());
@@ -100,7 +100,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     {
         createPageContents();
 
-        Text patternField = findTextByLabel(shell, "Pattern:");
+        final Text patternField = findTextByLabel(shell, "Pattern:");
         assertNotNull(patternField);
 
         patternField.setText(SRC_FILE_VARIABLE);
@@ -120,7 +120,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     public void should_save_junit_directory_on_perform_ok()
     {
         createPageContents();
-        Text field = findTestSourceFolderField();
+        final Text field = findTestSourceFolderField();
         field.setText("src/test/java");
 
         assertTrue(page.performOk());
@@ -134,13 +134,13 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     {
         createPageContents();
 
-        org.moreunit.properties.OtherMoreunitPropertiesBlock block = (org.moreunit.properties.OtherMoreunitPropertiesBlock) getField(page, "otherMoreunitPropertiesBlock");
+        final org.moreunit.properties.OtherMoreunitPropertiesBlock block = (org.moreunit.properties.OtherMoreunitPropertiesBlock) getField(page, "otherMoreunitPropertiesBlock");
         assertNotNull(block);
 
-        Text packagePrefixField = findTextByLabel(shell, PreferenceConstants.TEXT_PACKAGE_PREFIX);
+        final Text packagePrefixField = findTextByLabel(shell, PreferenceConstants.TEXT_PACKAGE_PREFIX);
         packagePrefixField.setText("pref-prefix");
 
-        Text packageSuffixField = findTextByLabel(shell, PreferenceConstants.TEXT_PACKAGE_SUFFIX);
+        final Text packageSuffixField = findTextByLabel(shell, PreferenceConstants.TEXT_PACKAGE_SUFFIX);
         packageSuffixField.setText("pref-suffix");
 
         assertTrue(page.performOk());
@@ -153,7 +153,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     public void should_use_plugin_preference_store_by_default()
     {
         // without init(IWorkbench), the page must fall back to the plugin's store
-        MoreUnitPreferencePage freshPage = new MoreUnitPreferencePage();
+        final MoreUnitPreferencePage freshPage = new MoreUnitPreferencePage();
 
         assertSame(MoreUnitPlugin.getDefault().getPreferenceStore(), freshPage.getPreferenceStore());
     }
@@ -163,7 +163,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     {
         createPageContents();
 
-        Text patternField = findTextByLabel(shell, "Pattern:");
+        final Text patternField = findTextByLabel(shell, "Pattern:");
         patternField.setText(SRC_FILE_VARIABLE + "*Test*");
         patternField.notifyListeners(SWT.Modify, new org.eclipse.swt.widgets.Event());
 
@@ -174,7 +174,7 @@ public class MoreUnitPreferencePageTest extends SwtPageTestCase
     @Test
     public void should_initialize_preference_store_from_workbench()
     {
-        IWorkbench workbench = PlatformUI.getWorkbench();
+        final IWorkbench workbench = PlatformUI.getWorkbench();
 
         page.init(workbench);
 

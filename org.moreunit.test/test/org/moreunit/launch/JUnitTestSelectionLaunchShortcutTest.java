@@ -48,11 +48,11 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
     @Test
     public void launch_should_build_configuration_and_delegate_launch_for_several_selected_tests() throws Exception
     {
-        IType fooTest = context.getPrimaryTypeHandler("com.FooTest").get();
-        IType barTest = context.getPrimaryTypeHandler("com.BarTest").get();
+        final IType fooTest = context.getPrimaryTypeHandler("com.FooTest").get();
+        final IType barTest = context.getPrimaryTypeHandler("com.BarTest").get();
 
-        List<Object[]> delegateInvocations = new CopyOnWriteArrayList<>();
-        AtomicReference<ILaunch> createdLaunch = new AtomicReference<>();
+        final List<Object[]> delegateInvocations = new CopyOnWriteArrayList<>();
+        final AtomicReference<ILaunch> createdLaunch = new AtomicReference<>();
 
         try (MockedConstruction<JUnitTestSelectionLaunchConfigurationDelegate> delegate = mockConstruction(JUnitTestSelectionLaunchConfigurationDelegate.class, (mock, constructionContext) -> {
             doAnswer(invocation -> {
@@ -68,11 +68,11 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
             try
             {
                 shortcutClass = Class.forName("org.moreunit.launch.JUnitTestSelectionLaunchShortcut");
-                var constructor = shortcutClass.getDeclaredConstructor();
+                final var constructor = shortcutClass.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 shortcut = constructor.newInstance();
             }
-            catch (ReflectiveOperationException e)
+            catch (final ReflectiveOperationException e)
             {
                 throw new RuntimeException(e);
             }
@@ -81,21 +81,21 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
             {
                 // the declaring class is not accessible from this bundle,
                 // hence getDeclaredMethod + setAccessible
-                var launchMethod = shortcutClass.getDeclaredMethod("launch", org.eclipse.jface.viewers.ISelection.class, String.class);
+                final var launchMethod = shortcutClass.getDeclaredMethod("launch", org.eclipse.jface.viewers.ISelection.class, String.class);
                 launchMethod.setAccessible(true);
                 launchMethod.invoke(shortcut, new StructuredSelection(Arrays.asList(fooTest, barTest)), "run");
             }
-            catch (ReflectiveOperationException e)
+            catch (final ReflectiveOperationException e)
             {
                 throw new RuntimeException(e);
             }
 
             await(() -> assertEquals(1, delegateInvocations.size()));
 
-            Object[] invocation = delegateInvocations.get(0);
-            ILaunchConfiguration configuration = (ILaunchConfiguration) invocation[0];
-            String mode = (String) invocation[1];
-            ILaunch launch = (ILaunch) invocation[2];
+            final Object[] invocation = delegateInvocations.get(0);
+            final ILaunchConfiguration configuration = (ILaunchConfiguration) invocation[0];
+            final String mode = (String) invocation[1];
+            final ILaunch launch = (ILaunch) invocation[2];
 
             assertNotNull(configuration);
             assertEquals("run", mode);
@@ -104,7 +104,7 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
 
             // the launch must have been registered with the launch manager
             assertTrue(Arrays.asList(DebugPlugin.getDefault().getLaunchManager().getLaunches()).contains(launch));
-            IDebugTarget[] targets = launch.getDebugTargets();
+            final IDebugTarget[] targets = launch.getDebugTargets();
             assertNotNull(targets);
         }
         finally
@@ -118,8 +118,8 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
 
     private void await(Runnable assertion) throws Exception
     {
-        Display display = Display.getDefault();
-        long deadline = System.currentTimeMillis() + 30_000;
+        final Display display = Display.getDefault();
+        final long deadline = System.currentTimeMillis() + 30_000;
         AssertionError lastFailure = null;
         while (System.currentTimeMillis() < deadline)
         {
@@ -129,7 +129,7 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
                 assertion.run();
                 return;
             }
-            catch (AssertionError e)
+            catch (final AssertionError e)
             {
                 lastFailure = e;
             }
@@ -141,13 +141,13 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
     @Test
     public void hasSameAttributes_should_compare_the_given_attributes() throws Exception
     {
-        Class< ? > shortcutClass = Class.forName("org.moreunit.launch.JUnitTestSelectionLaunchShortcut");
-        Method hasSameAttributes = shortcutClass
+        final Class< ? > shortcutClass = Class.forName("org.moreunit.launch.JUnitTestSelectionLaunchShortcut");
+        final Method hasSameAttributes = shortcutClass
                 .getDeclaredMethod("hasSameAttributes", ILaunchConfiguration.class, ILaunchConfiguration.class, String[].class);
         hasSameAttributes.setAccessible(true);
 
-        ILaunchConfiguration config1 = mock(ILaunchConfiguration.class);
-        ILaunchConfiguration config2 = mock(ILaunchConfiguration.class);
+        final ILaunchConfiguration config1 = mock(ILaunchConfiguration.class);
+        final ILaunchConfiguration config2 = mock(ILaunchConfiguration.class);
         when(config1.getAttribute("main", "")).thenReturn("com.FooTest");
         when(config2.getAttribute("main", "")).thenReturn("com.FooTest");
 
@@ -163,7 +163,7 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
         assertTrue((boolean) hasSameAttributes.invoke(null, config1, config2, new String[] { "main", "proj" }));
 
         // a CoreException while reading an attribute results in false
-        ILaunchConfiguration failingConfig = mock(ILaunchConfiguration.class);
+        final ILaunchConfiguration failingConfig = mock(ILaunchConfiguration.class);
         when(failingConfig.getAttribute("main", "")).thenThrow(new org.eclipse.core.runtime.CoreException(org.eclipse.core.runtime.Status.CANCEL_STATUS));
         assertFalse((boolean) hasSameAttributes.invoke(null, failingConfig, config2, new String[] { "main" }));
     }

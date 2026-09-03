@@ -25,11 +25,11 @@ public class NewTestCaseWizardParticipatorTest
     @Test
     public void should_return_null_when_no_class_under_test()
     {
-        MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
-        INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
+        final MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
+        final INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
         when(context.getClassUnderTest()).thenReturn(null);
 
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
 
         assertNull(participator.getPages(context));
     }
@@ -37,7 +37,7 @@ public class NewTestCaseWizardParticipatorTest
     @Test
     public void should_ignore_page_creation_aborted()
     {
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(mock(MockDependenciesPageManager.class));
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(mock(MockDependenciesPageManager.class));
 
         participator.testCaseCreationAborted(null);
         participator.testCaseCreationCanceled(null);
@@ -46,10 +46,10 @@ public class NewTestCaseWizardParticipatorTest
     @Test
     public void should_do_nothing_when_created_test_case_is_null()
     {
-        INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
+        final INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
         when(context.getTestType()).thenReturn(TestType.JUNIT_5);
 
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(mock(MockDependenciesPageManager.class));
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(mock(MockDependenciesPageManager.class));
 
         // when: createdTestCase is null (the context.get(PAGE_KEY) returns null too)
         participator.testCaseCreated(context);
@@ -60,16 +60,16 @@ public class NewTestCaseWizardParticipatorTest
     public void should_return_created_page_when_class_under_test_is_defined()
     {
         // given
-        MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
-        INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
+        final MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
+        final INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
         when(context.getClassUnderTest()).thenReturn(mock(IType.class));
-        MockDependenciesWizardPage page = mock(MockDependenciesWizardPage.class);
+        final MockDependenciesWizardPage page = mock(MockDependenciesWizardPage.class);
         when(pageManager.createPage(context)).thenReturn(page);
 
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
 
         // when
-        Collection<INewTestCaseWizardPage> pages = participator.getPages(context);
+        final Collection<INewTestCaseWizardPage> pages = participator.getPages(context);
 
         // then
         assertNotNull(pages);
@@ -82,12 +82,12 @@ public class NewTestCaseWizardParticipatorTest
     public void should_return_null_when_page_could_not_be_created()
     {
         // given
-        MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
-        INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
+        final MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
+        final INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
         when(context.getClassUnderTest()).thenReturn(mock(IType.class));
         when(pageManager.createPage(context)).thenReturn(null);
 
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
 
         // when + then
         assertNull(participator.getPages(context));
@@ -97,14 +97,14 @@ public class NewTestCaseWizardParticipatorTest
     public void should_validate_page_with_test_type_of_context_when_test_case_is_created()
     {
         // given
-        MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
-        INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
-        MockDependenciesWizardPage page = mock(MockDependenciesWizardPage.class);
+        final MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
+        final INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
+        final MockDependenciesWizardPage page = mock(MockDependenciesWizardPage.class);
         when(context.get(anyString())).thenReturn(page);
         when(context.getCreatedTestCase()).thenReturn(mock(IType.class));
         when(context.getTestType()).thenReturn(TestType.TESTNG);
 
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
 
         // when
         participator.testCaseCreated(context);
@@ -117,14 +117,14 @@ public class NewTestCaseWizardParticipatorTest
     public void should_use_default_test_type_when_test_type_is_unknown()
     {
         // given
-        MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
-        INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
-        MockDependenciesWizardPage page = mock(MockDependenciesWizardPage.class);
+        final MockDependenciesPageManager pageManager = mock(MockDependenciesPageManager.class);
+        final INewTestCaseWizardContext context = mock(INewTestCaseWizardContext.class);
+        final MockDependenciesWizardPage page = mock(MockDependenciesWizardPage.class);
         when(context.get(anyString())).thenReturn(page);
         when(context.getCreatedTestCase()).thenReturn(mock(IType.class));
         when(context.getTestType()).thenReturn(null);
 
-        NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
+        final NewTestCaseWizardParticipator participator = new NewTestCaseWizardParticipator(pageManager);
 
         // when
         participator.testCaseCreated(context);

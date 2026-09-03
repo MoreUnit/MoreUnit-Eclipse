@@ -16,8 +16,8 @@ public class CodeMiningPreferencesTest extends ContextTestCase
     @Test
     public void codeMiningPreferences_should_return_defaults_then_written_values() throws Exception
     {
-        Preferences preferences = Preferences.getInstance();
-        IJavaProject javaProject = context.getProjectHandler().get();
+        final Preferences preferences = Preferences.getInstance();
+        final IJavaProject javaProject = context.getProjectHandler().get();
 
         // defaults: the workbench store does not contain the keys yet
         assertTrue(preferences.shouldEnableMoreUnitCodeMining(javaProject));

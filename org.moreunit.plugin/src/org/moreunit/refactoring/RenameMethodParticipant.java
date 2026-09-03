@@ -65,18 +65,18 @@ public class RenameMethodParticipant extends RenameParticipant
         {
             return null;
         }
-        List<Change> changes = new ArrayList<>();
+        final List<Change> changes = new ArrayList<>();
 
-        List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(renamedMethod);
+        final List<IMethod> allTestMethods = javaFileFacade.getCorrespondingTestMethodsByName(renamedMethod);
         if(allTestMethods == null)
         {
             return null;
         }
-        for (IMethod testMethod : allTestMethods)
+        for (final IMethod testMethod : allTestMethods)
         {
             if(testMethod != null)
             {
-                String newTestMethodName = testMethodDiviner.getTestMethodNameAfterRename(renamedMethod.getElementName(), getArguments().getNewName(), testMethod.getElementName());
+                final String newTestMethodName = testMethodDiviner.getTestMethodNameAfterRename(renamedMethod.getElementName(), getArguments().getNewName(), testMethod.getElementName());
                 changes.add(new RenameMethodChange(testMethod, newTestMethodName));
             }
         }

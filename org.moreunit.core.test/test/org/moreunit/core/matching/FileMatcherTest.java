@@ -11,11 +11,11 @@ public class FileMatcherTest
     @Test
     public void should_create_from_src_file_search_engine_and_selector()
     {
-        SrcFile srcFile = mock(SrcFile.class);
-        SearchEngine searchEngine = mock(SearchEngine.class);
-        FileMatchSelector matchSelector = mock(FileMatchSelector.class);
+        final SrcFile srcFile = mock(SrcFile.class);
+        final SearchEngine searchEngine = mock(SearchEngine.class);
+        final FileMatchSelector matchSelector = mock(FileMatchSelector.class);
 
-        FileMatcher matcher = new FileMatcher(srcFile, searchEngine, matchSelector);
+        final FileMatcher matcher = new FileMatcher(srcFile, searchEngine, matchSelector);
 
         assertNotNull(matcher);
     }

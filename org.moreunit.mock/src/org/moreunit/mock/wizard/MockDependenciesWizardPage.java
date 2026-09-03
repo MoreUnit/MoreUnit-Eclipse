@@ -19,10 +19,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -101,7 +97,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     @Override
     public void createControl(Composite parent)
     {
-        Composite container = createContainer(parent);
+        final Composite container = createContainer(parent);
 
         createTemplateSelector(container);
         createDependenciesTreeControls(container);
@@ -113,7 +109,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private void createFieldCategoriesToggleCheckboxes(Composite parent)
     {
-        GridData layoutForOneLineControls = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        final GridData layoutForOneLineControls = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         layoutForOneLineControls.horizontalSpan = 2;
 
         showAllFieldsCheckbox = new Button(parent, SWT.CHECK);
@@ -146,8 +142,8 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private Composite createContainer(Composite parent)
     {
-        Composite container = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
+        final Composite container = new Composite(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout();
         layout.numColumns = 2;
         container.setLayout(layout);
         container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -169,10 +165,10 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private void createAvailableDependenciesLabel(Composite container)
     {
-        Label label = new Label(container, SWT.LEFT | SWT.WRAP);
+        final Label label = new Label(container, SWT.LEFT | SWT.WRAP);
         label.setFont(container.getFont());
         label.setText("Available dependencies:");
-        GridData gd = new GridData();
+        final GridData gd = new GridData();
         gd.horizontalSpan = 2;
         label.setLayoutData(gd);
     }
@@ -180,33 +176,19 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
     private void createDependenciesTree(Composite container)
     {
         dependenciesTree = new ContainerCheckedTreeViewer(container, SWT.BORDER);
-        GridData gd = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
+        final GridData gd = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
         gd.heightHint = 180;
         dependenciesTree.getTree().setLayoutData(gd);
 
         dependenciesTree.setLabelProvider(new JavaElementLabelProvider());
         dependenciesTree.setAutoExpandLevel(2);
-        dependenciesTree.addCheckStateListener(new ICheckStateListener()
-        {
-            @Override
-            public void checkStateChanged(CheckStateChangedEvent event)
-            {
-                doCheckedStateChanged();
-            }
-        });
-        dependenciesTree.addSelectionChangedListener(new ISelectionChangedListener()
-        {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event)
-            {
-                doCheckedStateChanged();
-            }
-        });
+        dependenciesTree.addCheckStateListener(event -> doCheckedStateChanged());
+        dependenciesTree.addSelectionChangedListener(event -> doCheckedStateChanged());
     }
 
     private void doCheckedStateChanged()
     {
-        List<IMember> members = getCheckedInjectionPoints();
+        final List<IMember> members = getCheckedInjectionPoints();
 
         injectionPointStore.setInjectionPoints(members);
 
@@ -217,10 +199,10 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private List<IMember> getCheckedInjectionPoints()
     {
-        Object[] checked = dependenciesTree.getCheckedElements();
-        List<IMember> members = new ArrayList<>(checked.length);
+        final Object[] checked = dependenciesTree.getCheckedElements();
+        final List<IMember> members = new ArrayList<>(checked.length);
 
-        for (Object checkedElement : checked)
+        for (final Object checkedElement : checked)
         {
             if(checkedElement instanceof IMethod || checkedElement instanceof IField)
             {
@@ -251,7 +233,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         {
             selectedConstructors = injectionPointStore.getConstructors();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // ignored
             selectedConstructors = Collections.<IMethod> emptyList();
@@ -272,7 +254,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         int constructorCount = 0;
         try
         {
-            for (IMethod m : type.getMethods())
+            for (final IMethod m : type.getMethods())
             {
                 if(m.isConstructor())
                 {
@@ -285,7 +267,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
                 }
             }
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // will return false
         }
@@ -294,9 +276,9 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private void createSideButtons(Composite container)
     {
-        Composite buttonContainer = new Composite(container, SWT.NONE);
+        final Composite buttonContainer = new Composite(container, SWT.NONE);
         buttonContainer.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-        GridLayout buttonLayout = new GridLayout();
+        final GridLayout buttonLayout = new GridLayout();
         buttonLayout.marginWidth = 0;
         buttonLayout.marginHeight = 0;
         buttonContainer.setLayout(buttonLayout);
@@ -322,7 +304,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private Button createSideButton(Composite buttonContainer, String text, SelectionListener selectionListener)
     {
-        Button button = new Button(buttonContainer, SWT.PUSH);
+        final Button button = new Button(buttonContainer, SWT.PUSH);
         button.setText(text);
         button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         button.addSelectionListener(selectionListener);
@@ -352,7 +334,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
         gd.horizontalSpan = 1;
         selectedMembersLabel.setLayoutData(gd);
 
-        Label emptyLabel = new Label(container, SWT.LEFT);
+        final Label emptyLabel = new Label(container, SWT.LEFT);
         gd = new GridData();
         gd.horizontalSpan = 1;
         emptyLabel.setLayoutData(gd);
@@ -376,7 +358,7 @@ public class MockDependenciesWizardPage extends WizardPage implements INewTestCa
 
     private void initValues()
     {
-        IType classUnderTest = wizardValues.getClassUnderTest();
+        final IType classUnderTest = wizardValues.getClassUnderTest();
 
         // uses project or workspace preferences, depending on user choice
         IJavaProject project = classUnderTest.getJavaProject();

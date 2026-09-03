@@ -38,7 +38,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -57,7 +57,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
 
     private GenericPropertyPage createPage(String description)
     {
-        GenericPropertyPage page = new GenericPropertyPage(LANGUAGE_ID, description);
+        final GenericPropertyPage page = new GenericPropertyPage(LANGUAGE_ID, description);
         page.setElement(new IAdaptable()
         {
             @SuppressWarnings("unchecked")
@@ -72,7 +72,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_use_given_description()
     {
-        GenericPropertyPage page = createPage("Page for GPP");
+        final GenericPropertyPage page = createPage("Page for GPP");
 
         assertEquals("Page for GPP", page.getDescription());
     }
@@ -80,7 +80,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_return_parent_unchanged_when_element_is_not_a_project()
     {
-        GenericPropertyPage page = new GenericPropertyPage(LANGUAGE_ID, null);
+        final GenericPropertyPage page = new GenericPropertyPage(LANGUAGE_ID, null);
         page.setElement(new IAdaptable()
         {
             public <T> T getAdapter(Class<T> adapter)
@@ -89,7 +89,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
             }
         });
 
-        Shell parent = new Shell(display);
+        final Shell parent = new Shell(display);
 
         assertSame(parent, createContents(page, parent));
         assertEquals(0, parent.getChildren().length);
@@ -100,9 +100,9 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_build_contents_when_element_is_a_project()
     {
-        GenericPropertyPage page = createPage(null);
+        final GenericPropertyPage page = createPage(null);
 
-        Control control = createContents(page, shell);
+        final Control control = createContents(page, shell);
 
         assertTrue(control != null);
         assertTrue(shell.getChildren().length > 0);
@@ -111,7 +111,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_show_project_specific_settings_unchecked_by_default()
     {
-        GenericPropertyPage page = createPage(null);
+        final GenericPropertyPage page = createPage(null);
         createContents(page, shell);
 
         assertFalse(findCheckbox().getSelection());
@@ -121,10 +121,10 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_validate_page_when_project_specific_settings_get_activated()
     {
-        GenericPropertyPage page = createPage(null);
+        final GenericPropertyPage page = createPage(null);
         createContents(page, shell);
 
-        Button checkbox = findCheckbox();
+        final Button checkbox = findCheckbox();
         checkbox.setSelection(true);
         checkbox.notifyListeners(SWT.Selection, new Event());
 
@@ -141,12 +141,12 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_save_properties_on_perform_ok()
     {
-        GenericPropertyPage page = createPage(null);
+        final GenericPropertyPage page = createPage(null);
         createContents(page, shell);
 
         assertTrue(page.performOk());
 
-        LanguagePreferencesWriter writer = CoreModule.$().getPreferences().get(project).writerForLanguage(LANGUAGE_ID);
+        final LanguagePreferencesWriter writer = CoreModule.$().getPreferences().get(project).writerForLanguage(LANGUAGE_ID);
         assertEquals(Preferences.DEFAULTS.getSrcFolderPathTemplate(), writer.getSrcFolderPathTemplate());
         assertEquals(Preferences.DEFAULTS.getTestFolderPathTemplate(), writer.getTestFolderPathTemplate());
     }
@@ -154,7 +154,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_restore_default_fields_on_perform_defaults()
     {
-        GenericPropertyPage page = createPage(null);
+        final GenericPropertyPage page = createPage(null);
         createContents(page, shell);
 
         performDefaults(page);
@@ -165,8 +165,8 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     @Test
     public void should_validate_page_when_shown()
     {
-        GenericPropertyPage page = createPage(null);
-        Control control = createContents(page, shell);
+        final GenericPropertyPage page = createPage(null);
+        final Control control = createContents(page, shell);
         setControl(page, control);
 
         page.setVisible(true);
@@ -176,14 +176,14 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
 
     private Button findCheckbox()
     {
-        Button checkbox = findButton(shell, "Use project specific settings");
+        final Button checkbox = findButton(shell, "Use project specific settings");
         assertNotNull(checkbox);
         return checkbox;
     }
 
     private Button findButton(Composite composite, String text)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
             if(control instanceof Button && text.equals(((Button) control).getText()))
             {
@@ -191,7 +191,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
             }
             if(control instanceof Composite)
             {
-                Button button = findButton((Composite) control, text);
+                final Button button = findButton((Composite) control, text);
                 if(button != null)
                 {
                     return button;
@@ -207,11 +207,11 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     {
         try
         {
-            Method method = findMethod(page.getClass(), "createContents", Composite.class);
+            final Method method = findMethod(page.getClass(), "createContents", Composite.class);
             method.setAccessible(true);
             return (Control) method.invoke(page, parent);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -221,11 +221,11 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     {
         try
         {
-            Method method = findMethod(page.getClass(), "performDefaults");
+            final Method method = findMethod(page.getClass(), "performDefaults");
             method.setAccessible(true);
             method.invoke(page);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -235,11 +235,11 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
     {
         try
         {
-            Method method = findMethod(page.getClass(), "setControl", Control.class);
+            final Method method = findMethod(page.getClass(), "setControl", Control.class);
             method.setAccessible(true);
             method.invoke(page, control);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -253,7 +253,7 @@ public class GenericPropertyPageTest extends TmpProjectTestCase
             {
                 return c.getDeclaredMethod(name, parameterTypes);
             }
-            catch (NoSuchMethodException e)
+            catch (final NoSuchMethodException e)
             {
                 c = c.getSuperclass();
             }

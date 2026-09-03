@@ -62,13 +62,7 @@ public class TemplateStyleSelectorTest
         {
             return;
         }
-        display.syncExec(new Runnable()
-        {
-            public void run()
-            {
-                shell = new Shell(display);
-            }
-        });
+        display.syncExec(() -> shell = new Shell(display));
 
         categoryA = new Category("catA", "Cat A");
         categoryB = new Category("catB", "Cat B");
@@ -88,13 +82,7 @@ public class TemplateStyleSelectorTest
     {
         if(shell != null && ! shell.isDisposed())
         {
-            display.syncExec(new Runnable()
-            {
-                public void run()
-                {
-                    shell.dispose();
-                }
-            });
+            display.syncExec(() -> shell.dispose());
         }
     }
 
@@ -110,8 +98,8 @@ public class TemplateStyleSelectorTest
 
         selector.createContents(shell, null);
 
-        Combo categoryCombo = findCategoryCombo();
-        Combo templateCombo = findTemplateCombo();
+        final Combo categoryCombo = findCategoryCombo();
+        final Combo templateCombo = findTemplateCombo();
 
         assertArrayEquals(new String[] { "Cat A", "Cat B" }, categoryCombo.getItems());
         assertEquals(0, categoryCombo.getSelectionIndex());
@@ -238,8 +226,8 @@ public class TemplateStyleSelectorTest
             return;
         }
 
-        Category categoryC = new Category("catC", "Cat C");
-        MockingTemplate templateC1 = new MockingTemplate("t3", "catC", "Template C1", null);
+        final Category categoryC = new Category("catC", "Cat C");
+        final MockingTemplate templateC1 = new MockingTemplate("t3", "catC", "Template C1", null);
 
         selector.createContents(shell, null);
 
@@ -276,7 +264,7 @@ public class TemplateStyleSelectorTest
 
     private java.util.List<Combo> findCombos()
     {
-        java.util.List<Combo> combos = new java.util.ArrayList<>();
+        final java.util.List<Combo> combos = new java.util.ArrayList<>();
         collectCombos(shell, combos);
         if(combos.size() < 2)
         {
@@ -287,13 +275,13 @@ public class TemplateStyleSelectorTest
 
     private static void collectCombos(Composite composite, java.util.List<Combo> combos)
     {
-        for (Control child : composite.getChildren())
+        for (final Control child : composite.getChildren())
         {
-            if(child instanceof Combo combo)
+            if(child instanceof final Combo combo)
             {
                 combos.add(combo);
             }
-            else if(child instanceof Composite nested)
+            else if(child instanceof final Composite nested)
             {
                 collectCombos(nested, combos);
             }

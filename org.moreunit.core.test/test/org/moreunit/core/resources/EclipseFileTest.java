@@ -16,34 +16,34 @@ public class EclipseFileTest
     @Test
     public void should_create_file_from_ifile()
     {
-        IFile ifile = mock(IFile.class);
-        IPath path = mock(IPath.class);
+        final IFile ifile = mock(IFile.class);
+        final IPath path = mock(IPath.class);
         when(path.removeTrailingSeparator()).thenReturn(path);
         when(path.toString()).thenReturn("/proj/src/Foo.java");
         when(ifile.getFullPath()).thenReturn(path);
 
-        EclipseFile file = new EclipseFile(ifile);
+        final EclipseFile file = new EclipseFile(ifile);
         assertNotNull(file);
     }
 
     @Test
     public void get_extension_should_return_file_extension()
     {
-        IFile ifile = mock(IFile.class);
-        IPath path = mock(IPath.class);
+        final IFile ifile = mock(IFile.class);
+        final IPath path = mock(IPath.class);
         when(path.removeTrailingSeparator()).thenReturn(path);
         when(ifile.getFullPath()).thenReturn(path);
         when(ifile.getFileExtension()).thenReturn("java");
 
-        EclipseFile file = new EclipseFile(ifile);
+        final EclipseFile file = new EclipseFile(ifile);
         assertEquals("java", file.getExtension());
     }
 
     @Test
     public void has_extension_should_check_file_extension()
     {
-        IFile ifile = mock(IFile.class);
-        IPath path = mock(IPath.class);
+        final IFile ifile = mock(IFile.class);
+        final IPath path = mock(IPath.class);
         when(path.removeTrailingSeparator()).thenReturn(path);
         when(ifile.getFullPath()).thenReturn(path);
         when(ifile.getFileExtension()).thenReturn("java");

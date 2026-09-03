@@ -19,9 +19,9 @@ public class DefaultFileMatchSelector implements FileMatchSelector
     @Override
     public MatchSelection select(Collection<IFile> files, IFile preferredFile)
     {
-        FileContentProvider contentProvider = new FileContentProvider(files, preferredFile);
-        FileMatchSelectionDialog<IFile> dialog = new FileMatchSelectionDialog<>("Jump to...", contentProvider, logger);
-        IFile choice = dialog.getChoice();
+        final FileContentProvider contentProvider = new FileContentProvider(files, preferredFile);
+        final FileMatchSelectionDialog<IFile> dialog = new FileMatchSelectionDialog<>("Jump to...", contentProvider, logger);
+        final IFile choice = dialog.getChoice();
         return choice == null ? MatchSelection.none() : MatchSelection.file(choice);
     }
 }

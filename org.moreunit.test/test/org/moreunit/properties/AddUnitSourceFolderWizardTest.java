@@ -72,7 +72,7 @@ public class AddUnitSourceFolderWizardTest extends SwtPageTestCase
     @Test
     public void should_declare_a_single_page_not_complete_by_default()
     {
-        IWizardPage[] pages = wizard.getPages();
+        final IWizardPage[] pages = wizard.getPages();
 
         assertEquals(1, pages.length);
         assertEquals("Add Unit Source Folder", wizardPage().getTitle());
@@ -83,18 +83,18 @@ public class AddUnitSourceFolderWizardTest extends SwtPageTestCase
     @Test
     public void should_display_source_folders_that_are_not_already_test_folders()
     {
-        AddUnitSourceFolderWizardPage page = wizardPage();
+        final AddUnitSourceFolderWizardPage page = wizardPage();
         page.createControl(shell);
-        CheckboxTreeViewer viewer = checkboxTreeViewer();
+        final CheckboxTreeViewer viewer = checkboxTreeViewer();
 
-        ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
+        final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
 
-        Object[] elements = contentProvider.getElements(viewer.getInput());
+        final Object[] elements = contentProvider.getElements(viewer.getInput());
         assertEquals(1, elements.length);
         assertEquals(javaProject, elements[0]);
 
         // the default test folder ("test") is filtered out, only "src" remains
-        Object[] children = contentProvider.getChildren(javaProject);
+        final Object[] children = contentProvider.getChildren(javaProject);
         assertEquals(1, children.length);
         assertEquals(context.getProjectHandler().getMainSrcFolderHandler().get(), children[0]);
     }
@@ -102,9 +102,9 @@ public class AddUnitSourceFolderWizardTest extends SwtPageTestCase
     @Test
     public void should_complete_page_when_all_source_folders_of_a_project_are_checked()
     {
-        AddUnitSourceFolderWizardPage page = wizardPage();
+        final AddUnitSourceFolderWizardPage page = wizardPage();
         page.createControl(shell);
-        CheckboxTreeViewer viewer = checkboxTreeViewer();
+        final CheckboxTreeViewer viewer = checkboxTreeViewer();
 
         check(viewer, page, javaProject, true);
 
@@ -125,16 +125,16 @@ public class AddUnitSourceFolderWizardTest extends SwtPageTestCase
         Preferences.getInstance().setMappingList(javaProject, List.of());
         try
         {
-            UnitSourceFolderBlock blockWithoutMappings = new UnitSourceFolderBlock(javaProject, propertyPage);
+            final UnitSourceFolderBlock blockWithoutMappings = new UnitSourceFolderBlock(javaProject, propertyPage);
             blockWithoutMappings.getControl(shell);
 
-            AddUnitSourceFolderWizard wizardWithoutMappings = new AddUnitSourceFolderWizard(javaProject, blockWithoutMappings);
+            final AddUnitSourceFolderWizard wizardWithoutMappings = new AddUnitSourceFolderWizard(javaProject, blockWithoutMappings);
             wizardWithoutMappings.addPages();
-            AddUnitSourceFolderWizardPage page = (AddUnitSourceFolderWizardPage) wizardWithoutMappings.getPages()[0];
+            final AddUnitSourceFolderWizardPage page = (AddUnitSourceFolderWizardPage) wizardWithoutMappings.getPages()[0];
             page.createControl(shell);
 
-            CheckboxTreeViewer viewer = (CheckboxTreeViewer) getField(page, "checkboxTreeViewer");
-            ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
+            final CheckboxTreeViewer viewer = (CheckboxTreeViewer) getField(page, "checkboxTreeViewer");
+            final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
             assertEquals(2, contentProvider.getChildren(javaProject).length);
 
             // check only one folder: project gets grayed
@@ -171,17 +171,17 @@ public class AddUnitSourceFolderWizardTest extends SwtPageTestCase
     @Test
     public void should_add_selected_source_folders_to_block_when_wizard_performs_finish()
     {
-        AddUnitSourceFolderWizardPage page = wizardPage();
+        final AddUnitSourceFolderWizardPage page = wizardPage();
         page.createControl(shell);
-        CheckboxTreeViewer viewer = checkboxTreeViewer();
+        final CheckboxTreeViewer viewer = checkboxTreeViewer();
 
-        int initialMappingCount = block.getListOfUnitSourceFolder().size();
+        final int initialMappingCount = block.getListOfUnitSourceFolder().size();
 
         check(viewer, page, context.getProjectHandler().getMainSrcFolderHandler().get(), true);
 
         assertTrue(wizard.performFinish());
 
-        List<SourceFolderMapping> mappings = block.getListOfUnitSourceFolder();
+        final List<SourceFolderMapping> mappings = block.getListOfUnitSourceFolder();
         assertEquals(initialMappingCount + 1, mappings.size());
         assertEquals(context.getProjectHandler().getMainSrcFolderHandler().get(), mappings.get(mappings.size() - 1).getTestFolder());
     }

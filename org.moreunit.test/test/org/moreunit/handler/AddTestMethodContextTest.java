@@ -16,14 +16,14 @@ public class AddTestMethodContextTest
     @Test
     public void two_arg_constructor_should_store_methods()
     {
-        IMethod testMethod = mock(IMethod.class);
-        IMethod methodUnderTest = mock(IMethod.class);
-        ICompilationUnit testCu = mock(ICompilationUnit.class);
-        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        final IMethod testMethod = mock(IMethod.class);
+        final IMethod methodUnderTest = mock(IMethod.class);
+        final ICompilationUnit testCu = mock(ICompilationUnit.class);
+        final ICompilationUnit cutCu = mock(ICompilationUnit.class);
         when(testMethod.getCompilationUnit()).thenReturn(testCu);
         when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
 
-        AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
+        final AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
 
         assertEquals(testCu, ctx.getTestClass());
         assertEquals(testMethod, ctx.getTestMethod());
@@ -35,10 +35,10 @@ public class AddTestMethodContextTest
     @Test
     public void three_arg_constructor_should_store_new_test_class_flag()
     {
-        IMethod testMethod = mock(IMethod.class);
-        IMethod methodUnderTest = mock(IMethod.class);
-        ICompilationUnit testCu = mock(ICompilationUnit.class);
-        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        final IMethod testMethod = mock(IMethod.class);
+        final IMethod methodUnderTest = mock(IMethod.class);
+        final ICompilationUnit testCu = mock(ICompilationUnit.class);
+        final ICompilationUnit cutCu = mock(ICompilationUnit.class);
         when(testMethod.getCompilationUnit()).thenReturn(testCu);
         when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
 
@@ -49,17 +49,17 @@ public class AddTestMethodContextTest
     @Test
     public void should_set_and_get_preferences()
     {
-        IMethod testMethod = mock(IMethod.class);
-        IMethod methodUnderTest = mock(IMethod.class);
-        ICompilationUnit testCu = mock(ICompilationUnit.class);
-        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        final IMethod testMethod = mock(IMethod.class);
+        final IMethod methodUnderTest = mock(IMethod.class);
+        final ICompilationUnit testCu = mock(ICompilationUnit.class);
+        final ICompilationUnit cutCu = mock(ICompilationUnit.class);
         when(testMethod.getCompilationUnit()).thenReturn(testCu);
         when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
 
-        AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
+        final AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
         assertNull(ctx.getPreferences());
 
-        var prefs = mock(org.moreunit.preferences.Preferences.class);
+        final var prefs = mock(org.moreunit.preferences.Preferences.class);
         ctx.setPreferences(prefs);
         assertEquals(prefs, ctx.getPreferences());
     }
@@ -67,12 +67,12 @@ public class AddTestMethodContextTest
     @Test
     public void four_arg_constructor_should_store_compilation_units_and_methods()
     {
-        IMethod testMethod = mock(IMethod.class);
-        IMethod methodUnderTest = mock(IMethod.class);
-        ICompilationUnit testCu = mock(ICompilationUnit.class);
-        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        final IMethod testMethod = mock(IMethod.class);
+        final IMethod methodUnderTest = mock(IMethod.class);
+        final ICompilationUnit testCu = mock(ICompilationUnit.class);
+        final ICompilationUnit cutCu = mock(ICompilationUnit.class);
 
-        AddTestMethodContext ctx = new AddTestMethodContext(testCu, testMethod, cutCu, methodUnderTest);
+        final AddTestMethodContext ctx = new AddTestMethodContext(testCu, testMethod, cutCu, methodUnderTest);
 
         assertEquals(testCu, ctx.getTestClass());
         assertEquals(testMethod, ctx.getTestMethod());
@@ -84,17 +84,17 @@ public class AddTestMethodContextTest
     @Test
     public void setTestMethod_should_replace_the_test_method()
     {
-        IMethod testMethod = mock(IMethod.class);
-        IMethod methodUnderTest = mock(IMethod.class);
-        ICompilationUnit testCu = mock(ICompilationUnit.class);
-        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        final IMethod testMethod = mock(IMethod.class);
+        final IMethod methodUnderTest = mock(IMethod.class);
+        final ICompilationUnit testCu = mock(ICompilationUnit.class);
+        final ICompilationUnit cutCu = mock(ICompilationUnit.class);
         when(testMethod.getCompilationUnit()).thenReturn(testCu);
         when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
 
-        AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
+        final AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest);
         assertEquals(testMethod, ctx.getTestMethod());
 
-        IMethod newTestMethod = mock(IMethod.class);
+        final IMethod newTestMethod = mock(IMethod.class);
         ctx.setTestMethod(newTestMethod);
 
         assertEquals(newTestMethod, ctx.getTestMethod());
@@ -104,10 +104,10 @@ public class AddTestMethodContextTest
     @Test
     public void toString_should_describe_all_members()
     {
-        IMethod testMethod = mock(IMethod.class);
-        IMethod methodUnderTest = mock(IMethod.class);
-        ICompilationUnit testCu = mock(ICompilationUnit.class);
-        ICompilationUnit cutCu = mock(ICompilationUnit.class);
+        final IMethod testMethod = mock(IMethod.class);
+        final IMethod methodUnderTest = mock(IMethod.class);
+        final ICompilationUnit testCu = mock(ICompilationUnit.class);
+        final ICompilationUnit cutCu = mock(ICompilationUnit.class);
         when(testMethod.getCompilationUnit()).thenReturn(testCu);
         when(methodUnderTest.getCompilationUnit()).thenReturn(cutCu);
         when(testMethod.getElementName()).thenReturn("testFoo");
@@ -115,9 +115,9 @@ public class AddTestMethodContextTest
         when(testCu.getElementName()).thenReturn("FooTest.java");
         when(cutCu.getElementName()).thenReturn("Foo.java");
 
-        AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest, true);
+        final AddTestMethodContext ctx = new AddTestMethodContext(testMethod, methodUnderTest, true);
 
-        String s = ctx.toString();
+        final String s = ctx.toString();
 
         assertTrue(s.startsWith("AddTestMethodContext ["));
         assertTrue(s.contains("classUnderTestCompilationUnit=Foo.java"));

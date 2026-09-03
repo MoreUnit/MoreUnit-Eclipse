@@ -14,7 +14,7 @@ public class LanguageTypeTest
     public void should_return_java() throws Exception
     {
         // given
-        IPath path = mock(IPath.class);
+        final IPath path = mock(IPath.class);
         when(path.getFileExtension()).thenReturn("java");
 
         // then
@@ -25,7 +25,7 @@ public class LanguageTypeTest
     public void should_return_groovy() throws Exception
     {
         // given
-        IPath path = mock(IPath.class);
+        final IPath path = mock(IPath.class);
         when(path.getFileExtension()).thenReturn("groovy");
 
         // then
@@ -36,7 +36,7 @@ public class LanguageTypeTest
     public void should_return_unknown_when_unsupported() throws Exception
     {
         // given
-        IPath path = mock(IPath.class);
+        final IPath path = mock(IPath.class);
         when(path.getFileExtension()).thenReturn("cpp");
 
         // then

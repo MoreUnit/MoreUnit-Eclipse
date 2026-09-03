@@ -14,11 +14,11 @@ public class SourceFormatter
 {
     public String getFormattedSource(ICompilationUnit compilationUnit) throws BadLocationException, JavaModelException
     {
-        CodeFormatter formatter = ToolFactory.createCodeFormatter(compilationUnit.getJavaProject().getOptions(true));
+        final CodeFormatter formatter = ToolFactory.createCodeFormatter(compilationUnit.getJavaProject().getOptions(true));
 
-        IDocument document = new Document(compilationUnit.getSource());
-        String lineDelimiter = TextUtilities.getDefaultLineDelimiter(document);
-        TextEdit edit = formatter.format(CodeFormatter.K_COMPILATION_UNIT, document.get(), 0, document.getLength(), 0, lineDelimiter);
+        final IDocument document = new Document(compilationUnit.getSource());
+        final String lineDelimiter = TextUtilities.getDefaultLineDelimiter(document);
+        final TextEdit edit = formatter.format(CodeFormatter.K_COMPILATION_UNIT, document.get(), 0, document.getLength(), 0, lineDelimiter);
 
         if(edit != null)
         {

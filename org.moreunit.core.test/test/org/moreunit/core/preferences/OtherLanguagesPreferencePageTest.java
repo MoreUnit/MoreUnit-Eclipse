@@ -44,7 +44,7 @@ public class OtherLanguagesPreferencePageTest
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -78,18 +78,18 @@ public class OtherLanguagesPreferencePageTest
     {
         try
         {
-            Method method = OtherLanguagesPreferencePage.class.getSuperclass().getDeclaredMethod("createContents", Composite.class);
+            final Method method = OtherLanguagesPreferencePage.class.getSuperclass().getDeclaredMethod("createContents", Composite.class);
             method.setAccessible(true);
-            Control control = (Control) method.invoke(page, shell);
+            final Control control = (Control) method.invoke(page, shell);
 
             // needed so that the page handlers can resolve their shell
-            Method setControl = findMethod(page.getClass(), "setControl", Control.class);
+            final Method setControl = findMethod(page.getClass(), "setControl", Control.class);
             setControl.setAccessible(true);
             setControl.invoke(page, control);
 
             return control;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -103,7 +103,7 @@ public class OtherLanguagesPreferencePageTest
             {
                 return c.getDeclaredMethod(name, parameterTypes);
             }
-            catch (NoSuchMethodException e)
+            catch (final NoSuchMethodException e)
             {
                 c = c.getSuperclass();
             }
@@ -113,16 +113,16 @@ public class OtherLanguagesPreferencePageTest
 
     private void createLanguageConfiguration(String name, String extension)
     {
-        Group group = findGroup(shell, "Per-language configurations may also be created:");
+        final Group group = findGroup(shell, "Per-language configurations may also be created:");
         assertNotNull(group, "Should find the per-language configuration group");
 
-        Text[] fields = findTextFields(group);
+        final Text[] fields = findTextFields(group);
         assertEquals(2, fields.length, "Group should contain the language name and extension fields");
 
         fields[0].setText(name);
         fields[1].setText(extension);
 
-        Button button = findButton(group, "Create Configuration");
+        final Button button = findButton(group, "Create Configuration");
         assertNotNull(button);
 
         button.notifyListeners(SWT.Selection, new Event());
@@ -157,7 +157,7 @@ public class OtherLanguagesPreferencePageTest
             public void run()
             {
                 boolean closedOne = false;
-                for (Shell s : display.getShells())
+                for (final Shell s : display.getShells())
                 {
                     if(matches.test(s))
                     {
@@ -184,9 +184,9 @@ public class OtherLanguagesPreferencePageTest
     @Test
     public void should_create_contents_with_default_and_per_language_sections()
     {
-        OtherLanguagesPreferencePage page = createPage();
+        final OtherLanguagesPreferencePage page = createPage();
 
-        Control control = createContents(page);
+        final Control control = createContents(page);
 
         assertTrue(control != null);
         assertNotNull(findButton(shell, "Create Configuration"));
@@ -196,7 +196,7 @@ public class OtherLanguagesPreferencePageTest
     @Test
     public void should_apply_default_configuration_on_perform_ok()
     {
-        OtherLanguagesPreferencePage page = createPage();
+        final OtherLanguagesPreferencePage page = createPage();
         createContents(page);
 
         assertTrue(page.performOk());
@@ -205,7 +205,7 @@ public class OtherLanguagesPreferencePageTest
     @Test
     public void should_warn_and_not_create_configuration_when_extension_is_invalid()
     {
-        OtherLanguagesPreferencePage page = createPage();
+        final OtherLanguagesPreferencePage page = createPage();
         createContents(page);
 
         scheduleWarningDialogCloser();
@@ -221,7 +221,7 @@ public class OtherLanguagesPreferencePageTest
     {
         CoreModule.$().getPreferences().add(new Language(LANGUAGE_EXT, LANGUAGE_NAME));
 
-        OtherLanguagesPreferencePage page = createPage();
+        final OtherLanguagesPreferencePage page = createPage();
         createContents(page);
 
         scheduleWarningDialogCloser();
@@ -237,7 +237,7 @@ public class OtherLanguagesPreferencePageTest
     {
         assumeTrue(org.moreunit.core.MoreUnitCore.get() != null, "MoreUnit core plugin not started");
 
-        OtherLanguagesPreferencePage page = createPage();
+        final OtherLanguagesPreferencePage page = createPage();
         createContents(page);
 
         // the creation triggers a language configuration listener that opens
@@ -252,7 +252,7 @@ public class OtherLanguagesPreferencePageTest
 
     private Button findButton(Composite composite, String text)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
             if(control instanceof Button && text.equals(((Button) control).getText()))
             {
@@ -260,7 +260,7 @@ public class OtherLanguagesPreferencePageTest
             }
             if(control instanceof Composite)
             {
-                Button button = findButton((Composite) control, text);
+                final Button button = findButton((Composite) control, text);
                 if(button != null)
                 {
                     return button;
@@ -272,7 +272,7 @@ public class OtherLanguagesPreferencePageTest
 
     private Group findGroup(Composite composite, String text)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
             if(control instanceof Group && text.equals(((Group) control).getText()))
             {
@@ -280,7 +280,7 @@ public class OtherLanguagesPreferencePageTest
             }
             if(control instanceof Composite)
             {
-                Group group = findGroup((Composite) control, text);
+                final Group group = findGroup((Composite) control, text);
                 if(group != null)
                 {
                     return group;
@@ -292,14 +292,14 @@ public class OtherLanguagesPreferencePageTest
 
     private Text[] findTextFields(Composite composite)
     {
-        java.util.List<Text> texts = new java.util.ArrayList<>();
+        final java.util.List<Text> texts = new java.util.ArrayList<>();
         collectTexts(composite, texts);
         return texts.toArray(new Text[texts.size()]);
     }
 
     private void collectTexts(Composite composite, java.util.List<Text> texts)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
             if(control instanceof Text)
             {

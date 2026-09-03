@@ -19,7 +19,7 @@ public class WorkspaceHandler
 
     public ProjectHandler addProject(String projectName)
     {
-        ProjectHandler projectHandler = newProjectHandler(this, projectName);
+        final ProjectHandler projectHandler = newProjectHandler(this, projectName);
         projectHandlers.put(projectName, projectHandler);
         return projectHandler;
     }
@@ -38,14 +38,14 @@ public class WorkspaceHandler
     {
         try
         {
-            CompilationUnitHandler cuHandler = findInWorkspace(cuName);
+            final CompilationUnitHandler cuHandler = findInWorkspace(cuName);
             if(cuHandler != null)
             {
                 return cuHandler;
             }
             throw new IllegalArgumentException("No compilation unit defined with name: " + cuName);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             throw new RuntimeException("Could not load compilation unit: " + cuName, e);
         }
@@ -53,9 +53,9 @@ public class WorkspaceHandler
 
     protected CompilationUnitHandler findInWorkspace(String cuName) throws CoreException
     {
-        for (ProjectHandler projectHandler : projectHandlers.values())
+        for (final ProjectHandler projectHandler : projectHandlers.values())
         {
-            CompilationUnitHandler cuHandler = projectHandler.findCompilationUnit(cuName);
+            final CompilationUnitHandler cuHandler = projectHandler.findCompilationUnit(cuName);
             if(cuHandler != null)
             {
                 return cuHandler;
@@ -71,13 +71,13 @@ public class WorkspaceHandler
 
     public void clearWorkspace()
     {
-        for (ProjectHandler projectHandler : projectHandlers.values())
+        for (final ProjectHandler projectHandler : projectHandlers.values())
         {
             try
             {
                 WorkspaceHelper.deleteProject(projectHandler.get());
             }
-            catch (CoreException e)
+            catch (final CoreException e)
             {
                 e.printStackTrace();
             }

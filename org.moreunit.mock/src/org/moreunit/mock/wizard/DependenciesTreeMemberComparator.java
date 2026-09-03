@@ -18,7 +18,7 @@ public class DependenciesTreeMemberComparator implements Comparator<IMember>
             return result;
         }
 
-        if(m1 instanceof IMethod method && m2 instanceof IMethod method1)
+        if(m1 instanceof final IMethod method && m2 instanceof final IMethod method1)
         {
             result = compareMethodTypes(method, method1);
             if(result != 0)
@@ -51,7 +51,7 @@ public class DependenciesTreeMemberComparator implements Comparator<IMember>
             c1 = m1.isConstructor();
             c2 = m2.isConstructor();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             // ignored
         }
@@ -66,7 +66,7 @@ public class DependenciesTreeMemberComparator implements Comparator<IMember>
         }
         if(c1 && c2)
         {
-            int result = compareNumberOfParameters(m1, m2);
+            final int result = compareNumberOfParameters(m1, m2);
             if(result != 0)
             {
                 return result;
@@ -77,8 +77,8 @@ public class DependenciesTreeMemberComparator implements Comparator<IMember>
 
     private int compareNumberOfParameters(IMethod m1, IMethod m2)
     {
-        int n1 = m1.getNumberOfParameters();
-        int n2 = m2.getNumberOfParameters();
+        final int n1 = m1.getNumberOfParameters();
+        final int n2 = m2.getNumberOfParameters();
         if(n1 > n2)
         {
             return - 1;

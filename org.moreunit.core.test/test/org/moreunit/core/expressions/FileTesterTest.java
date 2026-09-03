@@ -26,7 +26,7 @@ public class FileTesterTest
     @Test
     public void should_return_false_when_method_is_not_supported()
     {
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
 
         assertFalse(tester.test(file, "unknownMethod", new Object[0], null));
     }
@@ -34,7 +34,7 @@ public class FileTesterTest
     @Test
     public void has_default_support_should_return_true_when_expected_value_is_false()
     {
-        IFile file = mock(IFile.class);
+        final IFile file = mock(IFile.class);
         when(workspace.toSrcFile(file)).thenReturn(mock(SrcFile.class));
 
         assertTrue(tester.test(file, "hasDefaultSupport", new Object[0], "false"));
@@ -43,8 +43,8 @@ public class FileTesterTest
     @Test
     public void has_default_support_should_delegate_to_file_when_expected_value_is_not_false()
     {
-        IFile file = mock(IFile.class);
-        SrcFile srcFile = mock(SrcFile.class);
+        final IFile file = mock(IFile.class);
+        final SrcFile srcFile = mock(SrcFile.class);
         when(workspace.toSrcFile(file)).thenReturn(srcFile);
 
         when(srcFile.hasDefaultSupport()).thenReturn(true);

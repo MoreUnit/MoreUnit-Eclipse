@@ -11,7 +11,7 @@ import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
 
 public class SeparatorNameTokenizerTest
 {
-    private SeparatorNameTokenizer tokenizer = new SeparatorNameTokenizer("_");
+    private final SeparatorNameTokenizer tokenizer = new SeparatorNameTokenizer("_");
 
     @Test
     public void should_complain_when_separator_is_empty() throws Exception

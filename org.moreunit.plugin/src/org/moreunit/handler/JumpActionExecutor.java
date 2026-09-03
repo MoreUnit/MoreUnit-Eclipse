@@ -77,7 +77,7 @@ public class JumpActionExecutor
 
     public void executeJumpAction(IEditorPart editorPart)
     {
-        EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
+        final EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
         executeJumpAction(editorPartFacade.getCompilationUnit(), editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition());
     }
 
@@ -94,11 +94,11 @@ public class JumpActionExecutor
     private void executeJumpAction(ICompilationUnit compilationUnit, IMethod methodUnderCursorPosition)
     {
         Jobs.waitForIndexExecuteAndRunInUI("Jump to ... ", () -> {
-            MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(compilationUnit.getJavaProject());
+            final MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(compilationUnit.getJavaProject());
 
-            TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
+            final TypeFacade typeFacade = TypeFacade.createFacade(compilationUnit);
 
-            CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
+            final CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
                     .withExpectedResultType(MemberType.TYPE_OR_METHOD) //
                     .withCurrentMethod(methodUnderCursorPosition) //
                     .methodSearchMode(searchMode) //
@@ -111,9 +111,9 @@ public class JumpActionExecutor
 
     private void jumpToMember(IMember memberToJump)
     {
-        if(memberToJump instanceof IMethod methodToJump)
+        if(memberToJump instanceof final IMethod methodToJump)
         {
-            IEditorPart openedEditor = editorUI.open(methodToJump.getDeclaringType().getParent());
+            final IEditorPart openedEditor = editorUI.open(methodToJump.getDeclaringType().getParent());
             revealInEditor(openedEditor, methodToJump);
         }
         else

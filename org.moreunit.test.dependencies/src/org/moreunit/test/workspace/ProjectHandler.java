@@ -35,7 +35,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
             {
                 project = WorkspaceHelper.createJavaProject(prefix + projectName);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new RuntimeException(e);
             }
@@ -103,25 +103,25 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
 
     public CompilationUnitHandler findCompilationUnit(String cuName)
     {
-        for (SourceFolderHandler srcFolderHandler : sourceFolders.values())
+        for (final SourceFolderHandler srcFolderHandler : sourceFolders.values())
         {
-            CompilationUnitHandler cuHandler = srcFolderHandler.findCompilationUnit(cuName);
+            final CompilationUnitHandler cuHandler = srcFolderHandler.findCompilationUnit(cuName);
             if(cuHandler != null)
             {
                 return cuHandler;
             }
         }
 
-        IType type = findType(cuName);
+        final IType type = findType(cuName);
 
         if(type == null)
         {
             return null;
         }
 
-        ICompilationUnit cu = type.getCompilationUnit();
-        IPackageFragmentRoot srcFolder = (IPackageFragmentRoot) cu.getParent().getParent();
-        String srcFolderName = SourceFolderHandler.getPathRelativeToProject(srcFolder);
+        final ICompilationUnit cu = type.getCompilationUnit();
+        final IPackageFragmentRoot srcFolder = (IPackageFragmentRoot) cu.getParent().getParent();
+        final String srcFolderName = SourceFolderHandler.getPathRelativeToProject(srcFolder);
         return getSrcFolderHandler(srcFolderName).createHandlerFor(cu);
     }
 
@@ -131,7 +131,7 @@ public class ProjectHandler implements ElementHandler<IJavaProject, ProjectAsser
         {
             return get().findType(typeName);
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             throw new RuntimeException(e);
         }

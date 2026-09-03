@@ -10,7 +10,7 @@ import org.moreunit.core.matching.NameTokenizer.TokenizationResult;
 
 public class CamelCaseNameTokenizerTest extends NameTokenizerTestCase
 {
-    private NameTokenizer tokenizer = new CamelCaseNameTokenizer();
+    private final NameTokenizer tokenizer = new CamelCaseNameTokenizer();
 
     @Override
     protected NameTokenizer getTokenizer()

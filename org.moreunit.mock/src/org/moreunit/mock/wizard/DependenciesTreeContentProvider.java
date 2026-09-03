@@ -62,10 +62,10 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
         {
             types.add(classUnderTest);
 
-            ITypeHierarchy hierarchy = classUnderTest.newSupertypeHierarchy(null);
+            final ITypeHierarchy hierarchy = classUnderTest.newSupertypeHierarchy(null);
             Collections.addAll(types, hierarchy.getAllSuperclasses(classUnderTest));
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             logger.error("Error while populating dependencies tree", e);
         }
@@ -80,7 +80,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
             addFields(provider.getFields());
             sortMembers();
         }
-        catch (JavaModelException e)
+        catch (final JavaModelException e)
         {
             logger.error("Error while populating dependencies tree", e);
         }
@@ -88,12 +88,12 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     private void addMethods(Iterable<IMethod> methods) throws JavaModelException
     {
-        for_methods: for (IMethod method : methods)
+        for_methods: for (final IMethod method : methods)
         {
-            for (ListIterator<IMember> memberIt = members.listIterator(); memberIt.hasNext();)
+            for (final ListIterator<IMember> memberIt = members.listIterator(); memberIt.hasNext();)
             {
-                IMember alreadyCollectedMember = memberIt.next();
-                if(alreadyCollectedMember instanceof IMethod iMethod && alreadyCollectedMember.getElementName().equals(method.getElementName())
+                final IMember alreadyCollectedMember = memberIt.next();
+                if(alreadyCollectedMember instanceof final IMethod iMethod && alreadyCollectedMember.getElementName().equals(method.getElementName())
                    && iMethod.getSignature().equals(method.getSignature()))
                 {
                     memberIt.set(method);
@@ -106,15 +106,15 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     private void addFields(Iterable<Field> fields) throws JavaModelException
     {
-        for_fields: for (Field field : fields)
+        for_fields: for (final Field field : fields)
         {
             if(! shouldShowField(field))
             {
                 continue;
             }
-            for (ListIterator<IMember> memberIt = members.listIterator(); memberIt.hasNext();)
+            for (final ListIterator<IMember> memberIt = members.listIterator(); memberIt.hasNext();)
             {
-                IMember alreadyCollectedMemeber = memberIt.next();
+                final IMember alreadyCollectedMemeber = memberIt.next();
                 if(alreadyCollectedMemeber instanceof IMethod && alreadyCollectedMemeber.getElementName().equals(field.get().getElementName()))
                 {
                     memberIt.set(field.get());
@@ -142,8 +142,8 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
 
     private void removeUnusedTypes()
     {
-        Set<IType> usedTypes = new HashSet<>(types.size());
-        for (IMember member : members)
+        final Set<IType> usedTypes = new HashSet<>(types.size());
+        for (final IMember member : members)
         {
             usedTypes.add(member.getDeclaringType());
         }
@@ -154,10 +154,10 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
     @Override
     public Object[] getChildren(Object parentElement)
     {
-        if(parentElement instanceof IType parentType)
+        if(parentElement instanceof final IType parentType)
         {
-            List<IMember> result = new ArrayList<>(members.size());
-            for (IMember member : members)
+            final List<IMember> result = new ArrayList<>(members.size());
+            for (final IMember member : members)
             {
                 if(member.getDeclaringType().equals(parentType))
                 {
@@ -172,7 +172,7 @@ public class DependenciesTreeContentProvider implements ITreeContentProvider
     @Override
     public Object getParent(Object element)
     {
-        if(element instanceof IMethod method)
+        if(element instanceof final IMethod method)
         {
             return method.getDeclaringType();
         }

@@ -29,14 +29,14 @@ public class SourceFolderMappingDialogTest extends ContextTestCase
     @Test
     public void open_should_notify_block_with_selected_folders_when_dialog_is_confirmed() throws Exception
     {
-        SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), //
+        final SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), //
                 context.getProjectHandler().getMainSrcFolderHandler().get(), //
                 context.getProjectHandler().getTestSrcFolderHandler().get());
-        UnitSourceFolderBlock block = mock(UnitSourceFolderBlock.class);
+        final UnitSourceFolderBlock block = mock(UnitSourceFolderBlock.class);
 
-        Display display = Display.getDefault();
-        Shell dialogParent = new Shell(display);
-        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Display display = Display.getDefault();
+        final Shell dialogParent = new Shell(display);
+        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
         display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmOkButton(shell), 2000));
         try
         {
@@ -53,14 +53,14 @@ public class SourceFolderMappingDialogTest extends ContextTestCase
     @Test
     public void open_should_not_notify_block_when_dialog_is_cancelled() throws Exception
     {
-        SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), //
+        final SourceFolderMapping mapping = new SourceFolderMapping(context.getProjectHandler().get(), //
                 context.getProjectHandler().getMainSrcFolderHandler().get(), //
                 context.getProjectHandler().getTestSrcFolderHandler().get());
-        UnitSourceFolderBlock block = mock(UnitSourceFolderBlock.class);
+        final UnitSourceFolderBlock block = mock(UnitSourceFolderBlock.class);
 
-        Display display = Display.getDefault();
-        Shell dialogParent = new Shell(display);
-        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Display display = Display.getDefault();
+        final Shell dialogParent = new Shell(display);
+        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
         display.asyncExec(DialogHelper.closerFor(display, knownShells, Shell::close, 2000));
         try
         {

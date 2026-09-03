@@ -27,31 +27,31 @@ public class SearchScopeSingeltonTest {
     @Project(mainSrcFolder = "src/main/java", testSrcFolder = "src/test/java")
     @Test
     public void getSearchScope_should_cache_and_return_scope() throws CoreException {
-        SearchScopeSingelton instance = SearchScopeSingelton.getInstance();
+        final SearchScopeSingelton instance = SearchScopeSingelton.getInstance();
 
-        ProjectHandler testProject = context.getProjectHandler();
-        IPackageFragmentRoot sourceFolder = testProject.getMainSrcFolderHandler().get();
-        IPackageFragmentRoot sourceFolder2 = testProject.getTestSrcFolderHandler().get();
+        final ProjectHandler testProject = context.getProjectHandler();
+        final IPackageFragmentRoot sourceFolder = testProject.getMainSrcFolderHandler().get();
+        final IPackageFragmentRoot sourceFolder2 = testProject.getTestSrcFolderHandler().get();
 
         // First call should create scope and cache it (goes through else branch)
-        IJavaSearchScope scope1 = instance.getSearchScope(sourceFolder);
+        final IJavaSearchScope scope1 = instance.getSearchScope(sourceFolder);
         assertNotNull(scope1);
 
         // Second call should return cached scope (goes through if branch)
-        IJavaSearchScope scope2 = instance.getSearchScope(sourceFolder);
+        final IJavaSearchScope scope2 = instance.getSearchScope(sourceFolder);
         assertNotNull(scope2);
         assertSame(scope1, scope2);
 
         // A different folder should get a new scope
-        IJavaSearchScope scope3 = instance.getSearchScope(sourceFolder2);
+        final IJavaSearchScope scope3 = instance.getSearchScope(sourceFolder2);
         assertNotNull(scope3);
         assertNotSame(scope1, scope3);
     }
 
     @Test
     public void getInstance_should_return_same_instance() {
-        SearchScopeSingelton instance1 = SearchScopeSingelton.getInstance();
-        SearchScopeSingelton instance2 = SearchScopeSingelton.getInstance();
+        final SearchScopeSingelton instance1 = SearchScopeSingelton.getInstance();
+        final SearchScopeSingelton instance2 = SearchScopeSingelton.getInstance();
 
         assertNotNull(instance1);
         assertSame(instance1, instance2);
@@ -59,7 +59,7 @@ public class SearchScopeSingeltonTest {
 
     @Test
     public void resetCachedSearchScopes_should_clear_cache() {
-        SearchScopeSingelton instance = SearchScopeSingelton.getInstance();
+        final SearchScopeSingelton instance = SearchScopeSingelton.getInstance();
         instance.resetCachedSearchScopes();
     }
 }

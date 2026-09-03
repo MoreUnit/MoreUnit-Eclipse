@@ -71,7 +71,7 @@ public class MockingTemplateLoaderTest
         when(resourceLoader.getWorkspaceResourceLocation(TEMPLATE_DIRECTORY)).thenReturn("/workspace/state/path");
 
         // when
-        String location = loader.getWorkspaceTemplatesLocation();
+        final String location = loader.getWorkspaceTemplatesLocation();
 
         // then
         assertEquals("/workspace/state/path", location);
@@ -81,20 +81,20 @@ public class MockingTemplateLoaderTest
     public void should_load_from_both_bundle_and_workspace_state() throws Exception
     {
         // given
-        URL bundleUrl = URI.create("file:/bundle.url").toURL();
-        URL workspaceUrl = URI.create("file:/workspace.url").toURL();
+        final URL bundleUrl = URI.create("file:/bundle.url").toURL();
+        final URL workspaceUrl = URI.create("file:/workspace.url").toURL();
 
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(bundleUrl));
         when(resourceLoader.findWorkspaceStateResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(workspaceUrl));
 
-        MockingTemplates bundleTemplates = someTemplates();
-        MockingTemplates workspaceTemplates = someTemplates();
+        final MockingTemplates bundleTemplates = someTemplates();
+        final MockingTemplates workspaceTemplates = someTemplates();
 
         when(templateDefinitionReader.read(bundleUrl)).thenReturn(bundleTemplates);
         when(templateDefinitionReader.read(workspaceUrl)).thenReturn(workspaceTemplates);
 
         // when
-        LoadingResult result = loader.loadTemplates();
+        final LoadingResult result = loader.loadTemplates();
 
         // then
         verify(templateStore).store(bundleTemplates);
@@ -123,8 +123,8 @@ public class MockingTemplateLoaderTest
     public void should_log_error_and_add_to_invalid_templates_when_generic_exception_occurs() throws Exception
     {
         // given
-        URL definitionUrl = URI.create("file:/generic.exception.url").toURL();
-        RuntimeException genericException = new RuntimeException("generic exception");
+        final URL definitionUrl = URI.create("file:/generic.exception.url").toURL();
+        final RuntimeException genericException = new RuntimeException("generic exception");
 
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(definitionUrl));
         when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
@@ -132,7 +132,7 @@ public class MockingTemplateLoaderTest
         when(templateDefinitionReader.read(definitionUrl)).thenThrow(genericException);
 
         // when
-        LoadingResult result = loader.loadTemplates();
+        final LoadingResult result = loader.loadTemplates();
 
         // then
         verify(logger).error(anyString(), eq(genericException));
@@ -144,7 +144,7 @@ public class MockingTemplateLoaderTest
     public void should_log_error_when_template_definition_is_invalid() throws Exception
     {
         // given
-        URL invalidDefinitionUrl = URI.create("file:/invalid.definition.url").toURL();
+        final URL invalidDefinitionUrl = URI.create("file:/invalid.definition.url").toURL();
 
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(invalidDefinitionUrl));
         when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
@@ -162,7 +162,7 @@ public class MockingTemplateLoaderTest
     public void should_store_templates() throws Exception
     {
         // given
-        URL validDefinitionUrl = URI.create("file:/valid.definition.url").toURL();
+        final URL validDefinitionUrl = URI.create("file:/valid.definition.url").toURL();
 
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(validDefinitionUrl));
         when(resourceLoader.findWorkspaceStateResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(noResources);
@@ -170,7 +170,7 @@ public class MockingTemplateLoaderTest
         when(templateDefinitionReader.read(validDefinitionUrl)).thenReturn(someTemplates);
 
         // when
-        LoadingResult result = loader.loadTemplates();
+        final LoadingResult result = loader.loadTemplates();
 
         // then
         verify(templateStore).store(someTemplates);
@@ -183,11 +183,11 @@ public class MockingTemplateLoaderTest
     public void should_return_urls_of_templates_that_could_not_be_loaded_with_a_reason() throws Exception
     {
         // given
-        URL validDefinition1Url = URI.create("file:/valid.definition.1.url").toURL();
-        URL validDefinition2Url = URI.create("file:/valid.definition.2.url").toURL();
-        URL invalidDefinition1Url = URI.create("file:/invalid.definition.1.url").toURL();
-        URL invalidDefinition2Url = URI.create("file:/invalid.definition.2.url").toURL();
-        URL invalidDefinition3Url = URI.create("file:/invalid.definition.3.url").toURL();
+        final URL validDefinition1Url = URI.create("file:/valid.definition.1.url").toURL();
+        final URL validDefinition2Url = URI.create("file:/valid.definition.2.url").toURL();
+        final URL invalidDefinition1Url = URI.create("file:/invalid.definition.1.url").toURL();
+        final URL invalidDefinition2Url = URI.create("file:/invalid.definition.2.url").toURL();
+        final URL invalidDefinition3Url = URI.create("file:/invalid.definition.3.url").toURL();
 
         // some template definitions will be found in the plugin resources and
         // in the workspace resources
@@ -202,7 +202,7 @@ public class MockingTemplateLoaderTest
                 .thenThrow(someException);
 
         // when
-        LoadingResult result = loader.loadTemplates();
+        final LoadingResult result = loader.loadTemplates();
 
         // then
         assertTrue(result.invalidTemplatesFound());
@@ -213,8 +213,8 @@ public class MockingTemplateLoaderTest
     public void should_return_urls_of_templates_that_are_already_defined_with_a_reason() throws Exception
     {
         // given
-        URL existingDefinition1Url = URI.create("file:/existing.definition.1.url").toURL();
-        URL existingDefinition2Url = URI.create("file:/existing.definition.2.url").toURL();
+        final URL existingDefinition1Url = URI.create("file:/existing.definition.1.url").toURL();
+        final URL existingDefinition2Url = URI.create("file:/existing.definition.2.url").toURL();
         workspaceResourcesContainTemplateDefinitions(existingDefinition1Url, existingDefinition2Url);
 
         doThrow(new TemplateAlreadyDefinedException("templateId1"))
@@ -222,7 +222,7 @@ public class MockingTemplateLoaderTest
                 .when(templateStore).store(any(MockingTemplates.class));
 
         // when
-        LoadingResult result = loader.loadTemplates();
+        final LoadingResult result = loader.loadTemplates();
 
         // then
         assertTrue(result.invalidTemplatesFound());
@@ -233,16 +233,16 @@ public class MockingTemplateLoaderTest
     public void should_log_error_when_template_already_defined() throws Exception
     {
         // given
-        URL definitionUrl = URI.create("file:/already.defined.url").toURL();
+        final URL definitionUrl = URI.create("file:/already.defined.url").toURL();
         when(resourceLoader.findBundleResources(eq(TEMPLATE_DIRECTORY), anyString())).thenReturn(singleton(definitionUrl));
         when(resourceLoader.findWorkspaceStateResources(anyString(), anyString())).thenReturn(noResources);
 
-        TemplateAlreadyDefinedException exception = new TemplateAlreadyDefinedException("templateId");
+        final TemplateAlreadyDefinedException exception = new TemplateAlreadyDefinedException("templateId");
         when(templateDefinitionReader.read(definitionUrl)).thenReturn(someTemplates);
         doThrow(exception).when(templateStore).store(someTemplates);
 
         // when
-        LoadingResult result = loader.loadTemplates();
+        final LoadingResult result = loader.loadTemplates();
 
         // then
         verify(logger).error("Could not load template " + definitionUrl, exception);
@@ -265,7 +265,7 @@ public class MockingTemplateLoaderTest
         when(resourceLoader.findWorkspaceStateResources(eq(TEMPLATE_DIRECTORY), anyString()))
                 .thenReturn(asList(definitionUrls));
 
-        for (URL url : definitionUrls)
+        for (final URL url : definitionUrls)
         {
             when(templateDefinitionReader.read(url)).thenReturn(someTemplates());
         }

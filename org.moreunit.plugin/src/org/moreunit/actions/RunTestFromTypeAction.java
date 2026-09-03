@@ -32,7 +32,7 @@ public class RunTestFromTypeAction implements IObjectActionDelegate
     @Override
     public void selectionChanged(IAction action, ISelection selection)
     {
-        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+        final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
         type = (IType) structuredSelection.getFirstElement();
     }
 

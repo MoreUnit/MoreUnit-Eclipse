@@ -32,7 +32,7 @@ public class LanguagePageManagerTest
     @Test
     public void should_read_stream_content_as_string() throws Exception
     {
-        InputStream is = new ByteArrayInputStream("some content éà".getBytes(StandardCharsets.UTF_8));
+        final InputStream is = new ByteArrayInputStream("some content éà".getBytes(StandardCharsets.UTF_8));
 
         assertEquals("some content éà", LanguagePageManager.asString(is, "UTF-8"));
     }
@@ -40,7 +40,7 @@ public class LanguagePageManagerTest
     @Test
     public void should_return_empty_string_when_stream_is_empty() throws Exception
     {
-        InputStream is = new ByteArrayInputStream(new byte[0]);
+        final InputStream is = new ByteArrayInputStream(new byte[0]);
 
         assertEquals("", LanguagePageManager.asString(is, "UTF-8"));
     }
@@ -49,7 +49,7 @@ public class LanguagePageManagerTest
     public void should_close_stream_after_reading_it() throws Exception
     {
         final boolean[] closed = new boolean[1];
-        InputStream is = new ByteArrayInputStream("content".getBytes(StandardCharsets.UTF_8))
+        final InputStream is = new ByteArrayInputStream("content".getBytes(StandardCharsets.UTF_8))
         {
             @Override
             public void close() throws IOException
@@ -67,7 +67,7 @@ public class LanguagePageManagerTest
     @Test
     public void should_propagate_exception_when_encoding_is_unknown()
     {
-        InputStream is = new ByteArrayInputStream("content".getBytes(StandardCharsets.UTF_8));
+        final InputStream is = new ByteArrayInputStream("content".getBytes(StandardCharsets.UTF_8));
 
         assertThrows(IOException.class, () -> LanguagePageManager.asString(is, "no-such-encoding"));
     }
@@ -77,24 +77,24 @@ public class LanguagePageManagerTest
     {
         assumeTrue(PlatformUI.isWorkbenchRunning(), "Workbench is not running");
 
-        Language lang = new Language("lmo", "Lmo");
-        List<Language> languages = new ArrayList<>();
+        final Language lang = new Language("lmo", "Lmo");
+        final List<Language> languages = new ArrayList<>();
         languages.add(lang);
 
-        LanguageRepository languageRepository = mock(LanguageRepository.class);
-        Preferences preferences = mock(Preferences.class);
+        final LanguageRepository languageRepository = mock(LanguageRepository.class);
+        final Preferences preferences = mock(Preferences.class);
         when(preferences.getLanguages()).thenReturn(languages);
-        Logger logger = mock(Logger.class);
+        final Logger logger = mock(Logger.class);
 
-        LanguagePageManager pageManager = new LanguagePageManager(languageRepository, preferences, logger);
+        final LanguagePageManager pageManager = new LanguagePageManager(languageRepository, preferences, logger);
 
-        PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
-        IPreferenceNode mainNode = preferenceManager.find(PreferencePages.FEATURED_LANGUAGES);
-        IPreferenceNode otherLanguagesNode = mainNode.findSubNode(PreferencePages.OTHER_LANGUAGES);
+        final PreferenceManager preferenceManager = PlatformUI.getWorkbench().getPreferenceManager();
+        final IPreferenceNode mainNode = preferenceManager.find(PreferencePages.FEATURED_LANGUAGES);
+        final IPreferenceNode otherLanguagesNode = mainNode.findSubNode(PreferencePages.OTHER_LANGUAGES);
 
         pageManager.start();
 
-        IPreferenceNode languageNode = otherLanguagesNode.findSubNode("org.moreunit.core.preferences.page.lmo");
+        final IPreferenceNode languageNode = otherLanguagesNode.findSubNode("org.moreunit.core.preferences.page.lmo");
         assertTrue(languageNode != null, "Preference page for language should have been added");
         assertEquals("Lmo", languageNode.getLabelText());
         assertTrue(Platform.getExtensionRegistry().getExtension("org.moreunit.core.properties.page.extension.lmo") != null, //

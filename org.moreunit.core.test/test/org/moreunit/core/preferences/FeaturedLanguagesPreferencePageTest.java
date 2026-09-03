@@ -33,7 +33,7 @@ public class FeaturedLanguagesPreferencePageTest
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -54,11 +54,11 @@ public class FeaturedLanguagesPreferencePageTest
     {
         try
         {
-            Method method = findMethod(page.getClass(), "createContents", Composite.class);
+            final Method method = findMethod(page.getClass(), "createContents", Composite.class);
             method.setAccessible(true);
             return (Control) method.invoke(page, shell);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -67,10 +67,10 @@ public class FeaturedLanguagesPreferencePageTest
     @Test
     public void should_create_welcome_contents_for_preference_page()
     {
-        FeaturedLanguagesPreferencePage page = new FeaturedLanguagesPreferencePage();
+        final FeaturedLanguagesPreferencePage page = new FeaturedLanguagesPreferencePage();
         page.init(null);
 
-        Control control = createContents(page);
+        final Control control = createContents(page);
 
         assertTrue(control instanceof Composite);
         assertTrue(((Composite) control).getChildren().length > 0, "Page should contain labels");
@@ -79,12 +79,12 @@ public class FeaturedLanguagesPreferencePageTest
     @Test
     public void should_create_property_page_with_link_to_workspace_preferences()
     {
-        FeaturedLanguagesPropertyPage page = new FeaturedLanguagesPropertyPage();
+        final FeaturedLanguagesPropertyPage page = new FeaturedLanguagesPropertyPage();
 
-        Control control = createContents(page);
+        final Control control = createContents(page);
 
-        Composite composite = (Composite) control;
-        Link link = findLink(composite);
+        final Composite composite = (Composite) control;
+        final Link link = findLink(composite);
 
         assertNotNull(link, "Property page should contain a link");
         assertEquals("<A>Open workspace preferences</A>", link.getText());
@@ -92,7 +92,7 @@ public class FeaturedLanguagesPreferencePageTest
 
     private Link findLink(Composite composite)
     {
-        for (Control control : composite.getChildren())
+        for (final Control control : composite.getChildren())
         {
             if(control instanceof Link)
             {
@@ -100,7 +100,7 @@ public class FeaturedLanguagesPreferencePageTest
             }
             if(control instanceof Composite)
             {
-                Link link = findLink((Composite) control);
+                final Link link = findLink((Composite) control);
                 if(link != null)
                 {
                     return link;
@@ -118,7 +118,7 @@ public class FeaturedLanguagesPreferencePageTest
             {
                 return c.getDeclaredMethod(name, parameterTypes);
             }
-            catch (NoSuchMethodException e)
+            catch (final NoSuchMethodException e)
             {
                 c = c.getSuperclass();
             }

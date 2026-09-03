@@ -22,7 +22,7 @@ public class RunTestSWTBotTest extends JavaProjectSWTBotTestHelper
     @BeforeEach
     public void closeEditors()
     {
-        for (SWTBotEditor editor : bot.editors())
+        for (final SWTBotEditor editor : bot.editors())
         {
             editor.close();
         }
@@ -38,7 +38,7 @@ public class RunTestSWTBotTest extends JavaProjectSWTBotTestHelper
                     testClassNameTemplate = "${srcFile}Test"))
     public void should_launch_corresponding_test_when_run_shortcut_pressed_in_cut()
     {
-        int launchesBefore = DebugPlugin.getDefault().getLaunchManager().getLaunches().length;
+        final int launchesBefore = DebugPlugin.getDefault().getLaunchManager().getLaunches().length;
 
         openResource("Calculator.java");
         // ensure the editor has focus before pressing the shortcut
@@ -52,7 +52,7 @@ public class RunTestSWTBotTest extends JavaProjectSWTBotTestHelper
             @Override
             public boolean test() throws Exception
             {
-                ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
+                final ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
                 return launches.length > launchesBefore;
             }
 

@@ -14,7 +14,7 @@ public class TestMethodDivinerNoPraefix implements TestMethodDiviner
     {
         // Performance optimization: Replaced regex-based replaceFirst with
         // faster manual indexOf and substring extraction for literal replacement.
-        int index = testMethodName.indexOf(methodNameBeforeRename);
+        final int index = testMethodName.indexOf(methodNameBeforeRename);
         if (index != -1) {
             return testMethodName.substring(0, index) + methodNameAfterRename + testMethodName.substring(index + methodNameBeforeRename.length());
         }

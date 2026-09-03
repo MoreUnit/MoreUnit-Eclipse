@@ -22,7 +22,7 @@ public class ContainerCreationRecord
 
     public void cancelCreationOfFoldersThatAreNotAncestorsOf(Resource resource)
     {
-        ResourceContainer ancestor = findGreatestNonAncestorOf(resource);
+        final ResourceContainer ancestor = findGreatestNonAncestorOf(resource);
 
         if(ancestor != null)
         {
@@ -33,7 +33,7 @@ public class ContainerCreationRecord
     private ResourceContainer findGreatestNonAncestorOf(Resource resource)
     {
         ResourceContainer ancestor = null;
-        for (ResourceContainer container : createdContainers)
+        for (final ResourceContainer container : createdContainers)
         {
             if(container.isParentOf(resource))
             {

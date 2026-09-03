@@ -51,7 +51,7 @@ public class SetterInjectionPatternResolverTest
         dependencies.injectableBySetter().add(new SetterDependency("pack.age.Foo", "setFoo"));
 
         // when
-        String resolvedPattern = resolver.resolve("pre ${:setDependency(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:setDependency(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre ${objectUnderTest}.setFoo(foo) post");
@@ -66,7 +66,7 @@ public class SetterInjectionPatternResolverTest
         dependencies.injectableBySetter().add(new SetterDependency("BlobClass", "setABlob"));
 
         // when
-        String resolvedPattern = resolver.resolve("pre ${:setDependency(objectUnderTest, dependency)} post");
+        final String resolvedPattern = resolver.resolve("pre ${:setDependency(objectUnderTest, dependency)} post");
 
         // then
         assertEquals(resolvedPattern, "pre ${objectUnderTest}.setFoo(foo) post" +

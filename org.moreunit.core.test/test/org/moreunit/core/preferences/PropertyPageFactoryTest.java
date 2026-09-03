@@ -13,7 +13,7 @@ public class PropertyPageFactoryTest
     private String languageId;
     private String description;
 
-    private PropertyPageFactory factory = new PropertyPageFactory()
+    private final PropertyPageFactory factory = new PropertyPageFactory()
     {
         @Override
         protected GenericPropertyPage createPage(String langId, String desc)

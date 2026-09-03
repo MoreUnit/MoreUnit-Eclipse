@@ -38,7 +38,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
     @Override
     public void delete()
     {
-        for (Resource child : children())
+        for (final Resource child : children())
         {
             child.delete();
         }
@@ -47,7 +47,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     private Iterable<Resource> children()
     {
-        Collection<Resource> children = new HashSet<>();
+        final Collection<Resource> children = new HashSet<>();
         children.addAll(files.values());
         children.addAll(folders.values());
         return children;
@@ -70,14 +70,14 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
             return getRelativeFile(fileRelativePath);
         }
 
-        InMemoryResourceContainer container = findResourceContainer(fileRelativePath.withoutLastSegment());
+        final InMemoryResourceContainer container = findResourceContainer(fileRelativePath.withoutLastSegment());
         return container.getFile(fileRelativePath.getBaseName());
     }
 
     private InMemoryResourceContainer findResourceContainer(Path relativePath)
     {
         InMemoryResourceContainer container = this;
-        for (String segment : relativePath)
+        for (final String segment : relativePath)
         {
             container = container.getFolder(segment);
         }
@@ -91,7 +91,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     private InMemoryFile getRelativeFile(Path fileRelativePath)
     {
-        String fileName = fileRelativePath.getBaseName();
+        final String fileName = fileRelativePath.getBaseName();
         InMemoryFile file = files.get(fileName);
         if(file == null)
         {
@@ -105,7 +105,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     private void checkThatNoFolderExistsWithName(String name)
     {
-        Folder maybeExistingFolder = folders.get(name);
+        final Folder maybeExistingFolder = folders.get(name);
         if(maybeExistingFolder != null && maybeExistingFolder.exists())
         {
             throw new ResourceException("a folder already exists at this path");
@@ -129,13 +129,13 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
             return getRelativeFolder(folderRelativePath);
         }
 
-        InMemoryResourceContainer container = findResourceContainer(folderRelativePath.withoutLastSegment());
+        final InMemoryResourceContainer container = findResourceContainer(folderRelativePath.withoutLastSegment());
         return container.getFolder(folderRelativePath.getBaseName());
     }
 
     private InMemoryFolder getRelativeFolder(Path folderRelativePath)
     {
-        String folderName = folderRelativePath.getBaseName();
+        final String folderName = folderRelativePath.getBaseName();
         InMemoryFolder folder = folders.get(folderName);
         if(folder == null)
         {
@@ -149,7 +149,7 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     private void checkThatNoFileExistsWithName(String name)
     {
-        File maybeExistingFile = files.get(name);
+        final File maybeExistingFile = files.get(name);
         if(maybeExistingFile != null && maybeExistingFile.exists())
         {
             throw new ResourceException("a file already exists at this path");
@@ -178,8 +178,8 @@ abstract class InMemoryResourceContainer extends InMemoryResource implements Res
 
     protected final <T extends Resource> List< ? extends T> keepIfExists(Collection<T> resources)
     {
-        List<T> result = new ArrayList<>(resources.size());
-        for (T resource : resources)
+        final List<T> result = new ArrayList<>(resources.size());
+        for (final T resource : resources)
         {
             if(resource.exists())
                 result.add(resource);

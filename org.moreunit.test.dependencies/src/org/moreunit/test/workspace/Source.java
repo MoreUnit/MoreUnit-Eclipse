@@ -46,7 +46,7 @@ public class Source
 
     private String loadSource(Class< ? > loadingClass, String sourceLocation)
     {
-        InputStream resourceAsStream = loadingClass.getResourceAsStream(sourceLocation.trim());
+        final InputStream resourceAsStream = loadingClass.getResourceAsStream(sourceLocation.trim());
         if (resourceAsStream == null) {
             return null;
         }
@@ -60,12 +60,12 @@ public class Source
     {
         if(compilationUnit == null)
         {
-            String src = getSource();
+            final String src = getSource();
 
-            String packageName = extract(src, PACKAGE_PATTERN);
-            String className = extract(src, CLASSNAME_PATTERN);
+            final String packageName = extract(src, PACKAGE_PATTERN);
+            final String className = extract(src, CLASSNAME_PATTERN);
 
-            IPackageFragment packageFragment = WorkspaceHelper.createNewPackageInSourceFolder(sourceFolderHandler.get(), packageName);
+            final IPackageFragment packageFragment = WorkspaceHelper.createNewPackageInSourceFolder(sourceFolderHandler.get(), packageName);
             compilationUnit = WorkspaceHelper.createJavaClass(packageFragment, className).getCompilationUnit();
 
             setSource(compilationUnit, src);
@@ -76,7 +76,7 @@ public class Source
 
     String extract(String src, Pattern pattern)
     {
-        Matcher matcher = pattern.matcher(src);
+        final Matcher matcher = pattern.matcher(src);
         if(! matcher.matches())
         {
             throw new RuntimeException("Could not match pattern <%s> in file <%s>".formatted(pattern.pattern(), location));
@@ -86,12 +86,12 @@ public class Source
 
     private void setSource(ICompilationUnit cu, String source) throws JavaModelException
     {
-        NullProgressMonitor progressMonitor = new NullProgressMonitor();
+        final NullProgressMonitor progressMonitor = new NullProgressMonitor();
         if(! cu.isOpen())
         {
             cu.open(progressMonitor);
         }
-        ICompilationUnit wc = cu.getWorkingCopy(progressMonitor);
+        final ICompilationUnit wc = cu.getWorkingCopy(progressMonitor);
 
         wc.getBuffer().setContents(source);
         wc.commitWorkingCopy(false, progressMonitor);

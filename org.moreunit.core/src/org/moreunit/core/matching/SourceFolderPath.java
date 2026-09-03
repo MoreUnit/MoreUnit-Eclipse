@@ -51,7 +51,7 @@ public class SourceFolderPath
             return path;
         }
         int i = 0;
-        for (String s : path)
+        for (final String s : path)
         {
             if(s.endsWith("[^") || s.contains("*"))
             {
@@ -64,7 +64,7 @@ public class SourceFolderPath
 
     public Resource getResolvedPartAsResource()
     {
-        Path part = getResolvedPart();
+        final Path part = getResolvedPart();
         if(part.getSegmentCount() == 1)
         {
             return workspace.getProject(part.getProjectName());
@@ -97,8 +97,8 @@ public class SourceFolderPath
 
     public ContainerCreationRecord createResolvedPartIfItDoesNotExist()
     {
-        Resource resolvedPart = getResolvedPartAsResource();
-        if(resolvedPart instanceof Folder folder && ! resolvedPart.exists())
+        final Resource resolvedPart = getResolvedPartAsResource();
+        if(resolvedPart instanceof final Folder folder && ! resolvedPart.exists())
         {
             return folder.createWithRecord();
         }

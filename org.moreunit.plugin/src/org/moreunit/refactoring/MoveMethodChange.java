@@ -16,9 +16,9 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 public class MoveMethodChange extends Change
 {
 
-    private IType sourceType;
-    private IType destinationType;
-    private IMethod methodToMove;
+    private final IType sourceType;
+    private final IType destinationType;
+    private final IMethod methodToMove;
     
     
     public MoveMethodChange(IType sourceType, IType destinationType, IMethod methodToMove)

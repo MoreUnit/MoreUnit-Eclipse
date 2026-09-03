@@ -46,7 +46,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
             return languagePrefWriters.get(language);
         }
 
-        LanguagePreferencesWriter writer = new LanguagePreferencesWriter(language, this);
+        final LanguagePreferencesWriter writer = new LanguagePreferencesWriter(language, this);
         languagePrefWriters.put(language, writer);
 
         return writer;
@@ -72,7 +72,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
 
         if(hasPreferencesForLanguage(language))
         {
-            LanguagePreferencesReader reader = new LanguagePreferencesReader(language, defaults, this);
+            final LanguagePreferencesReader reader = new LanguagePreferencesReader(language, defaults, this);
             languagePrefReaders.put(language, reader);
             return reader;
         }
@@ -106,8 +106,8 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         int idx = languages.indexOf(language);
         while (idx != -1)
         {
-            boolean startBoundary = (idx == 0 || languages.charAt(idx - 1) == ',');
-            boolean endBoundary = (idx + language.length() == languages.length() || languages.charAt(idx + language.length()) == ',');
+            final boolean startBoundary = (idx == 0 || languages.charAt(idx - 1) == ',');
+            final boolean endBoundary = (idx + language.length() == languages.length() || languages.charAt(idx + language.length()) == ',');
 
             if (startBoundary && endBoundary)
             {
@@ -150,8 +150,8 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         int idx = languages.indexOf(language);
         while (idx != -1)
         {
-            boolean startBoundary = (idx == 0 || languages.charAt(idx - 1) == ',');
-            boolean endBoundary = (idx + language.length() == languages.length() || languages.charAt(idx + language.length()) == ',');
+            final boolean startBoundary = (idx == 0 || languages.charAt(idx - 1) == ',');
+            final boolean endBoundary = (idx + language.length() == languages.length() || languages.charAt(idx + language.length()) == ',');
 
             if (startBoundary && endBoundary)
             {
@@ -192,7 +192,7 @@ public class ProjectPreferences implements WriteablePreferences, ReadablePrefere
         {
             store.save();
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             logger.error("Could not save preferences for project: " + project.getName(), e);
         }

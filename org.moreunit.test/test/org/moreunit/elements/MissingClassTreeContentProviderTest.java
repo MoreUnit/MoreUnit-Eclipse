@@ -32,13 +32,13 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     @Test
     public void should_not_throw_exception_but_return_null_when_java_model_exception_occurs() throws JavaModelException
     {
-        MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
-        IPackageFragment mockFragment = mock(IPackageFragment.class);
+        final MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
+        final IPackageFragment mockFragment = mock(IPackageFragment.class);
         when(mockFragment.getCompilationUnits()).thenThrow(new JavaModelException(new RuntimeException("Test exception"), 1));
 
         Object[] result = null;
         try (MockedStatic<LogHandler> logHandlerMock = mockStatic(LogHandler.class)) {
-            LogHandler mockHandler = mock(LogHandler.class);
+            final LogHandler mockHandler = mock(LogHandler.class);
             logHandlerMock.when(LogHandler::getInstance).thenReturn(mockHandler);
             result = provider.getChildren(mockFragment);
         }
@@ -57,11 +57,11 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     {
         context.getProjectHandler().getMainSrcFolderHandler().createClass("org.Isolated");
 
-        IPackageFragment orgPackage = getPackageFragment("org");
+        final IPackageFragment orgPackage = getPackageFragment("org");
 
-        Object[] children = new MissingClassTreeContentProvider().getChildren(orgPackage);
+        final Object[] children = new MissingClassTreeContentProvider().getChildren(orgPackage);
 
-        List<String> names = Arrays.stream(children).map(Object::toString).collect(Collectors.toList());
+        final List<String> names = Arrays.stream(children).map(Object::toString).collect(Collectors.toList());
         assertEquals(1, children.length);
         assertTrue(names.get(0).startsWith("Isolated.java"));
     }
@@ -71,10 +71,10 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     {
         context.getProjectHandler().getMainSrcFolderHandler().createClass("org.Isolated");
 
-        MissingTestsViewPart viewPart = mock(MissingTestsViewPart.class);
+        final MissingTestsViewPart viewPart = mock(MissingTestsViewPart.class);
         when(viewPart.getSelectedJavaProject()).thenReturn(context.getProjectHandler().get());
 
-        Object[] elements = new MissingClassTreeContentProvider().getElements(viewPart);
+        final Object[] elements = new MissingClassTreeContentProvider().getElements(viewPart);
 
         assertEquals(1, elements.length);
         assertEquals("org", ((IPackageFragment) elements[0]).getElementName());
@@ -83,7 +83,7 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     @Test
     public void getElements_should_return_no_element_when_no_project_is_selected() throws Exception
     {
-        MissingTestsViewPart viewPart = mock(MissingTestsViewPart.class);
+        final MissingTestsViewPart viewPart = mock(MissingTestsViewPart.class);
         when(viewPart.getSelectedJavaProject()).thenReturn(null);
 
         assertEquals(0, new MissingClassTreeContentProvider().getElements(viewPart).length);
@@ -100,10 +100,10 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     {
         context.getProjectHandler().getMainSrcFolderHandler().createClass("org.Isolated");
 
-        IPackageFragment orgPackage = getPackageFragment("org");
-        ICompilationUnit unit = orgPackage.getCompilationUnit("Isolated.java");
+        final IPackageFragment orgPackage = getPackageFragment("org");
+        final ICompilationUnit unit = orgPackage.getCompilationUnit("Isolated.java");
 
-        MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
+        final MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
         assertEquals(orgPackage, provider.getParent(unit));
         assertNull(provider.getParent(orgPackage));
         assertNull(provider.getParent(new Object()));
@@ -112,7 +112,7 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     @Test
     public void hasChildren_should_return_true_for_anything_but_compilation_units()
     {
-        MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
+        final MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
         assertTrue(provider.hasChildren(new Object()));
         assertFalse(provider.hasChildren(mock(ICompilationUnit.class)));
     }
@@ -120,17 +120,17 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
     @Test
     public void dispose_and_inputChanged_should_do_nothing()
     {
-        MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
+        final MissingClassTreeContentProvider provider = new MissingClassTreeContentProvider();
         provider.dispose();
         provider.inputChanged(null, null, null);
     }
 
     private IPackageFragment getPackageFragment(String packageName) throws JavaModelException
     {
-        IJavaProject project = context.getProjectHandler().get();
-        for (IPackageFragmentRoot root : PluginTools.getAllSourceFolderFromProject(project))
+        final IJavaProject project = context.getProjectHandler().get();
+        for (final IPackageFragmentRoot root : PluginTools.getAllSourceFolderFromProject(project))
         {
-            IPackageFragment packageFragment = root.getPackageFragment(packageName);
+            final IPackageFragment packageFragment = root.getPackageFragment(packageName);
             if(packageFragment.exists())
                 return packageFragment;
         }

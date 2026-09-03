@@ -86,17 +86,17 @@ public class CreateTestMethodActionExecutor
 
     public void executeCreateTestMethodAction(IEditorPart editorPart)
     {
-        EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
-        ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
-        IMethod originalMethod = editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition();
+        final EditorPartFacade editorPartFacade = new EditorPartFacade(editorPart);
+        final ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+        final IMethod originalMethod = editorPartFacade.getFirstNonAnonymousMethodSurroundingCursorPosition();
         Jobs.waitForIndexExecuteAndRunInUI("Create test method ... ", () -> {
             // Creates an intermediate object to clarify code that follows
-            CreationContext context = createContext(compilationUnit);
+            final CreationContext context = createContext(compilationUnit);
             if(context != null)
             {
                 // Creates test method template
-                ProjectPreferences prefs = preferences.getProjectView(editorPartFacade.getJavaProject());
-                TestmethodCreator creator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(compilationUnit, context.testCaseUnit).testCaseJustCreated(context.newTestClassCreated).testType(prefs.getTestType()).generateComments(prefs.shouldGenerateCommentsForTestMethod()).defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
+                final ProjectPreferences prefs = preferences.getProjectView(editorPartFacade.getJavaProject());
+                final TestmethodCreator creator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(compilationUnit, context.testCaseUnit).testCaseJustCreated(context.newTestClassCreated).testType(prefs.getTestType()).generateComments(prefs.shouldGenerateCommentsForTestMethod()).defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
 
                 return creator.createTestMethod(originalMethod);
             }
@@ -108,7 +108,7 @@ public class CreateTestMethodActionExecutor
             }
             else if(creationResult.methodCreated())
             {
-                IMethod createdMethod = creationResult.getMethod();
+                final IMethod createdMethod = creationResult.getMethod();
 
                 editorUI.open(createdMethod);
 
@@ -117,7 +117,7 @@ public class CreateTestMethodActionExecutor
                     markMethodSuffix(editorPartFacade, createdMethod);
                 }
 
-                if(editorPart instanceof ITextEditor textEditor)
+                if(editorPart instanceof final ITextEditor textEditor)
                 {
                     MoreUnitAnnotationModel.updateAnnotations(textEditor);
                 }
@@ -133,8 +133,8 @@ public class CreateTestMethodActionExecutor
         }
         else
         {
-            ClassTypeFacade classUnderTest = new ClassTypeFacade(currentlyEditedUnit);
-            CorrespondingTestCase testCase = classUnderTest.getOneCorrespondingTestCase(true);
+            final ClassTypeFacade classUnderTest = new ClassTypeFacade(currentlyEditedUnit);
+            final CorrespondingTestCase testCase = classUnderTest.getOneCorrespondingTestCase(true);
 
             // if the user cancels the test case selection wizard
             if(! testCase.found())
@@ -147,19 +147,19 @@ public class CreateTestMethodActionExecutor
 
     private void markMethodSuffix(EditorPartFacade testCaseTypeFacade, IMethod newMethod)
     {
-        ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
+        final ISelectionProvider selectionProvider = testCaseTypeFacade.getEditorPart().getSite().getSelectionProvider();
 
         ISelection exactSelection = null;
         try
         {
-            ISourceRange range = newMethod.getNameRange();
-            int offset = range.getOffset();
-            int length = range.getLength();
+            final ISourceRange range = newMethod.getNameRange();
+            final int offset = range.getOffset();
+            final int length = range.getLength();
 
-            int suffixLength = MoreUnitContants.SUFFIX_NAME.length();
+            final int suffixLength = MoreUnitContants.SUFFIX_NAME.length();
             exactSelection = new TextSelection(offset + length - suffixLength, suffixLength);
         }
-        catch (JavaModelException exc)
+        catch (final JavaModelException exc)
         {
             LogHandler.getInstance().handleExceptionLog(exc);
         }

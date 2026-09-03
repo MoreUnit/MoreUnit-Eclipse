@@ -13,10 +13,10 @@ public class NoDependenciesToMockExceptionTest
     @Test
     public void should_throw_exception_for_class_with_no_dependencies()
     {
-        IType classUnderTest = mock(IType.class);
+        final IType classUnderTest = mock(IType.class);
         when(classUnderTest.getElementName()).thenReturn("MyClass");
 
-        NoDependenciesToMockException exception = new NoDependenciesToMockException(classUnderTest);
+        final NoDependenciesToMockException exception = new NoDependenciesToMockException(classUnderTest);
 
         assertNotNull(exception);
         // message contains class name

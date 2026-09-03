@@ -22,7 +22,7 @@ public class SetterDependencyTest
     @Test
     public void should_extract_name_from_setter_method()
     {
-        SetterDependency dep = new SetterDependency("com.example.MyService", "setMyService");
+        final SetterDependency dep = new SetterDependency("com.example.MyService", "setMyService");
         assertEquals("myService", dep.name);
         assertEquals("setMyService", dep.setterMethodName);
     }
@@ -30,7 +30,7 @@ public class SetterDependencyTest
     @Test
     public void should_handle_uppercase_after_set_prefix()
     {
-        SetterDependency dep = new SetterDependency("com.example.Foo", "setURLHandler");
+        final SetterDependency dep = new SetterDependency("com.example.Foo", "setURLHandler");
         assertEquals("uRLHandler", dep.name);
     }
 

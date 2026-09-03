@@ -96,7 +96,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		getShortcutStrategy().pressRenameShortcut();
 		bot.textWithLabel("New name:").setText("AnyClass");
 		bot.button("Finish").click();
-		SWTBotShell renameDialog = bot.activeShell();
+		final SWTBotShell renameDialog = bot.activeShell();
 		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(renameDialog), 20000);
 	}
 
@@ -123,7 +123,7 @@ public class RenameClassTest extends JavaProjectSWTBotTestHelper
 		getShortcutStrategy().pressRenameShortcut();
 		bot.textWithLabel("New name:").setText("AnyClass");
 		bot.button("Finish").click();
-		SWTBotShell renameDialog = bot.activeShell();
+		final SWTBotShell renameDialog = bot.activeShell();
 		bot.waitUntil(org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses(renameDialog), 20000);
 	}
 

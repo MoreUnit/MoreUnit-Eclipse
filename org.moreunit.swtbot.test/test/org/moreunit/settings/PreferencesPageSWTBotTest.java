@@ -24,12 +24,12 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
     @org.junit.jupiter.api.BeforeEach
     public void prepareWorkbench()
     {
-        try { bot.shell("Preferences").close(); } catch (Exception e) { }
+        try { bot.shell("Preferences").close(); } catch (final Exception e) { }
         try
         {
             selectAndReturnJavaProjectFromPackageExplorer();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
         }
     }
@@ -70,7 +70,7 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
         bot.waitUntil(new DefaultCondition() {
             @Override public boolean test() {
                 try { return bot.tree().getTreeItem("MoreUnit") != null; }
-                catch (Exception e) { return false; }
+                catch (final Exception e) { return false; }
             }
             @Override public String getFailureMessage() {
                 return "MoreUnit not found in Preferences tree";
@@ -83,7 +83,7 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
         bot.waitUntil(new DefaultCondition() {
             @Override public boolean test() {
                 try { return bot.label("Pattern:").isVisible(); }
-                catch (Exception e) { return false; }
+                catch (final Exception e) { return false; }
             }
             @Override public String getFailureMessage() {
                 return "Java page did not show pattern field";
@@ -93,8 +93,8 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
 
     private boolean isMessageVisible(String text)
     {
-        try { return bot.label(text).isVisible(); } catch (Exception e) { }
-        try { return bot.clabel(text).isVisible(); } catch (Exception e) { }
+        try { return bot.label(text).isVisible(); } catch (final Exception e) { }
+        try { return bot.clabel(text).isVisible(); } catch (final Exception e) { }
         return false;
     }
 
@@ -112,7 +112,7 @@ public class PreferencesPageSWTBotTest extends JavaProjectSWTBotTestHelper
             }, timeoutMs);
             return true;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             // On Eclipse 4.x Windows, the validation message might not be rendered as a discoverable widget
             return false;

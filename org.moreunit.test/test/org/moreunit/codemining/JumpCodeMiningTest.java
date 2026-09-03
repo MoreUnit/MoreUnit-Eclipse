@@ -30,7 +30,7 @@ public class JumpCodeMiningTest extends ContextTestCase
     @AfterEach
     public void closeOpenedEditors()
     {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         if(page != null)
         {
             page.closeAllEditors(false);
@@ -39,28 +39,28 @@ public class JumpCodeMiningTest extends ContextTestCase
 
     private void resolve(JumpCodeMining mining) throws Exception
     {
-        java.lang.reflect.Method doResolve = JumpCodeMining.class.getDeclaredMethod("doResolve", ITextViewer.class, org.eclipse.core.runtime.IProgressMonitor.class);
+        final java.lang.reflect.Method doResolve = JumpCodeMining.class.getDeclaredMethod("doResolve", ITextViewer.class, org.eclipse.core.runtime.IProgressMonitor.class);
         doResolve.setAccessible(true);
         ((java.util.concurrent.CompletableFuture< ? >) doResolve.invoke(mining, mock(ITextViewer.class), new NullProgressMonitor())).join();
     }
 
     private JumpCodeMining miningFor(IJavaElement element) throws Exception
     {
-        ICompilationUnit compilationUnit = ((IType) element).getCompilationUnit();
-        IDocument document = new org.eclipse.jface.text.Document(compilationUnit.getSource());
+        final ICompilationUnit compilationUnit = ((IType) element).getCompilationUnit();
+        final IDocument document = new org.eclipse.jface.text.Document(compilationUnit.getSource());
         return new JumpCodeMining(element, document, mock(ICodeMiningProvider.class));
     }
 
     private JumpCodeMining miningFor(IMethod method) throws Exception
     {
-        IDocument document = new org.eclipse.jface.text.Document(method.getCompilationUnit().getSource());
+        final IDocument document = new org.eclipse.jface.text.Document(method.getCompilationUnit().getSource());
         return new JumpCodeMining(method, document, mock(ICodeMiningProvider.class));
     }
 
     @Test
     public void doResolve_should_propose_jump_to_test_class_when_it_exists() throws Exception
     {
-        JumpCodeMining mining = miningFor(context.getPrimaryTypeHandler("org.SomeClass").get());
+        final JumpCodeMining mining = miningFor(context.getPrimaryTypeHandler("org.SomeClass").get());
         resolve(mining);
 
         assertEquals(" Jump to test class", mining.getLabel());
@@ -69,8 +69,8 @@ public class JumpCodeMiningTest extends ContextTestCase
     @Test
     public void doResolve_should_not_propose_jump_when_class_has_no_test_case() throws Exception
     {
-        IType typeWithoutTest = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.ClassWithoutTest").get();
-        JumpCodeMining mining = miningFor(typeWithoutTest);
+        final IType typeWithoutTest = context.getProjectHandler().getMainSrcFolderHandler().createClass("org.ClassWithoutTest").get();
+        final JumpCodeMining mining = miningFor(typeWithoutTest);
         resolve(mining);
 
         assertEquals("", mining.getLabel());
@@ -79,7 +79,7 @@ public class JumpCodeMiningTest extends ContextTestCase
     @Test
     public void doResolve_should_propose_jump_to_tested_class_when_type_is_a_test_case() throws Exception
     {
-        JumpCodeMining mining = miningFor(context.getPrimaryTypeHandler("org.SomeClassTest").get());
+        final JumpCodeMining mining = miningFor(context.getPrimaryTypeHandler("org.SomeClassTest").get());
         resolve(mining);
 
         assertEquals(" Jump to tested class", mining.getLabel());
@@ -88,10 +88,10 @@ public class JumpCodeMiningTest extends ContextTestCase
     @Test
     public void doResolve_should_propose_jump_to_test_method_when_it_exists() throws Exception
     {
-        IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
+        final IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void testGetNumberOne()", "new SomeClass().getNumberOne();");
 
-        JumpCodeMining mining = miningFor(method);
+        final JumpCodeMining mining = miningFor(method);
         resolve(mining);
 
         assertEquals(" Jump to test method", mining.getLabel());
@@ -100,9 +100,9 @@ public class JumpCodeMiningTest extends ContextTestCase
     @Test
     public void doResolve_should_not_propose_jump_when_method_has_no_test() throws Exception
     {
-        IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberTwo()", "return 2;").get();
+        final IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberTwo()", "return 2;").get();
 
-        JumpCodeMining mining = miningFor(method);
+        final JumpCodeMining mining = miningFor(method);
         resolve(mining);
 
         assertEquals("", mining.getLabel());
@@ -111,20 +111,20 @@ public class JumpCodeMiningTest extends ContextTestCase
     @Test
     public void getAction_should_jump_to_the_corresponding_test_method() throws Exception
     {
-        IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
+        final IMethod method = context.getPrimaryTypeHandler("org.SomeClass").addMethod("public int getNumberOne()", "return 1;").get();
         context.getPrimaryTypeHandler("org.SomeClassTest").addMethod("public void testGetNumberOne()", "new SomeClass().getNumberOne();");
 
-        JumpCodeMining mining = miningFor(method);
+        final JumpCodeMining mining = miningFor(method);
         mining.getAction().accept(null);
 
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        long deadline = System.currentTimeMillis() + 30_000;
+        final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final long deadline = System.currentTimeMillis() + 30_000;
         while (System.currentTimeMillis() < deadline)
         {
             while (Display.getDefault().readAndDispatch())
             {
             }
-            IEditorPart editor = page.getActiveEditor();
+            final IEditorPart editor = page.getActiveEditor();
             if(editor != null && "SomeClassTest.java".equals(editor.getEditorInput().getName()))
             {
                 return;

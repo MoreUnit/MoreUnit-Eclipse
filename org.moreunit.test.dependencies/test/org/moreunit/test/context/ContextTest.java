@@ -14,10 +14,10 @@ public class ContextTest extends ContextTestCase
     @Test
     public void should_use_properties_when_annotated_with_properties()
     {
-        org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
+        final org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         assertTrue(prefs.hasProjectSpecificSettings(context.getProjectHandler().get()));
 
-        String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
+        final String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
         assertEquals(prefix, "tseT");
     }
 
@@ -25,10 +25,10 @@ public class ContextTest extends ContextTestCase
     @Test
     public void should_use_preferences_when_not_annotated_with_properties()
     {
-        org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
+        final org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
         assertFalse(prefs.hasProjectSpecificSettings(context.getProjectHandler().get()));
 
-        String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
+        final String prefix = prefs.getTestPackagePrefix(context.getProjectHandler().get());
         assertEquals(prefix, "Test");
     }
 
@@ -45,8 +45,8 @@ public class ContextTest extends ContextTestCase
     @Test
     public void should_read_preferences_from_annotation()
     {
-        org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
-        IJavaProject javaProject = context.getProjectHandler().get();
+        final org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
+        final IJavaProject javaProject = context.getProjectHandler().get();
         assertTrue(prefs.getMethodSearchMode(javaProject).searchByCall);
         assertFalse(prefs.getMethodSearchMode(javaProject).searchByName);
         assertEquals(prefs.getTestMethodType(javaProject), "testMethodTypeJunit3");
@@ -70,8 +70,8 @@ public class ContextTest extends ContextTestCase
     @Test
     public void should_read_properties_from_annotation()
     {
-        org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
-        IJavaProject javaProject = context.getProjectHandler().get();
+        final org.moreunit.preferences.Preferences prefs = org.moreunit.preferences.Preferences.getInstance();
+        final IJavaProject javaProject = context.getProjectHandler().get();
         assertTrue(prefs.getMethodSearchMode(javaProject).searchByCall);
         assertFalse(prefs.getMethodSearchMode(javaProject).searchByName);
         assertEquals(prefs.getTestMethodType(javaProject), "testMethodTypeJunit3");

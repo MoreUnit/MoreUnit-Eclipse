@@ -40,8 +40,8 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
     @Override
     public void createPartControl(Composite parent)
     {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout(1, true);
+        final Composite composite = new Composite(parent, SWT.NONE);
+        final GridLayout layout = new GridLayout(1, true);
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -78,8 +78,8 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
     @Override
     public void widgetSelected(SelectionEvent e)
     {
-        String projectName = ((Combo) e.getSource()).getText();
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        final String projectName = ((Combo) e.getSource()).getText();
+        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
         selectedJavaProject = JavaCore.create(project);
         treeViewer.refresh();
         treeViewer.expandAll();
@@ -93,15 +93,15 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
     @Override
     public void doubleClick(DoubleClickEvent event)
     {
-        ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
-        Object firstElement = selection.getFirstElement();
-        if(firstElement instanceof ICompilationUnit compilationUnit)
+        final ITreeSelection selection = (ITreeSelection) this.treeViewer.getSelection();
+        final Object firstElement = selection.getFirstElement();
+        if(firstElement instanceof final ICompilationUnit compilationUnit)
         {
             new EditorUI().open(compilationUnit);
         }
         else
         {
-            PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+            final PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
             part.selectAndReveal(firstElement);
             part.setFocus();
         }
@@ -126,8 +126,8 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         if((event.getType() != IResourceChangeEvent.POST_CHANGE) || (selectedJavaProject == null))
             return;
 
-        IResourceDelta delta = event.getDelta();
-        IResourceDelta projectDelta = delta.findMember(selectedJavaProject.getPath());
+        final IResourceDelta delta = event.getDelta();
+        final IResourceDelta projectDelta = delta.findMember(selectedJavaProject.getPath());
         if(projectDelta == null)
         {
             checkNewProject(delta);
@@ -135,69 +135,51 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
         }
 
         final ArrayList<IResource> addedOrRemovedResource = new ArrayList<>();
-        IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
-        {
-            @Override
-            public boolean visit(IResourceDelta delta) throws CoreException
+        final IResourceDeltaVisitor visitor = delta1 -> {
+            if(delta1.getKind() == IResourceDelta.ADDED || delta1.getKind() == IResourceDelta.REMOVED)
             {
-                if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)
+                if(delta1.getResource().getType() == IResource.FILE && "java".equals(delta1.getResource().getFileExtension()))
                 {
-                    if(delta.getResource().getType() == IResource.FILE && "java".equals(delta.getResource().getFileExtension()))
-                    {
-                        addedOrRemovedResource.add(delta.getResource());
-                    }
+                    addedOrRemovedResource.add(delta1.getResource());
                 }
-                return true;
             }
+            return true;
         };
 
         try
         {
             projectDelta.accept(visitor);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             e.printStackTrace();
         }
 
         if(! addedOrRemovedResource.isEmpty())
         {
-            PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
-            {
-
-                @Override
-                public void run()
-                {
-                    treeViewer.refresh();
-                }
-            });
+            PlatformUI.getWorkbench().getDisplay().asyncExec(() -> treeViewer.refresh());
         }
     }
 
     private void checkNewProject(IResourceDelta delta)
     {
         final ArrayList<IResource> addedProjects = new ArrayList<>();
-        IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
-        {
-            @Override
-            public boolean visit(IResourceDelta delta) throws CoreException
+        final IResourceDeltaVisitor visitor = delta1 -> {
+            if(delta1.getKind() == IResourceDelta.ADDED || delta1.getKind() == IResourceDelta.REMOVED)
             {
-                if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)
+                if(delta1.getResource().getType() == IResource.PROJECT)
                 {
-                    if(delta.getResource().getType() == IResource.PROJECT)
-                    {
-                        addedProjects.add(delta.getResource());
-                    }
+                    addedProjects.add(delta1.getResource());
                 }
-                return true;
             }
+            return true;
         };
 
         try
         {
             delta.accept(visitor);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             e.printStackTrace();
         }
@@ -210,14 +192,7 @@ public class MissingTestsViewPart extends ViewPart implements SelectionListener,
 
     protected void updateProjectsInComboBox()
     {
-        PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                projectComboBox.setItems(getNamesOfJavaProjects());
-            }
-        });
+        PlatformUI.getWorkbench().getDisplay().asyncExec(() -> projectComboBox.setItems(getNamesOfJavaProjects()));
         return;
     }
 }

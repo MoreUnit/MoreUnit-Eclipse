@@ -46,13 +46,7 @@ public class MainPreferencePageTest
         {
             return;
         }
-        display.syncExec(new Runnable()
-        {
-            public void run()
-            {
-                shell = new Shell(display);
-            }
-        });
+        display.syncExec(() -> shell = new Shell(display));
 
         preferencePage = new MainPreferencePage(templateStyleSelector, templateLoader);
         when(templateLoader.getWorkspaceTemplatesLocation()).thenReturn("/some/workspace/location");
@@ -63,13 +57,7 @@ public class MainPreferencePageTest
     {
         if(shell != null && ! shell.isDisposed())
         {
-            display.syncExec(new Runnable()
-            {
-                public void run()
-                {
-                    shell.dispose();
-                }
-            });
+            display.syncExec(() -> shell.dispose());
         }
     }
 
@@ -83,10 +71,10 @@ public class MainPreferencePageTest
 
         preferencePage.createControl(shell);
 
-        Control content = preferencePage.getControl();
+        final Control content = preferencePage.getControl();
         assertEquals(shell, content.getShell());
 
-        Button reloadButton = findButton(shell, "Reload templates");
+        final Button reloadButton = findButton(shell, "Reload templates");
         assertEquals("Reload templates", reloadButton.getText());
     }
 
@@ -100,10 +88,10 @@ public class MainPreferencePageTest
 
         preferencePage.createControl(shell);
 
-        LoadingResult loadingResult = new LoadingResult();
+        final LoadingResult loadingResult = new LoadingResult();
         when(templateLoader.loadTemplates()).thenReturn(loadingResult);
 
-        Button reloadButton = findButton(shell, "Reload templates");
+        final Button reloadButton = findButton(shell, "Reload templates");
         reloadButton.notifyListeners(SWT.Selection, new Event());
 
         verify(templateLoader).loadTemplates();
@@ -135,28 +123,28 @@ public class MainPreferencePageTest
 
         preferencePage.createControl(shell);
 
-        LoadingResult loadingResult = new LoadingResult();
+        final LoadingResult loadingResult = new LoadingResult();
         loadingResult.addInvalidTemplate(java.net.URI.create("file:/templates/bad.xml").toURL(), new RuntimeException("boom"));
         when(templateLoader.loadTemplates()).thenReturn(loadingResult);
 
-        Button reloadButton = findButton(shell, "Reload templates");
-        Display display = shell.getDisplay();
+        final Button reloadButton = findButton(shell, "Reload templates");
+        final Display display = shell.getDisplay();
 
-        java.util.Set<Shell> knownShells = new java.util.HashSet<>(java.util.Arrays.asList(display.getShells()));
-        java.util.concurrent.atomic.AtomicReference<String> dialogMessage = new java.util.concurrent.atomic.AtomicReference<>();
+        final java.util.Set<Shell> knownShells = new java.util.HashSet<>(java.util.Arrays.asList(display.getShells()));
+        final java.util.concurrent.atomic.AtomicReference<String> dialogMessage = new java.util.concurrent.atomic.AtomicReference<>();
 
         // the reload action opens a modal error dialog; it is dismissed by a
         // self-re-scheduling timer so that the event loop is never blocked
         final int[] attempts = { 0 };
-        Runnable closer = new Runnable()
+        final Runnable closer = new Runnable()
         {
             public void run()
             {
-                for (Shell s : display.getShells())
+                for (final Shell s : display.getShells())
                 {
                     if(! knownShells.contains(s) && ! s.isDisposed())
                     {
-                        for (Control c : s.getChildren())
+                        for (final Control c : s.getChildren())
                         {
                             if(c instanceof org.eclipse.swt.widgets.Label && c.isVisible() && ((org.eclipse.swt.widgets.Label) c).getText().contains("could not be loaded"))
                             {
@@ -175,16 +163,10 @@ public class MainPreferencePageTest
         };
         display.timerExec(100, closer);
 
-        display.asyncExec(new Runnable()
-        {
-            public void run()
-            {
-                reloadButton.notifyListeners(SWT.Selection, new Event());
-            }
-        });
+        display.asyncExec(() -> reloadButton.notifyListeners(SWT.Selection, new Event()));
 
         // process events (including the nested dialog loop) until quiet
-        long deadline = System.currentTimeMillis() + 10_000;
+        final long deadline = System.currentTimeMillis() + 10_000;
         while(System.currentTimeMillis() < deadline)
         {
             if(! display.readAndDispatch())
@@ -206,15 +188,15 @@ public class MainPreferencePageTest
 
     private static Button findButton(Composite composite, String text)
     {
-        for (Control child : composite.getChildren())
+        for (final Control child : composite.getChildren())
         {
-            if(child instanceof Button button && text.equals(button.getText()))
+            if(child instanceof final Button button && text.equals(button.getText()))
             {
                 return button;
             }
-            if(child instanceof Composite nested)
+            if(child instanceof final Composite nested)
             {
-                Button found = findButton(nested, text);
+                final Button found = findButton(nested, text);
                 if(found != null)
                 {
                     return found;

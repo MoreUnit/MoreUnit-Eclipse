@@ -68,19 +68,18 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     public static void updateAnnotations(ITextEditor editor)
     {
-        IDocumentProvider provider = editor.getDocumentProvider();
+        final IDocumentProvider provider = editor.getDocumentProvider();
         if(provider == null)
         {
             return;
         }
-        IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-        if(! (model instanceof IAnnotationModelExtension))
+        final IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
+        if(! (model instanceof final IAnnotationModelExtension modelExtension))
         {
             return;
         }
 
-        IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-        MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
+        final MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
         if(annotationModel != null)
         {
             annotationModel.updateAnnotations();
@@ -89,17 +88,17 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     public static void attachForAllOpenEditor()
     {
-        IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-        for (IWorkbenchWindow window : windows)
+        final IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+        for (final IWorkbenchWindow window : windows)
         {
-            IWorkbenchPage[] pages = window.getPages();
-            for (IWorkbenchPage page : pages)
+            final IWorkbenchPage[] pages = window.getPages();
+            for (final IWorkbenchPage page : pages)
             {
-                IEditorReference[] editors = page.getEditorReferences();
-                for (IEditorReference editorReference : editors)
+                final IEditorReference[] editors = page.getEditorReferences();
+                for (final IEditorReference editorReference : editors)
                 {
-                    IWorkbenchPart editorPart = editorReference.getPart(false);
-                    if(editorPart instanceof ITextEditor editor)
+                    final IWorkbenchPart editorPart = editorReference.getPart(false);
+                    if(editorPart instanceof final ITextEditor editor)
                     {
                         attach(editor);
                     }
@@ -110,19 +109,18 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     public static void attach(ITextEditor editor)
     {
-        IDocumentProvider provider = editor.getDocumentProvider();
+        final IDocumentProvider provider = editor.getDocumentProvider();
         if(provider == null)
         {
             return;
         }
-        IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-        if(! (model instanceof IAnnotationModelExtension))
+        final IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
+        if(! (model instanceof final IAnnotationModelExtension modelExtension))
         {
             return;
         }
 
-        IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-        IDocument document = provider.getDocument(editor.getEditorInput());
+        final IDocument document = provider.getDocument(editor.getEditorInput());
 
         MoreUnitAnnotationModel annotationModel = (MoreUnitAnnotationModel) modelExtension.getAnnotationModel(MODEL_KEY);
 
@@ -135,20 +133,19 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     public static void detach(ITextEditor editor)
     {
-        IDocumentProvider provider = editor.getDocumentProvider();
+        final IDocumentProvider provider = editor.getDocumentProvider();
         if(provider == null)
         {
             return;
         }
 
         IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-        if(! (model instanceof IAnnotationModelExtension))
+        if(! (model instanceof final IAnnotationModelExtension modelExtension))
         {
             return;
         }
-        IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
         model = modelExtension.removeAnnotationModel(MODEL_KEY);
-        if(model instanceof MoreUnitAnnotationModel annotationModel && annotationModel.updateJob != null)
+        if(model instanceof final MoreUnitAnnotationModel annotationModel && annotationModel.updateJob != null)
         {
             annotationModel.updateJob.cancel();
         }
@@ -158,7 +155,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     {
         synchronized (annotations)
         {
-            for (MoreUnitAnnotation annotation : annotations)
+            for (final MoreUnitAnnotation annotation : annotations)
             {
                 annotation.markDeleted(true);
                 event.annotationRemoved(annotation, annotation.getPosition());
@@ -183,22 +180,22 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                     {
                         return Status.CANCEL_STATUS;
                     }
-                    AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
+                    final AnnotationModelEvent event = new AnnotationModelEvent(modelInstance);
                     clear(event);
                     try
                     {
-                        EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
+                        final EditorPartFacade editorPartFacade = new EditorPartFacade(textEditor);
                         if(! editorPartFacade.isJavaLikeFile())
                         {
                             return Status.OK_STATUS;
                         }
-                        ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
+                        final ICompilationUnit compilationUnit = editorPartFacade.getCompilationUnit();
                         if(TypeFacade.isTestCase(compilationUnit))
                         {
                             return Status.OK_STATUS;
                         }
-                        ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
-                        IType type = classTypeFacade.getType();
+                        final ClassTypeFacade classTypeFacade = new ClassTypeFacade(compilationUnit);
+                        final IType type = classTypeFacade.getType();
                         if(type == null)
                         {
                             return Status.OK_STATUS; // this could happen if the
@@ -208,7 +205,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
                         }
                         annotateTestedMethods(type, classTypeFacade, event, monitor);
                     }
-                    catch (Exception exc)
+                    catch (final Exception exc)
                     {
                         LogHandler.getInstance().handleExceptionLog(exc);
                     }
@@ -227,13 +224,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
     private void annotateTestedMethods(IType type, ClassTypeFacade classTypeFacade, AnnotationModelEvent event, IProgressMonitor monitor) throws JavaModelException
     {
-        TestAnnotationMode testAnnotationMode = Preferences.forProject(type.getJavaProject()).getTestAnnotationMode();
+        final TestAnnotationMode testAnnotationMode = Preferences.forProject(type.getJavaProject()).getTestAnnotationMode();
         if(testAnnotationMode == TestAnnotationMode.OFF)
         {
             return;
         }
         monitor.beginTask("Processing type \"" + type.getElementName() + "\"", type.getMethods().length);
-        for (IMethod method : type.getMethods())
+        for (final IMethod method : type.getMethods())
         {
             if(monitor.isCanceled())
             {
@@ -242,16 +239,16 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             // never search by call, as it causes a lot of issues, the
             // CallHierarchy singleton's state being shared between different
             // search tasks
-            Collection<IMethod> testMethods = classTypeFacade.getCorrespondingTestMethods(method, testAnnotationMode.getMethodSearchMode());
+            final Collection<IMethod> testMethods = classTypeFacade.getCorrespondingTestMethods(method, testAnnotationMode.getMethodSearchMode());
 
             boolean hasIgnoredTest = false;
-            for (IMethod testMethod : testMethods)
+            for (final IMethod testMethod : testMethods)
             {
                 // Using getAnnotation(IGNORE_ANNOTATION_NAME).exists() seems to
                 // give back true "for a while" after removing an annotation,
                 // that is why I am using this loop
-                IAnnotation[] allAnnotations = testMethod.getAnnotations();
-                for (IAnnotation annotation : allAnnotations)
+                final IAnnotation[] allAnnotations = testMethod.getAnnotations();
+                for (final IAnnotation annotation : allAnnotations)
                 {
                     if(IGNORE_ANNOTATION_NAME.equals(annotation.getElementName()))
                     {
@@ -263,7 +260,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
 
             if(! testMethods.isEmpty())
             {
-                ISourceRange range = method.getNameRange();
+                final ISourceRange range = method.getNameRange();
                 MoreUnitAnnotation annotation = null;
                 if(hasIgnoredTest)
                     annotation = MoreUnitAnnotation.createAnnotationForIgnoredTesMethod(range);
@@ -301,9 +298,9 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
         event.markSealed();
         if(! event.isEmpty())
         {
-            for (IAnnotationModelListener listener : annotationModelListeners)
+            for (final IAnnotationModelListener listener : annotationModelListeners)
             {
-                if(listener instanceof IAnnotationModelListenerExtension extension)
+                if(listener instanceof final IAnnotationModelListenerExtension extension)
                 {
                     extension.modelChanged(event);
                 }
@@ -323,13 +320,13 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (MoreUnitAnnotation annotation : copyAnnotations())
+        for (final MoreUnitAnnotation annotation : copyAnnotations())
         {
             try
             {
                 document.addPosition(annotation.getPosition());
             }
-            catch (BadLocationException exc)
+            catch (final BadLocationException exc)
             {
                 LogHandler.getInstance().handleExceptionLog(exc);
             }
@@ -344,7 +341,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
             throw new RuntimeException("Can not connect");
         }
 
-        for (MoreUnitAnnotation annotation : copyAnnotations())
+        for (final MoreUnitAnnotation annotation : copyAnnotations())
         {
             document.removePosition(annotation.getPosition());
         }
@@ -359,7 +356,7 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     @Override
     public Position getPosition(Annotation annotation)
     {
-        if(annotation instanceof MoreUnitAnnotation unitAnnotation)
+        if(annotation instanceof final MoreUnitAnnotation unitAnnotation)
         {
             return unitAnnotation.getPosition();
         }

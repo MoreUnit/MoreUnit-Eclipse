@@ -32,7 +32,7 @@ public class ActionHandlersTest
              var executor = mockStatic(RunTestsActionExecutor.class))
         {
             pluginTools.when(PluginTools::getOpenEditorPart).thenReturn(editorPart);
-            RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
+            final RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
             executor.when(RunTestsActionExecutor::getInstance).thenReturn(executorInstance);
 
             assertEquals(null, new RunTestActionHandler().execute(mock(ExecutionEvent.class)));
@@ -48,7 +48,7 @@ public class ActionHandlersTest
              var executor = mockStatic(RunTestsActionExecutor.class))
         {
             pluginTools.when(PluginTools::getOpenEditorPart).thenReturn(editorPart);
-            RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
+            final RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
             executor.when(RunTestsActionExecutor::getInstance).thenReturn(executorInstance);
 
             new DebugTestActionHandler().execute(mock(ExecutionEvent.class));
@@ -64,7 +64,7 @@ public class ActionHandlersTest
              var executor = mockStatic(RunTestsActionExecutor.class))
         {
             pluginTools.when(PluginTools::getOpenEditorPart).thenReturn(editorPart);
-            RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
+            final RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
             executor.when(RunTestsActionExecutor::getInstance).thenReturn(executorInstance);
 
             new RunTestsOfSelectedMemberActionHandler().execute(mock(ExecutionEvent.class));
@@ -80,7 +80,7 @@ public class ActionHandlersTest
              var executor = mockStatic(RunTestsActionExecutor.class))
         {
             pluginTools.when(PluginTools::getOpenEditorPart).thenReturn(editorPart);
-            RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
+            final RunTestsActionExecutor executorInstance = mock(RunTestsActionExecutor.class);
             executor.when(RunTestsActionExecutor::getInstance).thenReturn(executorInstance);
 
             new DebugTestsOfSelectedMemberActionHandler().execute(mock(ExecutionEvent.class));
@@ -107,7 +107,7 @@ public class ActionHandlersTest
              var executor = mockStatic(JumpActionExecutor.class))
         {
             pluginTools.when(PluginTools::getOpenEditorPart).thenReturn(editorPart);
-            JumpActionExecutor executorInstance = mock(JumpActionExecutor.class);
+            final JumpActionExecutor executorInstance = mock(JumpActionExecutor.class);
             executor.when(JumpActionExecutor::getInstance).thenReturn(executorInstance);
 
             new JumpActionHandler().execute(mock(ExecutionEvent.class));
@@ -123,7 +123,7 @@ public class ActionHandlersTest
              var executor = mockStatic(CreateTestMethodActionExecutor.class))
         {
             pluginTools.when(PluginTools::getOpenEditorPart).thenReturn(editorPart);
-            CreateTestMethodActionExecutor executorInstance = mock(CreateTestMethodActionExecutor.class);
+            final CreateTestMethodActionExecutor executorInstance = mock(CreateTestMethodActionExecutor.class);
             executor.when(CreateTestMethodActionExecutor::getInstance).thenReturn(executorInstance);
 
             new CreateTestMethodActionHandler().execute(mock(ExecutionEvent.class));
@@ -137,14 +137,14 @@ public class ActionHandlersTest
     {
         try (var executor = mockStatic(JumpActionExecutor.class))
         {
-            JumpActionExecutor executorInstance = mock(JumpActionExecutor.class);
+            final JumpActionExecutor executorInstance = mock(JumpActionExecutor.class);
             executor.when(JumpActionExecutor::getInstance).thenReturn(executorInstance);
 
-            IJumpContext context = mock(IJumpContext.class);
+            final IJumpContext context = mock(IJumpContext.class);
             when(context.isFileOpenInEditor()).thenReturn(true);
             when(context.getOpenEditorPart()).thenReturn(editorPart);
 
-            JumpResult result = new Jumper().jump(context);
+            final JumpResult result = new Jumper().jump(context);
 
             verify(executorInstance).executeJumpAction(editorPart);
             assertEquals(JumpResult.done(), result);
@@ -156,15 +156,15 @@ public class ActionHandlersTest
     {
         try (var executor = mockStatic(JumpActionExecutor.class))
         {
-            JumpActionExecutor executorInstance = mock(JumpActionExecutor.class);
+            final JumpActionExecutor executorInstance = mock(JumpActionExecutor.class);
             executor.when(JumpActionExecutor::getInstance).thenReturn(executorInstance);
 
-            IJumpContext context = mock(IJumpContext.class);
+            final IJumpContext context = mock(IJumpContext.class);
             when(context.isFileOpenInEditor()).thenReturn(false);
-            IFile selectedFile = mock(IFile.class);
+            final IFile selectedFile = mock(IFile.class);
             when(context.getSelectedFile()).thenReturn(selectedFile);
 
-            JumpResult result = new Jumper().jump(context);
+            final JumpResult result = new Jumper().jump(context);
 
             verify(executorInstance).executeJumpAction(selectedFile);
             assertEquals(JumpResult.done(), result);

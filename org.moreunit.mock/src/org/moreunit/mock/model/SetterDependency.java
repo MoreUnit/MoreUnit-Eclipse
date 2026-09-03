@@ -29,7 +29,7 @@ public class SetterDependency extends Dependency
             throw new IllegalArgumentException("'%s' is not a setter".formatted(setterMethod));
         }
 
-        String withoutSet = setterMethod.substring(3);
+        final String withoutSet = setterMethod.substring(3);
         return withoutSet.substring(0, 1).toLowerCase() + withoutSet.substring(1);
     }
 

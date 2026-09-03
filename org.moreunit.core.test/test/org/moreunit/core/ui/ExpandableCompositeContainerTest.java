@@ -28,7 +28,7 @@ public class ExpandableCompositeContainerTest
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -53,7 +53,7 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_create_container_inside_a_scrolled_composite()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
 
         // the container is wrapped into a scrolled composite, itself child of the shell
         assertTrue(container.getParent() != shell);
@@ -63,9 +63,9 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_create_expandable_composite_with_label_and_client()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
 
-        ExpandableComposite exComp = newExpandable(container, true);
+        final ExpandableComposite exComp = newExpandable(container, true);
 
         assertEquals("Section", exComp.getText());
         assertTrue(exComp.isExpanded());
@@ -75,9 +75,9 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_create_collapsed_expandable_composite_when_requested()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
 
-        ExpandableComposite exComp = newExpandable(container, false);
+        final ExpandableComposite exComp = newExpandable(container, false);
 
         assertFalse(exComp.isExpanded());
     }
@@ -85,9 +85,9 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_expand_and_collapse_all_contained_composites()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
-        ExpandableComposite exComp1 = newExpandable(container, false);
-        ExpandableComposite exComp2 = newExpandable(container, false);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableComposite exComp1 = newExpandable(container, false);
+        final ExpandableComposite exComp2 = newExpandable(container, false);
 
         container.setExpanded(true);
 
@@ -103,9 +103,9 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_disable_and_collapse_all_contained_composites_when_not_expandable()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
-        ExpandableComposite exComp1 = newExpandable(container, true);
-        ExpandableComposite exComp2 = newExpandable(container, true);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableComposite exComp1 = newExpandable(container, true);
+        final ExpandableComposite exComp2 = newExpandable(container, true);
 
         container.setExpandable(false);
 
@@ -118,8 +118,8 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_leave_contained_composites_enabled_when_expandable()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
-        ExpandableComposite exComp = newExpandable(container, true);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableComposite exComp = newExpandable(container, true);
 
         container.setExpandable(true);
 
@@ -129,8 +129,8 @@ public class ExpandableCompositeContainerTest
     @Test
     public void should_fire_expansion_listener_and_reflow_without_error()
     {
-        ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
-        ExpandableComposite exComp = newExpandable(container, false);
+        final ExpandableCompositeContainer container = new ExpandableCompositeContainer(shell);
+        final ExpandableComposite exComp = newExpandable(container, false);
 
         // expanding fires the ExpansionAdapter registered by the container,
         // which triggers a reflow of the scrolled composite

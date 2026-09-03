@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 
 abstract class EclipseResourceContainer extends EclipseResource implements ResourceContainer
 {
-    private IContainer container;
+    private final IContainer container;
 
     protected EclipseResourceContainer(IContainer container)
     {
@@ -39,7 +39,7 @@ abstract class EclipseResourceContainer extends EclipseResource implements Resou
         checkArgument(! fileRelativePath.isEmpty(), "path must not be empty");
         checkArgument(fileRelativePath.isRelative(), "path must be relative to this resource");
 
-        org.eclipse.core.runtime.Path platformPath = new org.eclipse.core.runtime.Path(fileRelativePath.toString());
+        final org.eclipse.core.runtime.Path platformPath = new org.eclipse.core.runtime.Path(fileRelativePath.toString());
 
         if(container.getFolder(platformPath).exists())
         {
@@ -61,7 +61,7 @@ abstract class EclipseResourceContainer extends EclipseResource implements Resou
         checkArgument(! folderRelativePath.isEmpty(), "path must not be empty");
         checkArgument(folderRelativePath.isRelative(), "path must be relative to this resource");
 
-        org.eclipse.core.runtime.Path platformPath = new org.eclipse.core.runtime.Path(folderRelativePath.toString());
+        final org.eclipse.core.runtime.Path platformPath = new org.eclipse.core.runtime.Path(folderRelativePath.toString());
 
         if(container.getFile(platformPath).exists())
         {
@@ -93,12 +93,12 @@ abstract class EclipseResourceContainer extends EclipseResource implements Resou
     {
         try
         {
-            Constructor<U> outputTypeConstructor = outputType.getConstructor(resourceType);
+            final Constructor<U> outputTypeConstructor = outputType.getConstructor(resourceType);
 
-            IResource[] members = container.members();
-            List<T> result = new ArrayList<>(members.length);
+            final IResource[] members = container.members();
+            final List<T> result = new ArrayList<>(members.length);
 
-            for (IResource m : members)
+            for (final IResource m : members)
             {
                 if(resourceType.isInstance(m))
                 {
@@ -107,7 +107,7 @@ abstract class EclipseResourceContainer extends EclipseResource implements Resou
             }
             return result;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ResourceException(e);
         }

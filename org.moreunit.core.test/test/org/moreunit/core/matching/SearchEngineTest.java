@@ -27,18 +27,18 @@ public class SearchEngineTest
     public void searchFiles_should_log_warning_when_search_fails() throws Exception
     {
         // given
-        TextSearchEngine textSearchEngine = mock(TextSearchEngine.class);
-        Logger logger = mock(Logger.class);
-        SearchEngine searchEngine = new SearchEngine(textSearchEngine, logger);
+        final TextSearchEngine textSearchEngine = mock(TextSearchEngine.class);
+        final Logger logger = mock(Logger.class);
+        final SearchEngine searchEngine = new SearchEngine(textSearchEngine, logger);
 
-        Resource rootResource = mock(Resource.class);
-        IResource platformResource = mock(IResource.class);
+        final Resource rootResource = mock(Resource.class);
+        final IResource platformResource = mock(IResource.class);
         when(rootResource.getUnderlyingPlatformResource()).thenReturn(platformResource);
 
-        TextSearchRequestor requestor = mock(TextSearchRequestor.class);
-        Pattern pattern = Pattern.compile("test");
+        final TextSearchRequestor requestor = mock(TextSearchRequestor.class);
+        final Pattern pattern = Pattern.compile("test");
 
-        IStatus errorStatus = new Status(IStatus.ERROR, "pluginId", IStatus.ERROR, "Search error", null);
+        final IStatus errorStatus = new Status(IStatus.ERROR, "pluginId", IStatus.ERROR, "Search error", null);
         when(textSearchEngine.search(nullable(TextSearchScope.class), eq(requestor), nullable(Pattern.class), isNull())).thenReturn(errorStatus);
 
         // when
@@ -52,15 +52,15 @@ public class SearchEngineTest
     public void searchFiles_should_log_error_when_exception_thrown() throws Exception
     {
         // given
-        TextSearchEngine textSearchEngine = mock(TextSearchEngine.class);
-        Logger logger = mock(Logger.class);
-        SearchEngine searchEngine = new SearchEngine(textSearchEngine, logger);
+        final TextSearchEngine textSearchEngine = mock(TextSearchEngine.class);
+        final Logger logger = mock(Logger.class);
+        final SearchEngine searchEngine = new SearchEngine(textSearchEngine, logger);
 
-        Resource rootResource = mock(Resource.class);
+        final Resource rootResource = mock(Resource.class);
         when(rootResource.getUnderlyingPlatformResource()).thenThrow(new RuntimeException("Simulated exception"));
 
-        TextSearchRequestor requestor = mock(TextSearchRequestor.class);
-        Pattern pattern = Pattern.compile("test");
+        final TextSearchRequestor requestor = mock(TextSearchRequestor.class);
+        final Pattern pattern = Pattern.compile("test");
 
         // when
         searchEngine.searchFiles(rootResource, pattern, requestor);
@@ -73,18 +73,18 @@ public class SearchEngineTest
     public void searchFiles_should_not_log_warning_when_search_succeeds() throws Exception
     {
         // given
-        TextSearchEngine textSearchEngine = mock(TextSearchEngine.class);
-        Logger logger = mock(Logger.class);
-        SearchEngine searchEngine = new SearchEngine(textSearchEngine, logger);
+        final TextSearchEngine textSearchEngine = mock(TextSearchEngine.class);
+        final Logger logger = mock(Logger.class);
+        final SearchEngine searchEngine = new SearchEngine(textSearchEngine, logger);
 
-        Resource rootResource = mock(Resource.class);
-        IResource platformResource = mock(IResource.class);
+        final Resource rootResource = mock(Resource.class);
+        final IResource platformResource = mock(IResource.class);
         when(rootResource.getUnderlyingPlatformResource()).thenReturn(platformResource);
 
-        TextSearchRequestor requestor = mock(TextSearchRequestor.class);
-        Pattern pattern = Pattern.compile("test");
+        final TextSearchRequestor requestor = mock(TextSearchRequestor.class);
+        final Pattern pattern = Pattern.compile("test");
 
-        IStatus okStatus = Status.OK_STATUS;
+        final IStatus okStatus = Status.OK_STATUS;
         when(textSearchEngine.search(nullable(TextSearchScope.class), eq(requestor), nullable(Pattern.class), isNull())).thenReturn(okStatus);
 
         // when

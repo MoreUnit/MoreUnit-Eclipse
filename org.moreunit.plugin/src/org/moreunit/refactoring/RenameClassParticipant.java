@@ -65,15 +65,15 @@ public class RenameClassParticipant extends RenameParticipant
 
         try
         {
-            List<Change> changes = new ArrayList<>();
-            RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
-            for (IType typeToRename : javaFileFacade.getCorrespondingTestCases())
+            final List<Change> changes = new ArrayList<>();
+            final RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
+            for (final IType typeToRename : javaFileFacade.getCorrespondingTestCases())
             {
-                RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
+                final RenameJavaElementDescriptor renameJavaElementDescriptor = (RenameJavaElementDescriptor) refactoringContribution.createDescriptor();
                 renameJavaElementDescriptor.setJavaElement(typeToRename.getCompilationUnit());
                 renameJavaElementDescriptor.setNewName(getNewTestName(typeToRename));
-                RefactoringStatus refactoringStatus = new RefactoringStatus();
-                Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
+                final RefactoringStatus refactoringStatus = new RefactoringStatus();
+                final Refactoring renameRefactoring = renameJavaElementDescriptor.createRefactoring(refactoringStatus);
                 // RefactoringStatus checkAllConditions =
                 // renameRefactoring.checkAllConditions(pm);
                 renameRefactoring.checkAllConditions(pm);
@@ -90,7 +90,7 @@ public class RenameClassParticipant extends RenameParticipant
                 return new CompositeChange(getName(), changes.toArray(new Change[0]));
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -103,14 +103,14 @@ public class RenameClassParticipant extends RenameParticipant
         // Performance optimization: Avoid regex compilation overhead for replaceFirst
         String newName = getArguments().getNewName();
 
-        int lastDotIndex = newName.lastIndexOf('.');
+        final int lastDotIndex = newName.lastIndexOf('.');
         if (lastDotIndex != -1) {
             newName = newName.substring(0, lastDotIndex);
         }
 
-        String testName = typeToRename.getElementName();
-        String mainName = compilationUnit.findPrimaryType().getElementName();
-        int index = testName.indexOf(mainName);
+        final String testName = typeToRename.getElementName();
+        final String mainName = compilationUnit.findPrimaryType().getElementName();
+        final int index = testName.indexOf(mainName);
         if (index != -1) {
             return testName.substring(0, index) + newName + testName.substring(index + mainName.length());
         }

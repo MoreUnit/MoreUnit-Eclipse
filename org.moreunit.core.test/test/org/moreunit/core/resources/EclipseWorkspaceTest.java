@@ -20,7 +20,7 @@ public class EclipseWorkspaceTest
     @Test
     public void getProject_should_throw_on_invalid_name()
     {
-        Workspace workspace = EclipseWorkspace.get();
+        final Workspace workspace = EclipseWorkspace.get();
         assertThrows(IllegalArgumentException.class, () -> workspace.getProject("invalid/name"));
     }
 }

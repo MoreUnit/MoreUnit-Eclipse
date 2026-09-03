@@ -12,7 +12,7 @@ public class Composites
 {
     public static Composite fillWidth(Composite parent)
     {
-        Composite c = new Composite(parent, SWT.NONE);
+        final Composite c = new Composite(parent, SWT.NONE);
         c.setLayout(GridLayouts.noMargin());
         c.setLayoutData(LayoutData.fillRow());
         return c;
@@ -20,10 +20,10 @@ public class Composites
 
     public static Composite gridGroup(Composite parent, String text, int numColumns, int margins)
     {
-        Group group = new Group(parent, SWT.NONE);
+        final Group group = new Group(parent, SWT.NONE);
         group.setText(text);
 
-        GridLayout layout = new GridLayout(numColumns, false);
+        final GridLayout layout = new GridLayout(numColumns, false);
         layout.marginHeight = margins;
         layout.marginWidth = margins;
         group.setLayout(layout);
@@ -45,8 +45,8 @@ public class Composites
 
     public static Composite grid(Composite parent, int numCol)
     {
-        Composite c = new Composite(parent, SWT.NONE);
-        GridLayout l = GridLayouts.noMargin();
+        final Composite c = new Composite(parent, SWT.NONE);
+        final GridLayout l = GridLayouts.noMargin();
         l.numColumns = 2;
         c.setLayout(l);
         c.setLayoutData(LayoutData.fillRow());
@@ -55,7 +55,7 @@ public class Composites
 
     public static Link link(Composite parent, String text)
     {
-        Link link = new Link(parent, SWT.NONE);
+        final Link link = new Link(parent, SWT.NONE);
         link.setFont(parent.getFont());
         link.setText("<A>" + text + "</A>"); //$NON-NLS-1$//$NON-NLS-2$
         return link;
@@ -63,7 +63,7 @@ public class Composites
 
     public static Link link(Composite parent, String text, SelectionListener selectionListener)
     {
-        Link link = link(parent, text);
+        final Link link = link(parent, text);
         link.addSelectionListener(selectionListener);
         return link;
     }

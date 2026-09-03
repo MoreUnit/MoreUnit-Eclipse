@@ -32,7 +32,7 @@ public class PreferencesMigrationTest
     public void should_migrate_workspace_preferences_from_v1_to_v2() throws Exception
     {
         // given
-        IPreferenceStore workbenchPrefStore = prefs.getWorkbenchStore();
+        final IPreferenceStore workbenchPrefStore = prefs.getWorkbenchStore();
 
         // remove new-style pref values
         workbenchPrefStore.setValue(PREFERENCES_VERSION, "");
@@ -55,9 +55,9 @@ public class PreferencesMigrationTest
     public void should_migrate_project_preferences_from_v1_to_v2() throws Exception
     {
         // given
-        IJavaProject project = context.getProjectHandler().get();
+        final IJavaProject project = context.getProjectHandler().get();
 
-        IPreferenceStore projectPrefStore = prefs.getProjectStore(project);
+        final IPreferenceStore projectPrefStore = prefs.getProjectStore(project);
         projectPrefStore.setValue(USE_PROJECT_SPECIFIC_SETTINGS, true);
 
         // remove new-style pref values

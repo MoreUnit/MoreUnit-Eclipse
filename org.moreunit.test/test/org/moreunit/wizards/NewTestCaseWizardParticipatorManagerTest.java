@@ -66,7 +66,7 @@ public class NewTestCaseWizardParticipatorManagerTest
     @Test
     public void should_get_extension_pages_and_pass_them_to_composer_in_the_same_order()
     {
-        NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
+        final NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
         manager.addExtensionPagesToComposer(composer, new TestContext(), participators);
 
         assertEquals(Arrays.asList(page("1"), page("2"), page("3"), page("4"), page("5"), page("6")), composer.getExtensionPages());
@@ -79,7 +79,7 @@ public class NewTestCaseWizardParticipatorManagerTest
         when(participator2.getPages(any(INewTestCaseWizardContext.class))).thenThrow(new RuntimeException("test exception"));
 
         // when
-        NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
+        final NewTestCaseWizardComposer composer = new NewTestCaseWizardComposer();
         manager.addExtensionPagesToComposer(composer, new TestContext(), participators);
 
         // then
@@ -90,7 +90,7 @@ public class NewTestCaseWizardParticipatorManagerTest
     public void should_relay_test_case_creation_success_to_participators()
     {
         // given
-        TestContext context = new TestContext();
+        final TestContext context = new TestContext();
 
         // when
         manager.testCaseCreated(context, participators);
@@ -107,7 +107,7 @@ public class NewTestCaseWizardParticipatorManagerTest
         // given
         doThrow(new RuntimeException("test exception")).when(participator2).testCaseCreated(any(INewTestCaseWizardContext.class));
 
-        TestContext context = new TestContext();
+        final TestContext context = new TestContext();
 
         // when
         manager.testCaseCreated(context, participators);
@@ -123,7 +123,7 @@ public class NewTestCaseWizardParticipatorManagerTest
     public void should_relay_test_case_creation_cancelation_to_participators()
     {
         // given
-        TestContext context = new TestContext();
+        final TestContext context = new TestContext();
 
         // when
         manager.testCaseCreationCanceled(context, participators);
@@ -140,7 +140,7 @@ public class NewTestCaseWizardParticipatorManagerTest
         // given
         doThrow(new RuntimeException("test exception")).when(participator2).testCaseCreationCanceled(any(INewTestCaseWizardContext.class));
 
-        TestContext context = new TestContext();
+        final TestContext context = new TestContext();
 
         // when
         manager.testCaseCreationCanceled(context, participators);
@@ -156,7 +156,7 @@ public class NewTestCaseWizardParticipatorManagerTest
     public void should_relay_test_case_creation_abortion_to_participators()
     {
         // given
-        TestContext context = new TestContext();
+        final TestContext context = new TestContext();
 
         // when
         manager.testCaseCreationAborted(context, participators);
@@ -173,7 +173,7 @@ public class NewTestCaseWizardParticipatorManagerTest
         // given
         doThrow(new RuntimeException("test exception")).when(participator2).testCaseCreationAborted(any(INewTestCaseWizardContext.class));
 
-        TestContext context = new TestContext();
+        final TestContext context = new TestContext();
 
         // when
         manager.testCaseCreationAborted(context, participators);

@@ -34,7 +34,7 @@ public class FileNamePatternDemoTest
         {
             display = Display.getDefault();
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             display = null;
         }
@@ -53,7 +53,7 @@ public class FileNamePatternDemoTest
 
     private FileNamePatternDemo createDemo(TestFileNamePattern pattern, AtomicInteger sizeChanges)
     {
-        FileNamePatternDemo demo = new FileNamePatternDemo()
+        final FileNamePatternDemo demo = new FileNamePatternDemo()
         {
             protected TestFileNamePattern getPattern()
             {
@@ -73,11 +73,11 @@ public class FileNamePatternDemoTest
     {
         try
         {
-            Field field = FileNamePatternDemo.class.getDeclaredField("inputField");
+            final Field field = FileNamePatternDemo.class.getDeclaredField("inputField");
             field.setAccessible(true);
             return (Text) field.get(demo);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -85,7 +85,7 @@ public class FileNamePatternDemoTest
 
     private void testLinkSelected(FileNamePatternDemo demo)
     {
-        Link link = findLink(shell);
+        final Link link = findLink(shell);
         assertNotNull(link, "Demo should contain the 'Test' link");
 
         link.notifyListeners(SWT.Selection, new Event());
@@ -98,7 +98,7 @@ public class FileNamePatternDemoTest
 
     private Link findLink(Shell shell, int index)
     {
-        java.util.List<Link> links = new java.util.ArrayList<>();
+        final java.util.List<Link> links = new java.util.ArrayList<>();
         collectLinks(shell, links);
         return links.size() > index ? links.get(index) : null;
     }
@@ -110,7 +110,7 @@ public class FileNamePatternDemoTest
 
     private void collectLinks(org.eclipse.swt.widgets.Composite composite, java.util.List<Link> links)
     {
-        for (org.eclipse.swt.widgets.Control control : composite.getChildren())
+        for (final org.eclipse.swt.widgets.Control control : composite.getChildren())
         {
             if(control instanceof Link)
             {
@@ -127,7 +127,7 @@ public class FileNamePatternDemoTest
     public void should_generate_simple_camelcase_source_file_name() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
+        final TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
 
         // then
         assertEquals(FileNamePatternDemo.generateSourceFileName(pattern), "FooBar");
@@ -137,7 +137,7 @@ public class FileNamePatternDemoTest
     public void should_generate_simple_source_file_name_with_separator() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_test", new SeparatorNameTokenizer("_"));
+        final TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_test", new SeparatorNameTokenizer("_"));
 
         // then
         assertEquals(FileNamePatternDemo.generateSourceFileName(pattern), "foo_bar");
@@ -147,7 +147,7 @@ public class FileNamePatternDemoTest
     public void should_generate_source_file_name_with_stars_and_groups() throws Exception
     {
         // given
-        TestFileNamePattern pattern = new TestFileNamePattern("(bla|bli)*${srcFile}-*(plop|plip)*", new SeparatorNameTokenizer("-"));
+        final TestFileNamePattern pattern = new TestFileNamePattern("(bla|bli)*${srcFile}-*(plop|plip)*", new SeparatorNameTokenizer("-"));
 
         // then
         assertEquals(FileNamePatternDemo.generateSourceFileName(pattern), "foo-bar");
@@ -156,9 +156,9 @@ public class FileNamePatternDemoTest
     @Test
     public void should_generate_and_evaluate_source_file_name_when_input_is_empty()
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
-        AtomicInteger sizeChanges = new AtomicInteger();
-        FileNamePatternDemo demo = createDemo(pattern, sizeChanges);
+        final TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
+        final AtomicInteger sizeChanges = new AtomicInteger();
+        final FileNamePatternDemo demo = createDemo(pattern, sizeChanges);
 
         testLinkSelected(demo);
 
@@ -170,9 +170,9 @@ public class FileNamePatternDemoTest
     @Test
     public void should_evaluate_test_file_when_input_matches_pattern()
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
-        AtomicInteger sizeChanges = new AtomicInteger();
-        FileNamePatternDemo demo = createDemo(pattern, sizeChanges);
+        final TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}Test", new CamelCaseNameTokenizer());
+        final AtomicInteger sizeChanges = new AtomicInteger();
+        final FileNamePatternDemo demo = createDemo(pattern, sizeChanges);
 
         inputField(demo).setText("FooTest");
 
@@ -185,9 +185,9 @@ public class FileNamePatternDemoTest
     @Test
     public void should_refresh_input_when_pattern_changes()
     {
-        TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_test", new SeparatorNameTokenizer("_"));
-        AtomicInteger sizeChanges = new AtomicInteger();
-        FileNamePatternDemo demo = createDemo(pattern, sizeChanges);
+        final TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}_test", new SeparatorNameTokenizer("_"));
+        final AtomicInteger sizeChanges = new AtomicInteger();
+        final FileNamePatternDemo demo = createDemo(pattern, sizeChanges);
 
         demo.patternChanged();
 

@@ -41,10 +41,10 @@ public class MoveClassParticipantTest extends ContextTestCase
     @Test
     public void checkConditions_should_return_ok_status()
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new MoveArguments(new Object(), true));
 
-        RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
+        final RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
 
         assertNotNull(status);
         assertTrue(status.isOK());
@@ -53,7 +53,7 @@ public class MoveClassParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_return_null_when_destination_is_not_a_package_fragment() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new MoveArguments(new Object(), true));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -64,7 +64,7 @@ public class MoveClassParticipantTest extends ContextTestCase
     {
         // moving "com.Foo" to package "com" means that the test case
         // "com.FooTest" would stay in the very same test package
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new MoveArguments(context.getCompilationUnit("com.Foo").getParent(), true));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -75,7 +75,7 @@ public class MoveClassParticipantTest extends ContextTestCase
     {
         SourceFolderContext.getInstance().initContextForWorkspace();
 
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(context.getCompilationUnit("com.Foo"), new MoveArguments(context.getCompilationUnit("other.Other").getParent(), true));
 
         // the destination test package does not exist yet: the participant

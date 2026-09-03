@@ -27,15 +27,15 @@ public class SearchEngine
     {
         try
         {
-            TextSearchScope scope = createScope(rootResource.getUnderlyingPlatformResource(), fileNamePattern);
-            IStatus searchStatus = searchEngine.search(scope, requestor, ANY_CONTENT, null);
+            final TextSearchScope scope = createScope(rootResource.getUnderlyingPlatformResource(), fileNamePattern);
+            final IStatus searchStatus = searchEngine.search(scope, requestor, ANY_CONTENT, null);
 
             if(searchStatus.getCode() != IStatus.OK)
             {
                 logger.warn("Search failed with status: " + searchStatus);
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             logger.error("Search failed", e);
         }

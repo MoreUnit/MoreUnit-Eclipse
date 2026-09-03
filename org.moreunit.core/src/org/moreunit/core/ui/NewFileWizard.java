@@ -31,7 +31,7 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     @Override
     public void addPage(IWizardPage page)
     {
-        if(page instanceof WizardNewFileCreationPage creationPage)
+        if(page instanceof final WizardNewFileCreationPage creationPage)
         {
             creationPage.setFileName(fileNameInitialValue);
         }
@@ -41,7 +41,7 @@ public class NewFileWizard extends BasicNewFileResourceWizard
     @Override
     protected void selectAndReveal(IResource newResource)
     {
-        SrcFile createdFile = workspace.toSrcFile((IFile) newResource);
+        final SrcFile createdFile = workspace.toSrcFile((IFile) newResource);
         maybeCreatedFolder.cancelCreationOfFoldersThatAreNotAncestorsOf(createdFile);
         creationListener.fileCreated(createdFile);
         super.selectAndReveal(newResource);

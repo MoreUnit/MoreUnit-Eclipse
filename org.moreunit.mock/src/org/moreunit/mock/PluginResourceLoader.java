@@ -28,7 +28,7 @@ public class PluginResourceLoader
 
     public Collection<URL> findBundleResources(String searchRoot, String filePattern)
     {
-        Set<URL> resources = new LinkedHashSet<>();
+        final Set<URL> resources = new LinkedHashSet<>();
         Enumeration<URL> bundleEntries = plugin.getBundle().findEntries(searchRoot, filePattern, true);
         if(bundleEntries == null)
         {
@@ -45,15 +45,15 @@ public class PluginResourceLoader
 
     public Collection<URL> findWorkspaceStateResources(String searchRoot, String filePattern)
     {
-        Set<URL> resources = new LinkedHashSet<>();
-        File templateDirectory = plugin.getStateLocation().append(searchRoot).toFile();
-        for (File f : templateDirectory.listFiles(new WildcardFileFilter(filePattern)))
+        final Set<URL> resources = new LinkedHashSet<>();
+        final File templateDirectory = plugin.getStateLocation().append(searchRoot).toFile();
+        for (final File f : templateDirectory.listFiles(new WildcardFileFilter(filePattern)))
         {
             try
             {
                 resources.add(f.toURI().toURL());
             }
-            catch (MalformedURLException e)
+            catch (final MalformedURLException e)
             {
                 logger.error("Failed to resolve resource", e);
             }
@@ -63,8 +63,8 @@ public class PluginResourceLoader
 
     public boolean ensureStateExists(String subPath)
     {
-        IPath userTemplateDir = MoreUnitMockPlugin.getDefault().getStateLocation().append(subPath);
-        File templateDirFile = userTemplateDir.toFile();
+        final IPath userTemplateDir = MoreUnitMockPlugin.getDefault().getStateLocation().append(subPath);
+        final File templateDirFile = userTemplateDir.toFile();
         if(! templateDirFile.exists())
         {
             if (!templateDirFile.mkdirs() && !templateDirFile.exists())

@@ -62,9 +62,9 @@ public class TypeFacadeTest extends ContextTestCase
     @Test
     public void getType_should_return_primary_type_of_compilation_unit() throws CoreException
     {
-        ICompilationUnit compilationUnit = context.getCompilationUnit("Hello");
+        final ICompilationUnit compilationUnit = context.getCompilationUnit("Hello");
 
-        ClassTypeFacade facade = new ClassTypeFacade(compilationUnit);
+        final ClassTypeFacade facade = new ClassTypeFacade(compilationUnit);
 
         assertEquals(compilationUnit, facade.getCompilationUnit());
         assertEquals(compilationUnit.findPrimaryType(), facade.getType());
@@ -75,14 +75,14 @@ public class TypeFacadeTest extends ContextTestCase
     @Test
     public void facade_should_be_creatable_from_editor_part_showing_the_compilation_unit() throws CoreException
     {
-        ICompilationUnit compilationUnit = context.getCompilationUnit("Hello");
+        final ICompilationUnit compilationUnit = context.getCompilationUnit("Hello");
 
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn((IFile) compilationUnit.getResource());
-        IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
 
-        TypeFacade facade = new ClassTypeFacade(editorPart);
+        final TypeFacade facade = new ClassTypeFacade(editorPart);
 
         assertEquals(compilationUnit, facade.getCompilationUnit());
     }
@@ -93,17 +93,17 @@ public class TypeFacadeTest extends ContextTestCase
     public void getOneCorrespondingMember_should_open_dialog_with_likely_matches_when_no_perfect_match_exists() throws Exception
     {
         // the test class lives in another package: it is a likely, not a perfect, match
-        Display display = Display.getDefault();
-        java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+        final Display display = Display.getDefault();
+        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
         display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "FooTest"), 2000));
 
-        ClassTypeFacade facade = new ClassTypeFacade(context.getCompilationUnit("com.Foo"));
+        final ClassTypeFacade facade = new ClassTypeFacade(context.getCompilationUnit("com.Foo"));
 
-        CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
+        final CorrespondingMemberRequest request = CorrespondingMemberRequest.newCorrespondingMemberRequest() //
                 .withExpectedResultType(CorrespondingMemberRequest.MemberType.TYPE_OR_METHOD) //
                 .build();
 
-        IMember member = facade.getOneCorrespondingMember(request);
+        final IMember member = facade.getOneCorrespondingMember(request);
 
         assertEquals(context.getPrimaryTypeHandler("org.FooTest").get(), member);
     }

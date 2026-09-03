@@ -24,13 +24,13 @@ public class JumpActionExecutor
 
     private void execute(Selection selection, UserInterface ui)
     {
-        SelectedSrcFile selectedFile = selection.getUniqueSrcFile();
+        final SelectedSrcFile selectedFile = selection.getUniqueSrcFile();
         if(! selectedFile.isSupported())
         {
             return;
         }
 
-        JumpResult jumpResult = extensionManager.jump(selectedFile.createJumpContext());
+        final JumpResult jumpResult = extensionManager.jump(selectedFile.createJumpContext());
         if(jumpResult.isDone())
         {
             return;
@@ -39,7 +39,7 @@ public class JumpActionExecutor
         try
         {
             // TODO Nicolas refactor this part (listeners?)
-            MatchingFile match = selectedFile.getSrcFile().findUniqueMatch();
+            final MatchingFile match = selectedFile.getSrcFile().findUniqueMatch();
             if(match.isSearchCancelled())
             {
                 return;
@@ -51,7 +51,7 @@ public class JumpActionExecutor
                 {
                     ui.createNewFileWizard(match.getSrcFolderToCreate(), match.getFileToCreate()).open();
                 }
-                catch (FolderCreationException e)
+                catch (final FolderCreationException e)
                 {
                     ui.showError("An error occurred while attempting to create folder " + e.getFolder());
                 }
@@ -61,7 +61,7 @@ public class JumpActionExecutor
                 ui.openEditor(match.get());
             }
         }
-        catch (DoesNotMatchConfigurationException e)
+        catch (final DoesNotMatchConfigurationException e)
         {
             ui.showInfo(e.getPath() + " does not match your source folder preferences");
         }

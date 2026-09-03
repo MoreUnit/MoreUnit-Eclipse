@@ -49,7 +49,7 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
         {
             launch(((StructuredSelection) selection).toList(), mode);
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -60,7 +60,7 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
         final ILaunchConfiguration config = getConfiguration(testsToRun);
         final ILaunchConfigurationDelegate delegate = getDelegate(testsToRun);
 
-        Job job = new Job("MoreUnit")
+        final Job job = new Job("MoreUnit")
         {
             @Override
             protected IStatus run(IProgressMonitor monitor)
@@ -70,7 +70,7 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
                 {
                     launch(config, delegate, mode, monitor);
                 }
-                catch (CoreException e)
+                catch (final CoreException e)
                 {
                     LogHandler.getInstance().handleExceptionLog(e);
                     return e.getStatus();
@@ -96,15 +96,15 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
 
     private ILaunchConfiguration getConfiguration(Collection< ? extends IMember> testsToRun) throws CoreException
     {
-        ILaunchConfigurationWorkingCopy wc = createDefaultLaunchConfig(testsToRun);
-        ILaunchConfiguration existingConfig = findExistingLaunchConfiguration(wc);
+        final ILaunchConfigurationWorkingCopy wc = createDefaultLaunchConfig(testsToRun);
+        final ILaunchConfiguration existingConfig = findExistingLaunchConfiguration(wc);
         // create a new one if no existing found
         return existingConfig == null ? wc.doSave() : existingConfig;
     }
 
     private ILaunchConfigurationWorkingCopy createDefaultLaunchConfig(Collection< ? extends IMember> testsToRun) throws CoreException
     {
-        IMember test = testsToRun.iterator().next();
+        final IMember test = testsToRun.iterator().next();
         if(testsToRun.size() > 1)
         {
             return createLaunchConfiguration(test.getJavaProject());
@@ -117,20 +117,20 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
 
     private ILaunchConfiguration findExistingLaunchConfiguration(ILaunchConfigurationWorkingCopy template) throws CoreException
     {
-        List<ILaunchConfiguration> candidateConfigs = findExistingLaunchConfigurations(template);
+        final List<ILaunchConfiguration> candidateConfigs = findExistingLaunchConfigurations(template);
         return candidateConfigs.isEmpty() ? null : candidateConfigs.getFirst();
     }
 
     // taken from org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut
     private List<ILaunchConfiguration> findExistingLaunchConfigurations(ILaunchConfigurationWorkingCopy temporary) throws CoreException
     {
-        ILaunchConfigurationType configType = temporary.getType();
+        final ILaunchConfigurationType configType = temporary.getType();
 
-        ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(configType);
-        String[] attributeToCompare = getAttributeNamesToCompare();
+        final ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(configType);
+        final String[] attributeToCompare = getAttributeNamesToCompare();
 
-        ArrayList<ILaunchConfiguration> candidateConfigs = new ArrayList<>(configs.length);
-        for (ILaunchConfiguration config : configs)
+        final ArrayList<ILaunchConfiguration> candidateConfigs = new ArrayList<>(configs.length);
+        for (final ILaunchConfiguration config : configs)
         {
             if(hasSameAttributes(config, temporary, attributeToCompare))
             {
@@ -145,10 +145,10 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
     {
         try
         {
-            for (String element : attributeToCompare)
+            for (final String element : attributeToCompare)
             {
-                String val1 = config1.getAttribute(element, EMPTY_STRING);
-                String val2 = config2.getAttribute(element, EMPTY_STRING);
+                final String val1 = config1.getAttribute(element, EMPTY_STRING);
+                final String val2 = config2.getAttribute(element, EMPTY_STRING);
                 if(! val1.equals(val2))
                 {
                     return false;
@@ -156,7 +156,7 @@ class JUnitTestSelectionLaunchShortcut extends JUnitLaunchShortcut
             }
             return true;
         }
-        catch (CoreException e)
+        catch (final CoreException e)
         {
             // ignore access problems here, return false
         }

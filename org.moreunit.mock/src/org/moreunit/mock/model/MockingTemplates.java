@@ -48,7 +48,7 @@ public class MockingTemplates implements Iterable<MockingTemplate>
 
     public MockingTemplate findTemplate(String templateId)
     {
-        for (MockingTemplate template : templates())
+        for (final MockingTemplate template : templates())
         {
             if(templateId.equals(template.id()))
             {

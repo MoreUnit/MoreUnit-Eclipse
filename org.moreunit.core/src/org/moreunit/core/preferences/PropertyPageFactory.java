@@ -45,9 +45,9 @@ public class PropertyPageFactory implements IExecutableExtension, IExecutableExt
     @Override
     public void setInitializationData(IConfigurationElement cfg, String name, Object data) throws CoreException
     {
-        if(data instanceof String string)
+        if(data instanceof final String string)
         {
-            String[] parts = string.split(":");
+            final String[] parts = string.split(":");
             languageId = parts[0];
             if(parts.length > 1)
             {

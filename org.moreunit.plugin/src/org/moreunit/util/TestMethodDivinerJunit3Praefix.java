@@ -23,12 +23,12 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
     @Override
     public String getTestMethodNameAfterRename(String methodNameBeforeRename, String methodNameAfterRename, String testMethodName)
     {
-        String old = getStringWithFirstCharToUpperCase(methodNameBeforeRename);
-        String newName = getStringWithFirstCharToUpperCase(methodNameAfterRename);
+        final String old = getStringWithFirstCharToUpperCase(methodNameBeforeRename);
+        final String newName = getStringWithFirstCharToUpperCase(methodNameAfterRename);
 
         // Performance optimization: Replaced regex-based replaceFirst with
         // faster manual indexOf and substring extraction for literal replacement.
-        int index = testMethodName.indexOf(old);
+        final int index = testMethodName.indexOf(old);
         if (index != -1) {
             return testMethodName.substring(0, index) + newName + testMethodName.substring(index + old.length());
         }
@@ -40,8 +40,8 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
         if(string == null || string.length() == 0)
             return string;
 
-        char firstChar = string.charAt(0);
-        StringBuffer result = new StringBuffer();
+        final char firstChar = string.charAt(0);
+        final StringBuilder result = new StringBuilder();
         result.append(Character.toUpperCase(firstChar));
         result.append(string.substring(1));
 
@@ -60,8 +60,8 @@ public class TestMethodDivinerJunit3Praefix implements TestMethodDiviner
         if(testMethodName == null || ! testMethodName.startsWith(TEST_METHOD_PRAEFIX) || testMethodName.length() <= 4)
             return null;
 
-        char erstesZeichen = testMethodName.charAt(4);
-        StringBuffer result = new StringBuffer();
+        final char erstesZeichen = testMethodName.charAt(4);
+        final StringBuilder result = new StringBuilder();
         result.append(Character.toLowerCase(erstesZeichen));
         result.append(testMethodName.substring(5));
         return result.toString();

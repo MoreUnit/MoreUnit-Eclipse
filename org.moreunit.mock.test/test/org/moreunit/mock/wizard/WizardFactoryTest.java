@@ -24,10 +24,10 @@ public class WizardFactoryTest
     @Test
     public void should_create_dependencies_wizard_page()
     {
-        MockDependenciesWizardValues wizardValues = mock(MockDependenciesWizardValues.class);
-        DependencyInjectionPointStore store = mock(DependencyInjectionPointStore.class);
+        final MockDependenciesWizardValues wizardValues = mock(MockDependenciesWizardValues.class);
+        final DependencyInjectionPointStore store = mock(DependencyInjectionPointStore.class);
 
-        MockDependenciesWizardPage page = factory().createMockDependenciesWizardPage(wizardValues, store);
+        final MockDependenciesWizardPage page = factory().createMockDependenciesWizardPage(wizardValues, store);
 
         assertNotNull(page);
         assertSame(store, page.getInjectionPointStore());
@@ -36,12 +36,12 @@ public class WizardFactoryTest
     @Test
     public void should_create_dependencies_wizard_with_page()
     {
-        WizardFactory factory = factory();
-        MockDependenciesWizardPage page = factory.createMockDependenciesWizardPage(mock(MockDependenciesWizardValues.class), mock(DependencyInjectionPointStore.class));
+        final WizardFactory factory = factory();
+        final MockDependenciesWizardPage page = factory.createMockDependenciesWizardPage(mock(MockDependenciesWizardValues.class), mock(DependencyInjectionPointStore.class));
 
-        MockDependenciesWizard wizard = factory.createMockDependenciesWizard(page);
+        final MockDependenciesWizard wizard = factory.createMockDependenciesWizard(page);
 
-        IWizardPage[] pages = wizard.getPages();
+        final IWizardPage[] pages = wizard.getPages();
         assertEquals(1, pages.length);
         assertSame(page, pages[0]);
     }
@@ -49,12 +49,12 @@ public class WizardFactoryTest
     @Test
     public void should_create_wizard_dialog_for_shell_and_wizard()
     {
-        WizardFactory factory = factory();
-        MockDependenciesWizardPage page = factory.createMockDependenciesWizardPage(mock(MockDependenciesWizardValues.class), mock(DependencyInjectionPointStore.class));
-        MockDependenciesWizard wizard = factory.createMockDependenciesWizard(page);
+        final WizardFactory factory = factory();
+        final MockDependenciesWizardPage page = factory.createMockDependenciesWizardPage(mock(MockDependenciesWizardValues.class), mock(DependencyInjectionPointStore.class));
+        final MockDependenciesWizard wizard = factory.createMockDependenciesWizard(page);
 
-        Shell shell = new Shell();
-        WizardDialog dialog = factory.createWizardDialog(shell, wizard);
+        final Shell shell = new Shell();
+        final WizardDialog dialog = factory.createWizardDialog(shell, wizard);
 
         assertNotNull(dialog);
         dialog.close();

@@ -26,11 +26,11 @@ public class ConversionUtilsTest
     @Test
     public void adapt_should_return_adapter()
     {
-        IAdaptable adaptable = mock(IAdaptable.class);
-        String expectedAdapter = "adapter";
+        final IAdaptable adaptable = mock(IAdaptable.class);
+        final String expectedAdapter = "adapter";
         when(adaptable.getAdapter(String.class)).thenReturn(expectedAdapter);
 
-        String result = conversionUtils.adapt(adaptable, String.class);
+        final String result = conversionUtils.adapt(adaptable, String.class);
 
         assertEquals(result, expectedAdapter);
     }
@@ -38,14 +38,14 @@ public class ConversionUtilsTest
     @Test
     public void getFile_should_return_file_from_editor_input()
     {
-        IEditorPart editorPart = mock(IEditorPart.class);
-        IEditorInput editorInput = mock(IEditorInput.class);
-        IFile expectedFile = mock(IFile.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorInput editorInput = mock(IEditorInput.class);
+        final IFile expectedFile = mock(IFile.class);
 
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         when(editorInput.getAdapter(IFile.class)).thenReturn(expectedFile);
 
-        IFile result = conversionUtils.getFile(editorPart);
+        final IFile result = conversionUtils.getFile(editorPart);
 
         assertEquals(result, expectedFile);
     }
@@ -53,11 +53,11 @@ public class ConversionUtilsTest
     @Test
     public void getPrimaryType_from_CompilationUnit()
     {
-        ICompilationUnit cu = mock(ICompilationUnit.class);
-        IType expectedType = mock(IType.class);
+        final ICompilationUnit cu = mock(ICompilationUnit.class);
+        final IType expectedType = mock(IType.class);
         when(cu.findPrimaryType()).thenReturn(expectedType);
 
-        IType result = conversionUtils.getPrimaryType(cu);
+        final IType result = conversionUtils.getPrimaryType(cu);
 
         assertEquals(result, expectedType);
     }

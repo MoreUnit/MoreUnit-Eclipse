@@ -74,7 +74,7 @@ public enum TestType {
      */
     public static TestType getTestType(final IJavaProject javaProject) {
 
-        String typeName = Preferences.getInstance().getTestType(javaProject);
+        final String typeName = Preferences.getInstance().getTestType(javaProject);
         return TestType.fromPreferenceConstant(typeName);
     }
 
@@ -85,7 +85,7 @@ public enum TestType {
 	 */
 	public static TestType fromPreferenceConstant(final String moreUnitName) {
 
-		for (TestType t : values()) {
+		for (final TestType t : values()) {
 			if (t.preferenceValue.equalsIgnoreCase(moreUnitName)) {
 				return t;
 			}

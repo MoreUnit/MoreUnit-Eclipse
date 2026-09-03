@@ -38,10 +38,10 @@ public class RenameDialogRunnable implements Runnable
     @Override
     public void run()
     {
-        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getShell();
+        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorSite().getShell();
 
-        List<IMethod> corrspondingTests = javaFile.getCorrespondingTestMethodsByName(renamedMethod);
-        ListDialog listDialog = new ListDialog(shell);
+        final List<IMethod> corrspondingTests = javaFile.getCorrespondingTestMethodsByName(renamedMethod);
+        final ListDialog listDialog = new ListDialog(shell);
         listDialog.setMessage("Should the following methods be renamed either?");
         listDialog.setTitle("Rename tests");
         listDialog.setLabelProvider(new JavaElementLabelProvider());
@@ -50,16 +50,15 @@ public class RenameDialogRunnable implements Runnable
 
         if(listDialog.open() == Window.OK)
         {
-            for (int i = 0; i < corrspondingTests.size(); i++)
+            for (final IMethod testMethod : corrspondingTests)
             {
                 try
                 {
-                    IMethod testMethod = corrspondingTests.get(i);
-                    String testMethodNameAfterRename = testMethodDiviner.getTestMethodNameAfterRename(renamedMethod.getElementName(), newMethodName, testMethod.getElementName());
-                    RenameSupport renameSupport = RenameSupport.create(testMethod, testMethodNameAfterRename, RenameSupport.UPDATE_REFERENCES);
+                    final String testMethodNameAfterRename = testMethodDiviner.getTestMethodNameAfterRename(renamedMethod.getElementName(), newMethodName, testMethod.getElementName());
+                    final RenameSupport renameSupport = RenameSupport.create(testMethod, testMethodNameAfterRename, RenameSupport.UPDATE_REFERENCES);
                     renameSupport.perform(shell, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     LogHandler.getInstance().handleExceptionLog(e);
                 }

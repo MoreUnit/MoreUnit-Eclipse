@@ -16,7 +16,7 @@ public class PreconditionsTest
     @Test
     public void checkNotNull_should_return_reference_when_not_null()
     {
-        String ref = "abc";
+        final String ref = "abc";
         assertSame(Preconditions.checkNotNull(ref), ref);
     }
 
@@ -29,7 +29,7 @@ public class PreconditionsTest
     @Test
     public void checkNotNull_with_message_should_return_reference_when_not_null()
     {
-        String ref = "abc";
+        final String ref = "abc";
         assertSame(Preconditions.checkNotNull(ref, "error"), ref);
     }
 
@@ -41,7 +41,7 @@ public class PreconditionsTest
             Preconditions.checkNotNull(null, "custom error");
             fail("Should have thrown NullPointerException");
         }
-        catch (NullPointerException e)
+        catch (final NullPointerException e)
         {
             assertEquals(e.getMessage(), "custom error");
         }
@@ -73,7 +73,7 @@ public class PreconditionsTest
             Preconditions.checkArgument(false, "custom error");
             fail("Should have thrown IllegalArgumentException");
         }
-        catch (IllegalArgumentException e)
+        catch (final IllegalArgumentException e)
         {
             assertEquals(e.getMessage(), "custom error");
         }
@@ -93,7 +93,7 @@ public class PreconditionsTest
             Preconditions.checkState(false, "custom error");
             fail("Should have thrown IllegalStateException");
         }
-        catch (IllegalStateException e)
+        catch (final IllegalStateException e)
         {
             assertEquals(e.getMessage(), "custom error");
         }
@@ -102,7 +102,7 @@ public class PreconditionsTest
     @Test
     public void checkNotNullOrEmpty_should_return_collection_when_not_null_nor_empty()
     {
-        List<String> list = Arrays.asList("a");
+        final List<String> list = Arrays.asList("a");
         assertSame(Preconditions.checkNotNullOrEmpty(list), list);
     }
 
@@ -121,7 +121,7 @@ public class PreconditionsTest
     @Test
     public void checkNotNullOrEmpty_with_message_should_return_collection_when_not_null_nor_empty()
     {
-        List<String> list = Arrays.asList("a");
+        final List<String> list = Arrays.asList("a");
         assertSame(Preconditions.checkNotNullOrEmpty(list, "error"), list);
     }
 
@@ -133,7 +133,7 @@ public class PreconditionsTest
             Preconditions.checkNotNullOrEmpty(null, "custom error");
             fail("Should have thrown NullPointerException");
         }
-        catch (NullPointerException e)
+        catch (final NullPointerException e)
         {
             assertEquals(e.getMessage(), "custom error");
         }
@@ -147,7 +147,7 @@ public class PreconditionsTest
             Preconditions.checkNotNullOrEmpty(new ArrayList<String>(), "custom error");
             fail("Should have thrown IllegalArgumentException");
         }
-        catch (IllegalArgumentException e)
+        catch (final IllegalArgumentException e)
         {
             assertEquals(e.getMessage(), "custom error");
         }

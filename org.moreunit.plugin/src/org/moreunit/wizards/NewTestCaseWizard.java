@@ -31,7 +31,7 @@ public class NewTestCaseWizard extends NewClassyWizard
     private NewTestCaseWizardPageTwo pageTwo;
     private NewTestCaseWizardContext context;
     private NewTestCaseWizardComposer wizardComposer;
-    private IJavaProject javaProjectUnderTest;
+    private final IJavaProject javaProjectUnderTest;
 
     public NewTestCaseWizard(final IType element)
     {
@@ -73,7 +73,7 @@ public class NewTestCaseWizard extends NewClassyWizard
 
     private void configurePageOne()
     {
-        String testSuperClass = getTestSuperClass();
+        final String testSuperClass = getTestSuperClass();
         if(testSuperClass != null && ! testSuperClass.isEmpty())
         {
             this.pageOne.setSuperClass(testSuperClass, true);
@@ -94,7 +94,7 @@ public class NewTestCaseWizard extends NewClassyWizard
 
     private String getTestSuperClass()
     {
-        String result = this.preferences.getTestSuperClass();
+        final String result = this.preferences.getTestSuperClass();
 
         if(Strings.isBlank(result) && preferences.shouldUseJunit3Type())
         {
@@ -126,7 +126,7 @@ public class NewTestCaseWizard extends NewClassyWizard
     {
         super.typeCreated(createdType);
 
-        NewTestCaseWizardContext ctxt = getContext();
+        final NewTestCaseWizardContext ctxt = getContext();
         ctxt.setCreatedTestCase(createdType);
         participatorManager.testCaseCreated(ctxt);
     }
@@ -143,7 +143,7 @@ public class NewTestCaseWizard extends NewClassyWizard
     @Override
     public boolean performCancel()
     {
-        boolean cancelationAccepted = super.performCancel();
+        final boolean cancelationAccepted = super.performCancel();
         if(cancelationAccepted)
         {
             participatorManager.testCaseCreationCanceled(getContext());

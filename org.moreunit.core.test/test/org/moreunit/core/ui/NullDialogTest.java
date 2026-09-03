@@ -6,7 +6,7 @@ public class NullDialogTest {
 
     @Test
     public void testOpen() {
-        NullDialog dialog = new NullDialog();
+        final NullDialog dialog = new NullDialog();
         // Since it does nothing, we just verify it doesn't throw any exceptions
         dialog.open();
     }

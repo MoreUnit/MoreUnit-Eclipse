@@ -49,7 +49,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
         if(! (this.selection instanceof IStructuredSelection))
             return;
 
-        Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
+        final Object firstElement = ((IStructuredSelection) this.selection).getFirstElement();
         if(! (firstElement instanceof IMethod))
             return;
 
@@ -58,13 +58,13 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
 
     private void createTestMethod(IMethod method)
     {
-        ICompilationUnit cu = method.getCompilationUnit();
+        final ICompilationUnit cu = method.getCompilationUnit();
         Jobs.waitForIndexExecuteAndRunInUI("Create test method ... ", () -> {
-            ProjectPreferences prefs = preferencesFor(cu);
+            final ProjectPreferences prefs = preferencesFor(cu);
             if(prefs != null)
             {
 
-                TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cu).testType(prefs.getTestType()).generateComments(prefs.shouldGenerateCommentsForTestMethod()).defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
+                final TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cu).testType(prefs.getTestType()).generateComments(prefs.shouldGenerateCommentsForTestMethod()).defaultTestMethodContent(prefs.getTestMethodDefaultContent()));
 
                 return testmethodCreator.createTestMethod(method);
             }
@@ -82,7 +82,7 @@ public class CreateTestMethodHierarchyAction implements IObjectActionDelegate
         final IJavaProject projectWithPrefs;
         if(TypeFacade.isTestCase(cu))
         {
-            IType cut = new TestCaseTypeFacade(cu).getCorrespondingClassUnderTest();
+            final IType cut = new TestCaseTypeFacade(cu).getCorrespondingClassUnderTest();
             if(cut == null)
                 return null;
 

@@ -22,8 +22,8 @@ public class LayoutUtil
     public static int getButtonWidthHint(Button button)
     {
         button.setFont(JFaceResources.getDialogFont());
-        PixelConverter converter = new PixelConverter(button);
-        int widthHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+        final PixelConverter converter = new PixelConverter(button);
+        final int widthHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
         return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
     }
 
@@ -37,8 +37,8 @@ public class LayoutUtil
     public static void setButtonDimensionHint(Button button)
     {
         Assert.isNotNull(button);
-        Object gd = button.getLayoutData();
-        if(gd instanceof GridData data)
+        final Object gd = button.getLayoutData();
+        if(gd instanceof final GridData data)
         {
             data.widthHint = getButtonWidthHint(button);
             data.horizontalAlignment = GridData.FILL;

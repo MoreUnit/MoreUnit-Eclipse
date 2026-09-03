@@ -10,7 +10,7 @@ public abstract class MockingTestCase extends UiTestCase
     private final String expectationQualifier;
     private final String templateId;
 
-    private MockDependenciesAction mockDependenciesAction = new MockDependenciesAction();
+    private final MockDependenciesAction mockDependenciesAction = new MockDependenciesAction();
 
     protected MockingTestCase(String expectationQualifier, String templateId)
     {

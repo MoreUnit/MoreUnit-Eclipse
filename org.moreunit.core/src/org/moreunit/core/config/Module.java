@@ -32,7 +32,7 @@ public abstract class Module<M extends Module<M>>
     private M handleReplacement()
     {
         BundleContext ctxt = null;
-        M possiblyExistingInstance = getInstance();
+        final M possiblyExistingInstance = getInstance();
         if(possiblyExistingInstance != null)
         {
             ctxt = possiblyExistingInstance.getContext();
@@ -80,13 +80,13 @@ public abstract class Module<M extends Module<M>>
 
     private void startServices()
     {
-        for (Service s : services)
+        for (final Service s : services)
         {
             try
             {
                 s.start();
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 getLogger().error("Could not start service " + s, e);
             }
@@ -114,15 +114,15 @@ public abstract class Module<M extends Module<M>>
 
     private void stopServices()
     {
-        for (ListIterator<Service> it = services.listIterator(services.size()); it.hasPrevious();)
+        for (final ListIterator<Service> it = services.listIterator(services.size()); it.hasPrevious();)
         {
-            Service s = it.previous();
+            final Service s = it.previous();
             try
             {
                 s.stop();
                 it.remove();
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 getLogger().error("Could not stop service " + s, e);
             }

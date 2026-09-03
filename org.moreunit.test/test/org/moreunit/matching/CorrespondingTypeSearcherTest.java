@@ -23,8 +23,8 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_return_class_which_matches_suffix() throws Exception
     {
-        CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
-        Collection<IType> matches = testCaseDiviner.getMatches(false);
+        final CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
+        final Collection<IType> matches = testCaseDiviner.getMatches(false);
 
         assertEquals(1, matches.size());
         assertEquals(matches.iterator().next().getElementName(), "FooTest");
@@ -35,8 +35,8 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_find_all_tests_which_match_all_suffixes() throws Exception
     {
-        CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
-        Collection<IType> matches = testCaseDiviner.getMatches(false);
+        final CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
+        final Collection<IType> matches = testCaseDiviner.getMatches(false);
 
         assertEquals(2, matches.size());
     }
@@ -46,8 +46,8 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_return_class_which_matches_prefix() throws Exception
     {
-        CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
-        Collection<IType> matches = testCaseDiviner.getMatches(false);
+        final CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
+        final Collection<IType> matches = testCaseDiviner.getMatches(false);
 
         assertEquals(1, matches.size());
         assertEquals(matches.iterator().next().getElementName(), "TestFoo");
@@ -57,9 +57,9 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_find_matches_when_package_name_differs_if_so_requested() throws Exception
     {
-        CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("com.Foo"), getPreferences());
+        final CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("com.Foo"), getPreferences());
 
-        IType perfectMatch = context.getPrimaryTypeHandler("com.FooTest").get();
+        final IType perfectMatch = context.getPrimaryTypeHandler("com.FooTest").get();
         context.getPrimaryTypeHandler("org.FooTest").get();
 
         Collection<IType> matches = testCaseDiviner.getMatches(false);
@@ -74,8 +74,8 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getSource_should_not_throw_exception_for_enums() throws Exception
     {
-        CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("com.SomeEnum"), getPreferences());
-        Collection<IType> matches = testCaseDiviner.getMatches(false);
+        final CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("com.SomeEnum"), getPreferences());
+        final Collection<IType> matches = testCaseDiviner.getMatches(false);
 
         assertEquals(1, matches.size());
         assertEquals(matches.iterator().next().getElementName(), "SomeEnumTest");
@@ -85,14 +85,14 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_find_test_of_concrete_implementation_when_type_is_interface() throws Exception
     {
-        TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo");
+        final TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo");
         interfaceHandler.get().getCompilationUnit().getBuffer().setContents("public interface Foo {}");
         interfaceHandler.get().getCompilationUnit().save(null, true);
         interfaceHandler.createSubclass("FooImpl");
         context.getProjectHandler().getTestSrcFolderHandler().createCompilationUnit("FooImplTest", "public class FooImplTest {}");
 
-        CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
-        Collection<IType> matches = searcher.getMatches(false);
+        final CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo"), getPreferences());
+        final Collection<IType> matches = searcher.getMatches(false);
 
         assertEquals(1, matches.size());
         assertEquals("FooImplTest", matches.iterator().next().getElementName());
@@ -102,14 +102,14 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_find_test_of_concrete_implementation_when_type_is_abstract() throws Exception
     {
-        TypeHandler abstractHandler = context.getPrimaryTypeHandler("AbsFoo");
+        final TypeHandler abstractHandler = context.getPrimaryTypeHandler("AbsFoo");
         abstractHandler.get().getCompilationUnit().getBuffer().setContents("public abstract class AbsFoo {}");
         abstractHandler.get().getCompilationUnit().save(null, true);
         abstractHandler.createSubclass("AbsFooImpl");
         context.getProjectHandler().getTestSrcFolderHandler().createCompilationUnit("AbsFooImplTest", "public class AbsFooImplTest {}");
 
-        CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("AbsFoo"), getPreferences());
-        Collection<IType> matches = searcher.getMatches(false);
+        final CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("AbsFoo"), getPreferences());
+        final Collection<IType> matches = searcher.getMatches(false);
 
         assertEquals(1, matches.size());
         assertEquals("AbsFooImplTest", matches.iterator().next().getElementName());
@@ -119,13 +119,13 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_replace_interface_without_implementation_by_its_concrete_implementation() throws Exception
     {
-        TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo");
+        final TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo");
         interfaceHandler.get().getCompilationUnit().getBuffer().setContents("public interface Foo {}");
         interfaceHandler.get().getCompilationUnit().save(null, true);
         interfaceHandler.createSubclass("FooImpl");
 
-        CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("FooTest"), getPreferences());
-        Collection<IType> matches = searcher.getMatches(false);
+        final CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("FooTest"), getPreferences());
+        final Collection<IType> matches = searcher.getMatches(false);
 
         assertEquals(1, matches.size());
         assertEquals("FooImpl", matches.iterator().next().getElementName());
@@ -135,13 +135,13 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_keep_interface_having_a_default_method() throws Exception
     {
-        TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo");
+        final TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo");
         interfaceHandler.get().getCompilationUnit().getBuffer().setContents("public interface Foo { default int size() { return 0; } }");
         interfaceHandler.get().getCompilationUnit().save(null, true);
         interfaceHandler.createSubclass("FooImpl");
 
-        CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("FooTest"), getPreferences());
-        Collection<IType> matches = searcher.getMatches(false);
+        final CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("FooTest"), getPreferences());
+        final Collection<IType> matches = searcher.getMatches(false);
 
         assertEquals(2, matches.size());
     }
@@ -150,18 +150,18 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
     @Test
     public void getMatches_should_cache_matches_per_likely_flag() throws Exception
     {
-        TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo2");
+        final TypeHandler interfaceHandler = context.getPrimaryTypeHandler("Foo2");
         interfaceHandler.get().getCompilationUnit().getBuffer().setContents("public interface Foo2 {}");
         interfaceHandler.get().getCompilationUnit().save(null, true);
         interfaceHandler.createSubclass("Foo2Impl");
         context.getProjectHandler().getTestSrcFolderHandler().createCompilationUnit("Foo2ImplTest", "public class Foo2ImplTest {}");
 
-        CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo2"), getPreferences());
-        Collection<IType> perfectMatches = searcher.getMatches(false);
+        final CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(context.getCompilationUnit("Foo2"), getPreferences());
+        final Collection<IType> perfectMatches = searcher.getMatches(false);
         // second call must return the cached result
-        Collection<IType> perfectMatchesAgain = searcher.getMatches(false);
-        Collection<IType> likelyMatches = searcher.getMatches(true);
-        Collection<IType> likelyMatchesAgain = searcher.getMatches(true);
+        final Collection<IType> perfectMatchesAgain = searcher.getMatches(false);
+        final Collection<IType> likelyMatches = searcher.getMatches(true);
+        final Collection<IType> likelyMatchesAgain = searcher.getMatches(true);
 
         assertEquals(perfectMatches, perfectMatchesAgain);
         assertEquals(1, perfectMatches.size());

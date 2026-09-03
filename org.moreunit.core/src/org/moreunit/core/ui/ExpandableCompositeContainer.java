@@ -34,7 +34,7 @@ public class ExpandableCompositeContainer extends Composite
 
     private static Composite applyStretchedGridLayout(Composite c)
     {
-        GridLayout layout = new GridLayout();
+        final GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         c.setLayout(layout);
@@ -49,7 +49,7 @@ public class ExpandableCompositeContainer extends Composite
      */
     public ExpandableComposite newExpandableComposite(Composite parent, String label, boolean expanded, ExpandableContent content)
     {
-        ExpandableComposite exComp = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
+        final ExpandableComposite exComp = new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
         exComp.setText(label);
         exComp.setExpanded(expanded);
         exComp.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
@@ -79,7 +79,7 @@ public class ExpandableCompositeContainer extends Composite
 
     public void setExpandable(boolean expandable)
     {
-        for (ExpandableComposite ec : expandableComposites)
+        for (final ExpandableComposite ec : expandableComposites)
         {
             ec.setEnabled(expandable);
         }
@@ -92,7 +92,7 @@ public class ExpandableCompositeContainer extends Composite
 
     public void setExpanded(boolean expanded)
     {
-        for (ExpandableComposite ec : expandableComposites)
+        for (final ExpandableComposite ec : expandableComposites)
         {
             ec.setExpanded(expanded);
         }

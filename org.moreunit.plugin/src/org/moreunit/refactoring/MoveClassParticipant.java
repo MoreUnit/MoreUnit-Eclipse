@@ -71,21 +71,21 @@ public class MoveClassParticipant extends MoveParticipant
 
         try
         {
-            IPackageFragment moveClassDestinationPackage = (IPackageFragment) getArguments().getDestination();
+            final IPackageFragment moveClassDestinationPackage = (IPackageFragment) getArguments().getDestination();
 
-            IPackageFragment moveTestsDestinationPackage = getMoveTestsDestinationPackage(moveClassDestinationPackage);
+            final IPackageFragment moveTestsDestinationPackage = getMoveTestsDestinationPackage(moveClassDestinationPackage);
             if(moveTestsDestinationPackage == null)
             {
                 return null;
             }
 
-            RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
+            final RefactoringContribution refactoringContribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.MOVE);
 
-            List<Change> changes = new ArrayList<>();
-            IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
-            String importString = "%s.%s".formatted(packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
+            final List<Change> changes = new ArrayList<>();
+            final IPackageDeclaration packageDeclaration = javaFileFacade.getCompilationUnit().getPackageDeclarations()[0];
+            final String importString = "%s.%s".formatted(packageDeclaration.getElementName(), javaFileFacade.getCompilationUnit().findPrimaryType().getElementName());
 
-            for (IType typeToMove : javaFileFacade.getCorrespondingTestCases())
+            for (final IType typeToMove : javaFileFacade.getCorrespondingTestCases())
             {
                 // fix https://sourceforge.net/p/moreunit/bugs/141/
                 // if CUT is moved to a different source folder and the test
@@ -96,15 +96,15 @@ public class MoveClassParticipant extends MoveParticipant
                     continue;
                 }
 
-                ICompilationUnit[] members = new ICompilationUnit[1];
+                final ICompilationUnit[] members = new ICompilationUnit[1];
                 members[0] = typeToMove.getCompilationUnit();
-                ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
+                final ICompilationUnit newType = moveTestsDestinationPackage.createCompilationUnit(members[0].getElementName(), EMPTY_CONTENT, true, pm);
 
-                MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToMove, members, newType);
-                RefactoringStatus refactoringStatus = new RefactoringStatus();
-                Refactoring createRefactoring = moveDescriptor.createRefactoring(refactoringStatus);
+                final MoveDescriptor moveDescriptor = createMoveDescriptor(refactoringContribution, typeToMove, members, newType);
+                final RefactoringStatus refactoringStatus = new RefactoringStatus();
+                final Refactoring createRefactoring = moveDescriptor.createRefactoring(refactoringStatus);
                 createRefactoring.checkAllConditions(pm);
-                Change createChange = createRefactoring.createChange(null);
+                final Change createChange = createRefactoring.createChange(null);
                 changes.add(createChange);
 
                 // Because of bug
@@ -128,7 +128,7 @@ public class MoveClassParticipant extends MoveParticipant
                 return new CompositeChange(getName(), changes.toArray(new Change[0]));
             }
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             LogHandler.getInstance().handleExceptionLog(e);
         }
@@ -153,7 +153,7 @@ public class MoveClassParticipant extends MoveParticipant
 
     private IPackageFragment getMoveTestsDestinationPackage(IPackageFragment moveClassDestinationPackage)
     {
-        IPackageFragmentRoot unitSourceFolder = Preferences.getInstance().getTestSourceFolder(moveClassDestinationPackage.getJavaProject(), (IPackageFragmentRoot) moveClassDestinationPackage.getParent());
+        final IPackageFragmentRoot unitSourceFolder = Preferences.getInstance().getTestSourceFolder(moveClassDestinationPackage.getJavaProject(), (IPackageFragmentRoot) moveClassDestinationPackage.getParent());
         if(unitSourceFolder == null || ! unitSourceFolder.exists())
         {
             return null;
@@ -166,7 +166,7 @@ public class MoveClassParticipant extends MoveParticipant
             {
                 packageFragment = unitSourceFolder.createPackageFragment(moveClassDestinationPackage.getElementName(), false, null);
             }
-            catch (JavaModelException e)
+            catch (final JavaModelException e)
             {
                 LogHandler.getInstance().handleExceptionLog(e);
             }

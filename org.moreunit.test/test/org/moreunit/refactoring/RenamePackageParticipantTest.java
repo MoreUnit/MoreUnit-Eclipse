@@ -56,10 +56,10 @@ public class RenamePackageParticipantTest extends ContextTestCase
     @Test
     public void checkConditions_should_return_ok_status()
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(mainPackageFragment(), new RenameArguments("org", true));
 
-        RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
+        final RefactoringStatus status = participant.checkConditions(new NullProgressMonitor(), null);
 
         assertNotNull(status);
         assertTrue(status.isOK());
@@ -68,7 +68,7 @@ public class RenamePackageParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_return_null_when_references_should_not_be_updated() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(mainPackageFragment(), new RenameArguments("org", false));
 
         assertNull(participant.createChange(new NullProgressMonitor()));
@@ -77,13 +77,13 @@ public class RenamePackageParticipantTest extends ContextTestCase
     @Test
     public void createChange_should_rename_corresponding_test_package() throws Exception
     {
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(mainPackageFragment(), new RenameArguments("org", true));
 
-        Change change = participant.createChange(new NullProgressMonitor());
+        final Change change = participant.createChange(new NullProgressMonitor());
 
         assertNotNull(change);
-        CompositeChange compositeChange = assertInstanceOf(CompositeChange.class, change);
+        final CompositeChange compositeChange = assertInstanceOf(CompositeChange.class, change);
         assertEquals(1, compositeChange.getChildren().length);
     }
 
@@ -91,15 +91,15 @@ public class RenamePackageParticipantTest extends ContextTestCase
     public void createChange_should_return_empty_change_when_no_test_package_exists() throws Exception
     {
         context.getProjectHandler().getMainSrcFolderHandler().createClass("empty.Empty");
-        IPackageFragment emptyPackage = (IPackageFragment) context.getCompilationUnit("empty.Empty").getParent();
+        final IPackageFragment emptyPackage = (IPackageFragment) context.getCompilationUnit("empty.Empty").getParent();
 
-        TestableParticipant participant = new TestableParticipant();
+        final TestableParticipant participant = new TestableParticipant();
         participant.init(emptyPackage, new RenameArguments("renamed", true));
 
-        Change change = participant.createChange(new NullProgressMonitor());
+        final Change change = participant.createChange(new NullProgressMonitor());
 
         assertNotNull(change);
-        CompositeChange compositeChange = assertInstanceOf(CompositeChange.class, change);
+        final CompositeChange compositeChange = assertInstanceOf(CompositeChange.class, change);
         assertEquals(0, compositeChange.getChildren().length);
     }
 

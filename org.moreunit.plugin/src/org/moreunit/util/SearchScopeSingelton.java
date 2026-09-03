@@ -30,7 +30,7 @@ public class SearchScopeSingelton
             return searchScopeMap.get(sourceFolder);
         else
         {
-            IJavaSearchScope scope = getSearchScopeFromContext(sourceFolder);
+            final IJavaSearchScope scope = getSearchScopeFromContext(sourceFolder);
             searchScopeMap.put(sourceFolder, scope);
             return scope;
         }
@@ -38,7 +38,7 @@ public class SearchScopeSingelton
 
     private IJavaSearchScope getSearchScopeFromContext(IPackageFragmentRoot sourceFolder)
     {
-        List<IPackageFragmentRoot> sourceFolderToSearch = SourceFolderContext.getInstance().getSourceFolderToSearch(sourceFolder);
+        final List<IPackageFragmentRoot> sourceFolderToSearch = SourceFolderContext.getInstance().getSourceFolderToSearch(sourceFolder);
         return SearchEngine.createJavaSearchScope(sourceFolderToSearch.toArray(new IPackageFragmentRoot[0]));
     }
 

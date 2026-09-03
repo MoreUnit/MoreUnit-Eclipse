@@ -37,7 +37,7 @@ public class MoreUnitWizardPageOneStubCreationTest extends NewClassyWizardTestCa
     @BeforeEach
     public void enableMethodStubs()
     {
-        IDialogSettings settings = MoreUnitPlugin.getDefault().getDialogSettings();
+        final IDialogSettings settings = MoreUnitPlugin.getDefault().getDialogSettings();
         settings.put(PREFIX + "USE_SETUP", true);
         settings.put(PREFIX + "USE_TEARDOWN", true);
         settings.put(PREFIX + "USE_SETUPCLASS", true);
@@ -48,7 +48,7 @@ public class MoreUnitWizardPageOneStubCreationTest extends NewClassyWizardTestCa
     @AfterEach
     public void disableMethodStubs()
     {
-        IDialogSettings settings = MoreUnitPlugin.getDefault().getDialogSettings();
+        final IDialogSettings settings = MoreUnitPlugin.getDefault().getDialogSettings();
         settings.put(PREFIX + "USE_SETUP", false);
         settings.put(PREFIX + "USE_TEARDOWN", false);
         settings.put(PREFIX + "USE_SETUPCLASS", false);
@@ -59,11 +59,11 @@ public class MoreUnitWizardPageOneStubCreationTest extends NewClassyWizardTestCa
     @Test
     public void should_create_selected_method_stubs_when_finishing_the_wizard() throws Exception
     {
-        NewTestCaseWizard wizard = new NewTestCaseWizard(context.getPrimaryTypeHandler("pack.Class").get());
+        final NewTestCaseWizard wizard = new NewTestCaseWizard(context.getPrimaryTypeHandler("pack.Class").get());
 
         willAutomaticallyValidateWhenOpen(wizard);
 
-        IType createdType = wizard.open();
+        final IType createdType = wizard.open();
         assertNotNull(createdType);
 
         assertMethodExists(createdType, "setUp");
@@ -85,18 +85,18 @@ public class MoreUnitWizardPageOneStubCreationTest extends NewClassyWizardTestCa
         properties = @Properties(SimpleJUnit3Properties.class))
     public void should_create_constructor_stub_when_finishing_the_wizard() throws Exception
     {
-        IDialogSettings settings = MoreUnitPlugin.getDefault().getDialogSettings();
+        final IDialogSettings settings = MoreUnitPlugin.getDefault().getDialogSettings();
         settings.put(PREFIX + "USE_CONSTRUCTOR", true);
 
-        NewTestCaseWizard wizard = new NewTestCaseWizard(context.getPrimaryTypeHandler("pack.Class3").get());
+        final NewTestCaseWizard wizard = new NewTestCaseWizard(context.getPrimaryTypeHandler("pack.Class3").get());
 
         willAutomaticallyValidateWhenOpen(wizard);
 
-        IType createdType = wizard.open();
+        final IType createdType = wizard.open();
         assertNotNull(createdType);
         // for JUnit 3 the constructor stub takes the class under test name as parameter
         boolean constructorFound = false;
-        for (org.eclipse.jdt.core.IMethod method : createdType.getMethods())
+        for (final org.eclipse.jdt.core.IMethod method : createdType.getMethods())
         {
             constructorFound |= method.isConstructor();
         }

@@ -46,7 +46,7 @@ public class MethodPageTest extends SwtPageTestCase
     @BeforeEach
     public void createPage()
     {
-        IType cut = context.getPrimaryTypeHandler("org.SomeClass").get();
+        final IType cut = context.getPrimaryTypeHandler("org.SomeClass").get();
         editorPartFacade = facadeShowing(cut);
 
         page = new MethodPage(editorPartFacade);
@@ -63,7 +63,7 @@ public class MethodPageTest extends SwtPageTestCase
             {
                 page.dispose();
             }
-            catch (RuntimeException e)
+            catch (final RuntimeException e)
             {
                 // ignore
             }
@@ -72,9 +72,9 @@ public class MethodPageTest extends SwtPageTestCase
 
     private void createPageControl()
     {
-        IPageSite site = mock(IPageSite.class);
-        IActionBars actionBars = mock(IActionBars.class);
-        IToolBarManager toolBarManager = new ToolBarManager();
+        final IPageSite site = mock(IPageSite.class);
+        final IActionBars actionBars = mock(IActionBars.class);
+        final IToolBarManager toolBarManager = new ToolBarManager();
         when(site.getActionBars()).thenReturn(actionBars);
         when(actionBars.getToolBarManager()).thenReturn(toolBarManager);
         page.init(site);
@@ -84,10 +84,10 @@ public class MethodPageTest extends SwtPageTestCase
 
     private EditorPartFacade facadeShowing(IType type)
     {
-        IFile file = (IFile) type.getCompilationUnit().getResource();
-        IEditorInput editorInput = mock(IEditorInput.class);
+        final IFile file = (IFile) type.getCompilationUnit().getResource();
+        final IEditorInput editorInput = mock(IEditorInput.class);
         when(editorInput.getAdapter(IFile.class)).thenReturn(file);
-        IEditorPart editorPart = mock(IEditorPart.class);
+        final IEditorPart editorPart = mock(IEditorPart.class);
         when(editorPart.getEditorInput()).thenReturn(editorInput);
         return new EditorPartFacade(editorPart);
     }
@@ -123,17 +123,17 @@ public class MethodPageTest extends SwtPageTestCase
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("private String secretOperation()", "return \"secret\";");
         page.updateUI();
 
-        Action filterPrivateAction = (Action) getField(page, "filterPrivateAction");
+        final Action filterPrivateAction = (Action) getField(page, "filterPrivateAction");
         filterPrivateAction.setChecked(true);
         filterPrivateAction.run();
 
         assertTrue(filterPrivateAction.isChecked());
-        MethodTreeContentProvider contentProvider = (MethodTreeContentProvider) getField(page, "methodTreeContentProvider");
-        TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
-        Object[] shownElements = contentProvider.getElements(treeViewer.getInput());
-        for (Object element : shownElements)
+        final MethodTreeContentProvider contentProvider = (MethodTreeContentProvider) getField(page, "methodTreeContentProvider");
+        final TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
+        final Object[] shownElements = contentProvider.getElements(treeViewer.getInput());
+        for (final Object element : shownElements)
         {
-            IJavaElement javaElement = (IJavaElement) element;
+            final IJavaElement javaElement = (IJavaElement) element;
             assertFalse("secretOperation".equals(javaElement.getElementName()));
         }
     }
@@ -142,29 +142,29 @@ public class MethodPageTest extends SwtPageTestCase
     public void should_filter_getter_methods_when_corresponding_action_is_run()
     {
         createPageControl();
-        IType cut = context.getPrimaryTypeHandler("org.SomeClass").get();
+        final IType cut = context.getPrimaryTypeHandler("org.SomeClass").get();
         try
         {
             cut.createField("private String name;", null, false, new org.eclipse.core.runtime.NullProgressMonitor());
         }
-        catch (org.eclipse.core.runtime.CoreException e)
+        catch (final org.eclipse.core.runtime.CoreException e)
         {
             throw new RuntimeException(e);
         }
         context.getPrimaryTypeHandler("org.SomeClass").addMethod("public String getName()", "return \"name\";");
         page.updateUI();
 
-        Action filterGetterAction = (Action) getField(page, "filterGetterAction");
+        final Action filterGetterAction = (Action) getField(page, "filterGetterAction");
         filterGetterAction.setChecked(true);
         filterGetterAction.run();
 
         assertTrue(filterGetterAction.isChecked());
-        MethodTreeContentProvider contentProvider = (MethodTreeContentProvider) getField(page, "methodTreeContentProvider");
-        TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
-        Object[] shownElements = contentProvider.getElements(treeViewer.getInput());
-        for (Object element : shownElements)
+        final MethodTreeContentProvider contentProvider = (MethodTreeContentProvider) getField(page, "methodTreeContentProvider");
+        final TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
+        final Object[] shownElements = contentProvider.getElements(treeViewer.getInput());
+        for (final Object element : shownElements)
         {
-            IJavaElement javaElement = (IJavaElement) element;
+            final IJavaElement javaElement = (IJavaElement) element;
             assertFalse("getName".equals(javaElement.getElementName()));
         }
     }
@@ -173,7 +173,7 @@ public class MethodPageTest extends SwtPageTestCase
     public void should_update_ui_when_a_compilation_unit_changed()
     {
         createPageControl();
-        TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
+        final TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
         assertFalse(treeViewer.getControl().isDisposed());
 
         page.elementChanged(eventWithElementType(IJavaElement.COMPILATION_UNIT));
@@ -198,7 +198,7 @@ public class MethodPageTest extends SwtPageTestCase
     {
         createPageControl();
 
-        IType testType = context.getPrimaryTypeHandler("org.SomeClassTest").get();
+        final IType testType = context.getPrimaryTypeHandler("org.SomeClassTest").get();
         page.setNewEditorPartFacade(facadeShowing(testType));
 
         assertEquals(testType, page.getInputType());
@@ -216,9 +216,9 @@ public class MethodPageTest extends SwtPageTestCase
 
     private ElementChangedEvent eventWithElementType(int elementType)
     {
-        IJavaElement element = mock(IJavaElement.class);
+        final IJavaElement element = mock(IJavaElement.class);
         when(element.getElementType()).thenReturn(elementType);
-        IJavaElementDelta delta = mock(IJavaElementDelta.class);
+        final IJavaElementDelta delta = mock(IJavaElementDelta.class);
         when(delta.getElement()).thenReturn(element);
         return new ElementChangedEvent(delta, ElementChangedEvent.POST_CHANGE);
     }
@@ -242,15 +242,15 @@ public class MethodPageTest extends SwtPageTestCase
         page.updateUI();
         flushDisplayEvents();
 
-        TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
-        org.eclipse.swt.widgets.Tree tree = treeViewer.getTree();
-        org.eclipse.swt.widgets.TreeItem item = treeItemShowing(tree, "getNumberOne");
+        final TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
+        final org.eclipse.swt.widgets.Tree tree = treeViewer.getTree();
+        final org.eclipse.swt.widgets.TreeItem item = treeItemShowing(tree, "getNumberOne");
         assertNotNull(item);
         tree.select(item);
 
         invoke(page, "addItem");
 
-        org.eclipse.jdt.core.IMethod[] testMethods = context.getPrimaryTypeHandler("org.SomeClassTest").get().getMethods();
+        final org.eclipse.jdt.core.IMethod[] testMethods = context.getPrimaryTypeHandler("org.SomeClassTest").get().getMethods();
         assertEquals(1, testMethods.length);
         assertEquals("testGetNumberOne", testMethods[0].getElementName());
     }
@@ -263,19 +263,19 @@ public class MethodPageTest extends SwtPageTestCase
         page.updateUI();
         flushDisplayEvents();
 
-        TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
-        org.eclipse.swt.widgets.Tree tree = treeViewer.getTree();
-        org.eclipse.swt.widgets.TreeItem item = treeItemShowing(tree, "getNumberOne");
+        final TreeViewer treeViewer = (TreeViewer) getField(page, "treeViewer");
+        final org.eclipse.swt.widgets.Tree tree = treeViewer.getTree();
+        final org.eclipse.swt.widgets.TreeItem item = treeItemShowing(tree, "getNumberOne");
         assertNotNull(item);
         tree.select(item);
 
-        org.eclipse.ui.IWorkbenchPage workbenchPage = org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        final org.eclipse.ui.IWorkbenchPage workbenchPage = org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try
         {
             page.doubleClick(new DoubleClickEvent(treeViewer, treeViewer.getSelection()));
 
             flushDisplayEvents();
-            org.eclipse.ui.IEditorPart editor = workbenchPage.getActiveEditor();
+            final org.eclipse.ui.IEditorPart editor = workbenchPage.getActiveEditor();
             assertNotNull(editor, "double click should have opened an editor");
         }
         finally
@@ -286,7 +286,7 @@ public class MethodPageTest extends SwtPageTestCase
 
     private org.eclipse.swt.widgets.TreeItem treeItemShowing(org.eclipse.swt.widgets.Tree tree, String text)
     {
-        for (org.eclipse.swt.widgets.TreeItem item : tree.getItems())
+        for (final org.eclipse.swt.widgets.TreeItem item : tree.getItems())
         {
             if(item.getText().contains(text))
             {

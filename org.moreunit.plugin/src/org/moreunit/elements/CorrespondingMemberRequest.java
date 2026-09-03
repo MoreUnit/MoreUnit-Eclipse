@@ -10,7 +10,7 @@ public class CorrespondingMemberRequest
         return new Builder();
     }
 
-    private Builder builder;
+    private final Builder builder;
 
     private CorrespondingMemberRequest(Builder builder)
     {

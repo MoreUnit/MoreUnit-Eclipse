@@ -62,7 +62,7 @@ public class FeatureDetector
 
     private boolean testNgPluginVersionGreaterThanOrEqualTo(Version expected)
     {
-        Version actual = getTestNgPluginVersion();
+        final Version actual = getTestNgPluginVersion();
         return isGreaterOrEqual(actual, expected);
     }
 
@@ -77,7 +77,7 @@ public class FeatureDetector
 
     public Version getTestNgPluginVersion()
     {
-        Bundle bundle = getBundle(TESTNG_PLUGIN_ID);
+        final Bundle bundle = getBundle(TESTNG_PLUGIN_ID);
         return bundle == null ? null : bundle.getVersion();
     }
 
@@ -88,10 +88,9 @@ public class FeatureDetector
             return null;
         }
 
-        Bundle[] bundles = bundleContext.getBundles();
-        for (int i = 0; i < bundles.length; i++)
+        final Bundle[] bundles = bundleContext.getBundles();
+        for (final Bundle bundle : bundles)
         {
-            Bundle bundle = bundles[i];
             if(bundleId.equals(bundle.getSymbolicName()))
             {
                 return bundle;
@@ -102,7 +101,7 @@ public class FeatureDetector
 
     public NewClassWizardPage createNewGroovyClassWizardPageIfPossible()
     {
-        Class<NewClassWizardPage> clazz = loadClassIfPossible(GROOVY_UI_PLUGIN_ID, NEW_GROOVY_CLASS_WIZARD_PAGE_CLASS);
+        final Class<NewClassWizardPage> clazz = loadClassIfPossible(GROOVY_UI_PLUGIN_ID, NEW_GROOVY_CLASS_WIZARD_PAGE_CLASS);
         if(clazz == null)
         {
             return null;
@@ -111,7 +110,7 @@ public class FeatureDetector
         {
             return clazz.getDeclaredConstructor().newInstance();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             LogHandler.getInstance().handleWarnLog("Could not instantiate class: " + NEW_GROOVY_CLASS_WIZARD_PAGE_CLASS);
             return null;
@@ -121,7 +120,7 @@ public class FeatureDetector
     @SuppressWarnings("unchecked")
     private <T> Class<T> loadClassIfPossible(String bundleId, String className)
     {
-        Bundle bundle = getBundle(bundleId);
+        final Bundle bundle = getBundle(bundleId);
         if(bundle == null)
         {
             return null;
@@ -132,7 +131,7 @@ public class FeatureDetector
             {
                 bundle.start();
             }
-            catch (BundleException e)
+            catch (final BundleException e)
             {
                 LogHandler.getInstance().handleWarnLog("Could not start bundle: " + bundleId);
             }
@@ -143,7 +142,7 @@ public class FeatureDetector
             {
                 return (Class<T>) bundle.loadClass(NEW_GROOVY_CLASS_WIZARD_PAGE_CLASS);
             }
-            catch (ClassNotFoundException e)
+            catch (final ClassNotFoundException e)
             {
                 LogHandler.getInstance().handleWarnLog("Could not load class: " + className);
             }

@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class DrivableWizardDialog extends WizardDialog
 {
-    private WizardDriver driver;
+    private final WizardDriver driver;
 
     public DrivableWizardDialog(Shell parentShell, IWizard newWizard, WizardDriver driver)
     {
@@ -22,7 +22,7 @@ public class DrivableWizardDialog extends WizardDialog
         driver.configure(this);
         setBlockOnOpen(false);
         super.open();
-        int result = driver.onOpen(this);
+        final int result = driver.onOpen(this);
         doClose();
         return result;
     }
@@ -39,11 +39,11 @@ public class DrivableWizardDialog extends WizardDialog
     {
         try
         {
-            Method m = WizardDialog.class.getDeclaredMethod("hardClose");
+            final Method m = WizardDialog.class.getDeclaredMethod("hardClose");
             m.setAccessible(true);
             m.invoke(this);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new RuntimeException(e);
         }

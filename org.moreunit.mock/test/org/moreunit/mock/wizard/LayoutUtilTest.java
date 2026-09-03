@@ -38,13 +38,13 @@ public class LayoutUtilTest
     @Test
     public void getButtonWidthHint_should_calculate_width()
     {
-        Button button = new Button(shell, SWT.PUSH);
+        final Button button = new Button(shell, SWT.PUSH);
         button.setText("Ok");
 
-        int hint = LayoutUtil.getButtonWidthHint(button);
+        final int hint = LayoutUtil.getButtonWidthHint(button);
 
         button.setFont(JFaceResources.getDialogFont());
-        PixelConverter converter = new PixelConverter(button);
+        final PixelConverter converter = new PixelConverter(button);
         int expectedHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
         expectedHint = Math.max(expectedHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 
@@ -54,14 +54,14 @@ public class LayoutUtilTest
     @Test
     public void setButtonDimensionHint_should_update_grid_data()
     {
-        Button button = new Button(shell, SWT.PUSH);
+        final Button button = new Button(shell, SWT.PUSH);
         button.setText("Cancel");
-        GridData layoutData = new GridData();
+        final GridData layoutData = new GridData();
         button.setLayoutData(layoutData);
 
         LayoutUtil.setButtonDimensionHint(button);
 
-        int expectedHint = LayoutUtil.getButtonWidthHint(button);
+        final int expectedHint = LayoutUtil.getButtonWidthHint(button);
         assertEquals(expectedHint, layoutData.widthHint);
         assertEquals(GridData.FILL, layoutData.horizontalAlignment);
     }
@@ -69,7 +69,7 @@ public class LayoutUtilTest
     @Test
     public void setButtonDimensionHint_should_do_nothing_if_not_grid_data()
     {
-        Button button = new Button(shell, SWT.PUSH);
+        final Button button = new Button(shell, SWT.PUSH);
         button.setLayoutData(new Object());
 
         LayoutUtil.setButtonDimensionHint(button);

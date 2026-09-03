@@ -39,8 +39,8 @@ public class ExecutionContext
     // implemented in HandlerUtil only since 3.7
     public IEditorPart getActiveEditorPart()
     {
-        Object editor = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_NAME);
-        if(editor instanceof IEditorPart part)
+        final Object editor = HandlerUtil.getVariable(event, ISources.ACTIVE_EDITOR_NAME);
+        if(editor instanceof final IEditorPart part)
         {
             return part;
         }
@@ -49,7 +49,7 @@ public class ExecutionContext
 
     private IWorkbenchPage getActivePage()
     {
-        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+        final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
         return window == null ? null : window.getActivePage();
     }
 
@@ -75,7 +75,7 @@ public class ExecutionContext
 
     private IWorkbench getWorkbench()
     {
-        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+        final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
         return window == null ? null : window.getWorkbench();
     }
 }

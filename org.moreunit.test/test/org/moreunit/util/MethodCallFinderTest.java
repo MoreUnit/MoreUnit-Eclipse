@@ -35,32 +35,32 @@ public class MethodCallFinderTest extends ContextTestCase
     @Test
     public void getMatches_should_find_callers_when_methodMatch_is_true() throws JavaModelException
     {
-        MethodHandler callerMethod = testcaseType.addMethod("public void someMethod()", "new Hello().getNumberOne();");
+        final MethodHandler callerMethod = testcaseType.addMethod("public void someMethod()", "new Hello().getNumberOne();");
 
-        MethodCallFinder finder = new MethodCallFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())) {
+        final MethodCallFinder finder = new MethodCallFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())) {
             @Override
             protected boolean methodMatch(IMethod method) {
                 return true;
             }
         };
 
-        Set<IMethod> matches = finder.getMatches(new NullProgressMonitor());
+        final Set<IMethod> matches = finder.getMatches(new NullProgressMonitor());
         assertTrue(matches.contains(callerMethod.get()));
     }
 
     @Test
     public void getMatches_should_not_find_callers_when_methodMatch_is_false() throws JavaModelException
     {
-        MethodHandler callerMethod = testcaseType.addMethod("public void someMethod()", "new Hello().getNumberOne();");
+        final MethodHandler callerMethod = testcaseType.addMethod("public void someMethod()", "new Hello().getNumberOne();");
 
-        MethodCallFinder finder = new MethodCallFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())) {
+        final MethodCallFinder finder = new MethodCallFinder(getNumberOneMethod.get(), Set.of(testcaseType.get())) {
             @Override
             protected boolean methodMatch(IMethod method) {
                 return false;
             }
         };
 
-        Set<IMethod> matches = finder.getMatches(new NullProgressMonitor());
+        final Set<IMethod> matches = finder.getMatches(new NullProgressMonitor());
         assertFalse(matches.contains(callerMethod.get()));
     }
 }

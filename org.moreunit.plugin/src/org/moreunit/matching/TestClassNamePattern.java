@@ -28,7 +28,7 @@ public class TestClassNamePattern
 
     public ClassNameEvaluation evaluate(IType type)
     {
-        String packageName = type.getPackageFragment().getElementName();
+        final String packageName = type.getPackageFragment().getElementName();
 
         final TestFileNamePattern pattern;
         if(matchesTestPackagePattern(packageName))
@@ -48,20 +48,20 @@ public class TestClassNamePattern
 
     private ClassNameEvaluation evaluate(TestFileNamePattern pattern, JavaType type)
     {
-        FileNameEvaluation evaluation = pattern.evaluate(type.getSimpleName());
+        final FileNameEvaluation evaluation = pattern.evaluate(type.getSimpleName());
         return new ClassNameEvaluation(evaluation, packagePrefix, packageSuffix, type.getQualifier());
     }
 
     public JavaType nameTestCaseFor(IType classUnderTest)
     {
-        ClassNameEvaluation evaluation = evaluate(patternForcingEvaluationAsSourceFile, new JavaType(classUnderTest.getFullyQualifiedName()));
+        final ClassNameEvaluation evaluation = evaluate(patternForcingEvaluationAsSourceFile, new JavaType(classUnderTest.getFullyQualifiedName()));
 
         return evaluation.getPreferredCorrespondingClass();
     }
 
     public JavaType nameClassTestedBy(IType testCase)
     {
-        ClassNameEvaluation evaluation = evaluate(patternForcingEvaluationAsTestFile, new JavaType(testCase.getFullyQualifiedName()));
+        final ClassNameEvaluation evaluation = evaluate(patternForcingEvaluationAsTestFile, new JavaType(testCase.getFullyQualifiedName()));
 
         return evaluation.getPreferredCorrespondingClass();
     }

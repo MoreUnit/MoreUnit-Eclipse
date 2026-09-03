@@ -67,7 +67,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     @AfterEach
     public void cleanPreferences() throws Exception
     {
-        for (Language l : preferences.getLanguages())
+        for (final Language l : preferences.getLanguages())
         {
             preferences.get(project).activatePreferencesForLanguage(l.getExtension(), false);
             preferences.remove(l);
@@ -84,8 +84,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_open_test_file_when_in_source_file() throws Exception
     {
         // given
-        IFile sourceFile = createFile("SomeConcept.lg");
-        IFile testFile = createFile("SomeConceptTest.lg");
+        final IFile sourceFile = createFile("SomeConcept.lg");
+        final IFile testFile = createFile("SomeConceptTest.lg");
 
         openEditor(sourceFile);
 
@@ -100,8 +100,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_open_source_file_when_in_test_file() throws Exception
     {
         // given
-        IFile sourceFile = createFile("SomeConcept.lg");
-        IFile testFile = createFile("SomeConceptTest.lg");
+        final IFile sourceFile = createFile("SomeConcept.lg");
+        final IFile testFile = createFile("SomeConceptTest.lg");
 
         openEditor(testFile);
 
@@ -116,8 +116,8 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_ignore_file_extension_case() throws Exception
     {
         // given
-        IFile sourceFile = createFile("SomeConcept.LG");
-        IFile testFile = createFile("SomeConceptTest.lg");
+        final IFile sourceFile = createFile("SomeConcept.LG");
+        final IFile testFile = createFile("SomeConceptTest.lg");
 
         openEditor(sourceFile);
 
@@ -134,7 +134,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile sourceFile = createFile("src/SomeConcept.lg");
+        final IFile sourceFile = createFile("src/SomeConcept.lg");
         // wrong folder: should not be found
         createFile("src/SomeConceptTest.lg");
 
@@ -149,7 +149,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         assertEquals(getFileInActiveEditor(), sourceFile);
 
         // given
-        IFile testFile = createFile("test/SomeConceptTest.lg");
+        final IFile testFile = createFile("test/SomeConceptTest.lg");
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -164,7 +164,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile testFile = createFile("test/SomeConceptTest.lg");
+        final IFile testFile = createFile("test/SomeConceptTest.lg");
 
         // wrong folder: should not be found
         createFile("test/SomeConcept.lg");
@@ -180,7 +180,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         assertEquals(getFileInActiveEditor(), testFile);
 
         // given
-        IFile sourceFile = createFile("src/SomeConcept.lg");
+        final IFile sourceFile = createFile("src/SomeConcept.lg");
 
         // when
         executeCommand(JUMP_COMMAND);
@@ -193,12 +193,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     public void should_use_project_preferences_when_defined() throws Exception
     {
         // given
-        LanguagePreferencesWriter projectPrefs = preferences.get(project).writerForAnyLanguage();
+        final LanguagePreferencesWriter projectPrefs = preferences.get(project).writerForAnyLanguage();
         projectPrefs.setTestFileNameTemplate("${srcFile}TEST", "");
         projectPrefs.setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile sourceFile = createFile("src/SomeConcept.lg");
-        IFile testFile = createFile("test/SomeConceptTEST.lg");
+        final IFile sourceFile = createFile("src/SomeConcept.lg");
+        final IFile testFile = createFile("test/SomeConceptTEST.lg");
 
         openEditor(sourceFile);
 
@@ -215,12 +215,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.add(new Language("io", "IO"));
 
-        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("io");
+        final LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("io");
         langPrefs.setTestFileNameTemplate("${srcFile}-test", "-");
         langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
 
-        IFile sourceFile = createFile("sources/some-concept.io");
-        IFile testFile = createFile("tests/some-concept-test.io");
+        final IFile sourceFile = createFile("sources/some-concept.io");
+        final IFile testFile = createFile("tests/some-concept-test.io");
 
         openEditor(sourceFile);
 
@@ -237,18 +237,18 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.add(new Language("io", "IO"));
 
-        LanguagePreferencesWriter wsLangPrefs = preferences.writerForLanguage("io");
+        final LanguagePreferencesWriter wsLangPrefs = preferences.writerForLanguage("io");
         wsLangPrefs.setTestFileNameTemplate("${srcFile}-test", "-");
         wsLangPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
 
         preferences.get(project).activatePreferencesForLanguage("io", true);
 
-        LanguagePreferencesWriter projectLangPrefs = preferences.get(project).writerForLanguage("io");
+        final LanguagePreferencesWriter projectLangPrefs = preferences.get(project).writerForLanguage("io");
         projectLangPrefs.setTestFileNameTemplate("${srcFile}--test", "--");
         projectLangPrefs.setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/tst");
 
-        IFile sourceFile = createFile("src/some--concept.io");
-        IFile testFile = createFile("tst/some--concept--test.io");
+        final IFile sourceFile = createFile("src/some--concept.io");
+        final IFile testFile = createFile("tst/some--concept--test.io");
 
         openEditor(sourceFile);
 
@@ -265,9 +265,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
 
-        IFile sourceFile = createFile("SomeConcept.jui");
+        final IFile sourceFile = createFile("SomeConcept.jui");
         createFile("SomeConceptFirstTest.jui");
-        IFile testFile2 = createFile("SomeConceptSecondTest.jui");
+        final IFile testFile2 = createFile("SomeConceptSecondTest.jui");
 
         capturingSelector.fileToReturn = testFile2;
 
@@ -289,7 +289,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
 
-        IFile sourceFile = createFile("SomeConcept.lg");
+        final IFile sourceFile = createFile("SomeConcept.lg");
         createFile("SomeConceptFirstTest.lg");
         createFile("SomeConceptSecondTest.lg");
 
@@ -313,7 +313,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile sourceFile = createFile("src/SomeConcept.thing");
+        final IFile sourceFile = createFile("src/SomeConcept.thing");
 
         openEditor(sourceFile);
 
@@ -323,7 +323,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        IFile testFile = getFile("test/SomeConceptTest.thing");
+        final IFile testFile = getFile("test/SomeConceptTest.thing");
         assertEquals(getFileInActiveEditor(), testFile);
     }
 
@@ -334,7 +334,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile testFile = getFile("test/SomeConcept2Test.thing");
+        final IFile testFile = getFile("test/SomeConcept2Test.thing");
 
         openEditor(testFile);
 
@@ -344,7 +344,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         executeCommand(JUMP_COMMAND);
 
         // then
-        IFile sourceFile = getFile("src/SomeConcept2.thing");
+        final IFile sourceFile = getFile("src/SomeConcept2.thing");
         assertEquals(getFileInActiveEditor(), sourceFile);
     }
 
@@ -354,7 +354,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src/folder/with/several/parts", "${srcProject}/test/folder/having/many/parts");
 
-        IFile sourceFile = createFile("src/folder/with/several/parts/SomeConcept3.thing");
+        final IFile sourceFile = createFile("src/folder/with/several/parts/SomeConcept3.thing");
 
         // path to preferred test folder partially exists
         createFolder("test/folder/having");
@@ -386,7 +386,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
 
-        IFile sourceFile = createFile("src/some/path/to/file/SomeConcept4.thing");
+        final IFile sourceFile = createFile("src/some/path/to/file/SomeConcept4.thing");
 
         // path to preferred test folder partially exists
         createFolder("test/some");
@@ -421,12 +421,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.add(new Language("nde", "NDE"));
 
-        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
+        final LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
         langPrefs.setTestFileNameTemplate("${srcFile} test", " ");
         langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
 
-        IFile sourceFile = createFile("sources/some concept (2).nde");
-        IFile testFile = createFile("tests/some concept (2) test.nde");
+        final IFile sourceFile = createFile("sources/some concept (2).nde");
+        final IFile testFile = createFile("tests/some concept (2) test.nde");
 
         openEditor(sourceFile);
 
@@ -447,12 +447,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.add(new Language("nde", "NDE"));
 
-        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
+        final LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
         langPrefs.setTestFileNameTemplate("${srcFile} \\(test\\)", " ");
         langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
 
-        IFile sourceFile = createFile("sources/some concept.nde");
-        IFile testFile = createFile("tests/some concept (test).nde");
+        final IFile sourceFile = createFile("sources/some concept.nde");
+        final IFile testFile = createFile("tests/some concept (test).nde");
 
         openEditor(sourceFile);
 
@@ -474,12 +474,12 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         // given
         preferences.add(new Language("nde", "NDE"));
 
-        LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
+        final LanguagePreferencesWriter langPrefs = preferences.writerForLanguage("nde");
         langPrefs.setTestFileNameTemplate("${srcFile}*\\*test", "*");
         langPrefs.setTestFolderPathTemplate("${srcProject}/sources", "${srcProject}/tests");
 
-        IFile sourceFile = createFile("sources/some*concept.nde");
-        IFile testFile = createFile("tests/some*concept*foo*test.nde");
+        final IFile sourceFile = createFile("sources/some*concept.nde");
+        final IFile testFile = createFile("tests/some*concept*foo*test.nde");
 
         openEditor(sourceFile);
 
@@ -496,7 +496,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
     private void userSelectsTestFolder(DrivableWizardDialog dialog, IFolder folder)
     {
-        NewFileWizard wizard = (NewFileWizard) dialog.getWizard();
+        final NewFileWizard wizard = (NewFileWizard) dialog.getWizard();
         wizard.init(wizard.getWorkbench(), new StructuredSelection(folder));
     }
 
@@ -528,7 +528,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         {
             this.files = files;
 
-            for (IFile f : files)
+            for (final IFile f : files)
             {
                 if(f.equals(fileToReturn))
                 {
@@ -546,11 +546,11 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         {
             try
             {
-                IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(TEST_PROJECT);
+                final IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(TEST_PROJECT);
                 openEditor(p.getFile("SomeOtherClojureFileThatShouldBeConsideredAsACorrespondingTestByTheExtension.clj"));
                 return JumpResult.done();
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 return JumpResult.notDone();
             }
@@ -560,21 +560,21 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
     @Test
     public void testTestJumperJump_NotDone()
     {
-        TestJumper jumper = new TestJumper();
+        final TestJumper jumper = new TestJumper();
         // Cause an exception by passing an invalid context or letting activePage be null
         // Headless testing with xvfb-run actually passes the first test when active page exists.
         // We will just verify it's not null.
-        JumpResult result = jumper.jump(null);
+        final JumpResult result = jumper.jump(null);
         assertNotNull(result);
     }
 
     @Test
     public void testTestJumperJump_Done() throws Exception
     {
-        TestJumper jumper = new TestJumper();
-        IFile file = createFile("SomeOtherClojureFileThatShouldBeConsideredAsACorrespondingTestByTheExtension.clj");
+        final TestJumper jumper = new TestJumper();
+        final IFile file = createFile("SomeOtherClojureFileThatShouldBeConsideredAsACorrespondingTestByTheExtension.clj");
         openEditor(file);
-        JumpResult result = jumper.jump(null);
+        final JumpResult result = jumper.jump(null);
         assertNotNull(result);
         assertTrue(result.isDone());
     }

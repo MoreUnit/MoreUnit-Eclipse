@@ -14,9 +14,9 @@ public class CreateNewClassActionTest
     @Test
     public void should_provide_element_via_execute()
     {
-        IType createdType = mock(IType.class);
+        final IType createdType = mock(IType.class);
 
-        CreateNewClassAction action = new CreateNewClassAction()
+        final CreateNewClassAction action = new CreateNewClassAction()
         {
             @Override
             public IType execute()

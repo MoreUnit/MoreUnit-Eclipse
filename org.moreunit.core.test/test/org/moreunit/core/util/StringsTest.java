@@ -146,7 +146,7 @@ public class StringsTest
     @Test
     public void join_should_append_to_string_builder_with_given_separator_for_collection() throws Exception
     {
-        StringBuilder sb = new StringBuilder("prefix: ");
+        final StringBuilder sb = new StringBuilder("prefix: ");
         Strings.join(sb, ",", java.util.Arrays.asList("1", "2", "3"));
         assertEquals(sb.toString(), "prefix: 1,2,3");
     }
@@ -154,7 +154,7 @@ public class StringsTest
     @Test
     public void join_should_append_to_string_builder_with_given_separator_for_array() throws Exception
     {
-        StringBuilder sb = new StringBuilder("prefix: ");
+        final StringBuilder sb = new StringBuilder("prefix: ");
         Strings.join(sb, " -> ", new String[]{"aBc", "2", "DEf"});
         assertEquals(sb.toString(), "prefix: aBc -> 2 -> DEf");
     }

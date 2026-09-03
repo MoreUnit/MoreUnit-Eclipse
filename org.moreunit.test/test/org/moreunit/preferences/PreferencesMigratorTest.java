@@ -34,8 +34,8 @@ public class PreferencesMigratorTest
     public void should_apply_steps_by_ascending_target_version() throws Exception
     {
         // given
-        int appPreferencesVersion = 99;
-        PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
+        final int appPreferencesVersion = 99;
+        final PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
 
         storePreferencesVersionIs(1);
 
@@ -50,8 +50,8 @@ public class PreferencesMigratorTest
     public void should_only_apply_steps_with_target_version_greater_than_current_preferences_version() throws Exception
     {
         // given
-        int appPreferencesVersion = 7;
-        PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
+        final int appPreferencesVersion = 7;
+        final PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
 
         storePreferencesVersionIs(4);
 
@@ -66,8 +66,8 @@ public class PreferencesMigratorTest
     public void should_not_apply_any_step_when_target_versions_are_lower_than_or_equal_to_store_version() throws Exception
     {
         // given
-        int appPreferencesVersion = 12;
-        PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
+        final int appPreferencesVersion = 12;
+        final PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
 
         storePreferencesVersionIs(7);
 
@@ -82,8 +82,8 @@ public class PreferencesMigratorTest
     public void should_update_store_version_after_migration() throws Exception
     {
         // given
-        int appPreferencesVersion = 42;
-        PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
+        final int appPreferencesVersion = 42;
+        final PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
 
         storePreferencesVersionIs(1);
 
@@ -98,8 +98,8 @@ public class PreferencesMigratorTest
     public void should_not_update_store_version_when_no_migration_occurred() throws Exception
     {
         // given
-        int appPreferencesVersion = 17;
-        PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
+        final int appPreferencesVersion = 17;
+        final PreferencesMigrator migrator = new PreferencesMigrator(store, appPreferencesVersion, unorderedStepsTargetingV_3_5_7);
 
         storePreferencesVersionIs(appPreferencesVersion);
 
@@ -117,7 +117,7 @@ public class PreferencesMigratorTest
 
     private class StepTargetingVersion implements MigrationStep
     {
-        private int targetVersion;
+        private final int targetVersion;
 
         public StepTargetingVersion(int targetVersion)
         {

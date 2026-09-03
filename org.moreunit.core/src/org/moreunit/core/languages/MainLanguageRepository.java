@@ -33,7 +33,7 @@ public class MainLanguageRepository implements LanguageRepository, Service
 
     private void notifyListenersOfAddition(Language lang)
     {
-        for (LanguageConfigurationListener l : listeners)
+        for (final LanguageConfigurationListener l : listeners)
         {
             l.languageConfigurationAdded(lang);
         }
@@ -48,7 +48,7 @@ public class MainLanguageRepository implements LanguageRepository, Service
 
     private void notifyListenersOfRemoval(Language lang)
     {
-        for (LanguageConfigurationListener l : listeners)
+        for (final LanguageConfigurationListener l : listeners)
         {
             l.languageConfigurationRemoved(lang);
         }

@@ -6,8 +6,8 @@ import org.moreunit.MoreUnitPlugin;
 public class MoreUnitStatus implements IStatus
 {
 
-    private String fStatusMessage;
-    private int fSeverity;
+    private final String fStatusMessage;
+    private final int fSeverity;
 
     public MoreUnitStatus()
     {
