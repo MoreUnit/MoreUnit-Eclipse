@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.junit.jupiter.api.Test;
 
 public class EclipseResourceTest
@@ -142,5 +143,56 @@ public class EclipseResourceTest
 
         final Resource resource = new EclipseFile(underlyingResource);
         assertEquals(underlyingResource, resource.getUnderlyingPlatformResource());
+    }
+
+    @Test
+    public void should_equal_itself()
+    {
+        final Resource resource = newResource("/project/file.txt");
+
+        assertTrue(resource.equals(resource));
+    }
+
+    @Test
+    public void should_not_equal_null()
+    {
+        assertFalse(newResource("/project/file.txt").equals(null));
+    }
+
+    @Test
+    public void should_not_equal_resource_of_different_type_with_same_path()
+    {
+        final IFolder folder = mock(IFolder.class);
+        when(folder.getFullPath()).thenReturn(new Path("/project/file.txt"));
+
+        assertFalse(newResource("/project/file.txt").equals(new EclipseFolder(folder)));
+    }
+
+    @Test
+    public void should_equal_resource_of_same_type_with_same_path()
+    {
+        assertTrue(newResource("/project/file.txt").equals(newResource("/project/file.txt")));
+    }
+
+    @Test
+    public void should_not_equal_resource_with_different_path()
+    {
+        assertFalse(newResource("/project/file.txt").equals(newResource("/project/other.txt")));
+    }
+
+    @Test
+    public void should_use_path_string_for_hash_code_and_to_string()
+    {
+        final Resource resource = newResource("/project/file.txt");
+
+        assertEquals("/project/file.txt", resource.toString());
+        assertEquals("/project/file.txt".hashCode(), resource.hashCode());
+    }
+
+    private Resource newResource(String fullPath)
+    {
+        final IFile underlyingResource = mock(IFile.class);
+        when(underlyingResource.getFullPath()).thenReturn(new Path(fullPath));
+        return new EclipseFile(underlyingResource);
     }
 }

@@ -1,8 +1,11 @@
 package org.moreunit.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.moreunit.util.PluginTools.getPathStringWithoutProjectName;
@@ -14,6 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
@@ -320,6 +327,184 @@ public class PluginToolsTest
         createProject("CreatePFRProject2");
 
         assertNull(PluginTools.createPackageFragmentRoot("CreatePFRProject2", "src/doesNotExist"));
+    }
+
+    @Test
+    public void getOpenEditorPart_should_not_fail()
+    {
+        // smoke test for the workbench lookup (a missing page yields null)
+        PluginTools.getOpenEditorPart();
+    }
+
+    @Test
+    public void should_return_empty_string_when_source_folder_is_null()
+    {
+        assertEquals("", getPathStringWithoutProjectName(null));
+    }
+
+    @Test
+    public void should_return_null_guesses_when_project_has_no_source_folders() throws Exception
+    {
+        final IJavaProject project = mock(IJavaProject.class);
+        when(project.getPackageFragmentRoots()).thenReturn(new IPackageFragmentRoot[0]);
+        final IPackageFragmentRoot folder = mock(IPackageFragmentRoot.class);
+
+        assertNull(guessSourceFolderCorrespondingToTestFolder(project, folder));
+        assertNull(guessTestFolderCorrespondingToMainSrcFolder(project, folder));
+        assertNull(guessTestFolderCorrespondingToMainSrcFolder(project, folder, "java"));
+    }
+
+    @Test
+    public void should_filter_out_source_folders_excluding_java_files() throws Exception
+    {
+        final IPackageFragmentRoot excluded = newSourceRoot("src/main/java", new IPath[] { new Path("**/*.java") });
+        final IPackageFragmentRoot plain = newSourceRoot("src/test/java", null);
+        final IPackageFragmentRoot otherExclusions = newSourceRoot("src/other/java", new IPath[] { new Path("other/**") });
+
+        final IJavaProject project = mock(IJavaProject.class);
+        when(project.getPackageFragmentRoots()).thenReturn(new IPackageFragmentRoot[] { excluded, plain, otherExclusions });
+
+        final List<IPackageFragmentRoot> folders = PluginTools.findJavaSourceFoldersFor(project);
+
+        assertEquals(2, folders.size());
+        assertTrue(folders.contains(plain));
+        assertTrue(folders.contains(otherExclusions));
+        assertFalse(folders.contains(excluded));
+    }
+
+    @Test
+    public void should_keep_source_folder_when_exclusions_cannot_be_read() throws Exception
+    {
+        final IPackageFragmentRoot root = mock(IPackageFragmentRoot.class);
+        when(root.isArchive()).thenReturn(false);
+        final IClasspathEntry entry = mock(IClasspathEntry.class);
+        when(entry.getEntryKind()).thenReturn(IClasspathEntry.CPE_SOURCE);
+        // the first call serves the source-folder collection, the second one
+        // (inside the exclusion check) fails and must be swallowed
+        final JavaModelException failure = mock(JavaModelException.class);
+        when(root.getRawClasspathEntry()).thenReturn(entry).thenThrow(failure);
+        when(root.getPath()).thenReturn(new Path("/aProject/src/main/java"));
+
+        final IJavaProject project = mock(IJavaProject.class);
+        when(project.getPackageFragmentRoots()).thenReturn(new IPackageFragmentRoot[] { root });
+
+        assertTrue(PluginTools.findJavaSourceFoldersFor(project).contains(root));
+    }
+
+    @Test
+    public void should_return_no_source_folder_when_package_fragment_roots_cannot_be_read() throws Exception
+    {
+        final IJavaProject project = mock(IJavaProject.class);
+        when(project.getPackageFragmentRoots()).thenThrow(mock(JavaModelException.class));
+
+        assertTrue(PluginTools.getAllSourceFolderFromProject(project).isEmpty());
+    }
+
+    @Test
+    public void should_return_first_folder_when_all_folders_equal_test_folder() throws Exception
+    {
+        final IPackageFragmentRoot folder = newSourceRoot("one", null);
+
+        final IJavaProject project = mock(IJavaProject.class);
+        when(project.getPackageFragmentRoots()).thenReturn(new IPackageFragmentRoot[] { folder, folder });
+
+        assertSame(folder, guessSourceFolderCorrespondingToTestFolder(project, folder));
+    }
+
+    @Test
+    public void guessSourceFolderCorrespondingToTestFolder_should_return_maven_main_folder_among_several_folders() throws Exception
+    {
+        // given
+        final Project project = createAProjectWithSourceFolders("src/test/java", "src/main/java", "other");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("src/test/java");
+
+        // when
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+
+        // then
+        assertEquals(project.getSourceFolder("src/main/java"), mainSrcFolder);
+    }
+
+    @Test
+    public void guessSourceFolderCorrespondingToTestFolder_should_fall_back_when_all_folders_contain_test_keyword() throws Exception
+    {
+        // given
+        final Project project = createAProjectWithSourceFolders("test/one", "test/two", "test/three");
+        final IPackageFragmentRoot testSrcFolder = project.getSourceFolder("test/two");
+
+        // when
+        final IPackageFragmentRoot mainSrcFolder = guessSourceFolderCorrespondingToTestFolder(project.get(), testSrcFolder);
+
+        // then
+        assertEquals(project.getSourceFolder("test/one"), mainSrcFolder);
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_folder_named_test_among_several_folders() throws Exception
+    {
+        // given
+        final Project project = createAProjectWithSourceFolders("test", "src", "other");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src");
+
+        // when
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertEquals(project.getSourceFolder("test"), testSrcFolder);
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_use_explicit_language_for_maven_test_folder() throws Exception
+    {
+        // given
+        final Project project = createAProjectWithSourceFolders("src/main/java", "src/test/java", "src/test/groovy");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+
+        // when
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder, "groovy");
+
+        // then
+        assertEquals(project.getSourceFolder("src/test/groovy"), testSrcFolder);
+    }
+
+    @Test
+    public void guessTestFolderCorrespondingToMainSrcFolder_should_return_other_maven_test_folder_when_language_differs() throws Exception
+    {
+        // given
+        final Project project = createAProjectWithSourceFolders("src/main/java", "src/test/scala", "other");
+        final IPackageFragmentRoot mainSrcFolder = project.getSourceFolder("src/main/java");
+
+        // when
+        final IPackageFragmentRoot testSrcFolder = guessTestFolderCorrespondingToMainSrcFolder(project.get(), mainSrcFolder);
+
+        // then
+        assertEquals(project.getSourceFolder("src/test/scala"), testSrcFolder);
+    }
+
+    @Test
+    public void createPackageFragmentRoot_should_return_null_when_java_model_cannot_be_read() throws Exception
+    {
+        final IProject plainProject = ResourcesPlugin.getWorkspace().getRoot().getProject("PlainPFRProject");
+        if(! plainProject.exists())
+        {
+            plainProject.create(null);
+        }
+        plainProject.open(null);
+        projectsToDeleteAfterTest.add(plainProject);
+
+        assertNull(PluginTools.createPackageFragmentRoot("PlainPFRProject", "src"));
+    }
+
+    private IPackageFragmentRoot newSourceRoot(String projectRelativePath, IPath[] exclusions) throws Exception
+    {
+        final IPackageFragmentRoot root = mock(IPackageFragmentRoot.class);
+        when(root.isArchive()).thenReturn(false);
+        final IClasspathEntry entry = mock(IClasspathEntry.class);
+        when(entry.getEntryKind()).thenReturn(IClasspathEntry.CPE_SOURCE);
+        when(entry.getExclusionPatterns()).thenReturn(exclusions);
+        when(root.getRawClasspathEntry()).thenReturn(entry);
+        when(root.getPath()).thenReturn(new Path("/aProject/" + projectRelativePath));
+        return root;
     }
 
     private IJavaProject createProject(String name) throws Exception

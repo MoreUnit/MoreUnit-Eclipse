@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import org.mockito.stubbing.Answer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -19,6 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
@@ -117,6 +119,19 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
     public void should_have_no_selected_project_initially()
     {
         assertNull(view.getSelectedJavaProject());
+    }
+
+    @Test
+    public void should_do_nothing_when_widget_is_default_selected()
+    {
+        createViewControl();
+        selectProject();
+
+        final Event event = new Event();
+        event.widget = projectComboBox();
+        view.widgetDefaultSelected(new SelectionEvent(event));
+
+        assertEquals(context.getProjectHandler().get(), view.getSelectedJavaProject());
     }
 
     @Test
@@ -263,6 +278,40 @@ public class MissingTestsViewPartTest extends SwtPageTestCase
         flushDisplayEvents();
 
         verify(treeViewer, never()).refresh();
+    }
+
+    @Test
+    public void should_ignore_core_exception_while_visiting_project_delta() throws Exception
+    {
+        createViewControl();
+        selectProject();
+        final TreeViewer treeViewer = spyTreeView();
+
+        final IResourceDelta projectDelta = mock(IResourceDelta.class);
+        doThrow(new CoreException(mock(org.eclipse.core.runtime.IStatus.class))).when(projectDelta).accept(any(IResourceDeltaVisitor.class));
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
+        when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(projectDelta);
+
+        view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, rootDelta));
+        flushDisplayEvents();
+
+        verify(treeViewer, never()).refresh();
+    }
+
+    @Test
+    public void should_ignore_core_exception_while_checking_new_projects() throws Exception
+    {
+        createViewControl();
+        selectProject();
+
+        final IResourceDelta rootDelta = mock(IResourceDelta.class);
+        when(rootDelta.findMember(context.getProjectHandler().get().getPath())).thenReturn(null);
+        doThrow(new CoreException(mock(org.eclipse.core.runtime.IStatus.class))).when(rootDelta).accept(any(IResourceDeltaVisitor.class));
+
+        view.resourceChanged(event(IResourceChangeEvent.POST_CHANGE, rootDelta));
+        flushDisplayEvents();
+
+        assertFalse(view.getSelectedJavaProject() == null);
     }
 
     @Test

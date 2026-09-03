@@ -3,12 +3,18 @@ package org.moreunit.core.matching;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.moreunit.core.matching.TestFileNamePattern.isValid;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -688,5 +694,76 @@ public class TestFileNamePatternTest
         // then it falls back to source file logic (isTestFile == false)
         assertFalse(evaluation.isTestFile());
         assertEquals("SomethingMyVeryLongClassNameTest", evaluation.getPreferredCorrespondingFileName());
+    }
+
+    @Test
+    public void should_reject_template_without_src_file_variable()
+    {
+        final IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> new TestFileNamePattern("NoVariableHere", camelCaseTokenizer));
+
+        assertTrue(e.getMessage().contains("NoVariableHere"));
+    }
+
+    @Test
+    public void should_support_star_only_suffix()
+    {
+        // suffix "*" maps to regex ".*" and compiles an empty suffix pattern
+        final TestFileNamePattern pattern = new TestFileNamePattern("${srcFile}*", camelCaseTokenizer);
+
+        assertEquals("", pattern.getSeparator());
+        assertTrue(pattern.evaluate("Anything").isTestFile());
+    }
+
+    @Test
+    public void should_build_plain_names_when_template_holds_only_wildcards()
+    {
+        // both parts hold no alternatives, so names and patterns are plain copies
+        final TestFileNamePattern pattern = TestFileNamePattern.forceEvaluationAsSourceFile("*${srcFile}*", "");
+
+        final FileNameEvaluation evaluation = pattern.evaluate("MyFile");
+
+        assertFalse(evaluation.isTestFile());
+        assertEquals("MyFile", evaluation.getPreferredCorrespondingFileName());
+        assertEquals(1, evaluation.getPreferredCorrespondingFilePatterns().size());
+        assertTrue(evaluation.getOtherCorrespondingFilePatterns().isEmpty());
+    }
+
+    @Test
+    public void should_ignore_parts_without_alternatives_when_appending() throws Exception
+    {
+        final TestFileNamePatternParser.UserDefinedPart part = mock(TestFileNamePatternParser.UserDefinedPart.class);
+        when(part.hasAlternatives()).thenReturn(false);
+
+        final StringBuilder buffer = new StringBuilder("unchanged");
+        invokePrivateStatic("appendAlternatives", new Class<?>[] { StringBuilder.class, TestFileNamePatternParser.UserDefinedPart.class }, buffer, part);
+
+        assertEquals("unchanged", buffer.toString());
+    }
+
+    @Test
+    public void should_return_empty_pattern_for_part_without_alternatives() throws Exception
+    {
+        final TestFileNamePatternParser.UserDefinedPart part = mock(TestFileNamePatternParser.UserDefinedPart.class);
+        when(part.hasAlternatives()).thenReturn(false);
+
+        assertEquals("", invokePrivateStatic("toPattern", new Class<?>[] { TestFileNamePatternParser.UserDefinedPart.class, String.class }, part, "whatever"));
+        assertEquals("", invokePrivateStatic("toOptionalPattern", new Class<?>[] { TestFileNamePatternParser.UserDefinedPart.class }, part));
+    }
+
+    @Test
+    public void should_describe_group_by_its_alternatives() throws Exception
+    {
+        final Class<?> groupClass = Class.forName("org.moreunit.core.matching.TestFileNamePattern$Group");
+        final Constructor<?> constructor = groupClass.getDeclaredConstructor(List.class);
+        constructor.setAccessible(true);
+
+        assertEquals("[Pre1, Pre2]", constructor.newInstance(asList("Pre1", "Pre2")).toString());
+    }
+
+    private static Object invokePrivateStatic(String name, Class<?>[] types, Object... args) throws Exception
+    {
+        final Method method = TestFileNamePattern.class.getDeclaredMethod(name, types);
+        method.setAccessible(true);
+        return method.invoke(null, args);
     }
 }
