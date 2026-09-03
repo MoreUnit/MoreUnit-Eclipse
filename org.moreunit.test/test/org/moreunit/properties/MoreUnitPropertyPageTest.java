@@ -36,6 +36,8 @@ import static org.mockito.Mockito.mock;
  * Tests {@link MoreUnitPropertyPage} with real SWT widgets.
  */
 @Context(SimpleJUnit4Project.class)
+// white-box test: uses internal types on purpose
+@SuppressWarnings("restriction")
 public class MoreUnitPropertyPageTest extends SwtPageTestCase
 {
     private MoreUnitPropertyPage page;
@@ -276,6 +278,9 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
         }
     }
 
+    // Acces reflexif au champ prive "preferenceMap" de Preferences (test uniquement) :
+    // le cast Map<IJavaProject, IPreferenceStore> est sur mais non verifiable a l'execution.
+    @SuppressWarnings("unchecked")
     private IPreferenceStore replaceProjectStoreWithFailingStore() throws Exception
     {
         IPreferenceStore oldStore = Preferences.getInstance().getProjectStore(javaProject);
@@ -296,6 +301,9 @@ public class MoreUnitPropertyPageTest extends SwtPageTestCase
         return oldStore;
     }
 
+    // Acces reflexif au champ prive "preferenceMap" de Preferences (test uniquement) :
+    // le cast Map<IJavaProject, IPreferenceStore> est sur mais non verifiable a l'execution.
+    @SuppressWarnings("unchecked")
     private void restoreProjectStore(IPreferenceStore oldStore) throws Exception
     {
         Field preferenceMapField = Preferences.class.getDeclaredField("preferenceMap");

@@ -36,8 +36,7 @@ public class TypeRef<T extends TypeRef<T>>
             return false;
         }
 
-        @SuppressWarnings("rawtypes")
-        TypeRef other = (TypeRef) obj;
+        TypeRef<?> other = (TypeRef<?>) obj;
 
         if(fullyQualifiedClassName == null)
         {

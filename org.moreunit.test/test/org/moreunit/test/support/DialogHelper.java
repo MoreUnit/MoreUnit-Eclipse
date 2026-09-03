@@ -36,6 +36,12 @@ public final class DialogHelper
      * {@code knownShells} was captured and then applies the given action. The
      * task gives up after {@code maxAttempts} polls and then closes all new
      * shells, so that the dialog call eventually returns.
+     *
+     * @param display the display on which the dialog will open
+     * @param knownShells the shells existing before the dialog opens
+     * @param action the action to apply to the new shell once detected
+     * @param maxAttempts the number of polls before giving up
+     * @return a task polling for the new dialog shell
      */
     public static Runnable closerFor(Display display, Set<Shell> knownShells, Consumer<Shell> action, int maxAttempts)
     {
@@ -84,6 +90,9 @@ public final class DialogHelper
      * Selects the first tree item whose text contains the given text and
      * confirms it (default selection). Closes the shell when no such item
      * exists.
+     *
+     * @param dialogShell the dialog shell containing the tree
+     * @param itemText the (sub)string identifying the item to confirm
      */
     public static void confirmItem(Shell dialogShell, String itemText)
     {
@@ -123,6 +132,8 @@ public final class DialogHelper
 
     /**
      * Clicks the OK button of a {@link org.eclipse.jface.dialogs.Dialog} shell.
+     *
+     * @param dialogShell the dialog shell containing the OK button
      */
     public static void confirmOkButton(Shell dialogShell)
     {

@@ -151,7 +151,8 @@ public class CodeTemplateTest
         CodeTemplate template = new CodeTemplate("an.id", null, null);
 
         assertFalse(template.equals(null));
-        assertFalse(template.equals("an.id"));
+        Object objectOfDifferentClass = "an.id";
+        assertFalse(template.equals(objectOfDifferentClass));
     }
 
     @Test

@@ -340,7 +340,12 @@ public class RunTestsActionExecutor
             Object choice = dialog.getChoice();
             if(choice instanceof Collection)
             {
-                return (Collection<IType>) choice;
+                // choice comes from ChooseDialog<Object>: the dialog was fed
+                // with IType elements (plus a TreeActionElement returning
+                // Collection<IType>), so an unchecked cast is safe here
+                @SuppressWarnings("unchecked")
+                Collection<IType> selectedTypes = (Collection<IType>) choice;
+                return selectedTypes;
             }
             if(choice instanceof IType type)
             {

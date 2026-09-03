@@ -351,10 +351,9 @@ public class MoreUnitAnnotationModel implements IAnnotationModel
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Iterator<Annotation> getAnnotationIterator()
     {
-        return new ArrayList(copyAnnotations()).iterator();
+        return new ArrayList<Annotation>(copyAnnotations()).iterator();
     }
 
     @Override

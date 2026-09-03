@@ -76,7 +76,7 @@ public class EclipsePathTest
         assertSame(path, path);
         assertEquals(path, samePath);
         assertNotEquals(path, otherPath);
-        assertFalse(path.equals("not a path"));
+        assertNotEquals(path, "not a path");
         assertEquals(path.hashCode(), samePath.hashCode());
     }
 

@@ -1,6 +1,7 @@
 package org.moreunit.test.workspace;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -137,7 +138,15 @@ public class WorkspaceHelper
     {
         Location location = Platform.getInstallLocation();
         URL pluginURL = location.getURL();
-        URL jarURL = new URL(pluginURL, filename);
+        URL jarURL;
+        try
+        {
+            jarURL = pluginURL.toURI().resolve(filename).toURL();
+        }
+        catch (URISyntaxException e)
+        {
+            throw new IOException(e);
+        }
 
         URL localJarURL = FileLocator.toFileURL(jarURL);
 

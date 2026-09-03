@@ -52,7 +52,7 @@ public class MockingTemplatesTest
         MockingTemplates templates = new MockingTemplates(new ArrayList<>(), tmplList);
 
         int count = 0;
-        for (MockingTemplate t : templates)
+        for (Iterator<MockingTemplate> iter = templates.iterator(); iter.hasNext(); iter.next())
         {
             count++;
         }

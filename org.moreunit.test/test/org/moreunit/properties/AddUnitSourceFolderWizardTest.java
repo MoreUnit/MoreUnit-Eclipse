@@ -9,6 +9,7 @@ import java.util.List;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ICheckable;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -24,7 +25,8 @@ import org.moreunit.test.context.configs.SimpleJUnit4Project;
  * {@link AddUnitSourceFolderWizardPage} with real SWT widgets. The wizard
  * dialog itself is never opened (it is modal); instead the wizard API is
  * driven directly and check state changes are simulated the way JFace
- * notifies {@link ICheckStateListener}s (via {@link #check(CheckboxTreeViewer, AddUnitSourceFolderWizardPage, Object, boolean)}).
+ * notifies {@link ICheckStateListener}s (via the private {@code check} helper
+ * below).
  */
 @Context(SimpleJUnit4Project.class)
 public class AddUnitSourceFolderWizardTest extends SwtPageTestCase

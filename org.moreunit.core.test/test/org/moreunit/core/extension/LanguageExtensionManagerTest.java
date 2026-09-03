@@ -41,7 +41,6 @@ public class LanguageExtensionManagerTest
     private Logger logger;
     private LanguageExtensionManager manager;
     private IExtensionRegistry extensionRegistry;
-    private IConfigurationElement[] configElements;
 
     @BeforeEach
     public void setUp()
@@ -49,7 +48,6 @@ public class LanguageExtensionManagerTest
         bundleContext = mock(BundleContext.class);
         logger = mock(Logger.class);
         extensionRegistry = mock(IExtensionRegistry.class);
-        configElements = new IConfigurationElement[0];
     }
 
     @Test

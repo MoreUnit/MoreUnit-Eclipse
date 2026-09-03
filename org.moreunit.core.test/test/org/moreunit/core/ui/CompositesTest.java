@@ -125,7 +125,7 @@ public class CompositesTest
     public void should_not_fire_listener_when_not_selected()
     {
         boolean[] fired = new boolean[1];
-        Link link = Composites.link(shell, "Some text", org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter(e -> fired[0] = true));
+        Composites.link(shell, "Some text", org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter(e -> fired[0] = true));
 
         Control[] children = shell.getChildren();
 

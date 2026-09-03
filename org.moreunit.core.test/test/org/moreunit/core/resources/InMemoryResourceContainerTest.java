@@ -54,12 +54,12 @@ public class InMemoryResourceContainerTest {
 
         File file1 = project.getFile("file1.txt");
         file1.create();
-        File file2 = project.getFile("file2.txt");
+        project.getFile("file2.txt");
         // file2 not created
 
         Folder folder1 = project.getFolder("folder1");
         folder1.create();
-        Folder folder2 = project.getFolder("folder2");
+        project.getFolder("folder2");
         // folder2 not created
 
         List<File> files = project.listFiles();

@@ -163,6 +163,11 @@ public abstract class SwtPageTestCase extends ContextTestCase
     /**
      * Returns the text field placed next to the label having the given text
      * (fields and their labels are consecutive children of their parent).
+     *
+     * @param composite the composite to search (recursively)
+     * @param labelText the text of the label next to the wanted field
+     * @return the text field following the label, or {@code null} if none
+     *         matches
      */
     protected static Text findTextByLabel(Composite composite, String labelText)
     {

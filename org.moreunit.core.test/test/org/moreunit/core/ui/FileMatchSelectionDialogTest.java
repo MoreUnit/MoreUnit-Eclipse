@@ -16,10 +16,10 @@ import java.lang.reflect.Method;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -602,7 +602,8 @@ public class FileMatchSelectionDialogTest
         {
         }
 
-        public void inputChanged(IContentProvider viewer, Object oldInput, Object newInput)
+        @Override
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
         {
         }
     }

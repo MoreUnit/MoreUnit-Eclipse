@@ -35,6 +35,8 @@ import org.moreunit.test.context.configs.SimpleJUnit4Project;
  * project, so no cleanup is required).
  */
 @Context(SimpleJUnit4Project.class)
+// white-box test: uses internal types on purpose
+@SuppressWarnings("restriction")
 public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
 {
     private static final String SRC_FILE_VARIABLE = TestFileNamePattern.SRC_FILE_VARIABLE;
@@ -56,7 +58,7 @@ public class OtherMoreunitPropertiesBlockTest extends SwtPageTestCase
         preferences.setTestPackagePrefix(javaProject, "");
         preferences.setTestPackageSuffix(javaProject, "");
         preferences.setTestSuperClass(javaProject, "");
-        preferences.forProject(javaProject).setTestClassNameTemplate(PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
+        Preferences.forProject(javaProject).setTestClassNameTemplate(PreferenceConstants.DEFAULT_TEST_CLASS_NAME_TEMPLATE);
         preferences.setTestAnnotationMode(javaProject, TestAnnotationMode.OFF);
         preferences.setShouldUseTestMethodExtendedSearch(javaProject, true);
         preferences.setShouldUseTestMethodSearchByName(javaProject, true);

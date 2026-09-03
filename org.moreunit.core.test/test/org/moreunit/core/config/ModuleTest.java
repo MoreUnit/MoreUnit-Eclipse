@@ -129,7 +129,7 @@ public class ModuleTest
     @Test
     public void constructor_should_not_replace_existing_instance_when_override_is_false()
     {
-        TestModule newModule = new TestModule(false, logger);
+        new TestModule(false, logger);
 
         assertFalse(module.cleanCalled);
         assertEquals(TestModule.instance, module);

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.moreunit.core.resources.SrcFile;
 import org.moreunit.core.resources.Workspace;
 
+// white-box test: uses internal types on purpose
+@SuppressWarnings("restriction")
 public class FileTesterTest
 {
     private final Workspace workspace = mock(Workspace.class);

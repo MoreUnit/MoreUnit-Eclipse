@@ -266,7 +266,7 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
         preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}*Test", "");
 
         IFile sourceFile = createFile("SomeConcept.jui");
-        IFile testFile1 = createFile("SomeConceptFirstTest.jui");
+        createFile("SomeConceptFirstTest.jui");
         IFile testFile2 = createFile("SomeConceptSecondTest.jui");
 
         capturingSelector.fileToReturn = testFile2;

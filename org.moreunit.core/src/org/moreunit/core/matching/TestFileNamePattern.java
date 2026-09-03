@@ -128,7 +128,6 @@ import org.moreunit.core.matching.TestFileNamePatternParser.UserDefinedPart;
 public final class TestFileNamePattern
 {
     public static final String SRC_FILE_VARIABLE = TestFileNamePatternParser.SRC_FILE_VARIABLE;
-    private static final Pattern SRC_FILE_VARIABLE_PATTERN = compile(quote(SRC_FILE_VARIABLE));
 
     /* Various patterns */
 

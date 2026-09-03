@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.junit.jupiter.api.Test;
 
+// white-box test: uses internal types on purpose
+@SuppressWarnings("restriction")
 public class ImageDescriptorCenterTest
 {
     @Test

@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 import org.moreunit.extensionpoints.ITestLaunchSupport.Cardinality;
 import org.moreunit.log.LogHandler;
@@ -50,7 +51,7 @@ public class TestLauncherTest
         Collection<IMember> members = Arrays.asList(testMember);
 
         ILaunchShortcut additionalShortcut = mock(ILaunchShortcut.class);
-        when(additionalShortcutProvider.getShorcutFor(eq(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5), any(Class.class), any(Cardinality.class)))
+        when(additionalShortcutProvider.getShorcutFor(eq(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class)))
             .thenReturn(additionalShortcut);
 
         testLauncher.launch(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, members, "run");
@@ -67,12 +68,12 @@ public class TestLauncherTest
         // Make the additional provider resolve to a shortcut so we don't
         // fall through to the Eclipse-runtime path.
         ILaunchShortcut additionalShortcut = mock(ILaunchShortcut.class);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(additionalShortcut);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(additionalShortcut);
 
         testLauncher.launch(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4, members, "run");
 
         ArgumentCaptor<Cardinality> cardinalityCaptor = ArgumentCaptor.forClass(Cardinality.class);
-        verify(additionalShortcutProvider).getShorcutFor(eq(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4), any(Class.class), cardinalityCaptor.capture());
+        verify(additionalShortcutProvider).getShorcutFor(eq(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_4), ArgumentMatchers.<Class<? extends IJavaElement>>any(), cardinalityCaptor.capture());
         assertSame(Cardinality.ONE, cardinalityCaptor.getValue());
     }
 
@@ -84,12 +85,12 @@ public class TestLauncherTest
         Collection<IMember> members = Arrays.asList(testMember1, testMember2);
 
         ILaunchShortcut additionalShortcut = mock(ILaunchShortcut.class);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(additionalShortcut);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(additionalShortcut);
 
         testLauncher.launch(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, members, "run");
 
         ArgumentCaptor<Cardinality> cardinalityCaptor = ArgumentCaptor.forClass(Cardinality.class);
-        verify(additionalShortcutProvider).getShorcutFor(eq(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5), any(Class.class), cardinalityCaptor.capture());
+        verify(additionalShortcutProvider).getShorcutFor(eq(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5), ArgumentMatchers.<Class<? extends IJavaElement>>any(), cardinalityCaptor.capture());
         assertSame(Cardinality.SEVERAL, cardinalityCaptor.getValue());
     }
 
@@ -100,11 +101,12 @@ public class TestLauncherTest
         Collection<IMember> members = Arrays.asList(testMember);
 
         ILaunchShortcut additionalShortcut = mock(ILaunchShortcut.class);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(additionalShortcut);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(additionalShortcut);
 
         testLauncher.launch(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, members, "run");
 
-        ArgumentCaptor<Class<? extends IJavaElement>> classCaptor = ArgumentCaptor.forClass(Class.class);
+        @SuppressWarnings("unchecked") // forClass exige un Class<S> reifiable : cast via Class<?> sans type raw
+        ArgumentCaptor<Class<? extends IJavaElement>> classCaptor = ArgumentCaptor.forClass((Class<Class<? extends IJavaElement>>) (Class<?>) Class.class);
         verify(additionalShortcutProvider).getShorcutFor(any(String.class), classCaptor.capture(), any(Cardinality.class));
         assertSame(testMember.getClass(), classCaptor.getValue());
     }
@@ -118,7 +120,7 @@ public class TestLauncherTest
         IExtensionPoint extensionPoint = mock(IExtensionPoint.class);
         when(registry.getExtensionPoint(any(), any())).thenReturn(extensionPoint);
         when(extensionPoint.getExtensions()).thenReturn(new IExtension[0]);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(null);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(null);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class);
              MockedStatic<LogHandler> logHandlerMock = mockStatic(LogHandler.class))
@@ -129,7 +131,7 @@ public class TestLauncherTest
             IMember testMember = mock(IMember.class);
             testLauncher.launch(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, Arrays.asList(testMember), "run");
 
-            verify(additionalShortcutProvider, atLeastOnce()).getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class));
+            verify(additionalShortcutProvider, atLeastOnce()).getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class));
         }
     }
 
@@ -140,7 +142,7 @@ public class TestLauncherTest
         IExtensionPoint extensionPoint = mock(IExtensionPoint.class);
         when(registry.getExtensionPoint(any(), any())).thenReturn(extensionPoint);
         when(extensionPoint.getExtensions()).thenReturn(new IExtension[0]);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(null);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(null);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class);
              MockedStatic<LogHandler> logHandlerMock = mockStatic(LogHandler.class))
@@ -151,7 +153,7 @@ public class TestLauncherTest
             IMember testMember = mock(IMember.class);
             testLauncher.launch("some-unknown-type", Arrays.asList(testMember), "run");
 
-            verify(additionalShortcutProvider).getShorcutFor(eq("some-unknown-type"), any(Class.class), any(Cardinality.class));
+            verify(additionalShortcutProvider).getShorcutFor(eq("some-unknown-type"), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class));
         }
     }
 
@@ -164,7 +166,7 @@ public class TestLauncherTest
         when(extensionPoint.getExtensions()).thenReturn(new IExtension[0]);
 
         ILaunchShortcut additionalShortcut = mock(ILaunchShortcut.class);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(additionalShortcut);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(additionalShortcut);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class))
         {
@@ -186,7 +188,7 @@ public class TestLauncherTest
 
         // Just verify the launcher was created with the injected provider.
         ILaunchShortcut additionalShortcut = mock(ILaunchShortcut.class);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(additionalShortcut);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(additionalShortcut);
 
         IMember testMember = mock(IMember.class);
         testLauncher.launch(PreferenceConstants.TEST_TYPE_VALUE_JUNIT_5, Arrays.asList(testMember), "run");
@@ -207,7 +209,7 @@ public class TestLauncherTest
         when(jdtExtension.getConfigurationElements()).thenReturn(new IConfigurationElement[] { configElement });
         when(extensionPoint.getExtensions()).thenReturn(new IExtension[] { jdtExtension });
         when(registry.getExtensionPoint(any(), any())).thenReturn(extensionPoint);
-        when(additionalShortcutProvider.getShorcutFor(any(String.class), any(Class.class), any(Cardinality.class))).thenReturn(null);
+        when(additionalShortcutProvider.getShorcutFor(any(String.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(null);
 
         try (MockedStatic<Platform> platformMock = mockStatic(Platform.class);
              MockedStatic<LogHandler> logHandlerMock = mockStatic(LogHandler.class))

@@ -41,6 +41,9 @@ public class JUnitTestSelectionLaunchShortcutTest extends ContextTestCase
      * background job. The delegate is mocked so that no launch is actually
      * performed, and the job is awaited by dispatching the UI event queue (the
      * tests themselves run on the UI thread).
+     *
+     * @throws Exception if the package-private shortcut cannot be reached via
+     *             reflection or if awaiting the delegate launch times out
      */
     @Test
     public void launch_should_build_configuration_and_delegate_launch_for_several_selected_tests() throws Exception

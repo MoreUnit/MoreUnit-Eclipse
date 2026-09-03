@@ -111,6 +111,9 @@ public class SearchTools
         return new LinkedHashSet<>(collector.matches);
     }
 
+    // Used reflectively by SearchToolsTest (getDeclaredMethod + setAccessible),
+    // hence "never used locally" from JDT's point of view.
+    @SuppressWarnings("unused")
     private static SearchPattern createSearchPattern(Collection<String> typeNamePatterns, int searchFor, int limitTo, int matchRule)
     {
         SearchPattern result = null;
