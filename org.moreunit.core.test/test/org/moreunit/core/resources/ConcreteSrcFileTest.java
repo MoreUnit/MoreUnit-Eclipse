@@ -6,14 +6,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.moreunit.core.config.CoreModule.$;
 
 import org.moreunit.core.commands.TmpProjectTestCase;
 import org.moreunit.core.matching.FileNameEvaluation;
 import org.moreunit.core.matching.SourceFolderPath;
+import org.moreunit.core.preferences.Preferences;
 
 public class ConcreteSrcFileTest extends TmpProjectTestCase
 {
+    @BeforeEach
+    public void setUpPreferences()
+    {
+        $().getPreferences().writerForAnyLanguage().setTestFileNameTemplate("${srcFile}Test", "");
+        $().getPreferences().writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}/src", "${srcProject}/test");
+    }
+
+    @AfterEach
+    public void resetPreferences()
+    {
+        $().getPreferences().writerForAnyLanguage().setTestFileNameTemplate(Preferences.DEFAULTS.getTestFileNameTemplate(), Preferences.DEFAULTS.getFileWordSeparator());
+        $().getPreferences().writerForAnyLanguage().setTestFolderPathTemplate(Preferences.DEFAULTS.getSrcFolderPathTemplate(), Preferences.DEFAULTS.getTestFolderPathTemplate());
+    }
+
     private ConcreteSrcFile createSrcFile(String projectRelativePath) throws Exception
     {
         return new ConcreteSrcFile(new EclipseFile(createFile(projectRelativePath)));
@@ -82,13 +101,14 @@ public class ConcreteSrcFileTest extends TmpProjectTestCase
     public void should_find_corresponding_folder_of_test_and_src_files() throws Exception
     {
         ConcreteSrcFile srcFile = createSrcFile("src/Foo.java");
-        ConcreteSrcFile testFile = createSrcFile("src/FooTest.java");
+        ConcreteSrcFile testFile = createSrcFile("test/FooTest.java");
 
-        SourceFolderPath srcFolder = srcFile.findCorrespondingSrcFolder();
-        SourceFolderPath testFolder = testFile.findCorrespondingSrcFolder();
+        SourceFolderPath testFolder = srcFile.findCorrespondingSrcFolder();
+        SourceFolderPath srcFolder = testFile.findCorrespondingSrcFolder();
 
-        assertNotNull(srcFolder);
         assertNotNull(testFolder);
-        assertEquals(srcFolder.toString(), testFolder.toString());
+        assertNotNull(srcFolder);
+        assertEquals(TEST_PROJECT + "/test", testFolder.toString());
+        assertEquals(TEST_PROJECT + "/src", srcFolder.toString());
     }
 }

@@ -75,6 +75,9 @@ public class JumpActionHandlerTest extends TmpProjectTestCase
 
         preferences.get(project).activatePreferencesForLanguage(LanguagePreferences.ANY_LANGUAGE, false);
         preferences.get(project).save();
+
+        preferences.writerForAnyLanguage().setTestFileNameTemplate("${srcFile}Test", "");
+        preferences.writerForAnyLanguage().setTestFolderPathTemplate("${srcProject}", "${srcProject}");
     }
 
     @Test
