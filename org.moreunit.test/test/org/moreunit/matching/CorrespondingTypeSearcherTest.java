@@ -60,7 +60,7 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         CorrespondingTypeSearcher testCaseDiviner = new CorrespondingTypeSearcher(context.getCompilationUnit("com.Foo"), getPreferences());
 
         IType perfectMatch = context.getPrimaryTypeHandler("com.FooTest").get();
-        IType likelyMatch = context.getPrimaryTypeHandler("org.FooTest").get();
+        context.getPrimaryTypeHandler("org.FooTest").get();
 
         Collection<IType> matches = testCaseDiviner.getMatches(false);
         assertEquals(new java.util.HashSet<>(Arrays.asList(perfectMatch)), new java.util.HashSet<>((matches)));

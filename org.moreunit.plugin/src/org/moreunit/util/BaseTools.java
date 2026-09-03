@@ -28,11 +28,10 @@ public class BaseTools
      * @param packageSuffix
      * @return name of the class under test
      */
-    @SuppressWarnings("unchecked")
     public static List<String> getTestedClass(String testCaseClass, String[] prefixes, String[] suffixes, String packagePrefix, String packageSuffix)
     {
         if(testCaseClass == null || testCaseClass.length() <= 1)
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
 
         JavaType testType = new JavaType(testCaseClass);
 

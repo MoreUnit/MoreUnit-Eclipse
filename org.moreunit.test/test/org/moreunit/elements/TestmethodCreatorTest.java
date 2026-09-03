@@ -284,7 +284,7 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Test
     public void createTestMethod_should_insert_another_test_method_directly_below_the_existing_one_when_it_is_not_the_last_method() throws CoreException
     {
-        MethodHandler existingTestMethod = testcaseType.addMethod("public void getNumberOne()");
+        testcaseType.addMethod("public void getNumberOne()");
         testcaseType.addMethod("public void someOtherTest()");
 
         // pass the IMethod handle coming from the test case type so that the
@@ -319,7 +319,7 @@ public class TestmethodCreatorTest extends ContextTestCase
     @Preferences(testClassNameTemplate = "${srcFile}Test", testSrcFolder = "test", testMethodPrefix = false, testType = TestType.JUNIT4)
     public void createTestMethod_should_mention_parameter_types_in_generated_comment() throws CoreException
     {
-        MethodHandler addWithoutParams = cutType.addMethod("public int add(int a)", "return 0");
+        cutType.addMethod("public int add(int a)", "return 0");
         MethodHandler methodWithParams = cutType.addMethod("public int add(int a, String b)", "return 0");
 
         TestmethodCreator testmethodCreator = new TestmethodCreator(new TestMethodCreationSettings().compilationUnit(cutType.getCompilationUnit()).testType(TEST_TYPE_VALUE_JUNIT_4).defaultTestMethodContent(SOME_TEST_CODE).generateComments(true));

@@ -136,7 +136,7 @@ public class MainPreferencePageTest
         preferencePage.createControl(shell);
 
         LoadingResult loadingResult = new LoadingResult();
-        loadingResult.addInvalidTemplate(new java.net.URL("file:/templates/bad.xml"), new RuntimeException("boom"));
+        loadingResult.addInvalidTemplate(java.net.URI.create("file:/templates/bad.xml").toURL(), new RuntimeException("boom"));
         when(templateLoader.loadTemplates()).thenReturn(loadingResult);
 
         Button reloadButton = findButton(shell, "Reload templates");

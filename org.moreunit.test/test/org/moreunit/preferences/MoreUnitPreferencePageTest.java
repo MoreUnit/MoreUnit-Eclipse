@@ -24,6 +24,8 @@ import org.moreunit.properties.SwtPageTestCase;
  * on the workspace preference store (no project selected). Values changed
  * during the tests are restored so that other tests are not affected.
  */
+// white-box test: uses internal types on purpose
+@SuppressWarnings("restriction")
 public class MoreUnitPreferencePageTest extends SwtPageTestCase
 {
     private static final String SRC_FILE_VARIABLE = TestFileNamePattern.SRC_FILE_VARIABLE;

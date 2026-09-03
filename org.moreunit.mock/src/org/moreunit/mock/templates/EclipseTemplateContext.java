@@ -85,6 +85,12 @@ public class EclipseTemplateContext
      */
     private static class CustomJavaContext extends JavaContext
     {
+        // JavaPlugin.getTemplateContextRegistry() returns the deprecated
+        // org.eclipse.jface.text.templates.ContextTypeRegistry, so calling
+        // getContextType(String) on it cannot avoid a deprecation warning.
+        // There is no public (non-internal) API providing the Java template
+        // context type with all JDT resolvers, hence this minimal suppression.
+        @SuppressWarnings("deprecation")
         private static final TemplateContextType TYPE = JavaPlugin.getDefault().getTemplateContextRegistry().getContextType(CONTEXT_TYPE);
 
         public CustomJavaContext(IDocument document, int insertionOffset, ICompilationUnit compilationUnit)

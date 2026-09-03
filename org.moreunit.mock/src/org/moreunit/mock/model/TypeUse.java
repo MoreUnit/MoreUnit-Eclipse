@@ -60,8 +60,7 @@ public class TypeUse<T extends TypeUse<T>> extends TypeRef<TypeUse<T>>
             return false;
         }
 
-        @SuppressWarnings("rawtypes")
-        TypeUse other = (TypeUse) obj;
+        TypeUse<?> other = (TypeUse<?>) obj;
 
         if(typeParameters == null)
         {

@@ -83,7 +83,8 @@ public class MockingTemplateTest
         MockingTemplate template = new MockingTemplate("a template");
 
         assertFalse(template.equals(null));
-        assertFalse(template.equals("a template"));
+        Object objectOfDifferentClass = "a template";
+        assertFalse(template.equals(objectOfDifferentClass));
     }
 
     @Test

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -89,9 +90,9 @@ public class LoadingResultTest
     {
         try
         {
-            return new URL(urlString);
+            return URI.create(urlString).toURL();
         }
-        catch (MalformedURLException e)
+        catch (MalformedURLException | IllegalArgumentException e)
         {
             throw new RuntimeException(e);
         }

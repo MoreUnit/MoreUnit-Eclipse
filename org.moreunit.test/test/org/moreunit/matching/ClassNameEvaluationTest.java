@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.moreunit.core.matching.FileNameEvaluation;
 import org.moreunit.util.JavaType;
 
+// white-box test: uses internal types on purpose
+@SuppressWarnings("restriction")
 public class ClassNameEvaluationTest {
 
     @Test

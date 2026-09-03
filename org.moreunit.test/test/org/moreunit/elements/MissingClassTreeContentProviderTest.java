@@ -76,7 +76,6 @@ public class MissingClassTreeContentProviderTest extends ContextTestCase
 
         Object[] elements = new MissingClassTreeContentProvider().getElements(viewPart);
 
-        List<String> names = Arrays.stream(elements).map(Object::toString).collect(Collectors.toList());
         assertEquals(1, elements.length);
         assertEquals("org", ((IPackageFragment) elements[0]).getElementName());
     }

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -90,7 +91,7 @@ public class PluginResourceLoaderTest {
     @Test
     public void findBundleResources_should_return_bundle_entries() throws Exception {
         // given
-        URL url = new URL("file:/plugin/resources/templates/foo.xml");
+        URL url = URI.create("file:/plugin/resources/templates/foo.xml").toURL();
         when(plugin.getBundle()).thenReturn(bundle);
         when(bundle.findEntries("templates", "*.xml", true)).thenReturn(Collections.enumeration(Collections.singletonList(url)));
 
@@ -103,7 +104,7 @@ public class PluginResourceLoaderTest {
     @Test
     public void findBundleResources_should_look_into_resources_folder_when_bundle_entries_are_not_found() throws Exception {
         // given
-        URL url = new URL("file:/plugin/resources/resources/templates/foo.xml");
+        URL url = URI.create("file:/plugin/resources/resources/templates/foo.xml").toURL();
         when(plugin.getBundle()).thenReturn(bundle);
         when(bundle.findEntries("templates", "*.xml", true)).thenReturn(null);
         when(bundle.findEntries("/resources/templates", "*.xml", true)).thenReturn(Collections.enumeration(Collections.singletonList(url)));

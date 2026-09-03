@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.ui.ILaunchShortcut;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.MockedStatic;
 import org.moreunit.MoreUnitPlugin;
 import org.moreunit.extensionpoints.ITestLaunchSupport;
@@ -159,7 +161,7 @@ public class AdditionalTestLaunchShortcutProviderTest
     public void getShorcutFor_should_return_null_when_support_does_not_handle_the_cardinality() throws Exception
     {
         ITestLaunchSupport support = mock(ITestLaunchSupport.class);
-        when(support.isLaunchSupported(any(TestType.class), any(Class.class), any(Cardinality.class))).thenReturn(false);
+        when(support.isLaunchSupported(any(TestType.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(false);
 
         IConfigurationElement configElement = mock(IConfigurationElement.class);
         when(configElement.createExecutableExtension("class")).thenReturn(support);
@@ -240,7 +242,7 @@ public class AdditionalTestLaunchShortcutProviderTest
 
         // A second support that explicitly does NOT handle the request.
         ITestLaunchSupport support2 = mock(ITestLaunchSupport.class);
-        when(support2.isLaunchSupported(any(TestType.class), any(Class.class), any(Cardinality.class))).thenReturn(false);
+        when(support2.isLaunchSupported(any(TestType.class), ArgumentMatchers.<Class<? extends IJavaElement>>any(), any(Cardinality.class))).thenReturn(false);
 
         IConfigurationElement configElement1 = mock(IConfigurationElement.class);
         when(configElement1.createExecutableExtension("class")).thenReturn(support1);
