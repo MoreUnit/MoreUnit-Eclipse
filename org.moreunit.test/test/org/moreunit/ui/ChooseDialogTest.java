@@ -313,7 +313,7 @@ public class ChooseDialogTest extends SwtPageTestCase
 
         final Set<Shell> knownShells = DialogHelper.knownShells(display);
         knownShells.remove(dialog.getShell()); // the popup shell already exists
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "Type2"), 2000));
+        display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, shell -> DialogHelper.confirmItem(shell, "Type2"), 2000));
 
         final java.util.concurrent.atomic.AtomicReference<Object> choice = new java.util.concurrent.atomic.AtomicReference<>();
         final Thread background = new Thread(() -> choice.set(Display.getDefault().syncCall(dialog::getChoice)));

@@ -65,6 +65,25 @@ public class ChooseDialog<T> extends PopupDialog implements DisposeListener
     }
 
     @Override
+    protected Control getFocusControl()
+    {
+        // PopupDialog.open() dereferences this without a null check; the tree
+        // is the dialog area, so focusing it preserves the default behavior
+        // while staying safe when creation was interrupted (seen as an NPE on
+        // GTK when the shell lifecycle races with its opener).
+        if(treeViewer != null)
+        {
+            final Tree tree = treeViewer.getTree();
+            if(tree != null && ! tree.isDisposed())
+            {
+                return tree;
+            }
+        }
+        final Shell shell = getShell();
+        return shell != null && ! shell.isDisposed() ? shell : null;
+    }
+
+    @Override
     protected Control createDialogArea(Composite parent)
     {
         treeViewer = createTreeViewer(parent);

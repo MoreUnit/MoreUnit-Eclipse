@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -31,11 +32,38 @@ public final class DialogHelper
     }
 
     /**
+     * Brings the test workbench window to the front. Call this right before
+     * triggering an action that opens a dialog: on a shared desktop the
+     * workbench may sit behind other windows, and opening a popup there can
+     * deactivate (and thereby dismiss) it before the test driver even sees
+     * it. Must be called on the UI thread.
+     *
+     * @param display the display on which the test workbench runs
+     */
+    public static void bringWorkbenchToFront(Display display)
+    {
+        display.syncExec(() -> {
+            for (final Shell shell : display.getShells())
+            {
+                if(! shell.isDisposed() && shell.isVisible())
+                {
+                    shell.forceActive();
+                }
+            }
+        });
+    }
+
+    /**
      * Returns a task (to be scheduled with {@code display.asyncExec(...)}
      * before the dialog opens) that polls for a shell appearing after
      * {@code knownShells} was captured and then applies the given action. The
      * task gives up after {@code maxAttempts} polls and then closes all new
      * shells, so that the dialog call eventually returns.
+     * <p>
+     * The action runs exactly once, on the first new shell seen. When the
+     * handling depends on the shell content (which may lag behind shell
+     * visibility on some platforms), prefer
+     * {@link #closerUntilHandled(Display, Set, Predicate, int)}.
      *
      * @param display the display on which the dialog will open
      * @param knownShells the shells existing before the dialog opens
@@ -45,12 +73,47 @@ public final class DialogHelper
      */
     public static Runnable closerFor(Display display, Set<Shell> knownShells, Consumer<Shell> action, int maxAttempts)
     {
+        return closerUntilHandled(display, knownShells, shell -> {
+            action.accept(shell);
+            return true;
+        }, maxAttempts);
+    }
+
+    /**
+     * Returns a task (to be scheduled with {@code display.asyncExec(...)}
+     * before the dialog opens) that polls for a shell appearing after
+     * {@code knownShells} was captured and then applies the given action. When
+     * the action reports the shell as not handled yet (for instance its
+     * content is still loading), polling continues until {@code maxAttempts}
+     * polls; then all new shells are closed so that the dialog call
+     * eventually returns.
+     *
+     * @param display the display on which the dialog will open
+     * @param knownShells the shells existing before the dialog opens
+     * @param handled tests a new shell, handling it when ready; {@code true}
+     *            means handled (polling stops), {@code false} means not ready
+     *            yet (polling continues)
+     * @param maxAttempts the number of polls before giving up
+     * @return a task polling for the new dialog shell
+     */
+    public static Runnable closerUntilHandled(Display display, Set<Shell> knownShells, Predicate<Shell> handled, int maxAttempts)
+    {
         return () -> {
             final Shell target = findNewShell(display, knownShells);
             if(target != null)
             {
-                action.accept(target);
-                return;
+                // Keep the focus on the dialog while driving it: ChooseDialog
+                // dismisses itself on deactivation, and on a shared desktop
+                // any focus change in between would silently cancel the
+                // dialog (flaky on GTK, where focus handling is async).
+                if(! target.isDisposed())
+                {
+                    target.forceActive();
+                }
+                if(! target.isDisposed() && handled.test(target))
+                {
+                    return;
+                }
             }
             if(maxAttempts <= 0)
             {
@@ -65,7 +128,7 @@ public final class DialogHelper
                 }
                 return;
             }
-            display.timerExec(20, DialogHelper.closerFor(display, knownShells, action, maxAttempts - 1));
+            display.timerExec(20, DialogHelper.closerUntilHandled(display, knownShells, handled, maxAttempts - 1));
         };
     }
 
@@ -83,28 +146,45 @@ public final class DialogHelper
 
     /**
      * Selects the first tree item whose text contains the given text and
-     * confirms it (default selection). Closes the shell when no such item
-     * exists.
+     * confirms it (default selection).
      *
      * @param dialogShell the dialog shell containing the tree
      * @param itemText the (sub)string identifying the item to confirm
+     * @return {@code true} when an item was confirmed or the shell was closed
+     *         because no item will ever match; {@code false} when the tree
+     *         does not exist yet or its labels are not computed yet, meaning
+     *         the caller should try again later
      */
-    public static void confirmItem(Shell dialogShell, String itemText)
+    public static boolean confirmItem(Shell dialogShell, String itemText)
     {
         final Tree tree = findTree(dialogShell);
-        if(tree == null)
+        if(tree == null || tree.isDisposed())
         {
-            dialogShell.close();
-            return;
+            return false;
         }
-        for (final TreeItem item : tree.getItems())
+        final TreeItem[] items = tree.getItems();
+        if(items.length == 0)
+        {
+            return false;
+        }
+        boolean allLabeled = true;
+        for (final TreeItem item : items)
         {
             if(confirmItemOrChild(item, itemText))
             {
-                return;
+                return true;
+            }
+            if(item.isDisposed() || item.getText().isEmpty())
+            {
+                allLabeled = false;
             }
         }
+        if(! allLabeled)
+        {
+            return false;
+        }
         dialogShell.close();
+        return true;
     }
 
     private static boolean confirmItemOrChild(TreeItem item, String itemText)
@@ -129,16 +209,18 @@ public final class DialogHelper
      * Clicks the OK button of a {@link org.eclipse.jface.dialogs.Dialog} shell.
      *
      * @param dialogShell the dialog shell containing the OK button
+     * @return {@code true} when the button was clicked; {@code false} when it
+     *         does not exist yet, meaning the caller should try again later
      */
-    public static void confirmOkButton(Shell dialogShell)
+    public static boolean confirmOkButton(Shell dialogShell)
     {
         final org.eclipse.swt.widgets.Button okButton = findButtonWithText(dialogShell, "OK");
         if(okButton != null)
         {
             okButton.notifyListeners(org.eclipse.swt.SWT.Selection, new Event());
-            return;
+            return true;
         }
-        dialogShell.close();
+        return false;
     }
 
     private static org.eclipse.swt.widgets.Button findButtonWithText(org.eclipse.swt.widgets.Widget widget, String text)

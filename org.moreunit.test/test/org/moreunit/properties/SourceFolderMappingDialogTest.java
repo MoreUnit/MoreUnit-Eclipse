@@ -37,7 +37,7 @@ public class SourceFolderMappingDialogTest extends ContextTestCase
         final Display display = Display.getDefault();
         final Shell dialogParent = new Shell(display);
         final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmOkButton(shell), 2000));
+        display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, shell -> DialogHelper.confirmOkButton(shell), 2000));
         try
         {
             SourceFolderMappingDialog.open(block, dialogParent, mapping);

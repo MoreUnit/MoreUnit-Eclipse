@@ -39,6 +39,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.test.support.DialogHelper;
 import org.moreunit.test.context.ContextTestCase;
@@ -97,6 +98,34 @@ public class RunTestsActionExecutorTest extends ContextTestCase
             Thread.sleep(10);
         }
         assertTrue(launchCalled.get(), "TestLauncher.launch was not called");
+    }
+
+    /**
+     * Runs a dialog-driven interaction, waiting briefly for the launch after
+     * each attempt. On a shared desktop the ChooseDialog can be dismissed by
+     * an unrelated focus change before the test driver confirms the choice;
+     * such an attempt launches nothing and is simply retried. A genuinely
+     * broken interaction still fails loudly once attempts run out.
+     */
+    private void awaitLaunchWithRetry(Executable interaction) throws Throwable
+    {
+        Throwable lastFailure = null;
+        for (int attempt = 1; attempt <= 3; attempt++)
+        {
+            launchCalled.set(false);
+            launchedMembers.set(null);
+            interaction.execute();
+            try
+            {
+                awaitLaunch(20_000);
+                return;
+            }
+            catch (final AssertionError e)
+            {
+                lastFailure = e;
+            }
+        }
+        throw lastFailure;
     }
 
     private List<String> launchedElementNames()
@@ -266,20 +295,23 @@ public class RunTestsActionExecutorTest extends ContextTestCase
 
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}*Test", testSrcFolder = "test")
-    public void executeRunTestAction_should_let_the_user_choose_a_concrete_subclass_of_an_abstract_test_case() throws Exception
+    public void executeRunTestAction_should_let_the_user_choose_a_concrete_subclass_of_an_abstract_test_case() throws Throwable
     {
         TypeHandlerAccess.createAbstractTest(context, "com.FooAbstractTest");
         TypeHandlerAccess.createSubclass(context, "com.FooAbstractTest", "com.FooAbstractTestImpl");
         TypeHandlerAccess.createSubclass(context, "com.FooAbstractTest", "com.FooAbstractTestImpl2");
 
         final Display display = Display.getDefault();
-        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, //
-                shell -> DialogHelper.confirmItem(shell, "FooAbstractTestImpl"), 2000));
 
-        RunTestsActionExecutor.getInstance().executeRunTestAction(context.getCompilationUnit("com.Foo"), ILaunchManager.RUN_MODE);
+        awaitLaunchWithRetry(() -> {
+            final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+            DialogHelper.bringWorkbenchToFront(display);
+            display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, //
+                    shell -> DialogHelper.confirmItem(shell, "FooAbstractTestImpl"), 2000));
 
-        awaitLaunch(90_000);
+            RunTestsActionExecutor.getInstance().executeRunTestAction(context.getCompilationUnit("com.Foo"), ILaunchManager.RUN_MODE);
+        });
+
         final List<String> launchedNames = launchedElementNames();
         assertTrue(launchedNames.contains("FooTest"));
         assertTrue(launchedNames.contains("FooAbstractTestImpl"), "chosen subclass should be launched: " + launchedNames);
@@ -288,7 +320,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
 
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}*Test", testSrcFolder = "test")
-    public void executeRunTestsOfSelectedMemberAction_should_replace_abstract_test_method_by_chosen_subclass_method() throws Exception
+    public void executeRunTestsOfSelectedMemberAction_should_replace_abstract_test_method_by_chosen_subclass_method() throws Throwable
     {
         TypeHandlerAccess.createAbstractTest(context, "com.FooAbstractTest");
         context.getPrimaryTypeHandler("com.FooAbstractTest").addMethod("@Test\npublic void testFoo()", "");
@@ -300,13 +332,15 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooAbstractTest"), abstractTestMethod.getNameRange());
 
         final Display display = Display.getDefault();
-        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, //
-                shell -> DialogHelper.confirmItem(shell, "FooAbstractTestImpl"), 2000));
+        awaitLaunchWithRetry(() -> {
+            final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+            DialogHelper.bringWorkbenchToFront(display);
+            display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, //
+                    shell -> DialogHelper.confirmItem(shell, "FooAbstractTestImpl"), 2000));
 
-        RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
+            RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
+        });
 
-        awaitLaunch(90_000);
         final List<String> launchedNames = launchedElementNames();
         assertEquals(1, launchedNames.size());
         final IJavaElement launched = launchedMembers.get().iterator().next();
@@ -316,7 +350,7 @@ public class RunTestsActionExecutorTest extends ContextTestCase
 
     @Test
     @Preferences(testClassNameTemplate = "${srcFile}*Test", testSrcFolder = "test")
-    public void executeRunTestsOfSelectedMemberAction_should_launch_all_concrete_subclasses_when_user_chooses_all() throws Exception
+    public void executeRunTestsOfSelectedMemberAction_should_launch_all_concrete_subclasses_when_user_chooses_all() throws Throwable
     {
         TypeHandlerAccess.createAbstractTest(context, "com.FooAbstractTest");
         context.getPrimaryTypeHandler("com.FooAbstractTest").addMethod("@Test\npublic void testFoo()", "");
@@ -329,13 +363,15 @@ public class RunTestsActionExecutorTest extends ContextTestCase
         final IEditorPart editorPart = editorOver(context.getCompilationUnit("com.FooAbstractTest"), abstractTestMethod.getNameRange());
 
         final Display display = Display.getDefault();
-        final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, //
-                shell -> DialogHelper.confirmItem(shell, "All concrete subclasses"), 2000));
+        awaitLaunchWithRetry(() -> {
+            final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
+            DialogHelper.bringWorkbenchToFront(display);
+            display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, //
+                    shell -> DialogHelper.confirmItem(shell, "All concrete subclasses"), 2000));
 
-        RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
+            RunTestsActionExecutor.getInstance().executeRunTestsOfSelectedMemberAction(editorPart, ILaunchManager.RUN_MODE);
+        });
 
-        awaitLaunch(90_000);
         final java.util.Set<String> declaringTypes = launchedMembers.get().stream() //
                 .map(e -> ((IMethod) e).getDeclaringType().getElementName()) //
                 .collect(java.util.stream.Collectors.toSet());
