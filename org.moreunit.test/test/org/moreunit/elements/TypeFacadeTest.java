@@ -95,7 +95,7 @@ public class TypeFacadeTest extends ContextTestCase
         // the test class lives in another package: it is a likely, not a perfect, match
         final Display display = Display.getDefault();
         final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "FooTest"), 2000));
+        display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, shell -> DialogHelper.confirmItem(shell, "FooTest"), 2000));
 
         final ClassTypeFacade facade = new ClassTypeFacade(context.getCompilationUnit("com.Foo"));
 

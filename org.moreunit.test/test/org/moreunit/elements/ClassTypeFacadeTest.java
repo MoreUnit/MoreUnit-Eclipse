@@ -320,7 +320,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
     {
         final Display display = Display.getDefault();
         final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "FooTest"), 2000));
+        display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, shell -> DialogHelper.confirmItem(shell, "FooTest"), 2000));
 
         final ClassTypeFacade classTypeFacade = new ClassTypeFacade(context.getCompilationUnit("com.Foo"));
         final ClassTypeFacade.CorrespondingTestCase result = classTypeFacade.getOneCorrespondingTestCase(false, "Please choose a test case...");
@@ -342,7 +342,7 @@ public class ClassTypeFacadeTest extends ContextTestCase
 
         final Display display = Display.getDefault();
         final java.util.Set<Shell> knownShells = DialogHelper.knownShells(display);
-        display.asyncExec(DialogHelper.closerFor(display, knownShells, shell -> DialogHelper.confirmItem(shell, "testGiveMe1"), 2000));
+        display.asyncExec(DialogHelper.closerUntilHandled(display, knownShells, shell -> DialogHelper.confirmItem(shell, "testGiveMe1"), 2000));
 
         final TypeFacade classTypeFacade = new ClassTypeFacade(cutHandler().getCompilationUnit());
         final CorrespondingMemberRequest request = newCorrespondingMemberRequest() //
