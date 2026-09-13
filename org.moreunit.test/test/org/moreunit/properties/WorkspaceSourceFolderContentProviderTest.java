@@ -43,23 +43,48 @@ public class WorkspaceSourceFolderContentProviderTest extends ContextTestCase
     @Test
     public void getElements_should_not_throw_exception_when_workspace_contains_closed_projects() throws Exception
     {
-        closeProjectAndPrepareMockedLoggerToThrowExcpetionWhenErrorGetsLogged();
-
-        final ArrayList<SourceFolderMapping> list = new ArrayList<>(0);
-        final WorkspaceSourceFolderContentProvider provider = new WorkspaceSourceFolderContentProvider(list);
-        provider.getElements(null);
+        final Logger originalLogger = swapLoggerForOneThrowingOnError();
+        try
+        {
+            final ArrayList<SourceFolderMapping> list = new ArrayList<>(0);
+            final WorkspaceSourceFolderContentProvider provider = new WorkspaceSourceFolderContentProvider(list);
+            provider.getElements(null);
+        }
+        finally
+        {
+            // LogHandler is a singleton: keeping the throwing logger beyond
+            // this test breaks any later test which expects errors to be
+            // logged, whatever the test class execution order is.
+            setLogger(originalLogger);
+        }
     }
 
-    private void closeProjectAndPrepareMockedLoggerToThrowExcpetionWhenErrorGetsLogged() throws CoreException, NoSuchFieldException, IllegalAccessException
+    private Logger swapLoggerForOneThrowingOnError() throws CoreException, NoSuchFieldException, IllegalAccessException
     {
         context.getProjectHandler().get().getProject().close(null);
 
-        final Field loggerField = LogHandler.getInstance().getClass().getDeclaredField("logger");
-        loggerField.setAccessible(true);
-
+        final Logger originalLogger = getLogger();
         final Logger mockedLogger = mock(Logger.class);
         doThrow(new RuntimeException("error must not get thrown on closed projects")).when(mockedLogger).error(notNull());
-        loggerField.set(LogHandler.getInstance(), mockedLogger);
+        setLogger(mockedLogger);
+        return originalLogger;
+    }
+
+    private static Logger getLogger() throws NoSuchFieldException, IllegalAccessException
+    {
+        return (Logger) loggerField().get(LogHandler.getInstance());
+    }
+
+    private static void setLogger(Logger logger) throws NoSuchFieldException, IllegalAccessException
+    {
+        loggerField().set(LogHandler.getInstance(), logger);
+    }
+
+    private static Field loggerField() throws NoSuchFieldException
+    {
+        final Field loggerField = LogHandler.getInstance().getClass().getDeclaredField("logger");
+        loggerField.setAccessible(true);
+        return loggerField;
     }
 
     @Test
