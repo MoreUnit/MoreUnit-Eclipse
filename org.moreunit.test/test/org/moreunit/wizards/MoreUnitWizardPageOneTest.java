@@ -902,6 +902,16 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
     }
 
     @Test
+    public void should_catch_javamodelexception_when_resolving_class_name_to_type() throws Exception
+    {
+        final IJavaProject project = mock(IJavaProject.class);
+        when(project.exists()).thenReturn(true);
+        when(project.findType("org.SomeClass")).thenThrow(new org.eclipse.jdt.core.JavaModelException(new Exception(), 0));
+
+        assertNull(invoke(page, "resolveClassNameToType", project, null, "org.SomeClass"));
+    }
+
+    @Test
     public void should_create_constructor_stub_for_junit4() throws Exception
     {
         createPageControl();
