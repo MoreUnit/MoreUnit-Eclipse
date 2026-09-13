@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,7 +19,9 @@ import static org.mockito.Mockito.when;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageOne.JUnitVersion;
 import org.eclipse.jdt.junit.wizards.NewTestCaseWizardPageTwo;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -36,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.moreunit.elements.LanguageType;
 import org.moreunit.extensionpoints.TestType;
+import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.PreferenceConstants;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.ProjectPreferences;
@@ -902,13 +906,32 @@ public class MoreUnitWizardPageOneTest extends SwtPageTestCase
     }
 
     @Test
-    public void should_catch_javamodelexception_when_resolving_class_name_to_type() throws Exception
+    public void should_log_and_ignore_javamodelexception_when_validating_superclass() throws Exception
     {
+        createPageControl();
+        selectOnly("junit3Toggle");
+        page.handleSelectionChanged();
+        page.setSuperClass("org.SomeClass", true);
+
+        // the project rejects the lookup: the validation must not blow up
+        final JavaModelException failure = new JavaModelException(new Exception(), 0);
         final IJavaProject project = mock(IJavaProject.class);
         when(project.exists()).thenReturn(true);
-        when(project.findType("org.SomeClass")).thenThrow(new org.eclipse.jdt.core.JavaModelException(new Exception(), 0));
+        when(project.findType("org.SomeClass")).thenThrow(failure);
+        final IPackageFragmentRoot root = mock(IPackageFragmentRoot.class);
+        when(root.getJavaProject()).thenReturn(project);
+        setField(page, "fCurrRoot", root);
 
-        assertNull(invoke(page, "resolveClassNameToType", project, null, "org.SomeClass"));
+        try (var logs = mockStatic(LogHandler.class))
+        {
+            final LogHandler log = mock(LogHandler.class);
+            logs.when(LogHandler::getInstance).thenReturn(log);
+
+            final IStatus status = (IStatus) invoke(page, "superClassChanged");
+
+            assertTrue(status.isOK());
+            verify(log).handleExceptionLog(failure);
+        }
     }
 
     @Test
