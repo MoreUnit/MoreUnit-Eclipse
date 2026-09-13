@@ -30,7 +30,6 @@ import org.eclipse.jdt.internal.junit.JUnitCorePlugin;
 import org.eclipse.jdt.internal.junit.Messages;
 import org.eclipse.jdt.internal.junit.buildpath.BuildPathSupport;
 import org.eclipse.jdt.internal.junit.ui.IJUnitHelpContextIds;
-import org.eclipse.jdt.internal.junit.ui.JUnitPlugin;
 import org.eclipse.jdt.internal.junit.util.CoreTestSearchEngine;
 import org.eclipse.jdt.internal.junit.util.JUnitStatus;
 import org.eclipse.jdt.internal.junit.util.JUnitStubUtility;
@@ -65,6 +64,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.moreunit.elements.LanguageType;
+import org.moreunit.log.LogHandler;
 import org.moreunit.elements.TestmethodCreator;
 import org.moreunit.elements.TestmethodCreator.TestMethodCreationSettings;
 import org.moreunit.extensionpoints.TestType;
@@ -233,7 +233,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                         }
                         catch (final JavaModelException e)
                         {
-                            JUnitPlugin.log(e);
+                            LogHandler.getInstance().handleExceptionLog(e);
                         }
                     }
                 }
@@ -249,7 +249,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
                 }
                 catch (final JavaModelException e)
                 {
-                    JUnitCorePlugin.log(e);
+                    LogHandler.getInstance().handleExceptionLog(e);
                 }
             }
         }
@@ -738,7 +738,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
         }
         catch (final JavaModelException e)
         {
-            JUnitPlugin.log(e);
+            LogHandler.getInstance().handleExceptionLog(e);
         }
         return null;
     }
@@ -1221,7 +1221,7 @@ public class MoreUnitWizardPageOne extends NewTypeWizardPage
             }
             catch (final JavaModelException e)
             {
-                JUnitPlugin.log(e);
+                LogHandler.getInstance().handleExceptionLog(e);
             }
         }
         return status;
