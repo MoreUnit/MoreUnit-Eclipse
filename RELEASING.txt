@@ -18,7 +18,7 @@ git push --tags
 Run the following commands:
 
 ```
-mvn -file org.moreunit.build/pom.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=4.0.2-SNAPSHOT
+mvn -file org.moreunit.build/pom.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=4.1.1-SNAPSHOT
 git add .
 git commit --message="Prepare for next release"
 git push
