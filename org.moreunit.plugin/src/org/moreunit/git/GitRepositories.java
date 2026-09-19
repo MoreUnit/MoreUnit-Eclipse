@@ -6,18 +6,22 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.egit.core.info.GitInfo;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 /**
- * Locates the Git repository which contains a workspace resource, using the
- * Eclipse Git integration when it is available.
+ * Locates the Git repository which contains a workspace resource.
  * <p>
- * EGit is asked first: it already knows the repositories of the workspace
- * (including their specific layout, such as linked working trees or
- * submodules) and it already has them open. When EGit is not installed, or
- * does not know the resource, the repository is looked up directly with JGit.
+ * The closest repository is looked up from the location of the resource with
+ * JGit: this is the repository the user is working in, and it is always up to
+ * date. When no repository can be found that way (for instance when the
+ * project has been connected to a repository which is not one of its parent
+ * directories), the Eclipse Git integration is asked through the public
+ * {@link GitInfo} adapter: EGit knows the repositories of the workspace,
+ * including their specific layout, such as linked working trees or submodules.
  * </p>
  */
 public final class GitRepositories
@@ -33,18 +37,23 @@ public final class GitRepositories
      */
     public static Optional<GitRepository> repositoryOf(IResource resource)
     {
-        final Repository egitRepository = repositoryKnownToEgit(resource);
-        if(egitRepository != null)
+        final IPath location = resource.getLocation();
+        if(location != null)
+        {
+            final Optional<GitRepository> closestRepository = repositoryOf(location.toFile());
+            if(closestRepository.isPresent())
+            {
+                return closestRepository;
+            }
+        }
+
+        final GitInfo gitInfo = Adapters.adapt(resource, GitInfo.class);
+        if(gitInfo != null && gitInfo.getRepository() != null)
         {
             // the repository belongs to EGit: it must not be closed here
-            return Optional.of(new GitRepository(egitRepository, false));
+            return Optional.of(new GitRepository(gitInfo.getRepository(), false));
         }
-        final IPath location = resource.getLocation();
-        if(location == null)
-        {
-            return Optional.empty();
-        }
-        return repositoryOf(location.toFile());
+        return Optional.empty();
     }
 
     /**
@@ -74,23 +83,6 @@ public final class GitRepositories
         {
             // the ".git" entry is not a valid repository
             return Optional.empty();
-        }
-    }
-
-    private static Repository repositoryKnownToEgit(IResource resource)
-    {
-        if(! GitSupport.isEgitAvailable())
-        {
-            return null;
-        }
-        try
-        {
-            return EgitRepositories.repositoryOf(resource);
-        }
-        catch (final NoClassDefFoundError e)
-        {
-            // EGit disappeared between the check and the call
-            return null;
         }
     }
 }

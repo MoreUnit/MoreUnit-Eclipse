@@ -7,11 +7,13 @@ Bundle-Activator: org.moreunit.MoreUnitPlugin
 xxBundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.ui,
+ org.eclipse.egit.core,
  org.eclipse.jdt.core,
  org.eclipse.jdt.core.manipulation,
  org.eclipse.jdt.junit,
  org.eclipse.jdt.ui,
  org.eclipse.jface.text,
+ org.eclipse.jgit,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
@@ -60,11 +62,6 @@ Export-Package: org.moreunit.codemining;x-friends:="org.moreunit.test",org.moreu
  org.eclipse.jdt.core,  org.eclipse.jface.viewers,  org.eclipse.jdt.ju
  nit.wizards,  org.moreunit.preferences,  org.eclipse.jface.wizard,  o
  rg.eclipse.core.runtime,  org.eclipse.swt.widgets,  org.eclipse.ui"
-Import-Package: org.moreunit.extensionpoints,
- org.eclipse.jgit.api;resolution:=optional,
- org.eclipse.jgit.lib;resolution:=optional,
- org.eclipse.jgit.storage.file;resolution:=optional,
- org.eclipse.jgit.api.errors;resolution:=optional,
- org.eclipse.egit.core.info;resolution:=optional
+Import-Package: org.moreunit.extensionpoints
 Automatic-Module-Name: org.moreunit
 

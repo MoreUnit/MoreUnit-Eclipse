@@ -2,7 +2,6 @@ package org.moreunit.handler;
 
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.moreunit.elements.ChangedTests;
 import org.moreunit.elements.ChangedTestsFinder;
 import org.moreunit.git.ChangedFilesProvider;
 import org.moreunit.git.GitChangedFilesProvider;
-import org.moreunit.git.GitSupport;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.log.LogHandler;
 import org.moreunit.preferences.Preferences;
@@ -88,11 +86,6 @@ public class RunChangedTestsActionExecutor
      */
     public ChangedTests computeTests(Collection<IJavaProject> projects)
     {
-        if(! GitSupport.isAvailable())
-        {
-            return new ChangedTests(Collections.emptySet(), Collections.emptySet(), 0);
-        }
-
         final Collection<ICompilationUnit> changedFiles = new LinkedHashSet<>();
         for (final IJavaProject project : projects)
         {
@@ -152,10 +145,6 @@ public class RunChangedTestsActionExecutor
      */
     public static String nothingToRunMessage(ChangedTests result)
     {
-        if(! GitSupport.isAvailable())
-        {
-            return "Git support is not installed.\n\nMoreUnit uses the Git implementation of Eclipse (JGit/EGit) to find the changed files: please install EGit and try again.";
-        }
         if(result.getChangedFileCount() == 0)
         {
             return "No changed Java file was found.\n\nMake sure that the projects are in a Git working tree.";

@@ -27,9 +27,8 @@ public class RunChangedTestsSWTBotTest extends JavaProjectSWTBotTestHelper
     }
 
     /**
-     * The command is contributed by MoreUnit only when JGit is installed (it
-     * is an optional dependency): this test asserts that it appears on a Java
-     * project in a runtime which has JGit, as the target platform does.
+     * MoreUnit For Java requires EGit, so the command is always contributed on
+     * a Java project; this test asserts that it appears.
      */
     @Test
     @Project(
