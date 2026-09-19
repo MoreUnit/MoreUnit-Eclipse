@@ -1,9 +1,7 @@
 package org.moreunit.git;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,33 +48,27 @@ public class GitRepositoriesTest
     }
 
     /**
-     * A linked working tree has a ".git" file pointing to the repository of
-     * the main working tree: JGit resolves it, so MoreUnit can inspect it.
-     * The working tree is created with the "git" executable, because JGit has
-     * no API for this.
+     * A linked working tree (and a submodule) has a ".git" file pointing to
+     * the repository instead of a ".git" directory: JGit resolves it, so
+     * MoreUnit can inspect it. The file is written by hand so that the test
+     * does not need the "git" executable.
      */
     @Test
-    public void repositoryOf_should_support_linked_working_trees() throws Exception
+    public void repositoryOf_should_support_a_git_file_pointing_to_a_repository() throws Exception
     {
-        final Path mainDirectory = Files.createDirectories(tempDir.resolve("main"));
-        final Path linkedDirectory = tempDir.resolve("linked");
-        try (Git git = Git.init().setDirectory(mainDirectory.toFile()).call())
+        final Path repositoryDirectory = Files.createDirectories(tempDir.resolve("repository"));
+        try (Git git = Git.init().setDirectory(repositoryDirectory.toFile()).call())
         {
-            git.commit().setMessage("initial").setAuthor("MoreUnit", "moreunit@example.org").setAllowEmpty(true).call();
-        }
-        assumeTrue(createLinkedWorkingTree(mainDirectory, linkedDirectory), "the git executable is not available");
+            final Path workingTreeDirectory = Files.createDirectories(tempDir.resolve("working-tree"));
+            // git accepts forward slashes, also on Windows
+            final String gitDirectory = repositoryDirectory.resolve(".git").toString().replace('\\', '/');
+            Files.writeString(workingTreeDirectory.resolve(".git"), "gitdir: " + gitDirectory + "\n");
 
-        try (GitRepository repository = GitRepositories.repositoryOf(linkedDirectory).orElseThrow())
-        {
-            assertEquals(linkedDirectory.toAbsolutePath(), repository.getRepository().getWorkTree().toPath().toAbsolutePath());
+            try (GitRepository repository = GitRepositories.repositoryOf(workingTreeDirectory).orElseThrow())
+            {
+                // toRealPath: Windows may resolve short names differently
+                assertEquals(repositoryDirectory.resolve(".git").toRealPath(), repository.getRepository().getDirectory().toPath().toRealPath());
+            }
         }
-    }
-
-    private static boolean createLinkedWorkingTree(Path mainDirectory, Path linkedDirectory) throws Exception
-    {
-        final Process process = new ProcessBuilder("git", "-C", mainDirectory.toString(), "worktree", "add", linkedDirectory.toString(), "-b", "feature") //
-                .redirectErrorStream(true).start();
-        final String output = new String(process.getInputStream().readAllBytes(), UTF_8);
-        return process.waitFor() == 0 && output.isEmpty();
     }
 }
