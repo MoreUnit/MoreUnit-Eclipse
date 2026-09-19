@@ -1,12 +1,15 @@
 # How to release
 
+Use Maven 3.9.9 (the version used by CI): with Maven 3.9.12 the Tycho 5 extension
+fails with "No implementation for TargetPlatformArtifactResolver was bound".
+
 Run the following commands:
 
 ```
-mvn -file org.moreunit.build/pom.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=4.0.1
+mvn -file org.moreunit.build/pom.xml org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=4.1.0
 git add .
-git commit --message="Release v4.0.1"
-git tag v4.0.1
+git commit --message="Release v4.1.0"
+git tag v4.1.0
 git push --tags
 ```
 

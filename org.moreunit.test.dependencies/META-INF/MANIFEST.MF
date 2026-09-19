@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MoreUnit Test Dependencies
 Bundle-SymbolicName: org.moreunit.test.dependencies
-Bundle-Version: 4.0.2.qualifier
+Bundle-Version: 4.1.0
 Bundle-Vendor: MoreUnit.org
 Export-Package: org.moreunit.test,
  org.moreunit.test.config,
