@@ -27,6 +27,14 @@
 				<unit id="junit-platform-runner" version="1.14.4"/>
 				<unit id="junit-vintage-engine" version="5.14.4"/>
 		  	</location>
+		<!-- JGit (the Git implementation used by EGit) powers the "Run Tests for
+		     Changed Files" command. It is an optional dependency at runtime: the
+		     command only appears when the bundle is installed. -->
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+				<repository location="https://download.eclipse.org/egit/updates/"/>
+				<unit id="org.eclipse.jgit"/>
+				<unit id="org.eclipse.egit.core"/>
+			</location>
 	</locations>
 	<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21"/>
 </target>

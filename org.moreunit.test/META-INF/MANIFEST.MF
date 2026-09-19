@@ -22,6 +22,7 @@ Require-Bundle: org.eclipse.ui,
  org.moreunit,
  org.moreunit.test.dependencies,
  org.eclipse.ui.ide,
+ org.eclipse.jgit,
  junit-jupiter-api,
  org.mockito.mockito-core,
  org.mockito.junit-jupiter

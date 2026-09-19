@@ -1,4 +1,4 @@
-package org.moreunit.handler;
+package org.moreunit.git;
 
 import java.nio.file.Path;
 import java.util.Collection;

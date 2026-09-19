@@ -27,9 +27,9 @@ public class RunChangedTestsSWTBotTest extends JavaProjectSWTBotTestHelper
     }
 
     /**
-     * Only the presence of the command is asserted here: whether the test
-     * workspace belongs to a Git working tree with changed files depends on
-     * the machine running the tests.
+     * The command is contributed by MoreUnit only when JGit is installed (it
+     * is an optional dependency): this test asserts that it appears on a Java
+     * project in a runtime which has JGit, as the target platform does.
      */
     @Test
     @Project(

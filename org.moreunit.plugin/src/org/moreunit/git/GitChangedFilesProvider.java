@@ -1,4 +1,4 @@
-package org.moreunit.handler;
+package org.moreunit.git;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,14 +9,14 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
-import org.moreunit.core.git.GitWorkingTree;
 import org.moreunit.log.LogHandler;
 
 /**
- * Provides the Java files of a project which changed in the Git working tree
- * containing the project.
+ * Provides the Java files of a project which changed in its Git working tree,
+ * using JGit - the Git implementation of Eclipse, on which EGit is built.
  */
 public class GitChangedFilesProvider implements ChangedFilesProvider
 {
@@ -25,26 +25,26 @@ public class GitChangedFilesProvider implements ChangedFilesProvider
     @Override
     public Collection<Path> changedJavaFiles(IJavaProject project)
     {
-        final IPath projectLocation = project.getProject().getLocation();
+        final IProject workspaceProject = project.getProject();
+        final IPath projectLocation = workspaceProject.getLocation();
         if(projectLocation == null)
         {
             return Collections.emptyList();
         }
         final Path projectDirectory = projectLocation.toFile().toPath().toAbsolutePath().normalize();
 
-        final Optional<GitWorkingTree> workingTree = GitWorkingTree.locate(projectDirectory);
-        if(workingTree.isEmpty())
+        final Optional<GitRepository> repository = GitRepositories.repositoryOf(workspaceProject);
+        if(repository.isEmpty())
         {
-            LogHandler.getInstance().handleWarnLog("Project " + project.getElementName() + " is not in a Git working tree");
+            LogHandler.getInstance().handleWarnLog("Project " + project.getElementName() + " is not in a Git repository");
             return Collections.emptyList();
         }
 
-        try
+        try (GitRepository gitRepository = repository.get())
         {
-            final Path root = workingTree.get().root();
-            return workingTree.get().changedFiles().stream() //
-                    .map(root::resolve) //
-                    .filter(path -> path.normalize().startsWith(projectDirectory)) //
+            final GitWorkingTreeChanges changes = new GitWorkingTreeChanges(gitRepository.getRepository());
+            return changes.changedFiles().stream() //
+                    .filter(path -> path.startsWith(projectDirectory)) //
                     .filter(GitChangedFilesProvider::isJavaFile) //
                     .filter(Files::isRegularFile) //
                     .collect(Collectors.toCollection(LinkedHashSet::new));

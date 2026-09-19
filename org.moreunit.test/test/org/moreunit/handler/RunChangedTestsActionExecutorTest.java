@@ -3,6 +3,7 @@ package org.moreunit.handler;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.junit.jupiter.api.Test;
 import org.moreunit.elements.ChangedTests;
 import org.moreunit.elements.ChangedTestsFinder;
+import org.moreunit.git.GitSupport;
 import org.moreunit.launch.TestLauncher;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.test.context.ContextTestCase;
@@ -107,6 +109,16 @@ public class RunChangedTestsActionExecutorTest extends ContextTestCase
     }
 
     @Test
+    public void nothingToRunMessage_should_mention_the_eclipse_git_implementation_when_jgit_is_missing()
+    {
+        // JGit is part of the target platform, so the message about its absence
+        // is only checked when it is not installed
+        assumeFalse(GitSupport.isAvailable(), "JGit is installed in the test runtime");
+
+        assertTrue(RunChangedTestsActionExecutor.nothingToRunMessage(new ChangedTests(Set.of(), Set.of(), 0)).contains("EGit"));
+    }
+
+    @Test
     public void nothingToRunMessage_should_mention_the_number_of_changed_files()
     {
         assertTrue(RunChangedTestsActionExecutor.nothingToRunMessage(new ChangedTests(Set.of(), Set.of(), 3)).contains("3 Java file(s)"));
@@ -116,7 +128,6 @@ public class RunChangedTestsActionExecutorTest extends ContextTestCase
     {
         return new RunChangedTestsActionExecutor(testLauncher, project -> List.of(changedFiles), new ChangedTestsFinder());
     }
-
     private static Path pathOf(ICompilationUnit compilationUnit)
     {
         return Path.of(compilationUnit.getResource().getLocation().toOSString());
