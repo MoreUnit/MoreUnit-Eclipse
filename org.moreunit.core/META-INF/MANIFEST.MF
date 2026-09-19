@@ -22,6 +22,9 @@ Export-Package: org.moreunit.core;x-friends:="org.moreunit.core.test,org.moreuni
  org.moreunit.core.expressions;x-friends:="org.moreunit",
  org.moreunit.core.extension;x-friends:="org.moreunit.core.test",
  org.moreunit.core.extension.jump,
+ org.moreunit.core.git;
+  x-friends:="org.moreunit,
+   org.moreunit.core.test",
  org.moreunit.core.languages;x-friends:="org.moreunit.core.test",
  org.moreunit.core.log;
   x-friends:="org.moreunit,

@@ -40,6 +40,13 @@
 	            categoryId="org.eclipse.jdt.ui.category.source"
 	            id="org.moreunit.createtestmethod">
 	   </command>
+		<command
+	            name="Run Tests for Changed Files"
+	            defaultHandler="org.moreunit.handler.RunChangedTestsActionHandler"
+	            description="Run the tests corresponding to the files changed in the Git working tree."
+	            categoryId="org.eclipse.jdt.ui.category.source"
+	            id="org.moreunit.runtestsforchangedfiles">
+	   </command>
    </extension>
    <extension point="org.eclipse.ui.bindings">
        <!-- redefines this binding at a more specific level than org.eclipse.ui.textEditorScope,
@@ -284,6 +291,31 @@
                id="org.moreunit.plugin.action2"
                label="Jump to Test/Member under Test"
                menubarPath="org.moreunit.ui.type.menu.moreunit/top">
+         </action>
+      </objectContribution>
+
+      <objectContribution
+            adaptable="false"
+            id="org.moreunit.ui.javaproject.menucontribution"
+            objectClass="org.eclipse.jdt.core.IJavaProject">
+         <menu
+             id="org.moreunit.ui.javaproject.menu.moreunit"
+             label="MoreUnit"
+             icon="icons/moreunitLogo.gif"
+             path="additions">
+            <separator name="top" />
+         </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.moreunit.plugin.runChangedTestsFromProjectContribution"
+            objectClass="org.eclipse.jdt.core.IJavaProject">
+         <action
+               class="org.moreunit.actions.RunChangedTestsFromProjectAction"
+               icon="icons/testrun.png"
+               id="org.moreunit.plugin.action5"
+               label="Run Tests for Changed Files"
+               menubarPath="org.moreunit.ui.javaproject.menu.moreunit/top">
          </action>
       </objectContribution>
 

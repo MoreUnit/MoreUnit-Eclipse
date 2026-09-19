@@ -96,6 +96,21 @@
 		case class(es) directly from this class by hitting Ctrl+R.</p>
 		
 		
+		<h1>Running tests for changed files</h1>
+		
+		<p>MoreUnit can run the tests which correspond to the files that
+		changed since the last Git commit. Select one or more Java projects in
+		the Package Explorer and choose MOREUNIT &rarr; RUN TESTS FOR CHANGED
+		FILES.<br />
+		The files reported by Git (staged, unstaged and untracked) are matched
+		with their tests: a changed test file is run as is, and for a changed
+		class all its corresponding test cases are run.</p>
+		
+		<p>This command has no default shortcut, but you can bind one via
+		WINDOW &rarr; PREFERENCES... &rarr; GENERAL &rarr; KEYS and the command
+		named "Run Tests for Changed Files".</p>
+		
+		
 		<h1>View for missing test methods</h1>
 		
 		<p>MoreUnit offers a view to show the methods of the classes you are
