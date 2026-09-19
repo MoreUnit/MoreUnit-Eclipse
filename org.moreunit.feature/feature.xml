@@ -108,12 +108,14 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.egit.core"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.jdt.core.manipulation"/>
       <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.jgit"/>
       <import plugin="org.eclipse.ltk.core.refactoring"/>
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.ui"/>

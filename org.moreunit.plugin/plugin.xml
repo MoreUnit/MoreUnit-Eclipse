@@ -317,11 +317,6 @@
                label="Run Tests for Changed Files"
                menubarPath="org.moreunit.ui.javaproject.menu.moreunit/top">
          </action>
-         <!-- the command needs the Git implementation of Eclipse (JGit): hide
-              it when it is not installed -->
-         <visibility>
-            <pluginState id="org.eclipse.jgit" value="installed"/>
-         </visibility>
       </objectContribution>
 
       <objectContribution
