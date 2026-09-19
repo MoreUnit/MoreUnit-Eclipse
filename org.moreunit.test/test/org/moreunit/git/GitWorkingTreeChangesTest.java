@@ -17,6 +17,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
@@ -25,7 +26,9 @@ import org.junit.jupiter.api.io.TempDir;
  */
 public class GitWorkingTreeChangesTest
 {
-    @TempDir
+    // the cleanup is done by the test itself: JGit may keep file handles for a
+    // short while on Windows (see GitTestFiles)
+    @TempDir(cleanup = CleanupMode.NEVER)
     Path tempDir;
 
     private Path repositoryDirectory;
@@ -37,10 +40,12 @@ public class GitWorkingTreeChangesTest
         repositoryDirectory = Files.createDirectories(tempDir.resolve("repository"));
         repository = Git.init().setDirectory(repositoryDirectory.toFile()).setInitialBranch("main").call().getRepository();
     }
+
     @AfterEach
     public void closeRepository()
     {
         repository.close();
+        GitTestFiles.deleteRecursively(tempDir);
     }
 
     @Test

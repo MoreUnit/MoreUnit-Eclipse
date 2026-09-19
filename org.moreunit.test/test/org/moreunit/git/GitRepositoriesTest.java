@@ -7,13 +7,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.eclipse.jgit.api.Git;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 
 public class GitRepositoriesTest
 {
-    @TempDir
+    // the cleanup is done by the test itself: JGit may keep file handles for a
+    // short while on Windows (see GitTestFiles)
+    @TempDir(cleanup = CleanupMode.NEVER)
     Path tempDir;
+
+    @AfterEach
+    public void deleteTemporaryFiles()
+    {
+        GitTestFiles.deleteRecursively(tempDir);
+    }
 
     @Test
     public void repositoryOf_should_find_the_repository_containing_a_directory() throws Exception
