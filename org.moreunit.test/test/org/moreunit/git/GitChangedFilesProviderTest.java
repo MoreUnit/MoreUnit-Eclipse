@@ -45,6 +45,12 @@ public class GitChangedFilesProviderTest extends ContextTestCase
         {
             git.close();
         }
+        if(projectDirectory != null)
+        {
+            // the workspace is cleared by the test framework: remove the
+            // repository first, retrying while Windows releases its handles
+            GitTestFiles.deleteRecursively(projectDirectory.resolve(".git"));
+        }
     }
 
     @Test
