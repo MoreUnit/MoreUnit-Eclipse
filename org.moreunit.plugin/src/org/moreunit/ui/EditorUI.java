@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.moreunit.log.LogHandler;
 
 public class EditorUI
@@ -30,5 +31,18 @@ public class EditorUI
     public void reveal(IEditorPart editorPart, IJavaElement element)
     {
         JavaUI.revealInEditor(editorPart, element);
+    }
+
+    /**
+     * Reveals the given position in the given editor, thus moving the cursor to
+     * it. Does nothing if the position is unknown (negative offset) or if the
+     * editor is not a text editor.
+     */
+    public void revealOffset(IEditorPart editorPart, int offset)
+    {
+        if(editorPart instanceof final ITextEditor textEditor && offset >= 0)
+        {
+            textEditor.selectAndReveal(offset, 0);
+        }
     }
 }

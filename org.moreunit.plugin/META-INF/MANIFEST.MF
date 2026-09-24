@@ -62,6 +62,7 @@ Export-Package: org.moreunit.codemining;x-friends:="org.moreunit.test",org.moreu
  org.eclipse.jdt.core,  org.eclipse.jface.viewers,  org.eclipse.jdt.ju
  nit.wizards,  org.moreunit.preferences,  org.eclipse.jface.wizard,  o
  rg.eclipse.core.runtime,  org.eclipse.swt.widgets,  org.eclipse.ui"
+ ,org.moreunit.navigation;x-friends:="org.moreunit.test"
 Import-Package: org.moreunit.extensionpoints
 Automatic-Module-Name: org.moreunit
 
