@@ -1,10 +1,13 @@
 package org.moreunit.matching;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.junit.jupiter.api.Test;
 import org.moreunit.test.context.ContextTestCase;
@@ -167,5 +170,19 @@ public class CorrespondingTypeSearcherTest extends ContextTestCase
         assertEquals(1, perfectMatches.size());
         assertEquals(likelyMatches, likelyMatchesAgain);
         assertEquals(1, likelyMatches.size());
+    }
+
+    @Project(mainCls = "com:Foo", testCls = "com:FooTest")
+    @Test
+    public void getMatches_should_return_nothing_when_compilation_unit_has_no_primary_type() throws Exception
+    {
+        // eg. package-info.java, or a file being created or deleted
+        final IPackageFragment pkg = context.getPrimaryTypeHandler("com.Foo").get().getPackageFragment();
+        final ICompilationUnit emptyCompilationUnit = pkg.createCompilationUnit("Empty.java", "package com;", true, null);
+
+        final CorrespondingTypeSearcher searcher = new CorrespondingTypeSearcher(emptyCompilationUnit, getPreferences());
+
+        assertTrue(searcher.getMatches(false).isEmpty());
+        assertTrue(searcher.getMatches(true).isEmpty());
     }
 }
