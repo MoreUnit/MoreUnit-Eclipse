@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.moreunit.log.LogHandler;
 
@@ -44,5 +45,15 @@ public abstract class ShortcutStrategy
 	public void pressJumpShortcut() 
 	{
 		KeyboardFactory.getSWTKeyboard().pressShortcut(SWT.CTRL | SWT.SHIFT, 'j');
+	}
+	
+	public void pressJumpBackShortcut() 
+	{
+		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.CTRL, Keystrokes.ALT, Keystrokes.SHIFT, Keystrokes.LEFT);
+	}
+	
+	public void pressJumpForwardShortcut() 
+	{
+		KeyboardFactory.getSWTKeyboard().pressShortcut(Keystrokes.CTRL, Keystrokes.ALT, Keystrokes.SHIFT, Keystrokes.RIGHT);
 	}
 }
