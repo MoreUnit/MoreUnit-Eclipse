@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -48,8 +49,30 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             try
             {
                 final IJavaElement[] elements = unit.getChildren();
-                final List<ICodeMining> minings = new ArrayList<>(elements.length);
-                collectMinings(unit, textEditor, unit.getChildren(), minings, viewer, monitor);
+                final List<IJavaElement> minableElements = new ArrayList<>(elements.length);
+                collectElements(unit, textEditor, elements, minableElements, monitor);
+                if(minableElements.isEmpty())
+                {
+                    return Collections.emptyList();
+                }
+
+                // all the minings of a compilation unit share the same label
+                // computer, so that the corresponding test cases / classes
+                // under test are searched only once per refresh
+                final JumpLabelComputer labelComputer = new JumpLabelComputer(unit instanceof final ICompilationUnit compilationUnit ? compilationUnit : null, minableElements);
+
+                final List<ICodeMining> minings = new ArrayList<>(minableElements.size());
+                for (final IJavaElement element : minableElements)
+                {
+                    try
+                    {
+                        minings.add(new JumpCodeMining(element, viewer.getDocument(), this, labelComputer));
+                    }
+                    catch (final BadLocationException e)
+                    {
+                        // Should never occur
+                    }
+                }
                 return minings;
             }
             catch (final JavaModelException e)
@@ -60,7 +83,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
         });
     }
 
-    private void collectMinings(ITypeRoot unit, ITextEditor textEditor, IJavaElement[] elements, List<ICodeMining> minings, ITextViewer viewer, IProgressMonitor monitor) throws JavaModelException
+    private void collectElements(ITypeRoot unit, ITextEditor textEditor, IJavaElement[] elements, List<IJavaElement> minableElements, IProgressMonitor monitor) throws JavaModelException
     {
 
         if(! (textEditor instanceof JavaEditor))
@@ -76,7 +99,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             }
             if(element.getElementType() == IJavaElement.TYPE)
             {
-                collectMinings(unit, textEditor, ((IType) element).getChildren(), minings, viewer, monitor);
+                collectElements(unit, textEditor, ((IType) element).getChildren(), minableElements, monitor);
             }
             else if((element.getElementType() != IJavaElement.METHOD))
             {
@@ -97,14 +120,7 @@ public class MoreUnitCodeMiningProvider extends AbstractCodeMiningProvider
             }
             if(addMining)
             {
-                try
-                {
-                    minings.add(new JumpCodeMining(element, viewer.getDocument(), this));
-                }
-                catch (final BadLocationException e)
-                {
-                    // Should never occur
-                }
+                minableElements.add(element);
             }
         }
     }

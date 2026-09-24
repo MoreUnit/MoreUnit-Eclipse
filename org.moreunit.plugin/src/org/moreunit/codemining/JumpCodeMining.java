@@ -2,16 +2,17 @@ package org.moreunit.codemining;
 
 import static org.moreunit.elements.CorrespondingMemberRequest.newCorrespondingMemberRequest;
 
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.ISourceReference;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -22,14 +23,12 @@ import org.eclipse.jface.text.codemining.LineEndCodeMining;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.ui.IEditorPart;
 import org.moreunit.core.util.Jobs;
-import org.moreunit.elements.ClassTypeFacade;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TypeFacade;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
-import org.moreunit.preferences.TestAnnotationMode;
 import org.moreunit.ui.EditorUI;
 
 /**
@@ -40,11 +39,27 @@ public class JumpCodeMining extends LineEndCodeMining
 {
 
     private final IJavaElement element;
+    private final JumpLabelComputer labelComputer;
 
     public JumpCodeMining(IJavaElement element, IDocument document, ICodeMiningProvider provider) throws JavaModelException, BadLocationException
     {
+        this(element, document, provider, new JumpLabelComputer(compilationUnitOf(element), Collections.singletonList(element)));
+    }
+
+    /**
+     * Creates a mining sharing its labels with the other minings of the same
+     * compilation unit (see {@link JumpLabelComputer}).
+     */
+    public JumpCodeMining(IJavaElement element, IDocument document, ICodeMiningProvider provider, JumpLabelComputer labelComputer) throws JavaModelException, BadLocationException
+    {
         super(document, getLineNumber(element, document), provider);
         this.element = element;
+        this.labelComputer = labelComputer;
+    }
+
+    private static ICompilationUnit compilationUnitOf(IJavaElement element)
+    {
+        return element instanceof final IMember member ? member.getCompilationUnit() : null;
     }
 
     private static int getLineNumber(IJavaElement element, IDocument document) throws JavaModelException, BadLocationException
@@ -57,56 +72,7 @@ public class JumpCodeMining extends LineEndCodeMining
     @Override
     protected CompletableFuture<Void> doResolve(ITextViewer viewer, IProgressMonitor monitor)
     {
-        return CompletableFuture.runAsync(() -> {
-            final IMember member = (IMember) element;
-            final TypeFacade typeFacade = TypeFacade.createFacade(member.getCompilationUnit());
-            final String testOrTested = typeFacade instanceof TestCaseTypeFacade ? "tested" : "test";
-            if(element instanceof IType)
-            {
-                boolean jumpable = false;
-                if(typeFacade instanceof final ClassTypeFacade classTypeFacade)
-                {
-                    jumpable = classTypeFacade.hasTestCase();
-                }
-                else if(typeFacade instanceof final TestCaseTypeFacade testCaseTypeFacade)
-                {
-                    final IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
-                    jumpable = correspondingClassUnderTest != null;
-                }
-                if(jumpable)
-                {
-                    setLabel(" Jump to " + testOrTested + " class");
-                }
-                else
-                {
-                    setLabel("");
-                }
-            }
-            else if(element instanceof final IMethod method)
-            {
-                boolean jumpable = false;
-                if(typeFacade instanceof final ClassTypeFacade classTypeFacade)
-                {
-                    jumpable = ! (classTypeFacade.getCorrespondingTestMethods(method, TestAnnotationMode.BY_CALL_AND_BY_NAME.getMethodSearchMode()).isEmpty());
-                }
-                else if(typeFacade instanceof final TestCaseTypeFacade testCaseTypeFacade)
-                {
-                    final IType correspondingClassUnderTest = testCaseTypeFacade.getCorrespondingClassUnderTest();
-                    if(correspondingClassUnderTest != null)
-                    {
-                        jumpable = ! (testCaseTypeFacade.getCorrespondingTestedMethods(method, correspondingClassUnderTest).isEmpty());
-                    }
-                }
-                if(jumpable)
-                {
-                    setLabel(" Jump to " + testOrTested + " method");
-                }
-                else
-                {
-                    setLabel("");
-                }
-            }
-        });
+        return CompletableFuture.runAsync(() -> setLabel(labelComputer.labelFor(element)));
     }
 
     @Override
