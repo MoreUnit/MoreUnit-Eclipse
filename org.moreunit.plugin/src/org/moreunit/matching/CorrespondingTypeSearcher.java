@@ -45,6 +45,14 @@ public class CorrespondingTypeSearcher
     {
         this.type = compilationUnit.findPrimaryType();
         this.preferences = preferences.getProjectView(compilationUnit.getJavaProject());
+        if(this.type == null)
+        {
+            // a compilation unit without primary type (eg. package-info.java, or
+            // a file being created or deleted) has no corresponding type at all
+            this.nameEvaluation = null;
+            this.searchScope = null;
+            return;
+        }
         nameEvaluation = this.preferences.getTestClassNamePattern().evaluate(this.type);
         final IPackageFragmentRoot sourceFolder = nameEvaluation.isTestCase()
             ? preferences.getTestSourceFolder(compilationUnit.getJavaProject(), PluginTools.getSourceFolder(compilationUnit))
@@ -54,6 +62,11 @@ public class CorrespondingTypeSearcher
 
     public Collection<IType> getMatches(boolean alsoIncludeLikelyMatches)
     {
+        if(type == null)
+        {
+            return emptySet();
+        }
+
         try
         {
             if(alsoIncludeLikelyMatches)
