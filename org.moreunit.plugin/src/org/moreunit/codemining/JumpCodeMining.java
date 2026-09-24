@@ -21,15 +21,15 @@ import org.eclipse.jface.text.codemining.ICodeMining;
 import org.eclipse.jface.text.codemining.ICodeMiningProvider;
 import org.eclipse.jface.text.codemining.LineEndCodeMining;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.ui.IEditorPart;
 import org.moreunit.core.util.Jobs;
 import org.moreunit.elements.CorrespondingMemberRequest;
 import org.moreunit.elements.CorrespondingMemberRequest.MemberType;
 import org.moreunit.elements.TestCaseTypeFacade;
 import org.moreunit.elements.TypeFacade;
+import org.moreunit.handler.JumpActionExecutor;
+import org.moreunit.navigation.JumpLocation;
 import org.moreunit.preferences.Preferences;
 import org.moreunit.preferences.Preferences.MethodSearchMode;
-import org.moreunit.ui.EditorUI;
 
 /**
  * {@link ICodeMining} to "jump" from tested class/method to test class/method
@@ -79,6 +79,7 @@ public class JumpCodeMining extends LineEndCodeMining
     public Consumer<MouseEvent> getAction()
     {
         return e -> {
+            final JumpLocation origin = JumpLocation.of((IMember) element);
             Jobs.waitForIndexExecuteAndRunInUI("Jump to ... ", () -> {
             final MethodSearchMode searchMode = Preferences.getInstance().getMethodSearchMode(element.getJavaProject());
 
@@ -93,21 +94,7 @@ public class JumpCodeMining extends LineEndCodeMining
                     .build();
 
                 return typeFacade.getOneCorrespondingMember(request);
-            }, this::jumpToMember);
+            }, memberToJump -> JumpActionExecutor.getInstance().jumpToMember(origin, memberToJump));
         };
-    }
-
-    private void jumpToMember(IMember memberToJump)
-    {
-        final EditorUI editorUI = new EditorUI();
-        if(memberToJump instanceof final IMethod methodToJump)
-        {
-            final IEditorPart openedEditor = editorUI.open(methodToJump.getDeclaringType().getParent());
-            editorUI.reveal(openedEditor, methodToJump);
-        }
-        else
-        {
-            editorUI.open(memberToJump.getParent());
-        }
     }
 }

@@ -52,11 +52,19 @@ public class EditorPartFacade
         return file == null ? null : JavaCore.createCompilationUnitFrom(file);
     }
 
+    /**
+     * Returns the current text selection, or null if the editor does not
+     * provide any text selection.
+     */
     public ITextSelection getTextSelection()
     {
         final IWorkbenchPartSite site = editorPart.getSite();
-        final ISelectionProvider selectionProvider = site.getSelectionProvider();
-        return (ITextSelection) selectionProvider.getSelection();
+        final ISelectionProvider selectionProvider = site == null ? null : site.getSelectionProvider();
+        if(selectionProvider == null || ! (selectionProvider.getSelection() instanceof final ITextSelection textSelection))
+        {
+            return null;
+        }
+        return textSelection;
     }
 
     /**
@@ -73,7 +81,11 @@ public class EditorPartFacade
             if(compilationUnit == null)
                 return null;
 
-            final IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
+            final ITextSelection textSelection = getTextSelection();
+            if(textSelection == null)
+                return null;
+
+            final IJavaElement javaElement = compilationUnit.getElementAt(textSelection.getOffset());
             if(javaElement instanceof final IMethod iMethod)
             {
                 method = iMethod;
@@ -119,7 +131,11 @@ public class EditorPartFacade
             if(compilationUnit == null)
                 return null;
 
-            final IJavaElement javaElement = compilationUnit.getElementAt(getTextSelection().getOffset());
+            final ITextSelection textSelection = getTextSelection();
+            if(textSelection == null)
+                return null;
+
+            final IJavaElement javaElement = compilationUnit.getElementAt(textSelection.getOffset());
             if(javaElement instanceof final IMethod iMethod)
             {
                 method = iMethod;

@@ -47,6 +47,20 @@
 	            categoryId="org.eclipse.jdt.ui.category.source"
 	            id="org.moreunit.runtestsforchangedfiles">
 	   </command>
+        <command
+                name="Jump Back"
+                defaultHandler="org.moreunit.handler.JumpBackActionHandler"
+                description="Jump back to the location you were at before jumping to the test or class under test."
+                categoryId="org.eclipse.jdt.ui.category.source"
+                id="org.moreunit.jumpbackaction">
+       </command>
+        <command
+                name="Jump Forward"
+                defaultHandler="org.moreunit.handler.JumpForwardActionHandler"
+                description="Jump forward to the location you jumped back from."
+                categoryId="org.eclipse.jdt.ui.category.source"
+                id="org.moreunit.jumpforwardaction">
+       </command>
    </extension>
    <extension point="org.eclipse.ui.bindings">
        <!-- redefines this binding at a more specific level than org.eclipse.ui.textEditorScope,
@@ -85,6 +99,30 @@
 	      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
        <key
+          sequence="CTRL+ALT+SHIFT+ARROW_LEFT"
+          commandId="org.moreunit.jumpbackaction"
+          contextId="org.eclipse.jdt.ui.javaEditorScope"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+        </key>
+       <key
+          sequence="CTRL+ALT+SHIFT+ARROW_LEFT"
+          commandId="org.moreunit.jumpbackaction"
+          contextId="org.eclipse.ui.textEditorScope"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+        </key>
+       <key
+          sequence="CTRL+ALT+SHIFT+ARROW_RIGHT"
+          commandId="org.moreunit.jumpforwardaction"
+          contextId="org.eclipse.jdt.ui.javaEditorScope"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+        </key>
+       <key
+          sequence="CTRL+ALT+SHIFT+ARROW_RIGHT"
+          commandId="org.moreunit.jumpforwardaction"
+          contextId="org.eclipse.ui.textEditorScope"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+        </key>
+       <key
              sequence="M2+M3+Q M"
              commandId="org.eclipse.ui.views.showView"
              schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
@@ -115,6 +153,12 @@
             <command
                commandId="org.moreunit.core.commands.jumpCommand"
                mnemonic="J"/>
+            <command
+               commandId="org.moreunit.jumpbackaction"
+               mnemonic="B"/>
+            <command
+               commandId="org.moreunit.jumpforwardaction"
+               mnemonic="F"/>
             <separator name="top"/>
             <separator name="group2" visible="true"/>
             <separator name="additions"/>
