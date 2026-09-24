@@ -27,6 +27,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.moreunit.navigation.JumpLocation;
+import org.moreunit.navigation.JumpNavigationHistory;
 import org.moreunit.test.context.ContextTestCase;
 import org.moreunit.test.context.Preferences;
 import org.moreunit.test.context.Project;
@@ -74,6 +76,24 @@ public class JumpActionExecutorTest extends ContextTestCase
             final var constructor = JumpActionExecutor.class.getDeclaredConstructor(EditorUI.class);
             constructor.setAccessible(true);
             return constructor.newInstance(editorUI);
+        }
+        catch (final ReflectiveOperationException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * The constructor is package-private, which is not accessible from another
+     * bundle at runtime, hence the reflection.
+     */
+    private JumpActionExecutor newExecutorWithMockedEditorUI(JumpNavigationHistory navigationHistory)
+    {
+        try
+        {
+            final var constructor = JumpActionExecutor.class.getDeclaredConstructor(EditorUI.class, JumpNavigationHistory.class);
+            constructor.setAccessible(true);
+            return constructor.newInstance(editorUI, navigationHistory);
         }
         catch (final ReflectiveOperationException e)
         {
@@ -196,6 +216,72 @@ public class JumpActionExecutorTest extends ContextTestCase
         }
 
         verify(editorUI).reveal(eq(editorPart), eq(method));
+        assertTrue(openedElements.isEmpty());
+    }
+
+    @Test
+    public void executeJumpAction_should_register_the_jump_in_navigation_history() throws Exception
+    {
+        final ICompilationUnit foo = context.getCompilationUnit("com.Foo");
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final JumpNavigationHistory navigationHistory = new JumpNavigationHistory();
+
+        newExecutorWithMockedEditorUI(navigationHistory).executeJumpAction(foo);
+
+        await(() -> assertEquals(Collections.singletonList(fooTest), openedElements));
+
+        final JumpLocation locationJumpedFrom = navigationHistory.goBack(null);
+        assertEquals(foo, locationJumpedFrom.getCompilationUnit());
+        assertEquals(JumpLocation.UNKNOWN_OFFSET, locationJumpedFrom.getOffset());
+    }
+
+    @Test
+    public void jumpToMember_should_register_the_jump_in_navigation_history() throws Exception
+    {
+        final ICompilationUnit foo = context.getCompilationUnit("com.Foo");
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final JumpNavigationHistory navigationHistory = new JumpNavigationHistory();
+
+        newExecutorWithMockedEditorUI(navigationHistory).jumpToMember(new JumpLocation(foo, 12), fooTest.getTypes()[0]);
+
+        assertEquals(new JumpLocation(foo, 12), navigationHistory.goBack(null));
+    }
+
+    @Test
+    public void executeJumpBackAction_and_executeJumpForwardAction_should_navigate_between_visited_locations() throws Exception
+    {
+        final ICompilationUnit foo = context.getCompilationUnit("com.Foo");
+        final ICompilationUnit fooTest = context.getCompilationUnit("com.FooTest");
+        final JumpNavigationHistory navigationHistory = new JumpNavigationHistory();
+        final JumpActionExecutor executor = newExecutorWithMockedEditorUI(navigationHistory);
+        final ISourceRange cursorPosition = foo.getTypes()[0].getNameRange();
+
+        executor.executeJumpAction(editorOver(foo, cursorPosition));
+        await(() -> assertEquals(Collections.singletonList(fooTest), openedElements));
+        openedElements.clear();
+
+        executor.executeJumpBackAction(editorOver(fooTest, fooTest.getTypes()[0].getNameRange()));
+
+        assertEquals(Collections.singletonList(foo), openedElements);
+        verify(editorUI).revealOffset(any(), eq(cursorPosition.getOffset()));
+        openedElements.clear();
+
+        executor.executeJumpForwardAction(editorOver(foo, cursorPosition));
+
+        assertEquals(Collections.singletonList(fooTest), openedElements);
+    }
+
+    @Test
+    public void executeJumpBackAction_should_do_nothing_when_navigation_history_is_empty() throws Exception
+    {
+        final ICompilationUnit foo = context.getCompilationUnit("com.Foo");
+        final JumpActionExecutor executor = newExecutorWithMockedEditorUI(new JumpNavigationHistory());
+        final ISourceRange cursorPosition = foo.getTypes()[0].getNameRange();
+
+        executor.executeJumpBackAction(editorOver(foo, cursorPosition));
+        executor.executeJumpForwardAction(editorOver(foo, cursorPosition));
+        executor.executeJumpBackAction(null);
+
         assertTrue(openedElements.isEmpty());
     }
 }
