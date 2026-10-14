@@ -13,6 +13,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.moreunit.annotation.AnnotationUpdateListener;
 import org.moreunit.annotation.MoreUnitAnnotationModel;
+import org.moreunit.codemining.JumpLabelComputer;
 import org.moreunit.core.log.DefaultLogger;
 import org.moreunit.core.log.Logger;
 import org.moreunit.decorator.UnitDecorator;
@@ -111,6 +112,7 @@ public class MoreUnitPlugin extends AbstractUIPlugin
     @Override
     public void stop(BundleContext context) throws Exception
     {
+        JumpLabelComputer.shutdown();
         super.stop(context);
         annotationUpdateListener.dispose();
 

@@ -4,8 +4,16 @@ import static java.util.Collections.emptyList;
 import static org.moreunit.core.util.Preconditions.checkNotNull;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -55,8 +63,18 @@ public class JumpLabelComputer
     // cached by the facade, whatever the number of elements
     private TypeFacade typeFacade;
 
+    /**
+     * The searches for the corresponding tests and classes under test: not
+     * in the common pool of the JVM, which a slow search must not exhaust for
+     * the rest of Eclipse, and with a few threads, which stop when idle.
+     */
+    private static final ExecutorService EXECUTOR = newExecutor();
+
+    /** The computations running, see {@link #computation(String)} */
+    private static final Map<String, CompletableFuture<Map<String, String>>> COMPUTATIONS = new HashMap<>();
+
     // computed at most once per computer, all elements at once
-    private Map<String, String> labels;
+    private CompletableFuture<Map<String, String>> labels;
 
     public JumpLabelComputer(ICompilationUnit compilationUnit, Collection<IJavaElement> elements)
     {
@@ -78,32 +96,117 @@ public class JumpLabelComputer
      */
     public String labelFor(IJavaElement element)
     {
-        return allLabels().getOrDefault(element.getHandleIdentifier(), "");
+        try
+        {
+            return label(element).join();
+        }
+        catch (final CompletionException e)
+        {
+            // what computing the labels threw, as when it was computed in this thread
+            if(e.getCause() instanceof final RuntimeException cause)
+            {
+                throw cause;
+            }
+            if(e.getCause() instanceof final Error cause)
+            {
+                throw cause;
+            }
+            throw e;
+        }
     }
 
-    private synchronized Map<String, String> allLabels()
+    /**
+     * Returns the label of the given element, as {@link #labelFor} does, once
+     * the labels of all the elements are computed: no thread waits for them
+     * meanwhile, whatever the number of elements.
+     */
+    public CompletableFuture<String> label(IJavaElement element)
     {
-        if(labels == null)
+        final String handle = element.getHandleIdentifier();
+        return allLabels().thenApply(computed -> computed.getOrDefault(handle, ""));
+    }
+
+    private synchronized CompletableFuture<Map<String, String>> allLabels()
+    {
+        // computed again after a failure, at the next refresh
+        if(labels == null || labels.isCompletedExceptionally())
         {
-            labels = cachedLabelsOrCompute();
+            final String fingerprint = fingerprint();
+            // the labels in the cache are answered at once, without waiting
+            // behind the searches of other compilation units
+            final Map<String, String> cached = cachedLabels(fingerprint);
+            labels = cached != null ? CompletableFuture.completedFuture(cached) : computation(fingerprint);
         }
         return labels;
     }
 
-    private Map<String, String> cachedLabelsOrCompute()
+    /**
+     * Returns the computation of the labels, shared by the computers of the
+     * same compilation unit and elements: each refresh of the minings creates
+     * a computer, while one of a previous refresh may still be searching.
+     */
+    private CompletableFuture<Map<String, String>> computation(String fingerprint)
     {
-        final String fingerprint = fingerprint();
+        final String key = cacheKey() + '\n' + fingerprint;
+        synchronized (COMPUTATIONS)
+        {
+            final CompletableFuture<Map<String, String>> running = COMPUTATIONS.get(key);
+            if(running != null)
+            {
+                return running;
+            }
+            final CompletableFuture<Map<String, String>> computation = CompletableFuture.supplyAsync(() -> computeAndCache(fingerprint), EXECUTOR);
+            COMPUTATIONS.put(key, computation);
+            computation.whenComplete((computed, failure) -> {
+                synchronized (COMPUTATIONS)
+                {
+                    COMPUTATIONS.remove(key, computation);
+                }
+                if(failure != null)
+                {
+                    LogHandler.getInstance().handleExceptionLog("Could not compute the jump code minings", failure);
+                }
+            });
+            return computation;
+        }
+    }
 
+    /**
+     * Stops the threads that compute the labels, as MoreUnit stops.
+     */
+    public static void shutdown()
+    {
+        EXECUTOR.shutdownNow();
+    }
+
+    private static ExecutorService newExecutor()
+    {
+        final AtomicInteger count = new AtomicInteger();
+        final ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 2, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), runnable -> {
+            final Thread thread = new Thread(runnable, "MoreUnit code minings " + count.incrementAndGet());
+            thread.setDaemon(true);
+            return thread;
+        });
+        executor.allowCoreThreadTimeOut(true);
+        return executor;
+    }
+
+    /**
+     * @return the labels in the cache if they are still valid, else
+     *         <code>null</code>
+     */
+    private Map<String, String> cachedLabels(String fingerprint)
+    {
         final CacheEntry cached;
         synchronized (CACHE)
         {
             cached = CACHE.get(cacheKey());
         }
-        if(cached != null && cached.isStillValid(fingerprint, maxCacheAge))
-        {
-            return cached.labels;
-        }
+        return cached != null && cached.isStillValid(fingerprint, maxCacheAge) ? cached.labels : null;
+    }
 
+    private Map<String, String> computeAndCache(String fingerprint)
+    {
         final Map<String, String> computedLabels = computeLabels();
         synchronized (CACHE)
         {

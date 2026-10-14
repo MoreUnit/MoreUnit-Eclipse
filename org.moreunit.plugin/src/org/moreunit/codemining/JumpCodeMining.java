@@ -72,7 +72,12 @@ public class JumpCodeMining extends LineEndCodeMining
     @Override
     protected CompletableFuture<Void> doResolve(ITextViewer viewer, IProgressMonitor monitor)
     {
-        return CompletableFuture.runAsync(() -> setLabel(labelComputer.labelFor(element)));
+        if(monitor != null && monitor.isCanceled())
+        {
+            return CompletableFuture.completedFuture(null);
+        }
+        // no thread waits while the labels are computed, see JumpLabelComputer
+        return labelComputer.label(element).thenAccept(this::setLabel);
     }
 
     @Override
