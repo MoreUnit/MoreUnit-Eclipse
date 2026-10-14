@@ -303,6 +303,9 @@ public class MoreUnitAnnotationModelBranchesCoverageTest extends ContextTestCase
         final ITextEditor editor = mock(ITextEditor.class);
         when(editor.getEditorInput()).thenReturn(editorInput);
         final MoreUnitAnnotationModel model = new MoreUnitAnnotationModel(document, editor);
+        // the model schedules its update job, which first clears the annotations: wait for it, else it may clear the
+        // annotation added below before connect
+        assertTrue(((Job) field(model, "updateJob")).join(20000, new NullProgressMonitor()), "update job did not complete in time");
 
         @SuppressWarnings("unchecked")
         final List<MoreUnitAnnotation> annotations = (List<MoreUnitAnnotation>) field(model, "annotations");
