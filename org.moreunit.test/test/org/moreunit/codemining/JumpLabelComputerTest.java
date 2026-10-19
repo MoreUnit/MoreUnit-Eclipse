@@ -278,13 +278,17 @@ public class JumpLabelComputerTest extends ContextTestCase
         final IMethod foo = context.getPrimaryTypeHandler("com.Foo").addMethod("public int foo()", "return 0;").get();
         final ICompilationUnit fooUnit = context.getCompilationUnit("com.Foo");
 
-        final CountingJumpLabelComputer first = new CountingJumpLabelComputer(fooUnit, elementsOf(fooUnit), 0);
-        first.labelFor(foo);
+        // the computer that follows another one may be created as soon as this one answers
+        for (int i = 0; i < 200; i++)
+        {
+            final CountingJumpLabelComputer first = new CountingJumpLabelComputer(fooUnit, elementsOf(fooUnit), 0);
+            first.labelFor(foo);
 
-        final CountingJumpLabelComputer second = new CountingJumpLabelComputer(fooUnit, elementsOf(fooUnit), 0);
-        second.labelFor(foo);
+            final CountingJumpLabelComputer second = new CountingJumpLabelComputer(fooUnit, elementsOf(fooUnit), 0);
+            second.labelFor(foo);
 
-        assertEquals(1, first.computationCount);
-        assertEquals(1, second.computationCount);
+            assertEquals(1, first.computationCount);
+            assertEquals(1, second.computationCount);
+        }
     }
 }
