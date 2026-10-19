@@ -155,13 +155,23 @@ public class JumpLabelComputer
             {
                 return running;
             }
-            final CompletableFuture<Map<String, String>> computation = CompletableFuture.supplyAsync(() -> computeAndCache(fingerprint), EXECUTOR);
+            final CompletableFuture<Map<String, String>> computation = CompletableFuture.supplyAsync(() -> {
+                try
+                {
+                    return computeAndCache(fingerprint);
+                }
+                finally
+                {
+                    // before the computation ends: whoever waits for it then
+                    // starts a new one, instead of sharing one that is over
+                    synchronized (COMPUTATIONS)
+                    {
+                        COMPUTATIONS.remove(key);
+                    }
+                }
+            }, EXECUTOR);
             COMPUTATIONS.put(key, computation);
             computation.whenComplete((computed, failure) -> {
-                synchronized (COMPUTATIONS)
-                {
-                    COMPUTATIONS.remove(key, computation);
-                }
                 if(failure != null)
                 {
                     LogHandler.getInstance().handleExceptionLog("Could not compute the jump code minings", failure);
