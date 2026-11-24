@@ -10,6 +10,13 @@ runs:
         java-version: '21'
         cache: 'maven'
 
+    - name: Cache TestNG p2 repository
+      uses: actions/cache@v6
+      with:
+        path: ~/.m2/repository/.cache/tycho/https/testng.org
+        key: tycho-testng-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: tycho-testng-${{ runner.os }}-
+
     - name: Setup Maven
       uses: stCarolas/setup-maven@v5
       with:
